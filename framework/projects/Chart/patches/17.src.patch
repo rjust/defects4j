@@ -1,0 +1,14 @@
+Index: org/jfree/data/time/TimeSeries.java
+===================================================================
+--- org/jfree/data/time/TimeSeries.java	(revision 622)
++++ org/jfree/data/time/TimeSeries.java	(revision 621)
+@@ -854,8 +853,7 @@
+      *         subclasses may differ.
+      */
+     public Object clone() throws CloneNotSupportedException {
+-        TimeSeries clone = (TimeSeries) super.clone();
+-        clone.data = (List) ObjectUtilities.deepClone(this.data);
++        Object clone = createCopy(0, getItemCount() - 1);
+         return clone;
+     }
+ 

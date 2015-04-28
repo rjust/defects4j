@@ -1,0 +1,17 @@
+diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+index 47d3e5c..1de263f 100644
+--- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
++++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+@@ -562,12 +562,4 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+ 
+     foldSame("function f() { try{ return a } finally { a = 2 } return a; }");
+   }
+-
+-  public void testIssue291() {
+-    fold("if (true) { f.onchange(); }", "if (1) f.onchange();");
+-    foldSame("if (f) { f.onchange(); }");
+-    foldSame("if (f) { f.bar(); } else { f.onchange(); }");
+-    fold("if (f) { f.bonchange(); }", "f && f.bonchange();");
+-    foldSame("if (f) { f['x'](); }");
+-  }
+ }

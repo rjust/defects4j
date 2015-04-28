@@ -1,0 +1,23 @@
+diff --git a/com/google/javascript/jscomp/ProcessClosurePrimitives.java b/com/google/javascript/jscomp/ProcessClosurePrimitives.java
+index 85cee7c..6f69dff 100644
+--- a/com/google/javascript/jscomp/ProcessClosurePrimitives.java
++++ b/com/google/javascript/jscomp/ProcessClosurePrimitives.java
+@@ -321,12 +321,12 @@ class ProcessClosurePrimitives extends AbstractPostOrderCallback
+       maybeAddToSymbolTable(left);
+       maybeAddStringNodeToSymbolTable(arg);
+ 
+-      // Requires should be removed before further processing.
+-      // Some clients run closure pass multiple times, first with
+-      // the checks for broken requires turned off. In these cases, we
+-      // allow broken requires to be preserved by the first run to
+-      // let them be caught in the subsequent run.
+-      if (provided != null || requiresLevel.isOn()) {
++      // Requires should be removed before runtime.  The one
++      // exception is if the type has not been provided yet, in which case,
++      // we will be doing a later pass that may error, so we can
++      // leave this here this time and let it error next time if it
++      // is still not provided.
++      if (provided != null) {
+         parent.detachFromParent();
+         compiler.reportCodeChange();
+       }

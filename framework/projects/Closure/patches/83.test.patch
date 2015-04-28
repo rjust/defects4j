@@ -1,0 +1,51 @@
+diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index cb43c72..b87fa23 100644
+--- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -43,10 +43,6 @@ public class CommandLineRunnerTest extends TestCase {
+   private ByteArrayOutputStream outReader = null;
+   private ByteArrayOutputStream errReader = null;
+ 
+-  // If set, this will be appended to the end of the args list.
+-  // For testing args parsing.
+-  private String lastArg = null;
+-
+   // If set to true, uses comparison by string instead of by AST.
+   private boolean useStringComparison = false;
+ 
+@@ -100,7 +96,6 @@ public class CommandLineRunnerTest extends TestCase {
+     super.setUp();
+     externs = DEFAULT_EXTERNS;
+     lastCompiler = null;
+-    lastArg = null;
+     outReader = new ByteArrayOutputStream();
+     errReader = new ByteArrayOutputStream();
+     useStringComparison = false;
+@@ -597,16 +592,6 @@ public class CommandLineRunnerTest extends TestCase {
+             "Version: "));
+   }
+ 
+-  public void testVersionFlag2() {
+-    lastArg = "--version";
+-    testSame("");
+-    assertEquals(
+-        0,
+-        new String(errReader.toByteArray()).indexOf(
+-            "Closure Compiler (http://code.google.com/closure/compiler)\n" +
+-            "Version: "));
+-  }
+-
+   public void testPrintAstFlag() {
+     args.add("--print_ast=true");
+     testSame("");
+@@ -738,10 +723,6 @@ public class CommandLineRunnerTest extends TestCase {
+       }
+     }
+ 
+-    if (lastArg != null) {
+-      args.add(lastArg);
+-    }
+-
+     String[] argStrings = args.toArray(new String[] {});
+     return new CommandLineRunner(
+         argStrings,

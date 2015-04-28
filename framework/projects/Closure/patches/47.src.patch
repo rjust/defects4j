@@ -1,0 +1,43 @@
+diff --git a/com/google/debugging/sourcemap/SourceMapConsumerV3.java b/com/google/debugging/sourcemap/SourceMapConsumerV3.java
+index 5ee9108..3b07ae4 100644
+--- a/com/google/debugging/sourcemap/SourceMapConsumerV3.java
++++ b/com/google/debugging/sourcemap/SourceMapConsumerV3.java
+@@ -483,11 +483,10 @@ public class SourceMapConsumerV3 implements SourceMapConsumer,
+     if (entry.getSourceFileId() == UNMAPPED) {
+       return null;
+     } else {
+-      // Adjust the line/column here to be start at 1.
+       Builder x = OriginalMapping.newBuilder()
+         .setOriginalFile(sources[entry.getSourceFileId()])
+-        .setLineNumber(entry.getSourceLine() + 1)
+-        .setColumnPosition(entry.getSourceColumn() + 1);
++        .setLineNumber(entry.getSourceLine())
++        .setColumnPosition(entry.getSourceColumn());
+       if (entry.getNameId() != UNMAPPED) {
+         x.setIdentifier(names[entry.getNameId()]);
+       }
+diff --git a/com/google/javascript/jscomp/SourceMap.java b/com/google/javascript/jscomp/SourceMap.java
+index 7192408..04ff623 100644
+--- a/com/google/javascript/jscomp/SourceMap.java
++++ b/com/google/javascript/jscomp/SourceMap.java
+@@ -131,19 +129,9 @@ public class SourceMap {
+ 
+     String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);
+ 
+-    // Strangely, Rhino source lines are one based but columns are
+-    // zero based.
+-    // We don't change this for the v1 or v2 source maps but for
+-    // v3 we make them both 0 based.
+-    int lineBaseOffset = 1;
+-    if (generator instanceof SourceMapGeneratorV1
+-        || generator instanceof SourceMapGeneratorV2) {
+-      lineBaseOffset = 0;
+-    }
+-
+     generator.addMapping(
+         sourceFile, originalName,
+-        new FilePosition(node.getLineno() - lineBaseOffset, node.getCharno()),
++        new FilePosition(node.getLineno(), node.getCharno()),
+         outputStartPosition, outputEndPosition);
+   }
+ 

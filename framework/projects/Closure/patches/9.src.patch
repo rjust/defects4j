@@ -1,0 +1,29 @@
+diff --git a/com/google/javascript/jscomp/ProcessCommonJSModules.java b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+index 6777957..bed92d0 100644
+--- a/com/google/javascript/jscomp/ProcessCommonJSModules.java
++++ b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+@@ -114,14 +114,9 @@ public class ProcessCommonJSModules implements CompilerPass {
+   }
+ 
+   private String normalizeSourceName(String filename) {
+-    // The DOS command shell will normalize "/" to "\", so we have to
+-    // wrestle it back.
+-    filename = filename.replace("\\", "/");
+-
+     if (filename.indexOf(filenamePrefix) == 0) {
+       filename = filename.substring(filenamePrefix.length());
+     }
+-
+     return filename;
+   }
+ 
+@@ -181,7 +176,8 @@ public class ProcessCommonJSModules implements CompilerPass {
+       Preconditions.checkArgument(scriptNodeCount == 1,
+           "ProcessCommonJSModules supports only one invocation per " +
+           "CompilerInput / script node");
+-      String moduleName = guessCJSModuleName(script.getSourceFileName());
++      String moduleName = guessCJSModuleName(normalizeSourceName(script
++          .getSourceFileName()));
+       script.addChildToFront(IR.var(IR.name(moduleName), IR.objectlit())
+           .copyInformationFromForTree(script));
+       if (reportDependencies) {

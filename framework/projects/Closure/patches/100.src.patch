@@ -1,0 +1,127 @@
+diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+index 477b287..a0f264b 100644
+--- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+@@ -1034,6 +1034,14 @@ public final class JsDocInfoParser {
+       this.string = string;
+       this.token = token;
+     }
++
++    public String getString() {
++      return string;
++    }
++
++    public JsDocToken getToken() {
++      return token;
++    }
+   }
+ 
+   /**
+diff --git a/com/google/javascript/jscomp/CheckGlobalThis.java b/com/google/javascript/jscomp/CheckGlobalThis.java
+index 1b6c93f..94c9411 100644
+--- a/com/google/javascript/jscomp/CheckGlobalThis.java
++++ b/com/google/javascript/jscomp/CheckGlobalThis.java
+@@ -90,21 +88,8 @@ final class CheckGlobalThis implements Callback {
+       if (jsDoc != null && (jsDoc.isConstructor() || jsDoc.hasThisType())) {
+         return false;
+       }
+-
+-      // Don't traverse functions unless they would normally
+-      // be able to have a @this annotation associated with them. e.g.,
+-      // var a = function() { }; // or
+-      // function a() {} // or
+-      // a.x = function() {};
+-      int pType = parent.getType();
+-      if (!(pType == Token.BLOCK ||
+-            pType == Token.SCRIPT ||
+-            pType == Token.NAME ||
+-            pType == Token.ASSIGN)) {
+-        return false;
+-      }
+     }
+-
++    
+     if (parent != null && parent.getType() == Token.ASSIGN) {
+       Node lhs = parent.getFirstChild();
+       Node rhs = lhs.getNext();
+@@ -130,12 +115,12 @@ final class CheckGlobalThis implements Callback {
+         }
+       }
+     }
+-
++    
+     return true;
+   }
+ 
+   public void visit(NodeTraversal t, Node n, Node parent) {
+-    if (n.getType() == Token.THIS && shouldReportThis(n, parent)) {
++    if (assignLhsChild != null && n.getType() == Token.THIS) {
+       compiler.report(t.makeError(n, level, GLOBAL_THIS));
+     }
+     if (n == assignLhsChild) {
+@@ -143,16 +128,6 @@ final class CheckGlobalThis implements Callback {
+     }
+   }
+ 
+-  private boolean shouldReportThis(Node n, Node parent) {
+-    if (assignLhsChild != null) {
+-      // Always report a THIS on the left side of an assign.
+-      return true;
+-    }
+-
+-    // Also report a THIS with a property access.
+-    return parent != null && NodeUtil.isGet(parent);
+-  }
+-
+   /**
+    * Gets a function's JSDoc information, if it has any. Checks for a few
+    * patterns (ellipses show where JSDoc would be):
+diff --git a/com/google/javascript/rhino/jstype/FunctionType.java b/com/google/javascript/rhino/jstype/FunctionType.java
+index 48e0f07..cbd4dc2 100644
+--- a/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -41,6 +41,8 @@ package com.google.javascript.rhino.jstype;
+ 
+ import static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE;
+ 
++import com.google.common.annotations.VisibleForTesting;
++import com.google.common.base.Objects;
+ import com.google.common.base.Preconditions;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.Iterables;
+@@ -820,6 +822,11 @@ public class FunctionType extends PrototypeObjectType {
+     return super.resolveInternal(t, scope);
+   }
+ 
++  // A helper method for creating arrow types.
++  private ArrowType createArrowType(Node parameters, JSType returnType) {
++    return registry.createArrowType(parameters, returnType);
++  }
++
+   @Override
+   public String toDebugHashCodeString() {
+     if (this == registry.getNativeType(JSTypeNative.FUNCTION_INSTANCE_TYPE)) {
+diff --git a/com/google/javascript/rhino/jstype/NamedType.java b/com/google/javascript/rhino/jstype/NamedType.java
+index 6af723c..b67876c 100644
+--- a/com/google/javascript/rhino/jstype/NamedType.java
++++ b/com/google/javascript/rhino/jstype/NamedType.java
+@@ -110,7 +110,6 @@ class NamedType extends ProxyObjectType {
+     this.charno = charno;
+   }
+ 
+-  @Override
+   void forgiveUnknownNames() {
+     forgiving = true;
+   }
+diff --git a/com/google/javascript/jscomp/SourceFile.java b/com/google/javascript/jscomp/SourceFile.java
+index 0c40f03..f13ac25 100644
+--- a/com/google/javascript/jscomp/SourceFile.java
++++ b/com/google/javascript/jscomp/SourceFile.java
+@@ -371,7 +371,6 @@ public abstract class SourceFile {
+     /**
+      * Gets a reader for the code in this source file.
+      */
+-    @Override
+     public Reader getCodeReader() throws IOException {
+       if (hasSourceInMemory()) {
+         return super.getCodeReader();

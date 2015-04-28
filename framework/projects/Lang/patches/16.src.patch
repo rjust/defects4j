@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtils.java b/org/apache/commons/lang3/math/NumberUtils.java
+index 5b7891a..e0118ee 100644
+--- a/org/apache/commons/lang3/math/NumberUtils.java
++++ b/org/apache/commons/lang3/math/NumberUtils.java
+@@ -455,7 +455,7 @@ public class NumberUtils {
+             // a wrong value.
+             return null;
+         }
+-        if (str.startsWith("0x") || str.startsWith("-0x") || str.startsWith("0X") || str.startsWith("-0X")) {
++        if (str.startsWith("0x") || str.startsWith("-0x")) {
+             return createInteger(str);
+         }   
+         char lastChar = str.charAt(str.length() - 1);

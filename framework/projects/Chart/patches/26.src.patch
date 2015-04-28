@@ -1,0 +1,23 @@
+Index: org/jfree/chart/axis/Axis.java
+===================================================================
+--- org/jfree/chart/axis/Axis.java	(revision 103)
++++ org/jfree/chart/axis/Axis.java	(revision 102)
+@@ -1188,13 +1187,11 @@
+ 
+         }
+         if (plotState != null && hotspot != null) {
+-            ChartRenderingInfo owner = plotState.getOwner();
+-            if (owner != null) {
+-                EntityCollection entities = owner.getEntityCollection();
+-                if (entities != null) {
+-                    entities.add(new AxisLabelEntity(this, hotspot, 
+-                            this.labelToolTip, this.labelURL));
+-                }
++            EntityCollection entities = plotState.getOwner()
++                    .getEntityCollection();
++            if (entities != null) {
++                entities.add(new AxisLabelEntity(this, hotspot, 
++                        this.labelToolTip, this.labelURL));
+             }
+         }
+         return state;

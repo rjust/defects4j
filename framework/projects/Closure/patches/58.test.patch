@@ -1,0 +1,15 @@
+diff --git a/com/google/javascript/jscomp/LiveVariableAnalysisTest.java b/com/google/javascript/jscomp/LiveVariableAnalysisTest.java
+index 1459bd4..f29e5a7 100644
+--- a/com/google/javascript/jscomp/LiveVariableAnalysisTest.java
++++ b/com/google/javascript/jscomp/LiveVariableAnalysisTest.java
+@@ -206,10 +206,6 @@ public class LiveVariableAnalysisTest extends TestCase {
+     assertNotLiveAfterX("var a;X:a();a(param2)", "param1");
+   }
+ 
+-  public void testExpressionInForIn() {
+-    assertLiveBeforeX("var a = [0]; X:for (a[1] in foo) { }", "a");
+-  }
+-
+   public void testArgumentsArray() {
+     // Check that use of arguments forces the parameters into the
+     // escaped set.

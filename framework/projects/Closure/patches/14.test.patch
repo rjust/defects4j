@@ -1,0 +1,39 @@
+diff --git a/com/google/javascript/jscomp/CheckMissingReturnTest.java b/com/google/javascript/jscomp/CheckMissingReturnTest.java
+index 3a33aae..5b43e17 100644
+--- a/com/google/javascript/jscomp/CheckMissingReturnTest.java
++++ b/com/google/javascript/jscomp/CheckMissingReturnTest.java
+@@ -191,12 +191,6 @@ public class CheckMissingReturnTest extends CompilerTestCase {
+     testNotMissing("if (a) { return 1} else { while (1) {return 1} }");
+   }
+ 
+-  public void testIssue779() {
+-    testNotMissing(
+-        "var a = f(); try { alert(); if (a > 0) return 1; }" +
+-        "finally { a = 5; } return 2;");
+-  }
+-
+   private static String createFunction(String returnType, String body) {
+     return "/** @return {" + returnType + "} */ function foo() {" + body + "}";
+   }
+diff --git a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+index 5560e2c..90422d5 100644
+--- a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
++++ b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+@@ -1104,7 +1104,7 @@ public class ControlFlowAnalysisTest extends TestCase {
+     // BREAK to FINALLY.
+     assertCrossEdge(cfg, Token.BREAK, Token.BLOCK, Branch.UNCOND);
+     // FINALLY to FINALLY.
+-    assertCrossEdge(cfg, Token.BLOCK, Token.BLOCK, Branch.ON_EX);
++    assertCrossEdge(cfg, Token.BLOCK, Token.BLOCK, Branch.UNCOND);
+     assertCrossEdge(cfg, Token.WHILE, Token.BLOCK, Branch.ON_FALSE);
+     assertReturnEdge(cfg, Token.BLOCK);
+   }
+@@ -1115,7 +1115,7 @@ public class ControlFlowAnalysisTest extends TestCase {
+     ControlFlowGraph<Node> cfg = createCfg(src);
+     assertCrossEdge(cfg, Token.THROW, Token.BLOCK, Branch.ON_EX);
+     assertCrossEdge(cfg, Token.VAR, Token.BLOCK, Branch.UNCOND);
+-    assertCrossEdge(cfg, Token.IF, Token.BLOCK, Branch.ON_EX);
++    assertCrossEdge(cfg, Token.IF, Token.BLOCK, Branch.UNCOND);
+   }
+ 
+   public void testReturn() {

@@ -1,0 +1,23 @@
+diff --git a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+index 954ad7c..8066185 100644
+--- a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
++++ b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+@@ -64,18 +64,6 @@ public class SimplexSolverTest {
+         assertEquals(57.0, solution.getValue(), 0.0);
+     }
+ 
+-    @Test
+-    public void testSingleVariableAndConstraint() throws OptimizationException {
+-        LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] { 3 }, 0);
+-        Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
+-        constraints.add(new LinearConstraint(new double[] { 1 }, Relationship.LEQ, 10));
+-
+-        SimplexSolver solver = new SimplexSolver();
+-        RealPointValuePair solution = solver.optimize(f, constraints, GoalType.MAXIMIZE, false);
+-        assertEquals(10.0, solution.getPoint()[0], 0.0);
+-        assertEquals(30.0, solution.getValue(), 0.0);
+-    }
+-    
+     /**
+      * With no artificial variables needed (no equals and no greater than
+      * constraints) we can go straight to Phase 2.

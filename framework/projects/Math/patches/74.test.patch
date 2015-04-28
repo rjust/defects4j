@@ -1,0 +1,57 @@
+diff --git a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
+index 20dd424..0355800 100644
+--- a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
++++ b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
+@@ -145,9 +145,9 @@ public class AdamsMoultonIntegratorTest {
+             integ.integrate(pb, pb.getInitialTime(), pb.getInitialState(),
+                             pb.getFinalTime(), new double[pb.getDimension()]);
+             if (nSteps < 4) {
+-                assertTrue(integ.getEvaluations() > 140);
++                assertTrue(integ.getEvaluations() > 150);
+             } else {
+-                assertTrue(integ.getEvaluations() < 90);
++                assertTrue(integ.getEvaluations() < 100);
+             }
+         }
+ 
+diff --git a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+index bb36cda..895ceff 100644
+--- a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
++++ b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+@@ -147,8 +147,8 @@ public class DormandPrince853IntegratorTest
+       integ.integrate(pb, pb.getInitialTime(), pb.getInitialState(),
+                       pb.getFinalTime(), new double[pb.getDimension()]);
+ 
+-      assertTrue(handler.getLastError() < 8.1e-8);
+-      assertTrue(handler.getMaximalValueError() < 1.1e-7);
++      assertTrue(handler.getLastError() < 8.0e-8);
++      assertTrue(handler.getMaximalValueError() < 2.0e-7);
+       assertEquals(0, handler.getMaximalTimeError(), 1.0e-12);
+       assertEquals("Dormand-Prince 8 (5, 3)", integ.getName());
+   }
+diff --git a/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
+index 56663c9..0785d97 100644
+--- a/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
++++ b/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
+@@ -387,7 +387,7 @@ public class HighamHall54IntegratorTest
+         maxError = error;
+       }
+       if (isLast) {
+-        assertTrue(maxError < 4.2e-11);
++        assertTrue(maxError < 4e-11);
+         assertTrue(nbSteps < 670);
+       }
+     }
+diff --git a/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java b/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
+index a2645b7..9094b2a 100644
+--- a/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
++++ b/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
+@@ -49,7 +49,7 @@ public class HighamHall54StepInterpolatorTest {
+     HighamHall54Integrator integ = new HighamHall54Integrator(minStep, maxStep,
+                                                               scalAbsoluteTolerance,
+                                                               scalRelativeTolerance);
+-    StepInterpolatorTestUtils.checkDerivativesConsistency(integ, pb, 1.1e-10);
++    StepInterpolatorTestUtils.checkDerivativesConsistency(integ, pb, 1.0e-10);
+   }
+ 
+   @Test

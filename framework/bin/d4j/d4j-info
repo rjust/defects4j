@@ -1,0 +1,110 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-info -- Prints the information for a specific project or bug
+
+
+=head1 SYNOPSIS
+
+d4j-info -p project_id [-v bug_id]
+
+=head1 DESCRIPTION
+
+This script shows the configuration and basic information for a project and, if
+requested, the information for a specific bug.
+
+=cut
+use warnings;
+use strict;
+
+use Constants;
+use Project;
+use Getopt::Std;
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 -p project_id [-v bug_id]\n";
+    exit 1;
+}
+
+my %cmd_opts;
+getopts('p:v:', \%cmd_opts) or _usage();
+
+_usage() unless defined $cmd_opts{p};
+
+my $PID = $cmd_opts{p};
+my $VID = $cmd_opts{v};
+
+my $project = Project::create_project($PID);
+# Check version id
+if (defined $VID) {
+    $VID =~ /^(\d+)$/ or die "Wrong version_id format: $VID! Expected: \\d+";
+    # Make sure version id exists
+    $project->lookup("${VID}f");
+}
+
+
+$project->print_info();
+
+my $project_dir = "$SCRIPT_DIR/projects/$PID";
+
+my $sep = "-" x 80 . "\n";
+if (defined $VID) {
+    open(TRIG, "<$project_dir/trigger_tests/$VID") or die "Cannot read trigger tests";
+    open(PATCH, "<$project_dir/patches/$VID.src.patch") or die "Cannot read bug fix";
+    open(CLASS, "<$project_dir/modified_classes/$VID.src") or die "Cannot read modified classes";
+    my @trigger = <TRIG>;  close(TRIG);
+    my @patch   = <PATCH>; close(PATCH);
+    my @classes = <CLASS>; close(CLASS);
+
+    print("\nSummary for Bug: $VID\n");
+    print($sep);
+    print("Root cause in triggering tests:\n");
+    foreach my $i (0..$#trigger) {
+        next unless $trigger[$i] =~ /(--- )(.*)/;
+        print(" - $2\n");
+        print("   --> " . $trigger[$i+1]);
+    }
+    print($sep);
+    print("List of modified sources:\n");
+    foreach (@classes) {
+        print " - $_";
+    }
+    print($sep);
+}
+
+1;
+
+=pod
+
+=head1 SEE ALSO
+
+All valid project_ids are listed in F<Project.pm>
+
+=cut
+

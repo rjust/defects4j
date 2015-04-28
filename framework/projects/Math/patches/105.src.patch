@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math/stat/regression/SimpleRegression.java b/org/apache/commons/math/stat/regression/SimpleRegression.java
+index d9fa592..c105a41 100644
+--- a/org/apache/commons/math/stat/regression/SimpleRegression.java
++++ b/org/apache/commons/math/stat/regression/SimpleRegression.java
+@@ -261,7 +246,7 @@ public class SimpleRegression implements Serializable {
+      * @return sum of squared errors associated with the regression model
+      */
+     public double getSumSquaredErrors() {
+-        return Math.max(0d, sumYY - sumXY * sumXY / sumXX);
++        return sumYY - sumXY * sumXY / sumXX;
+     }
+ 
+     /**

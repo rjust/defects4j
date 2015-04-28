@@ -1,0 +1,25 @@
+diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+index 07761aa..4ef6e6f 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -509,18 +509,11 @@ public class IRFactory {
+       return node;
+     }
+ 
+-    @Override
+-    Node processFunctionNode(FunctionNode functionNode) {
++   @Override
++  Node processFunctionNode(FunctionNode functionNode) {
+       Name name = functionNode.getFunctionName();
+       Boolean isUnnamedFunction = false;
+       if (name == null) {
+-        int functionType = functionNode.getFunctionType();
+-        if (functionType != FunctionNode.FUNCTION_EXPRESSION) {
+-          errorReporter.error(
+-            "unnamed function statement",
+-            sourceName,
+-            functionNode.getLineno(), "", 0);
+-        }
+         name = new Name();
+         name.setIdentifier("");
+         isUnnamedFunction = true;

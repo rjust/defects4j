@@ -1,0 +1,25 @@
+diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+index c7005b2..8a2ec94 100644
+--- a/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -892,20 +892,7 @@ final class TypedScopeCreator implements ScopeCreator {
+       String variableName = n.getQualifiedName();
+       Preconditions.checkArgument(!variableName.isEmpty());
+ 
+-      // If n is a property, then we should really declare it in the
+-      // scope where the root object appears. This helps out people
+-      // who declare "global" names in an anonymous namespace.
+       Scope scopeToDeclareIn = scope;
+-      if (n.getType() == Token.GETPROP && !scope.isGlobal() &&
+-          isQnameRootedInGlobalScope(n)) {
+-        Scope globalScope = scope.getGlobalScope();
+-
+-        // don't try to declare in the global scope if there's
+-        // already a symbol there with this name.
+-        if (!globalScope.isDeclared(variableName, false)) {
+-          scopeToDeclareIn = scope.getGlobalScope();
+-        }
+-      }
+ 
+       // declared in closest scope?
+       if (scopeToDeclareIn.isDeclared(variableName, false)) {

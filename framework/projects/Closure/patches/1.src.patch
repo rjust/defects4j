@@ -1,0 +1,24 @@
+diff --git a/com/google/javascript/jscomp/RemoveUnusedVars.java b/com/google/javascript/jscomp/RemoveUnusedVars.java
+index 4c84735..a0520d2 100644
+--- a/com/google/javascript/jscomp/RemoveUnusedVars.java
++++ b/com/google/javascript/jscomp/RemoveUnusedVars.java
+@@ -367,18 +367,7 @@ class RemoveUnusedVars
+    * @param fnScope The scope inside the function
+    */
+   private void removeUnreferencedFunctionArgs(Scope fnScope) {
+-    // Notice that removing unreferenced function args breaks
+-    // Function.prototype.length. In advanced mode, we don't really care
+-    // about this: we consider "length" the equivalent of reflecting on
+-    // the function's lexical source.
+-    //
+-    // Rather than create a new option for this, we assume that if the user
+-    // is removing globals, then it's OK to remove unused function args.
+-    //
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+-    if (!removeGlobals) {
+-      return;
+-    }
++    // TODO(johnlenz): Update type registry for function signature changes.
+ 
+     Node function = fnScope.getRootNode();
+ 

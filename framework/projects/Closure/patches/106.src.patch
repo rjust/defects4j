@@ -1,0 +1,35 @@
+diff --git a/com/google/javascript/jscomp/GlobalNamespace.java b/com/google/javascript/jscomp/GlobalNamespace.java
+index 47ea27a..58f1370 100644
+--- a/com/google/javascript/jscomp/GlobalNamespace.java
++++ b/com/google/javascript/jscomp/GlobalNamespace.java
+@@ -900,15 +900,6 @@ class GlobalNamespace {
+       if (type == Type.OTHER || globalSets != 1 || localSets != 0) {
+         return false;
+       }
+-
+-      // Don't try to collapse if the one global set is a twin reference.
+-      // We could theoretically handle this case in CollapseProperties, but
+-      // it's probably not worth the effort.
+-      Preconditions.checkNotNull(declaration);
+-      if (declaration.getTwin() != null) {
+-        return false;
+-      }
+-
+       if (isClassOrEnum) {
+         return true;
+       }
+diff --git a/com/google/javascript/rhino/JSDocInfoBuilder.java b/com/google/javascript/rhino/JSDocInfoBuilder.java
+index bdfc2e8..d798317 100644
+--- a/com/google/javascript/rhino/JSDocInfoBuilder.java
++++ b/com/google/javascript/rhino/JSDocInfoBuilder.java
+@@ -186,7 +186,9 @@ final public class JSDocInfoBuilder {
+    * @return {@code true} if the description was recorded.
+    */
+   public boolean recordBlockDescription(String description) {
+-    populated = true;
++    if (parseDocumentation) {
++      populated = true;
++    }
+     return currentInfo.documentBlock(description);
+   }
+ 

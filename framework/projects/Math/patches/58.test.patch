@@ -1,0 +1,135 @@
+diff --git a/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java b/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
+index 827180e..a5b31c6 100644
+--- a/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
++++ b/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
+@@ -17,11 +17,12 @@
+ 
+ package org.apache.commons.math.optimization.fitting;
+ 
++import static org.junit.Assert.assertEquals;
++
+ import org.apache.commons.math.exception.MathIllegalArgumentException;
+ import org.apache.commons.math.optimization.OptimizationException;
+ import org.apache.commons.math.optimization.general.LevenbergMarquardtOptimizer;
+ 
+-import org.junit.Assert;
+ import org.junit.Test;
+ 
+ /**
+@@ -192,9 +193,9 @@ public class GaussianFitterTest {
+         addDatasetToGaussianFitter(DATASET1, fitter);
+         double[] parameters = fitter.fit();
+ 
+-        Assert.assertEquals(3496978.1837704973, parameters[0], 1e-4);
+-        Assert.assertEquals(4.054933085999146, parameters[1], 1e-4);
+-        Assert.assertEquals(0.015039355620304326, parameters[2], 1e-4);
++        assertEquals(3496978.1837704973, parameters[0], 1e-4);
++        assertEquals(4.054933085999146, parameters[1], 1e-4);
++        assertEquals(0.015039355620304326, parameters[2], 1e-4);
+     }
+ 
+     /**
+@@ -238,9 +239,9 @@ public class GaussianFitterTest {
+         addDatasetToGaussianFitter(DATASET2, fitter);
+         double[] parameters = fitter.fit();
+ 
+-        Assert.assertEquals(233003.2967252038, parameters[0], 1e-4);
+-        Assert.assertEquals(-10.654887521095983, parameters[1], 1e-4);
+-        Assert.assertEquals(4.335937353196641, parameters[2], 1e-4);
++        assertEquals(233003.2967252038, parameters[0], 1e-4);
++        assertEquals(-10.654887521095983, parameters[1], 1e-4);
++        assertEquals(4.335937353196641, parameters[2], 1e-4);
+     }  
+     
+     /**
+@@ -255,9 +256,9 @@ public class GaussianFitterTest {
+         addDatasetToGaussianFitter(DATASET3, fitter);
+         double[] parameters = fitter.fit();
+ 
+-        Assert.assertEquals(283863.81929180305, parameters[0], 1e-4);
+-        Assert.assertEquals(-13.29641995105174, parameters[1], 1e-4);
+-        Assert.assertEquals(1.7297330293549908, parameters[2], 1e-4);
++        assertEquals(283863.81929180305, parameters[0], 1e-4);
++        assertEquals(-13.29641995105174, parameters[1], 1e-4);
++        assertEquals(1.7297330293549908, parameters[2], 1e-4);
+     }
+     
+     /**
+@@ -272,9 +273,9 @@ public class GaussianFitterTest {
+         addDatasetToGaussianFitter(DATASET4, fitter);
+         double[] parameters = fitter.fit();
+ 
+-        Assert.assertEquals(285250.66754309234, parameters[0], 1e-4);
+-        Assert.assertEquals(-13.528375695228455, parameters[1], 1e-4);
+-        Assert.assertEquals(1.5204344894331614, parameters[2], 1e-4);
++        assertEquals(285250.66754309234, parameters[0], 1e-4);
++        assertEquals(-13.528375695228455, parameters[1], 1e-4);
++        assertEquals(1.5204344894331614, parameters[2], 1e-4);
+     }    
+ 
+     /**
+@@ -284,59 +285,15 @@ public class GaussianFitterTest {
+      */
+     @Test
+     public void testFit07()
+-    throws OptimizationException {
++    throws OptimizationException 
++    {
+         GaussianFitter fitter = new GaussianFitter(new LevenbergMarquardtOptimizer());
+         addDatasetToGaussianFitter(DATASET5, fitter);
+         double[] parameters = fitter.fit();
+ 
+-        Assert.assertEquals(3514384.729342235, parameters[0], 1e-4);
+-        Assert.assertEquals(4.054970307455625, parameters[1], 1e-4);
+-        Assert.assertEquals(0.015029412832160017, parameters[2], 1e-4);
+-    }
+-
+-    @Test
+-    public void testMath519() {
+-        // The optimizer will try negative sigma values but "GaussianFitter"
+-        // will catch the raised exceptions and return NaN values instead.
+-
+-        final double[] data = { 
+-            1.1143831578403364E-29,
+-            4.95281403484594E-28,
+-            1.1171347211930288E-26,
+-            1.7044813962636277E-25,
+-            1.9784716574832164E-24,
+-            1.8630236407866774E-23,
+-            1.4820532905097742E-22,
+-            1.0241963854632831E-21,
+-            6.275077366673128E-21,
+-            3.461808994532493E-20,
+-            1.7407124684715706E-19,
+-            8.056687953553974E-19,
+-            3.460193945992071E-18,
+-            1.3883326374011525E-17,
+-            5.233894983671116E-17,
+-            1.8630791465263745E-16,
+-            6.288759227922111E-16,
+-            2.0204433920597856E-15,
+-            6.198768938576155E-15,
+-            1.821419346860626E-14,
+-            5.139176445538471E-14,
+-            1.3956427429045787E-13,
+-            3.655705706448139E-13,
+-            9.253753324779779E-13,
+-            2.267636001476696E-12,
+-            5.3880460095836855E-12,
+-            1.2431632654852931E-11
+-        };
+-
+-        GaussianFitter fitter = new GaussianFitter(new LevenbergMarquardtOptimizer());
+-        for (int i = 0; i < data.length; i++) {
+-            fitter.addObservedPoint(i, data[i]);
+-        }
+-        final double[] p = fitter.fit();
+-
+-        Assert.assertEquals(53.1572792, p[1], 1e-7);
+-        Assert.assertEquals(5.75214622, p[2], 1e-8);
++        assertEquals(3514384.729342235, parameters[0], 1e-4);
++        assertEquals(4.054970307455625, parameters[1], 1e-4);
++        assertEquals(0.015029412832160017, parameters[2], 1e-4);
+     }
+     
+     /**

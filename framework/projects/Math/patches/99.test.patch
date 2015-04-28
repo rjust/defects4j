@@ -1,0 +1,23 @@
+diff --git a/org/apache/commons/math/analysis/BrentSolverTest.java b/org/apache/commons/math/analysis/BrentSolverTest.java
+index e163e59..ea1ba68 100644
+--- a/org/apache/commons/math/analysis/BrentSolverTest.java
++++ b/org/apache/commons/math/analysis/BrentSolverTest.java
+@@ -268,18 +268,6 @@ public final class BrentSolverTest extends TestCase {
+         assertEquals(result, 1.0, 1E-6);
+     }
+     
+-    public void testRootEndpoints() throws Exception {
+-        UnivariateRealFunction f = new SinFunction();
+-        UnivariateRealSolver solver = new BrentSolver(f);
+-        
+-        // endpoint is root
+-        double result = solver.solve(Math.PI, 4);
+-        assertEquals(result, Math.PI, solver.getAbsoluteAccuracy());
+-
+-        result = solver.solve(3, Math.PI);
+-        assertEquals(result, Math.PI, solver.getAbsoluteAccuracy());
+-    }
+-    
+     public void testBadEndpoints() throws Exception {
+         UnivariateRealFunction f = new SinFunction();
+         UnivariateRealSolver solver = new BrentSolver(f);

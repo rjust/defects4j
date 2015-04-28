@@ -1,0 +1,56 @@
+diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+index ce94573..bf46057 100644
+--- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+@@ -1364,7 +1364,7 @@ public final class JsDocInfoParser {
+     int lineno = stream.getLineno();
+     int charno = stream.getCharno() + 1;
+ 
+-    String line = getRemainingJSDocLine().trim();
++    String line = stream.getRemainingJSDocLine().trim();
+ 
+     // Record the textual description.
+     if (line.length() > 0) {
+@@ -1420,7 +1420,7 @@ public final class JsDocInfoParser {
+     int startCharno = stream.getCharno() + 1;
+ 
+     // Read the content from the first line.
+-    String line = getRemainingJSDocLine();
++    String line = stream.getRemainingJSDocLine();
+     if (option != WhitespaceOption.PRESERVE) {
+       line = line.trim();
+     }
+@@ -1509,7 +1509,7 @@ public final class JsDocInfoParser {
+ 
+           builder.append(toString(token));
+ 
+-          line = getRemainingJSDocLine();
++          line = stream.getRemainingJSDocLine();
+ 
+           if (option != WhitespaceOption.PRESERVE) {
+             line = trimEnd(line);
+@@ -1572,7 +1572,7 @@ public final class JsDocInfoParser {
+ 
+           builder.append(toString(token));
+ 
+-          String line = getRemainingJSDocLine();
++          String line = stream.getRemainingJSDocLine();
+           line = trimEnd(line);
+           builder.append(line);
+           token = next();
+@@ -2394,15 +2394,6 @@ public final class JsDocInfoParser {
+   }
+ 
+   /**
+-   * Returns the remainder of the line.
+-   */
+-  private String getRemainingJSDocLine() {
+-    String result = stream.getRemainingJSDocLine();
+-    unreadToken = NO_UNREAD_TOKEN;
+-    return result;
+-  }
+-
+-  /**
+    * Determines whether the parser has been populated with docinfo with a
+    * fileoverview tag.
+    */

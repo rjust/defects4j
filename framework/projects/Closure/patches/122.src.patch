@@ -1,0 +1,16 @@
+diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+index 936af02..c916cf8 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -249,8 +248,9 @@ class IRFactory {
+    * Check to see if the given block comment looks like it should be JSDoc.
+    */
+   private void handleBlockComment(Comment comment) {
+-    Pattern p = Pattern.compile("(/|(\n[ \t]*))\\*[ \t]*@[a-zA-Z]");
+-    if (p.matcher(comment.getValue()).find()) {
++    String value = comment.getValue();
++    if (value.indexOf("/* @") != -1 ||
++        value.indexOf("\n * @") != -1) {
+       errorReporter.warning(
+           SUSPICIOUS_COMMENT_WARNING,
+           sourceName,

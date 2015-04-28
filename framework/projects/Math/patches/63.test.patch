@@ -1,0 +1,26 @@
+diff --git a/org/apache/commons/math/util/MathUtilsTest.java b/org/apache/commons/math/util/MathUtilsTest.java
+index fa42e84..a2dc70b 100644
+--- a/org/apache/commons/math/util/MathUtilsTest.java
++++ b/org/apache/commons/math/util/MathUtilsTest.java
+@@ -447,18 +447,16 @@ public final class MathUtilsTest extends TestCase {
+         assertFalse(MathUtils.equals(new double[] { 1d }, new double[0]));
+         assertTrue(MathUtils.equals(new double[] { 1d }, new double[] { 1d }));
+         assertTrue(MathUtils.equals(new double[] {
+-                                      Double.POSITIVE_INFINITY,
++                                      Double.NaN, Double.POSITIVE_INFINITY,
+                                       Double.NEGATIVE_INFINITY, 1d, 0d
+                                     }, new double[] {
+-                                      Double.POSITIVE_INFINITY,
++                                      Double.NaN, Double.POSITIVE_INFINITY,
+                                       Double.NEGATIVE_INFINITY, 1d, 0d
+                                     }));
+-        assertFalse(MathUtils.equals(new double[] { Double.NaN },
+-                                     new double[] { Double.NaN }));
+         assertFalse(MathUtils.equals(new double[] { Double.POSITIVE_INFINITY },
+                                      new double[] { Double.NEGATIVE_INFINITY }));
+         assertFalse(MathUtils.equals(new double[] { 1d },
+-                                     new double[] { FastMath.nextAfter(FastMath.nextAfter(1d, 2d), 2d) }));
++                                     new double[] { FastMath.nextAfter(1d, 2d) }));
+ 
+     }
+ 

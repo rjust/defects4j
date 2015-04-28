@@ -1,0 +1,173 @@
+diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizerTest.java b/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizerTest.java
+index aec59bc..6be5da4 100644
+--- a/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizerTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizerTest.java
+@@ -136,9 +136,6 @@ public class NonLinearConjugateGradientOptimizerTest {
+                                  new InitialGuess(new double[] { 0 }));
+         Assert.assertEquals(1.5, optimum.getPoint()[0], 1.0e-10);
+         Assert.assertEquals(0.0, optimum.getValue(), 1.0e-10);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizerTest.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizerTest.java
+index 0b4cd6a..f7a548f 100644
+--- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizerTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizerTest.java
+@@ -49,7 +49,7 @@ public class CMAESOptimizerTest {
+ 
+     static final int DIM = 13;
+     static final int LAMBDA = 4 + (int)(3.*Math.log(DIM));
+-
++   
+     @Test(expected = NumberIsTooLargeException.class)
+     public void testInitOutofbounds1() {
+         double[] startPoint = point(DIM,3);
+@@ -510,8 +510,6 @@ public class CMAESOptimizerTest {
+         for (int i = 0; i < dim; i++) {
+             Assert.assertEquals(expected.getPoint()[i], result.getPoint()[i], pointTol);
+         }
+-
+-        Assert.assertTrue(optim.getIterations() > 0);
+     }
+ 
+     private static double[] point(int n, double value) {
+diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizerTest.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizerTest.java
+index 708f77b..c76c7c9 100644
+--- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizerTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizerTest.java
+@@ -262,7 +262,5 @@ public class PowellOptimizerTest {
+             Assert.assertEquals("found[" + i + "]=" + point[i] + " value=" + result.getValue(),
+                                 optimum[i], point[i], pointTol);
+         }
+-
+-        Assert.assertTrue(optim.getIterations() > 0);
+     }
+ }
+diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerMultiDirectionalTest.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerMultiDirectionalTest.java
+index 931c226..c9e9009 100644
+--- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerMultiDirectionalTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerMultiDirectionalTest.java
+@@ -61,9 +61,6 @@ public class SimplexOptimizerMultiDirectionalTest {
+         Assert.assertEquals(fourExtrema.valueXmYp, optimum.getValue(), 8e-13);
+         Assert.assertTrue(optimizer.getEvaluations() > 120);
+         Assert.assertTrue(optimizer.getEvaluations() < 150);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -82,9 +79,6 @@ public class SimplexOptimizerMultiDirectionalTest {
+         Assert.assertEquals(fourExtrema.valueXpYm, optimum.getValue(), 2e-12);
+         Assert.assertTrue(optimizer.getEvaluations() > 120);
+         Assert.assertTrue(optimizer.getEvaluations() < 150);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -103,9 +97,6 @@ public class SimplexOptimizerMultiDirectionalTest {
+         Assert.assertEquals(fourExtrema.valueXmYm, optimum.getValue(), 2e-14);
+         Assert.assertTrue(optimizer.getEvaluations() > 120);
+         Assert.assertTrue(optimizer.getEvaluations() < 150);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -124,9 +115,6 @@ public class SimplexOptimizerMultiDirectionalTest {
+         Assert.assertEquals(fourExtrema.valueXpYp, optimum.getValue(), 2e-12);
+         Assert.assertTrue(optimizer.getEvaluations() > 180);
+         Assert.assertTrue(optimizer.getEvaluations() < 220);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerNelderMeadTest.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerNelderMeadTest.java
+index d51025d..fdc187a 100644
+--- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerNelderMeadTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizerNelderMeadTest.java
+@@ -66,9 +66,6 @@ public class SimplexOptimizerNelderMeadTest {
+         Assert.assertEquals(fourExtrema.valueXmYp, optimum.getValue(), 6e-12);
+         Assert.assertTrue(optimizer.getEvaluations() > 60);
+         Assert.assertTrue(optimizer.getEvaluations() < 90);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -87,9 +84,6 @@ public class SimplexOptimizerNelderMeadTest {
+         Assert.assertEquals(fourExtrema.valueXpYm, optimum.getValue(), 1e-11);
+         Assert.assertTrue(optimizer.getEvaluations() > 60);
+         Assert.assertTrue(optimizer.getEvaluations() < 90);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -108,9 +102,6 @@ public class SimplexOptimizerNelderMeadTest {
+         Assert.assertEquals(fourExtrema.valueXmYm, optimum.getValue(), 3e-12);
+         Assert.assertTrue(optimizer.getEvaluations() > 60);
+         Assert.assertTrue(optimizer.getEvaluations() < 90);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+@@ -129,9 +120,6 @@ public class SimplexOptimizerNelderMeadTest {
+         Assert.assertEquals(fourExtrema.valueXpYp, optimum.getValue(), 7e-12);
+         Assert.assertTrue(optimizer.getEvaluations() > 60);
+         Assert.assertTrue(optimizer.getEvaluations() < 90);
+-
+-        // Check that the number of iterations is updated (MATH-949).
+-        Assert.assertTrue(optimizer.getIterations() > 0);
+     }
+ 
+     @Test
+diff --git a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizerAbstractTest.java b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizerAbstractTest.java
+index 942b472..cc86ae0 100644
+--- a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizerAbstractTest.java
++++ b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizerAbstractTest.java
+@@ -106,32 +106,6 @@ public abstract class AbstractLeastSquaresOptimizerAbstractTest {
+     public abstract AbstractLeastSquaresOptimizer createOptimizer();
+ 
+     @Test
+-    public void testGetIterations() {
+-        AbstractLeastSquaresOptimizer optim = createOptimizer();
+-        optim.optimize(new MaxEval(100), new Target(new double[] { 1 }),
+-                       new Weight(new double[] { 1 }),
+-                       new InitialGuess(new double[] { 3 }),
+-                       new ModelFunction(new MultivariateVectorFunction() {
+-                               @Override
+-                               public double[] value(double[] point) {
+-                                   return new double[] {
+-                                       FastMath.pow(point[0], 4)
+-                                   };
+-                               }
+-                           }),
+-                       new ModelFunctionJacobian(new MultivariateMatrixFunction() {
+-                               @Override
+-                               public double[][] value(double[] point) {
+-                                   return new double[][] {
+-                                       { 0.25 * FastMath.pow(point[0], 3) }
+-                                   };
+-                               }
+-                           }));
+-
+-        Assert.assertTrue(optim.getIterations() > 0);
+-    }
+-
+-    @Test
+     public void testTrivial() {
+         LinearProblem problem
+             = new LinearProblem(new double[][] { { 2 } }, new double[] { 3 });

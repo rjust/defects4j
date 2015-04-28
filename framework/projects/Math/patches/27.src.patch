@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math3/fraction/Fraction.java b/org/apache/commons/math3/fraction/Fraction.java
+index f81ff0a..f84218e 100644
+--- a/org/apache/commons/math3/fraction/Fraction.java
++++ b/org/apache/commons/math3/fraction/Fraction.java
+@@ -594,7 +594,7 @@ public class Fraction
+      * @return the fraction percentage as a <tt>double</tt>.
+      */
+     public double percentageValue() {
+-        return 100 * doubleValue();
++        return multiply(100).doubleValue();
+     }
+ 
+     /**

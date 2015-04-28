@@ -1,0 +1,17 @@
+diff --git a/org/apache/commons/math/analysis/solvers/BrentSolverTest.java b/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
+index 5874871..8fc47f0 100644
+--- a/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
++++ b/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
+@@ -329,12 +329,6 @@ public final class BrentSolverTest extends TestCase {
+         } catch (IllegalArgumentException ex) {
+             // expected
+         }
+-        try {  // no bracket
+-            solver.solve(f, 1, 1.5, 1.2);
+-            fail("Expecting IllegalArgumentException - non-bracketing");
+-        } catch (IllegalArgumentException ex) {
+-            // expected
+-        }
+     }
+ 
+     public void testInitialGuess() throws MathException {

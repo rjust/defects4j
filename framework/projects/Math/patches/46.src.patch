@@ -1,0 +1,24 @@
+diff --git a/org/apache/commons/math/complex/Complex.java b/org/apache/commons/math/complex/Complex.java
+index dd0b00a..137765c 100644
+--- a/org/apache/commons/math/complex/Complex.java
++++ b/org/apache/commons/math/complex/Complex.java
+@@ -256,8 +256,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+         }
+ 
+         if (divisor.isZero) {
+-            // return isZero ? NaN : INF; // See MATH-657
+-            return NaN;
++            return isZero ? NaN : INF;
+         }
+ 
+         if (divisor.isInfinite() && !isInfinite()) {
+@@ -293,8 +292,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+             return NaN;
+         }
+         if (divisor == 0d) {
+-            // return isZero ? NaN : INF; // See MATH-657
+-            return NaN;
++            return isZero ? NaN : INF;
+         }
+         if (Double.isInfinite(divisor)) {
+             return !isInfinite() ? ZERO : NaN;

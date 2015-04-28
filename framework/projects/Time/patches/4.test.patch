@@ -1,0 +1,40 @@
+diff --git a/org/joda/time/TestPartial_Basics.java b/org/joda/time/TestPartial_Basics.java
+index ceaa150..715d2c1 100644
+--- a/org/joda/time/TestPartial_Basics.java
++++ b/org/joda/time/TestPartial_Basics.java
+@@ -357,15 +357,6 @@ public class TestPartial_Basics extends TestCase {
+         check(test, 10, 20);
+     }
+ 
+-    public void testWith3() {
+-        Partial test = createHourMinPartial();
+-        try {
+-            test.with(DateTimeFieldType.clockhourOfDay(), 6);
+-            fail();
+-        } catch (IllegalArgumentException ex) {}
+-        check(test, 10, 20);
+-    }
+-
+     public void testWith3a() {
+         Partial test = createHourMinPartial();
+         Partial result = test.with(DateTimeFieldType.secondOfMinute(), 15);
+diff --git a/org/joda/time/TestPartial_Constructors.java b/org/joda/time/TestPartial_Constructors.java
+index 9a91bfa..f302fa5 100644
+--- a/org/joda/time/TestPartial_Constructors.java
++++ b/org/joda/time/TestPartial_Constructors.java
+@@ -345,15 +345,6 @@ public class TestPartial_Constructors extends TestCase {
+         } catch (IllegalArgumentException ex) {
+             assertMessageContains(ex, "must not", "duplicate");
+         }
+-        
+-        types = new DateTimeFieldType[] {
+-            DateTimeFieldType.dayOfMonth(), DateTimeFieldType.clockhourOfDay(), DateTimeFieldType.hourOfDay() };
+-        try {
+-            new Partial(types, values);
+-            fail();
+-        } catch (IllegalArgumentException ex) {
+-            assertMessageContains(ex, "must not", "duplicate");
+-        }
+     }
+ 
+     /**

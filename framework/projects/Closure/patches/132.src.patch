@@ -1,0 +1,15 @@
+diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+index 520c592..ae568e8 100644
+--- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
++++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+@@ -779,9 +779,7 @@ class PeepholeSubstituteAlternateSyntax
+               // evaluates LHS before cond]
+               // NOTE - there are some circumstances where we can
+               // proceed even if there are side effects...
+-              !mayEffectMutableState(lhs) &&
+-              (!mayHaveSideEffects(cond) ||
+-                  (thenOp.isAssign() && thenOp.getFirstChild().isName()))) {
++              !mayEffectMutableState(lhs)) {
+ 
+             n.removeChild(cond);
+             Node assignName = thenOp.removeFirstChild();

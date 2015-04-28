@@ -1,0 +1,90 @@
+diff --git a/R/chiSquareTestCases b/R/chiSquareTestCases
+index 747b5e8..bdc7f2d 100644
+--- a/R/chiSquareTestCases
++++ b/R/chiSquareTestCases
+@@ -49,9 +49,8 @@ verifyTable <- function(counts, expectedP, expectedStat, tol, desc) {
+ 
+ verifyHomogeneity <- function(obs, exp, expectedP, expectedStat, 
+   tol, desc) {
+-    results <- chisq.test(obs,p=exp,rescale.p=TRUE)
+-    chi <- results$statistic
+-    p <- results$p.value
++    chi <- sum((obs - exp)^2/exp)
++    p <- 1 - pchisq(sum((obs - exp)^2/exp), length(obs) - 1)
+     if (assertEquals(expectedP, p, tol, "p-value")) {
+         displayPadded(c(desc, " p-value test"), SUCCEEDED, WIDTH)
+     } else {
+@@ -74,14 +73,14 @@ verifyHomogeneity(observed, expected, 0.904837418036, 0.2, tol,
+ 
+ observed <- c(500, 623, 72, 70, 31)
+ expected <- c(485, 541, 82, 61, 37)
+-verifyHomogeneity(observed, expected, 0.06051952647453607, 9.023307936427388,
+-   tol, "testChiSquare2")
++verifyHomogeneity(observed, expected,  0.002512096, 16.4131070362, tol,
++   "testChiSquare2")
+ 
+ observed <- c(2372383, 584222, 257170, 17750155, 7903832, 489265,
+               209628, 393899)
+ expected <- c(3389119.5, 649136.6, 285745.4, 25357364.76, 11291189.78,
+               543628.0, 232921.0, 437665.75)
+-verifyHomogeneity(observed, expected, 0, 114875.90421929007, tol,
++verifyHomogeneity(observed, expected, 0, 3624883.342907764, tol,
+    "testChiSquareLargeTestStatistic")
+ 
+ counts <- matrix(c(40, 22, 43, 91, 21, 28, 60, 10, 22), nc = 3);
+diff --git a/org/apache/commons/math/stat/inference/ChiSquareTestTest.java b/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
+index 98a9e93..e043c9d 100644
+--- a/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
++++ b/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
+@@ -57,10 +57,10 @@ public class ChiSquareTestTest extends TestCase {
+         
+         long[] observed1 = { 500, 623, 72, 70, 31 };
+         double[] expected1 = { 485, 541, 82, 61, 37 };
+-        assertEquals( "chi-square test statistic", 9.023307936427388, testStatistic.chiSquare(expected1, observed1), 1E-10);
+-        assertEquals("chi-square p-value", 0.06051952647453607, testStatistic.chiSquareTest(expected1, observed1), 1E-9);
+-        assertTrue("chi-square test reject", testStatistic.chiSquareTest(expected1, observed1, 0.08));
+-        assertTrue("chi-square test accept", !testStatistic.chiSquareTest(expected1, observed1, 0.05));
++        assertEquals( "chi-square test statistic", 16.4131070362, testStatistic.chiSquare(expected1, observed1), 1E-10);
++        assertEquals("chi-square p-value", 0.002512096, testStatistic.chiSquareTest(expected1, observed1), 1E-9);
++        assertTrue("chi-square test reject", testStatistic.chiSquareTest(expected1, observed1, 0.003));
++        assertTrue("chi-square test accept", !testStatistic.chiSquareTest(expected1, observed1, 0.002));
+ 
+         try {
+             testStatistic.chiSquareTest(expected1, observed1, 95);
+@@ -181,7 +181,7 @@ public class ChiSquareTestTest extends TestCase {
+         double cst = csti.chiSquareTest(exp, obs); 
+         assertEquals("chi-square p-value", 0.0, cst, 1E-3);
+         assertEquals( "chi-square test statistic", 
+-                114875.90421929007, testStatistic.chiSquare(exp, obs), 1E-9);
++                3624883.342907764, testStatistic.chiSquare(exp, obs), 1E-9);
+     }
+     
+     /** Contingency table containing zeros - PR # 32531 */
+diff --git a/org/apache/commons/math/stat/inference/TestUtilsTest.java b/org/apache/commons/math/stat/inference/TestUtilsTest.java
+index f2ef73f..e0f16f7 100644
+--- a/org/apache/commons/math/stat/inference/TestUtilsTest.java
++++ b/org/apache/commons/math/stat/inference/TestUtilsTest.java
+@@ -55,10 +55,10 @@ public class TestUtilsTest extends TestCase {
+         
+         long[] observed1 = { 500, 623, 72, 70, 31 };
+         double[] expected1 = { 485, 541, 82, 61, 37 };
+-        assertEquals( "chi-square test statistic", 9.023307936427388, TestUtils.chiSquare(expected1, observed1), 1E-10);
+-        assertEquals("chi-square p-value", 0.06051952647453607, TestUtils.chiSquareTest(expected1, observed1), 1E-9);
+-        assertTrue("chi-square test reject", TestUtils.chiSquareTest(expected1, observed1, 0.07));
+-        assertTrue("chi-square test accept", !TestUtils.chiSquareTest(expected1, observed1, 0.05));
++        assertEquals( "chi-square test statistic", 16.4131070362, TestUtils.chiSquare(expected1, observed1), 1E-10);
++        assertEquals("chi-square p-value", 0.002512096, TestUtils.chiSquareTest(expected1, observed1), 1E-9);
++        assertTrue("chi-square test reject", TestUtils.chiSquareTest(expected1, observed1, 0.003));
++        assertTrue("chi-square test accept", !TestUtils.chiSquareTest(expected1, observed1, 0.002));
+ 
+         try {
+             TestUtils.chiSquareTest(expected1, observed1, 95);
+@@ -179,7 +179,7 @@ public class TestUtilsTest extends TestCase {
+         double cst = csti.chiSquareTest(exp, obs); 
+         assertEquals("chi-square p-value", 0.0, cst, 1E-3);
+         assertEquals( "chi-square test statistic", 
+-                114875.90421929007, TestUtils.chiSquare(exp, obs), 1E-9);
++                3624883.342907764, TestUtils.chiSquare(exp, obs), 1E-9);
+     }
+     
+     /** Contingency table containing zeros - PR # 32531 */

@@ -1,0 +1,74 @@
+diff --git a/com/google/javascript/jscomp/CodeConsumer.java b/com/google/javascript/jscomp/CodeConsumer.java
+index 5b5ab44..3522e89 100644
+--- a/com/google/javascript/jscomp/CodeConsumer.java
++++ b/com/google/javascript/jscomp/CodeConsumer.java
+@@ -257,19 +257,15 @@ abstract class CodeConsumer {
+         }
+       }
+       if (exp > 2) {
+-        addConstant(Long.toString(mantissa) + "E" + Integer.toString(exp));
++        add(Long.toString(mantissa) + "E" + Integer.toString(exp));
+       } else {
+-        addConstant(Long.toString(value));
++        add(Long.toString(value));
+       }
+     } else {
+-      addConstant(String.valueOf(x));
++      add(String.valueOf(x));
+     }
+   }
+ 
+-  void addConstant(String newcode) {
+-    add(newcode);
+-  }
+-
+   static boolean isNegativeZero(double x) {
+     return x == 0.0 && Math.copySign(1, x) == -1.0;
+   }
+diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+index e793ddf..da05c4f 100644
+--- a/com/google/javascript/jscomp/CodeGenerator.java
++++ b/com/google/javascript/jscomp/CodeGenerator.java
+@@ -550,7 +550,7 @@ class CodeGenerator {
+ 
+       case Token.NULL:
+         Preconditions.checkState(childCount == 0);
+-        cc.addConstant("null");
++        add("null");
+         break;
+ 
+       case Token.THIS:
+@@ -560,12 +560,12 @@ class CodeGenerator {
+ 
+       case Token.FALSE:
+         Preconditions.checkState(childCount == 0);
+-        cc.addConstant("false");
++        add("false");
+         break;
+ 
+       case Token.TRUE:
+         Preconditions.checkState(childCount == 0);
+-        cc.addConstant("true");
++        add("true");
+         break;
+ 
+       case Token.CONTINUE:
+diff --git a/com/google/javascript/jscomp/InlineCostEstimator.java b/com/google/javascript/jscomp/InlineCostEstimator.java
+index 65694ab..9d0dde7 100644
+--- a/com/google/javascript/jscomp/InlineCostEstimator.java
++++ b/com/google/javascript/jscomp/InlineCostEstimator.java
+@@ -94,14 +94,5 @@ class InlineCostEstimator {
+     void addIdentifier(String identifier) {
+       add(ESTIMATED_IDENTIFIER);
+     }
+-
+-    /**
+-     * Constants (true, false, null) are considered basically free,
+-     * because it's likely that they will get folded when we're done.
+-     */
+-    @Override
+-    void addConstant(String newcode) {
+-      add("0");
+-    }
+   }
+ }

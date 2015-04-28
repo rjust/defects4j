@@ -1,0 +1,52 @@
+diff --git a/com/google/javascript/jscomp/FunctionRewriter.java b/com/google/javascript/jscomp/FunctionRewriter.java
+index 9d8ebc3..0166c6e 100644
+--- a/com/google/javascript/jscomp/FunctionRewriter.java
++++ b/com/google/javascript/jscomp/FunctionRewriter.java
+@@ -113,11 +113,6 @@ class FunctionRewriter implements CompilerPass {
+     return (root != null) ? root.removeFirstChild() : null;
+   }
+ 
+-  private static boolean isReduceableFunctionExpression(Node n) {
+-    return NodeUtil.isFunctionExpression(n)
+-        && !NodeUtil.isGetOrSetKey(n.getParent());
+-  }
+-
+   /**
+    * Information needed to apply a reduction.
+    */
+@@ -305,7 +300,7 @@ class FunctionRewriter implements CompilerPass {
+ 
+     @Override
+     public Node reduce(Node node) {
+-      if (!isReduceableFunctionExpression(node)) {
++      if (!NodeUtil.isFunctionExpression(node)) {
+         return node;
+       }
+ 
+@@ -365,7 +360,7 @@ class FunctionRewriter implements CompilerPass {
+ 
+     @Override
+     public Node reduce(Node node) {
+-      if (!isReduceableFunctionExpression(node)) {
++      if (!NodeUtil.isFunctionExpression(node)) {
+         return node;
+       }
+ 
+@@ -419,7 +414,7 @@ class FunctionRewriter implements CompilerPass {
+ 
+     @Override
+     public Node reduce(Node node) {
+-      if (!isReduceableFunctionExpression(node)) {
++      if (!NodeUtil.isFunctionExpression(node)) {
+         return node;
+       }
+ 
+@@ -481,7 +476,7 @@ class FunctionRewriter implements CompilerPass {
+ 
+     @Override
+     public Node reduce(Node node) {
+-      if (!isReduceableFunctionExpression(node)) {
++      if (!NodeUtil.isFunctionExpression(node)) {
+         return node;
+       }
+ 

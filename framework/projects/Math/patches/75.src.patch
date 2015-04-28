@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math/stat/Frequency.java b/org/apache/commons/math/stat/Frequency.java
+index 68c8bf2..c45d728 100644
+--- a/org/apache/commons/math/stat/Frequency.java
++++ b/org/apache/commons/math/stat/Frequency.java
+@@ -300,7 +300,7 @@ public class Frequency implements Serializable {
+      */
+     @Deprecated
+     public double getPct(Object v) {
+-        return getPct((Comparable<?>) v);
++        return getCumPct((Comparable<?>) v);
+     }
+ 
+     /**

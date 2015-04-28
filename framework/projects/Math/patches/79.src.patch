@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
+index ad77a56..46368dc 100644
+--- a/org/apache/commons/math/util/MathUtils.java
++++ b/org/apache/commons/math/util/MathUtils.java
+@@ -1621,9 +1621,9 @@ public final class MathUtils {
+      * @return the L<sub>2</sub> distance between the two points
+      */
+     public static double distance(int[] p1, int[] p2) {
+-      double sum = 0;
++      int sum = 0;
+       for (int i = 0; i < p1.length; i++) {
+-          final double dp = p1[i] - p2[i];
++          final int dp = p1[i] - p2[i];
+           sum += dp * dp;
+       }
+       return Math.sqrt(sum);

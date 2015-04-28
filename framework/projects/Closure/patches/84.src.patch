@@ -1,0 +1,57 @@
+diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+index d2a4e5d..3568fc5 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -337,15 +337,7 @@ public class IRFactory {
+ 
+     @Override
+     Node processAssignment(Assignment assignmentNode) {
+-      Node assign = processInfixExpression(assignmentNode);
+-      Node target = assign.getFirstChild();
+-      if (!validAssignmentTarget(target)) {
+-        errorReporter.error(
+-          "invalid assignment target",
+-          sourceName,
+-          target.getLineno(), "", 0);
+-      }
+-      return assign;
++      return processInfixExpression(assignmentNode);
+     }
+ 
+     @Override
+@@ -801,18 +793,6 @@ public class IRFactory {
+         operand.setDouble(-operand.getDouble());
+         return operand;
+       } else {
+-        if (type == Token.INC || type == Token.DEC) {
+-          if (!validAssignmentTarget(operand)) {
+-            String msg = (type == Token.INC)
+-                ? "invalid increment target"
+-                : "invalid decrement target";
+-            errorReporter.error(
+-              msg,
+-              sourceName,
+-              operand.getLineno(), "", 0);
+-          }
+-        }
+-
+         Node node = newNode(type, operand);
+         if (exprNode.isPostfix()) {
+           node.putBooleanProp(Node.INCRDECR_PROP, true);
+@@ -821,16 +801,6 @@ public class IRFactory {
+       }
+     }
+ 
+-    private boolean validAssignmentTarget(Node target) {
+-      switch (target.getType()) {
+-        case Token.NAME:
+-        case Token.GETPROP:
+-        case Token.GETELEM:
+-          return true;
+-      }
+-      return false;
+-    }
+-
+     @Override
+     Node processVariableDeclaration(VariableDeclaration declarationNode) {
+       Node node = newNode(Token.VAR);

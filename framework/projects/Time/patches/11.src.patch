@@ -1,0 +1,20 @@
+diff --git a/org/joda/time/tz/ZoneInfoCompiler.java b/org/joda/time/tz/ZoneInfoCompiler.java
+index 64da5ea..6efe071 100644
+--- a/org/joda/time/tz/ZoneInfoCompiler.java
++++ b/org/joda/time/tz/ZoneInfoCompiler.java
+@@ -65,11 +65,10 @@ public class ZoneInfoCompiler {
+ 
+     static Chronology cLenientISO;
+ 
+-    static ThreadLocal<Boolean> cVerbose = new ThreadLocal<Boolean>() {
+-        protected Boolean initialValue() {
+-            return Boolean.FALSE;
+-        }
+-    };
++    static ThreadLocal<Boolean> cVerbose = new ThreadLocal<Boolean>();
++    static {
++        cVerbose.set(Boolean.FALSE);
++    }
+ 
+     /**
+      * Gets a flag indicating that verbose logging is required.

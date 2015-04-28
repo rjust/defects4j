@@ -1,0 +1,15 @@
+diff --git a/org/apache/commons/lang3/RandomStringUtils.java b/org/apache/commons/lang3/RandomStringUtils.java
+index 9dfee22..a799057 100644
+--- a/org/apache/commons/lang3/RandomStringUtils.java
++++ b/org/apache/commons/lang3/RandomStringUtils.java
+@@ -242,10 +242,6 @@ public class RandomStringUtils {
+                     start = ' ';                
+                 }
+             }
+-        } else {
+-            if (end <= start) {
+-                throw new IllegalArgumentException("Parameter end (" + end + ") must be greater than start (" + start + ")");
+-            }
+         }
+ 
+         char[] buffer = new char[count];

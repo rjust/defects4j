@@ -1,0 +1,16 @@
+diff --git a/com/google/javascript/jscomp/type/ClosureReverseAbstractInterpreter.java b/com/google/javascript/jscomp/type/ClosureReverseAbstractInterpreter.java
+index e3c599d..8e69edf 100644
+--- a/com/google/javascript/jscomp/type/ClosureReverseAbstractInterpreter.java
++++ b/com/google/javascript/jscomp/type/ClosureReverseAbstractInterpreter.java
+@@ -51,8 +51,9 @@ public class ClosureReverseAbstractInterpreter
+       new RestrictByTrueTypeOfResultVisitor() {
+         @Override
+         protected JSType caseTopType(JSType topType) {
+-          return topType.isAllType() ?
+-              getNativeType(ARRAY_TYPE) : topType;
++          // Ideally, we would like to return any subtype of Array.
++          // Since that's not possible, we don't restrict the type.
++          return topType;
+         }
+ 
+         @Override

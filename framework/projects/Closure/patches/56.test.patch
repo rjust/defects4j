@@ -1,0 +1,62 @@
+diff --git a/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java b/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
+index 2d988a3..e1efc22 100644
+--- a/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
++++ b/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
+@@ -29,12 +29,10 @@ public class JSCompilerSourceExcerptProviderTest extends TestCase {
+         "foo:first line\nfoo:second line\nfoo:third line\n");
+     JSSourceFile bar = JSSourceFile.fromCode("bar",
+         "bar:first line\nbar:second line\nbar:third line\nbar:fourth line\n");
+-    JSSourceFile foo2 = JSSourceFile.fromCode("foo2",
+-        "foo2:first line\nfoo2:second line\nfoo2:third line");
+     Compiler compiler = new Compiler();
+     CompilerOptions options = new CompilerOptions();
+     compiler.init(
+-        new JSSourceFile[] {}, new JSSourceFile[] {foo, bar, foo2}, options);
++        new JSSourceFile[] {}, new JSSourceFile[] {foo, bar}, options);
+     this.provider = compiler;
+   }
+ 
+@@ -61,13 +59,6 @@ public class JSCompilerSourceExcerptProviderTest extends TestCase {
+     assertEquals(null, provider.getSourceLine("bar", 5));
+   }
+ 
+-  public void testExceptNoNewLine() throws Exception {
+-    assertEquals("foo2:first line", provider.getSourceLine("foo2", 1));
+-    assertEquals("foo2:second line", provider.getSourceLine("foo2", 2));
+-    assertEquals("foo2:third line", provider.getSourceLine("foo2", 3));
+-    assertEquals(null, provider.getSourceLine("foo2", 4));
+-  }
+-
+   public void testExcerptRegion() throws Exception {
+     assertRegionWellFormed("foo", 1);
+     assertRegionWellFormed("foo", 2);
+diff --git a/com/google/javascript/jscomp/JsMessageExtractorTest.java b/com/google/javascript/jscomp/JsMessageExtractorTest.java
+index c88b37d..89a5d0c 100644
+--- a/com/google/javascript/jscomp/JsMessageExtractorTest.java
++++ b/com/google/javascript/jscomp/JsMessageExtractorTest.java
+@@ -56,10 +56,8 @@ public class JsMessageExtractorTest extends TestCase {
+       extractMessage("if (true) {}}");
+       fail("Expected exception");
+     } catch (RuntimeException e) {
+-      assertTrue(e.getMessage().contains("JSCompiler errors\n"));
+-      assertTrue(e.getMessage().contains(
+-          "testcode:1: ERROR - Parse error. syntax error\n"));
+-      assertTrue(e.getMessage().contains("if (true) {}}\n"));
++      assertEquals("JSCompiler errors\n" +
++          "testcode:1: ERROR - Parse error. syntax error\n", e.getMessage());
+     }
+   }
+ 
+@@ -68,10 +66,8 @@ public class JsMessageExtractorTest extends TestCase {
+       extractMessage("", "if (true) {}}");
+       fail("Expected exception");
+     } catch (RuntimeException e) {
+-      assertTrue(e.getMessage().contains("JSCompiler errors\n"));
+-      assertTrue(e.getMessage().contains(
+-          "testcode:2: ERROR - Parse error. syntax error\n"));
+-      assertTrue(e.getMessage().contains("if (true) {}}\n"));
++      assertEquals("JSCompiler errors\n" +
++          "testcode:2: ERROR - Parse error. syntax error\n", e.getMessage());
+     }
+   }
+ 

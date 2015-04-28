@@ -1,0 +1,30 @@
+diff --git a/org/apache/commons/math3/exception/util/LocalizedFormats.java b/org/apache/commons/math3/exception/util/LocalizedFormats.java
+index 04edd0b..1ca5635 100644
+--- a/org/apache/commons/math3/exception/util/LocalizedFormats.java
++++ b/org/apache/commons/math3/exception/util/LocalizedFormats.java
+@@ -344,7 +344,7 @@ public enum LocalizedFormats implements Localizable {
+     WRONG_BLOCK_LENGTH("wrong array shape (block length = {0}, expected {1})"),
+     WRONG_NUMBER_OF_POINTS("{0} points are required, got only {1}"),
+     NUMBER_OF_POINTS("number of points ({0})"), /* keep */
+-    ZERO_DENOMINATOR("denominator must be different from 0"), /* keep */
++    ZERO_DENOMINATOR("denominator must be different from 0"),
+     ZERO_DENOMINATOR_IN_FRACTION("zero denominator in fraction {0}/{1}"),
+     ZERO_FRACTION_TO_DIVIDE_BY("the fraction to divide by must not be zero: {0}/{1}"),
+     ZERO_NORM("zero norm"),
+diff --git a/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java b/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
+index c7af9ae..ebb36d3 100644
+--- a/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
++++ b/org/apache/commons/math3/optimization/fitting/HarmonicFitter.java
+@@ -320,12 +317,6 @@ public class HarmonicFitter extends CurveFitter<HarmonicOscillator.Parametric> {
+                 }
+                 a = 0.5 * (yMax - yMin);
+             } else {
+-                if (c2 == 0) {
+-                    // In some ill-conditioned cases (cf. MATH-844), the guesser
+-                    // procedure cannot produce sensible results.
+-                    throw new MathIllegalStateException(LocalizedFormats.ZERO_DENOMINATOR);
+-                }
+-
+                 a = FastMath.sqrt(c1 / c2);
+                 omega = FastMath.sqrt(c2 / c3);
+             }

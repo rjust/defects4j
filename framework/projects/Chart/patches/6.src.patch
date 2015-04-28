@@ -1,0 +1,42 @@
+Index: org/jfree/chart/util/ShapeList.java
+===================================================================
+--- org/jfree/chart/util/ShapeList.java	(revision 1166)
++++ org/jfree/chart/util/ShapeList.java	(revision 1164)
+@@ -96,27 +93,26 @@
+     /**
+      * Tests the list for equality with another object (typically also a list).
+      *
+-     * @param obj  the other object (<code>null</code> permitted).
++     * @param obj  the other object.
+      *
+      * @return A boolean.
+      */
+     public boolean equals(Object obj) {
+ 
++        if (obj == null) {
++            return false;
++        }
++
+         if (obj == this) {
+             return true;
+         }
+-        if (!(obj instanceof ShapeList)) {
+-            return false;
++
++        if (obj instanceof ShapeList) {
++            return super.equals(obj);
+         }
+-        ShapeList that = (ShapeList) obj;
+-        int listSize = size();
+-        for (int i = 0; i < listSize; i++) {
+-           if (!ShapeUtilities.equal((Shape) get(i), (Shape) that.get(i))) {
+-               return false;
+-           }
+-        }
+-        return true;
+ 
++        return false;
++
+     }
+ 
+     /**

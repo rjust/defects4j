@@ -1,0 +1,42 @@
+diff --git a/org/apache/commons/math3/genetics/ListPopulationTest.java b/org/apache/commons/math3/genetics/ListPopulationTest.java
+index 9234492..77178cc 100644
+--- a/org/apache/commons/math3/genetics/ListPopulationTest.java
++++ b/org/apache/commons/math3/genetics/ListPopulationTest.java
+@@ -18,7 +18,6 @@ package org.apache.commons.math3.genetics;
+ 
+ 
+ import java.util.ArrayList;
+-import java.util.Iterator;
+ 
+ import org.apache.commons.math3.exception.NotPositiveException;
+ import org.apache.commons.math3.exception.NumberIsTooLargeException;
+@@ -164,29 +163,6 @@ public class ListPopulationTest {
+         }
+     }
+     
+-    @Test(expected = UnsupportedOperationException.class)
+-    public void testIterator() {
+-        final ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>();
+-        chromosomes.add(new DummyBinaryChromosome(BinaryChromosome.randomBinaryRepresentation(3)));
+-        chromosomes.add(new DummyBinaryChromosome(BinaryChromosome.randomBinaryRepresentation(3)));
+-        chromosomes.add(new DummyBinaryChromosome(BinaryChromosome.randomBinaryRepresentation(3)));
+-
+-        final ListPopulation population = new ListPopulation(10) {
+-            public Population nextGeneration() {
+-                // not important
+-                return null;
+-            }
+-        };
+-
+-        population.addChromosomes(chromosomes);
+-
+-        final Iterator<Chromosome> iter = population.iterator();
+-        while (iter.hasNext()) {
+-            iter.next();
+-            iter.remove();
+-        }
+-    }
+-    
+     @Test(expected=NumberIsTooSmallException.class)
+     public void testSetPopulationLimitTooSmall() {
+         final ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome> ();

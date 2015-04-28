@@ -1,0 +1,28 @@
+diff --git a/org/apache/commons/math/fraction/FractionFormatTest.java b/org/apache/commons/math/fraction/FractionFormatTest.java
+index edfe945..eef7840 100644
+--- a/org/apache/commons/math/fraction/FractionFormatTest.java
++++ b/org/apache/commons/math/fraction/FractionFormatTest.java
+@@ -229,23 +229,6 @@ public class FractionFormatTest extends TestCase {
+         }
+     }
+     
+-    public void testParseProperInvalidMinus() {
+-        String source = "2 -2 / 3";
+-        try {
+-            Fraction c = properFormat.parse(source);
+-            fail("invalid minus in improper fraction.");
+-        } catch (ParseException ex) {
+-            // expected
+-        }
+-        source = "2 2 / -3";
+-        try {
+-            Fraction c = properFormat.parse(source);
+-            fail("invalid minus in improper fraction.");
+-        } catch (ParseException ex) {
+-            // expected
+-        }
+-    }
+-    
+     public void testNumeratorFormat() {
+     	NumberFormat old = properFormat.getNumeratorFormat();
+         NumberFormat nf = NumberFormat.getInstance();

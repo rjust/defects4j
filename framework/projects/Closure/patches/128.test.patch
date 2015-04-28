@@ -1,0 +1,15 @@
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index 7a2e8fa..826a7e1 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -1419,10 +1419,6 @@ public class CodePrinterTest extends TestCase {
+     assertPrint("var x = -0.0;", "var x=-0");
+   }
+ 
+-  public void testIssue942() {
+-    assertPrint("var x = {0: 1};", "var x={0:1}");
+-  }
+-
+   public void testIssue601() {
+     assertPrint("'\\v' == 'v'", "\"\\v\"==\"v\"");
+     assertPrint("'\\u000B' == '\\v'", "\"\\x0B\"==\"\\v\"");

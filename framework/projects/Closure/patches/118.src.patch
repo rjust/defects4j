@@ -1,0 +1,28 @@
+diff --git a/com/google/javascript/jscomp/DisambiguateProperties.java b/com/google/javascript/jscomp/DisambiguateProperties.java
+index 01293c9..5224861 100644
+--- a/com/google/javascript/jscomp/DisambiguateProperties.java
++++ b/com/google/javascript/jscomp/DisambiguateProperties.java
+@@ -488,13 +488,9 @@ class DisambiguateProperties<T> implements CompilerPass {
+      * Processes a OBJECTLIT node.
+      */
+     private void handleObjectLit(NodeTraversal t, Node n) {
+-      for (Node child = n.getFirstChild();
+-          child != null;
+-          child = child.getNext()) {
++      Node child = n.getFirstChild();
++      while (child != null) {
+         // Maybe STRING, GET, SET
+-        if (child.isQuotedString()) {
+-          continue;
+-        }
+ 
+         // We should never see a mix of numbers and strings.
+         String name = child.getString();
+@@ -512,6 +508,7 @@ class DisambiguateProperties<T> implements CompilerPass {
+                 (type == null ? "null" : type.toString()), n.toString(), ""));
+           }
+         }
++        child = child.getNext();
+       }
+     }
+ 

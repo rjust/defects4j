@@ -1,0 +1,66 @@
+diff --git a/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java b/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
+index e259233..c693b14 100644
+--- a/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
++++ b/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
+@@ -19,11 +19,6 @@ package org.apache.commons.math3.distribution;
+ 
+ import java.util.ArrayList;
+ import java.util.Collections;
+-import java.io.ByteArrayInputStream;
+-import java.io.ByteArrayOutputStream;
+-import java.io.IOException;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+ 
+ import org.apache.commons.math3.TestUtils;
+ import org.apache.commons.math3.util.FastMath;
+@@ -376,24 +371,6 @@ public abstract class RealDistributionAbstractTest {
+          
+     }
+ 
+-    @Test
+-    public void testDistributionClone()
+-        throws IOException,
+-               ClassNotFoundException {
+-        // Construct a distribution and initialize its internal random
+-        // generator, using a fixed seed for deterministic results.
+-        distribution.reseedRandomGenerator(123);
+-        distribution.sample();
+-
+-        // Clone the distribution.
+-        final RealDistribution cloned = deepClone();
+-
+-        // Make sure they still produce the same samples.
+-        final double s1 = distribution.sample();
+-        final double s2 = cloned.sample();
+-        Assert.assertEquals(s1, s2, 0d);
+-    }
+-
+     //------------------ Getters / Setters for test instance data -----------
+     /**
+      * @return Returns the cumulativeTestPoints.
+@@ -487,24 +464,4 @@ public abstract class RealDistributionAbstractTest {
+         this.tolerance = tolerance;
+     }
+ 
+-    /**
+-     * Serialization and deserialization loop of the {@link #distribution}.
+-     */
+-    private RealDistribution deepClone()
+-        throws IOException,
+-               ClassNotFoundException {
+-        // Serialize to byte array.
+-        final ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+-        final ObjectOutputStream oOut = new ObjectOutputStream(bOut);
+-        oOut.writeObject(distribution);
+-        final byte[] data = bOut.toByteArray();
+-
+-        // Deserialize from byte array.
+-        final ByteArrayInputStream bIn = new ByteArrayInputStream(data);
+-        final ObjectInputStream oIn = new ObjectInputStream(bIn);
+-        final Object clone = oIn.readObject();
+-        oIn.close();
+-
+-        return (RealDistribution) clone;
+-    }
+ }

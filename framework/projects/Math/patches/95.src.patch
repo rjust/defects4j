@@ -1,0 +1,20 @@
+diff --git a/org/apache/commons/math/distribution/FDistributionImpl.java b/org/apache/commons/math/distribution/FDistributionImpl.java
+index 59aeb07..3959403 100644
+--- a/org/apache/commons/math/distribution/FDistributionImpl.java
++++ b/org/apache/commons/math/distribution/FDistributionImpl.java
+@@ -141,13 +141,8 @@ public class FDistributionImpl
+      * @return initial domain value
+      */
+     protected double getInitialDomain(double p) {
+-        double ret = 1.0;
+-        double d = getDenominatorDegreesOfFreedom();
+-        if (d > 2.0) {
+-            // use mean
+-            ret = d / (d - 2.0);
+-        }
+-        return ret;
++        return getDenominatorDegreesOfFreedom() /
++            (getDenominatorDegreesOfFreedom() - 2.0);
+     }
+     
+     /**

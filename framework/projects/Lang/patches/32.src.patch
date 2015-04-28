@@ -1,0 +1,68 @@
+diff --git a/org/apache/commons/lang3/builder/HashCodeBuilder.java b/org/apache/commons/lang3/builder/HashCodeBuilder.java
+index 9f7e890..547676c 100644
+--- a/org/apache/commons/lang3/builder/HashCodeBuilder.java
++++ b/org/apache/commons/lang3/builder/HashCodeBuilder.java
+@@ -101,7 +101,14 @@ public class HashCodeBuilder {
+      * 
+      * @since 2.3
+      */
+-    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<Set<IDKey>>();
++    private static final ThreadLocal<Set<IDKey>> registry = new ThreadLocal<Set<IDKey>>() {
++        @Override
++        protected Set<IDKey> initialValue() {
++            // The HashSet implementation is not synchronized,
++            // which is just what we need here.
++            return new HashSet<IDKey>();
++        }
++    };
+ 
+     /*
+      * N.B. we cannot store the actual objects in a HashSet, as that would use the very hashCode()
+@@ -129,7 +136,7 @@ public class HashCodeBuilder {
+      * @since 2.3
+      */
+     static Set<IDKey> getRegistry() {
+-        return REGISTRY.get();
++        return registry.get();
+     }
+ 
+     /**
+@@ -144,8 +151,7 @@ public class HashCodeBuilder {
+      * @since 2.3
+      */
+     static boolean isRegistered(Object value) {
+-        Set<IDKey> registry = getRegistry();
+-        return registry != null && registry.contains(new IDKey(value));
++        return getRegistry().contains(new IDKey(value));
+     }
+ 
+     /**
+@@ -515,11 +521,6 @@ public class HashCodeBuilder {
+      *            The object to register.
+      */
+     static void register(Object value) {
+-        synchronized (HashCodeBuilder.class) {
+-            if (getRegistry() == null) {
+-                REGISTRY.set(new HashSet<IDKey>());
+-            }
+-        }
+         getRegistry().add(new IDKey(value));
+     }
+ 
+@@ -536,15 +537,7 @@ public class HashCodeBuilder {
+      * @since 2.3
+      */
+     static void unregister(Object value) {
+-        Set<IDKey> s = getRegistry();
+-        if (s != null) {
+-            s.remove(new IDKey(value));
+-            synchronized (HashCodeBuilder.class) {
+-                if (s.isEmpty()) {
+-                    REGISTRY.remove();
+-                }
+-            }
+-        }
++        getRegistry().remove(new IDKey(value));
+     }
+ 
+     /**

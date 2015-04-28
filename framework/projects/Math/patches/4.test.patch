@@ -1,0 +1,35 @@
+diff --git a/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java b/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
+index b941ffa..f060cfb 100644
+--- a/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
++++ b/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
+@@ -152,13 +152,5 @@ public class SubLineTest {
+         Assert.assertNull(sub1.intersection(sub2, true));
+         Assert.assertNull(sub1.intersection(sub2, false));
+     }
+-    
+-    @Test
+-    public void testIntersectionNotIntersecting() throws MathIllegalArgumentException {
+-        SubLine sub1 = new SubLine(new Vector3D(1, 1, 1), new Vector3D(1.5, 1, 1));
+-        SubLine sub2 = new SubLine(new Vector3D(2, 3, 0), new Vector3D(2, 3, 0.5));
+-        Assert.assertNull(sub1.intersection(sub2, true));
+-        Assert.assertNull(sub1.intersection(sub2, false));
+-    }
+ 
+ }
+diff --git a/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java b/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
+index 7a9defe..bc276d1 100644
+--- a/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
++++ b/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
+@@ -144,12 +144,4 @@ public class SubLineTest {
+         Assert.assertNull(sub1.intersection(sub2, false));
+     }
+ 
+-    @Test
+-    public void testIntersectionParallel() {
+-        final SubLine sub1 = new SubLine(new Vector2D(0, 1), new Vector2D(0, 2));
+-        final SubLine sub2 = new SubLine(new Vector2D(66, 3), new Vector2D(66, 4));
+-        Assert.assertNull(sub1.intersection(sub2, true));
+-        Assert.assertNull(sub1.intersection(sub2, false));
+-    }
+-
+ }

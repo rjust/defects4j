@@ -1,0 +1,129 @@
+diff --git a/org/apache/commons/math/linear/AbstractRealVector.java b/org/apache/commons/math/linear/AbstractRealVector.java
+index ace4b8d..cf103c0 100644
+--- a/org/apache/commons/math/linear/AbstractRealVector.java
++++ b/org/apache/commons/math/linear/AbstractRealVector.java
+@@ -206,40 +206,6 @@ public abstract class AbstractRealVector implements RealVector {
+     }
+ 
+     /** {@inheritDoc} */
+-    public double getNorm() {
+-        double sum = 0;
+-        Iterator<Entry> it = sparseIterator();
+-        Entry e;
+-        while (it.hasNext() && (e = it.next()) != null) {
+-            final double value = e.getValue();
+-            sum += value * value;
+-        }
+-        return Math.sqrt(sum);
+-    }
+-
+-    /** {@inheritDoc} */
+-    public double getL1Norm() {
+-        double norm = 0;
+-        Iterator<Entry> it = sparseIterator();
+-        Entry e;
+-        while (it.hasNext() && (e = it.next()) != null) {
+-            norm += Math.abs(e.getValue());
+-        }
+-        return norm;
+-    }
+-
+-    /** {@inheritDoc} */
+-    public double getLInfNorm() {
+-        double norm = 0;
+-        Iterator<Entry> it = sparseIterator();
+-        Entry e;
+-        while (it.hasNext() && (e = it.next()) != null) {
+-            norm = Math.max(norm, Math.abs(e.getValue()));
+-        }
+-        return norm;
+-    }
+-
+-    /** {@inheritDoc} */
+     public double getDistance(double[] v) throws IllegalArgumentException {
+         return getDistance(new ArrayRealVector(v,false));
+     }
+diff --git a/org/apache/commons/math/linear/ArrayRealVector.java b/org/apache/commons/math/linear/ArrayRealVector.java
+index 22d0a28..45c0919 100644
+--- a/org/apache/commons/math/linear/ArrayRealVector.java
++++ b/org/apache/commons/math/linear/ArrayRealVector.java
+@@ -694,7 +694,6 @@ public class ArrayRealVector extends AbstractRealVector implements Serializable
+     }
+ 
+     /** {@inheritDoc} */
+-    @Override
+     public double getNorm() {
+         double sum = 0;
+         for (double a : data) {
+@@ -704,7 +703,6 @@ public class ArrayRealVector extends AbstractRealVector implements Serializable
+     }
+ 
+     /** {@inheritDoc} */
+-    @Override
+     public double getL1Norm() {
+         double sum = 0;
+         for (double a : data) {
+@@ -714,11 +712,10 @@ public class ArrayRealVector extends AbstractRealVector implements Serializable
+     }
+ 
+     /** {@inheritDoc} */
+-    @Override
+     public double getLInfNorm() {
+         double max = 0;
+         for (double a : data) {
+-            max = Math.max(max, Math.abs(a));
++            max += Math.max(max, Math.abs(a));
+         }
+         return max;
+     }
+diff --git a/org/apache/commons/math/linear/OpenMapRealVector.java b/org/apache/commons/math/linear/OpenMapRealVector.java
+index eb5be1b..febea7a 100644
+--- a/org/apache/commons/math/linear/OpenMapRealVector.java
++++ b/org/apache/commons/math/linear/OpenMapRealVector.java
+@@ -495,6 +495,17 @@ public class OpenMapRealVector extends AbstractRealVector implements SparseRealV
+         return max;
+     }
+ 
++    /** {@inheritDoc} */
++    public double getL1Norm() {
++        double res = 0;
++        Iterator iter = entries.iterator();
++        while (iter.hasNext()) {
++            iter.advance();
++            res += Math.abs(iter.value());
++        }
++        return res;
++    }
++
+     /**
+      * Optimized method to compute LInfDistance.
+      * @param v The vector to compute from
+@@ -546,6 +557,28 @@ public class OpenMapRealVector extends AbstractRealVector implements SparseRealV
+     }
+ 
+     /** {@inheritDoc} */
++    public double getLInfNorm() {
++        double max = 0;
++        Iterator iter = entries.iterator();
++        while (iter.hasNext()) {
++            iter.advance();
++            max += iter.value();
++        }
++        return max;
++    }
++
++    /** {@inheritDoc} */
++    public double getNorm() {
++        double res = 0;
++        Iterator iter = entries.iterator();
++        while (iter.hasNext()) {
++            iter.advance();
++            res += iter.value() * iter.value();
++        }
++        return Math.sqrt(res);
++    }
++
++    /** {@inheritDoc} */
+     public boolean isInfinite() {
+         boolean infiniteFound = false;
+         Iterator iter = entries.iterator();

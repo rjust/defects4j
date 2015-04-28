@@ -1,0 +1,19 @@
+diff --git a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java
+index 26fd5e0..10bc9e6 100644
+--- a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java
++++ b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java
+@@ -89,12 +89,12 @@ public class MultiStartUnivariateRealOptimizer implements UnivariateRealOptimize
+ 
+     /** {@inheritDoc} */
+     public double getFunctionValue() {
+-        return optimaValues[0];
++        return optimizer.getFunctionValue();
+     }
+ 
+     /** {@inheritDoc} */
+     public double getResult() {
+-        return optima[0];
++        return optimizer.getResult();
+     }
+ 
+     /** {@inheritDoc} */

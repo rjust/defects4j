@@ -1,0 +1,21 @@
+diff --git a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
+index fea0abc..df729f7 100644
+--- a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
++++ b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
+@@ -18,7 +18,6 @@
+ package org.apache.commons.math.analysis.solvers;
+ 
+ import org.apache.commons.math.analysis.UnivariateRealFunction;
+-import org.apache.commons.math.exception.TooManyEvaluationsException;
+ import org.junit.Test;
+ import org.junit.Assert;
+ 
+@@ -41,7 +40,7 @@ public final class RegulaFalsiSolverTest extends BaseSecantSolverAbstractTest {
+         return new int[] {3, 7, 8, 19, 18, 11, 67, 55, 288, 151, -1};
+     }
+ 
+-    @Test(expected=TooManyEvaluationsException.class)
++    @Test
+     public void testIssue631() {
+         final UnivariateRealFunction f = new UnivariateRealFunction() {
+                 /** {@inheritDoc} */

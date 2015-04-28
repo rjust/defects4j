@@ -1,0 +1,164 @@
+diff --git a/org/apache/commons/math/geometry/euclidean/threed/Rotation.java b/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
+index ada0a8f..bfa7f26 100644
+--- a/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
++++ b/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
+@@ -313,51 +313,92 @@ public class Rotation implements Serializable {
+   public Rotation(Vector3D u1, Vector3D u2, Vector3D v1, Vector3D v2) {
+ 
+   // norms computation
+-  double u1u1 = u1.getNormSq();
+-  double u2u2 = u2.getNormSq();
+-  double v1v1 = v1.getNormSq();
+-  double v2v2 = v2.getNormSq();
++  double u1u1 = Vector3D.dotProduct(u1, u1);
++  double u2u2 = Vector3D.dotProduct(u2, u2);
++  double v1v1 = Vector3D.dotProduct(v1, v1);
++  double v2v2 = Vector3D.dotProduct(v2, v2);
+   if ((u1u1 == 0) || (u2u2 == 0) || (v1v1 == 0) || (v2v2 == 0)) {
+     throw MathRuntimeException.createIllegalArgumentException(LocalizedFormats.ZERO_NORM_FOR_ROTATION_DEFINING_VECTOR);
+   }
+ 
+-  // normalize v1 in order to have (v1'|v1') = (u1|u1)
+-  v1 = new Vector3D(FastMath.sqrt(u1u1 / v1v1), v1);
++  double u1x = u1.getX();
++  double u1y = u1.getY();
++  double u1z = u1.getZ();
++
++  double u2x = u2.getX();
++  double u2y = u2.getY();
++  double u2z = u2.getZ();
+ 
+-  // adjust v2 in order to have (u1|u2) = (v1'|v2') and (v2'|v2') = (u2|u2)
+-  double u1u2   = u1.dotProduct(u2);
+-  double v1v2   = v1.dotProduct(v2);
++  // normalize v1 in order to have (v1'|v1') = (u1|u1)
++  double coeff = FastMath.sqrt (u1u1 / v1v1);
++  double v1x   = coeff * v1.getX();
++  double v1y   = coeff * v1.getY();
++  double v1z   = coeff * v1.getZ();
++  v1 = new Vector3D(v1x, v1y, v1z);
++
++  // adjust v2 in order to have (u1|u2) = (v1|v2) and (v2'|v2') = (u2|u2)
++  double u1u2   = Vector3D.dotProduct(u1, u2);
++  double v1v2   = Vector3D.dotProduct(v1, v2);
+   double coeffU = u1u2 / u1u1;
+   double coeffV = v1v2 / u1u1;
+   double beta   = FastMath.sqrt((u2u2 - u1u2 * coeffU) / (v2v2 - v1v2 * coeffV));
+   double alpha  = coeffU - beta * coeffV;
+-  v2 = new Vector3D(alpha, v1, beta, v2);
+-
+-  // preliminary computation
+-  Vector3D uRef  = u1;
+-  Vector3D vRef  = v1;
+-  Vector3D v1Su1 = v1.subtract(u1);
+-  Vector3D v2Su2 = v2.subtract(u2);
+-  Vector3D k     = v1Su1.crossProduct(v2Su2);
+-  Vector3D u3    = u1.crossProduct(u2);
+-  double c       = k.dotProduct(u3);
+-  final double inPlaneThreshold = 0.001;
+-  if (c <= inPlaneThreshold * k.getNorm() * u3.getNorm()) {
+-    // the (q1, q2, q3) vector is close to the (u1, u2) plane
++  double v2x    = alpha * v1x + beta * v2.getX();
++  double v2y    = alpha * v1y + beta * v2.getY();
++  double v2z    = alpha * v1z + beta * v2.getZ();
++  v2 = new Vector3D(v2x, v2y, v2z);
++
++  // preliminary computation (we use explicit formulation instead
++  // of relying on the Vector3D class in order to avoid building lots
++  // of temporary objects)
++  Vector3D uRef = u1;
++  Vector3D vRef = v1;
++  double dx1 = v1x - u1.getX();
++  double dy1 = v1y - u1.getY();
++  double dz1 = v1z - u1.getZ();
++  double dx2 = v2x - u2.getX();
++  double dy2 = v2y - u2.getY();
++  double dz2 = v2z - u2.getZ();
++  Vector3D k = new Vector3D(dy1 * dz2 - dz1 * dy2,
++                            dz1 * dx2 - dx1 * dz2,
++                            dx1 * dy2 - dy1 * dx2);
++  double c = k.getX() * (u1y * u2z - u1z * u2y) +
++             k.getY() * (u1z * u2x - u1x * u2z) +
++             k.getZ() * (u1x * u2y - u1y * u2x);
++
++  if (c == 0) {
++    // the (q1, q2, q3) vector is in the (u1, u2) plane
+     // we try other vectors
++    Vector3D u3 = Vector3D.crossProduct(u1, u2);
+     Vector3D v3 = Vector3D.crossProduct(v1, v2);
+-    Vector3D v3Su3 = v3.subtract(u3);
+-    k = v1Su1.crossProduct(v3Su3);
+-    Vector3D u2Prime = u1.crossProduct(u3);
+-    c = k.dotProduct(u2Prime);
+-
+-    if (c <= inPlaneThreshold * k.getNorm() * u2Prime.getNorm()) {
+-      // the (q1, q2, q3) vector is also close to the (u1, u3) plane,
+-      // it is almost aligned with u1: we try (u2, u3) and (v2, v3)
+-      k = v2Su2.crossProduct(v3Su3);;
+-      c = k.dotProduct(u2.crossProduct(u3));;
+-
+-      if (c <= 0) {
++    double u3x  = u3.getX();
++    double u3y  = u3.getY();
++    double u3z  = u3.getZ();
++    double v3x  = v3.getX();
++    double v3y  = v3.getY();
++    double v3z  = v3.getZ();
++
++    double dx3 = v3x - u3x;
++    double dy3 = v3y - u3y;
++    double dz3 = v3z - u3z;
++    k = new Vector3D(dy1 * dz3 - dz1 * dy3,
++                     dz1 * dx3 - dx1 * dz3,
++                     dx1 * dy3 - dy1 * dx3);
++    c = k.getX() * (u1y * u3z - u1z * u3y) +
++        k.getY() * (u1z * u3x - u1x * u3z) +
++        k.getZ() * (u1x * u3y - u1y * u3x);
++
++    if (c == 0) {
++      // the (q1, q2, q3) vector is aligned with u1:
++      // we try (u2, u3) and (v2, v3)
++      k = new Vector3D(dy2 * dz3 - dz2 * dy3,
++                       dz2 * dx3 - dx2 * dz3,
++                       dx2 * dy3 - dy2 * dx3);
++      c = k.getX() * (u2y * u3z - u2z * u3y) +
++          k.getY() * (u2z * u3x - u2x * u3z) +
++          k.getZ() * (u2x * u3y - u2y * u3x);
++
++      if (c == 0) {
+         // the (q1, q2, q3) vector is aligned with everything
+         // this is really the identity rotation
+         q0 = 1.0;
+@@ -386,7 +427,8 @@ public class Rotation implements Serializable {
+    k = new Vector3D(uRef.getY() * q3 - uRef.getZ() * q2,
+                     uRef.getZ() * q1 - uRef.getX() * q3,
+                     uRef.getX() * q2 - uRef.getY() * q1);
+-  q0 = vRef.dotProduct(k) / (2 * k.getNormSq());
++   c = Vector3D.dotProduct(k, k);
++  q0 = Vector3D.dotProduct(vRef, k) / (c + c);
+ 
+   }
+ 
+@@ -410,7 +452,7 @@ public class Rotation implements Serializable {
+         throw MathRuntimeException.createIllegalArgumentException(LocalizedFormats.ZERO_NORM_FOR_ROTATION_DEFINING_VECTOR);
+     }
+ 
+-    double dot = u.dotProduct(v);
++    double dot = Vector3D.dotProduct(u, v);
+ 
+     if (dot < ((2.0e-15 - 1.0) * normProduct)) {
+       // special case u = -v: we select a PI angle rotation around
+@@ -425,10 +467,9 @@ public class Rotation implements Serializable {
+       // the shortest possible rotation: axis orthogonal to this plane
+       q0 = FastMath.sqrt(0.5 * (1.0 + dot / normProduct));
+       double coeff = 1.0 / (2.0 * q0 * normProduct);
+-      Vector3D q = v.crossProduct(u);
+-      q1 = coeff * q.getX();
+-      q2 = coeff * q.getY();
+-      q3 = coeff * q.getZ();
++      q1 = coeff * (v.getY() * u.getZ() - v.getZ() * u.getY());
++      q2 = coeff * (v.getZ() * u.getX() - v.getX() * u.getZ());
++      q3 = coeff * (v.getX() * u.getY() - v.getY() * u.getX());
+     }
+ 
+   }

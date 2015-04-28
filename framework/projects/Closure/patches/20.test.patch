@@ -1,0 +1,13 @@
+diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+index d1a569d..c8f8bf4 100644
+--- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
++++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+@@ -1028,8 +1028,6 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+   public void testSimpleFunctionCall() {
+     test("var a = String(23)", "var a = '' + 23");
+     test("var a = String('hello')", "var a = '' + 'hello'");
+-    testSame("var a = String('hello', bar());");
+-    testSame("var a = String({valueOf: function() { return 1; }});");
+   }
+ 
+   private static class StringCompareTestCase extends CompilerTestCase {

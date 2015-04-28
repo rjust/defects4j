@@ -1,0 +1,219 @@
+diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index b0bcbac..9a5c9b7 100644
+--- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -360,12 +360,6 @@ public class CommandLineRunnerTest extends TestCase {
+          "}");
+   }
+ 
+-  public void testIssue504() {
+-    args.add("--compilation_level=ADVANCED_OPTIMIZATIONS");
+-    test("void function() { alert('hi'); }();",
+-         "alert('hi');", CheckSideEffects.USELESS_CODE_ERROR);
+-  }
+-
+   public void testDebugFlag1() {
+     args.add("--compilation_level=SIMPLE_OPTIMIZATIONS");
+     args.add("--debug=false");
+@@ -871,10 +865,6 @@ public class CommandLineRunnerTest extends TestCase {
+     test(new String[] { original }, warning);
+   }
+ 
+-  private void test(String original, String expected, DiagnosticType warning) {
+-    test(new String[] { original }, new String[] { expected }, warning);
+-  }
+-
+   /**
+    * Asserts that when compiling, there is an error or warning.
+    */
+diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+index 67571d6..238013e 100644
+--- a/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/com/google/javascript/jscomp/NodeUtilTest.java
+@@ -89,114 +89,114 @@ public class NodeUtilTest extends TestCase {
+   }
+ 
+   public void testGetBooleanValue() {
+-    assertPureBooleanTrue("true");
+-    assertPureBooleanTrue("10");
+-    assertPureBooleanTrue("'0'");
+-    assertPureBooleanTrue("/a/");
+-    assertPureBooleanTrue("{}");
+-    assertPureBooleanTrue("[]");
+-    assertPureBooleanFalse("false");
+-    assertPureBooleanFalse("null");
+-    assertPureBooleanFalse("0");
+-    assertPureBooleanFalse("''");
+-    assertPureBooleanFalse("undefined");
+-    assertPureBooleanFalse("void 0");
+-    assertPureBooleanUnknown("void foo()");
+-    assertPureBooleanUnknown("b");
+-    assertPureBooleanUnknown("-'0.0'");
++    assertBooleanTrue("true");
++    assertBooleanTrue("10");
++    assertBooleanTrue("'0'");
++    assertBooleanTrue("/a/");
++    assertBooleanTrue("{}");
++    assertBooleanTrue("[]");
++    assertBooleanFalse("false");
++    assertBooleanFalse("null");
++    assertBooleanFalse("0");
++    assertBooleanFalse("''");
++    assertBooleanFalse("undefined");
++    assertBooleanFalse("void 0");
++    assertBooleanFalse("void foo()");
++    assertBooleanUnknown("b");
++    assertBooleanUnknown("-'0.0'");
+ 
+     // Known but getBooleanValue return false for expressions with side-effects
+-    assertPureBooleanUnknown("{a:foo()}");
+-    assertPureBooleanUnknown("[foo()]");
++    assertBooleanUnknown("{a:foo()}");
++    assertBooleanUnknown("[foo()]");
+   }
+ 
+-  private void assertPureBooleanTrue(String val) {
++  private void assertBooleanTrue(String val) {
+     assertEquals(TernaryValue.TRUE, NodeUtil.getPureBooleanValue(getNode(val)));
+   }
+ 
+-  private void assertPureBooleanFalse(String val) {
++  private void assertBooleanFalse(String val) {
+     assertEquals(
+         TernaryValue.FALSE, NodeUtil.getPureBooleanValue(getNode(val)));
+   }
+ 
+-  private void assertPureBooleanUnknown(String val) {
++  private void assertBooleanUnknown(String val) {
+     assertEquals(
+         TernaryValue.UNKNOWN, NodeUtil.getPureBooleanValue(getNode(val)));
+   }
+ 
+   public void testGetExpressionBooleanValue() {
+-    assertImpureBooleanTrue("a=true");
+-    assertImpureBooleanFalse("a=false");
++    assertExpressionBooleanTrue("a=true");
++    assertExpressionBooleanFalse("a=false");
+ 
+-    assertImpureBooleanTrue("a=(false,true)");
+-    assertImpureBooleanFalse("a=(true,false)");
++    assertExpressionBooleanTrue("a=(false,true)");
++    assertExpressionBooleanFalse("a=(true,false)");
+ 
+-    assertImpureBooleanTrue("a=(false || true)");
+-    assertImpureBooleanFalse("a=(true && false)");
++    assertExpressionBooleanTrue("a=(false || true)");
++    assertExpressionBooleanFalse("a=(true && false)");
+ 
+-    assertImpureBooleanTrue("a=!(true && false)");
++    assertExpressionBooleanTrue("a=!(true && false)");
+ 
+-    assertImpureBooleanTrue("a,true");
+-    assertImpureBooleanFalse("a,false");
++    assertExpressionBooleanTrue("a,true");
++    assertExpressionBooleanFalse("a,false");
+ 
+-    assertImpureBooleanTrue("true||false");
+-    assertImpureBooleanFalse("false||false");
++    assertExpressionBooleanTrue("true||false");
++    assertExpressionBooleanFalse("false||false");
+ 
+-    assertImpureBooleanTrue("true&&true");
+-    assertImpureBooleanFalse("true&&false");
++    assertExpressionBooleanTrue("true&&true");
++    assertExpressionBooleanFalse("true&&false");
+ 
+-    assertImpureBooleanFalse("!true");
+-    assertImpureBooleanTrue("!false");
+-    assertImpureBooleanTrue("!''");
++    assertExpressionBooleanFalse("!true");
++    assertExpressionBooleanTrue("!false");
++    assertExpressionBooleanTrue("!''");
+ 
+     // Assignment ops other than ASSIGN are unknown.
+-    assertImpureBooleanUnknown("a *= 2");
++    assertExpressionBooleanUnknown("a *= 2");
+ 
+     // Complex expressions that contain anything other then "=", ",", or "!" are
+     // unknown.
+-    assertImpureBooleanUnknown("2 + 2");
+-
+-    assertImpureBooleanTrue("a=1");
+-    assertImpureBooleanTrue("a=/a/");
+-    assertImpureBooleanTrue("a={}");
+-
+-    assertImpureBooleanTrue("true");
+-    assertImpureBooleanTrue("10");
+-    assertImpureBooleanTrue("'0'");
+-    assertImpureBooleanTrue("/a/");
+-    assertImpureBooleanTrue("{}");
+-    assertImpureBooleanTrue("[]");
+-    assertImpureBooleanFalse("false");
+-    assertImpureBooleanFalse("null");
+-    assertImpureBooleanFalse("0");
+-    assertImpureBooleanFalse("''");
+-    assertImpureBooleanFalse("undefined");
+-    assertImpureBooleanFalse("void 0");
+-    assertImpureBooleanFalse("void foo()");
+-
+-    assertImpureBooleanTrue("a?true:true");
+-    assertImpureBooleanFalse("a?false:false");
+-    assertImpureBooleanUnknown("a?true:false");
+-    assertImpureBooleanUnknown("a?true:foo()");
+-
+-    assertImpureBooleanUnknown("b");
+-    assertImpureBooleanUnknown("-'0.0'");
+-
+-    assertImpureBooleanTrue("{a:foo()}");
+-    assertImpureBooleanTrue("[foo()]");
+-  }
+-
+-  private void assertImpureBooleanTrue(String val) {
++    assertExpressionBooleanUnknown("2 + 2");
++
++    assertExpressionBooleanTrue("a=1");
++    assertExpressionBooleanTrue("a=/a/");
++    assertExpressionBooleanTrue("a={}");
++
++    assertExpressionBooleanTrue("true");
++    assertExpressionBooleanTrue("10");
++    assertExpressionBooleanTrue("'0'");
++    assertExpressionBooleanTrue("/a/");
++    assertExpressionBooleanTrue("{}");
++    assertExpressionBooleanTrue("[]");
++    assertExpressionBooleanFalse("false");
++    assertExpressionBooleanFalse("null");
++    assertExpressionBooleanFalse("0");
++    assertExpressionBooleanFalse("''");
++    assertExpressionBooleanFalse("undefined");
++    assertExpressionBooleanFalse("void 0");
++    assertExpressionBooleanFalse("void foo()");
++
++    assertExpressionBooleanTrue("a?true:true");
++    assertExpressionBooleanFalse("a?false:false");
++    assertExpressionBooleanUnknown("a?true:false");
++    assertExpressionBooleanUnknown("a?true:foo()");
++
++    assertExpressionBooleanUnknown("b");
++    assertExpressionBooleanUnknown("-'0.0'");
++
++    assertExpressionBooleanTrue("{a:foo()}");
++    assertExpressionBooleanTrue("[foo()]");
++  }
++
++  private void assertExpressionBooleanTrue(String val) {
+     assertEquals(TernaryValue.TRUE,
+         NodeUtil.getImpureBooleanValue(getNode(val)));
+   }
+ 
+-  private void assertImpureBooleanFalse(String val) {
++  private void assertExpressionBooleanFalse(String val) {
+     assertEquals(TernaryValue.FALSE,
+         NodeUtil.getImpureBooleanValue(getNode(val)));
+   }
+ 
+-  private void assertImpureBooleanUnknown(String val) {
++  private void assertExpressionBooleanUnknown(String val) {
+     assertEquals(TernaryValue.UNKNOWN,
+         NodeUtil.getImpureBooleanValue(getNode(val)));
+   }

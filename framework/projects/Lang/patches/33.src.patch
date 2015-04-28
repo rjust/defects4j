@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/lang3/ClassUtils.java b/org/apache/commons/lang3/ClassUtils.java
+index 3998966..85fda04 100644
+--- a/org/apache/commons/lang3/ClassUtils.java
++++ b/org/apache/commons/lang3/ClassUtils.java
+@@ -907,7 +906,7 @@ public class ClassUtils {
+         }
+         Class<?>[] classes = new Class[array.length];
+         for (int i = 0; i < array.length; i++) {
+-            classes[i] = array[i] == null ? null : array[i].getClass();
++            classes[i] = array[i].getClass();
+         }
+         return classes;
+     }

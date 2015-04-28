@@ -1,0 +1,137 @@
+diff --git a/org/apache/commons/math/linear/SingularValueSolverTest.java b/org/apache/commons/math/linear/SingularValueSolverTest.java
+index a13652d..0416787 100644
+--- a/org/apache/commons/math/linear/SingularValueSolverTest.java
++++ b/org/apache/commons/math/linear/SingularValueSolverTest.java
+@@ -139,32 +139,6 @@ public class SingularValueSolverTest {
+     }
+ 
+     @Test
+-    public void testTruncated() {
+-
+-        RealMatrix rm = new Array2DRowRealMatrix(new double[][] {
+-            { 1.0, 2.0, 3.0 }, { 2.0, 3.0, 4.0 }, { 3.0, 5.0, 7.0 }
+-        });
+-        double s439  = Math.sqrt(439.0);
+-        double[] reference = new double[] {
+-            Math.sqrt(3.0 * (21.0 + s439))
+-        };
+-        SingularValueDecomposition svd =
+-            new SingularValueDecompositionImpl(rm, 1);
+-
+-        // check we get the expected theoretical singular values
+-        double[] singularValues = svd.getSingularValues();
+-        Assert.assertEquals(reference.length, singularValues.length);
+-        for (int i = 0; i < reference.length; ++i) {
+-            Assert.assertEquals(reference[i], singularValues[i], 4.0e-13);
+-        }
+-
+-        // check the truncated decomposition DON'T allows to recover the original matrix
+-        RealMatrix recomposed = svd.getU().multiply(svd.getS()).multiply(svd.getVT());
+-        Assert.assertTrue(recomposed.subtract(rm).getNorm() > 1.4);
+-
+-    }
+-
+-    @Test
+     public void testMath320A() {
+         RealMatrix rm = new Array2DRowRealMatrix(new double[][] {
+             { 1.0, 2.0, 3.0 }, { 2.0, 3.0, 4.0 }, { 3.0, 5.0, 7.0 }
+@@ -175,39 +149,45 @@ public class SingularValueSolverTest {
+         };
+         SingularValueDecomposition svd =
+             new SingularValueDecompositionImpl(rm);
+-
+-        // check we get the expected theoretical singular values
+         double[] singularValues = svd.getSingularValues();
+-        Assert.assertEquals(reference.length, singularValues.length);
+         for (int i = 0; i < reference.length; ++i) {
+             Assert.assertEquals(reference[i], singularValues[i], 4.0e-13);
+         }
+-
+-        // check the decomposition allows to recover the original matrix
+-        RealMatrix recomposed = svd.getU().multiply(svd.getS()).multiply(svd.getVT());
+-        Assert.assertEquals(0.0, recomposed.subtract(rm).getNorm(), 5.0e-13);
+-
+-        // check we can solve a singular system
+-        double[] b = new double[] { 5.0, 6.0, 7.0 };
+-        double[] resSVD = svd.getSolver().solve(b);
+-        Assert.assertEquals(rm.getColumnDimension(), resSVD.length);
+-
+-        // check the solution really minimizes the residuals
+-        double svdMinResidual = residual(rm, resSVD, b);
+-        double epsilon = 2 * Math.ulp(svdMinResidual);
+-        double h = 0.1;
+-        int    k = 3;
+-        for (double d0 = -k * h; d0 <= k * h; d0 += h) {
+-            for (double d1 = -k * h ; d1 <= k * h; d1 += h) {
+-                for (double d2 = -k * h; d2 <= k * h; d2 += h) {
+-                    double[] x = new double[] { resSVD[0] + d0, resSVD[1] + d1, resSVD[2] + d2 };
+-                    Assert.assertTrue((residual(rm, x, b) - svdMinResidual) > -epsilon);
+-                }
+-            }
+-        }
+-
++        regularElements(svd.getU());
++        regularElements(svd.getVT());
++//        double[] b = new double[] { 5.0, 6.0, 7.0 };
++//        double[] resSVD = svd.getSolver().solve(b);
++//        Assert.assertEquals(rm.getColumnDimension(), resSVD.length);
++//        System.out.println("resSVD = " + resSVD[0] + " " + resSVD[1] + " " + resSVD[2]);
++//        double minResidual = Double.POSITIVE_INFINITY;
++//        double d0Min = Double.NaN;
++//        double d1Min = Double.NaN;
++//        double d2Min = Double.NaN;
++//        double h = 0.01;
++//        int    k = 100;
++//        for (double d0 = -k * h; d0 <= k * h; d0 += h) {
++//            for (double d1 = -k * h ; d1 <= k * h; d1 += h) {
++//                for (double d2 = -k * h; d2 <= k * h; d2 += h) {
++//                    double[] f = rm.operate(new double[] { resSVD[0] + d0, resSVD[1] + d1, resSVD[2] + d2 });
++//                    double residual = Math.sqrt((f[0] - b[0]) * (f[0] - b[0]) +
++//                                                (f[1] - b[1]) * (f[1] - b[1]) +
++//                                                (f[2] - b[2]) * (f[2] - b[2]));
++//                    if (residual < minResidual) {
++//                        d0Min = d0;
++//                        d1Min = d1;
++//                        d2Min = d2;
++//                        minResidual = residual;
++//                    }
++//                }
++//            }
++//        }
++//        System.out.println(d0Min + " " + d1Min + " " + d2Min + " -> " + minResidual);
++//        Assert.assertEquals(0, d0Min, 1.0e-15);
++//        Assert.assertEquals(0, d1Min, 1.0e-15);
++//        Assert.assertEquals(0, d2Min, 1.0e-15);
+     }
+ 
++
+     @Test
+     public void testMath320B() {
+         RealMatrix rm = new Array2DRowRealMatrix(new double[][] {
+@@ -215,17 +195,18 @@ public class SingularValueSolverTest {
+         });
+         SingularValueDecomposition svd =
+             new SingularValueDecompositionImpl(rm);
+-        RealMatrix recomposed = svd.getU().multiply(svd.getS()).multiply(svd.getVT());
+-        Assert.assertEquals(0.0, recomposed.subtract(rm).getNorm(), 2.0e-15);
++        regularElements(svd.getU());
++        regularElements(svd.getVT());
+     }
+ 
+-    private double residual(RealMatrix a, double[] x, double[] b) {
+-        double[] ax = a.operate(x);
+-        double sum = 0;
+-        for (int i = 0; i < ax.length; ++i) {
+-            sum += (ax[i] - b[i]) * (ax[i] - b[i]);
++    private void regularElements(RealMatrix m) {
++        for (int i = 0; i < m.getRowDimension(); ++i) {
++            for (int j = 0; j < m.getColumnDimension(); ++j) {
++                double mij = m.getEntry(i, j);
++                Assert.assertFalse(Double.isInfinite(mij));
++                Assert.assertFalse(Double.isNaN(mij));
++            }
+         }
+-        return Math.sqrt(sum);
+     }
+ 
+ }

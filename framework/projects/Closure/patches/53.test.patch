@@ -1,0 +1,16 @@
+diff --git a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+index 2e15d4f..2d76429 100644
+--- a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
++++ b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+@@ -356,11 +356,6 @@ public class InlineObjectLiteralsTest extends CompilerTestCase {
+          "new JSCompiler_object_inline_b_0.c");
+   }
+ 
+-  public void testBug545() {
+-    testLocal("var a = {}", "");
+-    testLocal("var a; a = {}", "true");
+-  }
+-
+   private final String LOCAL_PREFIX = "function local(){";
+   private final String LOCAL_POSTFIX = "}";
+ 

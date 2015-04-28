@@ -1,0 +1,49 @@
+diff --git a/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java b/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
+index 24f0f50..4d15b4b 100644
+--- a/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
++++ b/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
+@@ -448,44 +448,6 @@ public class GaussNewtonEstimatorTest
+ 
+   }
+ 
+-  public void testBoundParameters() throws EstimationException {
+-      EstimatedParameter[] p = {
+-        new EstimatedParameter("unbound0", 2, false),
+-        new EstimatedParameter("unbound1", 2, false),
+-        new EstimatedParameter("bound",    2, true)
+-      };
+-      LinearProblem problem = new LinearProblem(new LinearMeasurement[] {
+-        new LinearMeasurement(new double[] { 1.0, 1.0, 1.0 },
+-                              new EstimatedParameter[] { p[0], p[1], p[2] },
+-                              3.0),
+-        new LinearMeasurement(new double[] { 1.0, -1.0, 1.0 },
+-                              new EstimatedParameter[] { p[0], p[1], p[2] },
+-                              1.0),
+-        new LinearMeasurement(new double[] { 1.0, 3.0, 2.0 },
+-                              new EstimatedParameter[] { p[0], p[1], p[2] },
+-                              7.0)
+-      });
+-
+-      GaussNewtonEstimator estimator = new GaussNewtonEstimator(100, 1.0e-6, 1.0e-6);
+-      estimator.estimate(problem);
+-      assertTrue(estimator.getRMS(problem) < 1.0e-10);
+-      double[][] covariances = estimator.getCovariances(problem);
+-      int i0 = 0, i1 = 1;
+-      if (problem.getUnboundParameters()[0].getName().endsWith("1")) {
+-          i0 = 1;
+-          i1 = 0;
+-      }
+-      assertEquals(11.0 / 24, covariances[i0][i0], 1.0e-10);
+-      assertEquals(-3.0 / 24, covariances[i0][i1], 1.0e-10);
+-      assertEquals(-3.0 / 24, covariances[i1][i0], 1.0e-10);
+-      assertEquals( 3.0 / 24, covariances[i1][i1], 1.0e-10);
+-
+-      double[] errors = estimator.guessParametersErrors(problem);
+-      assertEquals(0, errors[i0], 1.0e-10);
+-      assertEquals(0, errors[i1], 1.0e-10);
+-
+-  }
+-
+   public void testMaxIterations() {
+       Circle circle = new Circle(98.680, 47.345);
+       circle.addPoint( 30.0,  68.0);

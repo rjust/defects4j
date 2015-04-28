@@ -1,0 +1,51 @@
+diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+index cff5bfd..ee2227c 100644
+--- a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
++++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+@@ -227,7 +226,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+ 
+                 if (checker != null) {
+                     if (checker.converged(iter, previous, current)) {
+-                        return best(current, previous, isMinim);
++                        return current;
+                     }
+                 }
+ 
+@@ -264,36 +263,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+                     }
+                 }
+             } else { // Default termination (Brent's criterion).
+-                return best(current, previous, isMinim);
++                return current;
+             }
+             ++iter;
+         }
+     }
+-
+-    /**
+-     * Selects the best of two points.
+-     *
+-     * @param a Point and value.
+-     * @param b Point and value.
+-     * @param isMinim {@code true} if the selected point must be the one with
+-     * the lowest value.
+-     * @return the best point, or {@code null} if {@code a} and {@code b} are
+-     * both {@code null}.
+-     */
+-    private UnivariatePointValuePair best(UnivariatePointValuePair a,
+-                                          UnivariatePointValuePair b,
+-                                          boolean isMinim) {
+-        if (a == null) {
+-            return b;
+-        }
+-        if (b == null) {
+-            return a;
+-        }
+-
+-        if (isMinim) {
+-            return a.getValue() < b.getValue() ? a : b;
+-        } else {
+-            return a.getValue() > b.getValue() ? a : b;
+-        }
+-    }
+ }

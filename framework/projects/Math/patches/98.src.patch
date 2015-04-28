@@ -1,0 +1,26 @@
+diff --git a/org/apache/commons/math/linear/BigMatrixImpl.java b/org/apache/commons/math/linear/BigMatrixImpl.java
+index 919a5ba..7cd61cb 100644
+--- a/org/apache/commons/math/linear/BigMatrixImpl.java
++++ b/org/apache/commons/math/linear/BigMatrixImpl.java
+@@ -988,7 +988,7 @@ public class BigMatrixImpl implements BigMatrix, Serializable {
+         }
+         final int nRows = this.getRowDimension();
+         final int nCols = this.getColumnDimension();
+-        final BigDecimal[] out = new BigDecimal[nRows];
++        final BigDecimal[] out = new BigDecimal[v.length];
+         for (int row = 0; row < nRows; row++) {
+             BigDecimal sum = ZERO;
+             for (int i = 0; i < nCols; i++) {
+diff --git a/org/apache/commons/math/linear/RealMatrixImpl.java b/org/apache/commons/math/linear/RealMatrixImpl.java
+index 3a717ff..7910644 100644
+--- a/org/apache/commons/math/linear/RealMatrixImpl.java
++++ b/org/apache/commons/math/linear/RealMatrixImpl.java
+@@ -776,7 +776,7 @@ public class RealMatrixImpl implements RealMatrix, Serializable {
+         if (v.length != nCols) {
+             throw new IllegalArgumentException("vector has wrong length");
+         }
+-        final double[] out = new double[nRows];
++        final double[] out = new double[v.length];
+         for (int row = 0; row < nRows; row++) {
+             final double[] dataRow = data[row];
+             double sum = 0;

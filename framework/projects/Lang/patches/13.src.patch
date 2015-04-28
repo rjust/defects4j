@@ -1,0 +1,46 @@
+diff --git a/org/apache/commons/lang3/SerializationUtils.java b/org/apache/commons/lang3/SerializationUtils.java
+index 7c89b61..5926a9b 100644
+--- a/org/apache/commons/lang3/SerializationUtils.java
++++ b/org/apache/commons/lang3/SerializationUtils.java
+@@ -236,8 +236,6 @@ public class SerializationUtils {
+      * class here is a workaround, see the JIRA issue LANG-626. </p>
+      */
+      static class ClassLoaderAwareObjectInputStream extends ObjectInputStream {
+-        private static final Map<String, Class<?>> primitiveTypes = 
+-                new HashMap<String, Class<?>>();
+         private ClassLoader classLoader;
+         
+         /**
+@@ -251,15 +249,6 @@ public class SerializationUtils {
+             super(in);
+             this.classLoader = classLoader;
+ 
+-            primitiveTypes.put("byte", byte.class);
+-            primitiveTypes.put("short", short.class);
+-            primitiveTypes.put("int", int.class);
+-            primitiveTypes.put("long", long.class);
+-            primitiveTypes.put("float", float.class);
+-            primitiveTypes.put("double", double.class);
+-            primitiveTypes.put("boolean", boolean.class);
+-            primitiveTypes.put("char", char.class);
+-            primitiveTypes.put("void", void.class);
+         }
+ 
+         /**
+@@ -276,15 +265,7 @@ public class SerializationUtils {
+             try {
+                 return Class.forName(name, false, classLoader);
+             } catch (ClassNotFoundException ex) {
+-                try {
+-                    return Class.forName(name, false, Thread.currentThread().getContextClassLoader());
+-                } catch (ClassNotFoundException cnfe) {
+-                    Class<?> cls = primitiveTypes.get(name);
+-                    if (cls != null)
+-                        return cls;
+-                    else
+-                        throw cnfe;
+-                }
++                return Class.forName(name, false, Thread.currentThread().getContextClassLoader());
+             }
+         }
+ 

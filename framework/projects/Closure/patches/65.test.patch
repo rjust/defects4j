@@ -1,0 +1,18 @@
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index 4ddd224..be1b816 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -1228,10 +1228,9 @@ public class CodePrinterTest extends TestCase {
+   }
+ 
+   public void testZero() {
+-    assertPrint("var x ='\\0';", "var x=\"\\000\"");
+-    assertPrint("var x ='\\x00';", "var x=\"\\000\"");
+-    assertPrint("var x ='\\u0000';", "var x=\"\\000\"");
+-    assertPrint("var x ='\\u00003';", "var x=\"\\0003\"");
++    assertPrint("var x ='\\0';", "var x=\"\\0\"");
++    assertPrint("var x ='\\x00';", "var x=\"\\0\"");
++    assertPrint("var x ='\\u0000';", "var x=\"\\0\"");
+   }
+ 
+   public void testUnicode() {

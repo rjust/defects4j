@@ -1,0 +1,85 @@
+diff --git a/org/apache/commons/math/linear/ArrayRealVectorTest.java b/org/apache/commons/math/linear/ArrayRealVectorTest.java
+index 171f23f..1632316 100644
+--- a/org/apache/commons/math/linear/ArrayRealVectorTest.java
++++ b/org/apache/commons/math/linear/ArrayRealVectorTest.java
+@@ -40,7 +40,6 @@ public class ArrayRealVectorTest extends TestCase {
+     protected double[] vec2 = {4d, 5d, 6d};
+     protected double[] vec3 = {7d, 8d, 9d};
+     protected double[] vec4 = {1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d, 9d};
+-    protected double[] vec5 = { -4d, 0d, 3d, 1d, -6d, 3d};
+     protected double[] vec_null = {0d, 0d, 0d};
+     protected Double[] dvec1 = {1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d, 9d};
+     protected double[][] mat1 = {{1d, 2d, 3d}, {4d, 5d, 6d},{ 7d, 8d, 9d}};
+@@ -1080,23 +1079,19 @@ public class ArrayRealVectorTest extends TestCase {
+     public void testBasicFunctions() {
+         ArrayRealVector v1 = new ArrayRealVector(vec1);
+         ArrayRealVector v2 = new ArrayRealVector(vec2);
+-        ArrayRealVector v5 = new ArrayRealVector(vec5);
+         ArrayRealVector v_null = new ArrayRealVector(vec_null);
+ 
+         RealVectorTestImpl v2_t = new RealVectorTestImpl(vec2);
+ 
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] A --> 8.4261497731763586307
+-        double d_getNorm = v5.getNorm();
+-        assertEquals("compare values  ", 8.4261497731763586307, d_getNorm);
++        //octave =  sqrt(sumsq(v1))
++        double d_getNorm = v1.getNorm();
++        assertEquals("compare values  ", 3.7416573867739413,d_getNorm);
+ 
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] vN --> 17
+-        double d_getL1Norm = v5.getL1Norm();
+-        assertEquals("compare values  ", 17.0, d_getL1Norm);
+-
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] vn --> 6
+-        double d_getLInfNorm = v5.getLInfNorm();
+-        assertEquals("compare values  ", 6.0, d_getLInfNorm);
++        double d_getL1Norm = v1.getL1Norm();
++        assertEquals("compare values  ",6.0, d_getL1Norm);
+ 
++        double d_getLInfNorm = v1.getLInfNorm();
++        assertEquals("compare values  ",6.0, d_getLInfNorm);
+ 
+         //octave =  sqrt(sumsq(v1-v2))
+         double dist = v1.getDistance(v2);
+diff --git a/org/apache/commons/math/linear/SparseRealVectorTest.java b/org/apache/commons/math/linear/SparseRealVectorTest.java
+index 2becb69..db27f96 100644
+--- a/org/apache/commons/math/linear/SparseRealVectorTest.java
++++ b/org/apache/commons/math/linear/SparseRealVectorTest.java
+@@ -40,7 +40,6 @@ public class SparseRealVectorTest extends TestCase {
+     protected double[] vec2 = {4d, 5d, 6d};
+     protected double[] vec3 = {7d, 8d, 9d};
+     protected double[] vec4 = {1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d, 9d};
+-    protected double[] vec5 = { -4d, 0d, 3d, 1d, -6d, 3d};
+     protected double[] vec_null = {0d, 0d, 0d};
+     protected Double[] dvec1 = {1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d, 9d};
+     protected double[][] mat1 = {{1d, 2d, 3d}, {4d, 5d, 6d},{ 7d, 8d, 9d}};
+@@ -950,22 +949,19 @@ public class SparseRealVectorTest extends TestCase {
+     public void testBasicFunctions() {
+         OpenMapRealVector v1 = new OpenMapRealVector(vec1);
+         OpenMapRealVector v2 = new OpenMapRealVector(vec2);
+-        OpenMapRealVector v5 = new OpenMapRealVector(vec5);
+         OpenMapRealVector v_null = new OpenMapRealVector(vec_null);
+ 
+         SparseRealVectorTestImpl v2_t = new SparseRealVectorTestImpl(vec2);
+ 
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] A --> 8.4261497731763586307
+-        double d_getNorm = v5.getNorm();
+-        assertEquals("compare values  ", 8.4261497731763586307, d_getNorm);
++        //octave =  sqrt(sumsq(v1))
++        double d_getNorm = v1.getNorm();
++        assertEquals("compare values  ", 3.7416573867739413,d_getNorm);
+ 
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] vN --> 17
+-        double d_getL1Norm = v5.getL1Norm();
+-        assertEquals("compare values  ", 17.0, d_getL1Norm);
++        double d_getL1Norm = v1.getL1Norm();
++        assertEquals("compare values  ",6.0, d_getL1Norm);
+ 
+-        // emacs calc: [-4, 0, 3, 1, -6, 3] vn --> 6
+-        double d_getLInfNorm = v5.getLInfNorm();
+-        assertEquals("compare values  ", 6.0, d_getLInfNorm);
++        double d_getLInfNorm = v1.getLInfNorm();
++        assertEquals("compare values  ",6.0, d_getLInfNorm);
+ 
+         //octave =  sqrt(sumsq(v1-v2))
+         double dist = v1.getDistance(v2);

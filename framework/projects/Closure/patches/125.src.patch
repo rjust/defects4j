@@ -1,0 +1,22 @@
+diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
+index de14c04..ab71542 100644
+--- a/com/google/javascript/jscomp/TypeCheck.java
++++ b/com/google/javascript/jscomp/TypeCheck.java
+@@ -1176,7 +1176,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+    * Returns true if any type in the chain has an implicitCast annotation for
+    * the given property.
+    */
+-  private static boolean propertyIsImplicitCast(ObjectType type, String prop) {
++  private boolean propertyIsImplicitCast(ObjectType type, String prop) {
+     for (; type != null; type = type.getImplicitPrototype()) {
+       JSDocInfo docInfo = type.getOwnPropertyJSDocInfo(prop);
+       if (docInfo != null && docInfo.isImplicitCast()) {
+@@ -1658,7 +1658,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+     JSType type = getJSType(constructor).restrictByNotNullOrUndefined();
+     if (type.isConstructor() || type.isEmptyType() || type.isUnknownType()) {
+       FunctionType fnType = type.toMaybeFunctionType();
+-      if (fnType != null && fnType.hasInstanceType()) {
++      if (fnType != null) {
+         visitParameterList(t, n, fnType);
+         ensureTyped(t, n, fnType.getInstanceType());
+       } else {

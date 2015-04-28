@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
+index df71405..c5342ae 100644
+--- a/org/apache/commons/math/util/MathUtils.java
++++ b/org/apache/commons/math/util/MathUtils.java
+@@ -409,7 +409,7 @@ public final class MathUtils {
+      * @since 1.1
+      */
+     public static int gcd(int u, int v) {
+-        if ((u == 0) || (v == 0)) {
++        if (u * v == 0) {
+             return (Math.abs(u) + Math.abs(v));
+         }
+         // keep u and v negative, as negative integers range down to

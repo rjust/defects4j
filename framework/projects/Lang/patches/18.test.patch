@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/lang3/time/FastDateFormatTest.java b/org/apache/commons/lang3/time/FastDateFormatTest.java
+index 6feb57d..e4cde1a 100644
+--- a/org/apache/commons/lang3/time/FastDateFormatTest.java
++++ b/org/apache/commons/lang3/time/FastDateFormatTest.java
+@@ -216,9 +216,8 @@ public class FastDateFormatTest extends TestCase {
+                 " dddd ddd dd d DDDD DDD DD D EEEE EEE EE E aaaa aaa aa a zzzz zzz zz z";
+             fdf = FastDateFormat.getInstance(pattern);
+             sdf = new SimpleDateFormat(pattern);
+-            // SDF bug fix starting with Java 7
+-            assertEquals(sdf.format(date1).replaceAll("2003 03 03 03", "2003 2003 03 2003"), fdf.format(date1));
+-            assertEquals(sdf.format(date2).replaceAll("2003 03 03 03", "2003 2003 03 2003"), fdf.format(date2));
++            assertEquals(sdf.format(date1), fdf.format(date1));
++            assertEquals(sdf.format(date2), fdf.format(date2));
+         } finally {
+             Locale.setDefault(realDefaultLocale);
+             TimeZone.setDefault(realDefaultZone);

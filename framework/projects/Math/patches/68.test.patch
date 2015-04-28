@@ -1,0 +1,84 @@
+diff --git a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
+index 06f1721..aabeab6 100644
+--- a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
++++ b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
+@@ -485,7 +485,7 @@ public class LevenbergMarquardtOptimizerTest
+             circle.addPoint(points[i][0], points[i][1]);
+         }
+         LevenbergMarquardtOptimizer optimizer = new LevenbergMarquardtOptimizer();
+-        optimizer.setConvergenceChecker(new SimpleVectorialValueChecker(1.0e-8, 1.0e-8));
++        optimizer.setConvergenceChecker(new SimpleVectorialValueChecker(1.0e-10, 1.0e-10));
+         VectorialPointValuePair optimum =
+             optimizer.optimize(circle, target, weights, new double[] { -12, -12 });
+         Point2D.Double center = new Point2D.Double(optimum.getPointRef()[0], optimum.getPointRef()[1]);
+diff --git a/org/apache/commons/math/optimization/general/MinpackTest.java b/org/apache/commons/math/optimization/general/MinpackTest.java
+index 59467b2..7ff3331 100644
+--- a/org/apache/commons/math/optimization/general/MinpackTest.java
++++ b/org/apache/commons/math/optimization/general/MinpackTest.java
+@@ -152,14 +152,14 @@ public class MinpackTest extends TestCase {
+     minpackTest(new FreudensteinRothFunction(new double[] { 5.0, -20.0 },
+                                              12432.833948863, 6.9988751744895,
+                                              new double[] {
+-                                               11.4121122022341,
+-                                               -0.8968550851268697
++                                               11.4130046614746,
++                                               -0.896796038685958
+                                              }), false);
+     minpackTest(new FreudensteinRothFunction(new double[] { 50.0, -200.0 },
+                                              11426454.595762, 6.99887517242903,
+                                              new double[] {
+-                                               11.412069435091231,
+-                                               -0.8968582807605691
++                                               11.4127817857886,
++                                               -0.89680510749204
+                                              }), false);
+   }
+ 
+@@ -325,7 +325,7 @@ public class MinpackTest extends TestCase {
+     minpackTest(new JennrichSampsonFunction(10, new double[] { 0.3, 0.4 },
+                                             64.5856498144943, 11.1517793413499,
+                                             new double[] {
+-                                             0.2578330049, 0.257829976764542
++                                             0.257819926636811, 0.257829976764542
+                                             }), false);
+   }
+ 
+@@ -499,8 +499,8 @@ public class MinpackTest extends TestCase {
+                                  function.getTarget(), function.getWeight(),
+                                  function.getStartPoint());
+           assertFalse(exceptionExpected);
+-          function.checkTheoreticalMinCost(optimizer.getRMS());
+-          function.checkTheoreticalMinParams(optimum);
++          assertTrue(function.checkTheoreticalMinCost(optimizer.getRMS()));
++          assertTrue(function.checkTheoreticalMinParams(optimum));
+       } catch (OptimizationException lsse) {
+           assertTrue(exceptionExpected);
+       } catch (FunctionEvaluationException fe) {
+@@ -561,20 +561,23 @@ public class MinpackTest extends TestCase {
+           return startParams.length;
+       }
+ 
+-      public void checkTheoreticalMinCost(double rms) {
++      public boolean checkTheoreticalMinCost(double rms) {
+           double threshold = costAccuracy * (1.0 + theoreticalMinCost);
+-          assertEquals(theoreticalMinCost, Math.sqrt(m) * rms, threshold);
++          return Math.abs(Math.sqrt(m) * rms - theoreticalMinCost) <= threshold;
+       }
+ 
+-      public void checkTheoreticalMinParams(VectorialPointValuePair optimum) {
++      public boolean checkTheoreticalMinParams(VectorialPointValuePair optimum) {
+           double[] params = optimum.getPointRef();
+           if (theoreticalMinParams != null) {
+               for (int i = 0; i < theoreticalMinParams.length; ++i) {
+                   double mi = theoreticalMinParams[i];
+                   double vi = params[i];
+-                  assertEquals(mi, vi, paramsAccuracy * (1.0 + Math.abs(mi)));
++                  if (Math.abs(mi - vi) > (paramsAccuracy * (1.0 + Math.abs(mi)))) {
++                      return false;
++                  }
+               }
+           }
++          return true;
+       }
+ 
+       public MultivariateMatrixFunction jacobian() {

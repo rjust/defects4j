@@ -1,0 +1,38 @@
+diff --git a/com/google/javascript/jscomp/CheckSideEffectsTest.java b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+index b3d1169..76dc726 100644
+--- a/com/google/javascript/jscomp/CheckSideEffectsTest.java
++++ b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+@@ -81,9 +81,4 @@ public class CheckSideEffectsTest extends CompilerTestCase {
+     test("function A() { this.foo; }", e);
+     test("function A() { /** @type Number */ this.foo; }", ok);
+   }
+-
+-  public void testJSDocComments() {
+-    test("function A() { /** This is a jsdoc comment */ this.foo; }", ok);
+-    test("function A() { /* This is a normal comment */ this.foo; }", e);
+-  }
+ }
+diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+index cac15c2..b5c2960 100644
+--- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+@@ -1096,19 +1096,4 @@ public class CollapsePropertiesTest extends CompilerTestCase {
+          "var a$b = CreateClass({c: function() {}});" +
+          "var a$d = CreateClass({c: a$b.prototype.c});");
+   }
+-
+-  public void testCrashInCommaOperator() {
+-    test("var a = {}; a.b = function() {},a.b();",
+-         "var a$b; a$b=function() {},a$b();");
+-  }
+-
+-  public void testCrashInNestedAssign() {
+-    test("var a = {}; if (a.b = function() {}) a.b();",
+-         "var a$b; if (a$b=function() {}) { a$b(); }");
+-  }
+-
+-  public void testTwinReferenceCancelsChildCollapsing() {
+-    test("var a = {}; if (a.b = function() {}) { a.b.c = 3; a.b(a.b.c); }",
+-         "var a$b; if (a$b = function() {}) { a$b.c = 3; a$b(a$b.c); }");
+-  }
+ }

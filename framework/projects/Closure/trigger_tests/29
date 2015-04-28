@@ -1,0 +1,763 @@
+--- com.google.javascript.jscomp.InlineObjectLiteralsTest::testObject10
+junit.framework.AssertionFailedError: 
+Expected: function local(){var x={};var b=f();x={a:a,b:b};if(x.a)g(x.b)+x.c}
+Result: function local(){var JSCompiler_object_inline_a_0;var JSCompiler_object_inline_b_1;var JSCompiler_object_inline_c_2;var b=f();JSCompiler_object_inline_a_0=a,JSCompiler_object_inline_b_1=b,JSCompiler_object_inline_c_2=void 0,true;if(JSCompiler_object_inline_a_0)g(JSCompiler_object_inline_b_1)+JSCompiler_object_inline_c_2}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION local 1 [source_file: expected0]
+            NAME local 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME x 1 [source_file: expected0]
+                        OBJECTLIT 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME b 1 [source_file: expected0]
+                        CALL 1 [free_call: 1] [source_file: expected0]
+                            NAME f 1 [source_file: expected0]
+                EXPR_RESULT 1 [source_file: expected0]
+                    ASSIGN 1 [source_file: expected0]
+                        NAME x 1 [source_file: expected0]
+                        OBJECTLIT 1 [source_file: expected0]
+                            STRING_KEY a 1 [source_file: expected0]
+                                NAME a 1 [source_file: expected0]
+                            STRING_KEY b 1 [source_file: expected0]
+                                NAME b 1 [source_file: expected0]
+                IF 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME x 1 [source_file: expected0]
+                        STRING a 1 [source_file: expected0]
+                    BLOCK 1 [source_file: expected0]
+                        EXPR_RESULT 1 [source_file: expected0]
+                            ADD 1 [source_file: expected0]
+                                CALL 1 [free_call: 1] [source_file: expected0]
+                                    NAME g 1 [source_file: expected0]
+                                    GETPROP 1 [source_file: expected0]
+                                        NAME x 1 [source_file: expected0]
+                                        STRING b 1 [source_file: expected0]
+                                GETPROP 1 [source_file: expected0]
+                                    NAME x 1 [source_file: expected0]
+                                    STRING c 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION local 1 [source_file: testcode]
+            NAME local 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME b 1 [source_file: testcode]
+                        CALL 1 [free_call: 1] [source_file: testcode]
+                            NAME f 1 [source_file: testcode]
+                EXPR_RESULT 1 [source_file: testcode]
+                    COMMA 1 [source_file: testcode]
+                        COMMA 1 [source_file: testcode]
+                            COMMA 1 [source_file: testcode]
+                                ASSIGN 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+                                    NAME a 1 [source_file: testcode]
+                                ASSIGN 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+                                    NAME b 1 [source_file: testcode]
+                            ASSIGN 1 [source_file: testcode]
+                                NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+                                VOID 1 [source_file: testcode]
+                                    NUMBER 0.0 1 [source_file: testcode]
+                        TRUE 1 [source_file: testcode]
+                IF 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+                    BLOCK 1 [source_file: testcode]
+                        EXPR_RESULT 1 [source_file: testcode]
+                            ADD 1 [source_file: testcode]
+                                CALL 1 [free_call: 1] [source_file: testcode]
+                                    NAME g 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+                                NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+
+
+Subtree1: BLOCK 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME x 1 [source_file: expected0]
+            OBJECTLIT 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME b 1 [source_file: expected0]
+            CALL 1 [free_call: 1] [source_file: expected0]
+                NAME f 1 [source_file: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        ASSIGN 1 [source_file: expected0]
+            NAME x 1 [source_file: expected0]
+            OBJECTLIT 1 [source_file: expected0]
+                STRING_KEY a 1 [source_file: expected0]
+                    NAME a 1 [source_file: expected0]
+                STRING_KEY b 1 [source_file: expected0]
+                    NAME b 1 [source_file: expected0]
+    IF 1 [source_file: expected0]
+        GETPROP 1 [source_file: expected0]
+            NAME x 1 [source_file: expected0]
+            STRING a 1 [source_file: expected0]
+        BLOCK 1 [source_file: expected0]
+            EXPR_RESULT 1 [source_file: expected0]
+                ADD 1 [source_file: expected0]
+                    CALL 1 [free_call: 1] [source_file: expected0]
+                        NAME g 1 [source_file: expected0]
+                        GETPROP 1 [source_file: expected0]
+                            NAME x 1 [source_file: expected0]
+                            STRING b 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME x 1 [source_file: expected0]
+                        STRING c 1 [source_file: expected0]
+
+
+Subtree2: BLOCK 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME b 1 [source_file: testcode]
+            CALL 1 [free_call: 1] [source_file: testcode]
+                NAME f 1 [source_file: testcode]
+    EXPR_RESULT 1 [source_file: testcode]
+        COMMA 1 [source_file: testcode]
+            COMMA 1 [source_file: testcode]
+                COMMA 1 [source_file: testcode]
+                    ASSIGN 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+                        NAME a 1 [source_file: testcode]
+                    ASSIGN 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+                        NAME b 1 [source_file: testcode]
+                ASSIGN 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+                    VOID 1 [source_file: testcode]
+                        NUMBER 0.0 1 [source_file: testcode]
+            TRUE 1 [source_file: testcode]
+    IF 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_a_0 1 [source_file: testcode]
+        BLOCK 1 [source_file: testcode]
+            EXPR_RESULT 1 [source_file: testcode]
+                ADD 1 [source_file: testcode]
+                    CALL 1 [free_call: 1] [source_file: testcode]
+                        NAME g 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_b_1 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_c_2 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:892)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:445)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:371)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:340)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:328)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testLocal(InlineObjectLiteralsTest.java:355)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testObject10(InlineObjectLiteralsTest.java:174)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineObjectLiteralsTest::testObject12
+junit.framework.AssertionFailedError: 
+Expected: function local(){var a;a={x:1,y:2};f(a.x,a.y2)}
+Result: function local(){var JSCompiler_object_inline_x_0;var JSCompiler_object_inline_y_1;var JSCompiler_object_inline_y2_2;JSCompiler_object_inline_x_0=1,JSCompiler_object_inline_y_1=2,JSCompiler_object_inline_y2_2=void 0,true;f(JSCompiler_object_inline_x_0,JSCompiler_object_inline_y2_2)}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION local 1 [source_file: expected0]
+            NAME local 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME a 1 [source_file: expected0]
+                EXPR_RESULT 1 [source_file: expected0]
+                    ASSIGN 1 [source_file: expected0]
+                        NAME a 1 [source_file: expected0]
+                        OBJECTLIT 1 [source_file: expected0]
+                            STRING_KEY x 1 [source_file: expected0]
+                                NUMBER 1.0 1 [source_file: expected0]
+                            STRING_KEY y 1 [source_file: expected0]
+                                NUMBER 2.0 1 [source_file: expected0]
+                EXPR_RESULT 1 [source_file: expected0]
+                    CALL 1 [free_call: 1] [source_file: expected0]
+                        NAME f 1 [source_file: expected0]
+                        GETPROP 1 [source_file: expected0]
+                            NAME a 1 [source_file: expected0]
+                            STRING x 1 [source_file: expected0]
+                        GETPROP 1 [source_file: expected0]
+                            NAME a 1 [source_file: expected0]
+                            STRING y2 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION local 1 [source_file: testcode]
+            NAME local 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+                EXPR_RESULT 1 [source_file: testcode]
+                    COMMA 1 [source_file: testcode]
+                        COMMA 1 [source_file: testcode]
+                            COMMA 1 [source_file: testcode]
+                                ASSIGN 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                                    NUMBER 1.0 1 [source_file: testcode]
+                                ASSIGN 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                                    NUMBER 2.0 1 [source_file: testcode]
+                            ASSIGN 1 [source_file: testcode]
+                                NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+                                VOID 1 [source_file: testcode]
+                                    NUMBER 0.0 1 [source_file: testcode]
+                        TRUE 1 [source_file: testcode]
+                EXPR_RESULT 1 [source_file: testcode]
+                    CALL 1 [free_call: 1] [source_file: testcode]
+                        NAME f 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+
+
+Subtree1: BLOCK 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME a 1 [source_file: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        ASSIGN 1 [source_file: expected0]
+            NAME a 1 [source_file: expected0]
+            OBJECTLIT 1 [source_file: expected0]
+                STRING_KEY x 1 [source_file: expected0]
+                    NUMBER 1.0 1 [source_file: expected0]
+                STRING_KEY y 1 [source_file: expected0]
+                    NUMBER 2.0 1 [source_file: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        CALL 1 [free_call: 1] [source_file: expected0]
+            NAME f 1 [source_file: expected0]
+            GETPROP 1 [source_file: expected0]
+                NAME a 1 [source_file: expected0]
+                STRING x 1 [source_file: expected0]
+            GETPROP 1 [source_file: expected0]
+                NAME a 1 [source_file: expected0]
+                STRING y2 1 [source_file: expected0]
+
+
+Subtree2: BLOCK 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+    EXPR_RESULT 1 [source_file: testcode]
+        COMMA 1 [source_file: testcode]
+            COMMA 1 [source_file: testcode]
+                COMMA 1 [source_file: testcode]
+                    ASSIGN 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                        NUMBER 1.0 1 [source_file: testcode]
+                    ASSIGN 1 [source_file: testcode]
+                        NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                        NUMBER 2.0 1 [source_file: testcode]
+                ASSIGN 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+                    VOID 1 [source_file: testcode]
+                        NUMBER 0.0 1 [source_file: testcode]
+            TRUE 1 [source_file: testcode]
+    EXPR_RESULT 1 [source_file: testcode]
+        CALL 1 [free_call: 1] [source_file: testcode]
+            NAME f 1 [source_file: testcode]
+            NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+            NAME JSCompiler_object_inline_y2_2 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:892)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:445)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:371)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:340)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:328)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testLocal(InlineObjectLiteralsTest.java:355)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testObject12(InlineObjectLiteralsTest.java:215)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineObjectLiteralsTest::testObject22
+junit.framework.AssertionFailedError: 
+Expected: function local(){var a;for(;1;){f(a.x,a.y);a={x:1,y:1}}}
+Result: function local(){var JSCompiler_object_inline_x_0;var JSCompiler_object_inline_y_1;for(;1;){f(JSCompiler_object_inline_x_0,JSCompiler_object_inline_y_1);JSCompiler_object_inline_x_0=1,JSCompiler_object_inline_y_1=1,true}}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION local 1 [source_file: expected0]
+            NAME local 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME a 1 [source_file: expected0]
+                FOR 1 [source_file: expected0]
+                    EMPTY 1 [source_file: expected0]
+                    NUMBER 1.0 1 [source_file: expected0]
+                    EMPTY 1 [source_file: expected0]
+                    BLOCK 1 [source_file: expected0]
+                        EXPR_RESULT 1 [source_file: expected0]
+                            CALL 1 [free_call: 1] [source_file: expected0]
+                                NAME f 1 [source_file: expected0]
+                                GETPROP 1 [source_file: expected0]
+                                    NAME a 1 [source_file: expected0]
+                                    STRING x 1 [source_file: expected0]
+                                GETPROP 1 [source_file: expected0]
+                                    NAME a 1 [source_file: expected0]
+                                    STRING y 1 [source_file: expected0]
+                        EXPR_RESULT 1 [source_file: expected0]
+                            ASSIGN 1 [source_file: expected0]
+                                NAME a 1 [source_file: expected0]
+                                OBJECTLIT 1 [source_file: expected0]
+                                    STRING_KEY x 1 [source_file: expected0]
+                                        NUMBER 1.0 1 [source_file: expected0]
+                                    STRING_KEY y 1 [source_file: expected0]
+                                        NUMBER 1.0 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION local 1 [source_file: testcode]
+            NAME local 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                FOR 1 [source_file: testcode]
+                    EMPTY 1 [source_file: testcode]
+                    NUMBER 1.0 1 [source_file: testcode]
+                    EMPTY 1 [source_file: testcode]
+                    BLOCK 1 [source_file: testcode]
+                        EXPR_RESULT 1 [source_file: testcode]
+                            CALL 1 [free_call: 1] [source_file: testcode]
+                                NAME f 1 [source_file: testcode]
+                                NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                                NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                        EXPR_RESULT 1 [source_file: testcode]
+                            COMMA 1 [source_file: testcode]
+                                COMMA 1 [source_file: testcode]
+                                    ASSIGN 1 [source_file: testcode]
+                                        NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                                        NUMBER 1.0 1 [source_file: testcode]
+                                    ASSIGN 1 [source_file: testcode]
+                                        NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                                        NUMBER 1.0 1 [source_file: testcode]
+                                TRUE 1 [source_file: testcode]
+
+
+Subtree1: BLOCK 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME a 1 [source_file: expected0]
+    FOR 1 [source_file: expected0]
+        EMPTY 1 [source_file: expected0]
+        NUMBER 1.0 1 [source_file: expected0]
+        EMPTY 1 [source_file: expected0]
+        BLOCK 1 [source_file: expected0]
+            EXPR_RESULT 1 [source_file: expected0]
+                CALL 1 [free_call: 1] [source_file: expected0]
+                    NAME f 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME a 1 [source_file: expected0]
+                        STRING x 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME a 1 [source_file: expected0]
+                        STRING y 1 [source_file: expected0]
+            EXPR_RESULT 1 [source_file: expected0]
+                ASSIGN 1 [source_file: expected0]
+                    NAME a 1 [source_file: expected0]
+                    OBJECTLIT 1 [source_file: expected0]
+                        STRING_KEY x 1 [source_file: expected0]
+                            NUMBER 1.0 1 [source_file: expected0]
+                        STRING_KEY y 1 [source_file: expected0]
+                            NUMBER 1.0 1 [source_file: expected0]
+
+
+Subtree2: BLOCK 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+    FOR 1 [source_file: testcode]
+        EMPTY 1 [source_file: testcode]
+        NUMBER 1.0 1 [source_file: testcode]
+        EMPTY 1 [source_file: testcode]
+        BLOCK 1 [source_file: testcode]
+            EXPR_RESULT 1 [source_file: testcode]
+                CALL 1 [free_call: 1] [source_file: testcode]
+                    NAME f 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+            EXPR_RESULT 1 [source_file: testcode]
+                COMMA 1 [source_file: testcode]
+                    COMMA 1 [source_file: testcode]
+                        ASSIGN 1 [source_file: testcode]
+                            NAME JSCompiler_object_inline_x_0 1 [source_file: testcode]
+                            NUMBER 1.0 1 [source_file: testcode]
+                        ASSIGN 1 [source_file: testcode]
+                            NAME JSCompiler_object_inline_y_1 1 [source_file: testcode]
+                            NUMBER 1.0 1 [source_file: testcode]
+                    TRUE 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:892)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:445)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:371)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:340)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:328)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testLocal(InlineObjectLiteralsTest.java:355)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testObject22(InlineObjectLiteralsTest.java:288)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineObjectLiteralsTest::testIssue724
+junit.framework.AssertionFailedError: 
+Expected: function local(){var getType;getType={};return functionToCheck&&getType.toString.apply(functionToCheck)==="[object Function]"}
+Result: function local(){var JSCompiler_object_inline_toString_0;JSCompiler_object_inline_toString_0=void 0,true;return functionToCheck&&JSCompiler_object_inline_toString_0.apply(functionToCheck)==="[object Function]"}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION local 1 [source_file: expected0]
+            NAME local 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME getType 1 [source_file: expected0]
+                EXPR_RESULT 1 [source_file: expected0]
+                    ASSIGN 1 [source_file: expected0]
+                        NAME getType 1 [source_file: expected0]
+                        OBJECTLIT 1 [source_file: expected0]
+                RETURN 1 [source_file: expected0]
+                    AND 1 [source_file: expected0]
+                        NAME functionToCheck 1 [source_file: expected0]
+                        SHEQ 1 [source_file: expected0]
+                            CALL 1 [source_file: expected0]
+                                GETPROP 1 [source_file: expected0]
+                                    GETPROP 1 [source_file: expected0]
+                                        NAME getType 1 [source_file: expected0]
+                                        STRING toString 1 [source_file: expected0]
+                                    STRING apply 1 [source_file: expected0]
+                                NAME functionToCheck 1 [source_file: expected0]
+                            STRING [object Function] 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION local 1 [source_file: testcode]
+            NAME local 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME JSCompiler_object_inline_toString_0 1 [source_file: testcode]
+                EXPR_RESULT 1 [source_file: testcode]
+                    COMMA 1 [source_file: testcode]
+                        ASSIGN 1 [source_file: testcode]
+                            NAME JSCompiler_object_inline_toString_0 1 [source_file: testcode]
+                            VOID 1 [source_file: testcode]
+                                NUMBER 0.0 1 [source_file: testcode]
+                        TRUE 1 [source_file: testcode]
+                RETURN 1 [source_file: testcode]
+                    AND 1 [source_file: testcode]
+                        NAME functionToCheck 1 [source_file: testcode]
+                        SHEQ 1 [source_file: testcode]
+                            CALL 1 [source_file: testcode]
+                                GETPROP 1 [source_file: testcode]
+                                    NAME JSCompiler_object_inline_toString_0 1 [source_file: testcode]
+                                    STRING apply 1 [source_file: testcode]
+                                NAME functionToCheck 1 [source_file: testcode]
+                            STRING [object Function] 1 [source_file: testcode]
+
+
+Subtree1: NAME getType 1 [source_file: expected0]
+
+
+Subtree2: NAME JSCompiler_object_inline_toString_0 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:892)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:445)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:371)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:340)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:328)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testLocal(InlineObjectLiteralsTest.java:355)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testSameLocal(InlineObjectLiteralsTest.java:360)
+	at com.google.javascript.jscomp.InlineObjectLiteralsTest.testIssue724(InlineObjectLiteralsTest.java:344)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.IntegrationTest::testIssue724
+junit.framework.AssertionFailedError: 
+Expected: isFunction=function(a){var b={};return a&&"[object Function]"===b.b.a(a)}
+Result: isFunction=function(a){return a&&"[object Function]"===(void 0).a(a)}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: input0] [input_id: InputId: input0]
+        EXPR_RESULT 1 [source_file: input0]
+            ASSIGN 1 [source_file: input0]
+                NAME isFunction 1 [source_file: input0]
+                FUNCTION  1 [source_file: input0]
+                    NAME  1 [source_file: input0]
+                    PARAM_LIST 1 [source_file: input0]
+                        NAME a 1 [source_file: input0]
+                    BLOCK 1 [source_file: input0]
+                        VAR 1 [source_file: input0]
+                            NAME b 1 [source_file: input0]
+                                OBJECTLIT 1 [source_file: input0]
+                        RETURN 1 [source_file: input0]
+                            AND 1 [source_file: input0]
+                                NAME a 1 [source_file: input0]
+                                SHEQ 1 [source_file: input0]
+                                    STRING [object Function] 1 [source_file: input0]
+                                    CALL 1 [source_file: input0]
+                                        GETPROP 1 [source_file: input0]
+                                            GETPROP 1 [source_file: input0]
+                                                NAME b 1 [source_file: input0]
+                                                STRING b 1 [source_file: input0]
+                                            STRING a 1 [source_file: input0]
+                                        NAME a 1 [source_file: input0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+        EXPR_RESULT 1 [source_file: i0]
+            ASSIGN 1 [source_file: i0]
+                NAME isFunction 1 [source_file: i0]
+                FUNCTION  1 [source_file: i0]
+                    NAME  1 [source_file: i0]
+                    PARAM_LIST 1 [source_file: i0]
+                        NAME a 1 [source_file: i0]
+                    BLOCK 1 [source_file: i0]
+                        RETURN 1 [source_file: i0]
+                            AND 1 [source_file: i0]
+                                NAME a 1 [source_file: i0]
+                                SHEQ 1 [source_file: i0]
+                                    STRING [object Function] 1 [source_file: i0]
+                                    CALL 1 [source_file: i0]
+                                        GETPROP 1 [source_file: i0]
+                                            VOID 1 [source_file: i0]
+                                                NUMBER 0.0 1 [source_file: i0]
+                                            STRING a 1 [source_file: i0]
+                                        NAME a 1 [source_file: i0]
+
+
+Subtree1: BLOCK 1 [source_file: input0]
+    VAR 1 [source_file: input0]
+        NAME b 1 [source_file: input0]
+            OBJECTLIT 1 [source_file: input0]
+    RETURN 1 [source_file: input0]
+        AND 1 [source_file: input0]
+            NAME a 1 [source_file: input0]
+            SHEQ 1 [source_file: input0]
+                STRING [object Function] 1 [source_file: input0]
+                CALL 1 [source_file: input0]
+                    GETPROP 1 [source_file: input0]
+                        GETPROP 1 [source_file: input0]
+                            NAME b 1 [source_file: input0]
+                            STRING b 1 [source_file: input0]
+                        STRING a 1 [source_file: input0]
+                    NAME a 1 [source_file: input0]
+
+
+Subtree2: BLOCK 1 [source_file: i0]
+    RETURN 1 [source_file: i0]
+        AND 1 [source_file: i0]
+            NAME a 1 [source_file: i0]
+            SHEQ 1 [source_file: i0]
+                STRING [object Function] 1 [source_file: i0]
+                CALL 1 [source_file: i0]
+                    GETPROP 1 [source_file: i0]
+                        VOID 1 [source_file: i0]
+                            NUMBER 0.0 1 [source_file: i0]
+                        STRING a 1 [source_file: i0]
+                    NAME a 1 [source_file: i0]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.IntegrationTestCase.test(IntegrationTestCase.java:92)
+	at com.google.javascript.jscomp.IntegrationTestCase.test(IntegrationTestCase.java:74)
+	at com.google.javascript.jscomp.IntegrationTest.testIssue724(IntegrationTest.java:1687)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

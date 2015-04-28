@@ -1,0 +1,56 @@
+diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+index 85cfe4f..33a4462 100644
+--- a/com/google/javascript/jscomp/IntegrationTest.java
++++ b/com/google/javascript/jscomp/IntegrationTest.java
+@@ -1763,24 +1763,6 @@ public class IntegrationTest extends TestCase {
+         "function f(a) {return a + 'xy'}");
+   }
+ 
+-  public void testIssue284() {
+-    CompilerOptions options = createCompilerOptions();
+-    options.smartNameRemoval = true;
+-    test(options,
+-        "var goog = {};" +
+-        "goog.inherits = function(x, y) {};" +
+-        "var ns = {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel = function() {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel.FooEvent = function() {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel.SelectEvent = function() {};" +
+-        "goog.inherits(ns.PageSelectionModel.ChangeEvent," +
+-        "    ns.PageSelectionModel.FooEvent);",
+-        "");
+-  }
+-
+   public void testCodingConvention() {
+     Compiler compiler = new Compiler();
+     compiler.initOptions(new CompilerOptions());
+diff --git a/com/google/javascript/jscomp/NameAnalyzerTest.java b/com/google/javascript/jscomp/NameAnalyzerTest.java
+index 0dea6c9..bc9566d 100644
+--- a/com/google/javascript/jscomp/NameAnalyzerTest.java
++++ b/com/google/javascript/jscomp/NameAnalyzerTest.java
+@@ -1640,22 +1640,6 @@ public class NameAnalyzerTest extends CompilerTestCase {
+     test("var x = {}; x.a.prototype = 1", "");
+   }
+ 
+-  public void testIssue284() {
+-    test(
+-        "var goog = {};" +
+-        "goog.inherits = function(x, y) {};" +
+-        "var ns = {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel = function() {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel.FooEvent = function() {};" +
+-        "/** @constructor */" +
+-        "ns.PageSelectionModel.SelectEvent = function() {};" +
+-        "goog.inherits(ns.PageSelectionModel.ChangeEvent," +
+-        "    ns.PageSelectionModel.FooEvent);",
+-        "");
+-  }
+-
+ 
+   @Override
+   protected CompilerPass getProcessor(Compiler compiler) {

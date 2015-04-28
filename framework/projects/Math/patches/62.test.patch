@@ -1,0 +1,33 @@
+diff --git a/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizerTest.java b/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizerTest.java
+index f1e0fd8..a688df9 100644
+--- a/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizerTest.java
++++ b/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizerTest.java
+@@ -50,8 +50,8 @@ public class MultiStartUnivariateRealOptimizerTest {
+             assertEquals(-1.0, f.value(optima[i].getPoint()), 1.0e-10);
+             assertEquals(f.value(optima[i].getPoint()), optima[i].getValue(), 1.0e-10);
+         }
+-        assertTrue(optimizer.getEvaluations() > 200);
+-        assertTrue(optimizer.getEvaluations() < 300);
++        assertTrue(optimizer.getEvaluations() > 150);
++        assertTrue(optimizer.getEvaluations() < 250);
+     }
+ 
+     @Test
+@@ -68,14 +68,14 @@ public class MultiStartUnivariateRealOptimizerTest {
+ 
+         UnivariateRealPointValuePair optimum
+             = optimizer.optimize(f, GoalType.MINIMIZE, -0.3, -0.2);
+-        assertEquals(-0.2719561293, optimum.getPoint(), 1e-9);
++        assertEquals(-0.2719561271, optimum.getPoint(), 1e-9);
+         assertEquals(-0.0443342695, optimum.getValue(), 1e-9);
+ 
+         UnivariateRealPointValuePair[] optima = optimizer.getOptima();
+         for (int i = 0; i < optima.length; ++i) {
+             assertEquals(f.value(optima[i].getPoint()), optima[i].getValue(), 1e-9);
+         }
+-        assertTrue(optimizer.getEvaluations() >= 50);
+-        assertTrue(optimizer.getEvaluations() <= 100);
++        assertTrue(optimizer.getEvaluations() >= 110);
++        assertTrue(optimizer.getEvaluations() <= 150);
+     }
+ }

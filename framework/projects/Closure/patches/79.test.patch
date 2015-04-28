@@ -1,0 +1,115 @@
+diff --git a/com/google/javascript/jscomp/CompilerTestCase.java b/com/google/javascript/jscomp/CompilerTestCase.java
+index b412416..d0cf9fc 100644
+--- a/com/google/javascript/jscomp/CompilerTestCase.java
++++ b/com/google/javascript/jscomp/CompilerTestCase.java
+@@ -88,11 +88,6 @@ public abstract class CompilerTestCase extends TestCase  {
+   private boolean acceptES5 = true;
+ 
+   /**
+-   * Whether externs changes should be allowed for this pass.
+-   */
+-  private boolean allowExternsChanges = false;
+-
+-  /**
+    * Constructs a test.
+    *
+    * @param externs Externs JS as a string
+@@ -196,13 +191,6 @@ public abstract class CompilerTestCase extends TestCase  {
+   }
+ 
+   /**
+-   * Whether to allow externs changes.
+-   */
+-  protected void allowExternsChanges(boolean allowExternsChanges) {
+-    this.allowExternsChanges = allowExternsChanges;
+-  }
+-
+-  /**
+    * Perform type checking before running the test pass. This will check
+    * for type errors and annotate nodes with type information.
+    *
+@@ -628,8 +616,7 @@ public abstract class CompilerTestCase extends TestCase  {
+    * @param error Expected error, or null if no error is expected
+    * @param warning Expected warning, or null if no warning is expected
+    */
+-  public void testSame(
+-      String[] js, DiagnosticType error, DiagnosticType warning) {
++  public void testSame(String[] js, DiagnosticType error, DiagnosticType warning) {
+     test(js, js, error, warning);
+   }
+ 
+@@ -816,20 +803,7 @@ public abstract class CompilerTestCase extends TestCase  {
+         normalizeActualCode(compiler, externsRootClone, mainRootClone);
+       }
+ 
+-      boolean codeChange = !mainRootClone.checkTreeEqualsSilent(mainRoot);
+-      boolean externsChange = !externsRootClone
+-          .checkTreeEqualsSilent(externsRoot);
+-
+-      // Generally, externs should not be change by the compiler passes.
+-      if (externsChange && !allowExternsChanges) {
+-        String explanation = externsRootClone.checkTreeEquals(externsRoot);
+-        fail("Unexpected changes to externs" +
+-            "\nExpected: " + compiler.toSource(externsRootClone) +
+-            "\nResult: " + compiler.toSource(externsRoot) +
+-            "\n" + explanation);
+-      }
+-
+-      if (!codeChange && !externsChange) {
++      if (mainRootClone.checkTreeEqualsSilent(mainRoot)) {
+         assertFalse(
+             "compiler.reportCodeChange() was called " +
+             "even though nothing changed",
+diff --git a/com/google/javascript/jscomp/NormalizeTest.java b/com/google/javascript/jscomp/NormalizeTest.java
+index adbfc8d..fe21010 100644
+--- a/com/google/javascript/jscomp/NormalizeTest.java
++++ b/com/google/javascript/jscomp/NormalizeTest.java
+@@ -381,11 +381,6 @@ public class NormalizeTest extends CompilerTestCase {
+          "}");
+   }
+ 
+-  public void testIssue() {
+-    super.allowExternsChanges(true);
+-    test("var a,b,c; var a,b", "a(), b()", "a(), b()", null, null);
+-  }
+-
+   public void testNormalizeSyntheticCode() {
+     Compiler compiler = new Compiler();
+     compiler.init(
+@@ -433,7 +428,7 @@ public class NormalizeTest extends CompilerTestCase {
+ 
+   public void testGetterPropertyIsConstant() throws Exception {
+     testSame("var a = { get CONST() {return 3} }; " +
+-             "var b = a.CONST;");
++    		 "var b = a.CONST;");
+     Node n = getLastCompiler().getRoot();
+ 
+     Set<Node> constantNodes = findNodesWithProperty(n, Node.IS_CONSTANT_NAME);
+diff --git a/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java b/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
+index a5d110c..6e481c0 100644
+--- a/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
++++ b/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
+@@ -31,11 +31,6 @@ public class ObjectPropertyStringPreprocessTest extends CompilerTestCase {
+     return 1;
+   }
+ 
+-  @Override
+-  protected void setUp() {
+-    super.allowExternsChanges(true);
+-  }
+-
+   public void testDeclaration() {
+     test("goog.testing.ObjectPropertyString = function() {}",
+          "JSCompiler_ObjectPropertyString = function() {}");
+diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
+index 438c349..d62d33d 100644
+--- a/com/google/javascript/jscomp/VarCheckTest.java
++++ b/com/google/javascript/jscomp/VarCheckTest.java
+@@ -39,7 +39,6 @@ public class VarCheckTest extends CompilerTestCase {
+   @Override
+   protected void setUp() throws Exception {
+     super.setUp();
+-    super.allowExternsChanges(true);
+     strictModuleDepErrorLevel = CheckLevel.OFF;
+     externValidationErrorLevel = null;
+     sanityCheck = false;

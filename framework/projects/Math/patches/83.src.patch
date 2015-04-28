@@ -1,0 +1,29 @@
+diff --git a/org/apache/commons/math/optimization/linear/SimplexTableau.java b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+index b387767..6cd5507 100644
+--- a/org/apache/commons/math/optimization/linear/SimplexTableau.java
++++ b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+@@ -289,8 +289,7 @@ class SimplexTableau implements Serializable {
+      */
+     private Integer getBasicRow(final int col, boolean ignoreObjectiveRows) {
+         Integer row = null;
+-        int start = ignoreObjectiveRows ? getNumObjectiveFunctions() : 0;
+-        for (int i = start; i < getHeight(); i++) {
++        for (int i = getNumObjectiveFunctions(); i < getHeight(); i++) {
+             if (MathUtils.equals(getEntry(i, col), 1.0, epsilon) && (row == null)) {
+                 row = i;
+             } else if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
+@@ -338,11 +337,11 @@ class SimplexTableau implements Serializable {
+      */
+     protected RealPointValuePair getSolution() {
+       double[] coefficients = new double[getOriginalNumDecisionVariables()];
+-      Integer negativeVarBasicRow = getBasicRowForSolution(getNegativeDecisionVariableOffset());
+-      double mostNegative = negativeVarBasicRow == null ? 0 : getEntry(negativeVarBasicRow, getRhsOffset());
++      Integer basicRow = getBasicRow(getNumObjectiveFunctions() + getOriginalNumDecisionVariables());
++      double mostNegative = basicRow == null ? 0 : getEntry(basicRow, getRhsOffset());
+       Set<Integer> basicRows = new HashSet<Integer>();
+       for (int i = 0; i < coefficients.length; i++) {
+-          Integer basicRow = getBasicRowForSolution(getNumObjectiveFunctions() + i);
++           basicRow = getBasicRow(getNumObjectiveFunctions() + i);
+           if (basicRows.contains(basicRow)) {
+               // if multiple variables can take a given value 
+               // then we choose the first and set the rest equal to 0

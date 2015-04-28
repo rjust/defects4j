@@ -1,0 +1,18 @@
+diff --git a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+index 00afc7d..369fc2f 100644
+--- a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
++++ b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+@@ -348,13 +348,6 @@ public class InlineObjectLiteralsTest extends CompilerTestCase {
+         "   '[object Function]';");
+   }
+ 
+-  public void testNoInlineDeletedProperties() {
+-    testSameLocal(
+-        "var foo = {bar:1};" +
+-        "delete foo.bar;" +
+-        "return foo.bar;");
+-  }
+-
+   private final String LOCAL_PREFIX = "function local(){";
+   private final String LOCAL_POSTFIX = "}";
+ 

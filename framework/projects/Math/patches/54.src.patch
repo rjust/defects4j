@@ -1,0 +1,27 @@
+diff --git a/org/apache/commons/math/dfp/Dfp.java b/org/apache/commons/math/dfp/Dfp.java
+index 54aabc4..04e6613 100644
+--- a/org/apache/commons/math/dfp/Dfp.java
++++ b/org/apache/commons/math/dfp/Dfp.java
+@@ -269,10 +269,6 @@ public class Dfp implements FieldElement<Dfp> {
+         if (exponent == -1023) {
+             // Zero or sub-normal
+             if (x == 0) {
+-                // make sure 0 has the right sign
+-                if ((bits & 0x8000000000000000L) != 0) {
+-                    sign = -1;
+-                }
+                 return;
+             }
+ 
+@@ -2319,10 +2315,7 @@ public class Dfp implements FieldElement<Dfp> {
+ 
+         Dfp y = this;
+         boolean negate = false;
+-        int cmp0 = compare(this, getZero());
+-        if (cmp0 == 0) {
+-            return sign < 0 ? -0.0 : +0.0;
+-        } else if (cmp0 < 0) {
++        if (lessThan(getZero())) {
+             y = negate();
+             negate = true;
+         }

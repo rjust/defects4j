@@ -1,0 +1,67 @@
+diff --git a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+index 28aee43..ea0f20d 100644
+--- a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
++++ b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+@@ -163,7 +157,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+         setMaxIterations(1000);
+ 
+         // default values for the tuning parameters
+-        setConvergenceChecker(null);
+         setInitialStepBoundFactor(100.0);
+         setCostRelativeTolerance(1.0e-10);
+         setParRelativeTolerance(1.0e-10);
+@@ -245,13 +235,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+         // outer loop
+         lmPar = 0;
+         boolean firstIteration = true;
+-        VectorialPointValuePair current = new VectorialPointValuePair(point, objective);
+         while (true) {
+ 
+             incrementIterationsCounter();
+ 
+             // compute the Q.R. decomposition of the jacobian matrix
+-            VectorialPointValuePair previous = current;
+             updateJacobian();
+             qrDecomposition();
+ 
+@@ -303,7 +291,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+             }
+             if (maxCosine <= orthoTolerance) {
+                 // convergence has been reached
+-                return current;
++                return new VectorialPointValuePair(point, objective);
+             }
+ 
+             // rescale if necessary
+@@ -345,7 +333,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+ 
+                 // evaluate the function at x + p and calculate its norm
+                 updateResidualsAndCost();
+-                current = new VectorialPointValuePair(point, objective);
+ 
+                 // compute the scaled actual reduction
+                 double actRed = -1.0;
+@@ -414,19 +401,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+                 }
+ 
+                 // tests for convergence.
+-                if (checker != null) {
+-                    // we use the vectorial convergence checker
+-                    if (checker.converged(getIterations(), previous, current)) {
+-                        return current;                        
+-                    }
+-                } else {
+-                    // we use the Levenberg-Marquardt specific convergence parameters
+-                    if (((Math.abs(actRed) <= costRelativeTolerance) &&
+-                         (preRed <= costRelativeTolerance) &&
+-                         (ratio <= 2.0)) ||
++                if (((Math.abs(actRed) <= costRelativeTolerance) &&
++                        (preRed <= costRelativeTolerance) &&
++                        (ratio <= 2.0)) ||
+                         (delta <= parRelativeTolerance * xNorm)) {
+-                        return current;
+-                    }
++                    return new VectorialPointValuePair(point, objective);
+                 }
+ 
+                 // tests for termination and stringent tolerances

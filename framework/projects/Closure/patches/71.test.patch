@@ -1,0 +1,28 @@
+diff --git a/com/google/javascript/jscomp/CheckAccessControlsTest.java b/com/google/javascript/jscomp/CheckAccessControlsTest.java
+index 9dd3a11..ac91c51 100644
+--- a/com/google/javascript/jscomp/CheckAccessControlsTest.java
++++ b/com/google/javascript/jscomp/CheckAccessControlsTest.java
+@@ -405,7 +405,7 @@ public class CheckAccessControlsTest extends CompilerTestCase {
+       "/** @constructor \n * @extends {Foo} */ " +
+       "function SubFoo() {};" +
+       "SubFoo.prototype.bar_ = function() {};"
+-    }, null, BAD_PRIVATE_PROPERTY_ACCESS);
++    }, null, PRIVATE_OVERRIDE);
+   }
+ 
+   public void testNoPrivateAccessForProperties7() {
+@@ -421,14 +421,6 @@ public class CheckAccessControlsTest extends CompilerTestCase {
+     }, null, BAD_PRIVATE_PROPERTY_ACCESS);
+   }
+ 
+-  public void testNoPrivateAccessForProperties8() {
+-    test(new String[] {
+-      "/** @constructor */ function Foo() { /** @private */ this.bar_ = 3; }",
+-      "/** @constructor \n * @extends {Foo} */ " +
+-      "function SubFoo() { /** @private */ this.bar_ = 3; };"
+-    }, null, PRIVATE_OVERRIDE);
+-  }
+-
+   public void testProtectedAccessForProperties1() {
+     testSame(new String[] {
+       "/** @constructor */ function Foo() {}" +

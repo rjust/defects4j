@@ -1,0 +1,16 @@
+diff --git a/com/google/javascript/jscomp/AnalyzePrototypeProperties.java b/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
+index 4472638..2b966b5 100644
+--- a/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
++++ b/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
+@@ -313,9 +313,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
+ 
+     private boolean isPrototypePropertyAssign(Node assign) {
+       Node n = assign.getFirstChild();
+-      if (n != null && NodeUtil.isVarOrSimpleAssignLhs(n, assign)
+-          && n.getType() == Token.GETPROP
+-          && assign.getParent().getType() == Token.EXPR_RESULT) {
++      if (n != null && NodeUtil.isVarOrSimpleAssignLhs(n, assign) &&
++          n.getType() == Token.GETPROP) {
+         // We want to exclude the assignment itself from the usage list
+         boolean isChainedProperty =
+             n.getFirstChild().getType() == Token.GETPROP;

@@ -1,0 +1,12 @@
+org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizerNelderMeadTest
+org.apache.commons.math3.optim.nonlinear.scalar.noderiv.SimplexOptimizerMultiDirectionalTest
+org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizerTest
+org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizerAbstractTest
+org.apache.commons.math3.analysis.SumSincFunction
+org.apache.commons.math3.Retry
+org.apache.commons.math3.optim.nonlinear.scalar.gradient.NonLinearConjugateGradientOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquardtOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.StatisticalReferenceDataset
+org.apache.commons.math3.RetryRunner
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.GaussNewtonOptimizerTest

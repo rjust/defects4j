@@ -1,0 +1,59 @@
+diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+index 55b62ca..2151c48 100644
+--- a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
++++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+@@ -185,43 +185,6 @@ public final class BrentOptimizerTest {
+     }
+ 
+     /**
+-     * Contrived example showing that prior to the resolution of MATH-855
+-     * (second revision), the algorithm would not return the best point if
+-     * it happened to be the initial guess.
+-     */
+-    @Test
+-    public void testKeepInitIfBest() {
+-        final double minSin = 3 * Math.PI / 2;
+-        final double offset = 1e-8;
+-        final double delta = 1e-7;
+-        final UnivariateFunction f1 = new Sin();
+-        final UnivariateFunction f2 = new StepFunction(new double[] { minSin, minSin + offset, minSin + 2 * offset},
+-                                                       new double[] { 0, -1, 0 });
+-        final UnivariateFunction f = FunctionUtils.add(f1, f2);
+-        // A slightly less stringent tolerance would make the test pass
+-        // even with the previous implementation.
+-        final double relTol = 1e-8;
+-        final UnivariateOptimizer optimizer = new BrentOptimizer(relTol, 1e-100);
+-        final double init = minSin + 1.5 * offset;
+-        final UnivariatePointValuePair result
+-            = optimizer.optimize(200, f, GoalType.MINIMIZE,
+-                                 minSin - 6.789 * delta,
+-                                 minSin + 9.876 * delta,
+-                                 init);
+-        final int numEval = optimizer.getEvaluations();
+-
+-        final double sol = result.getPoint();
+-        final double expected = init;
+-
+-//         System.out.println("numEval=" + numEval);
+-//         System.out.println("min=" + init + " f=" + f.value(init));
+-//         System.out.println("sol=" + sol + " f=" + f.value(sol));
+-//         System.out.println("exp=" + expected + " f=" + f.value(expected));
+-
+-        Assert.assertTrue("Best point not reported", f.value(sol) <= f.value(expected));
+-    }
+-
+-    /**
+      * Contrived example showing that prior to the resolution of MATH-855,
+      * the algorithm, by always returning the last evaluated point, would
+      * sometimes not report the best point it had found.
+@@ -237,9 +200,7 @@ public final class BrentOptimizerTest {
+         final UnivariateFunction f = FunctionUtils.add(f1, f2);
+         final UnivariateOptimizer optimizer = new BrentOptimizer(1e-8, 1e-100);
+         final UnivariatePointValuePair result
+-            = optimizer.optimize(200, f, GoalType.MINIMIZE,
+-                                 minSin - 6.789 * delta,
+-                                 minSin + 9.876 * delta);
++            = optimizer.optimize(200, f, GoalType.MINIMIZE, minSin - 6.789 * delta, minSin + 9.876 * delta);
+         final int numEval = optimizer.getEvaluations();
+ 
+         final double sol = result.getPoint();

@@ -1,0 +1,51 @@
+diff --git a/org/joda/time/chrono/GJChronology.java b/org/joda/time/chrono/GJChronology.java
+index d1556f5..960fe47 100644
+--- a/org/joda/time/chrono/GJChronology.java
++++ b/org/joda/time/chrono/GJChronology.java
+@@ -193,10 +192,6 @@ public final class GJChronology extends AssembledChronology {
+             cutoverInstant = DEFAULT_CUTOVER;
+         } else {
+             cutoverInstant = gregorianCutover.toInstant();
+-            LocalDate cutoverDate = new LocalDate(cutoverInstant.getMillis(), GregorianChronology.getInstance(zone));
+-            if (cutoverDate.getYear() <= 0) {
+-                throw new IllegalArgumentException("Cutover too early. Must be on or after 0001-01-01.");
+-            }
+         }
+ 
+         GJChronology chrono;
+@@ -980,17 +975,6 @@ public final class GJChronology extends AssembledChronology {
+                 if (instant < iCutover) {
+                     // Only adjust if gap fully crossed.
+                     if (instant + iGapDuration < iCutover) {
+-                        if (iConvertByWeekyear) {
+-                            int wyear = iGregorianChronology.weekyear().get(instant);
+-                            if (wyear <= 0) {
+-                                instant = iGregorianChronology.weekyear().add(instant, -1);
+-                            }
+-                        } else {
+-                            int year = iGregorianChronology.year().get(instant);
+-                            if (year <= 0) {
+-                                instant = iGregorianChronology.year().add(instant, -1);
+-                            }
+-                        }
+                         instant = gregorianToJulian(instant);
+                     }
+                 }
+@@ -1013,17 +996,6 @@ public final class GJChronology extends AssembledChronology {
+                 if (instant < iCutover) {
+                     // Only adjust if gap fully crossed.
+                     if (instant + iGapDuration < iCutover) {
+-                        if (iConvertByWeekyear) {
+-                            int wyear = iGregorianChronology.weekyear().get(instant);
+-                            if (wyear <= 0) {
+-                                instant = iGregorianChronology.weekyear().add(instant, -1);
+-                            }
+-                        } else {
+-                            int year = iGregorianChronology.year().get(instant);
+-                            if (year <= 0) {
+-                                instant = iGregorianChronology.year().add(instant, -1);
+-                            }
+-                        }
+                         instant = gregorianToJulian(instant);
+                     }
+                 }

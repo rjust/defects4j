@@ -1,0 +1,62 @@
+diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+index 3f39c07..d31bdcd 100644
+--- a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
++++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+@@ -154,7 +154,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+ 
+   @Override
+   public void process(Node externs, Node root) {
+-    (new NodeTraversal(compiler, this)).traverseRoots(externs, root);
++    (new NodeTraversal(compiler, this)).traverse(root);
+   }
+ 
+   @Override
+@@ -205,8 +205,6 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+             }
+ 
+             Node defNode = reachingDef.getDef(name, cfgNode);
+-            // TODO(nicksantos): We need to add some notion of @const outer
+-            // scope vars. We can inline those just fine.
+             if (defNode != null &&
+                 !reachingDef.dependsOnOuterScopeVars(name, cfgNode)) {
+               candidates.add(new Candidate(name, defNode, n, cfgNode));
+diff --git a/com/google/javascript/jscomp/MustBeReachingVariableDef.java b/com/google/javascript/jscomp/MustBeReachingVariableDef.java
+index 589f673..cc7dd73 100644
+--- a/com/google/javascript/jscomp/MustBeReachingVariableDef.java
++++ b/com/google/javascript/jscomp/MustBeReachingVariableDef.java
+@@ -68,8 +68,6 @@ final class MustBeReachingVariableDef extends
+   private static class Definition {
+     final Node node;
+     final Set<Var> depends = Sets.newHashSet();
+-    private boolean unknownDependencies = false;
+-
+     Definition(Node node) {
+       this.node = node;
+     }
+@@ -394,13 +392,8 @@ final class MustBeReachingVariableDef extends
+         new AbstractCfgNodeTraversalCallback() {
+       @Override
+       public void visit(NodeTraversal t, Node n, Node parent) {
+-        if (n.isName()) {
+-          Var dep = jsScope.getVar(n.getString());
+-          if (dep == null) {
+-            def.unknownDependencies = true;
+-          } else {
+-            def.depends.add(dep);
+-          }
++        if (n.isName() && jsScope.isDeclared(n.getString(), true)) {
++          def.depends.add(jsScope.getVar(n.getString()));
+         }
+       }
+     });
+@@ -432,10 +425,6 @@ final class MustBeReachingVariableDef extends
+     GraphNode<Node, Branch> n = getCfg().getNode(useNode);
+     FlowState<MustDef> state = n.getAnnotation();
+     Definition def = state.getIn().reachingDef.get(jsScope.getVar(name));
+-    if (def.unknownDependencies) {
+-      return true;
+-    }
+-
+     for (Var s : def.depends) {
+       if (s.scope != jsScope) {
+         return true;

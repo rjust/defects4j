@@ -1,0 +1,33 @@
+diff --git a/org/apache/commons/lang/Entities.java b/org/apache/commons/lang/Entities.java
+index a45e004..495c981 100644
+--- a/org/apache/commons/lang/Entities.java
++++ b/org/apache/commons/lang/Entities.java
+@@ -847,9 +847,6 @@ class Entities {
+                             } else {
+                                 entityValue = Integer.parseInt(entityName.substring(1));
+                             }
+-                            if (entityValue > 0xFFFF) {
+-                                entityValue = -1;
+-                            }
+                         } catch (NumberFormatException ex) {
+                             entityValue = -1;
+                         }
+@@ -920,17 +917,13 @@ class Entities {
+                                     case 'X' :
+                                     case 'x' : {
+                                         entityValue = Integer.parseInt(entityContent.substring(2), 16);
+-                                        break;
+                                     }
+                                     default : {
+                                         entityValue = Integer.parseInt(entityContent.substring(1), 10);
+                                     }
+                                 }
+-                                if (entityValue > 0xFFFF) {
+-                                    entityValue = -1;
+-                                }
+                             } catch (NumberFormatException e) {
+-                                entityValue = -1;
++                                // ignore the escaped value content
+                             }
+                         }
+                     } else { //escaped value content is an entity name

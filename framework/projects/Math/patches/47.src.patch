@@ -1,0 +1,52 @@
+diff --git a/org/apache/commons/math/complex/Complex.java b/org/apache/commons/math/complex/Complex.java
+index 137765c..ac31e4b 100644
+--- a/org/apache/commons/math/complex/Complex.java
++++ b/org/apache/commons/math/complex/Complex.java
+@@ -78,8 +78,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+     private final transient boolean isNaN;
+     /** Record whether this complex number is infinite. */
+     private final transient boolean isInfinite;
+-    /** Record whether this complex number is zero. */
+-    private final transient boolean isZero;
+ 
+     /**
+      * Create a complex number given only the real part.
+@@ -103,7 +101,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+         isNaN = Double.isNaN(real) || Double.isNaN(imaginary);
+         isInfinite = !isNaN &&
+             (Double.isInfinite(real) || Double.isInfinite(imaginary));
+-        isZero = real == 0 && imaginary == 0;
+     }
+ 
+     /**
+@@ -255,17 +249,16 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+             return NaN;
+         }
+ 
+-        if (divisor.isZero) {
+-            return isZero ? NaN : INF;
++        final double c = divisor.getReal();
++        final double d = divisor.getImaginary();
++        if (c == 0.0 && d == 0.0) {
++            return NaN;
+         }
+ 
+         if (divisor.isInfinite() && !isInfinite()) {
+             return ZERO;
+         }
+ 
+-        final double c = divisor.getReal();
+-        final double d = divisor.getImaginary();
+-
+         if (FastMath.abs(c) < FastMath.abs(d)) {
+             double q = c / d;
+             double denominator = c * q + d;
+@@ -292,7 +285,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+             return NaN;
+         }
+         if (divisor == 0d) {
+-            return isZero ? NaN : INF;
++            return NaN;
+         }
+         if (Double.isInfinite(divisor)) {
+             return !isInfinite() ? ZERO : NaN;

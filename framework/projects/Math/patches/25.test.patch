@@ -1,0 +1,41 @@
+diff --git a/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java b/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
+index 5bbad9f..910ba1b 100644
+--- a/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
++++ b/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
+@@ -22,7 +22,6 @@ import java.util.Random;
+ import org.apache.commons.math3.analysis.function.HarmonicOscillator;
+ import org.apache.commons.math3.optimization.general.LevenbergMarquardtOptimizer;
+ import org.apache.commons.math3.exception.NumberIsTooSmallException;
+-import org.apache.commons.math3.exception.MathIllegalStateException;
+ import org.apache.commons.math3.util.FastMath;
+ import org.apache.commons.math3.util.MathUtils;
+ 
+@@ -177,28 +176,4 @@ public class HarmonicFitterTest {
+         Assert.assertEquals(w, fitted[1], 3.5e-3);
+         Assert.assertEquals(p, MathUtils.normalizeAngle(fitted[2], p), 1.5e-2);
+     }
+-
+-    @Test(expected=MathIllegalStateException.class)
+-    public void testMath844() {
+-        final double[] y = { 0, 1, 2, 3, 2, 1,
+-                             0, -1, -2, -3, -2, -1,
+-                             0, 1, 2, 3, 2, 1,
+-                             0, -1, -2, -3, -2, -1,
+-                             0, 1, 2, 3, 2, 1, 0 };
+-        final int len = y.length;
+-        final WeightedObservedPoint[] points = new WeightedObservedPoint[len];
+-        for (int i = 0; i < len; i++) {
+-            points[i] = new WeightedObservedPoint(1, i, y[i]);
+-        }
+-
+-        final HarmonicFitter.ParameterGuesser guesser
+-            = new HarmonicFitter.ParameterGuesser(points);
+-
+-        // The guesser fails because the function is far from an harmonic
+-        // function: It is a triangular periodic function with amplitude 3
+-        // and period 12, and all sample points are taken at integer abscissae
+-        // so function values all belong to the integer subset {-3, -2, -1, 0,
+-        // 1, 2, 3}.
+-        guesser.guess();
+-    }
+ }

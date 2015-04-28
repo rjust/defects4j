@@ -1,0 +1,43 @@
+Index: org/jfree/chart/util/ShapeUtilities.java
+===================================================================
+--- org/jfree/chart/util/ShapeUtilities.java	(revision 1025)
++++ org/jfree/chart/util/ShapeUtilities.java	(revision 1024)
+@@ -272,7 +271,7 @@
+             return false;
+         }
+         PathIterator iterator1 = p1.getPathIterator(null);
+-        PathIterator iterator2 = p2.getPathIterator(null);
++        PathIterator iterator2 = p1.getPathIterator(null);
+         double[] d1 = new double[6];
+         double[] d2 = new double[6];
+         boolean done = iterator1.isDone() && iterator2.isDone();
+Index: org/jfree/chart/util/SerialUtilities.java
+===================================================================
+--- org/jfree/chart/util/SerialUtilities.java	(revision 1025)
++++ org/jfree/chart/util/SerialUtilities.java	(revision 1024)
+@@ -315,18 +314,21 @@
+                             gp.lineTo(args[0], args[1]);
+                             break;
+                         case PathIterator.SEG_CUBICTO :
+-                            gp.curveTo(args[0], args[1], args[2],
+-                                    args[3], args[4], args[5]);
++                            gp.curveTo(
++                                args[0], args[1], args[2],
++                                args[3], args[4], args[5]
++                            );
+                             break;
+                         case PathIterator.SEG_QUADTO :
+                             gp.quadTo(args[0], args[1], args[2], args[3]);
+                             break;
+                         case PathIterator.SEG_CLOSE :
+-                            gp.closePath();
++                            //result = gp;
+                             break;
+                         default :
+                             throw new RuntimeException(
+-                                    "JFreeChart - No path exists");
++                                "JFreeChart - No path exists"
++                            );
+                     }
+                     gp.setWindingRule(stream.readInt());
+                     hasNext = stream.readBoolean();

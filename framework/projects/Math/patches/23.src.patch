@@ -1,0 +1,55 @@
+diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+index 25f2f50..cff5bfd 100644
+--- a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
++++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+@@ -147,8 +141,6 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+         UnivariatePointValuePair previous = null;
+         UnivariatePointValuePair current
+             = new UnivariatePointValuePair(x, isMinim ? fx : -fx);
+-        // Best point encountered so far (which is the initial guess).
+-        UnivariatePointValuePair best = current;
+ 
+         int iter = 0;
+         while (true) {
+@@ -232,15 +224,10 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+                 // User-defined convergence checker.
+                 previous = current;
+                 current = new UnivariatePointValuePair(u, isMinim ? fu : -fu);
+-                best = best(best,
+-                            best(current,
+-                                 previous,
+-                                 isMinim),
+-                            isMinim);
+ 
+                 if (checker != null) {
+                     if (checker.converged(iter, previous, current)) {
+-                        return best;
++                        return best(current, previous, isMinim);
+                     }
+                 }
+ 
+@@ -277,11 +264,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+                     }
+                 }
+             } else { // Default termination (Brent's criterion).
+-                return best(best,
+-                            best(current,
+-                                 previous,
+-                                 isMinim),
+-                            isMinim);
++                return best(current, previous, isMinim);
+             }
+             ++iter;
+         }
+@@ -309,9 +291,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+         }
+ 
+         if (isMinim) {
+-            return a.getValue() <= b.getValue() ? a : b;
++            return a.getValue() < b.getValue() ? a : b;
+         } else {
+-            return a.getValue() >= b.getValue() ? a : b;
++            return a.getValue() > b.getValue() ? a : b;
+         }
+     }
+ }

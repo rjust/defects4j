@@ -1,0 +1,17 @@
+diff --git a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+index 0347525..c781a90 100644
+--- a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -184,11 +183,7 @@ public abstract class BaseSecantSolver
+                     f0 *= f1 / (f1 + fx);
+                     break;
+                 case REGULA_FALSI:
+-                    // Detect early that algorithm is stuck, instead of waiting
+-                    // for the maximum number of iterations to be exceeded.
+-                    if (x == x1) {
+-                        throw new ConvergenceException();
+-                    }
++                    // Nothing.
+                     break;
+                 default:
+                     // Should never happen.

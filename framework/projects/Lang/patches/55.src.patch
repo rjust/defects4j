@@ -1,0 +1,15 @@
+diff --git a/org/apache/commons/lang/time/StopWatch.java b/org/apache/commons/lang/time/StopWatch.java
+index 0f0786a..607e9b6 100644
+--- a/org/apache/commons/lang/time/StopWatch.java
++++ b/org/apache/commons/lang/time/StopWatch.java
+@@ -115,9 +115,7 @@ public class StopWatch {
+         if(this.runningState != STATE_RUNNING && this.runningState != STATE_SUSPENDED) {
+             throw new IllegalStateException("Stopwatch is not running. ");
+         }
+-        if(this.runningState == STATE_RUNNING) {
+-            stopTime = System.currentTimeMillis();
+-        }
++        stopTime = System.currentTimeMillis();
+         this.runningState = STATE_STOPPED;
+     }
+ 

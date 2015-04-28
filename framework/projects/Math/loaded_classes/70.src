@@ -1,0 +1,11 @@
+org.apache.commons.math.MathException
+org.apache.commons.math.MaxIterationsExceededException
+org.apache.commons.math.ConvergingAlgorithm
+org.apache.commons.math.analysis.UnivariateRealFunction
+org.apache.commons.math.analysis.solvers.UnivariateRealSolverUtils
+org.apache.commons.math.analysis.solvers.UnivariateRealSolver
+org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction
+org.apache.commons.math.ConvergenceException
+org.apache.commons.math.ConvergingAlgorithmImpl
+org.apache.commons.math.analysis.solvers.BisectionSolver
+org.apache.commons.math.analysis.solvers.UnivariateRealSolverImpl

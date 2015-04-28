@@ -1,0 +1,27 @@
+diff --git a/org/apache/commons/math/dfp/DfpTest.java b/org/apache/commons/math/dfp/DfpTest.java
+index d8426c3..db5c05c 100644
+--- a/org/apache/commons/math/dfp/DfpTest.java
++++ b/org/apache/commons/math/dfp/DfpTest.java
+@@ -17,8 +17,6 @@
+ 
+ package org.apache.commons.math.dfp;
+ 
+-import org.apache.commons.math.util.FastMath;
+-import org.apache.commons.math.util.MathUtils;
+ import org.junit.After;
+ import org.junit.Assert;
+ import org.junit.Before;
+@@ -1506,13 +1504,4 @@ public class DfpTest {
+              DfpField.FLAG_INVALID, "Sqrt #9");
+     }
+ 
+-    @Test
+-    public void testIssue567() {
+-        DfpField field = new DfpField(100);
+-        Assert.assertEquals(0.0, field.getZero().toDouble(), MathUtils.SAFE_MIN);
+-        Assert.assertEquals(0.0, field.newDfp(0.0).toDouble(), MathUtils.SAFE_MIN);
+-        Assert.assertEquals(-1, FastMath.copySign(1, field.newDfp(-0.0).toDouble()), MathUtils.EPSILON);
+-        Assert.assertEquals(+1, FastMath.copySign(1, field.newDfp(+0.0).toDouble()), MathUtils.EPSILON);
+-    }
+-
+ }

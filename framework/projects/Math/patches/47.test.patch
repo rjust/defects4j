@@ -1,0 +1,52 @@
+diff --git a/org/apache/commons/math/complex/ComplexTest.java b/org/apache/commons/math/complex/ComplexTest.java
+index a002b0b..4bc85b8 100644
+--- a/org/apache/commons/math/complex/ComplexTest.java
++++ b/org/apache/commons/math/complex/ComplexTest.java
+@@ -229,13 +229,6 @@ public class ComplexTest {
+     public void testDivideZero() {
+         Complex x = new Complex(3.0, 4.0);
+         Complex z = x.divide(Complex.ZERO);
+-        Assert.assertEquals(z, Complex.INF);
+-    }
+-
+-    @Test
+-    public void testDivideZeroZero() {
+-        Complex x = new Complex(0.0, 0.0);
+-        Complex z = x.divide(Complex.ZERO);
+         Assert.assertEquals(z, Complex.NaN);
+     }
+ 
+@@ -356,13 +349,13 @@ public class ComplexTest {
+ 
+     @Test
+     public void testScalarMultiplyInf() {
+-        Complex x = new Complex(1, 1);
++        Complex x = new Complex(1,1);
+         double yDouble = Double.POSITIVE_INFINITY;
+         Complex yComplex = new Complex(yDouble);
+         Assert.assertEquals(x.multiply(yComplex), x.multiply(yDouble));
+         
+         yDouble = Double.NEGATIVE_INFINITY;
+-        yComplex = new Complex(yDouble);
++         yComplex = new Complex(yDouble);
+         Assert.assertEquals(x.multiply(yComplex), x.multiply(yDouble));
+     }
+ 
+@@ -572,16 +565,9 @@ public class ComplexTest {
+     }
+ 
+     @Test
+-    public void testAtanI() {
+-        for (int i = -10; i < 10; i++) {
+-            System.out.println(new Complex(0, 1 - 0.1 * i).atan());
+-        }
+-        Assert.assertTrue(Complex.I.atan().isInfinite());
+-    }
+-
+-    @Test
+     public void testAtanNaN() {
+         Assert.assertTrue(Complex.NaN.atan().isNaN());
++        Assert.assertTrue(Complex.I.atan().isNaN());
+     }
+ 
+     @Test

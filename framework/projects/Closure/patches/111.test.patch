@@ -1,0 +1,13 @@
+diff --git a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+index 8c0b429..e6e6f8c 100644
+--- a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
++++ b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+@@ -205,7 +205,7 @@ public class ClosureReverseAbstractInterpreterTest extends
+   public void testGoogIsArray2() throws Exception {
+     testClosureFunction("goog.isArray",
+         ALL_TYPE,
+-        ARRAY_TYPE,
++        ALL_TYPE, // TODO(johnlenz): should be ARRAY_TYPE?
+         ALL_TYPE);
+   }
+ 

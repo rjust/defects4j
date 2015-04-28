@@ -1,0 +1,13 @@
+Index: org/jfree/data/time/Week.java
+===================================================================
+--- org/jfree/data/time/Week.java	(revision 1085)
++++ org/jfree/data/time/Week.java	(revision 1084)
+@@ -172,7 +171,7 @@
+      */
+     public Week(Date time, TimeZone zone) {
+         // defer argument checking...
+-        this(time, zone, Locale.getDefault());
++        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE, Locale.getDefault());
+     }
+ 
+     /**

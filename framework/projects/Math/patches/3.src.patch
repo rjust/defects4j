@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/math3/util/MathArrays.java b/org/apache/commons/math3/util/MathArrays.java
+index 8f83d96..1aa56cc 100644
+--- a/org/apache/commons/math3/util/MathArrays.java
++++ b/org/apache/commons/math3/util/MathArrays.java
+@@ -818,11 +818,6 @@ public class MathArrays {
+             throw new DimensionMismatchException(len, b.length);
+         }
+ 
+-        if (len == 1) {
+-            // Revert to scalar multiplication.
+-            return a[0] * b[0];
+-        }
+-
+         final double[] prodHigh = new double[len];
+         double prodLowSum = 0;
+ 

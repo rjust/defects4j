@@ -1,0 +1,19 @@
+diff --git a/org/apache/commons/math3/genetics/ListPopulation.java b/org/apache/commons/math3/genetics/ListPopulation.java
+index 3f3919c..8fe3ffe 100644
+--- a/org/apache/commons/math3/genetics/ListPopulation.java
++++ b/org/apache/commons/math3/genetics/ListPopulation.java
+@@ -200,12 +200,11 @@ public abstract class ListPopulation implements Population {
+     }
+ 
+     /**
+-     * Returns an iterator over the unmodifiable list of chromosomes.
+-     * <p>Any call to {@link Iterator#remove()} will result in a {@link UnsupportedOperationException}.</p>
++     * Chromosome list iterator
+      *
+      * @return chromosome iterator
+      */
+     public Iterator<Chromosome> iterator() {
+-        return getChromosomes().iterator();
++        return chromosomes.iterator();
+     }
+ }

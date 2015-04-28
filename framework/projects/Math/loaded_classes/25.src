@@ -1,0 +1,15 @@
+org.apache.commons.math3.exception.util.Localizable
+org.apache.commons.math3.optimization.fitting.HarmonicFitter
+org.apache.commons.math3.optimization.BaseMultivariateVectorOptimizer
+org.apache.commons.math3.exception.util.ExceptionContextProvider
+org.apache.commons.math3.optimization.fitting.WeightedObservedPoint
+org.apache.commons.math3.exception.ZeroException
+org.apache.commons.math3.exception.MathIllegalArgumentException
+org.apache.commons.math3.exception.NumberIsTooSmallException
+org.apache.commons.math3.optimization.DifferentiableMultivariateVectorOptimizer
+org.apache.commons.math3.optimization.BaseOptimizer
+org.apache.commons.math3.exception.util.LocalizedFormats
+org.apache.commons.math3.exception.MathIllegalNumberException
+org.apache.commons.math3.exception.util.ArgUtils
+org.apache.commons.math3.exception.util.ExceptionContext
+org.apache.commons.math3.exception.MathIllegalStateException

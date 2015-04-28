@@ -1,0 +1,135 @@
+--- com.google.javascript.jscomp.RemoveUnusedVarsTest::testIssue618_1
+junit.framework.AssertionFailedError: 
+Expected: function f(){var a=[];var b;a.push(b=[]);b[0]=1;return a}
+Result: function f(){var a=[];a.push([]);return a}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION f 1 [source_file: expected0]
+            NAME f 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME a 2 [source_file: expected0]
+                        ARRAYLIT 2 [source_file: expected0]
+                VAR 2 [source_file: expected0]
+                    NAME b 2 [source_file: expected0]
+                EXPR_RESULT 3 [source_file: expected0]
+                    CALL 3 [source_file: expected0]
+                        GETPROP 3 [source_file: expected0]
+                            NAME a 3 [source_file: expected0]
+                            STRING push 3 [source_file: expected0]
+                        ASSIGN 3 [source_file: expected0]
+                            NAME b 3 [source_file: expected0]
+                            ARRAYLIT 3 [source_file: expected0]
+                EXPR_RESULT 4 [source_file: expected0]
+                    ASSIGN 4 [source_file: expected0]
+                        GETELEM 4 [source_file: expected0]
+                            NAME b 4 [source_file: expected0]
+                            NUMBER 0.0 4 [source_file: expected0]
+                        NUMBER 1.0 4 [source_file: expected0]
+                RETURN 5 [source_file: expected0]
+                    NAME a 5 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION f 1 [source_file: testcode]
+            NAME f 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME a 2 [source_file: testcode]
+                        ARRAYLIT 2 [source_file: testcode]
+                EXPR_RESULT 3 [source_file: testcode]
+                    CALL 3 [source_file: testcode]
+                        GETPROP 3 [source_file: testcode]
+                            NAME a 3 [source_file: testcode]
+                            STRING push 3 [source_file: testcode]
+                        ARRAYLIT 3 [source_file: testcode]
+                RETURN 5 [source_file: testcode]
+                    NAME a 5 [source_file: testcode]
+
+
+Subtree1: BLOCK 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME a 2 [source_file: expected0]
+            ARRAYLIT 2 [source_file: expected0]
+    VAR 2 [source_file: expected0]
+        NAME b 2 [source_file: expected0]
+    EXPR_RESULT 3 [source_file: expected0]
+        CALL 3 [source_file: expected0]
+            GETPROP 3 [source_file: expected0]
+                NAME a 3 [source_file: expected0]
+                STRING push 3 [source_file: expected0]
+            ASSIGN 3 [source_file: expected0]
+                NAME b 3 [source_file: expected0]
+                ARRAYLIT 3 [source_file: expected0]
+    EXPR_RESULT 4 [source_file: expected0]
+        ASSIGN 4 [source_file: expected0]
+            GETELEM 4 [source_file: expected0]
+                NAME b 4 [source_file: expected0]
+                NUMBER 0.0 4 [source_file: expected0]
+            NUMBER 1.0 4 [source_file: expected0]
+    RETURN 5 [source_file: expected0]
+        NAME a 5 [source_file: expected0]
+
+
+Subtree2: BLOCK 1 [source_file: testcode]
+    VAR 1 [source_file: testcode]
+        NAME a 2 [source_file: testcode]
+            ARRAYLIT 2 [source_file: testcode]
+    EXPR_RESULT 3 [source_file: testcode]
+        CALL 3 [source_file: testcode]
+            GETPROP 3 [source_file: testcode]
+                NAME a 3 [source_file: testcode]
+                STRING push 3 [source_file: testcode]
+            ARRAYLIT 3 [source_file: testcode]
+    RETURN 5 [source_file: testcode]
+        NAME a 5 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:866)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:427)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:352)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:321)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:309)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:541)
+	at com.google.javascript.jscomp.RemoveUnusedVarsTest.testIssue618_1(RemoveUnusedVarsTest.java:741)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

@@ -1,0 +1,39 @@
+diff --git a/org/apache/commons/math/complex/Complex.java b/org/apache/commons/math/complex/Complex.java
+index ed76a29..3822a89 100644
+--- a/org/apache/commons/math/complex/Complex.java
++++ b/org/apache/commons/math/complex/Complex.java
+@@ -1015,15 +1015,9 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      * @since 1.2
+      */
+     public Complex tan() {
+-        if (isNaN || Double.isInfinite(real)) {
++        if (isNaN) {
+             return NaN;
+         }
+-        if (imaginary > 20.0) {
+-            return createComplex(0.0, 1.0);
+-        }
+-        if (imaginary < -20.0) {
+-            return createComplex(0.0, -1.0);
+-        }
+ 
+         double real2 = 2.0 * real;
+         double imaginary2 = 2.0 * imaginary;
+@@ -1066,15 +1060,10 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      * @since 1.2
+      */
+     public Complex tanh() {
+-        if (isNaN || Double.isInfinite(imaginary)) {
++        if (isNaN) {
+             return NaN;
+         }
+-        if (real > 20.0) {
+-            return createComplex(1.0, 0.0);
+-        }
+-        if (real < -20.0) {
+-            return createComplex(-1.0, 0.0);
+-        }
++
+         double real2 = 2.0 * real;
+         double imaginary2 = 2.0 * imaginary;
+         double d = FastMath.cosh(real2) + FastMath.cos(imaginary2);

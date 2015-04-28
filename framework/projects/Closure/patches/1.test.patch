@@ -1,0 +1,98 @@
+diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index 3b72929..0343725 100644
+--- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -151,16 +151,6 @@ public class CommandLineRunnerTest extends TestCase {
+     test("function f() { this.a = 3; }", CheckGlobalThis.GLOBAL_THIS);
+   }
+ 
+-  public void testSimpleModeLeavesUnusedParams() {
+-    args.add("--compilation_level=SIMPLE_OPTIMIZATIONS");
+-    testSame("window.f = function(a) {};");
+-  }
+-
+-  public void testAdvancedModeRemovesUnusedParams() {
+-    args.add("--compilation_level=ADVANCED_OPTIMIZATIONS");
+-    test("window.f = function(a) {};", "window.a = function() {};");
+-  }
+-
+   public void testCheckGlobalThisOffByDefault() {
+     testSame("function f() { this.a = 3; }");
+   }
+@@ -474,7 +464,7 @@ public class CommandLineRunnerTest extends TestCase {
+     args.add("--compilation_level=SIMPLE_OPTIMIZATIONS");
+     args.add("--debug=false");
+     test("function foo(a) {}",
+-         "function foo(a) {}");
++         "function foo() {}");
+   }
+ 
+   public void testDebugFlag2() {
+@@ -757,7 +747,7 @@ public class CommandLineRunnerTest extends TestCase {
+           "goog.provide('Scotch'); var x = 3;"
+          },
+          new String[] {
+-           "var beer = {}; function f(a) {}",
++           "var beer = {}; function f() {}",
+            ""
+          });
+ 
+@@ -766,7 +756,7 @@ public class CommandLineRunnerTest extends TestCase {
+           "goog.provide('beer'); /** @param {Scotch} x */ function f(x) {}"
+          },
+          new String[] {
+-           "var beer = {}; function f(a) {}",
++           "var beer = {}; function f() {}",
+            ""
+          },
+          RhinoErrorReporter.TYPE_PARSE_ERROR);
+diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+index 47604bc..5a86db1 100644
+--- a/com/google/javascript/jscomp/IntegrationTest.java
++++ b/com/google/javascript/jscomp/IntegrationTest.java
+@@ -2356,7 +2356,7 @@ public class IntegrationTest extends IntegrationTestCase {
+     String result = "" +
+         "function some_function() {\n" +
+         "  var a, b;\n" +
+-        "  any_expression && (b = external_ref, a = function(a) {\n" +
++        "  any_expression && (b = external_ref, a = function() {\n" +
+         "    return b()\n" +
+         "  });\n" +
+         "  return{method1:function() {\n" +
+diff --git a/com/google/javascript/jscomp/RemoveUnusedVarsTest.java b/com/google/javascript/jscomp/RemoveUnusedVarsTest.java
+index 02d13de..aa92257 100644
+--- a/com/google/javascript/jscomp/RemoveUnusedVarsTest.java
++++ b/com/google/javascript/jscomp/RemoveUnusedVarsTest.java
+@@ -244,20 +244,20 @@ public class RemoveUnusedVarsTest extends CompilerTestCase {
+   public void testRemoveGlobal1() {
+     removeGlobal = false;
+     testSame("var x=1");
+-    test("var y=function(x){var z;}", "var y=function(x){}");
++    test("var y=function(x){var z;}", "var y=function(){}");
+   }
+ 
+   public void testRemoveGlobal2() {
+     removeGlobal = false;
+     testSame("var x=1");
+-    test("function y(x){var z;}", "function y(x){}");
++    test("function y(x){var z;}", "function y(){}");
+   }
+ 
+   public void testRemoveGlobal3() {
+     removeGlobal = false;
+     testSame("var x=1");
+     test("function x(){function y(x){var z;}y()}",
+-         "function x(){function y(x){}y()}");
++         "function x(){function y(){}y()}");
+   }
+ 
+   public void testRemoveGlobal4() {
+@@ -286,7 +286,7 @@ public class RemoveUnusedVarsTest extends CompilerTestCase {
+          "function b(){" +
+          "  a();" +
+          "}",
+-         "function a(){(function(x){b()})(1)}" +
++         "function a(){(function(){b()})(1)}" +
+          "function b(){a()}");
+   }
+ 

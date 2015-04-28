@@ -1,0 +1,31 @@
+diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+index 371a756..455e49a 100644
+--- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+@@ -61,13 +61,6 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
+     inline("var x = 1; x = x + 1", "var x; x = 1 + 1");
+   }
+ 
+-  public void testSimpleForIn() {
+-    inline("var a,b,x = a in b; x",
+-           "var a,b,x; a in b");
+-    noInline("var a, b; var x = a in b; print(1); x");
+-    noInline("var a,b,x = a in b; delete a[b]; x");
+-  }
+-
+   public void testExported() {
+     noInline("var _x = 1; print(_x)");
+   }
+diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+index b01cf02..bd569cb 100644
+--- a/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/com/google/javascript/jscomp/NodeUtilTest.java
+@@ -406,8 +406,6 @@ public class NodeUtilTest extends TestCase {
+     assertSideEffect(false, "({}||[]).foo = 2;");
+     assertSideEffect(false, "(true ? {} : []).foo = 2;");
+     assertSideEffect(false, "({},[]).foo = 2;");
+-
+-    assertSideEffect(true, "delete a.b");
+   }
+ 
+   public void testObjectMethodSideEffects() {

@@ -1,0 +1,31 @@
+diff --git a/com/google/javascript/jscomp/ProcessCommonJSModules.java b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+index fa01cd9..a0f2dda 100644
+--- a/com/google/javascript/jscomp/ProcessCommonJSModules.java
++++ b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+@@ -125,7 +123,6 @@ public class ProcessCommonJSModules implements CompilerPass {
+       AbstractPostOrderCallback {
+ 
+     private int scriptNodeCount = 0;
+-    private Set<String> modulesWithExports = Sets.newHashSet();
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+@@ -205,10 +202,6 @@ public class ProcessCommonJSModules implements CompilerPass {
+      */
+     private void emitOptionalModuleExportsOverride(Node script,
+         String moduleName) {
+-      if (!modulesWithExports.contains(moduleName)) {
+-        return;
+-      }
+-
+       Node moduleExportsProp = IR.getprop(IR.name(moduleName),
+           IR.string("module$exports"));
+       script.addChildToBack(IR.ifNode(
+@@ -229,7 +222,6 @@ public class ProcessCommonJSModules implements CompilerPass {
+       Node exports = prop.getChildAtIndex(1);
+       exports.putProp(Node.ORIGINALNAME_PROP, "exports");
+       exports.setString("module$exports");
+-      modulesWithExports.add(moduleName);
+     }
+ 
+     /**

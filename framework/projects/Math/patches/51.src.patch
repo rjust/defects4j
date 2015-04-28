@@ -1,0 +1,52 @@
+diff --git a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+index b3a23a1..fde7172 100644
+--- a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -169,37 +169,25 @@ public abstract class BaseSecantSolver
+ 
+             // Update the bounds with the new approximation.
+             if (f1 * fx < 0) {
+-                // The value of x1 has switched to the other bound, thus inverting
++                // We had [x0..x1]. We update it to [x1, x]. Note that the
++                // value of x1 has switched to the other bound, thus inverting
+                 // the interval.
+                 x0 = x1;
+                 f0 = f1;
++                x1 = x;
++                f1 = fx;
+                 inverted = !inverted;
+             } else {
+-                switch (method) {
+-                case ILLINOIS:
++                // We had [x0..x1]. We update it to [x0, x].
++                if (method == Method.ILLINOIS) {
+                     f0 *= 0.5;
+-                    break;
+-                case PEGASUS:
++                }
++                if (method == Method.PEGASUS) {
+                     f0 *= f1 / (f1 + fx);
+-                    break;
+-                case REGULA_FALSI:
+-                    if (x == x1) {
+-                        final double delta = FastMath.max(rtol * FastMath.abs(x1),
+-                                                          atol);
+-                        // Update formula cannot make any progress: Update the
+-                        // search interval.
+-                        x0 = 0.5 * (x0 + x1 - delta);
+-                        f0 = computeObjectiveValue(x0);
+-                    }
+-                    break;
+-                default:
+-                    // Should never happen.
+-                    throw new MathInternalError();
+                 }
++                x1 = x;
++                f1 = fx;
+             }
+-            // Update from [x0, x1] to [x0, x].
+-            x1 = x;
+-            f1 = fx;
+ 
+             // If the function value of the last approximation is too small,
+             // given the function value accuracy, then we can't get closer to

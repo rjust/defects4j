@@ -1,0 +1,40 @@
+diff --git a/org/apache/commons/math/linear/OpenMapRealVector.java b/org/apache/commons/math/linear/OpenMapRealVector.java
+index 13ebfd2..5db4884 100644
+--- a/org/apache/commons/math/linear/OpenMapRealVector.java
++++ b/org/apache/commons/math/linear/OpenMapRealVector.java
+@@ -342,7 +342,7 @@ public class OpenMapRealVector extends AbstractRealVector
+     public OpenMapRealVector ebeDivide(RealVector v) {
+         checkVectorDimensions(v.getDimension());
+         OpenMapRealVector res = new OpenMapRealVector(this);
+-        Iterator iter = entries.iterator();
++        Iterator iter = res.entries.iterator();
+         while (iter.hasNext()) {
+             iter.advance();
+             res.setEntry(iter.key(), iter.value() / v.getEntry(iter.key()));
+@@ -355,7 +355,7 @@ public class OpenMapRealVector extends AbstractRealVector
+     public OpenMapRealVector ebeDivide(double[] v) {
+         checkVectorDimensions(v.length);
+         OpenMapRealVector res = new OpenMapRealVector(this);
+-        Iterator iter = entries.iterator();
++        Iterator iter = res.entries.iterator();
+         while (iter.hasNext()) {
+             iter.advance();
+             res.setEntry(iter.key(), iter.value() / v[iter.key()]);
+@@ -367,7 +367,7 @@ public class OpenMapRealVector extends AbstractRealVector
+     public OpenMapRealVector ebeMultiply(RealVector v) {
+         checkVectorDimensions(v.getDimension());
+         OpenMapRealVector res = new OpenMapRealVector(this);
+-        Iterator iter = entries.iterator();
++        Iterator iter = res.entries.iterator();
+         while (iter.hasNext()) {
+             iter.advance();
+             res.setEntry(iter.key(), iter.value() * v.getEntry(iter.key()));
+@@ -380,7 +380,7 @@ public class OpenMapRealVector extends AbstractRealVector
+     public OpenMapRealVector ebeMultiply(double[] v) {
+         checkVectorDimensions(v.length);
+         OpenMapRealVector res = new OpenMapRealVector(this);
+-        Iterator iter = entries.iterator();
++        Iterator iter = res.entries.iterator();
+         while (iter.hasNext()) {
+             iter.advance();
+             res.setEntry(iter.key(), iter.value() * v[iter.key()]);

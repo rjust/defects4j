@@ -1,0 +1,22 @@
+diff --git a/com/google/javascript/rhino/jstype/NamedType.java b/com/google/javascript/rhino/jstype/NamedType.java
+index 06988ab..70142c4 100644
+--- a/com/google/javascript/rhino/jstype/NamedType.java
++++ b/com/google/javascript/rhino/jstype/NamedType.java
+@@ -187,7 +187,7 @@ class NamedType extends ProxyObjectType {
+     // makes more sense. Now, resolution via registry is first in order to
+     // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
+-    if (detectInheritanceCycle()) {
++    if (detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+ 
+@@ -199,7 +199,7 @@ class NamedType extends ProxyObjectType {
+     }
+ 
+     resolveViaProperties(t, enclosing);
+-    if (detectInheritanceCycle()) {
++    if (detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+ 

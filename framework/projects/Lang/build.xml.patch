@@ -1,0 +1,21 @@
+8a9,12
+>   <path id="build.test.classpath">
+>     <pathelement location="${easymock.jar}" />
+>   </path>
+> 
+22a27,41
+>   <path id="test.classpath">                                                                
+>       <path refid="build.test.classpath"/>                                     
+>       <pathelement location="${maven.build.outputDir}"/>
+>       <pathelement location="${maven.build.testOutputDir}"/>                   
+>   </path> 
+> 
+>   <path id="compile.classpath">                                                                
+>       <path refid="build.classpath"/>                                     
+>   </path> 
+> 
+>    <property name="test.home" value="${maven.build.testDir.0}"/>
+>    <property name="source.home" value="${maven.build.srcDir.0}"/>
+>    <property name="build.home" value="${maven.build.dir}"/>
+>    <target name="compile.tests" depends="compile-tests"/>
+>  

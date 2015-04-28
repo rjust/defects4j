@@ -1,0 +1,32 @@
+diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+index 167e2cb..9ceae7c 100644
+--- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+@@ -865,9 +865,9 @@ public final class JsDocInfoParser {
+                         }
+                         break;
+                     }
+-                  }
+ 
+-                  token = eatTokensUntilEOL();
++                    token = eatTokensUntilEOL();
++                  }
+                   continue retry;
+               }
+             }
+@@ -1706,7 +1706,6 @@ public final class JsDocInfoParser {
+       }
+     }
+ 
+-    restoreLookAhead(token);
+     return reportGenericTypeSyntaxWarning();
+   }
+ 
+@@ -1759,7 +1758,6 @@ public final class JsDocInfoParser {
+     // NOTE(nicksantos): We're not implementing generics at the moment, so
+     // just throw out TypeParameters.
+     if (token != JsDocToken.LP) {
+-      restoreLookAhead(token);
+       return reportTypeSyntaxWarning("msg.jsdoc.missing.lp");
+     }
+ 

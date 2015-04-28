@@ -1,0 +1,39 @@
+diff --git a/org/apache/commons/math/distribution/NormalDistributionImpl.java b/org/apache/commons/math/distribution/NormalDistributionImpl.java
+index 0d7ce7d..456555b 100644
+--- a/org/apache/commons/math/distribution/NormalDistributionImpl.java
++++ b/org/apache/commons/math/distribution/NormalDistributionImpl.java
+@@ -114,20 +114,26 @@ public class NormalDistributionImpl extends AbstractContinuousDistribution
+ 
+     /**
+      * For this distribution, {@code X}, this method returns {@code P(X < x)}.
+-     * If {@code x}is more than 40 standard deviations from the mean, 0 or 1 is returned,
+-     * as in these cases the actual value is within {@code Double.MIN_VALUE} of 0 or 1.
+      *
+      * @param x Value at which the CDF is evaluated.
+      * @return CDF evaluated at {@code x}.
+-     * @throws MathException if the algorithm fails to converge
++     * @throws MathException if the algorithm fails to converge; unless
++     * {@code x} is more than 20 standard deviations from the mean, in which
++     * case the convergence exception is caught and 0 or 1 is returned.
+      */
+     public double cumulativeProbability(double x) throws MathException {
+-        final double dev = x - mean;
+-        if (FastMath.abs(dev) > 40 * standardDeviation) { 
+-            return dev < 0 ? 0.0d : 1.0d;
+-        }
+-        return 0.5 * (1.0 + Erf.erf((dev) /
++        try {
++            return 0.5 * (1.0 + Erf.erf((x - mean) /
+                     (standardDeviation * FastMath.sqrt(2.0))));
++        } catch (MaxIterationsExceededException ex) {
++            if (x < (mean - 20 * standardDeviation)) { // JDK 1.5 blows at 38
++                return 0;
++            } else if (x > (mean + 20 * standardDeviation)) {
++                return 1;
++            } else {
++                throw ex;
++            }
++        }
+     }
+ 
+     /**

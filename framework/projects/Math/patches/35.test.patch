@@ -1,0 +1,70 @@
+diff --git a/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java b/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
+index dbfc9f1..f2d1871 100644
+--- a/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
++++ b/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
+@@ -17,10 +17,6 @@
+ package org.apache.commons.math3.genetics;
+ 
+ 
+-import java.util.Collections;
+-import java.util.List;
+-
+-import org.apache.commons.math3.exception.OutOfRangeException;
+ import org.junit.Assert;
+ import org.junit.Test;
+ 
+@@ -40,54 +36,6 @@ public class ElitisticListPopulationTest {
+ 
+         Assert.assertEquals(20, nextGeneration.getPopulationSize());
+     }
+-    
+-    @Test
+-    public void testSetElitismRate() {
+-        final double rate = 0.25;
+-        final ElitisticListPopulation pop = new ElitisticListPopulation(100, 0.203);
+-        pop.setElitismRate(rate);
+-        Assert.assertEquals(rate, pop.getElitismRate(), 1e-6);
+-    }
+-    
+-    @Test(expected = OutOfRangeException.class)
+-    public void testSetElitismRateTooLow() {
+-        final double rate = -0.25;
+-        final ElitisticListPopulation pop = new ElitisticListPopulation(100, 0.203);
+-        pop.setElitismRate(rate);
+-    }
+-    
+-    @Test(expected = OutOfRangeException.class)
+-    public void testSetElitismRateTooHigh() {
+-        final double rate = 1.25;
+-        final ElitisticListPopulation pop = new ElitisticListPopulation(100, 0.203);
+-        pop.setElitismRate(rate);
+-    }
+-    
+-    @Test(expected = OutOfRangeException.class)
+-    public void testConstructorTooLow() {
+-        final double rate = -0.25;
+-        new ElitisticListPopulation(100, rate);
+-    }
+-    
+-    @Test(expected = OutOfRangeException.class)
+-    public void testConstructorTooHigh() {
+-        final double rate = 1.25;
+-        new ElitisticListPopulation(100, rate);
+-    }
+-
+-    @Test(expected = OutOfRangeException.class)
+-    public void testChromosomeListConstructorTooLow() {
+-        final List<Chromosome> chromosomes = Collections.emptyList();
+-        final double rate = -0.25;
+-        new ElitisticListPopulation(chromosomes, 100, rate);
+-    }
+-
+-    @Test(expected = OutOfRangeException.class)
+-    public void testChromosomeListConstructorTooHigh() {
+-        final List<Chromosome> chromosomes = Collections.emptyList();
+-        final double rate = 1.25;
+-        new ElitisticListPopulation(chromosomes, 100, rate);
+-    }
+ 
+     private static class DummyChromosome extends Chromosome {
+         private final int fitness;

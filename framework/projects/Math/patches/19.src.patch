@@ -1,0 +1,36 @@
+diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+index f6a4f28..b54cb37 100644
+--- a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
++++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+@@ -24,8 +24,8 @@ import java.util.List;
+ import org.apache.commons.math3.analysis.MultivariateFunction;
+ import org.apache.commons.math3.exception.DimensionMismatchException;
+ import org.apache.commons.math3.exception.MathUnsupportedOperationException;
++import org.apache.commons.math3.exception.MathIllegalStateException;
+ import org.apache.commons.math3.exception.NotPositiveException;
+-import org.apache.commons.math3.exception.NumberIsTooLargeException;
+ import org.apache.commons.math3.exception.OutOfRangeException;
+ import org.apache.commons.math3.exception.TooManyEvaluationsException;
+ import org.apache.commons.math3.exception.util.LocalizedFormats;
+@@ -535,21 +529,6 @@ public class CMAESOptimizer
+                 boundaries = new double[2][];
+                 boundaries[0] = lB;
+                 boundaries[1] = uB;
+-
+-                // Abort early if the normalization will overflow (cf. "encode" method).
+-                for (int i = 0; i < lB.length; i++) {
+-                    if (Double.isInfinite(boundaries[1][i] - boundaries[0][i])) {
+-                        final double max = Double.MAX_VALUE + boundaries[0][i];
+-                        final NumberIsTooLargeException e
+-                            = new NumberIsTooLargeException(boundaries[1][i],
+-                                                            max,
+-                                                            true);
+-                        e.getContext().addMessage(LocalizedFormats.OVERFLOW);
+-                        e.getContext().addMessage(LocalizedFormats.INDEX, i);
+-
+-                        throw e;
+-                    }
+-                }
+             }
+         } else {
+             // Convert API to internal handling of boundaries.

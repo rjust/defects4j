@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math/complex/ComplexTest.java b/org/apache/commons/math/complex/ComplexTest.java
+index 97b473d..3eb6d3e 100644
+--- a/org/apache/commons/math/complex/ComplexTest.java
++++ b/org/apache/commons/math/complex/ComplexTest.java
+@@ -113,7 +113,7 @@ public class ComplexTest {
+         Assert.assertTrue(z.isNaN());
+         z = new Complex(1, nan);
+         Complex w = x.add(z);
+-        Assert.assertTrue(Double.isNaN(w.getReal()));
++        Assert.assertEquals(w.getReal(), 4.0, 0);
+         Assert.assertTrue(Double.isNaN(w.getImaginary()));
+     }
+ 

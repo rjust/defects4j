@@ -1,0 +1,115 @@
+Index: org/jfree/data/DefaultKeyedValues.java
+===================================================================
+--- org/jfree/data/DefaultKeyedValues.java	(revision 621)
++++ org/jfree/data/DefaultKeyedValues.java	(revision 620)
+@@ -315,25 +314,27 @@
+     public void removeValue(int index) {
+         this.keys.remove(index);
+         this.values.remove(index);
+-        rebuildIndex();
++
++        // did we remove the last item? If not, then rebuild the index ..
++        if (index < this.keys.size()) {
++            rebuildIndex();
++        }
+     }
+ 
+     /**
+-     * Removes a value from the collection.
++     * Removes a value from the collection.  If there is no item with the 
++     * specified key, this method does nothing.
+      *
+      * @param key  the item key (<code>null</code> not permitted).
+      * 
+      * @throws IllegalArgumentException if <code>key</code> is 
+      *     <code>null</code>.
+-     * @throws UnknownKeyException if <code>key</code> is not recognised.
+      */
+     public void removeValue(Comparable key) {
+         int index = getIndex(key);
+-        if (index < 0) {
+-            throw new UnknownKeyException("The key (" + key 
+-                    + ") is not recognised.");
++        if (index >= 0) {
++            removeValue(index);
+         }
+-        removeValue(index);
+     }
+     
+     /**
+@@ -353,23 +354,23 @@
+      * @param order  the sort order (<code>null</code> not permitted).
+      */
+     public void sortByKeys(SortOrder order) {
+-        final int size = this.keys.size();
+-        final DefaultKeyedValue[] data = new DefaultKeyedValue[size];
++      final int size = this.keys.size();
++      final DefaultKeyedValue[] data = new DefaultKeyedValue[size];
+ 
+-        for (int i = 0; i < size; i++) {
+-            data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i), 
+-                    (Number) this.values.get(i));
+-        }
++      for (int i = 0; i < size; i++) {
++          data[i] = new DefaultKeyedValue((Comparable) this.keys.get(i), 
++                  (Number) this.values.get(i));
++      }
+ 
+-        Comparator comparator = new KeyedValueComparator(
++      Comparator comparator = new KeyedValueComparator(
+                 KeyedValueComparatorType.BY_KEY, order);
+-        Arrays.sort(data, comparator);
+-        clear();
++      Arrays.sort(data, comparator);
++      clear();
+ 
+-        for (int i = 0; i < data.length; i++) {
+-            final DefaultKeyedValue value = data[i];
+-            addValue(value.getKey(), value.getValue());
+-        }
++      for (int i = 0; i < data.length; i++) {
++          final DefaultKeyedValue value = data[i];
++          addValue(value.getKey(), value.getValue());
++      }
+     }
+ 
+     /**
+Index: org/jfree/data/DefaultKeyedValues2D.java
+===================================================================
+--- org/jfree/data/DefaultKeyedValues2D.java	(revision 621)
++++ org/jfree/data/DefaultKeyedValues2D.java	(revision 620)
+@@ -439,32 +438,18 @@
+     }
+ 
+     /**
+-     * Removes a column from the table.
++     * Removes a column.
+      *
+      * @param columnKey  the column key (<code>null</code> not permitted).
+      * 
+-     * @throws UnknownKeyException if the table does not contain a column with
+-     *     the specified key.
+-     * @throws IllegalArgumentException if <code>columnKey</code> is 
+-     *     <code>null</code>.
+-     * 
+      * @see #removeColumn(int)
+      * @see #removeRow(Comparable)
+      */
+     public void removeColumn(Comparable columnKey) {
+-    	if (columnKey == null) {
+-    		throw new IllegalArgumentException("Null 'columnKey' argument.");
+-    	}
+-    	if (!this.columnKeys.contains(columnKey)) {
+-    		throw new UnknownKeyException("Unknown key: " + columnKey);
+-    	}
+         Iterator iterator = this.rows.iterator();
+         while (iterator.hasNext()) {
+             DefaultKeyedValues rowData = (DefaultKeyedValues) iterator.next();
+-            int index = rowData.getIndex(columnKey);
+-            if (index >= 0) {
+-                rowData.removeValue(columnKey);
+-            }
++            rowData.removeValue(columnKey);
+         }
+         this.columnKeys.remove(columnKey);
+     }

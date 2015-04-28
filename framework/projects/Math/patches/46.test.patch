@@ -1,0 +1,26 @@
+diff --git a/org/apache/commons/math/complex/ComplexTest.java b/org/apache/commons/math/complex/ComplexTest.java
+index 71bdd1e..a002b0b 100644
+--- a/org/apache/commons/math/complex/ComplexTest.java
++++ b/org/apache/commons/math/complex/ComplexTest.java
+@@ -229,8 +229,7 @@ public class ComplexTest {
+     public void testDivideZero() {
+         Complex x = new Complex(3.0, 4.0);
+         Complex z = x.divide(Complex.ZERO);
+-        // Assert.assertEquals(z, Complex.INF); // See MATH-657
+-        Assert.assertEquals(z, Complex.NaN);
++        Assert.assertEquals(z, Complex.INF);
+     }
+ 
+     @Test
+@@ -574,7 +573,10 @@ public class ComplexTest {
+ 
+     @Test
+     public void testAtanI() {
+-        Assert.assertTrue(Complex.I.atan().isNaN());
++        for (int i = -10; i < 10; i++) {
++            System.out.println(new Complex(0, 1 - 0.1 * i).atan());
++        }
++        Assert.assertTrue(Complex.I.atan().isInfinite());
+     }
+ 
+     @Test

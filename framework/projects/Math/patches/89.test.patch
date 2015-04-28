@@ -1,0 +1,26 @@
+diff --git a/org/apache/commons/math/stat/FrequencyTest.java b/org/apache/commons/math/stat/FrequencyTest.java
+index dc18d92..b2e0b3a 100644
+--- a/org/apache/commons/math/stat/FrequencyTest.java
++++ b/org/apache/commons/math/stat/FrequencyTest.java
+@@ -192,16 +192,16 @@ public final class FrequencyTest extends TestCase {
+     // Check what happens when non-Comparable objects are added
+     public void testAddNonComparable(){
+         try {
+-            f.addValue(new Object()); // This was previously OK
+-            fail("Expected IllegalArgumentException");
+-        } catch (IllegalArgumentException expected) {
++            f.addValue(new Object()); // This was OK
++            fail("Expected ClassCastException");
++        } catch (ClassCastException expected) {
+         }
+         f.clear();
+         f.addValue(1);
+         try {
+             f.addValue(new Object());
+-            fail("Expected IllegalArgumentException");
+-        } catch (IllegalArgumentException expected) {
++            fail("Expected ClassCastException"); // Previously would have been IllegalArgument
++        } catch (ClassCastException expected) {
+         }
+     }
+ 

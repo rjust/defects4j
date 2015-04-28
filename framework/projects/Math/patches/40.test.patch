@@ -1,0 +1,35 @@
+diff --git a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
+index 13bd8f4..3324b79 100644
+--- a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
++++ b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
+@@ -41,7 +41,7 @@ public final class BracketingNthOrderBrentSolverTest extends BaseSecantSolverAbs
+     /** {@inheritDoc} */
+     @Override
+     protected int[] getQuinticEvalCounts() {
+-        return new int[] {1, 3, 8, 1, 9, 4, 8, 1, 12, 1, 16};
++        return new int[] {1, 3, 8, 1, 9, 4, 8, 1, 12, 1, 14};
+     }
+ 
+     @Test(expected=NumberIsTooSmallException.class)
+@@ -82,21 +82,6 @@ public final class BracketingNthOrderBrentSolverTest extends BaseSecantSolverAbs
+     }
+ 
+     @Test
+-    public void testIssue716() {
+-        BracketingNthOrderBrentSolver solver =
+-                new BracketingNthOrderBrentSolver(1.0e-12, 1.0e-10, 1.0e-22, 5);
+-        UnivariateFunction sharpTurn = new UnivariateFunction() {
+-            public double value(double x) {
+-                return (2 * x + 1) / (1.0e9 * (x + 1));
+-            }
+-        };
+-        double result = solver.solve(100, sharpTurn, -0.9999999, 30, 15, AllowedSolution.RIGHT_SIDE);
+-        Assert.assertEquals(0, sharpTurn.value(result), solver.getFunctionValueAccuracy());
+-        Assert.assertTrue(sharpTurn.value(result) >= 0);
+-        Assert.assertEquals(-0.5, result, 1.0e-10);
+-    }
+-
+-    @Test
+     public void testFasterThanNewton() {
+         // the following test functions come from Beny Neta's paper:
+         // "Several New Methods for solving Equations"

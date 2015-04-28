@@ -1,0 +1,48 @@
+diff --git a/org/apache/commons/math/linear/BigMatrixImplTest.java b/org/apache/commons/math/linear/BigMatrixImplTest.java
+index 2f52c35..f30e04b 100644
+--- a/org/apache/commons/math/linear/BigMatrixImplTest.java
++++ b/org/apache/commons/math/linear/BigMatrixImplTest.java
+@@ -435,20 +435,6 @@ public final class BigMatrixImplTest extends TestCase {
+             ;
+         }      
+     }
+-
+-    /** test issue MATH-209 */
+-    public void testMath209() {
+-        BigMatrix a = new BigMatrixImpl(new BigDecimal[][] {
+-                { new BigDecimal(1), new BigDecimal(2) },
+-                { new BigDecimal(3), new BigDecimal(4) },
+-                { new BigDecimal(5), new BigDecimal(6) }
+-        }, false);
+-        BigDecimal[] b = a.operate(new BigDecimal[] { new BigDecimal(1), new BigDecimal(1) });
+-        assertEquals(a.getRowDimension(), b.length);
+-        assertEquals( 3.0, b[0].doubleValue(), 1.0e-12);
+-        assertEquals( 7.0, b[1].doubleValue(), 1.0e-12);
+-        assertEquals(11.0, b[2].doubleValue(), 1.0e-12);
+-    }
+     
+     /** test transpose */
+     public void testTranspose() {
+diff --git a/org/apache/commons/math/linear/RealMatrixImplTest.java b/org/apache/commons/math/linear/RealMatrixImplTest.java
+index 383a959..7553f36 100644
+--- a/org/apache/commons/math/linear/RealMatrixImplTest.java
++++ b/org/apache/commons/math/linear/RealMatrixImplTest.java
+@@ -342,18 +342,6 @@ public final class RealMatrixImplTest extends TestCase {
+             ;
+         }      
+     }
+-
+-    /** test issue MATH-209 */
+-    public void testMath209() {
+-        RealMatrix a = new RealMatrixImpl(new double[][] {
+-                { 1, 2 }, { 3, 4 }, { 5, 6 }
+-        }, false);
+-        double[] b = a.operate(new double[] { 1, 1 });
+-        assertEquals(a.getRowDimension(), b.length);
+-        assertEquals( 3.0, b[0], 1.0e-12);
+-        assertEquals( 7.0, b[1], 1.0e-12);
+-        assertEquals(11.0, b[2], 1.0e-12);
+-    }
+     
+     /** test transpose */
+     public void testTranspose() {

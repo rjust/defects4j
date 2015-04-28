@@ -1,0 +1,63 @@
+Index: org/jfree/chart/plot/CategoryPlot.java
+===================================================================
+--- org/jfree/chart/plot/CategoryPlot.java	(revision 811)
++++ org/jfree/chart/plot/CategoryPlot.java	(revision 809)
+@@ -2163,9 +2161,6 @@
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
+-        if (markers == null) {
+-            return false;
+-        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2448,9 +2443,7 @@
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
+-        if (markers == null) {
+-            return false;
+-        }
++
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2504,10 +2497,12 @@
+      * @see #isRangeCrosshairLockedOnData()
+      */
+     public void setRangeCrosshairLockedOnData(boolean flag) {
++
+         if (this.rangeCrosshairLockedOnData != flag) {
+             this.rangeCrosshairLockedOnData = flag;
+             fireChangeEvent();
+         }
++
+     }
+ 
+     /**
+Index: org/jfree/chart/plot/XYPlot.java
+===================================================================
+--- org/jfree/chart/plot/XYPlot.java	(revision 811)
++++ org/jfree/chart/plot/XYPlot.java	(revision 809)
+@@ -2290,9 +2288,6 @@
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
+-        if (markers == null) {
+-            return false;
+-        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2529,9 +2524,7 @@
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
+-        if (markers == null) {
+-            return false;
+-        }
++
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();

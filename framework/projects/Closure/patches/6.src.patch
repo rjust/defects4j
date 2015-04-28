@@ -1,0 +1,105 @@
+diff --git a/com/google/javascript/jscomp/TypeValidator.java b/com/google/javascript/jscomp/TypeValidator.java
+index 12ce5b3..be049b0 100644
+--- a/com/google/javascript/jscomp/TypeValidator.java
++++ b/com/google/javascript/jscomp/TypeValidator.java
+@@ -363,22 +363,28 @@ class TypeValidator {
+       JSType leftType, Node owner, String propName) {
+     // The NoType check is a hack to make typedefs work OK.
+     if (!leftType.isNoType() && !rightType.canAssignTo(leftType)) {
+-      // Do not type-check interface methods, because we expect that
+-      // they will have dummy implementations that do not match the type
+-      // annotations.
+-      JSType ownerType = getJSType(owner);
+-      if (ownerType.isFunctionPrototypeType()) {
+-        FunctionType ownerFn = ownerType.toObjectType().getOwnerFunction();
+-        if (ownerFn.isInterface() &&
+-            rightType.isFunctionType() && leftType.isFunctionType()) {
+-          return true;
++      if (bothIntrinsics(rightType, leftType)) {
++        // We have a superior warning for this mistake, which gives you
++        // the line numbers of both types.
++        registerMismatch(rightType, leftType, null);
++      } else {
++        // Do not type-check interface methods, because we expect that
++        // they will have dummy implementations that do not match the type
++        // annotations.
++        JSType ownerType = getJSType(owner);
++        if (ownerType.isFunctionPrototypeType()) {
++          FunctionType ownerFn = ownerType.toObjectType().getOwnerFunction();
++          if (ownerFn.isInterface() &&
++              rightType.isFunctionType() && leftType.isFunctionType()) {
++            return true;
++          }
+         }
+-      }
+ 
+-      mismatch(t, n,
+-          "assignment to property " + propName + " of " +
+-          getReadableJSTypeName(owner, true),
+-          rightType, leftType);
++        mismatch(t, n,
++            "assignment to property " + propName + " of " +
++            getReadableJSTypeName(owner, true),
++            rightType, leftType);
++      }
+       return false;
+     }
+     return true;
+@@ -398,12 +404,23 @@ class TypeValidator {
+   boolean expectCanAssignTo(NodeTraversal t, Node n, JSType rightType,
+       JSType leftType, String msg) {
+     if (!rightType.canAssignTo(leftType)) {
+-      mismatch(t, n, msg, rightType, leftType);
++      if (bothIntrinsics(rightType, leftType)) {
++        // We have a superior warning for this mistake, which gives you
++        // the line numbers of both types.
++        registerMismatch(rightType, leftType, null);
++      } else {
++        mismatch(t, n, msg, rightType, leftType);
++      }
+       return false;
+     }
+     return true;
+   }
+ 
++  private boolean bothIntrinsics(JSType rightType, JSType leftType) {
++    return (leftType.isConstructor() || leftType.isEnumType()) &&
++        (rightType.isConstructor() || rightType.isEnumType());
++  }
++
+   /**
+    * Expect that the type of an argument matches the type of the parameter
+    * that it's fulfilling.
+@@ -676,7 +693,7 @@ class TypeValidator {
+       }
+ 
+       registerIfMismatch(
+-          fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);
++        fnTypeA.getReturnType(), fnTypeB.getReturnType(), error);
+     }
+   }
+ 
+diff --git a/com/google/javascript/rhino/jstype/FunctionType.java b/com/google/javascript/rhino/jstype/FunctionType.java
+index ba82d2a..5a6cf9a 100644
+--- a/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -1007,14 +1007,17 @@ public class FunctionType extends PrototypeObjectType {
+         // An interface function cannot be assigned to anything.
+         return false;
+       }
+-
+       // If functionA is a subtype of functionB, then their "this" types
+       // should be contravariant. However, this causes problems because
+       // of the way we enforce overrides. Because function(this:SubFoo)
+       // is not a subtype of function(this:Foo), our override check treats
+-      // this as an error. Let's punt on all this for now.
++      // this as an error. It also screws up out standard method
++      // for aliasing constructors. Let's punt on all this for now.
+       // TODO(nicksantos): fix this.
+       boolean treatThisTypesAsCovariant =
++        // If either one of these is a ctor, skip 'this' checking.
++        isConstructor() || other.isConstructor() ||
++
+         // An interface 'this'-type is non-restrictive.
+         // In practical terms, if C implements I, and I has a method m,
+         // then any m doesn't necessarily have to C#m's 'this'

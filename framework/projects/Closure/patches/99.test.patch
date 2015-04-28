@@ -1,0 +1,32 @@
+diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+index b168fd9..98e17aa 100644
+--- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+@@ -108,11 +108,6 @@ public class CheckGlobalThisTest extends CompilerTestCase {
+     testSame("/** @constructor */a.A = function() { this.m2 = 5; }");
+   }
+ 
+-  public void testInterface1() {
+-    testSame(
+-        "/** @interface */function A() { /** @type {string} */ this.m2; }");
+-  }
+-
+   public void testOverride1() {
+     testSame("/** @constructor */function A() { } var a = new A();" +
+              "/** @override */ a.foo = function() { this.bar = 5; };");
+@@ -150,15 +145,6 @@ public class CheckGlobalThisTest extends CompilerTestCase {
+     testSame("a.b.c.D.prototype.m1 = function() { this.m2 = 5; }");
+   }
+ 
+-  public void testMethod4() {
+-    testSame("a.prototype['x' + 'y'] =  function() { this.foo = 3; };");
+-  }
+-
+-  public void testPropertyOfMethod() {
+-    testFailure("a.protoype.b = {}; " +
+-        "a.prototype.b.c = function() { this.foo = 3; };");
+-  }
+-
+   public void testStaticMethod1() {
+     testFailure("a.b = function() { this.m2 = 5; }");
+   }

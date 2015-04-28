@@ -1,0 +1,42 @@
+Index: org/jfree/data/time/TimeSeries.java
+===================================================================
+--- org/jfree/data/time/TimeSeries.java	(revision 1083)
++++ org/jfree/data/time/TimeSeries.java	(revision 1082)
+@@ -674,7 +672,7 @@
+      */
+     public TimeSeriesDataItem addOrUpdate(RegularTimePeriod period,
+                                           double value) {
+-        return addOrUpdate(period, new Double(value));
++        return this.addOrUpdate(period, new Double(value));
+     }
+ 
+     /**
+@@ -941,7 +937,7 @@
+             endIndex = -(endIndex + 1); // this is first item AFTER end period
+             endIndex = endIndex - 1;    // so this is last item BEFORE end
+         }
+-        if ((endIndex < 0)  || (endIndex < startIndex)) {
++        if (endIndex < 0) {
+             emptyRange = true;
+         }
+         if (emptyRange) {
+@@ -970,13 +966,15 @@
+             return false;
+         }
+         TimeSeries s = (TimeSeries) object;
+-        if (!ObjectUtilities.equal(getDomainDescription(),
+-                s.getDomainDescription())) {
++        if (!ObjectUtilities.equal(
++            getDomainDescription(), s.getDomainDescription()
++        )) {
+             return false;
+         }
+ 
+-        if (!ObjectUtilities.equal(getRangeDescription(),
+-                s.getRangeDescription())) {
++        if (!ObjectUtilities.equal(
++            getRangeDescription(), s.getRangeDescription()
++        )) {
+             return false;
+         }
+ 

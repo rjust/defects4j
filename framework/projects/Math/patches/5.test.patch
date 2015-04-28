@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math3/complex/ComplexTest.java b/org/apache/commons/math3/complex/ComplexTest.java
+index 2646549..25c1a92 100644
+--- a/org/apache/commons/math3/complex/ComplexTest.java
++++ b/org/apache/commons/math3/complex/ComplexTest.java
+@@ -331,7 +331,7 @@ public class ComplexTest {
+ 
+     @Test
+     public void testReciprocalZero() {
+-        Assert.assertEquals(Complex.ZERO.reciprocal(), Complex.INF);
++        Assert.assertEquals(Complex.ZERO.reciprocal(), Complex.NaN);
+     }
+ 
+     @Test

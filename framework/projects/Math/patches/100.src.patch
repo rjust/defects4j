@@ -1,0 +1,28 @@
+diff --git a/org/apache/commons/math/estimation/AbstractEstimator.java b/org/apache/commons/math/estimation/AbstractEstimator.java
+index 8e5fe1a..19e06a0 100644
+--- a/org/apache/commons/math/estimation/AbstractEstimator.java
++++ b/org/apache/commons/math/estimation/AbstractEstimator.java
+@@ -163,7 +163,7 @@ public abstract class AbstractEstimator implements Estimator {
+ 
+         // compute transpose(J).J, avoiding building big intermediate matrices
+         final int rows = problem.getMeasurements().length;
+-        final int cols = problem.getUnboundParameters().length;
++        final int cols = problem.getAllParameters().length;
+         final int max  = cols * rows;
+         double[][] jTj = new double[cols][cols];
+         for (int i = 0; i < cols; ++i) {
+@@ -199,12 +199,12 @@ public abstract class AbstractEstimator implements Estimator {
+     public double[] guessParametersErrors(EstimationProblem problem)
+       throws EstimationException {
+         int m = problem.getMeasurements().length;
+-        int p = problem.getUnboundParameters().length;
++        int p = problem.getAllParameters().length;
+         if (m <= p) {
+             throw new EstimationException("no degrees of freedom ({0} measurements, {1} parameters)",
+                                           new Object[] { new Integer(m), new Integer(p)});
+         }
+-        double[] errors = new double[problem.getUnboundParameters().length];
++        double[] errors = new double[problem.getAllParameters().length];
+         final double c = Math.sqrt(getChiSquare(problem) / (m - p));
+         double[][] covar = getCovariances(problem);
+         for (int i = 0; i < errors.length; ++i) {

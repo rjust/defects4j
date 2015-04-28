@@ -1,0 +1,30 @@
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index aeb98a4..b8760e1 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -5902,25 +5902,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+          "}");
+   }
+ 
+-  public void testIssue688() throws Exception {
+-    testTypes(
+-        "/** @const */ var SOME_DEFAULT =\n" +
+-        "    /** @type {TwoNumbers} */ ({first: 1, second: 2});\n" +
+-        "/**\n" +
+-        "* Class defining an interface with two numbers.\n" +
+-        "* @interface\n" +
+-        "*/\n" +
+-        "function TwoNumbers() {}\n" +
+-        "/** @type number */\n" +
+-        "TwoNumbers.prototype.first;\n" +
+-        "/** @type number */\n" +
+-        "TwoNumbers.prototype.second;\n" +
+-        "/** @return {number} */ function f() { return SOME_DEFAULT; }",
+-        "inconsistent return type\n" +
+-        "found   : (TwoNumbers|null)\n" +
+-        "required: number");
+-  }
+-
+   public void testIssue700() throws Exception {
+     testTypes(
+         "/**\n" +

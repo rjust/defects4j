@@ -1,0 +1,154 @@
+diff --git a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
+index a865bda..159588d 100644
+--- a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
++++ b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
+@@ -48,8 +48,8 @@ public class MultiStartUnivariateRealOptimizerTest {
+             assertEquals(-1.0, f.value(optima[i]), 1.0e-10);
+             assertEquals(f.value(optima[i]), optimaValues[i], 1.0e-10);
+         }
+-        assertTrue(minimizer.getEvaluations() > 150);
+-        assertTrue(minimizer.getEvaluations() < 250);
++        assertTrue(minimizer.getEvaluations() > 1500);
++        assertTrue(minimizer.getEvaluations() < 1700);
+     }
+ 
+     @Test
+@@ -84,8 +84,8 @@ public class MultiStartUnivariateRealOptimizerTest {
+         }
+ 
+         double result = minimizer.optimize(f, GoalType.MINIMIZE, -0.3, -0.2);
+-        assertEquals(-0.2719561270319131, result, 1.0e-13);
+-        assertEquals(-0.2719561270319131, minimizer.getResult(), 1.0e-13);
++        assertEquals(-0.27195612525275803, result, 1.0e-13);
++        assertEquals(-0.27195612525275803, minimizer.getResult(), 1.0e-13);
+         assertEquals(-0.04433426954946637, minimizer.getFunctionValue(), 1.0e-13);
+ 
+         double[] optima = minimizer.getOptima();
+@@ -93,9 +93,10 @@ public class MultiStartUnivariateRealOptimizerTest {
+         for (int i = 0; i < optima.length; ++i) {
+             assertEquals(f.value(optima[i]), optimaValues[i], 1.0e-10);
+         }
+-        assertTrue(minimizer.getEvaluations()    >= 120);
+-        assertTrue(minimizer.getEvaluations()    <= 170);
+-        assertTrue(minimizer.getIterationCount() >= 120);
+-        assertTrue(minimizer.getIterationCount() <= 170);
++
++        assertTrue(minimizer.getEvaluations()    >= 300);
++        assertTrue(minimizer.getEvaluations()    <= 420);
++        assertTrue(minimizer.getIterationCount() >= 100);
++        assertTrue(minimizer.getIterationCount() <= 140);
+     }
+ }
+diff --git a/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
+index 176b9ad..9c73d21 100644
+--- a/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
++++ b/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
+@@ -29,7 +29,6 @@ import org.apache.commons.math.analysis.SinFunction;
+ import org.apache.commons.math.analysis.UnivariateRealFunction;
+ import org.apache.commons.math.optimization.GoalType;
+ import org.apache.commons.math.optimization.UnivariateRealOptimizer;
+-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+ import org.junit.Test;
+ 
+ /**
+@@ -51,13 +50,13 @@ public final class BrentOptimizerTest {
+         } catch (Exception e) {
+             fail("wrong exception caught");
+         }
+-        assertEquals(3 * Math.PI / 2, minimizer.optimize(f, GoalType.MINIMIZE, 4, 5), 10 * minimizer.getRelativeAccuracy());
++        assertEquals(3 * Math.PI / 2, minimizer.optimize(f, GoalType.MINIMIZE, 4, 5), 70 * minimizer.getAbsoluteAccuracy());
+         assertTrue(minimizer.getIterationCount() <= 50);
+-        assertEquals(3 * Math.PI / 2, minimizer.optimize(f, GoalType.MINIMIZE, 1, 5), 10 * minimizer.getRelativeAccuracy());
++        assertEquals(3 * Math.PI / 2, minimizer.optimize(f, GoalType.MINIMIZE, 1, 5), 70 * minimizer.getAbsoluteAccuracy());
+         assertTrue(minimizer.getIterationCount() <= 50);
+         assertTrue(minimizer.getEvaluations()    <= 100);
+-        assertTrue(minimizer.getEvaluations()    >=  15);
+-        minimizer.setMaxEvaluations(10);
++        assertTrue(minimizer.getEvaluations()    >=  30);
++        minimizer.setMaxEvaluations(50);
+         try {
+             minimizer.optimize(f, GoalType.MINIMIZE, 4, 5);
+             fail("an exception should have been thrown");
+@@ -83,35 +82,35 @@ public final class BrentOptimizerTest {
+     }
+ 
+     @Test
+-    public void testQuinticMinStatistics() throws MathException {
++    public void testQuinticMinPythonComparison() throws MathException {
+         // The function has local minima at -0.27195613 and 0.82221643.
+         UnivariateRealFunction f = new QuinticFunction();
+         UnivariateRealOptimizer minimizer = new BrentOptimizer();
+-        minimizer.setRelativeAccuracy(1e-10);
++        minimizer.setRelativeAccuracy(1e-12);
+         minimizer.setAbsoluteAccuracy(1e-11);
+ 
+-        final DescriptiveStatistics[] stat = new DescriptiveStatistics[3];
+-        for (int i = 0; i < stat.length; i++) {
+-            stat[i] = new DescriptiveStatistics();
+-        }
++        double result;
++        int nIter, nEval;
+ 
+-        final double min = -0.75;
+-        final double max = 0.25;
+-        final int nSamples = 200;
+-        final double delta = (max - min) / nSamples;
+-        for (int i = 0; i < nSamples; i++) {
+-            final double start = min + i * delta;
+-            stat[0].addValue(minimizer.optimize(f, GoalType.MINIMIZE, min, max, start));
+-            stat[1].addValue(minimizer.getIterationCount());
+-            stat[2].addValue(minimizer.getEvaluations());
+-        }
++        result = minimizer.optimize(f, GoalType.MINIMIZE, -0.3, -0.2, -0.25);
++        nIter = minimizer.getIterationCount();
++        nEval = minimizer.getEvaluations();
++        // XXX Python: -0.27195612805911351 (instead of -0.2719561279558559).
++        assertEquals(-0.2719561279558559, result, 1e-12);
++        // XXX Python: 15 (instead of 18).
++        assertEquals(18, nEval);
++        // XXX Python: 11 (instead of 17).
++        assertEquals(17, nIter);
+ 
+-        final double meanOptValue = stat[0].getMean();
+-        final double medianIter = stat[1].getPercentile(50);
+-        final double medianEval = stat[2].getPercentile(50);
+-        assertTrue(meanOptValue > -0.27195612812 && meanOptValue < -0.27195612811);
+-        assertEquals(medianIter, 17, Math.ulp(1d));
+-        assertEquals(medianEval, 18, Math.ulp(1d));
++        result = minimizer.optimize(f, GoalType.MINIMIZE, 0.7, 0.9, 0.8);
++        nIter = minimizer.getIterationCount();
++        nEval = minimizer.getEvaluations();
++        // XXX Python: 0.82221643488363705 (instead of 0.8222164326561908).
++        assertEquals(0.8222164326561908, result, 1e-12);
++        // XXX Python: 25 (instead of 43).
++        assertEquals(43, nEval);
++        // XXX Python: 21 (instead of 24).
++        assertEquals(24, nIter);
+     }
+ 
+     @Test
+@@ -121,7 +120,7 @@ public final class BrentOptimizerTest {
+         UnivariateRealFunction f = new QuinticFunction();
+         UnivariateRealOptimizer minimizer = new BrentOptimizer();
+         assertEquals(0.27195613, minimizer.optimize(f, GoalType.MAXIMIZE, 0.2, 0.3), 1.0e-8);
+-        minimizer.setMaximalIterationCount(5);
++        minimizer.setMaximalIterationCount(20);
+         try {
+             minimizer.optimize(f, GoalType.MAXIMIZE, 0.2, 0.3);
+             fail("an exception should have been thrown");
+@@ -137,13 +136,11 @@ public final class BrentOptimizerTest {
+         UnivariateRealFunction f = new SinFunction();
+         UnivariateRealOptimizer solver = new BrentOptimizer();
+ 
+-        solver.setRelativeAccuracy(1e-8);
+-
+         // endpoint is minimum
+         double result = solver.optimize(f, GoalType.MINIMIZE, 3 * Math.PI / 2, 5);
+-        assertEquals(3 * Math.PI / 2, result, 10 * solver.getRelativeAccuracy());
++        assertEquals(3 * Math.PI / 2, result, 70 * solver.getAbsoluteAccuracy());
+ 
+         result = solver.optimize(f, GoalType.MINIMIZE, 4, 3 * Math.PI / 2);
+-        assertEquals(3 * Math.PI / 2, result, 10 * solver.getRelativeAccuracy());
++        assertEquals(3 * Math.PI / 2, result, 80 * solver.getAbsoluteAccuracy());
+     }
+ }

@@ -1,0 +1,35 @@
+diff --git a/org/apache/commons/math/linear/SparseRealVectorTest.java b/org/apache/commons/math/linear/SparseRealVectorTest.java
+index 8ab628c..e23bfa0 100644
+--- a/org/apache/commons/math/linear/SparseRealVectorTest.java
++++ b/org/apache/commons/math/linear/SparseRealVectorTest.java
+@@ -998,30 +998,4 @@ public class SparseRealVectorTest {
+             Assert.assertEquals(msg + " " +  i + " elements differ", m[i],n[i],tolerance);
+         }
+     }
+-
+-    /* Check that the operations do not throw an exception (cf. MATH-645). */
+-    @Test
+-    public void testConcurrentModification() {
+-        final RealVector u = new OpenMapRealVector(3, 1e-6);
+-        u.setEntry(0, 1);
+-        u.setEntry(1, 0);
+-        u.setEntry(2, 2);
+-
+-        final RealVector v1 = new OpenMapRealVector(3, 1e-6);
+-        final double[] v2 = new double[3];
+-        v1.setEntry(0, 0);
+-        v2[0] = 0;
+-        v1.setEntry(1, 3);
+-        v2[1] = 3;
+-        v1.setEntry(2, 0);
+-        v2[2] = 0;
+-
+-        RealVector w;
+-
+-        w = u.ebeMultiply(v1);
+-        w = u.ebeMultiply(v2);
+-
+-        w = u.ebeDivide(v1);
+-        w = u.ebeDivide(v2);
+-    }
+ }

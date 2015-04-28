@@ -1,0 +1,40 @@
+diff --git a/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java b/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
+index bc70699..cbb8135 100644
+--- a/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
++++ b/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
+@@ -113,35 +113,6 @@ public abstract class UnivariateStatisticAbstractTest {
+         System.arraycopy(testArray, testArray.length - 5, arrayEnd, 0, 5);
+         Assert.assertEquals(stat.evaluate(arrayEnd), stat.evaluate(testArray, testArray.length - 5, 5), 0);
+     }
+-    
+-    @Test
+-    public void testEvaluateArraySegmentWeighted() {
+-        // See if this statistic computes weighted statistics
+-        // If not, skip this test
+-        UnivariateStatistic statistic = getUnivariateStatistic();
+-        if (!(statistic instanceof WeightedEvaluation)) {
+-            return;
+-        }
+-        final WeightedEvaluation stat = (WeightedEvaluation) getUnivariateStatistic();
+-        final double[] arrayZero = new double[5];
+-        final double[] weightZero = new double[5];
+-        System.arraycopy(testArray, 0, arrayZero, 0, 5);
+-        System.arraycopy(testWeightsArray, 0, weightZero, 0, 5);
+-        Assert.assertEquals(stat.evaluate(arrayZero, weightZero),
+-                stat.evaluate(testArray, testWeightsArray, 0, 5), 0);
+-        final double[] arrayOne = new double[5];
+-        final double[] weightOne = new double[5];
+-        System.arraycopy(testArray, 5, arrayOne, 0, 5);
+-        System.arraycopy(testWeightsArray, 5, weightOne, 0, 5);
+-        Assert.assertEquals(stat.evaluate(arrayOne, weightOne),
+-                stat.evaluate(testArray, testWeightsArray, 5, 5), 0);
+-        final double[] arrayEnd = new double[5];
+-        final double[] weightEnd = new double[5];
+-        System.arraycopy(testArray, testArray.length - 5, arrayEnd, 0, 5);
+-        System.arraycopy(testWeightsArray, testArray.length - 5, weightEnd, 0, 5);
+-        Assert.assertEquals(stat.evaluate(arrayEnd, weightEnd),
+-                stat.evaluate(testArray, testWeightsArray, testArray.length - 5, 5), 0);
+-    }
+ 
+     @Test
+     public void testCopy() throws Exception {

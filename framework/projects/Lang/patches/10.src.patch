@@ -1,0 +1,22 @@
+diff --git a/org/apache/commons/lang3/time/FastDateParser.java b/org/apache/commons/lang3/time/FastDateParser.java
+index 8df302f..a01159b 100644
+--- a/org/apache/commons/lang3/time/FastDateParser.java
++++ b/org/apache/commons/lang3/time/FastDateParser.java
+@@ -301,8 +301,17 @@ public class FastDateParser implements DateParser, Serializable {
+      * @return The <code>StringBuilder</code>
+      */
+     private static StringBuilder escapeRegex(StringBuilder regex, String value, boolean unquote) {
++        boolean wasWhite= false;
+         for(int i= 0; i<value.length(); ++i) {
+             char c= value.charAt(i);
++            if(Character.isWhitespace(c)) {
++                if(!wasWhite) {
++                    wasWhite= true;
++                    regex.append("\\s*+");
++                }
++                continue;
++            }
++            wasWhite= false;
+             switch(c) {
+             case '\'':
+                 if(unquote) {

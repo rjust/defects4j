@@ -1,0 +1,28 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtils.java b/org/apache/commons/lang3/math/NumberUtils.java
+index 0d30b22..d3054f3 100644
+--- a/org/apache/commons/lang3/math/NumberUtils.java
++++ b/org/apache/commons/lang3/math/NumberUtils.java
+@@ -488,7 +488,7 @@ public class NumberUtils {
+             }
+             dec = null;
+         }
+-        if (!Character.isDigit(lastChar) && lastChar != '.') {
++        if (!Character.isDigit(lastChar)) {
+             if (expPos > -1 && expPos < str.length() - 1) {
+                 exp = str.substring(expPos + 1, str.length() - 1);
+             } else {
+@@ -1385,14 +1385,6 @@ public class NumberUtils {
+                 // can't have an E at the last byte
+                 return false;
+             }
+-            if (chars[i] == '.') {
+-                if (hasDecPoint || hasExp) {
+-                    // two decimal points or dec in exponent
+-                    return false;
+-                }
+-                // single trailing decimal point after non-exponent is ok
+-                return foundDigit;
+-            }
+             if (!allowSigns
+                 && (chars[i] == 'd'
+                     || chars[i] == 'D'

@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/lang3/StringEscapeUtilsTest.java b/org/apache/commons/lang3/StringEscapeUtilsTest.java
+index 132ea05..5127ca3 100644
+--- a/org/apache/commons/lang3/StringEscapeUtilsTest.java
++++ b/org/apache/commons/lang3/StringEscapeUtilsTest.java
+@@ -423,11 +423,4 @@ public class StringEscapeUtilsTest extends TestCase {
+ 
+         assertEquals( "Hiragana character unicode behaviour has changed - expected no unescaping", escaped, unescaped);
+     }
+-
+-    // https://issues.apache.org/jira/browse/LANG-720
+-    public void testLang720() {
+-        String input = new StringBuilder("\ud842\udfb7").append("A").toString();
+-        String escaped = StringEscapeUtils.escapeXml(input);
+-        assertEquals(input, escaped);
+-    }
+ }

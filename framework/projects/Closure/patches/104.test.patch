@@ -1,0 +1,26 @@
+diff --git a/com/google/javascript/rhino/jstype/UnionTypeTest.java b/com/google/javascript/rhino/jstype/UnionTypeTest.java
+index bec0550..2dc4818 100644
+--- a/com/google/javascript/rhino/jstype/UnionTypeTest.java
++++ b/com/google/javascript/rhino/jstype/UnionTypeTest.java
+@@ -145,19 +145,10 @@ public class UnionTypeTest extends BaseJSTypeTestCase {
+    * Tests {@link JSType#getGreatestSubtype(JSType)} on union types.
+    */
+   public void testGreatestSubtypeUnionTypes4() throws Exception {
+-    UnionType errUnion = (UnionType) createUnionType(
++    UnionType numStr = (UnionType) createUnionType(
+         NULL_TYPE, EVAL_ERROR_TYPE, URI_ERROR_TYPE);
+     assertEquals(createUnionType(EVAL_ERROR_TYPE, URI_ERROR_TYPE),
+-        errUnion.getGreatestSubtype(ERROR_TYPE));
+-  }
+-
+-  /**
+-   * Tests {@link JSType#getGreatestSubtype(JSType)} on union types.
+-   */
+-  public void testGreatestSubtypeUnionTypes5() throws Exception {
+-    JSType errUnion = createUnionType(EVAL_ERROR_TYPE, URI_ERROR_TYPE);
+-    assertEquals(NO_OBJECT_TYPE,
+-        errUnion.getGreatestSubtype(STRING_OBJECT_TYPE));
++        numStr.getGreatestSubtype(ERROR_TYPE));
+   }
+ 
+   /**

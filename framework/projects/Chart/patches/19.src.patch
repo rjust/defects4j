@@ -1,0 +1,51 @@
+Index: org/jfree/chart/plot/CategoryPlot.java
+===================================================================
+--- org/jfree/chart/plot/CategoryPlot.java	(revision 434)
++++ org/jfree/chart/plot/CategoryPlot.java	(revision 430)
+@@ -685,19 +684,13 @@
+      * Returns the index of the specified axis, or <code>-1</code> if the axis
+      * is not assigned to the plot.
+      * 
+-     * @param axis  the axis (<code>null</code> not permitted).
++     * @param axis  the axis.
+      * 
+      * @return The axis index.
+      * 
+-     * @see #getDomainAxis(int)
+-     * @see #getRangeAxisIndex(ValueAxis)
+-     * 
+      * @since 1.0.3
+      */
+     public int getDomainAxisIndex(CategoryAxis axis) {
+-        if (axis == null) {
+-            throw new IllegalArgumentException("Null 'axis' argument.");
+-        }
+         return this.domainAxes.indexOf(axis);
+     }
+     
+@@ -958,24 +951,19 @@
+         notifyListeners(new PlotChangeEvent(this));
+     }
+     
+-
+     /**
+      * Returns the index of the specified axis, or <code>-1</code> if the axis
+      * is not assigned to the plot.
+      *
+-     * @param axis  the axis (<code>null</code> not permitted).
++     * @param axis  the axis.
+      *
+      * @return The axis index.
+      * 
+-     * @see #getRangeAxis(int)
+      * @see #getDomainAxisIndex(CategoryAxis)
+      * 
+      * @since 1.0.7
+      */
+     public int getRangeAxisIndex(ValueAxis axis) {
+-        if (axis == null) {
+-            throw new IllegalArgumentException("Null 'axis' argument.");
+-        }
+         int result = this.rangeAxes.indexOf(axis);
+         if (result < 0) { // try the parent plot
+             Plot parent = getParent();

@@ -1,0 +1,99 @@
+diff --git a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+index 0bb0420..33b2d8a 100644
+--- a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
++++ b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+@@ -20,9 +20,7 @@ package org.apache.commons.math.stat.clustering;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertTrue;
+ 
+-import java.util.ArrayList;
+ import java.util.Arrays;
+-import java.util.Collection;
+ import java.util.List;
+ import java.util.Random;
+ 
+@@ -168,84 +166,4 @@ public class KMeansPlusPlusClustererTest {
+ 
+     }
+ 
+-    /**
+-     * A helper class for testSmallDistances(). This class is similar to EuclideanIntegerPoint, but
+-     * it defines a different distanceFrom() method that tends to return distances less than 1.
+-     */
+-    private class CloseIntegerPoint implements Clusterable<CloseIntegerPoint> {
+-        public CloseIntegerPoint(EuclideanIntegerPoint point) {
+-            euclideanPoint = point;
+-        }
+-
+-        public double distanceFrom(CloseIntegerPoint p) {
+-            return euclideanPoint.distanceFrom(p.euclideanPoint) * 0.001;
+-        }
+-
+-        public CloseIntegerPoint centroidOf(Collection<CloseIntegerPoint> p) {
+-            Collection<EuclideanIntegerPoint> euclideanPoints =
+-                new ArrayList<EuclideanIntegerPoint>();
+-            for (CloseIntegerPoint point : p) {
+-                euclideanPoints.add(point.euclideanPoint);
+-            }
+-            return new CloseIntegerPoint(euclideanPoint.centroidOf(euclideanPoints));
+-        }
+-
+-        @Override
+-        public boolean equals(Object o) {
+-            if (!(o instanceof CloseIntegerPoint)) {
+-                return false;
+-            }
+-            CloseIntegerPoint p = (CloseIntegerPoint) o;
+-
+-            return euclideanPoint.equals(p.euclideanPoint);
+-        }
+-
+-        @Override
+-        public int hashCode() {
+-            return euclideanPoint.hashCode();
+-        }
+-
+-        private EuclideanIntegerPoint euclideanPoint;
+-    }
+-
+-    /**
+-     * Test points that are very close together. See issue MATH-546.
+-     */
+-    @Test
+-    public void testSmallDistances() {
+-        // Create a bunch of CloseIntegerPoints. Most are identical, but one is different by a
+-        // small distance.
+-        int[] repeatedArray = { 0 };
+-        int[] uniqueArray = { 1 };
+-        CloseIntegerPoint repeatedPoint =
+-            new CloseIntegerPoint(new EuclideanIntegerPoint(repeatedArray));
+-        CloseIntegerPoint uniquePoint =
+-            new CloseIntegerPoint(new EuclideanIntegerPoint(uniqueArray));
+-
+-        Collection<CloseIntegerPoint> points = new ArrayList<CloseIntegerPoint>();
+-        final int NUM_REPEATED_POINTS = 10 * 1000;
+-        for (int i = 0; i < NUM_REPEATED_POINTS; ++i) {
+-            points.add(repeatedPoint);
+-        }
+-        points.add(uniquePoint);
+-
+-        // Ask a KMeansPlusPlusClusterer to run zero iterations (i.e., to simply choose initial
+-        // cluster centers).
+-        final long RANDOM_SEED = 0;
+-        final int NUM_CLUSTERS = 2;
+-        final int NUM_ITERATIONS = 0;
+-        KMeansPlusPlusClusterer<CloseIntegerPoint> clusterer =
+-            new KMeansPlusPlusClusterer<CloseIntegerPoint>(new Random(RANDOM_SEED));
+-        List<Cluster<CloseIntegerPoint>> clusters =
+-            clusterer.cluster(points, NUM_CLUSTERS, NUM_ITERATIONS);
+-
+-        // Check that one of the chosen centers is the unique point.
+-        boolean uniquePointIsCenter = false;
+-        for (Cluster<CloseIntegerPoint> cluster : clusters) {
+-            if (cluster.getCenter().equals(uniquePoint)) {
+-                uniquePointIsCenter = true;
+-            }
+-        }
+-        assertTrue(uniquePointIsCenter);
+-    }
+ }

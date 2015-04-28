@@ -1,0 +1,20 @@
+diff --git a/org/apache/commons/lang/text/ExtendedMessageFormatTest.java b/org/apache/commons/lang/text/ExtendedMessageFormatTest.java
+index 53827ae..8a90abb 100644
+--- a/org/apache/commons/lang/text/ExtendedMessageFormatTest.java
++++ b/org/apache/commons/lang/text/ExtendedMessageFormatTest.java
+@@ -93,15 +93,6 @@ public class ExtendedMessageFormatTest extends TestCase {
+     }
+ 
+     /**
+-     * Test Bug LANG-477 - out of memory error with escaped quote
+-     */
+-    public void testEscapedQuote_LANG_477() {
+-        String pattern = "it''s a {0,lower} 'test'!";
+-        ExtendedMessageFormat emf = new ExtendedMessageFormat(pattern, registry);
+-        assertEquals("it's a dummy test!", emf.format(new Object[] {"DUMMY"}));
+-    }
+-
+-    /**
+      * Test extended and built in formats.
+      */
+     public void testExtendedAndBuiltInFormats() {

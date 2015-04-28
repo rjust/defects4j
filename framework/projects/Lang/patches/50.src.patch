@@ -1,0 +1,46 @@
+diff --git a/org/apache/commons/lang/time/FastDateFormat.java b/org/apache/commons/lang/time/FastDateFormat.java
+index d1caaa8..0be752b 100644
+--- a/org/apache/commons/lang/time/FastDateFormat.java
++++ b/org/apache/commons/lang/time/FastDateFormat.java
+@@ -281,15 +281,16 @@ public class FastDateFormat extends Format {
+         if (timeZone != null) {
+             key = new Pair(key, timeZone);
+         }
+-
+-        if (locale == null) {
+-            locale = Locale.getDefault();
++        if (locale != null) {
++            key = new Pair(key, locale);
+         }
+ 
+-        key = new Pair(key, locale);
+-
+         FastDateFormat format = (FastDateFormat) cDateInstanceCache.get(key);
+         if (format == null) {
++            if (locale == null) {
++                locale = Locale.getDefault();
++            }
++
+             try {
+                 SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(style, locale);
+                 String pattern = formatter.toPattern();
+@@ -460,13 +461,16 @@ public class FastDateFormat extends Format {
+         if (timeZone != null) {
+             key = new Pair(key, timeZone);
+         }
+-        if (locale == null) {
+-            locale = Locale.getDefault();
++        if (locale != null) {
++            key = new Pair(key, locale);
+         }
+-        key = new Pair(key, locale);
+ 
+         FastDateFormat format = (FastDateFormat) cDateTimeInstanceCache.get(key);
+         if (format == null) {
++            if (locale == null) {
++                locale = Locale.getDefault();
++            }
++
+             try {
+                 SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateTimeInstance(dateStyle, timeStyle,
+                         locale);

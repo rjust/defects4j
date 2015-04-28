@@ -1,0 +1,15 @@
+diff --git a/org/apache/commons/lang/StringEscapeUtils.java b/org/apache/commons/lang/StringEscapeUtils.java
+index db2d7bd..4fda091 100644
+--- a/org/apache/commons/lang/StringEscapeUtils.java
++++ b/org/apache/commons/lang/StringEscapeUtils.java
+@@ -233,10 +233,6 @@ public class StringEscapeUtils {
+                         out.write('\\');
+                         out.write('\\');
+                         break;
+-                    case '/':
+-                        out.write('\\');
+-                        out.write('/');
+-                        break;
+                     default :
+                         out.write(ch);
+                         break;

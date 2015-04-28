@@ -1,0 +1,54 @@
+diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+index 5306cce..8ae9fd9 100644
+--- a/com/google/javascript/jscomp/IntegrationTest.java
++++ b/com/google/javascript/jscomp/IntegrationTest.java
+@@ -1861,30 +1861,6 @@ public class IntegrationTest extends IntegrationTestCase {
+         "");
+   }
+ 
+-  public void testIssue772() throws Exception {
+-    CompilerOptions options = createCompilerOptions();
+-    options.closurePass = true;
+-    options.checkTypes = true;
+-    test(
+-        options,
+-        "/** @const */ var a = {};" +
+-        "/** @const */ a.b = {};" +
+-        "/** @const */ a.b.c = {};" +
+-        "goog.scope(function() {" +
+-        "  var b = a.b;" +
+-        "  var c = b.c;" +
+-        "  /** @typedef {string} */" +
+-        "  c.MyType;" +
+-        "  /** @param {c.MyType} x The variable. */" +
+-        "  c.myFunc = function(x) {};" +
+-        "});",
+-        "/** @const */ var a = {};" +
+-        "/** @const */ a.b = {};" +
+-        "/** @const */ a.b.c = {};" +
+-        "a.b.c.MyType;" +
+-        "a.b.c.myFunc = function(x) {};");
+-  }
+-
+   public void testCodingConvention() {
+     Compiler compiler = new Compiler();
+     compiler.initOptions(new CompilerOptions());
+diff --git a/com/google/javascript/jscomp/ScopedAliasesTest.java b/com/google/javascript/jscomp/ScopedAliasesTest.java
+index fda89aa..ac09a04 100644
+--- a/com/google/javascript/jscomp/ScopedAliasesTest.java
++++ b/com/google/javascript/jscomp/ScopedAliasesTest.java
+@@ -403,14 +403,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
+         + "/** @param draggable */ types.expected;");
+   }
+ 
+-  public void testIssue772() {
+-    testTypes(
+-        "var b = a.b;" +
+-        "var c = b.c;",
+-        "/** @param {c.MyType} x */ types.actual;" +
+-        "/** @param {a.b.c.MyType} x */ types.expected;");
+-  }
+-
+   // TODO(robbyw): What if it's recursive?  var goog = goog.dom;
+ 
+   // FAILURE CASES

@@ -1,0 +1,28 @@
+diff --git a/experimental/org/jfree/experimental/chart/demo/LogAxisDemo1.java b/experimental/org/jfree/experimental/chart/demo/LogAxisDemo1.java
+index ac7fdd2..6664c96 100644
+--- experimental/org/jfree/experimental/chart/demo/LogAxisDemo1.java
++++ experimental/org/jfree/experimental/chart/demo/LogAxisDemo1.java
+@@ -18,7 +18,7 @@ import org.jfree.chart.util.RefineryUtilities;
+ import org.jfree.data.xy.XYDataset;
+ import org.jfree.data.xy.XYSeries;
+ import org.jfree.data.xy.XYSeriesCollection;
+-import org.jfree.experimental.chart.axis.LogAxis;
++//import org.jfree.experimental.chart.axis.LogAxis;
+ 
+ /**
+  * A simple demo showing the use of the {@link LogAxis} class.
+@@ -49,10 +49,10 @@ public class LogAxisDemo1 extends ApplicationFrame {
+             false
+         );
+         XYPlot plot = (XYPlot) chart.getPlot();
+-        LogAxis xAxis = new LogAxis("X");
+-        LogAxis yAxis = new LogAxis("Y");
+-        plot.setDomainAxis(xAxis);
+-        plot.setRangeAxis(yAxis);
++//        LogAxis xAxis = new LogAxis("X");
++//        LogAxis yAxis = new LogAxis("Y");
++//        plot.setDomainAxis(xAxis);
++//        plot.setRangeAxis(yAxis);
+         return chart;
+     }
+     

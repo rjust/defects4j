@@ -1,0 +1,14 @@
+diff --git a/org/apache/commons/lang/math/Fraction.java b/org/apache/commons/lang/math/Fraction.java
+index 3347689..5f8e565 100644
+--- a/org/apache/commons/lang/math/Fraction.java
++++ b/org/apache/commons/lang/math/Fraction.java
+@@ -463,9 +463,6 @@ public final class Fraction extends Number implements Comparable {
+      * @return a new reduced fraction instance, or this if no simplification possible
+      */
+     public Fraction reduce() {
+-        if (numerator == 0) {
+-            return equals(ZERO) ? this : ZERO;
+-        }
+         int gcd = greatestCommonDivisor(Math.abs(numerator), denominator);
+         if (gcd == 1) {
+             return this;

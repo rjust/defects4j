@@ -1,0 +1,30 @@
+diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+index 1afb7a8..0df495d 100644
+--- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+@@ -32,6 +32,10 @@ import java.util.Locale;
+  */
+ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+ 
++  static final DiagnosticType DIVIDE_BY_0_ERROR = DiagnosticType.error(
++      "JSC_DIVIDE_BY_0_ERROR",
++      "Divide by 0");
++
+   static final DiagnosticType INVALID_GETELEM_INDEX_ERROR =
+       DiagnosticType.error(
+           "JSC_INVALID_GETELEM_INDEX_ERROR",
+@@ -708,12 +712,14 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+         break;
+       case Token.MOD:
+         if (rval == 0) {
++          error(DIVIDE_BY_0_ERROR, right);
+           return null;
+         }
+         result = lval % rval;
+         break;
+       case Token.DIV:
+         if (rval == 0) {
++          error(DIVIDE_BY_0_ERROR, right);
+           return null;
+         }
+         result = lval / rval;

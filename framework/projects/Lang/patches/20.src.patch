@@ -1,0 +1,41 @@
+diff --git a/org/apache/commons/lang3/StringUtils.java b/org/apache/commons/lang3/StringUtils.java
+index 711852e..6b8c2e4 100644
+--- a/org/apache/commons/lang3/StringUtils.java
++++ b/org/apache/commons/lang3/StringUtils.java
+@@ -3290,12 +3290,13 @@ public class StringUtils {
+         if (array == null) {
+             return null;
+         }
+-        int noOfItems = (endIndex - startIndex);
+-        if (noOfItems <= 0) {
++        int bufSize = (endIndex - startIndex);
++        if (bufSize <= 0) {
+             return EMPTY;
+         }
+-        
+-        StringBuilder buf = new StringBuilder(noOfItems * 16);
++
++        bufSize *= ((array[startIndex] == null ? 16 : array[startIndex].toString().length()) + 1);
++        StringBuilder buf = new StringBuilder(bufSize);
+ 
+         for (int i = startIndex; i < endIndex; i++) {
+             if (i > startIndex) {
+@@ -3375,12 +3377,15 @@ public class StringUtils {
+ 
+         // endIndex - startIndex > 0:   Len = NofStrings *(len(firstString) + len(separator))
+         //           (Assuming that all Strings are roughly equally long)
+-        int noOfItems = (endIndex - startIndex);
+-        if (noOfItems <= 0) {
++        int bufSize = (endIndex - startIndex);
++        if (bufSize <= 0) {
+             return EMPTY;
+         }
+ 
+-        StringBuilder buf = new StringBuilder(noOfItems * 16);
++        bufSize *= ((array[startIndex] == null ? 16 : array[startIndex].toString().length())
++                        + separator.length());
++
++        StringBuilder buf = new StringBuilder(bufSize);
+ 
+         for (int i = startIndex; i < endIndex; i++) {
+             if (i > startIndex) {

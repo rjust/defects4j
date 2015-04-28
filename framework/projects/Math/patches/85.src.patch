@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
+index e6398f6..5b76415 100644
+--- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
++++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
+@@ -195,7 +195,7 @@ public class UnivariateRealSolverUtils {
+         } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && 
+                 ((a > lowerBound) || (b < upperBound)));
+    
+-        if (fa * fb > 0.0 ) {
++        if (fa * fb >= 0.0 ) {
+             throw new ConvergenceException(
+                       "number of iterations={0}, maximum iterations={1}, " +
+                       "initial={2}, lower bound={3}, upper bound={4}, final a value={5}, " +

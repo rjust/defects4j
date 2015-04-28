@@ -1,0 +1,35 @@
+diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+index c46ee7d..fca42f1 100644
+--- a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
++++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+@@ -152,7 +152,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+     reachingUses = new MaybeReachingVariableUse(cfg, t.getScope(), compiler);
+     reachingUses.analyze();
+     for (Candidate c : candidates) {
+-      if (c.canInline(t.getScope())) {
++      if (c.canInline()) {
+         c.inlineVariable();
+ 
+         // If definition c has dependencies, then inlining it may have
+@@ -277,7 +277,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+       return defMetadata.node;
+     }
+ 
+-    private boolean canInline(final Scope scope) {
++    private boolean canInline() {
+       // Cannot inline a parameter.
+       if (getDefCfgNode().isFunction()) {
+         return false;
+@@ -372,12 +367,6 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+                   case Token.REGEXP:
+                   case Token.NEW:
+                     return true;
+-                  case Token.NAME:
+-                    Var var = scope.getOwnSlot(input.getString());
+-                    if (var != null
+-                        && var.getParentNode().isCatch()) {
+-                      return true;
+-                    }
+                 }
+                 return false;
+               }

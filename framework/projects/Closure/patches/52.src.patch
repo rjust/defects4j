@@ -1,0 +1,13 @@
+diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+index 535148c..ac6299d 100644
+--- a/com/google/javascript/jscomp/CodeGenerator.java
++++ b/com/google/javascript/jscomp/CodeGenerator.java
+@@ -742,7 +742,7 @@ class CodeGenerator {
+         return false;
+       }
+     }
+-    return len > 0 && s.charAt(0) != '0';
++    return len > 0;
+   }
+ 
+   static double getSimpleNumber(String s) {

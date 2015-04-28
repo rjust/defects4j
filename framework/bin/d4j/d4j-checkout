@@ -1,0 +1,119 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-checkout -- Checkout a particular project version.
+
+=head1 SYNOPSIS
+
+d4j-checkout -p project_id -v version_id -w work_dir
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-p C<project_id>> 
+
+The id of the project for which a particular version should be checked out.
+
+=item B<-v C<version_id>> 
+
+The version id that should be checked out. 
+B<C<version_id> has to have the format: \d+[bf]>.
+
+=item B<-w F<work_dir>> 
+
+The working directory to which the faulty or fixed project version shall be 
+checked out.
+The working directory has to be either empty or a previously used working directory.
+B<Note: ALL files in a previously used working directory are deleted prior to 
+checking out the requested project version.>
+
+=back
+
+=head1 DESCRIPTION
+
+This script performs a checkout of a faulty or fixed project version to F<work_dir>.
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use Utils;
+use Project;
+use Getopt::Std;
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 -p project_id -v version_id -w work_dir\n";
+    exit 1;
+}
+
+my %cmd_opts;
+getopts('p:v:w:', \%cmd_opts) or _usage();
+
+_usage() unless defined $cmd_opts{p} and defined $cmd_opts{v} and defined $cmd_opts{w};
+
+my $PID = $cmd_opts{p};
+my $VID = $cmd_opts{v};
+
+my $WORK_DIR = Utils::get_abs_path($cmd_opts{w});
+
+# Instantiate project and set working directory
+my $project = Project::create_project($PID);
+$project->{prog_root} = $WORK_DIR;
+
+# TODO: Implement in core module
+$VID =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $VID!";
+my $BID = $1;
+# Checkout fixed project version
+$project->checkout_id("${BID}f") == 0 or die "Cannot checkout!";
+$project->fix_tests("${BID}f");
+# Apply patch to obtain buggy version if necessary
+if ($VID=~/^(\d+)b$/) {
+    my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
+    my $src_patch = "$patch_dir/${BID}.src.patch";
+    my $rev2 = $project->lookup("${BID}f");
+    my $src_path = $project->src_dir($rev2);
+    $project->apply_patch($WORK_DIR, $src_patch, $src_path) == 0 or die;
+}
+# Update config file 
+my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
+$config->{$CONFIG_VID} = $VID; 
+Utils::write_config_file("$WORK_DIR/$CONFIG", $config);
+
+1;
+
+=pod
+
+=head1 SEE ALSO
+
+All valid project_ids are listed in F<Project.pm>
+
+=cut

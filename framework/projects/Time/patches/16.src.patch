@@ -1,0 +1,13 @@
+diff --git a/org/joda/time/format/DateTimeFormatter.java b/org/joda/time/format/DateTimeFormatter.java
+index baa276a..f92771a 100644
+--- a/org/joda/time/format/DateTimeFormatter.java
++++ b/org/joda/time/format/DateTimeFormatter.java
+@@ -706,7 +702,7 @@ public class DateTimeFormatter {
+         chrono = selectChronology(chrono);
+         
+         DateTimeParserBucket bucket = new DateTimeParserBucket(
+-            instantLocal, chrono, iLocale, iPivotYear, chrono.year().get(instantLocal));
++            instantLocal, chrono, iLocale, iPivotYear, iDefaultYear);
+         int newPos = parser.parseInto(bucket, text, position);
+         instant.setMillis(bucket.computeMillis(false, text));
+         if (iOffsetParsed && bucket.getOffsetInteger() != null) {

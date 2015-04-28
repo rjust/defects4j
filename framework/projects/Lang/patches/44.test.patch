@@ -1,0 +1,22 @@
+diff --git a/org/apache/commons/lang/NumberUtilsTest.java b/org/apache/commons/lang/NumberUtilsTest.java
+index 19aa348..f95727b 100644
+--- a/org/apache/commons/lang/NumberUtilsTest.java
++++ b/org/apache/commons/lang/NumberUtilsTest.java
+@@ -520,17 +520,5 @@ public class NumberUtilsTest extends TestCase {
+             fail( "Error calling public no-arg constructor" );
+         }
+     }
+-
+-    public void testLang457() {
+-        String[] badInputs = new String[] { "l", "L", "f", "F", "junk", "bobL"};
+-        for(int i=0; i<badInputs.length; i++) {
+-            try {
+-                NumberUtils.createNumber(badInputs[i]);
+-                fail("NumberFormatException was expected for " + badInputs[i]);
+-            } catch (NumberFormatException e) {
+-                return; // expected
+-            }
+-        }
+-    }
+     
+ }

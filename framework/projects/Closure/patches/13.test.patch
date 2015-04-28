@@ -1,0 +1,135 @@
+diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+index bf644af..20842be 100644
+--- a/com/google/javascript/jscomp/IntegrationTest.java
++++ b/com/google/javascript/jscomp/IntegrationTest.java
+@@ -362,8 +362,8 @@ public class IntegrationTest extends IntegrationTestCase {
+         + "}",
+         "function someTest() {\n"
+         + "  function Foo() { this.b = 3; }\n"
+-        + "  function Bar() {}\n"
+         + "  Foo.prototype.a = function(a, b) {};\n"
++        + "  function Bar() {}\n"
+         + "  goog.c(Bar, Foo);\n"
+         + "  var o = new Bar();\n"
+         + "  o.a(o.a, o.b);\n"
+@@ -790,7 +790,7 @@ public class IntegrationTest extends IntegrationTestCase {
+     test(options,
+          "var goog = {}; goog.provide('foo.Bar'); " +
+          "var foo = {}; foo.Bar = {};",
+-         "var foo = {}; foo = {}; foo.Bar = {};");
++         "var foo = {}; var foo = {}; foo.Bar = {};");
+   }
+ 
+   public void testProvidedNamespaceIsConst5() {
+@@ -1329,8 +1329,8 @@ public class IntegrationTest extends IntegrationTestCase {
+ 
+   public void testRenameLabels() {
+     CompilerOptions options = createCompilerOptions();
+-    String code = "longLabel: for(;true;) { break longLabel; }";
+-    String expected = "a: for(;true;) { break a; }";
++    String code = "longLabel: while (true) { break longLabel; }";
++    String expected = "a: while (true) { break a; }";
+     testSame(options, code);
+ 
+     options.labelRenaming = true;
+@@ -1535,7 +1535,7 @@ public class IntegrationTest extends IntegrationTestCase {
+ 
+     testSame(options, code);
+ 
+-    options.collapseVariableDeclarations = true;
++    options.collapseVariableDeclarations = false;
+ 
+     test(options, code, "for (var a = 1, b = 2; ;) {}");
+   }
+@@ -1939,10 +1939,9 @@ public class IntegrationTest extends IntegrationTestCase {
+   public void testSuppressEs5StrictWarning() {
+     CompilerOptions options = createCompilerOptions();
+     options.setWarningLevel(DiagnosticGroups.ES5_STRICT, CheckLevel.WARNING);
+-    test(options,
++    testSame(options,
+         "/** @suppress{es5Strict} */\n" +
+-        "function f() { var arguments; }",
+-        "function f() {}");
++        "function f() { var arguments; }");
+   }
+ 
+   public void testCheckProvidesWarning() {
+@@ -1962,7 +1961,7 @@ public class IntegrationTest extends IntegrationTestCase {
+     testSame(options,
+         "/** @constructor\n" +
+         " *  @suppress{checkProvides} */\n" +
+-        "function f() {}");
++        "function f() { var arguments; }");
+   }
+ 
+   public void testRenamePrefixNamespace() {
+@@ -2214,54 +2213,6 @@ public class IntegrationTest extends IntegrationTestCase {
+     test(options, code, ConstCheck.CONST_REASSIGNED_VALUE_ERROR);
+   }
+ 
+-  public void testIssue787() {
+-    CompilerOptions options = createCompilerOptions();
+-    CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
+-    level.setOptionsForCompilationLevel(options);
+-    WarningLevel warnings = WarningLevel.DEFAULT;
+-    warnings.setOptionsForWarningLevel(options);
+-
+-    String code = "" +
+-        "function some_function() {\n" +
+-        "  var fn1;\n" +
+-        "  var fn2;\n" +
+-        "\n" +
+-        "  if (any_expression) {\n" +
+-        "    fn2 = external_ref;\n" +
+-        "    fn1 = function (content) {\n" +
+-        "      return fn2();\n" +
+-        "    }\n" +
+-        "  }\n" +
+-        "\n" +
+-        "  return {\n" +
+-        "    method1: function () {\n" +
+-        "      if (fn1) fn1();\n" +
+-        "      return true;\n" +
+-        "    },\n" +
+-        "    method2: function () {\n" +
+-        "      return false;\n" +
+-        "    }\n" +
+-        "  }\n" +
+-        "}";
+-
+-    String result = "" +
+-        "function some_function() {\n" +
+-        "  var a, b;\n" +
+-        "  any_expression && (b = external_ref, a = function() {\n" +
+-        "    return b()\n" +
+-        "  });\n" +
+-        "  return{method1:function() {\n" +
+-        "    a && a();\n" +
+-        "    return !0\n" +
+-        "  }, method2:function() {\n" +
+-        "    return !1\n" +
+-        "  }}\n" +
+-        "}\n" +
+-        "";
+-
+-    test(options, code, result);
+-  }
+-
+   public void testManyAdds() {
+     CompilerOptions options = createCompilerOptions();
+     CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
+diff --git a/com/google/javascript/jscomp/IntegrationTestCase.java b/com/google/javascript/jscomp/IntegrationTestCase.java
+index e3007a6..a04b6ad 100644
+--- a/com/google/javascript/jscomp/IntegrationTestCase.java
++++ b/com/google/javascript/jscomp/IntegrationTestCase.java
+@@ -208,6 +208,10 @@ abstract class IntegrationTestCase extends TestCase {
+ 
+     (new CreateSyntheticBlocks(
+         compiler, "synStart", "synEnd")).process(externs, n);
++    (new Normalize(compiler, false)).process(externs, n);
++    (MakeDeclaredNamesUnique.getContextualRenameInverter(compiler)).process(
++        externs, n);
++    (new Denormalize(compiler)).process(externs, n);
+     return n;
+   }
+ 

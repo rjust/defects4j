@@ -1,0 +1,126 @@
+diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
+index 03c92eb..8cb7590 100644
+--- a/org/apache/commons/math/util/MathUtils.java
++++ b/org/apache/commons/math/util/MathUtils.java
+@@ -181,42 +181,11 @@ public final class MathUtils {
+         if ((k == 1) || (k == n - 1)) {
+             return n;
+         }
+-        // Use symmetry for large k
+-        if (k > n / 2)
+-            return binomialCoefficient(n, n - k);
+-        
+-        // We use the formula
+-        // (n choose k) = n! / (n-k)! / k!
+-        // (n choose k) == ((n-k+1)*...*n) / (1*...*k)
+-        // which could be written
+-        // (n choose k) == (n-1 choose k-1) * n / k
+-        long result = 1;
+-        if (n <= 61) {
+-            // For n <= 61, the naive implementation cannot overflow.
+-            for (int j = 1, i = n - k + 1; j <= k; i++, j++) {
+-                result = result * i / j;
+-            }
+-        } else if (n <= 66) {
+-            // For n > 61 but n <= 66, the result cannot overflow,
+-            // but we must take care not to overflow intermediate values.
+-            for (int j = 1, i = n - k + 1; j <= k; i++, j++) {
+-                // We know that (result * i) is divisible by j,
+-                // but (result * i) may overflow, so we split j:
+-                // Filter out the gcd, d, so j/d and i/d are integer.
+-                // result is divisible by (j/d) because (j/d)
+-                // is relative prime to (i/d) and is a divisor of
+-                // result * (i/d).
+-                long d = gcd(i, j);
+-                result = (result / (j / d)) * (i / d);
+-            }
+-        } else {
+-            // For n > 66, a result overflow might occur, so we check
+-            // the multiplication, taking care to not overflow
+-            // unnecessary.
+-            for (int j = 1, i = n - k + 1; j <= k; i++, j++) {
+-                long d = gcd(i, j);
+-                result = mulAndCheck((result / (j / d)), (i / d));
+-            }
++
++        long result = Math.round(binomialCoefficientDouble(n, k));
++        if (result == Long.MAX_VALUE) {
++            throw new ArithmeticException(
++                "result too large to represent in a long integer");
+         }
+         return result;
+     }
+@@ -244,33 +213,7 @@ public final class MathUtils {
+      * @throws IllegalArgumentException if preconditions are not met.
+      */
+     public static double binomialCoefficientDouble(final int n, final int k) {
+-        if (n < k) {
+-            throw new IllegalArgumentException(
+-                "must have n >= k for binomial coefficient (n,k)");
+-        }
+-        if (n < 0) {
+-            throw new IllegalArgumentException(
+-                "must have n >= 0 for binomial coefficient (n,k)");
+-        }
+-        if ((n == k) || (k == 0)) {
+-            return 1d;
+-        }
+-        if ((k == 1) || (k == n - 1)) {
+-            return n;
+-        }
+-        if (k > n/2) {
+-            return binomialCoefficientDouble(n, n - k);
+-        }
+-        if (n < 67) {
+-            return binomialCoefficient(n,k);
+-        }
+-        
+-        double result = 1d;
+-        for (int i = 1; i <= k; i++) {
+-             result *= (double)(n - k + i) / (double)i;
+-        }
+-  
+-        return Math.floor(result + 0.5);
++        return Math.floor(Math.exp(binomialCoefficientLog(n, k)) + 0.5);
+     }
+     
+     /**
+@@ -304,28 +247,8 @@ public final class MathUtils {
+             return 0;
+         }
+         if ((k == 1) || (k == n - 1)) {
+-            return Math.log((double) n);
+-        }
+-        
+-        /*
+-         * For values small enough to do exact integer computation,
+-         * return the log of the exact value 
+-         */
+-        if (n < 67) {  
+-            return Math.log(binomialCoefficient(n,k));
++            return Math.log((double)n);
+         }
+-        
+-        /*
+-         * Return the log of binomialCoefficientDouble for values that will not
+-         * overflow binomialCoefficientDouble
+-         */
+-        if (n < 1030) { 
+-            return Math.log(binomialCoefficientDouble(n, k));
+-        } 
+-        
+-        /*
+-         * Sum logs for values that could overflow
+-         */
+         double logSum = 0;
+ 
+         // n!/k!
+@@ -338,7 +261,7 @@ public final class MathUtils {
+             logSum -= Math.log((double)i);
+         }
+ 
+-        return logSum;      
++        return logSum;
+     }
+     
+     /**

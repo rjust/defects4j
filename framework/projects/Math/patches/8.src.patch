@@ -1,0 +1,32 @@
+diff --git a/org/apache/commons/math3/distribution/DiscreteDistribution.java b/org/apache/commons/math3/distribution/DiscreteDistribution.java
+index 879eb2a..8c08dbe 100644
+--- a/org/apache/commons/math3/distribution/DiscreteDistribution.java
++++ b/org/apache/commons/math3/distribution/DiscreteDistribution.java
+@@ -16,9 +16,9 @@
+  */
+ package org.apache.commons.math3.distribution;
+ 
++import java.lang.reflect.Array;
+ import java.util.ArrayList;
+ import java.util.List;
+-
+ import org.apache.commons.math3.exception.MathArithmeticException;
+ import org.apache.commons.math3.exception.MathIllegalArgumentException;
+ import org.apache.commons.math3.exception.NotPositiveException;
+@@ -178,13 +178,13 @@ public class DiscreteDistribution<T> {
+      * @throws NotStrictlyPositiveException if {@code sampleSize} is not
+      * positive.
+      */
+-    public Object[] sample(int sampleSize) throws NotStrictlyPositiveException {
++    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
+         if (sampleSize <= 0) {
+             throw new NotStrictlyPositiveException(LocalizedFormats.NUMBER_OF_SAMPLES,
+                     sampleSize);
+         }
+-
+-        final Object[] out = new Object[sampleSize];
++        @SuppressWarnings("unchecked")
++        final T[]out = (T[]) Array.newInstance(singletons.get(0).getClass(), sampleSize);
+ 
+         for (int i = 0; i < sampleSize; i++) {
+             out[i] = sample();

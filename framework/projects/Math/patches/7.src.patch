@@ -1,0 +1,50 @@
+diff --git a/org/apache/commons/math3/ode/AbstractIntegrator.java b/org/apache/commons/math3/ode/AbstractIntegrator.java
+index 6e0237f..00827db 100644
+--- a/org/apache/commons/math3/ode/AbstractIntegrator.java
++++ b/org/apache/commons/math3/ode/AbstractIntegrator.java
+@@ -338,15 +338,11 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+                 interpolator.setSoftPreviousTime(previousT);
+                 interpolator.setSoftCurrentTime(eventT);
+ 
+-                // get state at event time
++                // trigger the event
+                 interpolator.setInterpolatedTime(eventT);
+                 final double[] eventY = interpolator.getInterpolatedState().clone();
+-
+-                // advance all event states to current time
+-                for (final EventState state : eventsStates) {
+-                    state.stepAccepted(eventT, eventY);
+-                    isLastStep = isLastStep || state.stop();
+-                }
++                currentEvent.stepAccepted(eventT, eventY);
++                isLastStep = currentEvent.stop();
+ 
+                 // handle the first part of the step, up to the event
+                 for (final StepHandler handler : stepHandlers) {
+@@ -356,19 +352,21 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+                 if (isLastStep) {
+                     // the event asked to stop integration
+                     System.arraycopy(eventY, 0, y, 0, y.length);
++                    for (final EventState remaining : occuringEvents) {
++                        remaining.stepAccepted(eventT, eventY);
++                    }
+                     return eventT;
+                 }
+ 
+-                boolean needReset = false;
+-                for (final EventState state : eventsStates) {
+-                    needReset =  needReset || state.reset(eventT, eventY);
+-                }
+-                if (needReset) {
++                if (currentEvent.reset(eventT, eventY)) {
+                     // some event handler has triggered changes that
+                     // invalidate the derivatives, we need to recompute them
+                     System.arraycopy(eventY, 0, y, 0, y.length);
+                     computeDerivatives(eventT, y, yDot);
+                     resetOccurred = true;
++                    for (final EventState remaining : occuringEvents) {
++                        remaining.stepAccepted(eventT, eventY);
++                    }
+                     return eventT;
+                 }
+ 

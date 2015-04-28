@@ -1,0 +1,46 @@
+diff --git a/com/google/javascript/jscomp/ScopedAliases.java b/com/google/javascript/jscomp/ScopedAliases.java
+index e2f0538..426069f 100644
+--- a/com/google/javascript/jscomp/ScopedAliases.java
++++ b/com/google/javascript/jscomp/ScopedAliases.java
+@@ -166,24 +165,18 @@ class ScopedAliases implements HotSwapCompilerPass {
+   }
+ 
+   private class AliasedTypeNode implements AliasUsage {
+-    private final Node typeReference;
+-    private final Node aliasDefinition;
+-    private final String aliasName;
++    private final Node aliasReference;
+ 
+-    AliasedTypeNode(Node typeReference, Node aliasDefinition,
+-        String aliasName) {
+-      this.typeReference = typeReference;
+-      this.aliasDefinition = aliasDefinition;
+-      this.aliasName = aliasName;
++    private final String correctedType;
++
++    AliasedTypeNode(Node aliasReference, String correctedType) {
++      this.aliasReference = aliasReference;
++      this.correctedType = correctedType;
+     }
+ 
+     @Override
+     public void applyAlias() {
+-      String typeName = typeReference.getString();
+-      String aliasExpanded =
+-          Preconditions.checkNotNull(aliasDefinition.getQualifiedName());
+-      Preconditions.checkState(typeName.startsWith(aliasName));
+-      typeReference.setString(typeName.replaceFirst(aliasName, aliasExpanded));
++      aliasReference.setString(correctedType);
+     }
+   }
+ 
+@@ -471,7 +464,8 @@ class ScopedAliases implements HotSwapCompilerPass {
+         Var aliasVar = aliases.get(baseName);
+         if (aliasVar != null) {
+           Node aliasedNode = aliasVar.getInitialValue();
+-          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode, baseName));
++          aliasUsages.add(new AliasedTypeNode(typeNode,
++              aliasedNode.getQualifiedName() + name.substring(endIndex)));
+         }
+       }
+ 

@@ -1,0 +1,21 @@
+Index: org/jfree/data/xy/XYSeries.java
+===================================================================
+--- org/jfree/data/xy/XYSeries.java	(revision 1696)
++++ org/jfree/data/xy/XYSeries.java	(revision 1695)
+@@ -541,15 +537,9 @@
+         if (x == null) {
+             throw new IllegalArgumentException("Null 'x' argument.");
+         }
+-        if (this.allowDuplicateXValues) {
+-            add(x, y);
+-            return null;
+-        }
+-
+-        // if we get to here, we know that duplicate X values are not permitted
+         XYDataItem overwritten = null;
+         int index = indexOf(x);
+-        if (index >= 0) {
++        if (index >= 0 && !this.allowDuplicateXValues) {
+             XYDataItem existing = (XYDataItem) this.data.get(index);
+             try {
+                 overwritten = (XYDataItem) existing.clone();

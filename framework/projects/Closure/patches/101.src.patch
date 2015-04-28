@@ -1,0 +1,37 @@
+diff --git a/com/google/javascript/jscomp/CodingConvention.java b/com/google/javascript/jscomp/CodingConvention.java
+index 4416fc4..9540349 100644
+--- a/com/google/javascript/jscomp/CodingConvention.java
++++ b/com/google/javascript/jscomp/CodingConvention.java
+@@ -241,12 +241,16 @@ public interface CodingConvention {
+ 
+   static class SubclassRelationship {
+     final SubclassType type;
++    final Node subclassNode;
++    final Node superclassNode;
+     final String subclassName;
+     final String superclassName;
+ 
+     SubclassRelationship(SubclassType type,
+         Node subclassNode, Node superclassNode) {
+       this.type = type;
++      this.subclassNode = subclassNode;
++      this.superclassNode = superclassNode;
+       this.subclassName = subclassNode.getQualifiedName();
+       this.superclassName = superclassNode.getQualifiedName();
+     }
+diff --git a/com/google/javascript/jscomp/CommandLineRunner.java b/com/google/javascript/jscomp/CommandLineRunner.java
+index c18639a..bdf5592 100644
+--- a/com/google/javascript/jscomp/CommandLineRunner.java
++++ b/com/google/javascript/jscomp/CommandLineRunner.java
+@@ -430,8 +430,10 @@ public class CommandLineRunner extends
+     for (FormattingOption formattingOption : flags.formatting) {
+       formattingOption.applyToOptions(options);
+     }
++    if (flags.process_closure_primitives) {
++      options.closurePass = true;
++    }
+ 
+-    options.closurePass = flags.process_closure_primitives;
+     initOptionsFromFlags(options);
+     return options;
+   }

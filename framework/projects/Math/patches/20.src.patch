@@ -1,0 +1,30 @@
+diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+index b54cb37..d01cd15 100644
+--- a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
++++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+@@ -416,7 +414,7 @@ public class CMAESOptimizer
+                     bestValue = bestFitness;
+                     lastResult = optimum;
+                     optimum = new PointValuePair(
+-                            fitfun.repairAndDecode(bestArx.getColumn(0)),
++                            fitfun.decode(bestArx.getColumn(0)),
+                             isMinimize ? bestFitness : -bestFitness);
+                     if (getConvergenceChecker() != null && lastResult != null) {
+                         if (getConvergenceChecker().converged(iterations, optimum, lastResult)) {
+@@ -915,16 +913,6 @@ public class CMAESOptimizer
+ 
+         /**
+          * @param x Normalized objective variables.
+-         * @return the original objective variables, possibly repaired.
+-         */
+-        public double[] repairAndDecode(final double[] x) {
+-            return boundaries != null && isRepairMode ?
+-                decode(repair(x)) :
+-                decode(x);
+-        }
+-
+-        /**
+-         * @param x Normalized objective variables.
+          * @return the original objective variables.
+          */
+         public double[] decode(final double[] x) {

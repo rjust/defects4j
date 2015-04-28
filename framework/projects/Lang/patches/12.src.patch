@@ -1,0 +1,30 @@
+diff --git a/org/apache/commons/lang3/RandomStringUtils.java b/org/apache/commons/lang3/RandomStringUtils.java
+index a799057..f27fb6d 100644
+--- a/org/apache/commons/lang3/RandomStringUtils.java
++++ b/org/apache/commons/lang3/RandomStringUtils.java
+@@ -227,20 +227,13 @@ public class RandomStringUtils {
+         } else if (count < 0) {
+             throw new IllegalArgumentException("Requested random string length " + count + " is less than 0.");
+         }
+-        if (chars != null && chars.length == 0) {
+-            throw new IllegalArgumentException("The chars array must not be empty");
+-        }
+ 
+         if (start == 0 && end == 0) {
+-            if (chars != null) {
+-                end = chars.length;
+-            } else {
+-                if (!letters && !numbers) {
+-                    end = Integer.MAX_VALUE;
+-                } else {
+-                    end = 'z' + 1;
+-                    start = ' ';                
+-                }
++            end = 'z' + 1;
++            start = ' ';
++            if (!letters && !numbers) {
++                start = 0;
++                end = Integer.MAX_VALUE;
+             }
+         }
+ 

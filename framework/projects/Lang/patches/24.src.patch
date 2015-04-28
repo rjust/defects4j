@@ -1,0 +1,15 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtils.java b/org/apache/commons/lang3/math/NumberUtils.java
+index d9b3c6d..f1f36a8 100644
+--- a/org/apache/commons/lang3/math/NumberUtils.java
++++ b/org/apache/commons/lang3/math/NumberUtils.java
+@@ -1409,8 +1409,8 @@ public class NumberUtils {
+             }
+             if (chars[i] == 'l'
+                 || chars[i] == 'L') {
+-                // not allowing L with an exponent or decimal point
+-                return foundDigit && !hasExp && !hasDecPoint;
++                // not allowing L with an exponent
++                return foundDigit && !hasExp;
+             }
+             // last character is illegal
+             return false;

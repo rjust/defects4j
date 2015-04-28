@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math3/distribution/HypergeometricDistribution.java b/org/apache/commons/math3/distribution/HypergeometricDistribution.java
+index 81e180c..2769127 100644
+--- a/org/apache/commons/math3/distribution/HypergeometricDistribution.java
++++ b/org/apache/commons/math3/distribution/HypergeometricDistribution.java
+@@ -265,7 +265,7 @@ public class HypergeometricDistribution extends AbstractIntegerDistribution {
+      * size {@code n}, the mean is {@code n * m / N}.
+      */
+     public double getNumericalMean() {
+-        return getSampleSize() * (getNumberOfSuccesses() / (double) getPopulationSize());
++        return (double) (getSampleSize() * getNumberOfSuccesses()) / (double) getPopulationSize();
+     }
+ 
+     /**

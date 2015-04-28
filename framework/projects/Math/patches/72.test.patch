@@ -1,0 +1,24 @@
+diff --git a/org/apache/commons/math/analysis/solvers/BrentSolverTest.java b/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
+index a3bc425..5874871 100644
+--- a/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
++++ b/org/apache/commons/math/analysis/solvers/BrentSolverTest.java
+@@ -308,17 +308,10 @@ public final class BrentSolverTest extends TestCase {
+ 
+         // endpoint is root
+         double result = solver.solve(f, Math.PI, 4);
+-        assertEquals(Math.PI, result, solver.getAbsoluteAccuracy());
++        assertEquals(result, Math.PI, solver.getAbsoluteAccuracy());
+ 
+         result = solver.solve(f, 3, Math.PI);
+-        assertEquals(Math.PI, result, solver.getAbsoluteAccuracy());
+-
+-        result = solver.solve(f, Math.PI, 4, 3.5);
+-        assertEquals(Math.PI, result, solver.getAbsoluteAccuracy());
+-
+-        result = solver.solve(f, 3, Math.PI, 3.07);
+-        assertEquals(Math.PI, result, solver.getAbsoluteAccuracy());
+-
++        assertEquals(result, Math.PI, solver.getAbsoluteAccuracy());
+     }
+ 
+     public void testBadEndpoints() throws Exception {

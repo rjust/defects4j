@@ -1,0 +1,31 @@
+diff --git a/org/apache/commons/math3/dfp/Dfp.java b/org/apache/commons/math3/dfp/Dfp.java
+index 3a91982..d278a31 100644
+--- a/org/apache/commons/math3/dfp/Dfp.java
++++ b/org/apache/commons/math3/dfp/Dfp.java
+@@ -1595,24 +1595,12 @@ public class Dfp implements FieldElement<Dfp> {
+ 
+     }
+ 
+-    /** Multiply this by a single digit x.
+-     * @param x multiplicand
+-     * @return product of this and x
+-     */
+-    public Dfp multiply(final int x) {
+-        if (x >= 0 && x < RADIX) {
+-            return multiplyFast(x);
+-        } else {
+-            return multiply(newInstance(x));
+-        }
+-    }
+-
+     /** Multiply this by a single digit 0&lt;=x&lt;radix.
+-     * There are speed advantages in this special case.
++     * There are speed advantages in this special case
+      * @param x multiplicand
+      * @return product of this and x
+      */
+-    private Dfp multiplyFast(final int x) {
++    public Dfp multiply(final int x) {
+         Dfp result = newInstance(this);
+ 
+         /* handle special cases */

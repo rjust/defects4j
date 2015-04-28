@@ -1,0 +1,101 @@
+Index: org/jfree/data/junit/DefaultKeyedValuesTests.java
+===================================================================
+--- org/jfree/data/junit/DefaultKeyedValuesTests.java	(revision 621)
++++ org/jfree/data/junit/DefaultKeyedValuesTests.java	(revision 620)
+@@ -40,7 +40,6 @@
+  * 01-Aug-2006 : Extended testGetIndex() method (DG);
+  * 30-Apr-2007 : Added some new tests (DG);
+  * 03-Oct-2007 : Updated testRemoveValue() (DG);
+- * 21-Nov-2007 : Added testGetIndex2() method (DG);
+  *
+  */
+ 
+@@ -233,18 +232,6 @@
+     }
+     
+     /**
+-     * Another check for the getIndex(Comparable) method.
+-     */
+-    public void testGetIndex2() {
+-    	DefaultKeyedValues v = new DefaultKeyedValues();
+-    	assertEquals(-1, v.getIndex("K1"));
+-    	v.addValue("K1", 1.0);
+-    	assertEquals(0, v.getIndex("K1"));
+-    	v.removeValue("K1");
+-    	assertEquals(-1, v.getIndex("K1"));
+-    }
+-
+-    /**
+      * Some checks for the addValue() method.
+      */
+     public void testAddValue() {
+Index: org/jfree/data/junit/DefaultKeyedValues2DTests.java
+===================================================================
+--- org/jfree/data/junit/DefaultKeyedValues2DTests.java	(revision 621)
++++ org/jfree/data/junit/DefaultKeyedValues2DTests.java	(revision 620)
+@@ -40,7 +40,6 @@
+  * 18-Jan-2007 : Added testSparsePopulation() (DG);
+  * 26-Feb-2007 : Added some basic tests (DG);
+  * 30-Mar-2007 : Added a test for bug 1690654 (DG);
+- * 21-Nov-2007 : Added testRemoveColumnByKey() method (DG);
+  *
+  */
+ 
+@@ -342,27 +341,5 @@
+         }
+         assertTrue(pass);        
+     }
+-    
+-    /**
+-     * Some basic checks for the removeColumn(Comparable) method.
+-     */
+-    public void testRemoveColumnByKey() {
+-    	DefaultKeyedValues2D d = new DefaultKeyedValues2D();
+-    	d.addValue(new Double(1.0), "R1", "C1");
+-    	d.addValue(new Double(2.0), "R2", "C2");
+-    	d.removeColumn("C2");
+-    	d.addValue(new Double(3.0), "R2", "C2");
+-    	assertEquals(3.0, d.getValue("R2", "C2").doubleValue(), EPSILON);
+-    	
+-    	// check for unknown column
+-    	boolean pass = false;
+-    	try {
+-    		d.removeColumn("XXX");
+-    	}
+-    	catch (UnknownKeyException e) {
+-    		pass = true;
+-    	}
+-    	assertTrue(pass);
+-    }
+ 
+ }
+Index: org/jfree/data/category/junit/DefaultCategoryDatasetTests.java
+===================================================================
+--- org/jfree/data/category/junit/DefaultCategoryDatasetTests.java	(revision 621)
++++ org/jfree/data/category/junit/DefaultCategoryDatasetTests.java	(revision 620)
+@@ -36,7 +36,6 @@
+  * -------
+  * 23-Mar-2004 : Version 1 (DG);
+  * 08-Mar-2007 : Added testCloning() (DG);
+- * 21-Nov-2007 : Added testBug1835955() method (DG);
+  *
+  */
+ 
+@@ -337,17 +336,4 @@
+         assertTrue(d1.equals(d2));
+     }
+ 
+-    private static final double EPSILON = 0.0000000001;
+-    
+-    /**
+-     * A test for bug 1835955.
+-     */
+-    public void testBug1835955() {
+-    	DefaultCategoryDataset d = new DefaultCategoryDataset();
+-    	d.addValue(1.0, "R1", "C1");
+-    	d.addValue(2.0, "R2", "C2");
+-    	d.removeColumn("C2");
+-    	d.addValue(3.0, "R2", "C2");
+-    	assertEquals(3.0, d.getValue("R2", "C2").doubleValue(), EPSILON);
+-    }
+ }

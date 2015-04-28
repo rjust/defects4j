@@ -1,0 +1,142 @@
+--- com.google.javascript.jscomp.ProcessClosurePrimitivesTest::testProvideInIndependentModules4
+junit.framework.AssertionFailedError: 
+Expected: var apps={};apps.foo={};apps.foo.bar={};apps.foo.bar.B={};apps.foo.bar.C={}
+Result: var apps={};apps.foo.bar={};apps.foo={};apps.foo.bar.B={};apps.foo.bar.C={}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: expected0] [synthetic: 1]
+        VAR 1 [sourcename: expected0]
+            NAME apps 1 [sourcename: expected0]
+                OBJECTLIT 1 [sourcename: expected0]
+        EXPR_RESULT 1 [sourcename: expected0]
+            ASSIGN 1 [sourcename: expected0]
+                GETPROP 1 [sourcename: expected0]
+                    NAME apps 1 [sourcename: expected0]
+                    STRING foo 1 [sourcename: expected0]
+                OBJECTLIT 1 [sourcename: expected0]
+        EXPR_RESULT 1 [sourcename: expected0]
+            ASSIGN 1 [sourcename: expected0]
+                GETPROP 1 [sourcename: expected0]
+                    GETPROP 1 [sourcename: expected0]
+                        NAME apps 1 [sourcename: expected0]
+                        STRING foo 1 [sourcename: expected0]
+                    STRING bar 1 [sourcename: expected0]
+                OBJECTLIT 1 [sourcename: expected0]
+    SCRIPT 1 [sourcename: expected1] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: expected1]
+            ASSIGN 1 [sourcename: expected1]
+                GETPROP 1 [sourcename: expected1]
+                    GETPROP 1 [sourcename: expected1]
+                        GETPROP 1 [sourcename: expected1]
+                            NAME apps 1 [sourcename: expected1]
+                            STRING foo 1 [sourcename: expected1]
+                        STRING bar 1 [sourcename: expected1]
+                    STRING B 1 [sourcename: expected1] [is_constant_name: 1]
+                OBJECTLIT 1 [sourcename: expected1]
+    SCRIPT 1 [sourcename: expected2] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: expected2]
+            ASSIGN 1 [sourcename: expected2]
+                GETPROP 1 [sourcename: expected2]
+                    GETPROP 1 [sourcename: expected2]
+                        GETPROP 1 [sourcename: expected2]
+                            NAME apps 1 [sourcename: expected2]
+                            STRING foo 1 [sourcename: expected2]
+                        STRING bar 1 [sourcename: expected2]
+                    STRING C 1 [sourcename: expected2] [is_constant_name: 1]
+                OBJECTLIT 1 [sourcename: expected2]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: i0] [synthetic: 1]
+        VAR 1 [sourcename: i0] [is_namespace: 1]
+            NAME apps 1 [sourcename: i0]
+                OBJECTLIT 1 [sourcename: i0] : {}
+        EXPR_RESULT 1 [sourcename: i1] [is_namespace: 1]
+            ASSIGN 1 [sourcename: i1]
+                GETPROP 1 [sourcename: i1] [originalname: apps.foo.bar]
+                    GETPROP 1 [sourcename: i1]
+                        NAME apps 1 [sourcename: i1]
+                        STRING foo 1 [sourcename: i1]
+                    STRING bar 1 [sourcename: i1]
+                OBJECTLIT 1 [sourcename: i1] : {}
+        EXPR_RESULT 1 [sourcename: i1] [is_namespace: 1]
+            ASSIGN 1 [sourcename: i1]
+                GETPROP 1 [sourcename: i1] [originalname: apps.foo]
+                    NAME apps 1 [sourcename: i1]
+                    STRING foo 1 [sourcename: i1]
+                OBJECTLIT 1 [sourcename: i1] : {}
+    SCRIPT 1 [sourcename: i1] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: i1] [is_namespace: 1]
+            ASSIGN 1 [sourcename: i1]
+                GETPROP 1 [sourcename: i1] [originalname: apps.foo.bar.B]
+                    GETPROP 1 [sourcename: i1]
+                        GETPROP 1 [sourcename: i1]
+                            NAME apps 1 [sourcename: i1]
+                            STRING foo 1 [sourcename: i1]
+                        STRING bar 1 [sourcename: i1]
+                    STRING B 1 [sourcename: i1]
+                OBJECTLIT 1 [sourcename: i1] : {}
+    SCRIPT 1 [sourcename: i2] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: i2] [is_namespace: 1]
+            ASSIGN 1 [sourcename: i2]
+                GETPROP 1 [sourcename: i2] [originalname: apps.foo.bar.C]
+                    GETPROP 1 [sourcename: i2]
+                        GETPROP 1 [sourcename: i2]
+                            NAME apps 1 [sourcename: i2]
+                            STRING foo 1 [sourcename: i2]
+                        STRING bar 1 [sourcename: i2]
+                    STRING C 1 [sourcename: i2]
+                OBJECTLIT 1 [sourcename: i2] : {}
+
+
+Subtree1: NAME apps 1 [sourcename: expected0]
+
+
+Subtree2: GETPROP 1 [sourcename: i1]
+    NAME apps 1 [sourcename: i1]
+    STRING foo 1 [sourcename: i1]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:797)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:645)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:482)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:463)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:450)
+	at com.google.javascript.jscomp.ProcessClosurePrimitivesTest.testProvideInIndependentModules4(ProcessClosurePrimitivesTest.java:777)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

@@ -1,0 +1,15 @@
+diff --git a/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java b/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java
+index 752e04f..7221be5 100644
+--- a/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java
++++ b/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java
+@@ -169,10 +169,6 @@ public abstract class ChainableReverseAbstractInterpreter
+         scope.inferQualifiedSlot(node, qualifiedName, origType, type);
+         break;
+ 
+-      case Token.THIS:
+-        // "this" references aren't currently modeled in the CFG.
+-        break;
+-
+       default:
+         throw new IllegalArgumentException("Node cannot be refined. \n" +
+             node.toStringTree());

@@ -1,0 +1,24 @@
+diff --git a/org/apache/commons/lang/text/StrBuilder.java b/org/apache/commons/lang/text/StrBuilder.java
+index fd135fd..13281ce 100644
+--- a/org/apache/commons/lang/text/StrBuilder.java
++++ b/org/apache/commons/lang/text/StrBuilder.java
+@@ -1183,9 +1183,6 @@ public class StrBuilder implements Cloneable {
+         if (width > 0) {
+             ensureCapacity(size + width);
+             String str = (obj == null ? getNullText() : obj.toString());
+-            if (str == null) {
+-                str = "";
+-            }
+             int strLen = str.length();
+             if (strLen >= width) {
+                 str.getChars(strLen - width, strLen, buffer, size);
+@@ -1230,9 +1227,6 @@ public class StrBuilder implements Cloneable {
+         if (width > 0) {
+             ensureCapacity(size + width);
+             String str = (obj == null ? getNullText() : obj.toString());
+-            if (str == null) {
+-                str = "";
+-            }
+             int strLen = str.length();
+             if (strLen >= width) {
+                 str.getChars(0, width, buffer, size);

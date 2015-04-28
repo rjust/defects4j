@@ -1,0 +1,34 @@
+diff --git a/tests/org/jfree/chart/renderer/xy/junit/XYShapeRendererTests.java b/tests/org/jfree/chart/renderer/xy/junit/XYShapeRendererTests.java
+index a6b0065..17f3a93 100644
+--- tests/org/jfree/chart/renderer/xy/junit/XYShapeRendererTests.java
++++ tests/org/jfree/chart/renderer/xy/junit/XYShapeRendererTests.java
+@@ -177,23 +177,23 @@ public class XYShapeRendererTests extends TestCase {
+         dataset.addSeries("series1", data1);
+         range = r.findZBounds(dataset);
+         assertNotNull(range);
+-        assertEquals(1d, range.getLowerBound());
+-        assertEquals(3d, range.getUpperBound());
++        assertEquals(1d, range.getLowerBound(), 1e-6);
++        assertEquals(3d, range.getUpperBound(), 1e-6);
+ 
+         double data2[][] = { {1,1,1}, {1,1,1}, {-1,-2,-3} };
+         dataset.removeSeries("series1");
+         dataset.addSeries("series2", data2);
+         range = r.findZBounds(dataset);
+         assertNotNull(range);
+-        assertEquals(-3d, range.getLowerBound());
+-        assertEquals(-1d, range.getUpperBound());
++        assertEquals(-3d, range.getLowerBound(), 1e-6);
++        assertEquals(-1d, range.getUpperBound(), 1e-6);
+ 
+         double data3[][] = { {1,1,1}, {1,1,1}, {-1.2,2.9,3.8} };
+         dataset.removeSeries("series2");
+         dataset.addSeries("series3", data3);
+         range = r.findZBounds(dataset);
+         assertNotNull(range);
+-        assertEquals(-1.2d, range.getLowerBound());
+-        assertEquals(3.8d, range.getUpperBound());
++        assertEquals(-1.2d, range.getLowerBound(), 1e-6);
++        assertEquals(3.8d, range.getUpperBound(), 1e-6);
+     }
+ }

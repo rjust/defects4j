@@ -1,0 +1,58 @@
+diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+index 09aba12..b29ff9c 100644
+--- a/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1196,22 +1194,14 @@ final class TypedScopeCreator implements ScopeCreator {
+      * Check if the given node is a property of a name in the global scope.
+      */
+     private boolean isQnameRootedInGlobalScope(Node n) {
+-      Scope scope = getQnameRootScope(n);
+-      return scope != null && scope.isGlobal();
+-    }
+-
+-    /**
+-     * Return the scope for the name of the given node.
+-     */
+-    private Scope getQnameRootScope(Node n) {
+       Node root = NodeUtil.getRootOfQualifiedName(n);
+       if (root.isName()) {
+         Var var = scope.getVar(root.getString());
+         if (var != null) {
+-          return var.getScope();
++          return var.isGlobal();
+         }
+       }
+-      return null;
++      return false;
+     }
+ 
+     /**
+@@ -1518,14 +1484,11 @@ final class TypedScopeCreator implements ScopeCreator {
+             || FunctionTypeBuilder.isFunctionTypeDeclaration(info));
+       }
+ 
+-      if (inferred && rhsValue != null && rhsValue.isFunction()) {
++      if (inferred) {
+         // Determining declaration for #2
+-        if (info != null) {
+-          inferred = false;
+-        } else if (!scope.isDeclared(qName, false) &&
+-                   n.isUnscopedQualifiedName()) {
+-          inferred = false;
+-        }
++        inferred = !(rhsValue != null &&
++            rhsValue.isFunction() &&
++            (info != null || !scope.isDeclared(qName, false)));
+       }
+ 
+       if (!inferred) {
+@@ -1546,7 +1509,8 @@ final class TypedScopeCreator implements ScopeCreator {
+         // If the property is already declared, the error will be
+         // caught when we try to declare it in the current scope.
+         defineSlot(n, parent, valueType, inferred);
+-      } else if (rhsValue != null && rhsValue.isTrue()) {
++      } else if (rhsValue != null &&
++          rhsValue.isTrue()) {
+         // We declare these for delegate proxy method properties.
+         FunctionType ownerType =
+             JSType.toMaybeFunctionType(getObjectSlot(ownerName));

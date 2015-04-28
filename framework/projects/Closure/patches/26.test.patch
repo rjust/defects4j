@@ -1,0 +1,105 @@
+diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index fd8f632..f189883 100644
+--- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -1046,7 +1046,9 @@ public class CommandLineRunnerTest extends TestCase {
+     args.add("--common_js_entry_module=foo/bar");
+     setFilename(0, "foo/bar.js");
+     test("exports.test = 1",
+-        "var module$foo$bar={test:1};");
++        "var module$foo$bar={test:1}; " +
++        "module$foo$bar.module$exports && " +
++        "(module$foo$bar=module$foo$bar.module$exports)");
+   }
+ 
+   public void testTransformAMDAndProcessCJS() {
+@@ -1055,7 +1057,9 @@ public class CommandLineRunnerTest extends TestCase {
+     args.add("--common_js_entry_module=foo/bar");
+     setFilename(0, "foo/bar.js");
+     test("define({foo: 1})",
+-        "var module$foo$bar={}, module$foo$bar={foo:1};");
++        "var module$foo$bar={}, module$foo$bar={foo:1}; " +
++        "module$foo$bar.module$exports && " +
++        "(module$foo$bar=module$foo$bar.module$exports)");
+   }
+ 
+   /* Helper functions */
+diff --git a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+index 7525531..4f6f053 100644
+--- a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
++++ b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+@@ -43,7 +43,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "var module$test = {};" +
+         "goog.require('module$name');" +
+         "var name$$module$test = module$name;" +
+-        "name$$module$test();");
++        "name$$module$test();" +
++        "if(module$test.module$exports)" +
++        "module$test=module$test.module$exports");
+     setFilename("test/sub");
+     test(
+         "var name = require('mod/name');" +
+@@ -52,7 +54,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "var module$test$sub = {};" +
+         "goog.require('module$mod$name');" +
+         "var name$$module$test$sub = module$mod$name;" +
+-        "(function() { name$$module$test$sub(); })();");
++        "(function() { name$$module$test$sub(); })();" +
++        "if(module$test$sub.module$exports)" +
++        "module$test$sub=module$test$sub.module$exports");
+   }
+ 
+   public void testExports() {
+@@ -64,7 +68,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "var module$test = {};" +
+         "goog.require('module$name');" +
+         "var name$$module$test = module$name;" +
+-        "module$test.foo = 1;");
++        "module$test.foo = 1;" +
++        "if(module$test.module$exports)" +
++        "module$test=module$test.module$exports");
+     test(
+         "var name = require('name');" +
+         "module.exports = function() {};",
+@@ -85,7 +91,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "goog.provide('module$test');" +
+         "var module$test = {};" +
+         "var a$$module$test = 1, b$$module$test = 2;" +
+-        "(function() { var a; b$$module$test = 4})();");
++        "(function() { var a; b$$module$test = 4})();" +
++        "if(module$test.module$exports)" +
++        "module$test=module$test.module$exports");
+   }
+ 
+   public void testDash() {
+@@ -96,7 +104,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "var module$test_test = {};" +
+         "goog.require('module$name');" +
+         "var name$$module$test_test = module$name;" +
+-        "module$test_test.foo = 1;");
++        "module$test_test.foo = 1;" +
++        "if(module$test_test.module$exports)" +
++        "module$test_test=module$test_test.module$exports");
+   }
+ 
+   public void testModuleName() {
+@@ -115,13 +125,17 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+         "var name = require('name');",
+         "goog.provide('module$foo$bar'); var module$foo$bar = {};" +
+         "goog.require('module$name');" +
+-        "var name$$module$foo$bar = module$name;");
++        "var name$$module$foo$bar = module$name;" +
++        "if(module$foo$bar.module$exports)" +
++        "module$foo$bar=module$foo$bar.module$exports");
+     test(
+         "var name = require('./name');",
+         "goog.provide('module$foo$bar');" +
+         "var module$foo$bar = {};" +
+         "goog.require('module$foo$name');" +
+-        "var name$$module$foo$bar = module$foo$name;");
++        "var name$$module$foo$bar = module$foo$name;" +
++        "if(module$foo$bar.module$exports)" +
++        "module$foo$bar=module$foo$bar.module$exports");
+ 
+   }
+ 

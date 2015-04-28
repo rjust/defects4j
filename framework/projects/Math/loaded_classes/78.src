@@ -1,0 +1,17 @@
+org.apache.commons.math.ode.events.EventException
+org.apache.commons.math.ode.DerivativeException
+org.apache.commons.math.MaxIterationsExceededException
+org.apache.commons.math.ode.sampling.DummyStepInterpolator
+org.apache.commons.math.analysis.UnivariateRealFunction
+org.apache.commons.math.ode.sampling.AbstractStepInterpolator
+org.apache.commons.math.analysis.solvers.UnivariateRealSolver
+org.apache.commons.math.ode.events.EventHandler
+org.apache.commons.math.analysis.solvers.BrentSolver
+org.apache.commons.math.ode.events.EventState
+org.apache.commons.math.ConvergingAlgorithmImpl
+org.apache.commons.math.analysis.solvers.UnivariateRealSolverImpl
+org.apache.commons.math.MathException
+org.apache.commons.math.ConvergingAlgorithm
+org.apache.commons.math.ConvergenceException
+org.apache.commons.math.FunctionEvaluationException
+org.apache.commons.math.ode.sampling.StepInterpolator

@@ -1,0 +1,13 @@
+diff --git a/com/google/javascript/jscomp/CheckAccessControls.java b/com/google/javascript/jscomp/CheckAccessControls.java
+index 09eaa26..3bf9a84 100644
+--- a/com/google/javascript/jscomp/CheckAccessControls.java
++++ b/com/google/javascript/jscomp/CheckAccessControls.java
+@@ -413,7 +417,7 @@ class CheckAccessControls implements ScopedCallback, HotSwapCompilerPass {
+     if (objectType != null) {
+       // Is this a normal property access, or are we trying to override
+       // an existing property?
+-      boolean isOverride = parent.getJSDocInfo() != null &&
++      boolean isOverride = t.inGlobalScope() &&
+           parent.getType() == Token.ASSIGN &&
+           parent.getFirstChild() == getprop;
+ 

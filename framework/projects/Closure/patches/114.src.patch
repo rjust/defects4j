@@ -1,0 +1,29 @@
+diff --git a/com/google/javascript/jscomp/NameAnalyzer.java b/com/google/javascript/jscomp/NameAnalyzer.java
+index a7b95b0..fe64ce5 100644
+--- a/com/google/javascript/jscomp/NameAnalyzer.java
++++ b/com/google/javascript/jscomp/NameAnalyzer.java
+@@ -575,13 +575,7 @@ final class NameAnalyzer implements CompilerPass {
+           } else {
+             recordDepScope(nameNode, ns);
+           }
+-        } else if (!(parent.isCall() && parent.getFirstChild() == n)) {
+-          // The rhs of the assignment is the caller, so it's used by the
+-          // context. Don't associate it w/ the lhs.
+-          // FYI: this fixes only the specific case where the assignment is the
+-          // caller expression, but it could be nested deeper in the caller and
+-          // we would still get a bug.
+-          // See testAssignWithCall2 for an example of this.
++        } else {
+           recordDepScope(recordNode, ns);
+         }
+       }
+@@ -851,7 +845,8 @@ final class NameAnalyzer implements CompilerPass {
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-      if (!(n.isName() || (NodeUtil.isGet(n) && !parent.isGetProp()))) {
++      if (!(n.isName() ||
++            NodeUtil.isGet(n) && !parent.isGetProp())) {
+         // This is not a simple or qualified name.
+         return;
+       }

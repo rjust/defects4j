@@ -1,0 +1,32 @@
+diff --git a/org/apache/commons/math3/genetics/ElitisticListPopulation.java b/org/apache/commons/math3/genetics/ElitisticListPopulation.java
+index 829c97d..a309080 100644
+--- a/org/apache/commons/math3/genetics/ElitisticListPopulation.java
++++ b/org/apache/commons/math3/genetics/ElitisticListPopulation.java
+@@ -42,13 +42,12 @@ public class ElitisticListPopulation extends ListPopulation {
+      * @param populationLimit maximal size of the population
+      * @param elitismRate how many best chromosomes will be directly transferred to the
+      *                    next generation [in %]
+-     * @throws OutOfRangeException if the elitism rate is outside the [0, 1] range
+      */
+     public ElitisticListPopulation(final List<Chromosome> chromosomes,
+                                    final int populationLimit,
+                                    final double elitismRate) {
+         super(chromosomes, populationLimit);
+-        setElitismRate(elitismRate);
++        this.elitismRate = elitismRate;
+     }
+ 
+     /**
+@@ -58,11 +57,10 @@ public class ElitisticListPopulation extends ListPopulation {
+      * @param populationLimit maximal size of the population
+      * @param elitismRate how many best chromosomes will be directly transferred to the
+      *                    next generation [in %]
+-     * @throws OutOfRangeException if the elitism rate is outside the [0, 1] range
+      */
+     public ElitisticListPopulation(final int populationLimit, final double elitismRate) {
+         super(populationLimit);
+-        setElitismRate(elitismRate);
++        this.elitismRate = elitismRate;
+     }
+ 
+     /**

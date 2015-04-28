@@ -1,0 +1,67 @@
+diff --git a/com/google/javascript/jscomp/RemoveUnusedNamesTest.java b/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
+index d4a2b65..45a58de 100644
+--- a/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
++++ b/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
+@@ -128,11 +128,7 @@ public class RemoveUnusedNamesTest extends CompilerTestCase {
+   }
+ 
+   public void testStatement() {
+-    test("/**\n" +
+-         " * @fileoverview\n" +
+-         " * @notypecheck\n" +
+-         " */ \n" +
+-         "/** @constructor */" +
++    test("/** @constructor */ \n" +
+         "function e(){}" +
+            "var x = e.prototype.method1 = function(){};" +
+            "var y = new e; x()",
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index 71c85bc..28277b9 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -4543,45 +4543,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: number");
+   }
+ 
+-  public void testThisTypeOfFunction1() throws Exception {
+-    testTypes(
+-        "/** @type {function(this:Object)} */ function f() {}" +
+-        "f();");
+-  }
+-
+-  public void testThisTypeOfFunction2() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function F() {}" +
+-        "/** @type {function(this:F)} */ function f() {}" +
+-        "f();",
+-        "\"function (this:F): ?\" must be called with a \"this\" type");
+-  }
+-
+-  public void testThisTypeOfFunction3() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function F() {}" +
+-        "F.prototype.bar = function() {};" +
+-        "var f = (new F()).bar; f();",
+-        "\"function (this:F): undefined\" must be called with a \"this\" type");
+-  }
+-
+-  public void testThisTypeOfFunction4() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function F() {}" +
+-        "F.prototype.moveTo = function(x, y) {};" +
+-        "F.prototype.lineTo = function(x, y) {};" +
+-        "function demo() {" +
+-        "  var path = new F();" +
+-        "  var points = [[1,1], [2,2]];" +
+-        "  for (var i = 0; i < points.length; i++) {" +
+-        "    (i == 0 ? path.moveTo : path.lineTo)(" +
+-        "       points[i][0], points[i][1]);" +
+-        "  }" +
+-        "}",
+-        "\"function (this:F, ?, ?): undefined\" " +
+-        "must be called with a \"this\" type");
+-  }
+-
+   public void testGlobalThis1() throws Exception {
+     testTypes("/** @constructor */ function Window() {}" +
+         "/** @param {string} msg */ " +

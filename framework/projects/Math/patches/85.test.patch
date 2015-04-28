@@ -1,0 +1,61 @@
+diff --git a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
+index e87094f..9afd18e 100644
+--- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
++++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
+@@ -17,12 +17,13 @@
+ 
+ package org.apache.commons.math.analysis.solvers;
+ 
+-import junit.framework.TestCase;
+-
++import org.apache.commons.math.ConvergenceException;
+ import org.apache.commons.math.MathException;
+ import org.apache.commons.math.analysis.SinFunction;
+ import org.apache.commons.math.analysis.UnivariateRealFunction;
+ 
++import junit.framework.TestCase;
++
+ /**
+  * @version $Revision$ $Date$
+  */
+@@ -90,6 +91,15 @@ public class UnivariateRealSolverUtilsTest extends TestCase {
+         assertTrue(sin.value(result[1]) > 0);
+     }
+     
++    public void testBracketCornerSolution() throws MathException {
++        try {
++            UnivariateRealSolverUtils.bracket(sin, 1.5, 0, 2.0); 
++            fail("Expecting ConvergenceException");
++        } catch (ConvergenceException ex) {
++            // expected
++        }
++    }
++    
+     public void testBadParameters() throws MathException {
+         try { // null function
+             UnivariateRealSolverUtils.bracket(null, 1.5, 0, 2.0);
+diff --git a/org/apache/commons/math/distribution/NormalDistributionTest.java b/org/apache/commons/math/distribution/NormalDistributionTest.java
+index 8f3433c..dd607f3 100644
+--- a/org/apache/commons/math/distribution/NormalDistributionTest.java
++++ b/org/apache/commons/math/distribution/NormalDistributionTest.java
+@@ -17,8 +17,6 @@
+ 
+ package org.apache.commons.math.distribution;
+ 
+-import org.apache.commons.math.MathException;
+-
+ /**
+  * Test cases for NormalDistribution.
+  * Extends ContinuousDistributionAbstractTest.  See class javadoc for
+@@ -163,11 +161,4 @@ public class NormalDistributionTest extends ContinuousDistributionAbstractTest
+             }
+         } 
+    }
+-
+-    public void testMath280() throws MathException {
+-        NormalDistribution normal = new NormalDistributionImpl(0,1);
+-        double result = normal.inverseCumulativeProbability(0.9772498680518209);
+-        assertEquals(2.0, result, 1.0e-12);
+-    }
+-
+ }

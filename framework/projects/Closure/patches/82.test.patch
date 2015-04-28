@@ -1,0 +1,35 @@
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index 0760add..b890e92 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -4951,14 +4951,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: number");
+   }
+ 
+-  public void testIssue301() throws Exception {
+-    testTypes(
+-        "Array.indexOf = function() {};" +
+-        "var s = 'hello';" +
+-        "alert(s.toLowerCase.indexOf('1'));",
+-        "Property indexOf never defined on String.prototype.toLowerCase");
+-  }
+-
+   /**
+    * Tests that the || operator is type checked correctly, that is of
+    * the type of the first argument or of the second argument. See
+diff --git a/com/google/javascript/rhino/jstype/FunctionTypeTest.java b/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+index 8ad98e6..cb20b50 100644
+--- a/com/google/javascript/rhino/jstype/FunctionTypeTest.java
++++ b/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+@@ -169,11 +169,6 @@ public class FunctionTypeTest extends BaseJSTypeTestCase {
+     assertTrue(ctor.getInstanceType().isUnknownType());
+   }
+ 
+-  public void testEmptyFunctionTypes() {
+-    assertTrue(LEAST_FUNCTION_TYPE.isEmptyType());
+-    assertFalse(GREATEST_FUNCTION_TYPE.isEmptyType());
+-  }
+-
+   private void assertLeastSupertype(String s, JSType t1, JSType t2) {
+     assertEquals(s, t1.getLeastSupertype(t2).toString());
+     assertEquals(s, t2.getLeastSupertype(t1).toString());

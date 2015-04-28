@@ -1,0 +1,19 @@
+diff --git a/com/google/javascript/jscomp/CodeConsumer.java b/com/google/javascript/jscomp/CodeConsumer.java
+index 3522e89..8023324 100644
+--- a/com/google/javascript/jscomp/CodeConsumer.java
++++ b/com/google/javascript/jscomp/CodeConsumer.java
+@@ -241,12 +241,11 @@ abstract class CodeConsumer {
+     // This is not pretty printing. This is to prevent misparsing of x- -4 as
+     // x--4 (which is a syntax error).
+     char prev = getLastChar();
+-    boolean negativeZero = isNegativeZero(x);
+-    if ((x < 0 || negativeZero) && prev == '-') {
++    if (x < 0 && prev == '-') {
+       add(" ");
+     }
+ 
+-    if ((long) x == x && !negativeZero) {
++    if ((long) x == x && !isNegativeZero(x)) {
+       long value = (long) x;
+       long mantissa = value;
+       int exp = 0;

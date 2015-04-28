@@ -1,0 +1,14 @@
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index a369e4c..de53fc7 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -466,9 +466,6 @@ public class CodePrinterTest extends TestCase {
+     // Test we correctly handle an in operator inside a comma.
+     assertPrintSame("for(x,(y in z);;)foo()");
+     assertPrintSame("for(var x,w=(y in z);;)foo()");
+-
+-    // And in operator inside a hook.
+-    assertPrintSame("for(a=c?0:(0 in d);;)foo()");
+   }
+ 
+   public void testLiteralProperty() {

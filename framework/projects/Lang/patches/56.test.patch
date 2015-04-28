@@ -1,0 +1,23 @@
+diff --git a/org/apache/commons/lang/time/FastDateFormatTest.java b/org/apache/commons/lang/time/FastDateFormatTest.java
+index e981682..96f6a46 100644
+--- a/org/apache/commons/lang/time/FastDateFormatTest.java
++++ b/org/apache/commons/lang/time/FastDateFormatTest.java
+@@ -28,8 +28,6 @@ import junit.framework.TestCase;
+ import junit.framework.TestSuite;
+ import junit.textui.TestRunner;
+ 
+-import org.apache.commons.lang.SerializationUtils;
+-
+ /**
+  * Unit tests {@link org.apache.commons.lang.time.FastDateFormat}.
+  *
+@@ -280,9 +278,4 @@ public class FastDateFormatTest extends TestCase {
+         cal.set(1,2,2);
+         assertEquals("0001/03/02", format.format(cal));
+     }
+-
+-    public void testLang303() {
+-        FastDateFormat format = FastDateFormat.getInstance("yyyy/MM/dd");
+-        format = (FastDateFormat) SerializationUtils.deserialize( SerializationUtils.serialize( format ) );
+-    }
+ }

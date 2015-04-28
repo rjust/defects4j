@@ -1,0 +1,18 @@
+diff --git a/org/apache/commons/lang/LocaleUtilsTest.java b/org/apache/commons/lang/LocaleUtilsTest.java
+index 76cba2f..d1dd7f5 100644
+--- a/org/apache/commons/lang/LocaleUtilsTest.java
++++ b/org/apache/commons/lang/LocaleUtilsTest.java
+@@ -75,13 +75,6 @@ public class LocaleUtilsTest extends TestCase {
+         return suite;
+     }
+ 
+-    public void setUp() throws Exception {
+-        super.setUp();
+-
+-        // Testing #LANG-304. Must be called before availableLocaleSet is called.
+-        LocaleUtils.isAvailableLocale(Locale.getDefault());
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Test that constructors are public, and work, etc.

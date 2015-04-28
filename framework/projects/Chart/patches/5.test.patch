@@ -1,0 +1,29 @@
+Index: org/jfree/data/xy/junit/XYSeriesTests.java
+===================================================================
+--- org/jfree/data/xy/junit/XYSeriesTests.java	(revision 1696)
++++ org/jfree/data/xy/junit/XYSeriesTests.java	(revision 1695)
+@@ -39,7 +39,6 @@
+  * 30-Jan-2007 : Fixed some code that won't compile with Java 1.4 (DG);
+  * 31-Oct-2007 : New hashCode() test (DG);
+  * 01-May-2008 : Added testAddOrUpdate3() (DG);
+- * 24-Nov-2008 : Added testBug1955483() (DG);
+  *
+  */
+ 
+@@ -470,16 +469,4 @@
+         assertTrue(Double.isNaN(dataset.getYValue(0, 3)));
+     }
+ 
+-    /**
+-     * Another test for the addOrUpdate() method.
+-     */
+-    public void testBug1955483() {
+-        XYSeries series = new XYSeries("Series", true, true);
+-        series.addOrUpdate(1.0, 1.0);
+-        series.addOrUpdate(1.0, 2.0);
+-        assertEquals(new Double(1.0), series.getY(0));
+-        assertEquals(new Double(2.0), series.getY(1));
+-        assertEquals(2, series.getItemCount());
+-    }
+-
+ }

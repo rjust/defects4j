@@ -1,0 +1,35 @@
+diff --git a/com/google/javascript/jscomp/ClosureCodingConventionTest.java b/com/google/javascript/jscomp/ClosureCodingConventionTest.java
+index e7f60f7..9704d8e 100644
+--- a/com/google/javascript/jscomp/ClosureCodingConventionTest.java
++++ b/com/google/javascript/jscomp/ClosureCodingConventionTest.java
+@@ -191,13 +191,6 @@ public class ClosureCodingConventionTest extends TestCase {
+     assertFunctionBind("Function.prototype.bind.call(obj, p1)");
+   }
+ 
+-  public void testRequire() {
+-    assertRequire("goog.require('foo')");
+-    assertNotRequire("goog.require(foo)");
+-    assertNotRequire("goog.require()");
+-    assertNotRequire("foo()");
+-  }
+-
+   private void assertFunctionBind(String code) {
+     Node n = parseTestCode(code);
+     assertNotNull(conv.describeFunctionBind(n.getFirstChild()));
+@@ -208,16 +201,6 @@ public class ClosureCodingConventionTest extends TestCase {
+     assertNull(conv.describeFunctionBind(n.getFirstChild()));
+   }
+ 
+-  private void assertRequire(String code) {
+-    Node n = parseTestCode(code);
+-    assertNotNull(conv.extractClassNameIfRequire(n.getFirstChild(), n));
+-  }
+-
+-  private void assertNotRequire(String code) {
+-    Node n = parseTestCode(code);
+-    assertNull(conv.extractClassNameIfRequire(n.getFirstChild(), n));
+-  }
+-
+   private void assertNotObjectLiteralCast(String code) {
+     Node n = parseTestCode(code);
+     assertNull(conv.getObjectLiteralCast(null, n.getFirstChild()));

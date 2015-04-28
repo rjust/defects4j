@@ -1,0 +1,40 @@
+diff --git a/org/joda/time/Partial.java b/org/joda/time/Partial.java
+index 6ff2771..3b84fdc 100644
+--- a/org/joda/time/Partial.java
++++ b/org/joda/time/Partial.java
+@@ -214,20 +214,11 @@ public final class Partial
+             DateTimeFieldType loopType = types[i];
+             DurationField loopUnitField = loopType.getDurationType().getField(iChronology);
+             if (i > 0) {
+-                if (loopUnitField.isSupported() == false) {
+-                    if (lastUnitField.isSupported()) {
+-                        throw new IllegalArgumentException("Types array must be in order largest-smallest: " +
+-                                        types[i - 1].getName() + " < " + loopType.getName());
+-                    } else {
+-                        throw new IllegalArgumentException("Types array must not contain duplicate unsupported: " +
+-                                        types[i - 1].getName() + " and " + loopType.getName());
+-                    }
+-                }
+                 int compare = lastUnitField.compareTo(loopUnitField);
+                 if (compare < 0) {
+                     throw new IllegalArgumentException("Types array must be in order largest-smallest: " +
+                             types[i - 1].getName() + " < " + loopType.getName());
+-                } else if (compare == 0 && lastUnitField.equals(loopUnitField)) {
++                } else if (compare == 0) {
+                     if (types[i - 1].getRangeDurationType() == null) {
+                         if (loopType.getRangeDurationType() == null) {
+                             throw new IllegalArgumentException("Types array must not contain duplicate: " +
+diff --git a/org/joda/time/field/UnsupportedDurationField.java b/org/joda/time/field/UnsupportedDurationField.java
+index bf44e01..7e0ce57 100644
+--- a/org/joda/time/field/UnsupportedDurationField.java
++++ b/org/joda/time/field/UnsupportedDurationField.java
+@@ -224,6 +224,9 @@ public final class UnsupportedDurationField extends DurationField implements Ser
+      * @return zero always
+      */
+     public int compareTo(DurationField durationField) {
++        if (durationField.isSupported()) {
++            return 1;
++        }
+         return 0;
+     }
+ 

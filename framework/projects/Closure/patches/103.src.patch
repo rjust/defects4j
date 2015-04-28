@@ -1,0 +1,51 @@
+diff --git a/com/google/javascript/jscomp/ControlFlowAnalysis.java b/com/google/javascript/jscomp/ControlFlowAnalysis.java
+index 6ef2548..d5bcabe 100644
+--- a/com/google/javascript/jscomp/ControlFlowAnalysis.java
++++ b/com/google/javascript/jscomp/ControlFlowAnalysis.java
+@@ -891,13 +891,12 @@ final class ControlFlowAnalysis implements Callback, CompilerPass {
+       case Token.ASSIGN:
+       case Token.INC:
+       case Token.DEC:
+-      case Token.INSTANCEOF:
+         return true;
+       case Token.FUNCTION:
+         return false;
+     }
+     for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+-      if (!ControlFlowGraph.isEnteringNewCfgNode(c) && mayThrowException(c)) {
++      if (mayThrowException(c)) {
+         return true;
+       }
+     }
+diff --git a/com/google/javascript/jscomp/DisambiguateProperties.java b/com/google/javascript/jscomp/DisambiguateProperties.java
+index ca5edbd..9d9de03 100644
+--- a/com/google/javascript/jscomp/DisambiguateProperties.java
++++ b/com/google/javascript/jscomp/DisambiguateProperties.java
+@@ -733,7 +733,7 @@ class DisambiguateProperties<T> implements CompilerPass {
+       }
+     }
+ 
+-    @Override public ObjectType getTypeWithProperty(String field, JSType type) {
++    @Override public JSType getTypeWithProperty(String field, JSType type) {
+       if (!(type instanceof ObjectType)) {
+         if (type.autoboxesTo() != null) {
+           type = type.autoboxesTo();
+@@ -758,18 +758,6 @@ class DisambiguateProperties<T> implements CompilerPass {
+         }
+         objType = objType.getImplicitPrototype();
+       }
+-      // If the property does not exist on the referenced type but the original
+-      // type is an object type, see if any subtype has the property.
+-      if (foundType == null) {
+-        ObjectType maybeType = ObjectType.cast(
+-            registry.getGreatestSubtypeWithProperty(type, field));
+-        // getGreatestSubtypeWithProperty does not guarantee that the property
+-        // is defined on the returned type, it just indicates that it might be,
+-        // so we have to double check.
+-        if (maybeType != null && maybeType.hasOwnProperty(field)) {
+-          foundType = maybeType;
+-        }
+-      }
+       return foundType;
+     }
+ 

@@ -1,0 +1,68 @@
+diff --git a/org/apache/commons/math/linear/EigenDecompositionImpl.java b/org/apache/commons/math/linear/EigenDecompositionImpl.java
+index 468dca7..d1531a8 100644
+--- a/org/apache/commons/math/linear/EigenDecompositionImpl.java
++++ b/org/apache/commons/math/linear/EigenDecompositionImpl.java
+@@ -561,7 +561,7 @@ public class EigenDecompositionImpl implements EigenDecomposition {
+                             z[ia][i] = c * z[ia][i] - s * p;
+                         }
+                     }
+-                    if (t == 0.0 && i >= j)
++                    if (e[i + 1] == 0.0 && i >= j)
+                         continue;
+                     realEigenvalues[j] -= u;
+                     e[j] = q;
+diff --git a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+index 597f6c4..3abf3f0 100644
+--- a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
++++ b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+@@ -108,7 +108,7 @@ public class SingularValueDecompositionImpl implements
+                 for (int k = 0; k < n; k++) {
+                     matAAT[i][j] += localcopy[i][k] * localcopy[j][k];
+                 }
+-                 matAAT[j][i]=matAAT[i][j];
++                matAAT[j][i]=matAAT[i][j];
+             }
+         }
+         int p;
+@@ -140,7 +141,7 @@ public class SingularValueDecompositionImpl implements
+             singularValues[i] = Math.sqrt(Math.abs(singularValues[i]));
+         }
+         // Up to this point, U and V are computed independently of each other.
+-        // There still a sign indetermination of each column of, say, U.
++        // There still an sign indetermination of each column of, say, U.
+         // The sign is set such that A.V_i=sigma_i.U_i (i<=p)
+         // The right sign corresponds to a positive dot product of A.V_i and U_i
+         for (int i = 0; i < p; i++) {
+diff --git a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+index 5a60da8..10f7762 100644
+--- a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
++++ b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+@@ -237,20 +237,23 @@ public abstract class AbstractLeastSquaresOptimizer implements DifferentiableMul
+      * @return RMS value
+      */
+     public double getRMS() {
+-        return Math.sqrt(getChiSquare() / rows);
++        double criterion = 0;
++        for (int i = 0; i < rows; ++i) {
++            final double residual = residuals[i];
++            criterion += residualsWeights[i] * residual * residual;
++        }
++        return Math.sqrt(criterion / rows);
+     }
+ 
+     /**
+-     * Get a Chi-Square-like value assuming the N residuals follow N
+-     * distinct normal distributions centered on 0 and whose variances are
+-     * the reciprocal of the weights.
++     * Get the Chi-Square value.
+      * @return chi-square value
+      */
+     public double getChiSquare() {
+         double chiSquare = 0;
+         for (int i = 0; i < rows; ++i) {
+             final double residual = residuals[i];
+-            chiSquare += residual * residual * residualsWeights[i];
++            chiSquare += residual * residual / residualsWeights[i];
+         }
+         return chiSquare;
+     }

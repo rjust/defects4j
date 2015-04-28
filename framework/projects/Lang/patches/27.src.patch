@@ -1,0 +1,23 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtils.java b/org/apache/commons/lang3/math/NumberUtils.java
+index f1f36a8..fd03ab8 100644
+--- a/org/apache/commons/lang3/math/NumberUtils.java
++++ b/org/apache/commons/lang3/math/NumberUtils.java
+@@ -476,7 +476,7 @@ public class NumberUtils {
+         if (decPos > -1) {
+ 
+             if (expPos > -1) {
+-                if (expPos < decPos || expPos > str.length()) {
++                if (expPos < decPos) {
+                     throw new NumberFormatException(str + " is not a valid number.");
+                 }
+                 dec = str.substring(decPos + 1, expPos);
+@@ -486,9 +486,6 @@ public class NumberUtils {
+             mant = str.substring(0, decPos);
+         } else {
+             if (expPos > -1) {
+-                if (expPos > str.length()) {
+-                    throw new NumberFormatException(str + " is not a valid number.");
+-                }
+                 mant = str.substring(0, expPos);
+             } else {
+                 mant = str;

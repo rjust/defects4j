@@ -1,0 +1,23 @@
+diff --git a/org/apache/commons/math/complex/ComplexFormatAbstractTest.java b/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
+index 2260a09..2cb1eff 100644
+--- a/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
++++ b/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
+@@ -19,7 +19,6 @@ package org.apache.commons.math.complex;
+ 
+ import java.text.NumberFormat;
+ import java.text.ParseException;
+-import java.text.ParsePosition;
+ import java.util.Locale;
+ 
+ import junit.framework.TestCase;
+@@ -349,10 +348,4 @@ public abstract class ComplexFormatAbstractTest extends TestCase {
+             // success
+         }
+     }
+-
+-    public void testForgottenImaginaryCharacter() {
+-        ParsePosition pos = new ParsePosition(0);
+-        assertNull(new ComplexFormat().parse("1 + 1", pos));
+-        assertEquals(5, pos.getErrorIndex());
+-    }
+ }

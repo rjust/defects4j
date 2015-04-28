@@ -1,0 +1,21 @@
+diff --git a/org/apache/commons/lang3/SerializationUtilsTest.java b/org/apache/commons/lang3/SerializationUtilsTest.java
+index 9bf9c0d..01c98cd 100644
+--- a/org/apache/commons/lang3/SerializationUtilsTest.java
++++ b/org/apache/commons/lang3/SerializationUtilsTest.java
+@@ -364,16 +364,6 @@ public class SerializationUtilsTest extends TestCase {
+         }
+         fail();
+     }
+-    
+-    public void testPrimitiveTypeClassSerialization() {
+-        Class<?>[] primitiveTypes = { byte.class, short.class, int.class, long.class, float.class, double.class,
+-                boolean.class, char.class, void.class };
+-
+-        for (Class<?> primitiveType : primitiveTypes) {
+-            Class<?> clone = SerializationUtils.clone(primitiveType);
+-            assertEquals(primitiveType, clone);
+-        }
+-    }
+ 
+ }
+ 

@@ -1,0 +1,47 @@
+diff --git a/com/google/javascript/jscomp/FunctionToBlockMutator.java b/com/google/javascript/jscomp/FunctionToBlockMutator.java
+index 3fee1a9..07a499f 100644
+--- a/com/google/javascript/jscomp/FunctionToBlockMutator.java
++++ b/com/google/javascript/jscomp/FunctionToBlockMutator.java
+@@ -148,9 +148,6 @@ class FunctionToBlockMutator {
+                 idSupplier,
+                 "inline_",
+                 isCallInLoop)));
+-    // Make label names unique to this instance.
+-    new RenameLabels(compiler, new LabelNameSupplier(idSupplier), false)
+-        .process(null, fnNode);
+   }
+ 
+   static class LabelNameSupplier implements Supplier<String> {
+diff --git a/com/google/javascript/jscomp/RenameLabels.java b/com/google/javascript/jscomp/RenameLabels.java
+index 28e52ee..bb89efd 100644
+--- a/com/google/javascript/jscomp/RenameLabels.java
++++ b/com/google/javascript/jscomp/RenameLabels.java
+@@ -111,6 +111,10 @@ final class RenameLabels implements CompilerPass {
+     // inner scope, so a new namespace is created each time a scope is entered.
+     final Deque<LabelNamespace> namespaceStack = Lists.newLinkedList();
+ 
++    // NameGenerator is used to create safe label names.
++    final NameGenerator nameGenerator =
++        new NameGenerator(new HashSet<String>(), "", null);
++
+     // The list of generated names. Typically, the first name will be "a",
+     // the second "b", etc.
+     final ArrayList<String> names = new ArrayList<String>();
+@@ -148,7 +152,7 @@ final class RenameLabels implements CompilerPass {
+ 
+         // Create a new name, if needed, for this depth.
+         if (names.size() < currentDepth) {
+-          names.add(nameSupplier.get());
++          names.add(nameGenerator.generateNextName());
+         }
+ 
+         String newName = getNameForId(currentDepth);
+@@ -212,7 +216,7 @@ final class RenameLabels implements CompilerPass {
+       String name = nameNode.getString();
+       LabelInfo li = getLabelInfo(name);
+       // This is a label...
+-      if (li.referenced || !removeUnused) {
++      if (li.referenced) {
+         String newName = getNameForId(li.id);
+         if (!name.equals(newName)) {
+           // ... and it is used, give it the short name.

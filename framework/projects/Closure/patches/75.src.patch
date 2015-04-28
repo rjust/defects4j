@@ -1,0 +1,32 @@
+diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+index c97e091..212cc09 100644
+--- a/com/google/javascript/jscomp/NodeUtil.java
++++ b/com/google/javascript/jscomp/NodeUtil.java
+@@ -310,11 +310,6 @@ public final class NodeUtil {
+   }
+ 
+   static Double getStringNumberValue(String rawJsString) {
+-    if (rawJsString.contains("\u000b")) {
+-      // vertical tab is not always whitespace
+-      return null;
+-    }
+-
+     String s = trimJsWhiteSpace(rawJsString);
+     // return ScriptRuntime.toNumber(s);
+     if (s.length() == 0) {
+@@ -374,14 +369,13 @@ public final class NodeUtil {
+    */
+   static TernaryValue isStrWhiteSpaceChar(int c) {
+     switch (c) {
+-      case '\u000B': // <VT>
+-        return TernaryValue.UNKNOWN;  // IE says "no", EcmaScript says "yes"
+       case ' ': // <SP>
+       case '\n': // <LF>
+       case '\r': // <CR>
+       case '\t': // <TAB>
+       case '\u00A0': // <NBSP>
+       case '\u000C': // <FF>
++      case '\u000B': // <VT>
+       case '\u2028': // <LS>
+       case '\u2029': // <PS>
+       case '\uFEFF': // <BOM>

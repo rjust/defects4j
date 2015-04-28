@@ -1,0 +1,15 @@
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index 329b868..75e1155 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -1174,10 +1174,4 @@ public class CodePrinterTest extends TestCase {
+     assertPrint("var x = [,s];","var x=[,s]");
+     assertPrint("var x = [s,];","var x=[s]");
+   }
+-
+-  public void testZero() {
+-    assertPrint("var x ='\\0';", "var x=\"\\0\"");
+-    assertPrint("var x ='\\x00';", "var x=\"\\0\"");
+-    assertPrint("var x ='\\u0000';", "var x=\"\\0\"");
+-  }
+ }

@@ -1,0 +1,14 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+index 779eb74..80df562 100644
+--- a/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+@@ -211,9 +211,6 @@ public class NumberUtilsTest extends TestCase {
+ 
+         // LANG-521
+         assertEquals("createNumber(String) LANG-521 failed", new Float("2."), NumberUtils.createNumber("2."));
+-
+-        // LANG-638
+-        assertFalse("createNumber(String) succeeded", checkCreateNumber("1eE"));
+     }
+ 
+     public void testCreateFloat() {

@@ -1,0 +1,26 @@
+diff --git a/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+index f4b537d..dffe3a5 100644
+--- a/com/google/javascript/rhino/jstype/PrototypeObjectType.java
++++ b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+@@ -377,10 +377,10 @@ class PrototypeObjectType extends ObjectType {
+ 
+         sb.append(property);
+         sb.append(": ");
+-        sb.append(getPropertyType(property).toStringHelper(forAnnotations));
++        sb.append(getPropertyType(property).toString());
+ 
+         ++i;
+-        if (!forAnnotations && i == MAX_PRETTY_PRINTED_PROPERTIES) {
++        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+           sb.append(", ...");
+           break;
+         }
+@@ -391,7 +391,7 @@ class PrototypeObjectType extends ObjectType {
+       prettyPrint = true;
+       return sb.toString();
+     } else {
+-      return forAnnotations ? "?" : "{...}";
++      return "{...}";
+     }
+   }
+ 

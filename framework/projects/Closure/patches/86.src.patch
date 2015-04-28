@@ -1,0 +1,16 @@
+diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+index 9049aae..5262f2d 100644
+--- a/com/google/javascript/jscomp/NodeUtil.java
++++ b/com/google/javascript/jscomp/NodeUtil.java
+@@ -2459,10 +2459,7 @@ public final class NodeUtil {
+             || isToStringMethodCall(value)
+             || locals.apply(value);
+       case Token.NEW:
+-        // TODO(nicksantos): This needs to be changed so that it
+-        // returns true iff we're sure the value was never aliased from inside
+-        // the constructor (similar to callHasLocalResult)
+-        return false;
++        return true;
+       case Token.FUNCTION:
+       case Token.REGEXP:
+       case Token.ARRAYLIT:

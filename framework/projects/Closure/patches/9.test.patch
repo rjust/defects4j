@@ -1,0 +1,14 @@
+diff --git a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+index 43bc8ed..7525531 100644
+--- a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
++++ b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+@@ -129,9 +129,5 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
+     ProcessCommonJSModules pass = new ProcessCommonJSModules(null, "foo");
+     assertEquals("module$baz",
+         pass.guessCJSModuleName("foo/baz.js"));
+-    assertEquals("module$baz",
+-        pass.guessCJSModuleName("foo\\baz.js"));
+-    assertEquals("module$bar$baz",
+-        pass.guessCJSModuleName("foo\\bar\\baz.js"));
+   }
+ }

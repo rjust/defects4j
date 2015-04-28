@@ -1,0 +1,14 @@
+diff --git a/com/google/javascript/jscomp/Compiler.java b/com/google/javascript/jscomp/Compiler.java
+index 1d6e494..b3ca246 100644
+--- a/com/google/javascript/jscomp/Compiler.java
++++ b/com/google/javascript/jscomp/Compiler.java
+@@ -252,8 +252,7 @@ public class Compiler extends AbstractCompiler {
+           CheckLevel.OFF);
+     }
+ 
+-    if (options.checkGlobalThisLevel.isOn() &&
+-        !options.disables(DiagnosticGroups.GLOBAL_THIS)) {
++    if (options.checkGlobalThisLevel.isOn()) {
+       options.setWarningLevel(
+           DiagnosticGroups.GLOBAL_THIS,
+           options.checkGlobalThisLevel);

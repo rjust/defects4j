@@ -1,0 +1,24 @@
+diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
+index a127604..afa75d7 100644
+--- a/org/joda/time/DateTimeZone.java
++++ b/org/joda/time/DateTimeZone.java
+@@ -276,17 +258,14 @@ public abstract class DateTimeZone implements Serializable {
+         if (hoursOffset < -23 || hoursOffset > 23) {
+             throw new IllegalArgumentException("Hours out of range: " + hoursOffset);
+         }
+-        if (minutesOffset < -59 || minutesOffset > 59) {
++        if (minutesOffset < 0 || minutesOffset > 59) {
+             throw new IllegalArgumentException("Minutes out of range: " + minutesOffset);
+         }
+-        if (hoursOffset > 0 && minutesOffset < 0) {
+-            throw new IllegalArgumentException("Positive hours must not have negative minutes: " + minutesOffset);
+-        }
+         int offset = 0;
+         try {
+             int hoursInMinutes = hoursOffset * 60;
+             if (hoursInMinutes < 0) {
+-                minutesOffset = hoursInMinutes - Math.abs(minutesOffset);
++                minutesOffset = hoursInMinutes - minutesOffset;
+             } else {
+                 minutesOffset = hoursInMinutes + minutesOffset;
+             }

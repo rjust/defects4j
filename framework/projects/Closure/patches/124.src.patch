@@ -1,0 +1,28 @@
+diff --git a/com/google/javascript/jscomp/ExploitAssigns.java b/com/google/javascript/jscomp/ExploitAssigns.java
+index 1639f2c..1f925ba 100644
+--- a/com/google/javascript/jscomp/ExploitAssigns.java
++++ b/com/google/javascript/jscomp/ExploitAssigns.java
+@@ -73,7 +73,7 @@ class ExploitAssigns extends AbstractPeepholeOptimization {
+    * @param value The value node.
+    * @param isLValue Whether it's on the left-hand side of an expr.
+    */
+-  private static boolean isCollapsibleValue(Node value, boolean isLValue) {
++  private boolean isCollapsibleValue(Node value, boolean isLValue) {
+     switch (value.getType()) {
+       case Token.GETPROP:
+         // Do not collapse GETPROPs on arbitrary objects, because
+@@ -210,11 +210,9 @@ class ExploitAssigns extends AbstractPeepholeOptimization {
+     }
+     Preconditions.checkArgument(node.isGetProp());
+ 
+-    while (node.isGetProp()) {
+-      node = node.getFirstChild();
+-    }
+-    if (node.isName()
+-        && isNameAssignedTo(node.getString(), replacement)) {
++    Node name = node.getFirstChild();
++    if (name.isName()
++        && isNameAssignedTo(name.getString(), replacement)) {
+       return false;
+     }
+ 

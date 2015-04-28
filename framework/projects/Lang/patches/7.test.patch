@@ -1,0 +1,25 @@
+diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+index b97289a..e66fa61 100644
+--- a/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+@@ -229,20 +229,6 @@ public class NumberUtilsTest {
+         // LANG-693
+         assertEquals("createNumber(String) LANG-693 failed", Double.valueOf(Double.MAX_VALUE), NumberUtils
+                     .createNumber("" + Double.MAX_VALUE));
+-        
+-        // LANG-822
+-        // ensure that the underlying negative number would create a BigDecimal
+-        final Number bigNum = NumberUtils.createNumber("-1.1E-700F");
+-        assertEquals(BigDecimal.class,bigNum.getClass());
+-        assertNotNull(bigNum);
+-
+-        // Check that the code fails to create a valid number when preceeded by -- rather than -
+-        try {
+-            NumberUtils.createNumber("--1.1E-700F");
+-            fail("Expected NumberFormatException");
+-        } catch (NumberFormatException nfe) {
+-            // expected
+-        }
+     }
+ 
+     @Test

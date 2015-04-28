@@ -1,0 +1,15 @@
+org.apache.commons.math3.exception.MathInternalError
+org.apache.commons.math3.exception.MathIllegalArgumentException
+org.apache.commons.math3.exception.util.Localizable
+org.apache.commons.math3.exception.NumberIsTooSmallException
+org.apache.commons.math3.exception.MathIllegalNumberException
+org.apache.commons.math3.exception.NullArgumentException
+org.apache.commons.math3.exception.MathArithmeticException
+org.apache.commons.math3.util.MathArrays
+org.apache.commons.math3.exception.DimensionMismatchException
+org.apache.commons.math3.exception.util.ExceptionContextProvider
+org.apache.commons.math3.exception.MathIllegalStateException
+org.apache.commons.math3.exception.NoDataException
+org.apache.commons.math3.exception.NotPositiveException
+org.apache.commons.math3.exception.NonMonotonicSequenceException
+org.apache.commons.math3.exception.NotStrictlyPositiveException

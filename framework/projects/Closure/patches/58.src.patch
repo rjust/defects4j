@@ -1,0 +1,19 @@
+diff --git a/com/google/javascript/jscomp/LiveVariablesAnalysis.java b/com/google/javascript/jscomp/LiveVariablesAnalysis.java
+index e107faa..772d251 100644
+--- a/com/google/javascript/jscomp/LiveVariablesAnalysis.java
++++ b/com/google/javascript/jscomp/LiveVariablesAnalysis.java
+@@ -203,12 +203,8 @@ class LiveVariablesAnalysis extends
+             // for(var x in y) {...}
+             lhs = lhs.getLastChild();
+           }
+-          if (NodeUtil.isName(lhs)) {
+-            addToSetIfLocal(lhs, kill);
+-            addToSetIfLocal(lhs, gen);
+-          } else {
+-            computeGenKill(lhs, gen, kill, conditional);
+-          }
++          addToSetIfLocal(lhs, kill);
++          addToSetIfLocal(lhs, gen);
+           computeGenKill(rhs, gen, kill, conditional);
+         }
+         return;

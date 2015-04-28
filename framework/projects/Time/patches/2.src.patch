@@ -1,0 +1,55 @@
+diff --git a/org/joda/time/Partial.java b/org/joda/time/Partial.java
+index 3b84fdc..8e8e603 100644
+--- a/org/joda/time/Partial.java
++++ b/org/joda/time/Partial.java
+@@ -215,14 +215,13 @@ public final class Partial
+             DurationField loopUnitField = loopType.getDurationType().getField(iChronology);
+             if (i > 0) {
+                 int compare = lastUnitField.compareTo(loopUnitField);
+-                if (compare < 0) {
++                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {
+                     throw new IllegalArgumentException("Types array must be in order largest-smallest: " +
+                             types[i - 1].getName() + " < " + loopType.getName());
+                 } else if (compare == 0) {
+                     if (types[i - 1].getRangeDurationType() == null) {
+                         if (loopType.getRangeDurationType() == null) {
+-                            throw new IllegalArgumentException("Types array must not contain duplicate: " +
+-                                            types[i - 1].getName() + " and " + loopType.getName());
++                            throw new IllegalArgumentException("Types array must not contain duplicate: " + loopType.getName());
+                         }
+                     } else {
+                         if (loopType.getRangeDurationType() == null) {
+@@ -236,8 +235,7 @@ public final class Partial
+                                     types[i - 1].getName() + " < " + loopType.getName());
+                         }
+                         if (lastRangeField.compareTo(loopRangeField) == 0) {
+-                            throw new IllegalArgumentException("Types array must not contain duplicate: " +
+-                                            types[i - 1].getName() + " and " + loopType.getName());
++                            throw new IllegalArgumentException("Types array must not contain duplicate: " + loopType.getName());
+                         }
+                     }
+                 }
+@@ -446,9 +444,6 @@ public final class Partial
+                         if (compare > 0) {
+                             break;
+                         } else if (compare == 0) {
+-                            if (fieldType.getRangeDurationType() == null) {
+-                                break;
+-                            }
+                             DurationField rangeField = fieldType.getRangeDurationType().getField(iChronology);
+                             DurationField loopRangeField = loopType.getRangeDurationType().getField(iChronology);
+                             if (rangeField.compareTo(loopRangeField) > 0) {
+diff --git a/org/joda/time/field/UnsupportedDurationField.java b/org/joda/time/field/UnsupportedDurationField.java
+index 7e0ce57..bf44e01 100644
+--- a/org/joda/time/field/UnsupportedDurationField.java
++++ b/org/joda/time/field/UnsupportedDurationField.java
+@@ -224,9 +224,6 @@ public final class UnsupportedDurationField extends DurationField implements Ser
+      * @return zero always
+      */
+     public int compareTo(DurationField durationField) {
+-        if (durationField.isSupported()) {
+-            return 1;
+-        }
+         return 0;
+     }
+ 

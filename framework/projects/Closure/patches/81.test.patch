@@ -1,0 +1,1295 @@
+diff --git a/com/google/javascript/jscomp/AliasStringsTest.java b/com/google/javascript/jscomp/AliasStringsTest.java
+index 78c2500..7611e6b 100644
+--- a/com/google/javascript/jscomp/AliasStringsTest.java
++++ b/com/google/javascript/jscomp/AliasStringsTest.java
+@@ -73,13 +73,12 @@ public class AliasStringsTest extends CompilerTestCase {
+   public void testSeveral() {
+     strings = ImmutableSet.of("", "px", "none", "width");
+ 
+-    test("function f() {" +
+-         "var styles=['width',100,'px','display','none'].join('')}",
++    test("function() {var styles=['width',100,'px','display','none'].join('')}",
+          "var $$S_width='width';" +
+          "var $$S_px='px';" +
+          "var $$S_none='none';" +
+          "var $$S_='';" +
+-         "function f() {var styles=[$$S_width,100,$$S_px,'display'," +
++         "function() {var styles=[$$S_width,100,$$S_px,'display'," +
+          "$$S_none].join($$S_)}");
+   }
+ 
+@@ -90,22 +89,22 @@ public class AliasStringsTest extends CompilerTestCase {
+ 
+     // string as key
+     test("var foo={'px':435}", "var foo={px:435}");
+-    test("bar=function f(){return {'px':435}}",
+-         "bar=function f(){return {px:435}}");
++    test("bar=function(){return {'px':435}}",
++         "bar=function(){return {px:435}}");
+ 
+-    test("function f() {var foo={bar:'!@#$%^&*()'}}",
++    test("function() {var foo={bar:'!@#$%^&*()'}}",
+          "var $$S_$21$40$23$24$25$5e$26$2a$28$29='!@#$%^&*()';" +
+-         "function f() {var foo={bar:$$S_$21$40$23$24$25$5e$26$2a$28$29}}");
++         "function() {var foo={bar:$$S_$21$40$23$24$25$5e$26$2a$28$29}}");
+ 
+-    test("function f() {var foo={px:435,foo:'px',bar:'baz'}}",
++    test("function() {var foo={px:435,foo:'px',bar:'baz'}}",
+          "var $$S_px='px';" +
+-         "function f() {var foo={px:435,foo:$$S_px,bar:'baz'}}");
++         "function() {var foo={px:435,foo:$$S_px,bar:'baz'}}");
+   }
+ 
+   public void testGetProp() {
+     strings = ImmutableSet.of("px", "width");
+ 
+-    testSame("function f(){element.style.px=1234}");
++    testSame("function(){element.style.px=1234}");
+ 
+     test("function f(){shape.width.units='px'}",
+         "var $$S_px='px';function f(){shape.width.units=$$S_px}");
+@@ -134,9 +133,9 @@ public class AliasStringsTest extends CompilerTestCase {
+   }
+ 
+   public void testBlackList() {
+-    test("(function (){var f=\'sec ret\';g=\"TOPseCreT\"})",
++    test("function(){var f=\'sec ret\';g=\"TOPseCreT\"}",
+          "var $$S_sec$20ret='sec ret';" +
+-         "(function (){var f=$$S_sec$20ret;g=\"TOPseCreT\"})");
++         "function(){var f=$$S_sec$20ret;g=\"TOPseCreT\"}");
+   }
+ 
+   public void testLongStableAlias() {
+diff --git a/com/google/javascript/jscomp/AstParallelizerTest.java b/com/google/javascript/jscomp/AstParallelizerTest.java
+index 8f38d23..1ac4170 100644
+--- a/com/google/javascript/jscomp/AstParallelizerTest.java
++++ b/com/google/javascript/jscomp/AstParallelizerTest.java
+@@ -50,39 +50,31 @@ public class AstParallelizerTest extends TestCase {
+                    "function foo(x) { foo(1) }");
+   }
+ 
+-  // TODO(johnlenz): This test is invalid it relies on allowing
+-  // nameless function statements, which does not parse.
+-  public void disable_testSplitAnonFuntion() {
++  public void testSplitAnonFuntion() {
+     splitFunctions("var foo = function(x) { foo(1) }; foo(1)",
+                    "var foo = function " + HOLDER + "() {}; foo(1)",
+-                   "(function(x) { foo(1) })");
++                   "function(x) { foo(1) }");
+   }
+ 
+-  // TODO(johnlenz): This test is invalid it relies on allowing
+-  // nameless function statements, which does not parse.
+-  public void disable_testSplitInplaceCall() {
++  public void testSplitInplaceCall() {
+     splitFunctions("(function() { print('hi') })()",
+                    "(function " + HOLDER + "() {})()",
+-                   "(function() { print('hi') })");
++                   "function() { print('hi') }");
+   }
+ 
+-  // TODO(johnlenz): This test is invalid it relies on allowing
+-  // nameless function statements, which does not parse.
+-  public void disable_testSplitMupltiFuntions() {
++  public void testSplitMupltiFuntions() {
+     splitFunctions("var foo = function(x) { foo(1) }; foo();" +
+                    "var bar = function(x,y) { bar(1,2) }; bar(1,2)",
+                    // Output Root
+                    "var foo = function " + HOLDER + "() {}; foo();" +
+                    "var bar = function " + HOLDER + "() {}; bar(1,2)",
+                    // foo
+-                   "(function(x) { foo(1) })",
++                   "function(x) { foo(1) }",
+                    // bar
+-                   "(function(x,y) { bar(1,2) })");
++                   "function(x,y) { bar(1,2) }");
+   }
+ 
+-  // TODO(johnlenz): This test is invalid it relies on allowing
+-  // nameless function statements, which does not parse.
+-  public void disable_testInnerFunctions() {
++  public void testInnerFunctions() {
+     splitFunctions("var foo = function() {var bar = function() {}}",
+                    "var foo = function " + HOLDER + "() {}",
+                    "function() {var bar = function() {}}");
+diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+index 33bd023..585df22 100644
+--- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+@@ -131,11 +131,11 @@ public class CheckGlobalThisTest extends CompilerTestCase {
+   }
+ 
+   public void testThisJSDoc4() throws Exception {
+-    testSame("/** @this whatever */function f() { this.foo = 56; }");
++    testSame("/** @this whatever */function() { this.foo = 56; }");
+   }
+ 
+   public void testThisJSDoc5() throws Exception {
+-    testSame("function a() { /** @this x */function f() { this.foo = 56; } }");
++    testSame("function a() { /** @this x */function() { this.foo = 56; } }");
+   }
+ 
+   public void testMethod1() {
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index 0818b64..7afc665 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -983,11 +983,11 @@ public class CodePrinterTest extends TestCase {
+ 
+   public void testDoLoopIECompatiblity() {
+     // Do loops within IFs cause syntax errors in IE6 and IE7.
+-    assertPrint("function f(){if(e1){do foo();while(e2)}else foo()}",
+-        "function f(){if(e1){do foo();while(e2)}else foo()}");
++    assertPrint("function(){if(e1){do foo();while(e2)}else foo()}",
++        "function(){if(e1){do foo();while(e2)}else foo()}");
+ 
+-    assertPrint("function f(){if(e1)do foo();while(e2)else foo()}",
+-        "function f(){if(e1){do foo();while(e2)}else foo()}");
++    assertPrint("function(){if(e1)do foo();while(e2)else foo()}",
++        "function(){if(e1){do foo();while(e2)}else foo()}");
+ 
+     assertPrint("if(x){do{foo()}while(y)}else bar()",
+         "if(x){do foo();while(y)}else bar()");
+@@ -1010,11 +1010,11 @@ public class CodePrinterTest extends TestCase {
+ 
+   public void testFunctionSafariCompatiblity() {
+     // Functions within IFs cause syntax errors on Safari.
+-    assertPrint("function f(){if(e1){function goo(){return true}}else foo()}",
+-        "function f(){if(e1){function goo(){return true}}else foo()}");
++    assertPrint("function(){if(e1){function goo(){return true}}else foo()}",
++        "function(){if(e1){function goo(){return true}}else foo()}");
+ 
+-    assertPrint("function f(){if(e1)function goo(){return true}else foo()}",
+-        "function f(){if(e1){function goo(){return true}}else foo()}");
++    assertPrint("function(){if(e1)function goo(){return true}else foo()}",
++        "function(){if(e1){function goo(){return true}}else foo()}");
+ 
+     assertPrint("if(e1){function goo(){return true}}",
+         "if(e1){function goo(){return true}}");
+diff --git a/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java b/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
+index 84d0bfc..d077f14 100644
+--- a/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
++++ b/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
+@@ -68,8 +68,8 @@ public class CollapseVariableDeclarationsTest extends CompilerTestCase {
+ 
+     test("a = null; this.foo = null;",
+          "this.foo = a = null");
+-    test("function f(){ a = null; return null; }",
+-         "function f(){return a = null}");
++    test("function(){ a = null; return null; }",
++         "function(){return a = null}");
+     test("a = true; if (a) { foo(); }",
+          "if (a = true) { foo() }");
+     test("a = true; if (a && a) { foo(); }",
+diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index d54122a..6f7e5e5 100644
+--- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -175,7 +175,7 @@ public class CommandLineRunnerTest extends TestCase {
+   }
+ 
+   public void testDuplicateParams() {
+-    test("function f(a, a) {}", RhinoErrorReporter.DUPLICATE_PARAM);
++    test("function (a, a) {}", RhinoErrorReporter.DUPLICATE_PARAM);
+     assertTrue(lastCompiler.hasHaltingErrors());
+   }
+ 
+@@ -633,12 +633,9 @@ public class CommandLineRunnerTest extends TestCase {
+         "  node0 [label=\"BLOCK\"];\n" +
+         "  node1 [label=\"SCRIPT\"];\n" +
+         "  node0 -> node1 [weight=1];\n" +
+-        "  node1 -> RETURN [label=\"UNCOND\", " +
+-            "fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
+-        "  node0 -> RETURN [label=\"SYN_BLOCK\", " +
+-            "fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
+-        "  node0 -> node1 [label=\"UNCOND\", " +
+-            "fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
++        "  node1 -> RETURN [label=\"UNCOND\", fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
++        "  node0 -> RETURN [label=\"SYN_BLOCK\", fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
++        "  node0 -> node1 [label=\"UNCOND\", fontcolor=\"red\", weight=0.01, color=\"red\"];\n" +
+         "}\n\n",
+         new String(outReader.toByteArray()));
+   }
+diff --git a/com/google/javascript/jscomp/CreateSyntheticBlocksTest.java b/com/google/javascript/jscomp/CreateSyntheticBlocksTest.java
+index ec5039d..73141ba 100644
+--- a/com/google/javascript/jscomp/CreateSyntheticBlocksTest.java
++++ b/com/google/javascript/jscomp/CreateSyntheticBlocksTest.java
+@@ -63,25 +63,25 @@ public class CreateSyntheticBlocksTest extends CompilerTestCase {
+   // TODO(johnlenz): Add tests to the IntegrationTest.
+ 
+   public void testFold1() {
+-    test("function f() { if (x) return; y(); }",
+-         "function f(){x||y()}");
++    test("function() { if (x) return; y(); }",
++         "function(){x||y()}");
+   }
+ 
+   public void testFoldWithMarkers1() {
+-    testSame("function f(){startMarker();if(x)return;endMarker();y()}");
++    testSame("function(){startMarker();if(x)return;endMarker();y()}");
+   }
+ 
+   public void testFoldWithMarkers1a() {
+-    testSame("function f(){startMarker();if(x)return;endMarker()}");
++    testSame("function(){startMarker();if(x)return;endMarker()}");
+   }
+ 
+   public void testFold2() {
+-    test("function f() { if (x) return; y(); if (a) return; b(); }",
+-         "function f(){if(!x){y();a||b()}}");
++    test("function() { if (x) return; y(); if (a) return; b(); }",
++         "function(){if(!x){y();a||b()}}");
+   }
+ 
+   public void testFoldWithMarkers2() {
+-    testSame("function f(){startMarker(\"FOO\");startMarker(\"BAR\");" +
++    testSame("function(){startMarker(\"FOO\");startMarker(\"BAR\");" +
+              "if(x)return;endMarker(\"BAR\");y();if(a)return;" +
+              "endMarker(\"FOO\");b()}");
+   }
+diff --git a/com/google/javascript/jscomp/DenormalizeTest.java b/com/google/javascript/jscomp/DenormalizeTest.java
+index 50d26ca..5de6c86 100644
+--- a/com/google/javascript/jscomp/DenormalizeTest.java
++++ b/com/google/javascript/jscomp/DenormalizeTest.java
+@@ -56,9 +56,9 @@ public class DenormalizeTest extends CompilerTestCase {
+          "for(init(); a < 2 ; a++) foo();");
+ 
+     // Other statements are left as is.
+-    test("function f(){ var a; for(; a < 2 ; a++) foo() }",
+-         "function f(){ for(var a; a < 2 ; a++) foo() }");
+-    testSame("function f(){ return; for(; a < 2 ; a++) foo() }");
++    test("function(){ var a; for(; a < 2 ; a++) foo() }",
++         "function(){ for(var a; a < 2 ; a++) foo() }");
++    testSame("function(){ return; for(; a < 2 ; a++) foo() }");
+   }
+ 
+   public void testForIn() {
+@@ -78,7 +78,7 @@ public class DenormalizeTest extends CompilerTestCase {
+     testSame("init(); for(a in b) foo()");
+ 
+     // Other statements are left as is.
+-    testSame("function f(){ return; for(a in b) foo() }");
++    testSame("function(){ return; for(a in b) foo() }");
+   }
+ 
+   public void testInOperatorNotInsideFor() {
+@@ -88,16 +88,15 @@ public class DenormalizeTest extends CompilerTestCase {
+     // a for loop, even if it's protected by parentheses.
+ 
+     // Make sure the in operator doesn't get moved into the for loop.
+-    testSame("function f(){ var a; var i=\"length\" in a;" +
++    testSame("function(){ var a; var i=\"length\" in a;" +
+         "for(; a < 2 ; a++) foo() }");
+     // Same, but with parens around the operator.
+-    testSame("function f(){ var a; var i=(\"length\" in a);" +
++    testSame("function(){ var a; var i=(\"length\" in a);" +
+         "for(; a < 2 ; a++) foo() }");
+     // Make sure Normalize yanks the variable initializer out, and
+     // Denormalize doesn't put it back.
+-    test("function f(){" +
+-         "var b,a=0; for (var i=(\"length\" in b);a<2; a++) foo()}",
+-         "function f(){var b; var a=0;var i=(\"length\" in b);" +
++    test("function(){var b,a=0; for (var i=(\"length\" in b);a<2; a++) foo()}",
++         "function(){var b; var a=0;var i=(\"length\" in b);" +
+          "for (;a<2;a++) foo()}");
+   }
+ 
+diff --git a/com/google/javascript/jscomp/ExpressionDecomposerTest.java b/com/google/javascript/jscomp/ExpressionDecomposerTest.java
+index 7c76ccb..58a79c2 100644
+--- a/com/google/javascript/jscomp/ExpressionDecomposerTest.java
++++ b/com/google/javascript/jscomp/ExpressionDecomposerTest.java
+@@ -75,7 +75,7 @@ public class ExpressionDecomposerTest extends TestCase {
+     helperCanExposeExpression(
+         DecompositionType.MOVABLE, "switch(foo()){}", "foo");
+     helperCanExposeExpression(
+-        DecompositionType.MOVABLE, "function f(){ return foo();}", "foo");
++        DecompositionType.MOVABLE, "function (){ return foo();}", "foo");
+ 
+     helperCanExposeExpression(
+         DecompositionType.MOVABLE, "x = foo() && 1", "foo");
+@@ -113,7 +113,7 @@ public class ExpressionDecomposerTest extends TestCase {
+         DecompositionType.DECOMPOSABLE, "switch(x = goo() && foo()){}", "foo");
+     helperCanExposeExpression(
+         DecompositionType.DECOMPOSABLE,
+-        "function f(){ return goo() && foo();}", "foo");
++        "function (){ return goo() && foo();}", "foo");
+   }
+ 
+   public void testCanExposeExpression4() {
+@@ -190,9 +190,9 @@ public class ExpressionDecomposerTest extends TestCase {
+ 
+   public void testMoveExpression7() {
+     helperMoveExpression(
+-        "function f(){ return foo();}",
++        "function (){ return foo();}",
+         "foo",
+-        "function f(){ var temp$$0 = foo(); return temp$$0;}");
++        "function (){ var temp$$0 = foo(); return temp$$0;}");
+   }
+ 
+   public void testMoveExpression8() {
+@@ -290,9 +290,9 @@ public class ExpressionDecomposerTest extends TestCase {
+ 
+   public void testExposeExpression10() {
+     helperExposeExpression(
+-        "function f(){ return goo() && foo();}",
++        "function (){ return goo() && foo();}",
+         "foo",
+-        "function f(){" +
++        "function (){" +
+           "var temp$$0; if (temp$$0 = goo()) temp$$0 = foo();" +
+           "return temp$$0;" +
+          "}");
+diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+index 9157014..bc4ba6f 100644
+--- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+@@ -374,11 +374,11 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
+     testSame("function _func(x) { print(x) }");
+     testSame("function _func(x,y) { if(y) { x = 1 }; print(x) }");
+ 
+-    test("function f(x, y) { x = 1; print(x) }",
+-         "function f(x, y) { print(1) }");
++    test("function(x, y) { x = 1; print(x) }",
++         "function(x, y) { print(1) }");
+ 
+-    test("function f(x, y) { if (y) { x = 1; print(x) }}",
+-         "function f(x, y) { if (y) { print(1) }}");
++    test("function(x, y) { if (y) { x = 1; print(x) }}",
++         "function(x, y) { if (y) { print(1) }}");
+   }
+ 
+   private void noInline(String input) {
+diff --git a/com/google/javascript/jscomp/FunctionArgumentInjectorTest.java b/com/google/javascript/jscomp/FunctionArgumentInjectorTest.java
+index d4cda86..cd7ce76 100644
+--- a/com/google/javascript/jscomp/FunctionArgumentInjectorTest.java
++++ b/com/google/javascript/jscomp/FunctionArgumentInjectorTest.java
+@@ -43,31 +43,31 @@ public class FunctionArgumentInjectorTest extends TestCase {
+   public void testFindModifiedParameters1() {
+     assertEquals(Sets.newHashSet(),
+         FunctionArgumentInjector.findModifiedParameters(
+-            parseFunction("function f(a){ return a==0; }")));
++            parseFunction("function (a){ return a==0; }")));
+   }
+ 
+   public void testFindModifiedParameters2() {
+     assertEquals(Sets.newHashSet(),
+         FunctionArgumentInjector.findModifiedParameters(
+-            parseFunction("function f(a){ b=a }")));
++            parseFunction("function (a){ b=a }")));
+   }
+ 
+   public void testFindModifiedParameters3() {
+     assertEquals(Sets.newHashSet("a"),
+         FunctionArgumentInjector.findModifiedParameters(
+-            parseFunction("function f(a){ a=0 }")));
++            parseFunction("function (a){ a=0 }")));
+   }
+ 
+   public void testFindModifiedParameters4() {
+     assertEquals(Sets.newHashSet("a", "b"),
+         FunctionArgumentInjector.findModifiedParameters(
+-            parseFunction("function f(a,b){ a=0;b=0 }")));
++            parseFunction("function (a,b){ a=0;b=0 }")));
+   }
+ 
+   public void testFindModifiedParameters5() {
+     assertEquals(Sets.newHashSet("b"),
+         FunctionArgumentInjector.findModifiedParameters(
+-            parseFunction("function f(a,b){ a; if (a) b=0 }")));
++            parseFunction("function (a,b){ a; if (a) b=0 }")));
+   }
+ 
+   public void testMaybeAddTempsForCallArguments1() {
+@@ -191,7 +191,7 @@ public class FunctionArgumentInjectorTest extends TestCase {
+         "function foo(a,b){goo();for(;;){a;b;}}; foo(x,y);",
+         "foo",
+         Sets.newHashSet("a", "b"));
+-  }
++  }  
+ 
+   public void testMaybeAddTempsForCallArguments20() {
+     // A long string referenced more than once should have a temp.
+diff --git a/com/google/javascript/jscomp/FunctionInjectorTest.java b/com/google/javascript/jscomp/FunctionInjectorTest.java
+index 76cf9f9..ac76a24 100644
+--- a/com/google/javascript/jscomp/FunctionInjectorTest.java
++++ b/com/google/javascript/jscomp/FunctionInjectorTest.java
+@@ -46,37 +46,37 @@ public class FunctionInjectorTest extends TestCase {
+ 
+   public void testIsSimpleFunction1() {
+     assertTrue(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){}")));
++        prep("function(){}")));
+   }
+ 
+   public void testIsSimpleFunction2() {
+     assertTrue(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){return 0;}")));
++        prep("function(){return 0;}")));
+   }
+ 
+   public void testIsSimpleFunction3() {
+     assertTrue(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){return x ? 0 : 1}")));
++        prep("function(){return x ? 0 : 1}")));
+   }
+ 
+   public void testIsSimpleFunction4() {
+     assertFalse(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){return;}")));
++        prep("function(){return;}")));
+   }
+ 
+   public void testIsSimpleFunction5() {
+     assertFalse(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){return 0; return 0;}")));
++        prep("function(){return 0; return 0;}")));
+   }
+ 
+   public void testIsSimpleFunction6() {
+     assertFalse(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){var x=true;return x ? 0 : 1}")));
++        prep("function(){var x=true;return x ? 0 : 1}")));
+   }
+ 
+   public void testIsSimpleFunction7() {
+     assertFalse(getInjector().isDirectCallNodeReplacementPossible(
+-        prep("function f(){if (x) return 0; else return 1}")));
++        prep("function(){if (x) return 0; else return 1}")));
+   }
+ 
+   public void testCanInlineReferenceToFunction1() {
+diff --git a/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java b/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+index 30c9518..20dd5a4 100644
+--- a/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
++++ b/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+@@ -92,15 +92,15 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+   private String wrapInFunction(String s) {
+     return "function f(){" + s + "}";
+   }
+-
++  
+   public void testInFunction(String original, String expected) {
+     test(wrapInFunction(original), wrapInFunction(expected));
+   }
+-
++  
+   public void testSameInFunction(String original) {
+     testSame(wrapInFunction(original));
+-  }
+-
++  }  
++  
+   public void testMakeLocalNamesUniqueWithContext1() {
+     // Set the test type
+     this.useDefaultRenamer = true;
+@@ -214,7 +214,7 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+         "function foo(){var arguments;function bar(){var arguments;}}");
+ 
+     invert = true;
+-
++    
+     // Don't introduce new references to arguments, it is special.
+     test(
+         "function foo(){var arguments$$1;}",
+@@ -274,14 +274,14 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+     testSame("function f() { var $$; }");
+     test("var CONST = 3; var b = CONST;",
+          "var CONST = 3; var b = CONST;");
+-    test("function f() {var CONST = 3; var ACONST$$1 = 2;}",
+-         "function f() {var CONST = 3; var ACONST = 2;}");
++    test("function() {var CONST = 3; var ACONST$$1 = 2;}",
++         "function() {var CONST = 3; var ACONST = 2;}");
+   }
+ 
+   public void testOnlyInversion2() {
+     invert = true;
+-    test("function f() {try { } catch(e) {e;}; try { } catch(e$$0) {e$$0;}}",
+-        "function f() {try { } catch(e) {e;}; try { } catch(e$$1) {e$$1;}}");
++    test("function () {try { } catch(e) {e;}; try { } catch(e$$0) {e$$0;}}",
++        "function () {try { } catch(e) {e;}; try { } catch(e$$1) {e$$1;}}");
+   }
+ 
+   public void testOnlyInversion3() {
+@@ -326,8 +326,8 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+ 
+   public void testConstRemovingRename1() {
+     removeConst = true;
+-    test("(function () {var CONST = 3; var ACONST$$1 = 2;})",
+-         "(function () {var CONST$$unique_0 = 3; var ACONST$$unique_1 = 2;})");
++    test("function() {var CONST = 3; var ACONST$$1 = 2;}",
++         "function() {var CONST$$unique_0 = 3; var ACONST$$unique_1 = 2;}");
+   }
+ 
+   public void testConstRemovingRename2() {
+diff --git a/com/google/javascript/jscomp/MinimizeExitPointsTest.java b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
+index 568eca0..67e98a6 100644
+--- a/com/google/javascript/jscomp/MinimizeExitPointsTest.java
++++ b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
+@@ -88,48 +88,48 @@ public class MinimizeExitPointsTest extends CompilerTestCase {
+   }
+ 
+   public void testFunctionReturnOptimization() throws Exception {
+-    fold("function f(){if(a()){b();if(c())return;}}",
+-         "function f(){if(a()){b();if(c());}}");
+-    fold("function f(){if(x)return; x=3; return; }",
+-         "function f(){if(x); else x=3}");
+-    fold("function f(){if(true){a();return;}else;b();}",
+-         "function f(){if(true){a();}else{b();}}");
+-    fold("function f(){if(false){a();return;}else;b();return;}",
+-         "function f(){if(false){a();}else{b();}}");
+-    fold("function f(){if(a()){b();return;}else;c();}",
+-         "function f(){if(a()){b();}else{c();}}");
+-    fold("function f(){if(a()){b()}else{c();return;}}",
+-         "function f(){if(a()){b()}else{c();}}");
+-    fold("function f(){if(a()){b();return;}else;}",
+-         "function f(){if(a()){b();}else;}");
+-    fold("function f(){if(a()){return;}else{return;} return;}",
+-         "function f(){if(a()){}else{}}");
+-    fold("function f(){if(a()){return;}else{return;} b();}",
+-         "function f(){if(a()){}else{return;b()}}");
+-
+-    fold("function f(){while(a())return;}",
+-         "function f(){while(a())return}");
+-    foldSame("function f(){for(x in a())return}");
+-
+-    fold("function f(){while(a())break;}",
+-         "function f(){while(a())break}");
+-    foldSame("function f(){for(x in a())break}");
+-
+-    fold("function f(){try{return;}catch(e){return;}finally{return}}",
+-         "function f(){try{}catch(e){}finally{}}");
+-    fold("function f(){try{return;}catch(e){return;}}",
+-         "function f(){try{}catch(e){}}");
+-    fold("function f(){try{return;}finally{return;}}",
+-         "function f(){try{}finally{}}");
+-    fold("function f(){try{if(a()){return;}else{return;} return;}catch(e){}}",
+-         "function f(){try{if(a()){}else{}}catch(e){}}");
+-
+-    fold("function f(){g:return}",
+-         "function f(){}");
+-    fold("function f(){g:if(a()){return;}else{return;} return;}",
+-         "function f(){g:if(a()){}else{}}");
+-    fold("function f(){try{g:if(a()){} return;}finally{return}}",
+-         "function f(){try{g:if(a()){}}finally{}}");
++    fold("function(){if(a()){b();if(c())return;}}",
++         "function(){if(a()){b();if(c());}}");
++    fold("function(){if(x)return; x=3; return; }",
++         "function(){if(x); else x=3}");
++    fold("function(){if(true){a();return;}else;b();}",
++         "function(){if(true){a();}else{b();}}");
++    fold("function(){if(false){a();return;}else;b();return;}",
++         "function(){if(false){a();}else{b();}}");
++    fold("function(){if(a()){b();return;}else;c();}",
++         "function(){if(a()){b();}else{c();}}");
++    fold("function(){if(a()){b()}else{c();return;}}",
++         "function(){if(a()){b()}else{c();}}");
++    fold("function(){if(a()){b();return;}else;}",
++         "function(){if(a()){b();}else;}");
++    fold("function(){if(a()){return;}else{return;} return;}",
++         "function(){if(a()){}else{}}");
++    fold("function(){if(a()){return;}else{return;} b();}",
++         "function(){if(a()){}else{return;b()}}");
++
++    fold("function(){while(a())return;}",
++         "function(){while(a())return}");
++    foldSame("function(){for(x in a())return}");
++
++    fold("function(){while(a())break;}",
++         "function(){while(a())break}");
++    foldSame("function(){for(x in a())break}");
++
++    fold("function(){try{return;}catch(e){return;}finally{return}}",
++         "function(){try{}catch(e){}finally{}}");
++    fold("function(){try{return;}catch(e){return;}}",
++         "function(){try{}catch(e){}}");
++    fold("function(){try{return;}finally{return;}}",
++         "function(){try{}finally{}}");
++    fold("function(){try{if(a()){return;}else{return;} return;}catch(e){}}",
++         "function(){try{if(a()){}else{}}catch(e){}}");
++
++    fold("function(){g:return}",
++         "function(){}");
++    fold("function(){g:if(a()){return;}else{return;} return;}",
++         "function(){g:if(a()){}else{}}");
++    fold("function(){try{g:if(a()){} return;}finally{return}}",
++         "function(){try{g:if(a()){}}finally{}}");
+   }
+ 
+   public void testWhileContinueOptimization() throws Exception {
+diff --git a/com/google/javascript/jscomp/NameAnonymousFunctionsMappedTest.java b/com/google/javascript/jscomp/NameAnonymousFunctionsMappedTest.java
+index fa9cd7e..f26193d 100644
+--- a/com/google/javascript/jscomp/NameAnonymousFunctionsMappedTest.java
++++ b/com/google/javascript/jscomp/NameAnonymousFunctionsMappedTest.java
+@@ -133,8 +133,8 @@ public class NameAnonymousFunctionsMappedTest extends CompilerTestCase {
+   }
+ 
+   public void testAssignmentToGetElem() {
+-    test("function f() { win['x' + this.id] = function(a){}; }",
+-         "function f() { win['x' + this.id] = function $(a){}; }");
++    test("function() { win['x' + this.id] = function(a){}; }",
++         "function() { win['x' + this.id] = function $(a){}; }");
+ 
+     // TODO - could probably do a better job encoding these
+     assertMapping("$", "win[\"x\"+this.id]");
+diff --git a/com/google/javascript/jscomp/NameAnonymousFunctionsTest.java b/com/google/javascript/jscomp/NameAnonymousFunctionsTest.java
+index 0191bb1..f04c5ef 100644
+--- a/com/google/javascript/jscomp/NameAnonymousFunctionsTest.java
++++ b/com/google/javascript/jscomp/NameAnonymousFunctionsTest.java
+@@ -104,8 +104,8 @@ public class NameAnonymousFunctionsTest extends CompilerTestCase {
+   }
+ 
+   public void testAssignmentToGetElem() {
+-    test("function f() {win['x' + this.id] = function(a){};}",
+-         "function f() {win['x' + this.id] = function $win$x$this$id$(a){};}");
++    test("function() { win['x' + this.id] = function(a){}; }",
++         "function() { win['x' + this.id] = function $win$x$this$id$(a){}; }");
+   }
+ 
+   public void testGetElemWithDashes() {
+diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+index 98e8e92..a13aa48 100644
+--- a/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/com/google/javascript/jscomp/NodeUtilTest.java
+@@ -685,10 +685,10 @@ public class NodeUtilTest extends TestCase {
+             parse("foo();")));
+     assertNodeNames(Sets.<String>newHashSet(),
+         NodeUtil.getVarsDeclaredInBranch(
+-            parse("function f(){var foo;}")));
++            parse("function(){var foo;}")));
+     assertNodeNames(Sets.newHashSet("goo"),
+         NodeUtil.getVarsDeclaredInBranch(
+-            parse("var goo;function f(){var foo;}")));
++            parse("var goo;function(){var foo;}")));
+   }
+ 
+   private void assertNodeNames(Set<String> nodeNames, Collection<Node> nodes) {
+diff --git a/com/google/javascript/jscomp/OptimizeArgumentsArrayTest.java b/com/google/javascript/jscomp/OptimizeArgumentsArrayTest.java
+index fb17440..999f741 100644
+--- a/com/google/javascript/jscomp/OptimizeArgumentsArrayTest.java
++++ b/com/google/javascript/jscomp/OptimizeArgumentsArrayTest.java
+@@ -42,19 +42,19 @@ public class OptimizeArgumentsArrayTest extends CompilerTestCase {
+   }
+ 
+   public void testNoVarArgs() {
+-    testSame("function f(a,b,c) { alert(a + b + c) }");
++    testSame("function(a,b,c) { alert(a + b + c) }");
+ 
+-    test("function f(a,b,c) { alert(arguments[0]) }",
+-         "function f(a,b,c) { alert(a) }");
++    test("function(a,b,c) { alert(arguments[0]) }",
++         "function(a,b,c) { alert(a) }");
+   }
+ 
+   public void testMissingVarArgs() {
+-    testSame("function f() { alert(arguments[x]) }");
++    testSame("function() { alert(arguments[x]) }");
+   }
+ 
+   public void testArgumentRefOnNamedParameter() {
+-    test("function f(a,b) { alert(arguments[0]) }",
+-         "function f(a,b) { alert(a) }");
++    test("function(a,b) { alert(arguments[0]) }",
++         "function(a,b) { alert(a) }");
+   }
+ 
+   public void testTwoVarArgs() {
+diff --git a/com/google/javascript/jscomp/PeepholeIntegrationTest.java b/com/google/javascript/jscomp/PeepholeIntegrationTest.java
+index bca3402..3279cb7 100644
+--- a/com/google/javascript/jscomp/PeepholeIntegrationTest.java
++++ b/com/google/javascript/jscomp/PeepholeIntegrationTest.java
+@@ -79,14 +79,14 @@ public class PeepholeIntegrationTest extends CompilerTestCase {
+ 
+   /** Check that removing blocks with 1 child works */
+   public void testFoldOneChildBlocksIntegration() {
+-     fold("function f(){switch(foo()){default:{break}}}",
+-          "function f(){foo()}");
++     fold("function(){switch(foo()){default:{break}}}",
++          "function(){foo()}");
+ 
+-     fold("function f(){switch(x){default:{break}}}",
+-          "function f(){}");
++     fold("function(){switch(x){default:{break}}}",
++          "function(){}");
+ 
+-     fold("function f(){switch(x){default:x;case 1:return 2}}",
+-          "function f(){switch(x){default:case 1:return 2}}");
++     fold("function(){switch(x){default:x;case 1:return 2}}",
++          "function(){switch(x){default:case 1:return 2}}");
+ 
+      // ensure that block folding does not break hook ifs
+      fold("if(x){if(true){foo();foo()}else{bar();bar()}}",
+@@ -135,8 +135,8 @@ public class PeepholeIntegrationTest extends CompilerTestCase {
+   /** Try to minimize returns */
+   public void testFoldReturnsIntegration() {
+     // if-then-else duplicate statement removal handles this case:
+-    fold("function f(){if(x)return;else return}",
+-         "function f(){}");
++    fold("function(){if(x)return;else return}",
++         "function(){}");
+   }
+ 
+   public void testBug1059649() {
+diff --git a/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java b/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
+index 30fec5d..b12d5f7 100644
+--- a/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
++++ b/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
+@@ -65,10 +65,10 @@ public class PeepholeRemoveDeadCodeTest extends CompilerTestCase {
+     fold("{'hi'}", "");
+     fold("{x==3}", "");
+     fold("{ (function(){x++}) }", "");
+-    fold("function f(){return;}", "function f(){return;}");
+-    fold("function f(){return 3;}", "function f(){return 3}");
+-    fold("function f(){if(x)return; x=3; return; }",
+-         "function f(){if(x)return; x=3; return; }");
++    fold("function(){return;}", "function(){return;}");
++    fold("function(){return 3;}", "function(){return 3}");
++    fold("function(){if(x)return; x=3; return; }",
++         "function(){if(x)return; x=3; return; }");
+     fold("{x=3;;;y=2;;;}", "x=3;y=2");
+ 
+     // Cases to test for empty block.
+@@ -588,7 +588,7 @@ public class PeepholeRemoveDeadCodeTest extends CompilerTestCase {
+   public void testNew2() {
+     test("1 + new Date;", "");
+   }
+-
++  
+   public void testFoldAssign() {
+     test("x=x", "");
+     testSame("x=xy");
+@@ -597,7 +597,7 @@ public class PeepholeRemoveDeadCodeTest extends CompilerTestCase {
+     test("var y=(x=x)", "var y=x");
+     test("y=1 + (x=x)", "y=1 + x");
+   }
+-
++  
+   public void testTryCatchFinally() {
+     testSame("try {foo()} catch (e) {bar()}");
+     testSame("try { try {foo()} catch (e) {bar()}} catch (x) {bar()}");
+@@ -605,5 +605,5 @@ public class PeepholeRemoveDeadCodeTest extends CompilerTestCase {
+     testSame("try {var x = 1} finally {x()}");
+     test("function f() { return; try{var x = 1}finally{} }",
+         "function f() { return; var x = 1; }");
+-  }
++  }  
+ }
+diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+index 3461fad..d9df7ae 100644
+--- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
++++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+@@ -27,9 +27,9 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+   // Needed for testFoldLiteralObjectConstructors(),
+   // testFoldLiteralArrayConstructors() and testFoldRegExp...()
+   private static final String FOLD_CONSTANTS_TEST_EXTERNS =
+-      "var Object = function f(){};\n" +
+-      "var RegExp = function f(a){};\n" +
+-      "var Array = function f(a){};\n";
++      "var Object = function(){};\n" +
++      "var RegExp = function(a){};\n" +
++      "var Array = function(a){};\n";
+ 
+   // TODO(user): Remove this when we no longer need to do string comparison.
+   private PeepholeSubstituteAlternateSyntaxTest(boolean compareAsTree) {
+@@ -95,52 +95,52 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+ 
+   /** Check that removing blocks with 1 child works */
+   public void testFoldOneChildBlocks() {
+-    fold("function f(){if(x)a();x=3}",
+-        "function f(){x&&a();x=3}");
+-    fold("function f(){if(x){a()}x=3}",
+-        "function f(){x&&a();x=3}");
+-    fold("function f(){if(x){return 3}}",
+-        "function f(){if(x)return 3}");
+-    fold("function f(){if(x){a()}}",
+-        "function f(){x&&a()}");
+-    fold("function f(){if(x){throw 1}}", "function f(){if(x)throw 1;}");
++    fold("function(){if(x)a();x=3}",
++        "function(){x&&a();x=3}");
++    fold("function(){if(x){a()}x=3}",
++        "function(){x&&a();x=3}");
++    fold("function(){if(x){return 3}}",
++        "function(){if(x)return 3}");
++    fold("function(){if(x){a()}}",
++        "function(){x&&a()}");
++    fold("function(){if(x){throw 1}}", "function(){if(x)throw 1;}");
+ 
+     // Try it out with functions
+-    fold("function f(){if(x){foo()}}", "function f(){x&&foo()}");
+-    fold("function f(){if(x){foo()}else{bar()}}",
+-         "function f(){x?foo():bar()}");
++    fold("function(){if(x){foo()}}", "function(){x&&foo()}");
++    fold("function(){if(x){foo()}else{bar()}}",
++         "function(){x?foo():bar()}");
+ 
+     // Try it out with properties and methods
+-    fold("function f(){if(x){a.b=1}}", "function f(){if(x)a.b=1}");
+-    fold("function f(){if(x){a.b*=1}}", "function f(){x&&(a.b*=1)}");
+-    fold("function f(){if(x){a.b+=1}}", "function f(){x&&(a.b+=1)}");
+-    fold("function f(){if(x){++a.b}}", "function f(){x&&++a.b}");
+-    fold("function f(){if(x){a.foo()}}", "function f(){x&&a.foo()}");
++    fold("function(){if(x){a.b=1}}", "function(){if(x)a.b=1}");
++    fold("function(){if(x){a.b*=1}}", "function(){x&&(a.b*=1)}");
++    fold("function(){if(x){a.b+=1}}", "function(){x&&(a.b+=1)}");
++    fold("function(){if(x){++a.b}}", "function(){x&&++a.b}");
++    fold("function(){if(x){a.foo()}}", "function(){x&&a.foo()}");
+ 
+     // Try it out with throw/catch/finally [which should not change]
+-    fold("function f(){try{foo()}catch(e){bar(e)}finally{baz()}}",
+-         "function f(){try{foo()}catch(e){bar(e)}finally{baz()}}");
++    fold("function(){try{foo()}catch(e){bar(e)}finally{baz()}}",
++         "function(){try{foo()}catch(e){bar(e)}finally{baz()}}");
+ 
+     // Try it out with switch statements
+-    fold("function f(){switch(x){case 1:break}}",
+-         "function f(){switch(x){case 1:break}}");
++    fold("function(){switch(x){case 1:break}}",
++         "function(){switch(x){case 1:break}}");
+ 
+     // Do while loops stay in a block if that's where they started
+-    fold("function f(){if(e1){do foo();while(e2)}else foo2()}",
+-         "function f(){if(e1){do foo();while(e2)}else foo2()}");
++    fold("function(){if(e1){do foo();while(e2)}else foo2()}",
++         "function(){if(e1){do foo();while(e2)}else foo2()}");
+     // Test an obscure case with do and while
+     fold("if(x){do{foo()}while(y)}else bar()",
+          "if(x){do foo();while(y)}else bar()");
+ 
+     // Play with nested IFs
+-    fold("function f(){if(x){if(y)foo()}}",
+-         "function f(){x&&y&&foo()}");
+-    fold("function f(){if(x){if(y)foo();else bar()}}",
+-         "function f(){x&&(y?foo():bar())}");
+-    fold("function f(){if(x){if(y)foo()}else bar()}",
+-         "function f(){if(x)y&&foo();else bar()}");
+-    fold("function f(){if(x){if(y)foo();else bar()}else{baz()}}",
+-         "function f(){if(x)y?foo():bar();else baz()}");
++    fold("function(){if(x){if(y)foo()}}",
++         "function(){x&&y&&foo()}");
++    fold("function(){if(x){if(y)foo();else bar()}}",
++         "function(){x&&(y?foo():bar())}");
++    fold("function(){if(x){if(y)foo()}else bar()}",
++         "function(){if(x)y&&foo();else bar()}");
++    fold("function(){if(x){if(y)foo();else bar()}else{baz()}}",
++         "function(){if(x)y?foo():bar();else baz()}");
+ 
+     fold("if(e1){while(e2){if(e3){foo()}}}else{bar()}",
+          "if(e1)while(e2)e3&&foo();else bar()");
+@@ -164,7 +164,7 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+     fold("if(a){if(b){f1();f2();}else if(c){f3();}}else {if(d){f4();}}",
+          "if(a)if(b){f1();f2()}else c&&f3();else d&&f4()");
+ 
+-    fold("function f(){foo()}", "function f(){foo()}");
++    fold("function(){foo()}", "function(){foo()}");
+     fold("switch(x){case y: foo()}", "switch(x){case y:foo()}");
+     fold("try{foo()}catch(ex){bar()}finally{baz()}",
+          "try{foo()}catch(ex){bar()}finally{baz()}");
+@@ -172,40 +172,40 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+ 
+   /** Try to minimize returns */
+   public void testFoldReturns() {
+-    fold("function f(){if(x)return 1;else return 2}",
+-         "function f(){return x?1:2}");
+-    fold("function f(){if(x)return 1+x;else return 2-x}",
+-         "function f(){return x?1+x:2-x}");
+-    fold("function f(){if(x)return y += 1;else return y += 2}",
+-         "function f(){return x?(y+=1):(y+=2)}");
++    fold("function(){if(x)return 1;else return 2}",
++         "function(){return x?1:2}");
++    fold("function(){if(x)return 1+x;else return 2-x}",
++         "function(){return x?1+x:2-x}");
++    fold("function(){if(x)return y += 1;else return y += 2}",
++         "function(){return x?(y+=1):(y+=2)}");
+ 
+-    fold("function f(){if(x)return;else return 2-x}",
+-         "function f(){if(x);else return 2-x}");
+-    fold("function f(){if(x)return x;else return}",
+-         "function f(){if(x)return x;else;}");
++    fold("function(){if(x)return;else return 2-x}",
++         "function(){if(x);else return 2-x}");
++    fold("function(){if(x)return x;else return}",
++         "function(){if(x)return x;else;}");
+ 
+-    foldSame("function f(){for(var x in y) { return x.y; } return k}");
++    foldSame("function(){for(var x in y) { return x.y; } return k}");
+   }
+ 
+   /** Try to minimize assignments */
+   public void testFoldAssignments() {
+-    fold("function f(){if(x)y=3;else y=4;}", "function f(){y=x?3:4}");
+-    fold("function f(){if(x)y=1+a;else y=2+a;}", "function f(){y=x?1+a:2+a}");
++    fold("function(){if(x)y=3;else y=4;}", "function(){y=x?3:4}");
++    fold("function(){if(x)y=1+a;else y=2+a;}", "function(){y=x?1+a:2+a}");
+ 
+     // and operation assignments
+-    fold("function f(){if(x)y+=1;else y+=2;}", "function f(){y+=x?1:2}");
+-    fold("function f(){if(x)y-=1;else y-=2;}", "function f(){y-=x?1:2}");
+-    fold("function f(){if(x)y%=1;else y%=2;}", "function f(){y%=x?1:2}");
+-    fold("function f(){if(x)y|=1;else y|=2;}", "function f(){y|=x?1:2}");
++    fold("function(){if(x)y+=1;else y+=2;}", "function(){y+=x?1:2}");
++    fold("function(){if(x)y-=1;else y-=2;}", "function(){y-=x?1:2}");
++    fold("function(){if(x)y%=1;else y%=2;}", "function(){y%=x?1:2}");
++    fold("function(){if(x)y|=1;else y|=2;}", "function(){y|=x?1:2}");
+ 
+     // sanity check, don't fold if the 2 ops don't match
+-    foldSame("function f(){if(x)y-=1;else y+=2}");
++    foldSame("function(){if(x)y-=1;else y+=2}");
+ 
+     // sanity check, don't fold if the 2 LHS don't match
+-    foldSame("function f(){if(x)y-=1;else z-=1}");
++    foldSame("function(){if(x)y-=1;else z-=1}");
+ 
+     // sanity check, don't fold if there are potential effects
+-    foldSame("function f(){if(x)y().a=3;else y().a=4}");
++    foldSame("function(){if(x)y().a=3;else y().a=4}");
+   }
+ 
+   public void testRemoveDuplicateStatements() {
+@@ -234,15 +234,15 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+   }
+ 
+   public void testNotCond() {
+-    fold("function f(){if(!x)foo()}", "function f(){x||foo()}");
+-    fold("function f(){if(!x)b=1}", "function f(){x||(b=1)}");
++    fold("function(){if(!x)foo()}", "function(){x||foo()}");
++    fold("function(){if(!x)b=1}", "function(){x||(b=1)}");
+     fold("if(!x)z=1;else if(y)z=2", "if(x){y&&(z=2)}else z=1");
+-    foldSame("function f(){if(!(x=1))a.b=1}");
++    foldSame("function(){if(!(x=1))a.b=1}");
+   }
+ 
+   public void testAndParenthesesCount() {
+-    fold("function f(){if(x||y)a.foo()}", "function f(){(x||y)&&a.foo()}");
+-    foldSame("function f(){if(x()||y()){x()||y()}}");
++    fold("function(){if(x||y)a.foo()}", "function(){(x||y)&&a.foo()}");
++    foldSame("function(){if(x()||y()){x()||y()}}");
+   }
+ 
+   public void testFoldLogicalOpStringCompare() {
+@@ -353,7 +353,7 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+ 
+     // Cannot fold, the constructor being used is actually a local function
+     foldSame("x = " +
+-         "(function f(){function Object(){this.x=4};return new Object();})();");
++         "(function(){function Object(){this.x=4};return new Object();})();");
+   }
+ 
+   public void testFoldLiteralArrayConstructors() {
+@@ -492,8 +492,8 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+     foldSame("function f(){return void foo();}");
+     fold("function f(){return undefined;}",
+          "function f(){}");
+-    fold("function f(){if(a()){return undefined;}}",
+-         "function f(){if(a()){}}");
++    fold("function(){if(a()){return undefined;}}",
++         "function(){if(a()){}}");
+   }
+ 
+   public void testFoldStandardConstructors() {
+@@ -740,7 +740,7 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+ 
+   public void testUndefined() {
+     foldSame("var x = undefined");
+-    foldSame("function f(f) {var undefined=2;var x = undefined;}");
++    foldSame("function (f) {var undefined=2;var x = undefined;}");
+     this.enableNormalize();
+     fold("var x = undefined", "var x=void 0");
+     foldSame(
+diff --git a/com/google/javascript/jscomp/RemoveTryCatchTest.java b/com/google/javascript/jscomp/RemoveTryCatchTest.java
+index 943950e..46cf784 100644
+--- a/com/google/javascript/jscomp/RemoveTryCatchTest.java
++++ b/com/google/javascript/jscomp/RemoveTryCatchTest.java
+@@ -58,7 +58,7 @@ public class RemoveTryCatchTest extends CompilerTestCase {
+   }
+ 
+   public void testPreserveTryBlockContainingReturnStatement() {
+-    testSame("function f(){var a;try{a=1;return}finally{a=2}}");
++    testSame("function(){var a;try{a=1;return}finally{a=2}}");
+   }
+ 
+   public void testPreserveAnnotatedTryBlock() {
+diff --git a/com/google/javascript/jscomp/RenameVarsTest.java b/com/google/javascript/jscomp/RenameVarsTest.java
+index 091ea8b..6aaca54 100644
+--- a/com/google/javascript/jscomp/RenameVarsTest.java
++++ b/com/google/javascript/jscomp/RenameVarsTest.java
+@@ -252,11 +252,11 @@ public class RenameVarsTest extends CompilerTestCase {
+          "var a,b,c,d,e,f; " +
+              "(function(g) {}); try { } catch(h) {}; var i = a + a;"
+          );
+-    test("(function(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," +
+-         "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,$){});" +
++    test("function(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z," +
++         "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,$){};" +
+          "var a4,a3,a2,a1,b4,b3,b2,b1,ab,ac,ad,fg;function foo(){};",
+-         "(function(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z," +
+-         "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$){});" +
++         "function(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z," +
++         "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$){};" +
+          "var aa,ba,ca,da,ea,fa,ga,ha,ia,ja,ka,la;function ma(){};");
+   }
+ 
+@@ -289,15 +289,13 @@ public class RenameVarsTest extends CompilerTestCase {
+ 
+   public void testStableRenameWithPointlesslyAnonymousFunctions() {
+     VariableMap expectedVariableMap = makeVariableMap("L 0", "a", "L 1", "b");
+-    testRenameMap("(function (v1, v2) {}); (function (v3, v4) {});",
+-                  "(function (a, b) {}); (function (a, b) {});",
++    testRenameMap("function (v1, v2) {}; function (v3, v4) {};",
++                  "function (a, b) {}; function (a, b) {};",
+                   expectedVariableMap);
+ 
+     expectedVariableMap = makeVariableMap("L 0", "a", "L 1", "b", "L 2", "c");
+-    testRenameMapUsingOldMap("(function (v0, v1, v2) {});" +
+-                             "(function (v3, v4) {});",
+-                             "(function (a, b, c) {});" +
+-                             "(function (a, b) {});",
++    testRenameMapUsingOldMap("function (v0, v1, v2) {}; function (v3, v4) {};",
++                             "function (a, b, c) {}; function (a, b) {};",
+                              expectedVariableMap);
+   }
+ 
+@@ -318,10 +316,9 @@ public class RenameVarsTest extends CompilerTestCase {
+ 
+     expectedVariableMap = makeVariableMap(
+         "f1", "a", "L 0", "b", "L 1", "c", "L 2", "d", "L 3", "e", "L 4", "f");
+-    testRenameMapUsingOldMap(
+-        "function f1(v1, v2) { (function(v3, v4, v5) {}) }",
+-        "function a(b, c) { (function(d, e, f) {}) }",
+-        expectedVariableMap);
++    testRenameMapUsingOldMap("function f1(v1, v2) { (function(v3, v4, v5) {}) }",
++                             "function a(b, c) { (function(d, e, f) {}) }",
++                             expectedVariableMap);
+   }
+ 
+   public void testStableRenameWithExterns1() {
+@@ -525,7 +522,7 @@ public class RenameVarsTest extends CompilerTestCase {
+     generatePseudoNames = true;
+     test("var foo = function(a, b, c){}",
+          "var $foo$$ = function($a$$, $b$$, $c$$){}");
+-
++    
+     test("var a = function(a, b, c){}",
+          "var $a$$ = function($a$$, $b$$, $c$$){}");
+   }
+diff --git a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+index 0d54837..f79beeb 100644
+--- a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
++++ b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+@@ -178,7 +178,7 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+     test("(function() {}).prototype[f] = function(){};", "");
+   }
+ 
+-  public void testUselessUnconditionalReturn() {
++  public void testUnlessUnconditionalReturn() {
+     test("function foo() { return }", " function foo() { }");
+     test("function foo() { return; return; x=1 }", "function foo() { }");
+     test("function foo() { return; return; var x=1}", "function foo() {var x}");
+@@ -186,13 +186,12 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+          "function foo() {         function bar() {} }" );
+     testSame("function foo() { return 5 }");
+ 
+-    test("function f() {switch (a) { case 'a': return}}",
+-         "function f() {switch (a) { case 'a': }}");
+-    testSame("function f() {switch (a) { case 'a': case foo(): }}");
+-    testSame("function f() {switch (a) {" +
+-             " default: return; case 'a': alert(1)}}");
+-    testSame("function f() {switch (a) {" +
+-             " case 'a': return; default: alert(1)}}");
++
++    test("function() {switch (a) { case 'a': return}}",
++         "function() {switch (a) { case 'a': }}");
++    testSame("function() {switch (a) { case 'a': case foo(): }}");
++    testSame("function() {switch (a) { default: return; case 'a': alert(1)}}");
++    testSame("function() {switch (a) { case 'a': return; default: alert(1)}}");
+   }
+ 
+   public void testUnlessUnconditionalContinue() {
+diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
+index d62d33d..be7fa65 100644
+--- a/com/google/javascript/jscomp/VarCheckTest.java
++++ b/com/google/javascript/jscomp/VarCheckTest.java
+@@ -30,8 +30,6 @@ public class VarCheckTest extends CompilerTestCase {
+ 
+   private CheckLevel externValidationErrorLevel;
+ 
+-  private CompilerPass testSetupPass;
+-
+   public VarCheckTest() {
+     super(EXTERNS);
+   }
+@@ -42,7 +40,6 @@ public class VarCheckTest extends CompilerTestCase {
+     strictModuleDepErrorLevel = CheckLevel.OFF;
+     externValidationErrorLevel = null;
+     sanityCheck = false;
+-    testSetupPass = null;
+   }
+ 
+   @Override
+@@ -62,9 +59,6 @@ public class VarCheckTest extends CompilerTestCase {
+     if (!sanityCheck) {
+       return new CompilerPass() {
+         @Override public void process(Node externs, Node root) {
+-          if (testSetupPass != null) {
+-            testSetupPass.process(externs, root);
+-          }
+           new VarCheck(compiler, false).process(externs, root);
+           if (!compiler.hasErrors()) {
+             new VarCheck(compiler, true).process(externs, root);
+@@ -164,31 +158,11 @@ public class VarCheckTest extends CompilerTestCase {
+   }
+ 
+   public void testInvalidFunctionDecl1() {
+-    final CompilerTestCase testcase = this;
+-
+-    // A compiler pass that create invalid function names.
+-    testSetupPass = new CompilerPass() {
+-
+-      void visit(Node n) {
+-        if (n.getType() == Token.NAME
+-            && !n.getString().isEmpty()
+-            && n.getParent().getType() == Token.FUNCTION) {
+-          n.setString("");
+-          testcase.getLastCompiler().reportCodeChange();
+-        }
+-        for (Node c : n.children()) {
+-          visit(c);
+-        }
+-      }
+-
+-      @Override
+-      public void process(Node externs, Node root) {
+-        visit(root);
+-      }
+-    };
++    test("function() {};", null, VarCheck.INVALID_FUNCTION_DECL);
++  }
+ 
+-    test("function f() {};", null, VarCheck.INVALID_FUNCTION_DECL);
+-    test("if (true) { function f(){}; }", null, VarCheck.INVALID_FUNCTION_DECL);
++  public void testInvalidFunctionDecl2() {
++    test("if (true) { function() {}; }", null, VarCheck.INVALID_FUNCTION_DECL);
+   }
+ 
+   public void testValidFunctionExpr() {
+diff --git a/com/google/javascript/jscomp/VariableReferenceCheckTest.java b/com/google/javascript/jscomp/VariableReferenceCheckTest.java
+index c07f747..e8e4b9c 100644
+--- a/com/google/javascript/jscomp/VariableReferenceCheckTest.java
++++ b/com/google/javascript/jscomp/VariableReferenceCheckTest.java
+@@ -56,9 +56,9 @@ public class VariableReferenceCheckTest extends CompilerTestCase {
+   public void testCorrectCode() {
+     assertNoWarning("function foo(d) { (function() { d.foo(); }); d.bar(); } ");
+     assertNoWarning("function foo() { bar(); } function bar() { foo(); } ");
+-    assertNoWarning("function f(d) { d = 3; }");
++    assertNoWarning("function(d) { d = 3; }");
+     assertNoWarning(VARIABLE_RUN);
+-    assertNoWarning("function f() { " + VARIABLE_RUN + "}");
++    assertNoWarning("function() { " + VARIABLE_RUN + "}");
+   }
+ 
+   public void testCorrectShadowing() {
+diff --git a/com/google/javascript/jscomp/parsing/IRFactoryTest.java b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+index 3d120d1..85ba7f6 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactoryTest.java
++++ b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+@@ -186,7 +186,7 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   }
+ 
+   public void testFunction2() {
+-    parse("(function() {})");
++    parse("function() {}");
+   }
+ 
+   public void testFunction3() {
+@@ -194,7 +194,7 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   }
+ 
+   public void testFunction4() {
+-    parse("(function(a) {})");
++    parse("function(a) {}");
+   }
+ 
+   public void testFunction5() {
+@@ -202,19 +202,19 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   }
+ 
+   public void testFunction6() {
+-    parse("(function(a, b) {})");
++    parse("function(a, b) {}");
+   }
+ 
+   public void testReturn() {
+-    parse("(function() {return 1;})");
++    parse("function() {return 1;}");
+   }
+ 
+   public void testReturn2() {
+-    parse("function f() {return;}");
++    parse("function() {return;}");
+   }
+ 
+   public void testReturn3() {
+-    parse("function f(){return x?1:2}");
++    parse("function(){return x?1:2}");
+   }
+ 
+   public void testThrow() {
+@@ -386,7 +386,7 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   }
+ 
+   public void testSwitch3() {
+-    parse("function f(){switch(x){default:case 1:return 2}}");
++    parse("function(){switch(x){default:case 1:return 2}}");
+   }
+ 
+   public void testDebugger() {
+@@ -1046,11 +1046,11 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   private void testNoParseError(String string) {
+     testParseError(string, (String)null);
+   }
+-
++  
+   private void testParseError(String string, String error) {
+     testParseError(string, error == null ? null : new String[] { error });
+   }
+-
++  
+   private void testParseError(String string, String[] errors) {
+     Node root = newParse(string, new TestErrorReporter(errors, null));
+     assertTrue("unexpected warnings reported",
+diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+index 868f756..c568c68 100644
+--- a/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+@@ -771,22 +771,12 @@ public class ParserTest extends BaseJSTypeTestCase {
+         var.getJSDocInfo().getBlockDescription());
+   }
+ 
+-  public void testUnnamedFunctionStatement() {
+-    // Statements
+-    parseError("function() {};", "unnamed function statement");
+-    parseError("if (true) { function() {}; }", "unnamed function statement");
+-    parse("function f() {};");
+-    // Expressions
+-    parse("(function f() {});");
+-    parse("(function () {});");
+-  }
+-
+   private void parseError(String string, String... errors) {
+     TestErrorReporter testErrorReporter = new TestErrorReporter(errors, null);
+     Node script = null;
+     try {
+       script = ParserRunner.parse(
+-          "input", string, ParserRunner.createConfig(true, es5mode, false),
++          "input", string, ParserRunner.createConfig(true, es5mode),
+           testErrorReporter, Logger.getAnonymousLogger());
+     } catch (IOException e) {
+       throw new RuntimeException(e);
+@@ -802,7 +792,7 @@ public class ParserTest extends BaseJSTypeTestCase {
+     Node script = null;
+     try {
+       script = ParserRunner.parse(
+-          "input", string, ParserRunner.createConfig(true, es5mode, false),
++          "input", string, ParserRunner.createConfig(true, es5mode),
+           testErrorReporter, Logger.getAnonymousLogger());
+     } catch (IOException e) {
+       throw new RuntimeException(e);

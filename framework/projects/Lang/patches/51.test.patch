@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/lang/BooleanUtilsTest.java b/org/apache/commons/lang/BooleanUtilsTest.java
+index 9706846..cc44051 100644
+--- a/org/apache/commons/lang/BooleanUtilsTest.java
++++ b/org/apache/commons/lang/BooleanUtilsTest.java
+@@ -330,8 +330,6 @@ public class BooleanUtilsTest extends TestCase {
+         assertEquals(true, BooleanUtils.toBoolean("YeS"));
+         assertEquals(true, BooleanUtils.toBoolean("YEs"));
+         assertEquals(true, BooleanUtils.toBoolean("YES"));
+-        assertEquals(false, BooleanUtils.toBoolean("yes?"));
+-        assertEquals(false, BooleanUtils.toBoolean("tru"));
+     }
+ 
+     public void test_toBoolean_String_String_String() {

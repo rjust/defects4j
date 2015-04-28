@@ -1,0 +1,56 @@
+diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+index 2151c48..7ccbd27 100644
+--- a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
++++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+@@ -20,8 +20,6 @@ package org.apache.commons.math3.optimization.univariate;
+ import org.apache.commons.math3.analysis.QuinticFunction;
+ import org.apache.commons.math3.analysis.UnivariateFunction;
+ import org.apache.commons.math3.analysis.function.Sin;
+-import org.apache.commons.math3.analysis.function.StepFunction;
+-import org.apache.commons.math3.analysis.FunctionUtils;
+ import org.apache.commons.math3.exception.NumberIsTooLargeException;
+ import org.apache.commons.math3.exception.NumberIsTooSmallException;
+ import org.apache.commons.math3.exception.TooManyEvaluationsException;
+@@ -41,7 +39,7 @@ public final class BrentOptimizerTest {
+     public void testSinMin() {
+         UnivariateFunction f = new Sin();
+         UnivariateOptimizer optimizer = new BrentOptimizer(1e-10, 1e-14);
+-        Assert.assertEquals(3 * Math.PI / 2, optimizer.optimize(200, f, GoalType.MINIMIZE, 4, 5).getPoint(), 1e-8);
++        Assert.assertEquals(3 * Math.PI / 2, optimizer.optimize(200, f, GoalType.MINIMIZE, 4, 5).getPoint(),1e-8);
+         Assert.assertTrue(optimizer.getEvaluations() <= 50);
+         Assert.assertEquals(200, optimizer.getMaxEvaluations());
+         Assert.assertEquals(3 * Math.PI / 2, optimizer.optimize(200, f, GoalType.MINIMIZE, 1, 5).getPoint(), 1e-8);
+@@ -183,33 +181,4 @@ public final class BrentOptimizerTest {
+ 
+         Assert.assertEquals(804.9355825, result, 1e-6);
+     }
+-
+-    /**
+-     * Contrived example showing that prior to the resolution of MATH-855,
+-     * the algorithm, by always returning the last evaluated point, would
+-     * sometimes not report the best point it had found.
+-     */
+-    @Test
+-    public void testMath855() {
+-        final double minSin = 3 * Math.PI / 2;
+-        final double offset = 1e-8;
+-        final double delta = 1e-7;
+-        final UnivariateFunction f1 = new Sin();
+-        final UnivariateFunction f2 = new StepFunction(new double[] { minSin, minSin + offset, minSin + 5 * offset },
+-                                                       new double[] { 0, -1, 0 });
+-        final UnivariateFunction f = FunctionUtils.add(f1, f2);
+-        final UnivariateOptimizer optimizer = new BrentOptimizer(1e-8, 1e-100);
+-        final UnivariatePointValuePair result
+-            = optimizer.optimize(200, f, GoalType.MINIMIZE, minSin - 6.789 * delta, minSin + 9.876 * delta);
+-        final int numEval = optimizer.getEvaluations();
+-
+-        final double sol = result.getPoint();
+-        final double expected = 4.712389027602411;
+-
+-        // System.out.println("min=" + (minSin + offset) + " f=" + f.value(minSin + offset));
+-        // System.out.println("sol=" + sol + " f=" + f.value(sol));
+-        // System.out.println("exp=" + expected + " f=" + f.value(expected));
+-
+-        Assert.assertTrue("Best point not reported", f.value(sol) <= f.value(expected));
+-    }
+ }

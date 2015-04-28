@@ -1,0 +1,60 @@
+diff --git a/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java b/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
+index ba3fe26..e31b156 100644
+--- a/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
++++ b/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
+@@ -1657,12 +1657,10 @@ public class BOBYQAOptimizer
+                     final int tmp2 = jpt;
+                     jpt = ipt - n;
+                     ipt = tmp2;
+-//                     throw new PathIsExploredException(); // XXX
++                    throw new PathIsExploredException(); // XXX
+                 }
+-                final int iptMinus1 = ipt - 1;
+-                final int jptMinus1 = jpt - 1;
+-                interpolationPoints.setEntry(nfm, iptMinus1, interpolationPoints.getEntry(ipt, iptMinus1));
+-                interpolationPoints.setEntry(nfm, jptMinus1, interpolationPoints.getEntry(jpt, jptMinus1));
++                interpolationPoints.setEntry(nfm, ipt, interpolationPoints.getEntry(ipt, ipt));
++                interpolationPoints.setEntry(nfm, jpt, interpolationPoints.getEntry(jpt, jpt));
+             }
+ 
+             // Calculate the next value of F. The least function value so far and
+@@ -1749,7 +1747,7 @@ public class BOBYQAOptimizer
+                 final int ih = ipt * (ipt - 1) / 2 + jpt - 1;
+                 final double tmp = interpolationPoints.getEntry(nfm, ipt - 1) * interpolationPoints.getEntry(nfm, jpt - 1);
+                 modelSecondDerivativesValues.setEntry(ih, (fbeg - fAtInterpolationPoints.getEntry(ipt) - fAtInterpolationPoints.getEntry(jpt) + f) / tmp);
+-//                 throw new PathIsExploredException(); // XXX
++                throw new PathIsExploredException(); // XXX
+             }
+         } while (getEvaluations() < npt);
+     } // prelim
+@@ -2464,19 +2462,19 @@ public class BOBYQAOptimizer
+     private static void printMethod() {
+         //        System.out.println(caller(2));
+     }
++}
+ 
+-    /**
+-     * Marker for code paths that are not explored with the current unit tests.
+-     * If the path becomes explored, it should just be removed from the code.
+-     */
+-    private static class PathIsExploredException extends RuntimeException {
+-        private static final long serialVersionUID = 745350979634801853L;
++/**
++ * Marker for code paths that are not explored with the current unit tests.
++ * If the path becomes explored, it should just be removed from the code.
++ */
++class PathIsExploredException extends RuntimeException {
++    private static final long serialVersionUID = 745350979634801853L;
+ 
+-        private static final String PATH_IS_EXPLORED
+-            = "If this exception is thrown, just remove it from the code";
++    private static final String PATH_IS_EXPLORED
++        = "If this exception is thrown, just remove it from the code";
+ 
+-        PathIsExploredException() {
+-            super(PATH_IS_EXPLORED + " " + BOBYQAOptimizer.caller(3));
+-        }
++    PathIsExploredException() {
++        super(PATH_IS_EXPLORED);
+     }
+ }

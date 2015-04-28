@@ -1,0 +1,67 @@
+diff --git a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+index 0fcb778..7eb9926 100644
+--- a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
++++ b/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+@@ -88,7 +77,18 @@ class MakeDeclaredNamesUnique
+       renamer = nameStack.peek().forChildScope();
+     }
+ 
+-    if (declarationRoot.getType() != Token.FUNCTION) {
++    if (declarationRoot.getType() == Token.FUNCTION) {
++      // Add the function parameters
++      Node fnParams = declarationRoot.getFirstChild().getNext();
++      for (Node c = fnParams.getFirstChild(); c != null; c = c.getNext()) {
++        String name = c.getString();
++        renamer.addDeclaredName(name);
++      }
++
++      // Add the function body declarations
++      Node functionBody = declarationRoot.getLastChild();
++      findDeclaredNames(functionBody, null, renamer);
++    } else {
+       // Add the block declarations
+       findDeclaredNames(declarationRoot, null, renamer);
+     }
+@@ -123,23 +123,6 @@ class MakeDeclaredNamesUnique
+         }
+         break;
+ 
+-      case Token.LP: {
+-          Renamer renamer = nameStack.peek().forChildScope();
+-
+-          // Add the function parameters
+-          for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+-            String name = c.getString();
+-            renamer.addDeclaredName(name);
+-          }
+-
+-          // Add the function body declarations
+-          Node functionBody = n.getNext();
+-          findDeclaredNames(functionBody, null, renamer);
+-
+-          nameStack.push(renamer);
+-        }
+-        break;
+-
+       case Token.CATCH:
+         {
+           Renamer renamer = nameStack.peek().forChildScope();
+@@ -172,18 +155,10 @@ class MakeDeclaredNamesUnique
+         break;
+ 
+       case Token.FUNCTION:
+-        // Remove the function body scope
+-        nameStack.pop();
+         // Remove function recursive name (if any).
+         nameStack.pop();
+         break;
+ 
+-      case Token.LP:
+-        // Note: The parameters and function body variables live in the
+-        // same scope, we introduce the scope when in the "shouldTraverse"
+-        // visit of LP, but remove it when when we exit the function above.
+-        break;
+-
+       case Token.CATCH:
+         // Remove catch except name from the stack of names.
+         nameStack.pop();

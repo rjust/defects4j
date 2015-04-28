@@ -1,0 +1,57 @@
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index c8cc8ef..1424a3b 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -4757,29 +4757,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "};");
+   }
+ 
+-  public void testQualifiedNameInference5() throws Exception {
+-    testTypes(
+-        "var ns = {}; " +
+-        "(function() { " +
+-        "    /** @param {number} x */ ns.foo = function(x) {}; })();" +
+-        "(function() { ns.foo(true); })();",
+-        "actual parameter 1 of ns.foo does not match formal parameter\n" +
+-        "found   : boolean\n" +
+-        "required: number");
+-  }
+-
+-  public void testQualifiedNameInference6() throws Exception {
+-    testTypes(
+-        "var ns = {}; " +
+-        "/** @param {number} x */ ns.foo = function(x) {};" +
+-        "(function() { " +
+-        "    ns.foo = function(x) {};" +
+-        "    ns.foo(true); })();",
+-        "actual parameter 1 of ns.foo does not match formal parameter\n" +
+-        "found   : boolean\n" +
+-        "required: number");
+-  }
+-
+   public void testSheqRefinedScope() throws Exception {
+     Node n = parseAndTypeCheck(
+         "/** @constructor */function A() {}\n" +
+diff --git a/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+index 400293f..789c546 100644
+--- a/com/google/javascript/jscomp/TypedScopeCreatorTest.java
++++ b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+@@ -772,18 +772,6 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
+         "{}", findTokenType(Token.OBJECTLIT, globalScope).toString());
+   }
+ 
+-  public void testGlobalQualifiedNameInLocalScope() {
+-    testSame(
+-        "var ns = {}; " +
+-        "(function() { " +
+-        "    /** @param {number} x */ ns.foo = function(x) {}; })();" +
+-        "(function() { ns.foo(3); })();");
+-    assertNotNull(globalScope.getVar("ns.foo"));
+-    assertEquals(
+-        "function (number): undefined",
+-        globalScope.getVar("ns.foo").getType().toString());
+-  }
+-
+   private JSType findNameType(final String name, Scope scope) {
+     return findTypeOnMatchedNode(new Predicate<Node>() {
+       @Override public boolean apply(Node n) {

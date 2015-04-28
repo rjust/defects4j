@@ -1,0 +1,19 @@
+diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+index 8d268b6..3b2a9d4 100644
+--- a/com/google/javascript/jscomp/CodeGenerator.java
++++ b/com/google/javascript/jscomp/CodeGenerator.java
+@@ -282,12 +282,11 @@ class CodeGenerator {
+       case Token.HOOK: {
+         Preconditions.checkState(childCount == 3);
+         int p = NodeUtil.precedence(type);
+-        Context rhsContext = getContextForNoInOperator(context);
+         addExpr(first, p + 1, context);
+         cc.addOp("?", true);
+-        addExpr(first.getNext(), 1, rhsContext);
++        addExpr(first.getNext(), 1, Context.OTHER);
+         cc.addOp(":", true);
+-        addExpr(last, 1, rhsContext);
++        addExpr(last, 1, Context.OTHER);
+         break;
+       }
+ 

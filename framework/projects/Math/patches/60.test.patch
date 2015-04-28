@@ -1,0 +1,37 @@
+diff --git a/org/apache/commons/math/distribution/NormalDistributionTest.java b/org/apache/commons/math/distribution/NormalDistributionTest.java
+index f8ebebf..e9ffe5c 100644
+--- a/org/apache/commons/math/distribution/NormalDistributionTest.java
++++ b/org/apache/commons/math/distribution/NormalDistributionTest.java
+@@ -152,16 +152,14 @@ public class NormalDistributionTest extends ContinuousDistributionAbstractTest
+ 
+     /**
+      * Check to make sure top-coding of extreme values works correctly.
+-     * Verifies fixes for JIRA MATH-167, MATH-414
++     * Verifies fix for JIRA MATH-167
+      */
+     public void testExtremeValues() throws Exception {
+         NormalDistribution distribution = new NormalDistributionImpl(0, 1);
+-        for (int i = 0; i < 100; i++) { // make sure no convergence exception
++        for (int i = 0; i < 100; i+=5) { // make sure no convergence exception
+             double lowerTail = distribution.cumulativeProbability(-i);
+             double upperTail = distribution.cumulativeProbability(i);
+-            if (i < 9) { // make sure not top-coded 
+-                // For i = 10, due to bad tail precision in erf (MATH-364), 1 is returned
+-                // TODO: once MATH-364 is resolved, replace 9 with 30
++            if (i < 10) { // make sure not top-coded
+                 assertTrue(lowerTail > 0.0d);
+                 assertTrue(upperTail < 1.0d);
+             }
+@@ -170,12 +168,6 @@ public class NormalDistributionTest extends ContinuousDistributionAbstractTest
+                 assertTrue(upperTail > 0.99999);
+             }
+         }
+-        
+-        assertEquals(distribution.cumulativeProbability(Double.MAX_VALUE), 1, 0);
+-        assertEquals(distribution.cumulativeProbability(-Double.MAX_VALUE), 0, 0);
+-        assertEquals(distribution.cumulativeProbability(Double.POSITIVE_INFINITY), 1, 0);
+-        assertEquals(distribution.cumulativeProbability(Double.NEGATIVE_INFINITY), 0, 0);
+-        
+    }
+ 
+     public void testMath280() throws MathException {

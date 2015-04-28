@@ -1,0 +1,15 @@
+diff --git a/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java b/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
+index add24ac..6ba72be 100644
+--- a/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
++++ b/org/apache/commons/math3/geometry/euclidean/twod/PolygonsSet.java
+@@ -132,9 +132,7 @@ public class PolygonsSet extends AbstractRegion<Euclidean2D, Euclidean1D> {
+         final Vector2D[][] v = getVertices();
+ 
+         if (v.length == 0) {
+-            final BSPTree<Euclidean2D> tree = getTree(false);
+-            if (tree.getCut() == null && (Boolean) tree.getAttribute()) {
+-                // the instance covers the whole space
++            if ((Boolean) getTree(false).getAttribute()) {
+                 setSize(Double.POSITIVE_INFINITY);
+                 setBarycenter(Vector2D.NaN);
+             } else {

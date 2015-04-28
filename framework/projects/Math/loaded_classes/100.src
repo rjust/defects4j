@@ -1,0 +1,15 @@
+org.apache.commons.math.estimation.EstimatedParameter
+org.apache.commons.math.estimation.WeightedMeasurement
+org.apache.commons.math.MathException
+org.apache.commons.math.linear.BigMatrix
+org.apache.commons.math.linear.RealMatrix
+org.apache.commons.math.estimation.AbstractEstimator
+org.apache.commons.math.estimation.Estimator
+org.apache.commons.math.linear.RealMatrixImpl
+org.apache.commons.math.estimation.GaussNewtonEstimator
+org.apache.commons.math.estimation.SimpleEstimationProblem
+org.apache.commons.math.estimation.EstimationException
+org.apache.commons.math.estimation.EstimationProblem
+org.apache.commons.math.linear.MatrixUtils
+org.apache.commons.math.linear.InvalidMatrixException
+org.apache.commons.math.linear.MatrixIndexException

@@ -1,0 +1,42 @@
+diff --git a/com/google/javascript/jscomp/InlineCostEstimatorTest.java b/com/google/javascript/jscomp/InlineCostEstimatorTest.java
+index 5756732..5524e6e 100644
+--- a/com/google/javascript/jscomp/InlineCostEstimatorTest.java
++++ b/com/google/javascript/jscomp/InlineCostEstimatorTest.java
+@@ -46,13 +46,11 @@ public class InlineCostEstimatorTest extends TestCase {
+ 
+   public void testCost() {
+     checkCost("1", "1");
+-    checkCost("true", "1");
+-    checkCost("false", "1");
+     checkCost("a", "xx");
+     checkCost("a + b", "xx+xx");
+     checkCost("foo()", "xx()");
+     checkCost("foo(a,b)", "xx(xx,xx)");
+-    checkCost("10 + foo(a,b)", "0+xx(xx,xx)");
++    checkCost("10 + foo(a,b)", "10+xx(xx,xx)");
+     checkCost("1 + foo(a,b)", "1+xx(xx,xx)");
+     checkCost("a ? 1 : 0", "xx?1:0");
+     checkCost("a.b", "xx.xx");
+diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+index 80ab5cc..1515f97 100644
+--- a/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+@@ -2164,18 +2164,6 @@ public class InlineFunctionsTest extends CompilerTestCase {
+         "}");
+   }
+ 
+-  public void testIssue728() {
+-    String f = "var f = function() { return false; };";
+-    StringBuilder calls = new StringBuilder();
+-    StringBuilder folded = new StringBuilder();
+-    for (int i = 0; i < 30; i++) {
+-      calls.append("if (!f()) alert('x');");
+-      folded.append("if (!false) alert('x');");
+-    }
+-
+-    test(f + calls, folded.toString());
+-  }
+-
+   public void testAnonymous1() {
+     assumeMinimumCapture = false;
+     test("(function(){var a=10;(function(){var b=a;a++;alert(b)})()})();",

@@ -1,0 +1,92 @@
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index 2d3be5d..c18ecd7 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -5260,72 +5260,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: number");
+   }
+ 
+-  public void testIssue537a() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Foo() {}" +
+-        "Foo.prototype = {method: function() {}};" +
+-        "/**\n" +
+-        " * @constructor\n" +
+-        " * @extends {Foo}\n" +
+-        " */\n" +
+-        "function Bar() {" +
+-        "  Foo.call(this);" +
+-        "  if (this.baz()) this.method(1);" +
+-        "}" +
+-        "Bar.prototype = {" +
+-        "  baz: function() {" +
+-        "    return true;" +
+-        "  }" +
+-        "};" +
+-        "Bar.prototype.__proto__ = Foo.prototype;",
+-        "Function Foo.prototype.method: called with 1 argument(s). " +
+-        "Function requires at least 0 argument(s) " +
+-        "and no more than 0 argument(s).");
+-  }
+-
+-  public void testIssue537b() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Foo() {}" +
+-        "Foo.prototype = {method: function() {}};" +
+-        "/**\n" +
+-        " * @constructor\n" +
+-        " * @extends {Foo}\n" +
+-        " */\n" +
+-        "function Bar() {" +
+-        "  Foo.call(this);" +
+-        "  if (this.baz(1)) this.method();" +
+-        "}" +
+-        "Bar.prototype = {" +
+-        "  baz: function() {" +
+-        "    return true;" +
+-        "  }" +
+-        "};" +
+-        "Bar.prototype.__proto__ = Foo.prototype;",
+-        "Function Bar.prototype.baz: called with 1 argument(s). " +
+-        "Function requires at least 0 argument(s) " +
+-        "and no more than 0 argument(s).");
+-  }
+-
+-  public void testIssue537c() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Foo() {}" +
+-        "/**\n" +
+-        " * @constructor\n" +
+-        " * @extends {Foo}\n" +
+-        " */\n" +
+-        "function Bar() {" +
+-        "  Foo.call(this);" +
+-        "  if (this.baz2()) alert(1);" +
+-        "}" +
+-        "Bar.prototype = {" +
+-        "  baz: function() {" +
+-        "    return true;" +
+-        "  }" +
+-        "};" +
+-        "Bar.prototype.__proto__ = Foo.prototype;",
+-        "Property baz2 never defined on Bar");
+-  }
+-
+   /**
+    * Tests that the || operator is type checked correctly, that is of
+    * the type of the first argument or of the second argument. See
+diff --git a/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+index 4fe01a0..048fc9e 100644
+--- a/com/google/javascript/jscomp/TypedScopeCreatorTest.java
++++ b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+@@ -372,9 +372,8 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
+         RhinoErrorReporter.TYPE_PARSE_ERROR);
+     ObjectType x = (ObjectType) findNameType("x", globalScope);
+     assertEquals("Foo", x.toString());
+-    assertEquals("Foo.prototype", x.getImplicitPrototype().toString());
+     assertTrue(x.getImplicitPrototype().hasOwnProperty("bar"));
+-    assertEquals("?", x.getPropertyType("bar").toString());
++    assertEquals("number", x.getPropertyType("bar").toString());
+     assertTrue(x.isPropertyTypeInferred("bar"));
+   }
+ 

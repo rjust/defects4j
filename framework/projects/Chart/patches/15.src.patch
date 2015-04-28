@@ -1,0 +1,27 @@
+Index: org/jfree/chart/plot/PiePlot.java
+===================================================================
+--- org/jfree/chart/plot/PiePlot.java	(revision 749)
++++ org/jfree/chart/plot/PiePlot.java	(revision 747)
+@@ -1375,9 +1373,6 @@
+      * @return The percent.
+      */
+     public double getMaximumExplodePercent() {
+-        if (this.dataset == null) {
+-            return 0.0;
+-        }
+         double result = 0.0;
+         Iterator iterator = this.dataset.getKeys().iterator();
+         while (iterator.hasNext()) {
+@@ -2051,10 +2046,8 @@
+      
+         PiePlotState state = new PiePlotState(info);
+         state.setPassesRequired(2);
+-        if (this.dataset != null) {
+-            state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
+-                    plot.getDataset()));
+-        }
++        state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
++                plot.getDataset()));
+         state.setLatestAngle(plot.getStartAngle());
+         return state;
+         

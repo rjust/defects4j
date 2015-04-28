@@ -1,0 +1,29 @@
+diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+index 14c507a..57e68f9 100644
+--- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+@@ -239,13 +239,11 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
+ 
+   public void testFoldBitShifts() {
+     fold("x = 1 << 0", "x = 1");
+-    fold("x = -1 << 0", "x = -1");
+     fold("x = 1 << 1", "x = 2");
+     fold("x = 3 << 1", "x = 6");
+     fold("x = 1 << 8", "x = 256");
+ 
+     fold("x = 1 >> 0", "x = 1");
+-    fold("x = -1 >> 0", "x = -1");
+     fold("x = 1 >> 1", "x = 0");
+     fold("x = 2 >> 1", "x = 1");
+     fold("x = 5 >> 1", "x = 2");
+@@ -259,9 +257,7 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
+     fold("x = 10 >>> 1", "x = 5");
+     fold("x = 10 >>> 2", "x = 2");
+     fold("x = 10 >>> 5", "x = 0");
+-    fold("x = -1 >>> 1", "x = 2147483647"); // 0x7fffffff
+-    fold("x = -1 >>> 0", "x = 4294967295"); // 0xffffffff
+-    fold("x = -2 >>> 0", "x = 4294967294"); // 0xfffffffe
++    fold("x = -1 >>> 1", "x = " + 0x7fffffff);
+ 
+     fold("3000000000 << 1", "3000000000<<1",
+          PeepholeFoldConstants.BITWISE_OPERAND_OUT_OF_RANGE);

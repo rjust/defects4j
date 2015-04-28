@@ -1,0 +1,22 @@
+Index: org/jfree/chart/renderer/GrayPaintScale.java
+===================================================================
+--- org/jfree/chart/renderer/GrayPaintScale.java	(revision 190)
++++ org/jfree/chart/renderer/GrayPaintScale.java	(revision 188)
+@@ -115,15 +107,14 @@
+     /**
+      * Returns a paint for the specified value.
+      * 
+-     * @param value  the value (must be within the range specified by the
+-     *         lower and upper bounds for the scale).
++     * @param value  the value.
+      * 
+      * @return A paint for the specified value.
+      */
+     public Paint getPaint(double value) {
+         double v = Math.max(value, this.lowerBound);
+         v = Math.min(v, this.upperBound);
+-        int g = (int) ((v - this.lowerBound) / (this.upperBound 
++        int g = (int) ((value - this.lowerBound) / (this.upperBound 
+                 - this.lowerBound) * 255.0);
+         return new Color(g, g, g);
+     }

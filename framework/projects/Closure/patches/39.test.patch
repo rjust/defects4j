@@ -1,0 +1,51 @@
+diff --git a/com/google/javascript/jscomp/ExternExportsPassTest.java b/com/google/javascript/jscomp/ExternExportsPassTest.java
+index 0c23a69..0e0dc0a 100755
+--- a/com/google/javascript/jscomp/ExternExportsPassTest.java
++++ b/com/google/javascript/jscomp/ExternExportsPassTest.java
+@@ -397,22 +397,6 @@ public class ExternExportsPassTest extends TestCase {
+       assertEquals(0, libraryCompileResult.errors.length);
+   }
+ 
+-  public void testTypedef() {
+-    compileAndCheck(
+-        "/** @typedef {{x: number, y: number}} */ var Coord;\n" +
+-        "/**\n" +
+-        " * @param {Coord} a\n" +
+-        " * @export\n" +
+-        " */\n" +
+-        "var fn = function(a) {};" +
+-        "goog.exportSymbol('fn', fn);",
+-        "/**\n" +
+-        " * @param {{x: number, y: number}} a\n" +
+-        " * @return {undefined}\n" +
+-        " */\n" +
+-        "var fn = function(a) {\n};\n");
+-  }
+-
+   private void compileAndCheck(String js, String expected) {
+     Result result = compileAndExportExterns(js);
+ 
+diff --git a/com/google/javascript/rhino/jstype/RecordTypeTest.java b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+index 4afd4db..4840532 100644
+--- a/com/google/javascript/rhino/jstype/RecordTypeTest.java
++++ b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+@@ -56,8 +56,6 @@ public class RecordTypeTest extends BaseJSTypeTestCase {
+     loop.setReferencedType(record);
+     assertEquals("{loop: {...}, number: number, string: string}",
+         record.toString());
+-    assertEquals("{loop: ?, number: number, string: string}",
+-        record.toAnnotationString());
+ 
+     Asserts.assertEquivalenceOperations(record, loop);
+   }
+@@ -73,10 +71,6 @@ public class RecordTypeTest extends BaseJSTypeTestCase {
+         .build();
+     assertEquals("{a1: number, a2: number, a3: number, a4: number, ...}",
+         record.toString());
+-    assertEquals(
+-        "{a1: number, a2: number, a3: number, a4: number," +
+-        " a5: number, a6: number}",
+-        record.toAnnotationString());
+   }
+ 
+   public void testSupAndInf() {

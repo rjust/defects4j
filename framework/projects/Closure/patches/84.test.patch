@@ -1,0 +1,192 @@
+diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+index 585df22..de413dd 100644
+--- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+@@ -85,11 +85,11 @@ public class CheckGlobalThisTest extends CompilerTestCase {
+   }
+ 
+   public void testStaticFunction6() {
+-    testSame("function a() { return function() { this.x = 8; } }");
++    testSame("function a() { return function() { this = 8; } }");
+   }
+ 
+   public void testStaticFunction7() {
+-    testSame("var a = function() { return function() { this.x = 8; } }");
++    testSame("var a = function() { return function() { this = 8; } }");
+   }
+ 
+   public void testStaticFunction8() {
+diff --git a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+index 486fe5a..2d82661 100644
+--- a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
++++ b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+@@ -91,7 +91,7 @@ public class DeadAssignmentsEliminationTest extends CompilerTestCase {
+     inFunction("var x; if(x=1==4&&1){}", "var x; if(1==4&&1) {}");
+     inFunction("var x; if(0&&(x=1)){}", "var x; if(0&&1){}");
+     inFunction("var x; if((x=2)&&(x=1)){}", "var x; if(2&&1){}");
+-    inFunction("var x; x=2; if(0&&(x=1)){}; x");
++    inFunction("var x; x=2; if(0&&x=1){}; x");
+ 
+     inFunction("var x,y; if( (x=1)+(y=2) > 3){}",
+         "var x,y; if( 1+2 > 3){}");
+diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+index bc4ba6f..4eab4b4 100644
+--- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+@@ -103,10 +103,8 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
+   }
+ 
+   public void testMultiDefinitionsInSameCfgNode() {
+-    noInline("var x; (x = 1) || (x = 2); print(x)");
+-    noInline("var x; x = (1 || (x = 2)); print(x)");
+-    noInline("var x;(x = 1) && (x = 2); print(x)");
+-    noInline("var x;x = (1 && (x = 2)); print(x)");
++    noInline("var x; x = 1 || x = 2; print(x)");
++    noInline("var x; x = 1 && x = 2; print(x)");
+     noInline("var x; x = 1 , x = 2; print(x)");
+   }
+ 
+@@ -365,7 +363,7 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
+     inline("var x = 1; x = (x = x + 1)", "var x; x = (x = 1 + 1)");
+ 
+     noInline("var x = 1; x = (x = (x = 10) + x)");
+-    noInline("var x = 1; x = (f(x) + (x = 10) + x);");
++    noInline("var x = 1; x = (f(x) = (x = 10) + x);");
+     noInline("var x = 1; x=-1,foo(x)");
+     noInline("var x = 1; x-=1,foo(x)");
+   }
+diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+index aa72d7a..c92661e 100644
+--- a/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+@@ -1249,9 +1249,9 @@ public class InlineFunctionsTest extends CompilerTestCase {
+   }
+ 
+   public void testComplexInlineInExpresssions3() {
+-    test("function f(){a()}c=z=f()",
++    test("function f(){a()}c=f()=z",
+         "{var JSCompiler_inline_result$$0;a();}" +
+-        "c=z=JSCompiler_inline_result$$0");
++        "c=JSCompiler_inline_result$$0=z");
+   }
+ 
+   public void testComplexInlineInExpresssions4() {
+diff --git a/com/google/javascript/jscomp/LooseTypeCheckTest.java b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+index 7488dec..b2b3dde 100644
+--- a/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+@@ -82,7 +82,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testTypeCheck2() throws Exception {
+-    testTypes("/**@return {void}*/function foo(){ var x=foo(); x--; }",
++    testTypes("/**@return {void}*/function foo(){ foo()--; }",
+         "increment/decrement\n" +
+         "found   : undefined\n" +
+         "required: number");
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index f2a279d..8a42af9 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -78,7 +78,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testTypeCheck2() throws Exception {
+-    testTypes("/**@return {void}*/function foo(){ var x=foo(); x--; }",
++    testTypes("/**@return {void}*/function foo(){ foo()--; }",
+         "increment/decrement\n" +
+         "found   : undefined\n" +
+         "required: number");
+diff --git a/com/google/javascript/jscomp/parsing/IRFactoryTest.java b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+index 6801b27..6b982b5 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactoryTest.java
++++ b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+@@ -1013,51 +1013,7 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+     assertNodePosition(2, 0, bName);
+     assertNodePosition(3, 8, fnNode);
+     assertNodePosition(3, 8, fnName);
+-  }
+-
+-  final String INVALID_ASSIGNMENT_TARGET = "invalid assignment target";
+-  final String INVALID_INCREMENT_TARGET = "invalid increment target";
+-  final String INVALID_DECREMENT_TARGET = "invalid decrement target";
+-
+-  final String INVALID_INC_OPERAND = "Invalid increment operand";
+-  final String INVALID_DEC_OPERAND = "Invalid decrement operand";
+-
+-  public void testAssignmentValidation() {
+-    testNoParseError("x=1");
+-    testNoParseError("x.y=1");
+-    testNoParseError("f().y=1");
+-    testParseError("(x||y)=1", INVALID_ASSIGNMENT_TARGET);
+-    testParseError("(x?y:z)=1", INVALID_ASSIGNMENT_TARGET);
+-    testParseError("f()=1", INVALID_ASSIGNMENT_TARGET);
+-
+-    testNoParseError("x+=1");
+-    testNoParseError("x.y+=1");
+-    testNoParseError("f().y+=1");
+-    testParseError("(x||y)+=1", INVALID_ASSIGNMENT_TARGET);
+-    testParseError("(x?y:z)+=1", INVALID_ASSIGNMENT_TARGET);
+-    testParseError("f()+=1", INVALID_ASSIGNMENT_TARGET);
+-
+-    testParseError("f()++", INVALID_INCREMENT_TARGET);
+-    testParseError("f()--", INVALID_DECREMENT_TARGET);
+-    testParseError("++f()", INVALID_INCREMENT_TARGET);
+-    testParseError("--f()", INVALID_DECREMENT_TARGET);
+-  }
+-
+-  private void testNoParseError(String string) {
+-    testParseError(string, (String)null);
+-  }
+-  
+-  private void testParseError(String string, String error) {
+-    testParseError(string, error == null ? null : new String[] { error });
+-  }
+-  
+-  private void testParseError(String string, String[] errors) {
+-    Node root = newParse(string, new TestErrorReporter(errors, null));
+-    assertTrue("unexpected warnings reported",
+-        errorReporter.hasEncounteredAllWarnings());
+-    assertTrue("expected error were not reported",
+-        errorReporter.hasEncounteredAllErrors());
+-  }
++   }
+ 
+   private void assertMarkerPosition(Node n, int lineno, int charno) {
+     int count = 0;
+@@ -1085,10 +1041,6 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+   }
+ 
+   private Node newParse(String string) {
+-    return newParse(string, new TestErrorReporter(null, null));
+-  }
+-
+-  private Node newParse(String string, TestErrorReporter errorReporter) {
+     CompilerEnvirons environment = new CompilerEnvirons();
+ 
+     environment.setRecordingComments(true);
+@@ -1098,7 +1050,8 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+     AstRoot script = p.parse(string, null, 0);
+ 
+     Config config = ParserRunner.createConfig(true, es5mode);
+-    Node root = IRFactory.transformTree(script, string, config, errorReporter);
++    Node root = IRFactory.transformTree(script, string, config,
++        new TestErrorReporter(null, null));
+ 
+     return root;
+   }
+diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+index e09390d..0d7e9eb 100644
+--- a/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+@@ -622,9 +622,7 @@ public class ParserTest extends BaseJSTypeTestCase {
+   }
+ 
+   public void testDestructuringAssignForbidden4() {
+-    parseError("[x, y] = foo();",
+-        "destructuring assignment forbidden",
+-        "invalid assignment target");
++    parseError("[x, y] = foo();", "destructuring assignment forbidden");
+   }
+ 
+   public void testLetForbidden() {

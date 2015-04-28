@@ -1,0 +1,13 @@
+diff --git a/org/apache/commons/math3/distribution/MultivariateNormalDistribution.java b/org/apache/commons/math3/distribution/MultivariateNormalDistribution.java
+index fd18c28..1570681 100644
+--- a/org/apache/commons/math3/distribution/MultivariateNormalDistribution.java
++++ b/org/apache/commons/math3/distribution/MultivariateNormalDistribution.java
+@@ -180,7 +180,7 @@ public class MultivariateNormalDistribution
+             throw new DimensionMismatchException(vals.length, dim);
+         }
+ 
+-        return FastMath.pow(2 * FastMath.PI, -0.5 * dim) *
++        return FastMath.pow(2 * FastMath.PI, -dim / 2) *
+             FastMath.pow(covarianceMatrixDeterminant, -0.5) *
+             getExponentTerm(vals);
+     }

@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/lang3/time/FastDateParserTest.java b/org/apache/commons/lang3/time/FastDateParserTest.java
+index e2f12c1..ee5a500 100644
+--- a/org/apache/commons/lang3/time/FastDateParserTest.java
++++ b/org/apache/commons/lang3/time/FastDateParserTest.java
+@@ -333,11 +333,6 @@ public class FastDateParserTest {
+         assertEquals(cal.getTime(), fdf.parse("'20030210A'B153320989'"));
+     }
+ 
+-    @Test
+-    public void testLANG_832() throws Exception {
+-        testSdfAndFdp("'d'd" ,"d3", false); // OK
+-        testSdfAndFdp("'d'd'","d3", true); // should fail (unterminated quote)
+-    }
+ 
+     @Test
+     public void testLANG_831() throws Exception {

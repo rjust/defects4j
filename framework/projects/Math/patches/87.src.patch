@@ -1,0 +1,21 @@
+diff --git a/org/apache/commons/math/optimization/linear/SimplexTableau.java b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+index b0d114e..a6d7419 100644
+--- a/org/apache/commons/math/optimization/linear/SimplexTableau.java
++++ b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+@@ -272,10 +272,12 @@ class SimplexTableau implements Serializable {
+     private Integer getBasicRow(final int col) {
+         Integer row = null;
+         for (int i = getNumObjectiveFunctions(); i < getHeight(); i++) {
+-            if (MathUtils.equals(getEntry(i, col), 1.0, epsilon) && (row == null)) {
+-                row = i;
+-            } else if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
+-                return null;
++            if (!MathUtils.equals(getEntry(i, col), 0.0, epsilon)) {
++                if (row == null) {
++                    row = i;
++                } else {
++                    return null;
++                }
+             }
+         }
+         return row;

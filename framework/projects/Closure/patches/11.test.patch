@@ -1,0 +1,86 @@
+diff --git a/com/google/javascript/jscomp/LooseTypeCheckTest.java b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+index 0a979fe..69d1261 100644
+--- a/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+@@ -5183,19 +5183,19 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAnonymousType1() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @constructor */\n" +
+         "f().bar = function() {};");
+   }
+ 
+   public void testAnonymousType2() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @interface */\n" +
+         "f().bar = function() {};");
+   }
+ 
+   public void testAnonymousType3() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @enum */\n" +
+         "f().bar = {FOO: 1};");
+   }
+diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+index 349cc59..e6282ee 100644
+--- a/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -3923,13 +3923,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "};");
+   }
+ 
+-  public void testGetprop4() throws Exception {
+-    testTypes("var x = null; x.prop = 3;",
+-        "No properties on this expression\n" +
+-        "found   : null\n" +
+-        "required: Object");
+-  }
+-
+   public void testGetpropDict1() throws Exception {
+     testTypes("/**\n" +
+               " * @constructor\n" +
+@@ -6182,17 +6175,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "Property unknownProp never defined on Type");
+   }
+ 
+-  public void testIssue810() throws Exception {
+-    testTypes(
+-        "/** @constructor */" +
+-        "var Type = function () {" +
+-        "};" +
+-        "Type.prototype.doIt = function(obj) {" +
+-        "  this.prop = obj.unknownProp;" +
+-        "};",
+-        "Property unknownProp never defined on obj");
+-  }
+-
+   /**
+    * Tests that the || operator is type checked correctly, that is of
+    * the type of the first argument or of the second argument. See
+@@ -7452,19 +7434,19 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAnonymousType1() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @constructor */\n" +
+         "f().bar = function() {};");
+   }
+ 
+   public void testAnonymousType2() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @interface */\n" +
+         "f().bar = function() {};");
+   }
+ 
+   public void testAnonymousType3() throws Exception {
+-    testTypes("function f() { return {}; }" +
++    testTypes("function f() {}" +
+         "/** @enum */\n" +
+         "f().bar = {FOO: 1};");
+   }

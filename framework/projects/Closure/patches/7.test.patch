@@ -1,0 +1,65 @@
+diff --git a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+index 704c969..7a5eedb 100644
+--- a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
++++ b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+@@ -117,20 +117,6 @@ public class ClosureReverseAbstractInterpreterTest extends
+         NULL_TYPE);
+   }
+ 
+-  public void testGoogIsFunction2() throws Exception {
+-    testClosureFunction("goog.isFunction",
+-        OBJECT_NUMBER_STRING_BOOLEAN,
+-        U2U_CONSTRUCTOR_TYPE,
+-        OBJECT_NUMBER_STRING_BOOLEAN);
+-  }
+-
+-  public void testGoogIsFunction3() throws Exception {
+-    testClosureFunction("goog.isFunction",
+-        createUnionType(U2U_CONSTRUCTOR_TYPE,NUMBER_STRING_BOOLEAN),
+-        U2U_CONSTRUCTOR_TYPE,
+-        NUMBER_STRING_BOOLEAN);
+-  }
+-
+   public void testGoogIsArray() throws Exception {
+     testClosureFunction("goog.isArray",
+         OBJECT_TYPE,
+diff --git a/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java b/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
+index ea687a5..632f5a8 100644
+--- a/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
++++ b/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
+@@ -460,35 +460,6 @@ public class SemanticReverseAbstractInterpreterTest
+   }
+ 
+   @SuppressWarnings("unchecked")
+-  public void testTypeof3() {
+-    FlowScope blind = newScope();
+-    testBinop(blind,
+-        Token.EQ,
+-        new Node(Token.TYPEOF, createVar(
+-            blind, "a", OBJECT_NUMBER_STRING_BOOLEAN)),
+-        Node.newString("function"),
+-        Sets.newHashSet(
+-            new TypedName("a", U2U_CONSTRUCTOR_TYPE)),
+-        Sets.newHashSet(
+-            new TypedName("a", OBJECT_NUMBER_STRING_BOOLEAN)));
+-  }
+-
+-  @SuppressWarnings("unchecked")
+-  public void testTypeof4() {
+-    FlowScope blind = newScope();
+-    testBinop(blind,
+-        Token.EQ,
+-        new Node(Token.TYPEOF, createVar(
+-            blind, "a", createUnionType(
+-                U2U_CONSTRUCTOR_TYPE,NUMBER_STRING_BOOLEAN))),
+-        Node.newString("function"),
+-        Sets.newHashSet(
+-            new TypedName("a", U2U_CONSTRUCTOR_TYPE)),
+-        Sets.newHashSet(
+-            new TypedName("a", NUMBER_STRING_BOOLEAN)));
+-  }
+-
+-  @SuppressWarnings("unchecked")
+   public void testInstanceOf() {
+     FlowScope blind = newScope();
+     testBinop(blind,

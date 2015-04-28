@@ -1,0 +1,33 @@
+diff --git a/org/apache/commons/math3/linear/SparseRealVectorTest.java b/org/apache/commons/math3/linear/SparseRealVectorTest.java
+index 3978fa5..d5e09f9 100644
+--- a/org/apache/commons/math3/linear/SparseRealVectorTest.java
++++ b/org/apache/commons/math3/linear/SparseRealVectorTest.java
+@@ -237,25 +237,14 @@ public class SparseRealVectorTest extends RealVectorAbstractTest {
+ 
+         @Override
+         public boolean isNaN() {
+-            boolean isNaN = false;
+-            for (int i = 0; i < data.length; i++) {
+-                isNaN |= Double.isNaN(data[i]);
+-            }
+-            return isNaN;
++            throw unsupported();
+         }
+ 
+         @Override
+         public boolean isInfinite() {
+-            boolean isInfinite = false;
+-            for (int i = 0; i < data.length; i++) {
+-                final double x = data[i];
+-                if (Double.isNaN(x)) {
+-                    return false;
+-                }
+-                isInfinite |= Double.isInfinite(x);
+-            }
+-            return isInfinite;
++            throw unsupported();
+         }
++
+     }
+ 
+     @Override

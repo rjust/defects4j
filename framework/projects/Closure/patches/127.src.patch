@@ -1,0 +1,29 @@
+diff --git a/com/google/javascript/jscomp/UnreachableCodeElimination.java b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+index e6d88a8..4cd1641 100644
+--- a/com/google/javascript/jscomp/UnreachableCodeElimination.java
++++ b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+@@ -167,23 +167,13 @@ class UnreachableCodeElimination implements CompilerPass {
+                 outEdges.get(0).getValue() == Branch.UNCOND);
+             Node fallThrough = computeFollowing(n);
+             Node nextCfgNode = outEdges.get(0).getDestination().getValue();
+-            if (nextCfgNode == fallThrough && !inFinally(n.getParent(), n)) {
++            if (nextCfgNode == fallThrough) {
+               removeNode(n);
+             }
+           }
+       }
+     }
+ 
+-    private boolean inFinally(Node parent, Node child) {
+-      if (parent == null || parent.isFunction()) {
+-        return false;
+-      } else if (NodeUtil.isTryFinallyNode(parent, child)) {
+-        return true;
+-      } else {
+-        return inFinally(parent.getParent(), parent);
+-      }
+-    }
+-
+     private Node computeFollowing(Node n) {
+       Node next = ControlFlowAnalysis.computeFollowNode(n);
+       while (next != null && next.isBlock()) {

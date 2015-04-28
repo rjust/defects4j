@@ -1,0 +1,18 @@
+diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
+index a43169a..dbca8bc 100644
+--- a/com/google/javascript/jscomp/VarCheckTest.java
++++ b/com/google/javascript/jscomp/VarCheckTest.java
+@@ -365,13 +365,6 @@ public class VarCheckTest extends CompilerTestCase {
+         null, VarCheck.VAR_ARGUMENTS_SHADOWED_ERROR);
+   }
+ 
+-  public void testNoUndeclaredVarWhenUsingClosurePass() {
+-    enableClosurePass();
+-    // We don't want to get goog as an undeclared var here.
+-    test("goog.require('namespace.Class1');\n", null,
+-        ProcessClosurePrimitives.MISSING_PROVIDE_ERROR);
+-  }
+-
+   private final static class VariableTestCheck implements CompilerPass {
+ 
+     final AbstractCompiler compiler;

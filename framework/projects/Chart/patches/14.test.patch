@@ -1,0 +1,207 @@
+Index: org/jfree/chart/plot/junit/XYPlotTests.java
+===================================================================
+--- org/jfree/chart/plot/junit/XYPlotTests.java	(revision 811)
++++ org/jfree/chart/plot/junit/XYPlotTests.java	(revision 809)
+@@ -2,7 +2,7 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+@@ -27,7 +27,7 @@
+  * ----------------
+  * XYPlotTests.java
+  * ----------------
+- * (C) Copyright 2003-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2003-2007, by Object Refinery Limited and Contributors.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+  * Contributor(s):   -;
+@@ -43,8 +43,6 @@
+  * 07-Feb-2007 : Added test1654215() (DG);
+  * 24-May-2007 : Added testDrawSeriesWithZeroItems() (DG);
+  * 20-Jun-2007 : Removed JCommon dependencies (DG);
+- * 07-Apr-2008 : Added testRemoveDomainMarker() and 
+- *               testRemoveRangeMarker() (DG);
+  * 
+  */
+ 
+@@ -76,10 +74,8 @@
+ import org.jfree.chart.LegendItemCollection;
+ import org.jfree.chart.annotations.XYTextAnnotation;
+ import org.jfree.chart.axis.AxisLocation;
+-import org.jfree.chart.axis.DateAxis;
+ import org.jfree.chart.axis.NumberAxis;
+ import org.jfree.chart.event.MarkerChangeListener;
+-import org.jfree.chart.labels.StandardXYToolTipGenerator;
+ import org.jfree.chart.plot.IntervalMarker;
+ import org.jfree.chart.plot.Marker;
+ import org.jfree.chart.plot.PlotOrientation;
+@@ -376,17 +372,6 @@
+         plot2.setQuadrantPaint(3, new GradientPaint(4.0f, 5.0f, Color.red,
+                 6.0f, 7.0f, Color.blue));
+         assertTrue(plot1.equals(plot2));  
+-        
+-        plot1.setDomainTickBandPaint(Color.red);
+-        assertFalse(plot1.equals(plot2));
+-        plot2.setDomainTickBandPaint(Color.red);
+-        assertTrue(plot1.equals(plot2));
+-        
+-        plot1.setRangeTickBandPaint(Color.blue);
+-        assertFalse(plot1.equals(plot2));
+-        plot2.setRangeTickBandPaint(Color.blue);
+-        assertTrue(plot1.equals(plot2));
+-        
+     }
+ 
+     /**
+@@ -531,17 +516,7 @@
+         assertFalse(p1.equals(p2));
+         p2.mapDatasetToRangeAxis(2, 1);
+         assertTrue(p1.equals(p2));
+-
+-        p1.getRenderer().setBaseOutlinePaint(Color.cyan);
+-        assertFalse(p1.equals(p2));
+-        p2.getRenderer().setBaseOutlinePaint(Color.cyan);
+-        assertTrue(p1.equals(p2));
+         
+-        p1.getRenderer(1).setBaseOutlinePaint(Color.red);
+-        assertFalse(p1.equals(p2));
+-        p2.getRenderer(1).setBaseOutlinePaint(Color.red);
+-        assertTrue(p1.equals(p2));
+-        
+     }
+     
+     /**
+@@ -593,37 +568,6 @@
+     }
+ 
+     /**
+-     * Serialize an instance, restore it, and check for equality.  This test 
+-     * uses a {@link DateAxis} and a {@link StandardXYToolTipGenerator}.
+-     */
+-    public void testSerialization2() {
+-
+-        IntervalXYDataset data1 = createDataset1();
+-        XYItemRenderer renderer1 = new XYBarRenderer(0.20);
+-        renderer1.setBaseToolTipGenerator(
+-                StandardXYToolTipGenerator.getTimeSeriesInstance());
+-        XYPlot p1 = new XYPlot(data1, new DateAxis("Date"), null, renderer1);
+-        XYPlot p2 = null;
+-
+-        try {
+-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+-            ObjectOutput out = new ObjectOutputStream(buffer);
+-            out.writeObject(p1);
+-            out.close();
+-
+-            ObjectInput in = new ObjectInputStream(
+-                    new ByteArrayInputStream(buffer.toByteArray()));
+-            p2 = (XYPlot) in.readObject();
+-            in.close();
+-        }
+-        catch (Exception e) {
+-            fail(e.toString());
+-        }
+-        assertEquals(p1, p2);
+-
+-    }
+-
+-    /**
+      * Problem to reproduce a bug in serialization.  The bug (first reported 
+      * against the {@link org.jfree.chart.plot.CategoryPlot} class) is a null 
+      * pointer exception that occurs when drawing a plot after deserialization.
+@@ -1018,23 +962,5 @@
+         }
+         assertTrue(success);
+     }
+-    
+-    /**
+-     * Check that removing a marker that isn't assigned to the plot returns 
+-     * false.
+-     */
+-    public void testRemoveDomainMarker() {
+-    	XYPlot plot = new XYPlot();
+-    	assertFalse(plot.removeDomainMarker(new ValueMarker(0.5)));
+-    }
+ 
+-    /**
+-     * Check that removing a marker that isn't assigned to the plot returns 
+-     * false.
+-     */
+-    public void testRemoveRangeMarker() {
+-    	XYPlot plot = new XYPlot();
+-    	assertFalse(plot.removeRangeMarker(new ValueMarker(0.5)));
+-    }
+-
+ }
+Index: org/jfree/chart/plot/junit/CategoryPlotTests.java
+===================================================================
+--- org/jfree/chart/plot/junit/CategoryPlotTests.java	(revision 811)
++++ org/jfree/chart/plot/junit/CategoryPlotTests.java	(revision 809)
+@@ -2,7 +2,7 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+@@ -27,7 +27,7 @@
+  * ----------------------
+  * CategoryPlotTests.java
+  * ----------------------
+- * (C) Copyright 2003-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2003-2007, by Object Refinery Limited and Contributors.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+  * Contributor(s):   -;
+@@ -40,9 +40,7 @@
+  * 05-Feb-2007 : Added testAddDomainMarker() and testAddRangeMarker() (DG);
+  * 07-Feb-2007 : Added test1654215() (DG);
+  * 20-Jun-2007 : Removed JCommon dependencies (DG);
+- * 07-Apr-2008 : Added testRemoveDomainMarker() and 
+- *               testRemoveRangeMarker() (DG);
+- *
++ * 
+  */
+ 
+ package org.jfree.chart.plot.junit;
+@@ -121,8 +119,7 @@
+      */
+     public void testConstructor() {
+         CategoryPlot plot = new CategoryPlot();
+-        assertEquals(new RectangleInsets(4.0, 4.0, 4.0, 4.0), 
+-        		plot.getAxisOffset());
++        assertEquals(RectangleInsets.ZERO_INSETS, plot.getAxisOffset());
+     }
+ 
+     /**
+@@ -761,23 +758,4 @@
+         }
+         assertTrue(pass);
+     }
+-    
+-    /**
+-     * Check that removing a marker that isn't assigned to the plot returns 
+-     * false.
+-     */
+-    public void testRemoveDomainMarker() {
+-    	CategoryPlot plot = new CategoryPlot();
+-    	assertFalse(plot.removeDomainMarker(new CategoryMarker("Category 1")));
+-    }
+-
+-    /**
+-     * Check that removing a marker that isn't assigned to the plot returns 
+-     * false.
+-     */
+-    public void testRemoveRangeMarker() {
+-    	CategoryPlot plot = new CategoryPlot();
+-    	assertFalse(plot.removeRangeMarker(new ValueMarker(0.5)));
+-    }
+-
+ }

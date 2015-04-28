@@ -1,0 +1,102 @@
+diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+index 61d4c31..aa052ec 100644
+--- a/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/com/google/javascript/jscomp/NodeUtilTest.java
+@@ -18,7 +18,6 @@ package com.google.javascript.jscomp;
+ 
+ import com.google.common.base.Preconditions;
+ import com.google.common.base.Predicates;
+-import com.google.common.collect.ImmutableSet;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Sets;
+ import com.google.javascript.rhino.Node;
+@@ -1067,35 +1066,4 @@ public class NodeUtilTest extends TestCase {
+ 
+     return NodeUtil.evaluatesToLocalValue(value);
+   }
+-  
+-  public void testValidDefine() {
+-    assertTrue(testValidDefineValue("1"));
+-    assertTrue(testValidDefineValue("-3"));
+-    assertTrue(testValidDefineValue("true"));
+-    assertTrue(testValidDefineValue("false"));
+-    assertTrue(testValidDefineValue("'foo'"));
+-    
+-    assertFalse(testValidDefineValue("x"));
+-    assertFalse(testValidDefineValue("null"));
+-    assertFalse(testValidDefineValue("undefined"));
+-    assertFalse(testValidDefineValue("NaN"));
+-    
+-    assertTrue(testValidDefineValue("!true"));
+-    assertTrue(testValidDefineValue("-true"));
+-    assertTrue(testValidDefineValue("1 & 8"));
+-    assertTrue(testValidDefineValue("1 + 8"));
+-    assertTrue(testValidDefineValue("'a' + 'b'"));
+-
+-    assertFalse(testValidDefineValue("1 & foo"));
+-  }
+-  
+-  private boolean testValidDefineValue(String js) {
+-    Node script = parse("var test = " + js +";");
+-    Node var = script.getFirstChild();
+-    Node name = var.getFirstChild();
+-    Node value = name.getFirstChild();
+-
+-    ImmutableSet<String> defines = ImmutableSet.of();
+-    return NodeUtil.isValidDefineValue(value, defines);   
+-  }
+ }
+diff --git a/com/google/javascript/jscomp/ProcessDefinesTest.java b/com/google/javascript/jscomp/ProcessDefinesTest.java
+index 6ab1ae7..b4b3816 100644
+--- a/com/google/javascript/jscomp/ProcessDefinesTest.java
++++ b/com/google/javascript/jscomp/ProcessDefinesTest.java
+@@ -84,15 +84,10 @@ public class ProcessDefinesTest extends CompilerTestCase {
+         null, ProcessDefines.INVALID_DEFINE_TYPE_ERROR);
+   }
+ 
+-  public void testDefineWithBadValue1() {
++  public void testDefineWithBadValue() {
+     test("/** @define {boolean} */ var DEF = new Boolean(true);", null,
+         ProcessDefines.INVALID_DEFINE_INIT_ERROR);
+   }
+-  
+-  public void testDefineWithBadValue2() {
+-    test("/** @define {string} */ var DEF = 'x' + y;", null,
+-        ProcessDefines.INVALID_DEFINE_INIT_ERROR);
+-  }  
+ 
+   public void testDefineWithDependentValue() {
+     test("/** @define {boolean} */ var BASE = false;\n" +
+@@ -137,32 +132,6 @@ public class ProcessDefinesTest extends CompilerTestCase {
+         "var DEF_OVERRIDE_TO_TRUE=true");
+   }
+ 
+-  public void testOverridingString0() {
+-    test(
+-        "/** @define {string} */ var DEF_OVERRIDE_STRING = 'x';",
+-        "var DEF_OVERRIDE_STRING=\"x\"");
+-  }
+-  
+-  public void testOverridingString1() {
+-    test(
+-        "/** @define {string} */ var DEF_OVERRIDE_STRING = 'x' + 'y';",
+-        "var DEF_OVERRIDE_STRING=\"x\" + \"y\"");
+-  }  
+-  
+-  public void testOverridingString2() {
+-    overrides.put("DEF_OVERRIDE_STRING", Node.newString("foo"));
+-    test(
+-        "/** @define {string} */ var DEF_OVERRIDE_STRING = 'x';",
+-        "var DEF_OVERRIDE_STRING=\"foo\"");
+-  }  
+-  
+-  public void testOverridingString3() {
+-    overrides.put("DEF_OVERRIDE_STRING", Node.newString("foo"));
+-    test(
+-        "/** @define {string} */ var DEF_OVERRIDE_STRING = 'x' + 'y';",
+-        "var DEF_OVERRIDE_STRING=\"foo\"");
+-  }
+-  
+   public void testMisspelledOverride() {
+     overrides.put("DEF_BAD_OVERIDE", new Node(Token.TRUE));
+     test("/** @define {boolean} */ var DEF_BAD_OVERRIDE = true",

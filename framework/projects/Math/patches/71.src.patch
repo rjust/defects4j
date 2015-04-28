@@ -1,0 +1,91 @@
+diff --git a/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java b/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
+index 6ee9bd5..935bb8b 100644
+--- a/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
++++ b/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
+@@ -271,16 +271,8 @@ public class AdamsBashforthIntegrator extends AdamsIntegrator {
+                     if (manager.evaluateStep(interpolatorTmp)) {
+                         final double dt = manager.getEventTime() - stepStart;
+                         if (Math.abs(dt) <= Math.ulp(stepStart)) {
+-                            // we cannot simply truncate the step, reject the current computation
+-                            // and let the loop compute another state with the truncated step.
+-                            // it is so small (much probably exactly 0 due to limited accuracy)
+-                            // that the code above would fail handling it.
+-                            // So we set up an artificial 0 size step by copying states
+-                            interpolator.storeTime(stepStart);
+-                            System.arraycopy(y, 0, yTmp, 0, y0.length);
+-                            hNew     = 0;
+-                            stepSize = 0;
+-                            loop     = false;
++                            // rejecting the step would lead to a too small next step, we accept it
++                            loop = false;
+                         } else {
+                             // reject the step to match exactly the next switch time
+                             hNew = dt;
+diff --git a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
+index e0e2f0d..27ade7b 100644
+--- a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
++++ b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
+@@ -289,16 +289,8 @@ public class AdamsMoultonIntegrator extends AdamsIntegrator {
+                     if (manager.evaluateStep(interpolatorTmp)) {
+                         final double dt = manager.getEventTime() - stepStart;
+                         if (Math.abs(dt) <= Math.ulp(stepStart)) {
+-                            // we cannot simply truncate the step, reject the current computation
+-                            // and let the loop compute another state with the truncated step.
+-                            // it is so small (much probably exactly 0 due to limited accuracy)
+-                            // that the code above would fail handling it.
+-                            // So we set up an artificial 0 size step by copying states
+-                            interpolator.storeTime(stepStart);
+-                            System.arraycopy(y, 0, yTmp, 0, y0.length);
+-                            hNew     = 0;
+-                            stepSize = 0;
+-                            loop     = false;
++                            // rejecting the step would lead to a too small next step, we accept it
++                            loop = false;
+                         } else {
+                             // reject the step to match exactly the next switch time
+                             hNew = dt;
+diff --git a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+index e03be9e..34b3dc1 100644
+--- a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
++++ b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+@@ -292,16 +292,8 @@ public abstract class EmbeddedRungeKuttaIntegrator
+           if (manager.evaluateStep(interpolator)) {
+               final double dt = manager.getEventTime() - stepStart;
+               if (Math.abs(dt) <= Math.ulp(stepStart)) {
+-                  // we cannot simply truncate the step, reject the current computation
+-                  // and let the loop compute another state with the truncated step.
+-                  // it is so small (much probably exactly 0 due to limited accuracy)
+-                  // that the code above would fail handling it.
+-                  // So we set up an artificial 0 size step by copying states
+-                  interpolator.storeTime(stepStart);
+-                  System.arraycopy(y, 0, yTmp, 0, y0.length);
+-                  hNew     = 0;
+-                  stepSize = 0;
+-                  loop     = false;
++                  // rejecting the step would lead to a too small next step, we accept it
++                  loop = false;
+               } else {
+                   // reject the step to match exactly the next switch time
+                   hNew = dt;
+diff --git a/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java b/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
+index b61b0b1..3227b98 100644
+--- a/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
++++ b/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
+@@ -172,15 +172,8 @@ public abstract class RungeKuttaIntegrator extends AbstractIntegrator {
+         if (manager.evaluateStep(interpolator)) {
+             final double dt = manager.getEventTime() - stepStart;
+             if (Math.abs(dt) <= Math.ulp(stepStart)) {
+-                // we cannot simply truncate the step, reject the current computation
+-                // and let the loop compute another state with the truncated step.
+-                // it is so small (much probably exactly 0 due to limited accuracy)
+-                // that the code above would fail handling it.
+-                // So we set up an artificial 0 size step by copying states
+-                interpolator.storeTime(stepStart);
+-                System.arraycopy(y, 0, yTmp, 0, y0.length);
+-                stepSize = 0;
+-                loop     = false;
++                // rejecting the step would lead to a too small next step, we accept it
++                loop = false;
+             } else {
+                 // reject the step to match exactly the next switch time
+                 stepSize = dt;

@@ -1,0 +1,32 @@
+diff --git a/org/apache/commons/math/stat/Frequency.java b/org/apache/commons/math/stat/Frequency.java
+index 237c2f6..a5b8d7b 100644
+--- a/org/apache/commons/math/stat/Frequency.java
++++ b/org/apache/commons/math/stat/Frequency.java
+@@ -101,26 +101,9 @@ public class Frequency implements Serializable {
+      * </p>
+      * 
+      * @param v the value to add.
+-     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries
+-     * @throws ClassCastException if <code>v</code> is not Comparable
+-     * @deprecated use {@link #addValue(Comparable)} instead
++     * @throws IllegalArgumentException if <code>v</code> is not comparable.
+      */
+-    @Deprecated
+     public void addValue(Object v) {
+-        addValue((Comparable<?>) v);
+-    }
+-    
+-    /**
+-     * Adds 1 to the frequency count for v.
+-     * <p>
+-     * If other objects have already been added to this Frequency, v must
+-     * be comparable to those that have already been added.
+-     * </p>
+-     * 
+-     * @param v the value to add.
+-     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries
+-     */
+-    public void addValue(Comparable<?>v){
+         Object obj = v;
+         if (v instanceof Integer) {
+            obj = Long.valueOf(((Integer) v).longValue());

@@ -1,0 +1,14 @@
+diff --git a/org/apache/commons/math3/analysis/differentiation/DSCompiler.java b/org/apache/commons/math3/analysis/differentiation/DSCompiler.java
+index d5a3c18..9d08555 100644
+--- a/org/apache/commons/math3/analysis/differentiation/DSCompiler.java
++++ b/org/apache/commons/math3/analysis/differentiation/DSCompiler.java
+@@ -1415,9 +1415,6 @@ public class DSCompiler {
+ 
+         }
+ 
+-        // fix value to take special cases (+0/+0, +0/-0, -0/+0, -0/-0, +/-infinity) correctly
+-        result[resultOffset] = FastMath.atan2(y[yOffset], x[xOffset]);
+-
+     }
+ 
+     /** Compute hyperbolic cosine of a derivative structure.

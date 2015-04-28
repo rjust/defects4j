@@ -1,0 +1,14 @@
+Index: org/jfree/data/time/TimeSeries.java
+===================================================================
+--- org/jfree/data/time/TimeSeries.java	(revision 2227)
++++ org/jfree/data/time/TimeSeries.java	(revision 2225)
+@@ -1054,8 +1054,7 @@
+             throw new IllegalArgumentException("Requires start <= end.");
+         }
+         TimeSeries copy = (TimeSeries) super.clone();
+-        copy.minY = Double.NaN;
+-        copy.maxY = Double.NaN;
++
+         copy.data = new java.util.ArrayList();
+         if (this.data.size() > 0) {
+             for (int index = start; index <= end; index++) {

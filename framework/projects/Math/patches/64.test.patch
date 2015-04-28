@@ -1,0 +1,33 @@
+diff --git a/org/apache/commons/math/optimization/general/MinpackTest.java b/org/apache/commons/math/optimization/general/MinpackTest.java
+index 620df2d..59467b2 100644
+--- a/org/apache/commons/math/optimization/general/MinpackTest.java
++++ b/org/apache/commons/math/optimization/general/MinpackTest.java
+@@ -152,14 +152,14 @@ public class MinpackTest extends TestCase {
+     minpackTest(new FreudensteinRothFunction(new double[] { 5.0, -20.0 },
+                                              12432.833948863, 6.9988751744895,
+                                              new double[] {
+-                                                11.41300466147456,
+-                                                -0.896796038685959
++                                               11.4121122022341,
++                                               -0.8968550851268697
+                                              }), false);
+     minpackTest(new FreudensteinRothFunction(new double[] { 50.0, -200.0 },
+                                              11426454.595762, 6.99887517242903,
+                                              new double[] {
+-                                                 11.412781785788564,
+-                                                 -0.8968051074920405
++                                               11.412069435091231,
++                                               -0.8968582807605691
+                                              }), false);
+   }
+ 
+@@ -325,8 +325,7 @@ public class MinpackTest extends TestCase {
+     minpackTest(new JennrichSampsonFunction(10, new double[] { 0.3, 0.4 },
+                                             64.5856498144943, 11.1517793413499,
+                                             new double[] {
+- //                                            0.2578330049, 0.257829976764542
+-                                               0.2578199266368004, 0.25782997676455244
++                                             0.2578330049, 0.257829976764542
+                                             }), false);
+   }
+ 

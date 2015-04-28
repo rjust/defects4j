@@ -1,0 +1,38 @@
+diff --git a/com/google/javascript/jscomp/InlineVariablesConstantsTest.java b/com/google/javascript/jscomp/InlineVariablesConstantsTest.java
+index be1cead..3810384 100644
+--- a/com/google/javascript/jscomp/InlineVariablesConstantsTest.java
++++ b/com/google/javascript/jscomp/InlineVariablesConstantsTest.java
+@@ -49,6 +49,9 @@ public class InlineVariablesConstantsTest extends CompilerTestCase {
+     test("var AA; if (false) AA=1; AA;", "if (false) 1; 1;");
+     testSame("var AA; if (false) AA=1; else AA=2; AA;");
+ 
++    test("var AA;(function () {AA=1})()",
++         "(function () {1})()");
++
+     // Make sure that nothing explodes if there are undeclared variables.
+     testSame("var x = AA;");
+ 
+@@ -72,6 +75,9 @@ public class InlineVariablesConstantsTest extends CompilerTestCase {
+     test("/** @const */var a_a=10; a_a + a_a;", "10+10");
+     test("/** @const */var aa=1;", "");
+     test("/** @const */var aa; aa=1;", "1");
++    test("/** @const */var aa;(function () {aa=1})()", "(function () {1})()");
++    test("/** @const */var aa;(function () {aa=1})(); var z=aa",
++         "(function () {1})(); var z=1");
+     testSame("/** @const */var aa;(function () {var y; aa=y})(); var z=aa");
+ 
+     // Don't inline if it will make the output larger.
+diff --git a/com/google/javascript/jscomp/InlineVariablesTest.java b/com/google/javascript/jscomp/InlineVariablesTest.java
+index d1c0ed7..23f9fee 100644
+--- a/com/google/javascript/jscomp/InlineVariablesTest.java
++++ b/com/google/javascript/jscomp/InlineVariablesTest.java
+@@ -1064,9 +1064,4 @@ public class InlineVariablesTest extends CompilerTestCase {
+         "F.prototype.inc = function() { this.a++; return 10; };" +
+         "F.prototype.bar = function() { var x = this.inc(); this.a += x; };");
+   }
+-
+-  public void testExternalIssue1053() {
+-    testSame(
+-        "var u; function f() { u = Random(); var x = u; f(); alert(x===u)}");
+-  }
+ }

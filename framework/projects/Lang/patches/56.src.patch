@@ -1,0 +1,32 @@
+diff --git a/org/apache/commons/lang/time/FastDateFormat.java b/org/apache/commons/lang/time/FastDateFormat.java
+index 756290f..ac96c58 100644
+--- a/org/apache/commons/lang/time/FastDateFormat.java
++++ b/org/apache/commons/lang/time/FastDateFormat.java
+@@ -137,11 +134,11 @@ public class FastDateFormat extends Format {
+     /**
+      * The parsed rules.
+      */
+-    private transient Rule[] mRules;
++    private Rule[] mRules;
+     /**
+      * The estimated maximum length.
+      */
+-    private transient int mMaxLengthEstimate;
++    private int mMaxLengthEstimate;
+ 
+     //-----------------------------------------------------------------------
+     /**
+@@ -1016,13 +1013,6 @@ public class FastDateFormat extends Format {
+     public String toString() {
+         return "FastDateFormat[" + mPattern + "]";
+     }
+-
+-    // Serializing
+-    //-----------------------------------------------------------------------
+-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+-        in.defaultReadObject();
+-        init();
+-    }
+     
+     // Rules
+     //-----------------------------------------------------------------------

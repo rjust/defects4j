@@ -1,0 +1,25 @@
+Index: org/jfree/chart/plot/XYPlot.java
+===================================================================
+--- org/jfree/chart/plot/XYPlot.java	(revision 2183)
++++ org/jfree/chart/plot/XYPlot.java	(revision 2182)
+@@ -4490,14 +4490,12 @@
+                     }
+                 }
+                 
+-                if (r != null) {
+-                    Collection c = r.getAnnotations();
+-                    Iterator i = c.iterator();
+-                    while (i.hasNext()) {
+-                        XYAnnotation a = (XYAnnotation) i.next();
+-                        if (a instanceof XYAnnotationBoundsInfo) {
+-                            includedAnnotations.add(a);
+-                        }
++                Collection c = r.getAnnotations();
++                Iterator i = c.iterator();
++                while (i.hasNext()) {
++                    XYAnnotation a = (XYAnnotation) i.next();
++                    if (a instanceof XYAnnotationBoundsInfo) {
++                        includedAnnotations.add(a);
+                     }
+                 }
+             }
