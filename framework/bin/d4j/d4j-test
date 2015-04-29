@@ -81,6 +81,9 @@ $project->{prog_root} = $WORK_DIR;
 # Test project version
 
 my $tmp = "$WORK_DIR/.failing_tests";
+
+# Clean temporary file that holds test results
+`>$tmp`;
 $project->run_tests($tmp) == 0 or die "Cannot run tests!";
 
 my $trigger = Utils::get_failing_tests($tmp) or die "Cannot determine triggering tests!";
