@@ -49,9 +49,9 @@ sub _checkout_cmd {
 sub _apply_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $work_dir, $patch_file, $path) = @_;
-    # Path to working directory if provided
-    $work_dir = "$work_dir/$path" if defined $path;
-    return "git apply --directory=$work_dir $patch_file 2>&1";
+    # Path to patch directory within the working directory
+    $path = $path // ".";
+    return "git --work-tree=$work_dir apply --directory=$work_dir/$path $patch_file 2>&1";
 }
 
 sub _diff_cmd {
