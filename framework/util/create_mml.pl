@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,10 +37,10 @@ create_mml.pl -p project_id -c class_dir -o out_dir [-v version_id]
 Generates a mml file for every list of project-related classes in
 C<class_dir> -- a list of classes has to be provided in a file with the
 following naming convention:
-B<"version_id".src>. 
+B<"version_id".src>.
 The generated mml files are named "version_id".mml and written to C<out_dir>.
 
-If the C<version_id> is provided in addition to the C<project_id>, then only 
+If the C<version_id> is provided in addition to the C<project_id>, then only
 this C<version_id> is considered for the project.
 
 =cut
@@ -93,7 +93,7 @@ if (defined $VID) {
 }
 
 foreach my $vid (@ids) {
-    #TODO: Skip id if mml file already exists and the 
+    #TODO: Skip id if mml file already exists and the
     # list of classes did not change
 
     my @classes = _get_class_list($vid);
@@ -110,7 +110,7 @@ foreach my $vid (@ids) {
         foreach my $op (@ops) {
             # Skip disabled operators
             next if $template =~ /-$op<"$class">/;
-            print FILE "$op<\"$class\">;\n"; 
+            print FILE "$op<\"$class\">;\n";
         }
     }
     close(FILE);
@@ -138,7 +138,7 @@ sub _get_version_ids {
     my @ids = ();
     foreach (@files) {
         /(\d+)\.src/ or next;
-        push(@ids, $1);    
+        push(@ids, $1);
     }
     return @ids;
 }

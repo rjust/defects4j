@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,9 +34,9 @@ merge_tests.pl log_file target_src_dir other_src_dir [test_name]
 
 =head1 DESCRIPTION
 
-Parses the file F<log_file> and replaces failing test methods in C<target_src_dir> 
-by replacing the body of each broken test method in the source file with the body 
-of the corresponding source file in C<other_src_dir>. The source file of the test 
+Parses the file F<log_file> and replaces failing test methods in C<target_src_dir>
+by replacing the body of each broken test method in the source file with the body
+of the corresponding source file in C<other_src_dir>. The source file of the test
 class is backed up prior to the first modification.
 
 If F<test_name> is specified, only that test is replaced. F<test_name> must be in
@@ -63,7 +63,7 @@ my $test_name= shift @ARGV;
 =pod
 
 The log file may contain arbitrary lines -- the script only considers lines that
-match the pattern: B</--- ([^:]*)(::(.*))?/>. 
+match the pattern: B</--- ([^:]*)(::(.*))?/>.
 
 =head3 Example entries in the log file
 
@@ -75,7 +75,7 @@ match the pattern: B</--- ([^:]*)(::(.*))?/>.
 
 =back
 
-All lines matching the pattern are sorted, such that a failing test class in the 
+All lines matching the pattern are sorted, such that a failing test class in the
 list will appear before any of its failing methods.
 
 =cut
@@ -103,7 +103,7 @@ for (@list) {
 
     my $file1 = "$base_dir/$file.java";
     my $file2 = "$other_dir/$file.java";
-    
+
     open(IN, "<$file1") or die $!; my @lines1 = <IN>; close IN;
     open(IN, "<$file2") or die $!; my @lines2 = <IN>; close IN;
 
@@ -111,12 +111,12 @@ for (@list) {
     my @other = _get_method($method, @lines2);
 
     # Check whether method exists in both classes
-    if (!@target or !@other) { 
-        exit 1; 
+    if (!@target or !@other) {
+        exit 1;
     }
-    
+
     # Check whether methods differ
-    if (scalar(@target) == scalar(@other)) { 
+    if (scalar(@target) == scalar(@other)) {
         my $equal = 1;
         for (my $i=0; $i<scalar(@target); ++$i) {
             if ($target[$i] ne $other[$i]) {
@@ -140,24 +140,24 @@ sub _replace_method {
     }
 
     open(OUT, ">$file") or die $!;
-    
+
     for (my $i=0; $i<=$#class; ++$i) {
         if ($class[$i] =~ /^([^\/]*)public.+$method\(\)/) {
             my $index = $i;
             # Found the test to exclude
             my $space = $1;
-            # Check whether JUnit4 annotation is present            
+            # Check whether JUnit4 annotation is present
             if ($class[$i-1] =~ /\@Test/) {
                 --$index;
             }
 
-            # Remove all comments as they may contain unbalanced delimiters 
+            # Remove all comments as they may contain unbalanced delimiters
             # or brackets
             my @tmp = @class[$index..$#class];
             foreach (@tmp) {
                 s/^\s*\/\/.*/\/\//;
             }
-            
+
             my @result = extract_bracketed(join("", @tmp), '{"\'}', '[^\{]*');
             die "Could not extract method body" unless defined $result[0];
 
@@ -168,7 +168,7 @@ sub _replace_method {
             # Print replacement method
             foreach (@{$method_other}) {
                 print OUT "$_";
-            }            
+            }
             # Comment out broken method
             foreach (@class[$index..($index+$len-1)]) {
                 print OUT "// $_";
@@ -177,7 +177,7 @@ sub _replace_method {
             print OUT @class[($index+$len)..$#class];
 
             last;
-        } 
+        }
     }
     close(OUT);
 }
@@ -193,12 +193,12 @@ sub _get_method {
         if ($class[$i] =~ /^([^\/]*)public.+$method_name\(\)/) {
             # Found the test
             my $index = $i;
-            # Check whether JUnit4 annotation is present            
+            # Check whether JUnit4 annotation is present
             if ($class[$i-1] =~ /\@Test/) {
                 --$index;
             }
 
-            # Remove all comments as they may contain unbalanced delimiters 
+            # Remove all comments as they may contain unbalanced delimiters
             # or brackets
             my @tmp = @class[$index..$#class];
             foreach (@tmp) {
@@ -210,7 +210,7 @@ sub _get_method {
             my $len = scalar(split("\n", $result[2].$result[0]));
             @method = @class[$index..($index+$len-1)];
             last;
-        } 
+        }
     }
     return @method;
 }

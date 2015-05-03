@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,8 +35,8 @@ rm_broken_tests.pl log_file src_dir
 =head1 DESCRIPTION
 
 Parses the file F<log_file> and fixes failing test methods by replacing each
-broken test method with a dummy test method in the source file of the corresponding test 
-class. The source file of the test class is backed up prior to the first 
+broken test method with a dummy test method in the source file of the corresponding test
+class. The source file of the test class is backed up prior to the first
 modification.
 
 =cut
@@ -60,7 +60,7 @@ my $verbose = 0;
 =pod
 
 The log file may contain arbitrary lines -- the script only considers lines that
-match the pattern: B</--- ([^:]*)(::(.*))?/>. 
+match the pattern: B</--- ([^:]*)(::(.*))?/>.
 
 =head3 Example entries in the log file
 
@@ -72,7 +72,7 @@ match the pattern: B</--- ([^:]*)(::(.*))?/>.
 
 =back
 
-All lines matching the pattern are sorted, such that a failing test class in the 
+All lines matching the pattern are sorted, such that a failing test class in the
 list will appear before any of its failing methods.
 
 =cut
@@ -110,7 +110,7 @@ _write_buffers();
 
 sub _exclude_test_class {
     my $class = shift;
-    # We do not remove broken test classes as 
+    # We do not remove broken test classes as
     # this might cause compilation issues
 }
 
@@ -125,7 +125,7 @@ sub _remove_test_method {
         print STDERR "$0: $file does not exist -> SKIP ($method)\n" if $verbose;
         return;
     }
-    
+
     # Backup file if necessary
     if (! -e "$file.bak") {
         copy("$file","$file.bak") or die "Cannot backup file ($file): $!";
@@ -153,19 +153,19 @@ sub _remove_test_method {
             my $space = $1;
             # Dummy test
             my $dummy = "${space}public void $method() {}\n";
-            # Check whether JUnit4 annotation is present            
+            # Check whether JUnit4 annotation is present
             if ($lines[$i-1] =~ /\@Test/) {
                 $dummy = "${space}\@Test\n$dummy";
                 --$index;
             }
 
-            # Remove all comments as they may contain unbalanced delimiters 
+            # Remove all comments as they may contain unbalanced delimiters
             # or brackets
             my @tmp = @lines[$index..$#lines];
             foreach (@tmp) {
                 s/^\s*\/\/.*/\/\//;
             }
-            
+
             my @result = extract_bracketed(join("", @tmp), '{"\'}', '[^\{]*');
             die "Could not extract method body" unless defined $result[0];
 
@@ -183,7 +183,7 @@ sub _remove_test_method {
             push(@buffer, @lines[($index+$len)..$#lines]);
 
             last;
-        } 
+        }
     }
 
     if (@buffer) {
@@ -195,21 +195,21 @@ sub _remove_test_method {
                        ###### TODO: There is a problem with adding the @Override annotation
                        #              it is that when we are dealing with e.g, broken_tests
                        #              and specify them project wide, it may be that
-                       #              the file exists but not the method, so we 
+                       #              the file exists but not the method, so we
                        #              don't find it and assume it was in the super class
                        #              This is different than the case when we know it is
-                       #              failing for this particular revision. 
+                       #              failing for this particular revision.
                        "    public void $method() {} // Fails in super class\n";
 
         # Only add @Test annotation if we are using Junit 4
         $override =       "    \@Test\n" . $override if $is_buffer_junit4{$file};
 
-        
+
         # Read file buffer, determine closing curly brace of test class,
         # and insert test method before the brace.
         # TODO: This is probably not the most elegant solution.
         my @buffer = @{$buffers{$file}};
-        for (my $index=$#buffer; $index>=0; --$index) {       
+        for (my $index=$#buffer; $index>=0; --$index) {
             # Find closing curly
             next unless $buffer[$index] =~ /}/;
             # Insert dummy (empty) test method

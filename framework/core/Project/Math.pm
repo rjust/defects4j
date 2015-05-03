@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project/Math.pm -- Concrete project instance for Commons-math. 
+Project/Math.pm -- Concrete project instance for Commons-math.
 
 =head1 DESCRIPTION
 
@@ -49,16 +49,16 @@ sub new {
     my $src  = "src/main/java";
     my $test = "src/test";
     my $vcs = Vcs::Git->new($PID,
-                            "$REPO_DIR/$name.git", 
+                            "$REPO_DIR/$name.git",
                             "$SCRIPT_DIR/projects/$PID/commit-db");
-    
+
     return $class->SUPER::new($PID, $name, $vcs, $src, $test);
 }
 
 sub src_dir {
     my ($self, $revision_id) = @_;
 
-    # Init dir_map if necessary 
+    # Init dir_map if necessary
     $self->_build_dir_map();
 
     # Get src directory from lookup table
@@ -71,10 +71,10 @@ sub src_dir {
 
 sub test_dir {
     my ($self, $revision_id) = @_;
-    
-    # Init dir_map if necessary 
+
+    # Init dir_map if necessary
     $self->_build_dir_map();
-    
+
     # Get test directory from lookup table
     my $test = $self->{_dir_map}->{$revision_id}->{test};
     return $test if defined $test;
@@ -88,11 +88,11 @@ sub _build_dir_map {
 
     return if defined $self->{_dir_map};
 
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";    
+    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
     open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
     my $cache = {};
     while (<IN>) {
-        chomp; 
+        chomp;
         /([^,]+),([^,]+),(.+)/ or next;
         $cache->{$1} = {src=>$2, test=>$3};
     }

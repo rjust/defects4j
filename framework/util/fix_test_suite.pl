@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,36 +36,36 @@ fix_test_suite.pl -p project_id -d suite_dir [-v version_id] [-f include_file_pa
 
 =over 4
 
-=item B<-p C<project_id>> 
+=item B<-p C<project_id>>
 
 The id of the project for which test suites are fixed.
 
-=item B<-d F<suite_dir>> 
+=item B<-d F<suite_dir>>
 
 The directory that contains the test suites.
 
-=item B<-v C<version_id>> 
+=item B<-v C<version_id>>
 
 Only fix test suites for this version id (optional). Per default all
-version ids are considered. 
+version ids are considered.
 
-=item B<-f C<include_file_pattern>> 
+=item B<-f C<include_file_pattern>>
 
-The pattern of the test class file names that should be included (optional). 
-Per default all files (*.java) are included. 
+The pattern of the test class file names that should be included (optional).
+Per default all files (*.java) are included.
 
-=item B<-s C<test_suite_src>> 
+=item B<-s C<test_suite_src>>
 
-Only fix test suites originating from this source (optional). 
+Only fix test suites originating from this source (optional).
 A test suite source is a specific tool or configuration (e.g., evosuite-branch).
-Per default all test suite sources for the given project id are considered. 
+Per default all test suite sources for the given project id are considered.
 
-=item B<-t F<tmp_dir>> 
+=item B<-t F<tmp_dir>>
 
-The temporary directory to be used to check out revisions (optional). 
+The temporary directory to be used to check out revisions (optional).
 The default is F</tmp>.
 
-=item B<-D> 
+=item B<-D>
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -80,7 +80,7 @@ For each test suite for C<project_id> in C<suite_dir>:
 
 =item 1) Remove uncompilable test classes until the test suite compiles
 
-=item 2) Run test suite and monitor failing tests -- remove failing test methods 
+=item 2) Run test suite and monitor failing tests -- remove failing test methods
          and repeat until:
 
 
@@ -111,8 +111,8 @@ use warnings;
 use strict;
 
 use FindBin;
-use File::Basename;                                                              
-use Cwd qw(abs_path);                                                            
+use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
 
@@ -146,12 +146,12 @@ if (defined $VID) {
 
 =head2 Test Suites
 
-The test suites in C<suite_dir> have to be provided as an archive that conforms to the 
-following naming convention: 
+The test suites in C<suite_dir> have to be provided as an archive that conforms to the
+following naming convention:
 
 B<"project_id"-"version_id"-"test_suite_src"[."test_id"].tar.bz2>.
 
-Examples: 
+Examples:
 
 =over 4
 
@@ -167,10 +167,10 @@ Examples:
 
 =cut
 my @list;
-opendir(DIR, $SUITE_DIR) or die "Could not open directory: $SUITE_DIR!";   
+opendir(DIR, $SUITE_DIR) or die "Could not open directory: $SUITE_DIR!";
 my @entries = readdir(DIR);
 closedir(DIR);
-foreach (@entries) {                                                   
+foreach (@entries) {
     next unless /^([^-]+)-(\d+[bf])-([^\.]+)(\.(\d+))?\.tar\.bz2$/;
     my $pid = $1;
     my $vid = $2;
@@ -187,7 +187,7 @@ foreach (@entries) {
 }
 
 # Set up project
-my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t}); 
+my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 
 
@@ -217,18 +217,18 @@ suite: foreach (@list) {
     $project->{prog_root} = $TMP_DIR;
 
     printf ("$sep\n$name\n$sep\n");
-    
-    _checkout($project, $vid); 
-   
+
+    _checkout($project, $vid);
+
     # Copy generated tests
     system("mkdir $TMP_DIR/$src && cd $TMP_DIR/$src && cp $SUITE_DIR/$name . && tar -xjf $name");
-    
+
     # Counter for successful runs of fixed test suite
     my $counter = $RUNS;
 
     my $fixed = 0;
     while ($counter > 0) {
-        # Compile generated tests        
+        # Compile generated tests
         my $comp_log = "$TMP_DIR/comp_tests.log";
         my $ret = $project->compile_ext_tests("$TMP_DIR/$src", $comp_log);
         if ($ret != 0) {
@@ -237,9 +237,9 @@ suite: foreach (@list) {
             # Indicate that test suite changed
             $fixed = 1;
             next;
-        }    
+        }
 
-        # Temporary log file to monitor failing tests     
+        # Temporary log file to monitor failing tests
         my $tests = "$TMP_DIR/run_tests.log";
 
         # Check for errors of runtime system
@@ -251,8 +251,8 @@ suite: foreach (@list) {
         }
 
         # Check failing test classes and methods
-        my $list = Utils::get_failing_tests($tests) or die;          
-        if (scalar(@{$list->{classes}}) != 0) {                                      
+        my $list = Utils::get_failing_tests($tests) or die;
+        if (scalar(@{$list->{classes}}) != 0) {
             $LOG->log_msg(" - Failing test classes: $name");
             $LOG->log_msg(join("\n", @{$list->{classes}}));
             $LOG->log_msg("Failing test classes are NOT automatically removed!");
@@ -261,11 +261,11 @@ suite: foreach (@list) {
             # TODO: Automatically remove failing test classes?
             #
             # This should be fine for generated test suites as
-            # there are usually no compilation dependencies 
+            # there are usually no compilation dependencies
             # between the individual test classes.
             #
-            # However, a failing test class most probably indicates 
-            # a configuration issue, which should be fixed before 
+            # However, a failing test class most probably indicates
+            # a configuration issue, which should be fixed before
             # any broken test is removed.
             #
 #            if (scalar(@{$list->{classes}}) != 0) {
@@ -279,7 +279,7 @@ suite: foreach (@list) {
 #                $fixed = 1;
 #                next;
 #            }
-            next suite;                     
+            next suite;
         }
 
         # No failing methods -> decrease counter and continue iteration
@@ -296,9 +296,9 @@ suite: foreach (@list) {
             system("$UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
         }
     }
- 
+
     # TODO: Run test classes in isolation
- 
+
     if ($fixed) {
         # Back up archive if necessary
         system("mv $SUITE_DIR/$name $SUITE_DIR/$name.bak") unless -e "$SUITE_DIR/$name.bak";
@@ -331,9 +331,9 @@ sub _checkout {
         my $rev2 = $project->lookup("${bid}f");
         my $src_path = $project->src_dir($rev2);
         $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
-        # Update config file 
+        # Update config file
         my $config = Utils::read_config_file("$root/$CONFIG");
-        $config->{$CONFIG_VID} = $vid; 
+        $config->{$CONFIG_VID} = $vid;
         Utils::write_config_file("$root/$CONFIG", $config);
     }
 }

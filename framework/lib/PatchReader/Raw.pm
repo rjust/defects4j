@@ -192,7 +192,7 @@ sub _maybe_end_file {
     if (!$this->{FILE_STARTED}) {
       $this->_start_file();
     }
-    
+
     # Send end notification and set state
     $this->{TARGET}->end_file($this->{FILE_STATE});
     delete $this->{FILE_STATE};

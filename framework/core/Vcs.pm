@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -50,7 +50,7 @@ This module provides a simple abstraction for version control systems.
 
 =over 4
 
-=item B<Vcs::Git> 
+=item B<Vcs::Git>
 
 =item B<Vcs::Svn>
 
@@ -75,19 +75,19 @@ A vcs object has to be instantiated with:
 
 - Project name
 
-- Repository url 
+- Repository url
 
 - File name of the commit database (commit-db), see below for details
 
 - Reference to post-checkout hook (optional) -- if provided, this method is called after each checkout.
 
-The commit database has to be a csv file with the structure C<version_id,rev_1,rev_2>. 
+The commit database has to be a csv file with the structure C<version_id,rev_1,rev_2>.
 
 =head2 Commit-db example for Svn:
 
 =over 4
 
-=item 1,1024,1025 
+=item 1,1024,1025
 
 =item 2,1064,1065
 
@@ -127,7 +127,7 @@ sub new {
 
 =item B<lookup> C<lookup(version_id)>
 
-Queries the commit database (commit-db) and returns the C<revision_id> for 
+Queries the commit database (commit-db) and returns the C<revision_id> for
 the given C<version_id>. The format of the C<version_id> is B<\d+[bf]>.
 
 =cut
@@ -166,11 +166,11 @@ sub get_version_ids {
 
 =item B<checkout_id> C<checkout_id(version_id, work_dir)>
 
-Performs a lookup of C<version_id> in the C<commit-db> followed by a checkout of 
+Performs a lookup of C<version_id> in the C<commit-db> followed by a checkout of
 the corresponding revision with C<revision_id> to C<work_dir>.
 The format of the C<version_id> is B<\d+[bf]>.
 
-B<This method always performs a clean checkout, i.e., the working directory is 
+B<This method always performs a clean checkout, i.e., the working directory is
 deleted before the checkout if it already exists>.
 
 =cut
@@ -182,11 +182,11 @@ sub checkout_id {
 
     # Get specific checkout command
     my $cmd = $self->_checkout_cmd($revision, $work_dir);
- 
+
     my %config = ();
 
     # Check whether working directory exists
-    if (-d $work_dir) { 
+    if (-d $work_dir) {
         # Check whether we should not delete the existing directory
 
         # Is the existing directory empty?
@@ -199,7 +199,7 @@ sub checkout_id {
             $dir_empty=0;
             last;
         }
-        
+
         # If the directory is not empty check whether it is a previously used
         # working directory, and delete all files if so.
         unless ($dir_empty) {
@@ -213,9 +213,9 @@ sub checkout_id {
                 next if m/^\.\.?$/;
                 system("rm -rf $work_dir/$_") == 0 or die "Failed to clean working directory: $!";
             }
-        }       
+        }
     } else {
-        make_path($work_dir) or die "Failed to create working directory: $!";    
+        make_path($work_dir) or die "Failed to create working directory: $!";
     }
 
     print "Checking out " . _trunc_rev_id($revision) . " to $work_dir ... ";
@@ -224,15 +224,15 @@ sub checkout_id {
         print "FAIL\n$log";
         return $ret;
     }
-    
+
     # Check whether post-checkout hook is provided
     $self->{_co_hook}($self, $revision, $work_dir) if defined $self->{_co_hook};
-   
+
     # Update version info file
     $config{$CONFIG_PID} = $self->{pid};
-    $config{$CONFIG_VID} = $version_id; 
+    $config{$CONFIG_VID} = $version_id;
     Utils::write_config_file("$work_dir/$CONFIG", \%config);
- 
+
     # Init (new) git repository to keep track of local changes
     # Note that we commit after executing the checkout hook,
     # so we can easily revert without re-applying patches etc.
@@ -249,7 +249,7 @@ sub checkout_id {
         print "FAIL\n$log";
         die "Cannot init local git repository!";
     }
-    
+
     print "OK\n";
     return $ret;
 }
@@ -259,8 +259,8 @@ sub checkout_id {
 =item B<diff> C<diff(revision_id_1, revision_id_2 [, path])>
 
 Returns the diff between C<revision_id_1> and C<revision_id_2> or C<undef> if
-the diff failed. The C<path> argument is optional and can be used to compute a diff 
-between certain files or directories. Note that C<path> is relative to the root 
+the diff failed. The C<path> argument is optional and can be used to compute a diff
+between certain files or directories. Note that C<path> is relative to the root
 of the working directory.
 
 =cut
@@ -268,7 +268,7 @@ sub diff {
     @_ >= 3 or die "Invalid number of arguments!";
     my ($self, $rev1, $rev2, $path) = @_;
     my $opt = defined $path ? $path : "";
-    printf("Diff $opt %.16s : %.16s ... ", $rev1, $rev2);    
+    printf("Diff $opt %.16s : %.16s ... ", $rev1, $rev2);
     my $cmd = $self->_diff_cmd($rev1, $rev2, $path);
     my $diff = `$cmd`; my $ret = $?;
     if ($ret!=0) {
@@ -276,15 +276,15 @@ sub diff {
         return undef;
     }
     print "OK\n";
-    return $diff;    
+    return $diff;
 }
 
 =pod
 
 =item B<export_diff> C<export_diff(revision_id_1, revision_id_2, out_file [, path])>
 
-Exports the diff between C<revision_id_1> and C<revision_id_2> to C<out_file>. 
-The path argument is optional and can be used to compute a diff between certain 
+Exports the diff between C<revision_id_1> and C<revision_id_2> to C<out_file>.
+The path argument is optional and can be used to compute a diff between certain
 files or directories. Note that C<path> is relative to the root of the working directory.
 
 =cut
@@ -322,7 +322,7 @@ sub apply_patch {
     } else {
         print "FAIL\n$log";
     }
-    return $ret;    
+    return $ret;
 }
 
 =pod
@@ -344,7 +344,7 @@ sub _checkout_cmd { die $ABSTRACT_METHOD; }
 
 =item B<_apply_cmd(work_dir, patch_file [, path])>
 
-      Returns the cmd to apply the patch in file C<patch_file> to the working 
+      Returns the cmd to apply the patch in file C<patch_file> to the working
       directory C<work_dir>. The optional path C<path> is relative to the
       working directory and used to apply patches to certain files or directories.
 
@@ -355,7 +355,7 @@ sub _apply_cmd { die $ABSTRACT_METHOD; }
 =item B<_diff_cmd(rev1, rev2, path)>
 
       Returns the cmd to compute a diff between two revisions C<rev1> and C<rev2>.
-      The optional path C<path> is relative to the repository root and used to 
+      The optional path C<path> is relative to the repository root and used to
       diff between certain files or directories.
 
 =back

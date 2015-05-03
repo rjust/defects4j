@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project.pm -- Provides a general interface and abstraction for all projects. 
+Project.pm -- Provides a general interface and abstraction for all projects.
 An instance of Project represents one of the analyzed open source projects.
 
 =head1 SYNOPSIS
@@ -35,7 +35,7 @@ use Project;
 
 my $pid=$ARGV[0];
 
-my $project = Project::create_project($pid);                                        
+my $project = Project::create_project($pid);
 
 $project->print_info();
 
@@ -60,27 +60,27 @@ sub new {
     my $vcs = Vcs::Git->new($PID,
                             "file://$REPO_DIR/$name.git",
                             "$SCRIPT_DIR/projects/$name/commit-db");
-                            # Add post checkout hook argument 
+                            # Add post checkout hook argument
                             # if necessary -- see Vcs.pm for details
 
     return $class->SUPER::new($name, $vcs, $src, $test, $build_file);
 }
 
 The C<$build_file> argument is optional. If omitted, the default file name is
-F<$SCRIPT_DIR/projects/${name}/${name}.build.xml">. 
+F<$SCRIPT_DIR/projects/${name}/${name}.build.xml">.
 
 =head1 DESCRIPTION
 
-This module provides a general abstraction for attributes and methods of a 
-concrete project. A specific project object can be created by 
-C<create_project(project_id)>. The C<project_id> has to match the subpackage 
+This module provides a general abstraction for attributes and methods of a
+concrete project. A specific project object can be created by
+C<create_project(project_id)>. The C<project_id> has to match the subpackage
 name of the corresponding project.
 
 =head2 Available project_ids:
 
 =over 4
 
-=item B<Chart>  JFreeChart (uses Vcs::Svn as Vcs backend) 
+=item B<Chart>  JFreeChart (uses Vcs::Svn as Vcs backend)
 
 =item B<Math>  Commons math (uses Vcs::Git as Vcs backend)
 
@@ -136,7 +136,7 @@ use Utils;
 
 =over 4
 
-=item B<Project::create_project(project_id)> 
+=item B<Project::create_project(project_id)>
 
 Dynamically load the required module, instantiate the project, and return the
 reference to it.
@@ -146,7 +146,7 @@ reference to it.
 =cut
 sub create_project {
     @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
-    my $pid = shift; 
+    my $pid = shift;
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -162,11 +162,11 @@ sub create_project {
 
 =over 4
 
-=item B<prog_name> 
+=item B<prog_name>
 
 The program name for the project.
 
-=item B<prog_root> 
+=item B<prog_root>
 
 The root (working) directory for the project. The default C<prog_root> for a
 project is F</tmp/"project_id"_"current-time">.
@@ -229,7 +229,7 @@ sub print_info {
 
 =item B<src_dir> C<src_dir(revision_id)>
 
-Returns the relative path to the directory of the source files for a given 
+Returns the relative path to the directory of the source files for a given
 C<revision_id>. The returned path is relative to the working directory.
 
 =cut
@@ -243,7 +243,7 @@ sub src_dir {
 
 =item B<test_dir> C<test_dir(revision_id)>
 
-Returns the relative path to the directory of the junit test files for a given 
+Returns the relative path to the directory of the junit test files for a given
 C<revision_id>. The returned path is relative to the working directory.
 
 =back
@@ -314,7 +314,7 @@ sub compile_ext_tests {
 =item B<run_ext_tests> C<run_ext_tests(test_dir, test_include, result_file [, single_test])>
 
 Run all of the tests in C<test_dir> that match the pattern C<test_include>.
-If C<single_test> is provided, only this test method is run. 
+If C<single_test> is provided, only this test method is run.
 The string C<single_test> has to have the format: B<classname::methodname>.
 Failing tests are written to C<result_file>
 
@@ -322,7 +322,7 @@ Failing tests are written to C<result_file>
 sub run_ext_tests {
     @_ >= 4 or die $ARG_ERROR;
     my ($self, $dir, $include, $out_file, $single_test) = @_;
-    
+
     my $single_test_opt = "";
     if (defined $single_test) {
         $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
@@ -337,7 +337,7 @@ sub run_ext_tests {
 =item B<fix_tests> C<fix_tests(revision_id)>
 
 Fix all broken tests in the checked out revision. Broken tests are determined
-based on the provided C<revision_id>. 
+based on the provided C<revision_id>.
 
 If the file F<$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id> exists, then:
 
@@ -398,11 +398,11 @@ sub exclude_tests_in_file {
 
     # Remove broken test methods
     system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$tests_dir") == 0 or die;
-        
+
     # Check whether broken test classes should be excluded
     my $failed = Utils::get_failing_tests($file);
-    my @classes= @{$failed->{classes}};       
- 
+    my @classes= @{$failed->{classes}};
+
     return if scalar @classes == 0;
     for (@classes) {
         s/\./\//g; s/(.*)/$1.java/;
@@ -437,12 +437,12 @@ sub coverage_instrument {
     die "no modified classes" if scalar @classes == 0;
     my @classes_and_inners = ();
     for (@classes) {
-        s/\./\//g; 
+        s/\./\//g;
         chomp;
         push @classes_and_inners, "$_.class";
         push @classes_and_inners, "$_" . '\$' . "*.class";
     }
- 
+
     # Write instrument.list to local.build.properties, which is imported
     # by the "project".build.xml file.
     my $list = join(",", @classes_and_inners);
@@ -487,9 +487,9 @@ sub run_evosuite {
                 "-Dsearch_budget=$time " .
                 "-Dassertion_timeout=$timeout " .
                 "-Djunit_suffix=EvoSuite_$criterion " .
-                "-Dshow_progress=false " . 
+                "-Dshow_progress=false " .
                 "$config";
-    
+
     print "Running EvoSuite ($criterion) using config $config_file ... ";
     my $output = `cd $self->{prog_root}; $cmd 2>&1`;
     my $ret = $?;
@@ -499,10 +499,10 @@ sub run_evosuite {
     } else {
         print "FAIL\n$output";
     }
-        
+
     if (defined $log) {
-        open(OUT, ">>$log") or die "Cannot open log file: $!";                       
-        print OUT "$output";                                                          
+        open(OUT, ">>$log") or die "Cannot open log file: $!";
+        print OUT "$output";
         close(OUT)
     }
 
@@ -553,10 +553,10 @@ sub run_randoop {
     } else {
         print "FAIL\n$output";
     }
-        
+
     if (defined $log) {
-        open(OUT, ">>$log") or die "Cannot open log file: $!";                       
-        print OUT "$output";                                                          
+        open(OUT, ">>$log") or die "Cannot open log file: $!";
+        print OUT "$output";
         close(OUT)
     }
 
@@ -575,20 +575,20 @@ Returns the number of generated mutants on success, -1 otherwise.
 sub mutate {
     my $self = shift;
     return -1 if ($self->_ant_call("mutate") != 0);
- 
+
     # Determine number of generated mutants
     open(MUT_LOG, "<$self->{prog_root}/mutants.log") or die "Cannot open mutants log: $!";
     my @lines = <MUT_LOG>;
     close(MUT_LOG);
-    return scalar @lines;     
+    return scalar @lines;
 }
 
 =pod
 
 =item B<run_tests> C<run_tests(result_file [, single_test])>
 
-Run all of the tests in the project, unless C<single_test> is provided. 
-If C<single_test> is provided, only this test method is run. 
+Run all of the tests in the project, unless C<single_test> is provided.
+If C<single_test> is provided, only this test method is run.
 The string C<single_test> has to have the format: B<classname::methodname>.
 Failing tests are written to C<result_file>
 
@@ -596,7 +596,7 @@ Failing tests are written to C<result_file>
 sub run_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $out_file, $single_test) = @_;
-    
+
     my $single_test_opt = "";
     if (defined $single_test) {
         $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
@@ -637,7 +637,7 @@ sub coverage_report {
 
 =item B<mutation_analysis> C<mutation_analysis([log_file])>
 
-Run mutation analysis for all tests in the project. If the optional argument 
+Run mutation analysis for all tests in the project. If the optional argument
 C<log_file> is provided then the output of the mutation analysis process is
 redirected to this file. B<Note that C<mutate> is not called implicitly>
 
@@ -656,9 +656,9 @@ sub mutation_analysis {
 
     my $basedir = $self->{prog_root};
 
-    return $self->_ant_call("mutation.test", 
+    return $self->_ant_call("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
-                            "-Dmajor.kill.log=$basedir/kill.csv " . 
+                            "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$log $single_test_opt");
 }
 
@@ -666,9 +666,9 @@ sub mutation_analysis {
 
 =item B<mutation_analysis_ext> C<mutation_analysis_ext(test_dir, test_include [, log_file])>
 
-Run mutation analysis for all tests in C<test_dir> that match the pattern 
-C<test_include>. If the optional argument C<log_file> is provided then the 
-output of the mutation analysis process is redirected to this file. 
+Run mutation analysis for all tests in C<test_dir> that match the pattern
+C<test_include>. If the optional argument C<log_file> is provided then the
+output of the mutation analysis process is redirected to this file.
 B<Note that C<mutate> is not called implicitly>
 
 =cut
@@ -679,11 +679,11 @@ sub mutation_analysis_ext {
     $log = "-logfile $log_file" if defined $log_file;
 
     my $basedir = $self->{prog_root};
-    
-    return $self->_ant_call("mutation.test", 
+
+    return $self->_ant_call("mutation.test",
                             "-Dbug-db.test.dir=$dir -Dtest.include=$include " .
                             "-Dmajor.exclude=$basedir/exclude.txt " .
-                            "-Dmajor.kill.log=$basedir/kill.csv " . 
+                            "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$log");
 }
 
@@ -692,7 +692,7 @@ sub mutation_analysis_ext {
 =item B<monitor_test> C<monitor_test(single_test, revision_id)>
 
 Runs C<single_test>, monitors the class loader, and returns a reference to a
-hash of list references, which store the loaded classes. The decision whether a 
+hash of list references, which store the loaded classes. The decision whether a
 src or test class was loaded is made based on the provided C<revision_id>.
 
 The returned reference is a reference to a hash that looks like:
@@ -700,7 +700,7 @@ The returned reference is a reference to a hash that looks like:
 {src} => [org.foo.Class1 org.bar.Class2]
 
 {test} => [org.foo.TestClass1 org.foo.TestClass2]
- 
+
 The string C<single_test> has to have the format: B<classname::methodname>.
 If the test execution fails, the returned reference is C<undef>.
 
@@ -711,9 +711,9 @@ sub monitor_test {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $single_test, $revision_id) = @_;
     $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
-   
+
     my $log_file = "$self->{prog_root}/classes.log";
- 
+
     my $classes = {
         src  => [],
         test => []
@@ -731,7 +731,7 @@ sub monitor_test {
         s/\[Loaded ([^\$]*)(\$\S*)? from.*/$1/;
         push(@{$classes->{src}}, $_) if defined $src->{$_};
         push(@{$classes->{test}}, $_) if defined $test->{$_};
-    }    
+    }
     return $classes;
 }
 
@@ -763,8 +763,8 @@ sub _ant_call {
     my $ret = $?;
 
     if (defined $log_file) {
-        open(OUT, ">>$log_file") or die "Cannot open log file: $!";                       
-        print OUT "$log";                                                          
+        open(OUT, ">>$log_file") or die "Cannot open log file: $!";
+        print OUT "$log";
         close(OUT);
     }
     if ($ret==0) {
@@ -776,7 +776,7 @@ sub _ant_call {
         # Always print log if ant fails
         print $log;
     }
-    return $ret;    
+    return $ret;
 }
 
 =pod

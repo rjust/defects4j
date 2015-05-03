@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -111,12 +111,12 @@ exit 0 unless $input eq "y";
 
 my $orig=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $orig;
-system("cd $TMP_DIR; git commit -a -m \"minimized patch\""); 
+system("cd $TMP_DIR; git commit -a -m \"minimized patch\"");
 my $min=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $min;
 
 # Last chance to reject patch
-system("cd $TMP_DIR; git diff -b -w $orig:$src_path $min:$src_path"); 
+system("cd $TMP_DIR; git diff -b -w $orig:$src_path $min:$src_path");
 print "Patch correct? [y/n] >";
 $input = <STDIN>; chomp $input;
 exit 0 unless $input eq "y";

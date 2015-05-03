@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,34 +38,34 @@ run_randoop.pl -p project_id -v version_id -n test_id -o out_dir -b budget [-t t
 
 =over 4
 
-=item B<-p C<project_id>> 
+=item B<-p C<project_id>>
 
 The id of the project for which test suites are generated.
 
-=item B<-v C<version_id>> 
+=item B<-v C<version_id>>
 
 Generate tests for this version id. B<Format: \d+[bf]>.
 
-=item B<-n C<test_id>> 
+=item B<-n C<test_id>>
 
 The test_id of the generated test suite (i.e., which run of the same configuration)
 
-=item B<-o F<out_dir>> 
+=item B<-o F<out_dir>>
 
-The root output directory for the generated tests. All tests and logs for a given 
+The root output directory for the generated tests. All tests and logs for a given
 project and version id are written to:
 F<"out_dir"/"project_id"/"vid">
 
-=item B<-b C<budget>> 
+=item B<-b C<budget>>
 
 The time in seconds to use for test generation.
 
-=item B<-t F<tmp_dir>> 
+=item B<-t F<tmp_dir>>
 
-The temporary root directory to be used to check out revisions (optional). 
+The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
 
-=item B<-D> 
+=item B<-D>
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -75,7 +75,7 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 =head2 Randoop Configuration File
 
 The filename of an optional Randoop configuration file can be provided with the
-environment variable RANDOOP_CONFIG_FILE. The default configuration file of Randoop 
+environment variable RANDOOP_CONFIG_FILE. The default configuration file of Randoop
 is: F<framework/util/randoop.config>.
 
 =head1 DESCRIPTION
@@ -97,11 +97,11 @@ use strict;
 use warnings;
 
 use FindBin;
-use File::Basename;                                                              
-use Cwd qw(abs_path);                                                            
+use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
-                               
+
 use lib abs_path("$FindBin::Bin/../core");
 use Constants;
 use Utils;
@@ -123,7 +123,7 @@ use Log;
 my %cmd_opts;
 getopts('p:v:o:n:b:t:D', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and 
+pod2usage(1) unless defined $cmd_opts{p} and
                     defined $cmd_opts{v} and
                     defined $cmd_opts{n} and
                     defined $cmd_opts{b} and
@@ -149,7 +149,7 @@ my $project = Project::create_project($PID);
 my $CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
 
 # Temporary directory for project checkout
-my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t}); 
+my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 
 $project->{prog_root} = $TMP_DIR;
@@ -163,7 +163,7 @@ the temporary project root.
 
 Upon success, the log file of this script is appended to:
 F<"out_dir"/"project_id"/"vid"/logs/"project_id"."version_id".log>.
-    
+
 =cut
 # Log file in output directory
 my $LOG_DIR = "$OUT_DIR/logs";

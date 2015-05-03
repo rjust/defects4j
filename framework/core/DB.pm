@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,7 +52,7 @@ our @ISA = qw(Exporter);
 
 =over 4
 
-=item B<DB_DIR> 
+=item B<DB_DIR>
 
 The directory of the database storing all results (I<$BASE_DIR/result_db>)
 
@@ -61,7 +61,7 @@ our $DB_DIR = ($ENV{DB_DIR} or "$BASE_DIR/result_db");
 
 =pod
 
-=item B<TAB_REV_PAIRS> 
+=item B<TAB_REV_PAIRS>
 
 The name of the database table for the results of analyzing all revision pairs (I<rev_pairs>)
 
@@ -70,7 +70,7 @@ our $TAB_REV_PAIRS = ($ENV{TAB_REV_PAIRS} or "rev_pairs");
 
 =pod
 
-=item B<TAB_TRIGGER> 
+=item B<TAB_TRIGGER>
 
 The name of the database table for the results of analyzing triggering tests (I<trigger>)
 
@@ -79,7 +79,7 @@ our $TAB_TRIGGER = ($ENV{TAB_TRIGGER} or "trigger");
 
 =pod
 
-=item B<TAB_BUG_DETECTION> 
+=item B<TAB_BUG_DETECTION>
 
 The name of the database table for the results of running bug detection analysis (I<bug_detection>)
 
@@ -89,7 +89,7 @@ our $TAB_BUG_DETECTION = ($ENV{TAB_BUG_DETECTION} or "bug_detection");
 
 =pod
 
-=item B<TAB_MUTATION> 
+=item B<TAB_MUTATION>
 
 The name of the database table for the results of running mutation analysis (I<mutation>)
 
@@ -98,7 +98,7 @@ our $TAB_MUTATION = ($ENV{TAB_MUTATION} or "mutation");
 
 =pod
 
-=item B<TAB_COVERAGE> 
+=item B<TAB_COVERAGE>
 
 The name of the database table for the results of running coverage analysis (I<coverage>)
 
@@ -127,7 +127,7 @@ our $COMP_V2       = "compile_v2";
 our $COMP_T2V2     = "compile_t2v2";
 our $FAIL_T2V2     = "num_fail_t2v2";
 our $COMP_V1       = "compile_v1";
-our $COMP_T2V1     = "compile_t2v1"; 
+our $COMP_T2V1     = "compile_t2v1";
 our $MIN_SRC       = "minimized_src_patch";
 our $REVIEW_TESTS  = "reviewed_tests_t2v2";
 
@@ -182,29 +182,29 @@ our %PRIMARY_KEYS = (
 );
 
 our @EXPORT = qw(
-$DB_DIR 
-$TAB_REV_PAIRS 
-$TAB_TRIGGER 
-$TAB_BUG_DETECTION 
-$TAB_MUTATION 
+$DB_DIR
+$TAB_REV_PAIRS
+$TAB_TRIGGER
+$TAB_BUG_DETECTION
+$TAB_MUTATION
 $TAB_REVIEW
 $TAB_COVERAGE
 
-$PROJECT      
-$ID           
-$DIFF_SRC     
-$DIFF_TEST    
-$COMP_V2      
-$COMP_T2V2    
-$FAIL_T2V2    
-$COMP_V1      
-$COMP_T2V1    
-$MIN_SRC      
-$REVIEW_TESTS 
-$FAIL_V2      
-$FAIL_C_V1    
-$FAIL_M_V1    
-$FAIL_ISO_V1  
+$PROJECT
+$ID
+$DIFF_SRC
+$DIFF_TEST
+$COMP_V2
+$COMP_T2V2
+$FAIL_T2V2
+$COMP_V1
+$COMP_T2V1
+$MIN_SRC
+$REVIEW_TESTS
+$FAIL_V2
+$FAIL_C_V1
+$FAIL_M_V1
+$FAIL_ISO_V1
 $PASS_ISO_V2
 $TEST_SUITE
 $TEST_ID
@@ -263,7 +263,7 @@ sub get_db_handle {
 
 =item B<get_tab_columns> C<get_tab_columns(tab_name)>
 
-Returns a list of column names for the table C<tab_name> or C<undef> if the 
+Returns a list of column names for the table C<tab_name> or C<undef> if the
 table does not exist.
 
 =back
@@ -271,5 +271,5 @@ table does not exist.
 =cut
 sub get_tab_columns {
     my $tab_name = shift;
-    return @{$tables{$tab_name}};    
+    return @{$tables{$tab_name}};
 }

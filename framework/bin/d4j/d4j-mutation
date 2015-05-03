@@ -43,7 +43,7 @@ the current directory.
 
 =head1 DESCRIPTION
 
-This script performs mutation analysis for all accompanying tests of a 
+This script performs mutation analysis for all accompanying tests of a
 checked-out project version.
 
 =cut
@@ -91,7 +91,7 @@ $project->{prog_root} = $WORK_DIR;
 my $mml_dir = "$WORK_DIR/mml";
 my $class_dir = "$SCRIPT_DIR/projects/$config->{$CONFIG_PID}/modified_classes";
 
-$config->{$CONFIG_VID} =~ /^(\d+)[bf]$/ 
+$config->{$CONFIG_VID} =~ /^(\d+)[bf]$/
     or die "Unexpected version id format (\\d+[bf]): $config->{$CONFIG_VID}";
 my $vid = $1;
 system("$UTIL_DIR/create_mml.pl -p $config->{$CONFIG_PID} -c $class_dir -o $mml_dir -v $vid");
@@ -116,7 +116,7 @@ if ($project->mutation_analysis($tmp) != 0) {
 open(RES, "<$WORK_DIR/summary.csv") or die "Cannot read mutation analysis result file $!";
 my $header = <RES>;
 my $line = <RES>;
-close(RES); 
+close(RES);
 my ($mutGen, $mutCov, $mutKill, $mutLive, $timePreproc, $timeAnalysis) = split(/,/, $line);
 printf("%17s: %d\n", "Mutants generated", $mutGen);
 printf("%17s: %d\n", "Mutants covered", $mutCov);

@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,10 +49,10 @@ sub new {
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
-                            "$REPO_DIR/$name.git", 
+                            "$REPO_DIR/$name.git",
                             "$SCRIPT_DIR/projects/$PID/commit-db",
                              \&_post_checkout);
-    
+
     return $class->SUPER::new($PID, $name, $vcs, $src, $test);
 }
 
@@ -60,7 +60,7 @@ sub new {
 sub _post_checkout {
     my ($vcs, $revision, $work_dir) = @_;
     my $name = $vcs->{prog_name};
-    
+
     if (-e "$work_dir/JodaTime") {
         system("mv $work_dir/JodaTime/* $work_dir");
     }
@@ -80,7 +80,7 @@ sub _post_checkout {
 
 sub rev_lookup {
     my ($self, $revision) = @_;
-    my @answer = grep {$self->lookup($_ . "f") eq $revision || 
+    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
                        $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
     die unless scalar(@answer) > 0;
     return $answer[0];

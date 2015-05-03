@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Coverage.pm -- Provides helper functions for coverage analysis. 
+Coverage.pm -- Provides helper functions for coverage analysis.
 
 =head1 DESCRIPTION
 
@@ -67,7 +67,7 @@ C<src_dir> provides the root of the source code. This is necessary for cobertura
 to generate reports.
 
 If C<single_test> is specified, only that test is run. This is meant to be used
-in conjunction with C<merge_with> (= path to a .ser file obtained by running 
+in conjunction with C<merge_with> (= path to a .ser file obtained by running
 coverage) to enable incremental analysis.
 
 =back
@@ -81,7 +81,7 @@ sub coverage {
 
 	$project->coverage_instrument($modified_classes_file) == 0 or return undef;
 
-	my $failure_file = "$project->{prog_root}/$FAIL_FILE"; 
+	my $failure_file = "$project->{prog_root}/$FAIL_FILE";
 	system(">$failure_file");
 	$project->coverage($failure_file) == 0 or return undef;
     Utils::has_failing_tests($failure_file) and return undef;
@@ -99,7 +99,7 @@ sub coverage {
 		# Remove stale data files
 		system("rm -f $datafile") if -e $datafile;
 		system("rm -f $xmlfile")  if -e $xmlfile ;
-	
+
 		system("sh $CORBETURA_MERGE --datafile $datafile $merge_with $my_ser >/dev/null 2>&1") == 0 or die "could not merge results";
 		system("sh $CORBETURA_REPORT --format xml --datafile $datafile --destination $xmldir >/dev/null 2>&1") == 0 or die "could not create report";
 
@@ -159,7 +159,7 @@ C<out_dir> is the optional alternative database directory to use.
 =cut
 sub insert_row {
     my ($data, $out_dir) = @_;
-    
+
 	# Get proper output db handle: check whether a different output directory is provided
     my $dbh;
     if (defined $out_dir) {
@@ -167,7 +167,7 @@ sub insert_row {
     } else {
         $dbh = DB::get_db_handle($TAB_COVERAGE);
     }
- 
+
     my @tmp;
     foreach (@COLS) {
         push (@tmp, $dbh->quote((defined $data->{$_} ? $data->{$_} : "-")));
@@ -186,7 +186,7 @@ sub insert_row {
 
 Copies the coverage log files to a permanent directory C<log_dir>.
 C<project> is the project refid, C<vid> is the version ID, C<suite> specifies
-the suite tag (e.g., manual, evosuite), and C<test_id> provides the ID of the 
+the suite tag (e.g., manual, evosuite), and C<test_id> provides the ID of the
 trigger test.
 
 =back
@@ -202,7 +202,7 @@ sub copy_coverage_logs {
 		or die "Cannot copy .xml file";
 }
 
-# 
+#
 # Parse coverage log file and return reference to a hash that holds all results
 #
 sub _get_info_from_xml {
@@ -221,7 +221,7 @@ sub _get_info_from_xml {
     close FH;
 
     die "values not set" unless defined $lt;
-    
+
     # Set all values and return hash reference
     return {
         $LINES_TOTAL => $lt,
@@ -235,7 +235,7 @@ sub _get_info_from_xml {
 
 =head1 SEE ALSO
 
-All constants are defined in F<Constants.pm>. This module uses the database 
+All constants are defined in F<Constants.pm>. This module uses the database
 back-end F<DB.pm>.
 
 =cut

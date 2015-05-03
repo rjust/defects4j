@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,16 +52,16 @@ my $dir = dirname(abs_path(__FILE__));
 Returns the path to a unique (local) temporary directory:
 B<"tmp_root"/"script_name"_"process_id"_"timestamp">
 
-The path is unique w.r.t. a local file system. The root directory to be used can 
+The path is unique w.r.t. a local file system. The root directory to be used can
 be specified with C<tmp_root> (optional) -- the default is F</tmp>.
 
 =cut
 sub get_tmp_dir {
     my $tmp_root = shift // "/tmp";
-    return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time; 
+    return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 
-=pod 
+=pod
 
 =item B<get_abs_path> C<get_abs_path(dir)>
 
@@ -73,7 +73,7 @@ sub get_abs_path {
     my $dir = shift;
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
-    return abs_path($dir); 
+    return abs_path($dir);
 }
 
 =pod
@@ -83,10 +83,10 @@ sub get_abs_path {
 
 =item B<get_failing_tests> C<get_failing_tests(result_file)>
 
-Returns a reference to a hash of references to lists with failing test classes 
-and methods found in the C<result_file>. The C<result_file> may contain 
-arbitrary lines -- this method only considers lines that match the pattern: 
-B</--- ([^:]+)(::([^:]+))?/>. 
+Returns a reference to a hash of references to lists with failing test classes
+and methods found in the C<result_file>. The C<result_file> may contain
+arbitrary lines -- this method only considers lines that match the pattern:
+B</--- ([^:]+)(::([^:]+))?/>.
 
 The data structure of the returned hash reference looks like:
 
@@ -98,11 +98,11 @@ The data structure of the returned hash reference looks like:
 sub get_failing_tests {
     @_ == 1 or die "Invalid number of arguments!";
     my $file_name = shift;
-   
+
     my $list = {
         classes => [],
         methods => []
-    }; 
+    };
     open FILE, $file_name or die "Cannot open result file: $!";
     while (<FILE>) {
         chomp;
@@ -123,14 +123,14 @@ sub get_failing_tests {
 
 =item B<has_failing_tests> C<has_failing_tests(result_file)>
 
-Returns 1 if the provided F<result_file> lists any failing test classes or 
+Returns 1 if the provided F<result_file> lists any failing test classes or
 failing test methods. Returns 0 otherwise.
 
 =cut
 sub has_failing_tests {
     @_ == 1 or die "Invalid number of arguments!";
     my $file_name = shift;
-   
+
     my $list = get_failing_tests($file_name) or die "Could not parse file";
     my @fail_methods = @{$list->{methods}};
     my @fail_classes = @{$list->{classes}};
@@ -165,7 +165,7 @@ sub parse_machines {
 
 =item B<write_config_file> C<write_config_file(filename, config_hash)>
 
-Writes all key-value pairs of C<config_hash> to a config file named 
+Writes all key-value pairs of C<config_hash> to a config file named
 C<filename>. Existing entries are overridden and missing entries are added
 to the config file -- all existing but unmodified entries are preserved.
 
@@ -189,7 +189,7 @@ sub write_config_file {
 
 =item B<read_config_file> C<read_config_file(filename)>
 
-Read all key-value pairs of the config file C<filename>. Format: key=value. 
+Read all key-value pairs of the config file C<filename>. Format: key=value.
 Returns a hash containing all key-value pairs on success, undef otherwise.
 
 =back

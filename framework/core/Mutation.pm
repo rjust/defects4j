@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Mutation.pm -- Provides helper functions for mutation analysis. 
+Mutation.pm -- Provides helper functions for mutation analysis.
 
 =head1 DESCRIPTION
 
-This module provides helper functions for mutation analysis using the Major 
+This module provides helper functions for mutation analysis using the Major
 mutation framework.
 
 =cut
@@ -67,7 +67,7 @@ Returns a reference to a hash that provides kill details for all covered mutants
 =cut
 sub mutation_analysis {
     @_ >= 2 or die $ARG_ERROR;
-    my ($project, $log_file, $base_map, $single_test) = @_;    
+    my ($project, $log_file, $base_map, $single_test) = @_;
 
     # If base_map is defined, exclude all already killed mutants from analysis
     if (defined $base_map) {
@@ -96,7 +96,7 @@ Returns a reference to a hash that provides kill details for all covered mutants
 =cut
 sub mutation_analysis_ext {
     @_ >= 4 or die $ARG_ERROR;
-    my ($project, $test_dir, $include, $log_file, $base_map) = @_;    
+    my ($project, $test_dir, $include, $log_file, $base_map) = @_;
 
     # If base_map is defined, exclude all already killed mutants from analysis
     if (defined $base_map) {
@@ -135,13 +135,13 @@ sub insert_row {
     } else {
         $dbh = DB::get_db_handle($TAB_MUTATION);
     }
-   
+
     # Build row based on data hash
     my @tmp;
     foreach (@COLS) {
         push (@tmp, $dbh->quote((defined $data->{$_} ? $data->{$_} : "-")));
     }
-    
+
     # Concat values and write to database table
     my $row = join(",", @tmp);
 
@@ -190,7 +190,7 @@ sub _build_mut_map {
         $mut_map->{$1}=$2;
     }
     close(IN);
- 
+
     # Merge mutation results if base_map exists
     if (defined $base_map) {
         foreach my $mut_id (keys %{$base_map}) {
@@ -208,7 +208,7 @@ sub _build_mut_map {
 sub _exclude_mutants {
     @_ == 2 or die $ARG_ERROR;
     my ($project, $mut_map) = @_;
-    
+
     open(OUT, ">$project->{prog_root}/$EXCL_FILE") or die "Cannot open exclude file!";
     foreach my $mut_id (keys %{$mut_map}) {
         next if ($mut_map->{$mut_id} eq "LIVE");
@@ -218,7 +218,7 @@ sub _exclude_mutants {
 }
 
 
-# 
+#
 # Determines number of covered and killed mutants and builds the data hash.
 # Returns a reference to a hash that holds all results.
 #
@@ -253,7 +253,7 @@ sub _build_data_hash {
 
 =head1 SEE ALSO
 
-All constants are defined in F<Constants.pm>. This module uses the database 
+All constants are defined in F<Constants.pm>. This module uses the database
 back-end F<DB.pm>.
 
 =cut

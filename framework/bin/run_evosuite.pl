@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@
 =head1 NAME
 
 run_evosuite.pl -- Run evosuite for a particular project and version_id. Tests are
-generated for all modified classes (i.e., all classes that were modified to fix 
+generated for all modified classes (i.e., all classes that were modified to fix
 the bug).
 
 =head1 SYNOPSIS
@@ -38,44 +38,44 @@ run_evosuite.pl -p project_id -v version_id -n test_id -o out_dir -c criterion [
 
 =over 4
 
-=item B<-p C<project_id>> 
+=item B<-p C<project_id>>
 
 The id of the project for which test suites are generated.
 
-=item B<-v C<version_id>> 
+=item B<-v C<version_id>>
 
 Generate tests for this version id. B<Format: \d+[bf]>.
 
-=item B<-n C<test_id>> 
+=item B<-n C<test_id>>
 
 The test_id of the generated test suite (i.e., which run of the same configuration)
 
-=item B<-o F<out_dir>> 
+=item B<-o F<out_dir>>
 
-The root output directory for the generated tests. All tests and logs for a given 
+The root output directory for the generated tests. All tests and logs for a given
 project and version id are written to:
 F<"out_dir"/"project_id"/"vid">
 
-=item B<-c F<criterion>>  
+=item B<-c F<criterion>>
 
-Generate tests for this criterion using the default search budget. 
+Generate tests for this criterion using the default search budget.
 See below for supported test criteria.
 
-=item B<-b F<search_budget>> 
+=item B<-b F<search_budget>>
 
 Set a specific search budget (optional). See below for defaults.
 
-=item B<-a F<assertion_timeout>> 
+=item B<-a F<assertion_timeout>>
 
 Set a specific timeout for assertion generation (optional).
 The default is 300sec.
 
-=item B<-t F<tmp_dir>> 
+=item B<-t F<tmp_dir>>
 
-The temporary root directory to be used to check out revisions (optional). 
+The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
 
-=item B<-D> 
+=item B<-D>
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -87,17 +87,17 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 B<branch> => 100s, B<weakmutation> => 100s, B<strongmutation> => 200s
 
 =cut
-my %criteria = ( branch         => 100, 
+my %criteria = ( branch         => 100,
                  weakmutation   => 100,
                  strongmutation => 200
                );
 
-=pod 
+=pod
 
 =head2 EvoSuite Configuration File
 
 The filename of an optional EvoSuite configuration file can be provided with the
-environment variable EVO_CONFIG_FILE. The default configuration file of EvoSuite 
+environment variable EVO_CONFIG_FILE. The default configuration file of EvoSuite
 is: F<framework/util/evo.config>.
 
 =head1 DESCRIPTION
@@ -119,11 +119,11 @@ use strict;
 use warnings;
 
 use FindBin;
-use File::Basename;                                                              
-use Cwd qw(abs_path);                                                            
+use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
-                               
+
 use lib abs_path("$FindBin::Bin/../core");
 use Constants;
 use Utils;
@@ -137,11 +137,11 @@ use Log;
 my %cmd_opts;
 getopts('p:v:o:n:t:c:b:a:D', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and 
+pod2usage(1) unless defined $cmd_opts{p} and
                     defined $cmd_opts{v} and
                     defined $cmd_opts{n} and
-                    defined $cmd_opts{o} and 
-                    defined $cmd_opts{c}; 
+                    defined $cmd_opts{o} and
+                    defined $cmd_opts{c};
 my $PID = $cmd_opts{p};
 my $VID = $cmd_opts{v};
 $VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format (\\d+[bf]): $VID!";
@@ -158,7 +158,7 @@ my $TIMEOUT = $cmd_opts{a} // 300;
 my $default = $criteria{$CRITERION};
 unless (defined $default) {
     die "Unknown criterion: $CRITERION!";
-}    
+}
 $BUDGET = $BUDGET // $default;
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
@@ -170,7 +170,7 @@ my $project = Project::create_project($PID);
 my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
 
 # Temporary directory for project checkout
-my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t}); 
+my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 
 $project->{prog_root} = $TMP_DIR;
@@ -184,7 +184,7 @@ the temporary project root.
 
 Upon success, the log file of this script is appended to:
 F<"out_dir"/"project_id"/"vid"/logs/"project_id"."version_id".log>.
-    
+
 =cut
 # Log file in output directory
 my $LOG_DIR = "$OUT_DIR/logs";

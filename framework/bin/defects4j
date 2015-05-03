@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,8 +26,8 @@ use warnings;
 use strict;
 
 use FindBin qw($Bin);
-use File::Basename;                                                              
-use Cwd qw(abs_path);                                                            
+use File::Basename;
+use Cwd qw(abs_path);
 
 use lib abs_path("$Bin/../core");
 
@@ -56,7 +56,7 @@ my %cmd_descr;
 
 =over 4
 
-=item B<checkout> 
+=item B<checkout>
 
 Checkout a fixed or faulty project version.
 
@@ -65,7 +65,7 @@ $cmd_descr{checkout}="Checkout a fixed or faulty program version";
 
 =pod
 
-=item B<compile> 
+=item B<compile>
 
 Compile a fixed or faulty project version.
 
@@ -74,7 +74,7 @@ $cmd_descr{compile}="Compile a fixed or faulty program version";
 
 =pod
 
-=item B<test> 
+=item B<test>
 
 Test a fixed or faulty project version using the accompanying test suite
 
@@ -83,7 +83,7 @@ $cmd_descr{test}="Test a fixed or faulty program version";
 
 =pod
 
-=item B<mutation> 
+=item B<mutation>
 
 Perform mutation analysis on a fixed or faulty project version using the accompanying test suite
 
@@ -92,7 +92,7 @@ $cmd_descr{"mutation"}="Perform mutation analysis on a fixed or faulty program v
 
 =pod
 
-=item B<info> 
+=item B<info>
 
 Print information for a specific project or bug.
 

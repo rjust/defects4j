@@ -2,17 +2,17 @@
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,34 +36,34 @@ run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] 
 
 =over 4
 
-=item B<-p C<project_id>> 
+=item B<-p C<project_id>>
 
 The id of the project for which the mutation analysis is performed.
 
-=item B<-d F<suite_dir>> 
+=item B<-d F<suite_dir>>
 
 The directory that contains the test suite archives.
 
-=item B<-o F<out_dir>> 
+=item B<-o F<out_dir>>
 
-The output directory for the mutation results and log files. 
+The output directory for the mutation results and log files.
 
-=item B<-f C<include__file_pattern>> 
+=item B<-f C<include__file_pattern>>
 
-The pattern of the test class file names that should be included in the mutation analysis (optional). 
-Per default all files (*.java) are included. 
+The pattern of the test class file names that should be included in the mutation analysis (optional).
+Per default all files (*.java) are included.
 
-=item B<-v C<version_id>> 
+=item B<-v C<version_id>>
 
 Only perform mutation analysis for this version id (optional). Per default all
-suitable version ids are considered. 
+suitable version ids are considered.
 
-=item B<-t F<tmp_dir>> 
+=item B<-t F<tmp_dir>>
 
 The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
 
-=item B<-D> 
+=item B<-D>
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -72,12 +72,12 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 
 =head1 DESCRIPTION
 
-Performs mutation analysis for each provided test suite (i.e., each test suite 
-archive in F<suite_dir>) on the program version for which it was generated. 
+Performs mutation analysis for each provided test suite (i.e., each test suite
+archive in F<suite_dir>) on the program version for which it was generated.
 B<Each test suite has to pass on the program version for which it was generated.>
 
-The results of the mutation analysis are stored in the database table 
-F<"out_dir"/$TAB_MUTATION>. The corresponding log files are stored in 
+The results of the mutation analysis are stored in the database table
+F<"out_dir"/$TAB_MUTATION>. The corresponding log files are stored in
 F<"out_dir"/"${TAB_MUTATION}_log">.
 
 =cut
@@ -86,7 +86,7 @@ use strict;
 
 
 use FindBin;
-use File::Basename;                                                              
+use File::Basename;
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -126,14 +126,14 @@ if (defined $VID) {
     $VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format: $VID! Expected: \\d+[bf]";
     # Verify that the bug_id is valid if a version_id is provided (version_id = bug_id + [bf])
     $1 ~~ @ids or die "Version id ($VID) does not exist in project: $PID";
-} 
+}
 
 # Output directory for results
 system("mkdir -p $cmd_opts{o}");
 my $OUT_DIR = abs_path($cmd_opts{o});
 
 # Temporary directory for execution
-my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t}); 
+my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 
 =pod
@@ -143,13 +143,13 @@ system("mkdir -p $TMP_DIR");
 By default, the script logs all errors and warnings to run_mutation.pl.log in
 the temporary project root.
 
-Upon success, the log file of this script and the detailed mutation results for 
+Upon success, the log file of this script and the detailed mutation results for
 each executed test suite are copied to:
 F<"out_dir"/${TAB_MUTATION}_log/"project_id">.
 
 =cut
 # Log directory and file
-my $LOG_DIR = "$OUT_DIR/${TAB_MUTATION}_log/$PID"; 
+my $LOG_DIR = "$OUT_DIR/${TAB_MUTATION}_log/$PID";
 my $LOG_FILE = "$LOG_DIR/" . basename($0) . ".log";
 system("mkdir -p $LOG_DIR");
 
@@ -162,7 +162,7 @@ $LOG->log_time("Start mutation analysis");
 =head2 Test Suites
 
 All test suites in C<suite_dir> have to be provided as an archive that conforms
-to the following naming convention: 
+to the following naming convention:
 
 B<C<project_id>-C<version_id>-C<test_suite_src>[.C<test_id>].tar.bz2>
 
@@ -204,7 +204,7 @@ foreach (@entries) {
     # Init hash if necessary
     $test_suites{$vid} = {} unless defined $test_suites{$vid};
     $test_suites{$vid}->{$suite_src} = {} unless defined $test_suites{$vid}->{$suite_src};
-    
+
     # Save archive name for current test id
     $test_suites{$vid}->{$suite_src}->{$test_id}=$_;
 
@@ -219,7 +219,7 @@ my $CLASS_DIR = "$SCRIPT_DIR/projects/$PID/modified_classes";
 # Get database handle for result table
 my $dbh_out = DB::get_db_handle($TAB_MUTATION, $OUT_DIR);
 
-my $sth = $dbh_out->prepare("SELECT * FROM $TAB_MUTATION WHERE $PROJECT=? AND $TEST_SUITE=? AND $ID=? AND $TEST_ID=?") 
+my $sth = $dbh_out->prepare("SELECT * FROM $TAB_MUTATION WHERE $PROJECT=? AND $TEST_SUITE=? AND $ID=? AND $TEST_ID=?")
     or die $dbh_out->errstr;
 
 # Iterate over all version ids
@@ -233,23 +233,23 @@ foreach my $vid (keys %test_suites) {
         foreach my $test_id (keys %{$test_suites{$vid}->{$suite_src}}) {
             my $archive = $test_suites{$vid}->{$suite_src}->{$test_id};
             my $test_dir = "$TMP_DIR/$suite_src";
-            
+
             # Skip existing entries
             $sth->execute($PID, $suite_src, $vid, $test_id);
             if ($sth->rows !=0) {
                 $LOG->log_msg(" - Skipping $archive since results already exist in database!");
                 next;
             }
-            
+
             $LOG->log_msg(" - Executing test suite: $archive");
             printf ("Executing test suite: $archive\n");
-            
-        
+
+
             # Copy generated tests into temp directory
-            system("mkdir -p $test_dir && cd $test_dir && rm -rf * && cp $SUITE_DIR/$archive . && tar -xjf $archive") == 0 
+            system("mkdir -p $test_dir && cd $test_dir && rm -rf * && cp $SUITE_DIR/$archive . && tar -xjf $archive") == 0
                 or die "Cannot extract test suite!";
-           
-            # 
+
+            #
             # Run mutation analysis
             #
             # TODO: Avoid re-compilation/mutation of classes for the same
@@ -276,7 +276,7 @@ sub _run_mutation {
 
     # Get archive name for current test suite
     my $archive = $test_suites{$vid}->{$suite_src}->{$test_id};
-   
+
     $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid!";
     my $bid   = $1;
     my $type  = $2;
@@ -296,12 +296,12 @@ sub _run_mutation {
     $ENV{MML} = $mml_file;
     my $gen_mutants = $project->mutate();
     $gen_mutants > 0 or die "No mutants generated for $vid!";
-    
+
     # Compile generated tests
     $project->compile_ext_tests($test_dir) == 0 or die "Tests do not compile!";
 
     # No need to run the test suite first. Major's preprocessing verifies that
-    # all tests in the test suite pass before performing the mutation analysis.   
+    # all tests in the test suite pass before performing the mutation analysis.
     my $mut_log = "$TMP_DIR/.mutation.log"; `>$mut_log`;
     my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", $mut_log);
     if (defined $mut_map) {
@@ -334,9 +334,9 @@ sub _checkout {
         my $rev2 = $project->lookup("${bid}f");
         my $src_path = $project->src_dir($rev2);
         $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
-        # Update config file 
+        # Update config file
         my $config = Utils::read_config_file("$root/$CONFIG");
-        $config->{$CONFIG_VID} = $vid; 
+        $config->{$CONFIG_VID} = $vid;
         Utils::write_config_file("$root/$CONFIG", $config);
     }
 }
@@ -345,7 +345,7 @@ sub _checkout {
 
 =head1 SEE ALSO
 
-All valid project_ids are listed in F<Project.pm> and all constants are defined 
+All valid project_ids are listed in F<Project.pm> and all constants are defined
 in F<Constants.pm>.
 
 =cut
