@@ -61,14 +61,6 @@ sub _post_checkout {
     # TODO: Then what should we do to fix compile errors?
     my ($vcs, $revision, $work_dir) = @_;
     my $name = $vcs->{prog_name};
-#    my $file;
-#    if ($revision == 1025) {
-#        $file = "$SCRIPT_DIR/projects/$PID/compile-diffs/diff-1025";
-#    } elsif ($revision <= 430 ) {
-#        $file = "$SCRIPT_DIR/projects/$PID/compile-diffs/diff-430";
-#    }
-#
-#    $vcs->apply_patch($work_dir, $file) if defined $file;
 
     my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";

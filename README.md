@@ -68,8 +68,8 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
-[issta14]: http://dl.acm.org/citation.cfm?id=2628055
-[fse14]: http://dl.acm.org/citation.cfm?id=2635929
+[issta14]: http://homes.cs.washington.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: http://homes.cs.washington.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 
 Documentation
 --------------------
@@ -88,7 +88,6 @@ Use `framework/bin/defects4j` to:
 
 Test execution framework
 --------------------------
-
 The test execution framework provides the following scripts:
   - framework/bin/run_bug_detection.pl:         
     Determines real fault detection rates of generated test suites and stores

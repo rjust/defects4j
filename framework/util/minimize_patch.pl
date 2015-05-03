@@ -30,7 +30,7 @@ minimize_patch.pl -- View and minimize patch in editor.
 
 =head1 SYNOPSIS
 
-minimize_patch -p project_id -v version_id
+minimize_patch.pl -p project_id -v version_id
 
 =head1 OPTIONS
 
@@ -116,7 +116,7 @@ my $min=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $min;
 
 # Last chance to reject patch
-system("cd $TMP_DIR; git diff -b -w $orig:$src_path $min:$src_path");
+system("cd $TMP_DIR; git diff $orig:$src_path $min:$src_path");
 print "Patch correct? [y/n] >";
 $input = <STDIN>; chomp $input;
 exit 0 unless $input eq "y";

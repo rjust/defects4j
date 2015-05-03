@@ -346,6 +346,7 @@ sub _rm_classes {
     my ($comp_log, $src, $name) = @_;
     open(LOG, "<$comp_log") or die "Cannot read compiler log!";
     $LOG->log_msg(" - Removing uncompilable classes: $name");
+    my $fixed=0;
     while (<LOG>) {
         # Find file names in javac's log: [javac] "path"/"file_name".java:"line_number": error: "error_text"
         next unless /javac.*($TMP_DIR\/$src\/(.*\.java)):.*error/;
@@ -355,8 +356,10 @@ sub _rm_classes {
         next unless -e $file;
         $LOG->log_msg($class);
         system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
+        ++$fixed;
     }
     close(LOG);
+    $fixed>0 or die "Unexpected compiler log: Could not identify uncompilable source files!";
 }
 
 =pod
