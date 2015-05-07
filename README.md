@@ -13,7 +13,7 @@ Defects4J contains bugs from the following open-source projects:
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
-| Time       | Joda Time            |  27            |
+| Time       | Joda-Time            |  27            |
 
 The bugs
 ---------------
@@ -73,7 +73,7 @@ Publications
 
 Documentation
 --------------------
-Detailed documentation for any script or module can be viewed with
+Detailed documentation for any script or module can be viewed with:
 `perldoc <file>`
 
 Database abstraction
