@@ -102,7 +102,7 @@ Reproducing faults
    will determine the list of modified classes for revisions with a reproducible
    fault, and also the list of classes loaded during the execution of the
    triggering test:
-    - `../bug-mining/get-class-list.pl -p Closure -w .`
+    - `../bug-mining/get-class-list.pl -p Lang -w .`
 
 Reviewing revisions and promoting to main database
 ------------------

@@ -1,15 +1,37 @@
 #!/usr/bin/env perl
+#
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
 
 =pod
 
 =head1 NAME
 
 analyze-project.pl -- Set up project and determine all suitable revision pairs
-                        from the commit-db.
+                      from the commit-db.
 
 =head1 SYNOPSIS
 
-analyze-project.pl -p project_id [ -v version_id] [-w work_dir]
+analyze-project.pl -p project_id -w work_dir [ -v version_id]
 
 =head1 OPTIONS
 
@@ -19,16 +41,16 @@ analyze-project.pl -p project_id [ -v version_id] [-w work_dir]
 
 The id of the project for which the revision pairs are analyzed.
 
+=item B<-w C<work_dir>>
+
+Use C<work_dir> as the working directory.
+
 =item B<-v C<version_id>>
 
 Only analyze project for this version id or an interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
-the interval boundaries are included in the analysis.
+The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+provided, the interval boundaries are included in the analysis.
 Per default all version ids are considered.
-
-=item B<-w C<work_dir>>
-
-Use C<work_dir> as the working directory. Defaults to F<$SCRIPT_DIR/projects/>.
 
 =back
 
@@ -64,7 +86,7 @@ C<commit-db>, or (if -v is specified) for a subset of revision pairs:
 
 =back
 
-The result for each individual step is stored in F<$DB_DIR/$TAB_REV_PAIRS>
+The result for each individual step is stored in F<C<work_dir>/$TAB_REV_PAIRS>
 
 For each steps the output table contains a column, indicating the result of the
 the step or '-' if the step was not applicable.
@@ -76,6 +98,7 @@ use File::Basename;
 use List::Util qw(all);
 use Cwd qw(abs_path);
 use Getopt::Std;
+use Pod::Usage;
 
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
@@ -84,24 +107,19 @@ use DB;
 use Utils;
 
 ############################## ARGUMENT PARSING
-# Issue usage message and quit
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id [-v version_id] [-w working_dir]";
-}
-
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or _usage();
+getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
 
 my ($PID, $VID, $working) =
     ($cmd_opts{p},
-     $cmd_opts{v} // undef,
-     $cmd_opts{w} // "$SCRIPT_DIR/projects"
+     $cmd_opts{v},
+     $cmd_opts{w}
     );
 
 _usage() unless all {defined} ($PID, $working); # $VID can be undefined
 
 # TODO make output dir more flexible
-my $db_dir = defined $cmd_opts{w} ? $working : $DB_DIR;
+my $db_dir = $working;
 
 # Check format of target version id
 if (defined $VID) {
@@ -332,10 +350,6 @@ sub _add_row {
 }
 
 =pod
-
-=head1 AUTHORS
-
-Rene Just, Darioush Jalali
 
 =head1 SEE ALSO
 
