@@ -107,6 +107,12 @@ The test execution framework provides the following scripts:
   - framework/bin/run_randoop.pl: 
     Generates test suites using Randoop.
 
+Bug mining
+-----------------
+
+To find more bugs from the internet or to expand defects4j, see `README.md` in
+`bug-mining`.
+
 Directory structure
 ----------------------
 This is the top-level directory of Defects4J.
@@ -129,7 +135,9 @@ The directory structure is as follows:
            |
            |--- util:          Util scripts used by Defects4J.
            |
-           |--- projects:      Project-specific resource files
+           |--- projects:      Project-specific fault database
+           |
+           |--- build-scripts: Project-specific files needed to build & run.
 
 License
 ---------
