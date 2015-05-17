@@ -61,7 +61,7 @@ The candidate commit database `commit-db`
    (Note that we manually built the commit-db for Chart):
 
    | Defects4J ID | Issue tracker | Project ID       | Regexp                 |
-   |--------------|-----------------------------------------------------------|
+   |--------------|---------------|------------------|------------------------|
    | Chart        |               |                  |                        |
    | Closure      | google        | closure-compiler | /issue.*(\d+)/mi       |
    | Lang         | jira          | lang             | /(LANG-\d+)/mi         |
@@ -102,7 +102,7 @@ Reproducing faults
    will determine the list of modified classes for revisions with a reproducible
    fault, and also the list of classes loaded during the execution of the
    triggering test:
-    - `../bug-mining/get-class-list.pl -p Lang -w .`
+    - ../get-class-list.pl -p Lang -w .
 
 Reviewing revisions and promoting to main database
 ------------------
@@ -117,13 +117,17 @@ Reviewing revisions and promoting to main database
 
 3. Manually review the diff for each fault and make sure it is minimal. Every
    reproducible fault has an entry with the file name `<id>.src.patch` in the
-   `patches` directory. Note that the patch is the *reverse* patch, i.e.,
-   patching the fixed revision with this patch will reintroduce the fault:
-    - ll Lang/patches/*.src.patch
-    - ../../../util/view_bug.pl -p Lang -v <id>
+   `patches` directory:
+     - ll Lang/patches/*.src.patch
+     - ../minimize_patch.pl -p Lang -w . -v <id>
+
+   Note that the patch is the *reverse* patch, i.e., patching the fixed revision
+   with this patch will reintroduce the fault.
+
 
 4. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
     - ../promote-to-directory.pl -p Lang -w . -v <id>
+
    Note: Make sure to specify the `-v` option as the default is to promote all
          found bugs!
