@@ -179,7 +179,7 @@ foreach my $vid (@ids) {
     $data{$PROJECT} = $PID;
     $data{$ID} = $vid;
 
-    _check_diff($project, $vid, \%data); # and
+    _check_diff($project, $vid, \%data) and
     _check_t2v2($project, $vid, \%data) and
     _check_t2v1($project, $vid, \%data);
 

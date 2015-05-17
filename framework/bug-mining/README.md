@@ -43,7 +43,7 @@ The candidate commit database `commit-db`
       ../../merge-issue-numbers.pl -f issues.txt
 
 6. Obtain the development history (commit logs) for the project:
-    - `git --git-dir=../../../../project_repos/commons-lang.git/ log > gitlog`
+    - git --git-dir=../../../../project_repos/commons-lang.git/ log > gitlog
 
 7. Cross-reference the commit log with the issue numbers known to be bugs
    (saved in `issues.txt` in this example) by using `vcs-log-xref.pl`. The
@@ -53,7 +53,7 @@ The candidate commit database `commit-db`
    output of `vcs-log-xref.pl`, and outputs or updates the `commit-db`:
     -  ../../vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog \
        -r ../../../../project_repos/commons-lang.git/ \
-       -c '../../bug-mining/verify-bug-file.sh issues.txt' | \
+       -c '../../verify-bug-file.sh issues.txt' | \
        ../../merge-commit-db.pl -f commit-db
 
    
