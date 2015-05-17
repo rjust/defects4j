@@ -1,4 +1,4 @@
-Defects4J
+Defects4J -- version 0.1.0
 ----------------
 Defects4J is a collection of reproducible bugs collected with the goal of
 advancing software testing research.
