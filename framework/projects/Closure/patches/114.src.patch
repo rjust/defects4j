@@ -1,29 +1,32 @@
-diff --git a/com/google/javascript/jscomp/NameAnalyzer.java b/com/google/javascript/jscomp/NameAnalyzer.java
-index a7b95b0..fe64ce5 100644
---- a/com/google/javascript/jscomp/NameAnalyzer.java
-+++ b/com/google/javascript/jscomp/NameAnalyzer.java
-@@ -575,13 +575,7 @@ final class NameAnalyzer implements CompilerPass {
-           } else {
-             recordDepScope(nameNode, ns);
-           }
--        } else if (!(parent.isCall() && parent.getFirstChild() == n)) {
--          // The rhs of the assignment is the caller, so it's used by the
--          // context. Don't associate it w/ the lhs.
--          // FYI: this fixes only the specific case where the assignment is the
--          // caller expression, but it could be nested deeper in the caller and
--          // we would still get a bug.
--          // See testAssignWithCall2 for an example of this.
-+        } else {
-           recordDepScope(recordNode, ns);
-         }
-       }
-@@ -851,7 +845,8 @@ final class NameAnalyzer implements CompilerPass {
+diff --git a/com/google/javascript/jscomp/FunctionInjector.java b/com/google/javascript/jscomp/FunctionInjector.java
+index 5b38600..accf4c5 100644
+--- a/com/google/javascript/jscomp/FunctionInjector.java
++++ b/com/google/javascript/jscomp/FunctionInjector.java
+@@ -694,6 +694,16 @@ class FunctionInjector {
  
-     @Override
-     public void visit(NodeTraversal t, Node n, Node parent) {
--      if (!(n.isName() || (NodeUtil.isGet(n) && !parent.isGetProp()))) {
-+      if (!(n.isName() ||
-+            NodeUtil.isGet(n) && !parent.isGetProp())) {
-         // This is not a simple or qualified name.
-         return;
-       }
+     Node block = fnNode.getLastChild();
+ 
++    boolean hasSideEffects = false;  // empty function case
++    if (block.hasChildren()) {
++      Preconditions.checkState(block.hasOneChild());
++      Node stmt = block.getFirstChild();
++      if (stmt.isReturn()) {
++        hasSideEffects = NodeUtil.mayHaveSideEffects(
++            stmt.getFirstChild(), compiler);
++      }
++    }
++
+     // CALL NODE: [ NAME, ARG1, ARG2, ... ]
+     Node cArg = callNode.getFirstChild().getNext();
+ 
+@@ -719,6 +729,10 @@ class FunctionInjector {
+       // For each named parameter check if a mutable argument use more than one.
+       if (fnParam != null) {
+         if (cArg != null) {
++          if (hasSideEffects && NodeUtil.canBeSideEffected(cArg)) {
++            return CanInlineResult.NO;
++          }
++
+           // Check for arguments that are evaluated more than once.
+           // Note: Unlike block inlining, there it is not possible that a
+           // parameter reference will be in a loop.

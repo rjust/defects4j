@@ -2,6 +2,42 @@ Index: org/jfree/chart/renderer/GrayPaintScale.java
 ===================================================================
 --- org/jfree/chart/renderer/GrayPaintScale.java	(revision 190)
 +++ org/jfree/chart/renderer/GrayPaintScale.java	(revision 188)
+@@ -39,7 +39,6 @@
+  * 05-Jul-2006 : Version 1 (DG);
+  * 31-Jan-2007 : Renamed min and max to lowerBound and upperBound (DG);
+  * 21-Jun-2007 : Removed JCommon dependencies (DG);
+- * 26-Sep-2007 : Fixed bug 1767315, problem in getPaint() method (DG);
+  * 
+  */
+ 
+@@ -77,9 +76,6 @@
+      * 
+      * @param lowerBound  the lower bound.
+      * @param upperBound  the upper bound.
+-     * 
+-     * @throws IllegalArgumentException if <code>lowerBound</code> is not
+-     *       less than <code>upperBound</code>.
+      */
+     public GrayPaintScale(double lowerBound, double upperBound) {
+         if (lowerBound >= upperBound) {
+@@ -94,8 +90,6 @@
+      * Returns the lower bound.
+      * 
+      * @return The lower bound.
+-     * 
+-     * @see #getUpperBound()
+      */
+     public double getLowerBound() {
+         return this.lowerBound;
+@@ -105,8 +99,6 @@
+      * Returns the upper bound.
+      * 
+      * @return The upper bound.
+-     * 
+-     * @see #getLowerBound()
+      */
+     public double getUpperBound() {
+         return this.upperBound;
 @@ -115,15 +107,14 @@
      /**
       * Returns a paint for the specified value.

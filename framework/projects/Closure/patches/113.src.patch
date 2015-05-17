@@ -1,23 +1,38 @@
-diff --git a/com/google/javascript/jscomp/ProcessClosurePrimitives.java b/com/google/javascript/jscomp/ProcessClosurePrimitives.java
-index 85cee7c..6f69dff 100644
---- a/com/google/javascript/jscomp/ProcessClosurePrimitives.java
-+++ b/com/google/javascript/jscomp/ProcessClosurePrimitives.java
-@@ -321,12 +321,12 @@ class ProcessClosurePrimitives extends AbstractPostOrderCallback
-       maybeAddToSymbolTable(left);
-       maybeAddStringNodeToSymbolTable(arg);
- 
--      // Requires should be removed before further processing.
--      // Some clients run closure pass multiple times, first with
--      // the checks for broken requires turned off. In these cases, we
--      // allow broken requires to be preserved by the first run to
--      // let them be caught in the subsequent run.
--      if (provided != null || requiresLevel.isOn()) {
-+      // Requires should be removed before runtime.  The one
-+      // exception is if the type has not been provided yet, in which case,
-+      // we will be doing a later pass that may error, so we can
-+      // leave this here this time and let it error next time if it
-+      // is still not provided.
-+      if (provided != null) {
-         parent.detachFromParent();
-         compiler.reportCodeChange();
+diff --git a/com/google/javascript/jscomp/NameAnalyzer.java b/com/google/javascript/jscomp/NameAnalyzer.java
+index a7b95b0..fe64ce5 100644
+--- a/com/google/javascript/jscomp/NameAnalyzer.java
++++ b/com/google/javascript/jscomp/NameAnalyzer.java
+@@ -575,13 +575,7 @@ final class NameAnalyzer implements CompilerPass {
+           } else {
+             recordDepScope(nameNode, ns);
+           }
+-        } else if (!(parent.isCall() && parent.getFirstChild() == n)) {
+-          // The rhs of the assignment is the caller, so it's used by the
+-          // context. Don't associate it w/ the lhs.
+-          // FYI: this fixes only the specific case where the assignment is the
+-          // caller expression, but it could be nested deeper in the caller and
+-          // we would still get a bug.
+-          // See testAssignWithCall2 for an example of this.
++        } else {
+           recordDepScope(recordNode, ns);
+         }
        }
+@@ -851,7 +845,8 @@ final class NameAnalyzer implements CompilerPass {
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+-      if (!(n.isName() || (NodeUtil.isGet(n) && !parent.isGetProp()))) {
++      if (!(n.isName() ||
++            NodeUtil.isGet(n) && !parent.isGetProp())) {
+         // This is not a simple or qualified name.
+         return;
+       }
+@@ -919,7 +914,7 @@ final class NameAnalyzer implements CompilerPass {
+ 
+       // A value whose result is the return value of a function call
+       // can be an alias to global object.
+-      // Here we add an alias to the general "global" object
++      // Here we add a alias to the general "global" object
+       // to act as a placeholder for the actual (unnamed) value.
+       if (maybeHiddenAlias(n)) {
+         recordAlias(name, WINDOW);

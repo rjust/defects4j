@@ -2,6 +2,14 @@ Index: org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
 ===================================================================
 --- org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java	(revision 210)
 +++ org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java	(revision 209)
+@@ -56,7 +56,6 @@
+  * 02-Feb-2007 : Removed author tags all over JFreeChart sources (DG);
+  * 09-Mar-2007 : Fixed problem with horizontal rendering (DG);
+  * 21-Jun-2007 : Removed JCommon dependencies (DG);
+- * 28-Sep-2007 : Added equals() method override (DG);
+  * 
+  */
+ 
 @@ -83,11 +82,12 @@
  
  import org.jfree.chart.axis.CategoryAxis;
@@ -97,6 +105,15 @@ Index: org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
  
      /**
       * Returns an icon.
+@@ -494,7 +470,7 @@
+     }
+ 
+     /**
+-     * Returns an icon from a shape.
++     * Returns an icon.
+      *
+      * @param shape  the shape.
+      * @param fill  the fill flag.
 @@ -503,7 +479,7 @@
       * @return The icon.
       */

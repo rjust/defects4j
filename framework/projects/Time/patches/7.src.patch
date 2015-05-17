@@ -2,6 +2,24 @@ diff --git a/org/joda/time/format/DateTimeFormatter.java b/org/joda/time/format/
 index 913d036..553b035 100644
 --- a/org/joda/time/format/DateTimeFormatter.java
 +++ b/org/joda/time/format/DateTimeFormatter.java
+@@ -23,7 +23,6 @@ import org.joda.time.Chronology;
+ import org.joda.time.DateTime;
+ import org.joda.time.DateTimeUtils;
+ import org.joda.time.DateTimeZone;
+-import org.joda.time.Instant;
+ import org.joda.time.LocalDate;
+ import org.joda.time.LocalDateTime;
+ import org.joda.time.LocalTime;
+@@ -683,8 +682,7 @@ public class DateTimeFormatter {
+      * one's complement operator (~) on the return value.
+      * <p>
+      * This parse method ignores the {@link #getDefaultYear() default year} and
+-     * parses using the year from the supplied instant based on the chronology
+-     * and time-zone of the supplied instant.
++     * parses using the year from the supplied instant as the default.
+      * <p>
+      * The parse will use the chronology of the instant.
+      *
 @@ -705,12 +703,11 @@ public class DateTimeFormatter {
          
          long instantMillis = instant.getMillis();

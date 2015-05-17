@@ -1,1 +1,2 @@
-com.google.javascript.jscomp.TypeCheck
+com.google.javascript.jscomp.MinimizeExitPoints
+com.google.javascript.jscomp.RemoveTryCatch

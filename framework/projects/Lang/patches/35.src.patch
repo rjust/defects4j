@@ -28,6 +28,14 @@ index 3a543ce..79c80bd 100644
          T[] newArray = (T[]) copyArrayGrow1(array, type);
          newArray[newArray.length - 1] = element;
          return newArray;
+@@ -3562,7 +3554,6 @@ public class ArrayUtils {
+      * @return A new array containing the existing elements and the new element
+      * @throws IndexOutOfBoundsException if the index is out of range
+      * (index < 0 || index > array.length).
+-     * @throws IllegalArgumentException if both array and element are null
+      */
+     public static <T> T[] add(T[] array, int index, T element) {
+         Class<?> clss = null;
 @@ -3571,7 +3562,9 @@ public class ArrayUtils {
          } else if (element != null) {
              clss = element.getClass();

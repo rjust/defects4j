@@ -3,6 +3,7 @@ com.google.javascript.rhino.jstype.AllType
 com.google.javascript.rhino.jstype.StringType
 com.google.javascript.rhino.jstype.ValueType
 com.google.javascript.rhino.jstype.IndexedType
+com.google.javascript.rhino.testing.TestErrorReporter
 com.google.javascript.rhino.jstype.VoidType
 com.google.javascript.rhino.ErrorReporter
 com.google.javascript.rhino.jstype.JSTypeNative
@@ -23,6 +24,7 @@ com.google.javascript.rhino.JSDocInfoBuilder
 com.google.javascript.rhino.jstype.TemplateType
 com.google.javascript.rhino.jstype.ParameterizedType
 com.google.javascript.rhino.JSTypeExpression
+com.google.javascript.jscomp.testing.TestErrorReporter
 com.google.javascript.rhino.jstype.NamedType
 com.google.javascript.rhino.jstype.RecordTypeBuilder
 com.google.javascript.rhino.jstype.RecordType
@@ -45,5 +47,6 @@ com.google.javascript.rhino.jstype.UnionType
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.ObjectType
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.jstype.FunctionType
 com.google.javascript.jscomp.parsing.JsDocToken

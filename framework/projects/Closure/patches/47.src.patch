@@ -1,3 +1,39 @@
+diff --git a/com/google/debugging/sourcemap/FilePosition.java b/com/google/debugging/sourcemap/FilePosition.java
+index f84320a..cc7243b 100644
+--- a/com/google/debugging/sourcemap/FilePosition.java
++++ b/com/google/debugging/sourcemap/FilePosition.java
+@@ -20,6 +20,9 @@ package com.google.debugging.sourcemap;
+  * Represents a position in a source file.
+  *
+  */
++/**
++ * Represents a position in a source file.
++ */
+ public class FilePosition {
+   private final int line;
+   private final int column;
+@@ -30,18 +33,15 @@ public class FilePosition {
+   }
+ 
+   /**
+-   * Returns the line number of this position.
+-   * Note: The v1 and v2 source maps use a line number with the first line
+-   * being 1, whereas the v3 source map corrects this and uses a first line
+-   * number of 0 to be consistent with the column representation.
++   * Returns the line number of this postion.
+    */
+   public int getLine() {
+     return line;
+   }
+ 
+   /**
+-   * @return the character index on the line
+-   * of this position, with the first column being 0.
++   * Returns the character index on the line
++   * of this position.
+    */
+   public int getColumn() {
+     return column;
 diff --git a/com/google/debugging/sourcemap/SourceMapConsumerV3.java b/com/google/debugging/sourcemap/SourceMapConsumerV3.java
 index 5ee9108..3b07ae4 100644
 --- a/com/google/debugging/sourcemap/SourceMapConsumerV3.java
@@ -20,6 +56,15 @@ diff --git a/com/google/javascript/jscomp/SourceMap.java b/com/google/javascript
 index 7192408..04ff623 100644
 --- a/com/google/javascript/jscomp/SourceMap.java
 +++ b/com/google/javascript/jscomp/SourceMap.java
+@@ -22,8 +22,6 @@ import com.google.debugging.sourcemap.FilePosition;
+ import com.google.debugging.sourcemap.SourceMapFormat;
+ import com.google.debugging.sourcemap.SourceMapGenerator;
+ import com.google.debugging.sourcemap.SourceMapGeneratorFactory;
+-import com.google.debugging.sourcemap.SourceMapGeneratorV1;
+-import com.google.debugging.sourcemap.SourceMapGeneratorV2;
+ import com.google.javascript.rhino.Node;
+ 
+ import java.io.IOException;
 @@ -131,19 +129,9 @@ public class SourceMap {
  
      String originalName = (String) node.getProp(Node.ORIGINALNAME_PROP);

@@ -2,6 +2,14 @@ Index: org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java
 ===================================================================
 --- org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 231)
 +++ org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 227)
+@@ -50,7 +50,6 @@
+  * 21-Jun-2007 : Removed JCommon dependencies (DG);
+  * 28-Sep-2007 : Fixed cloning bug (DG);
+  * 02-Oct-2007 : Fixed bug in updating cached bounds (DG);
+- * 03-Oct-2007 : Fixed another bug in updating cached bounds (DG);
+  *
+  */
+ 
 @@ -120,14 +119,12 @@
       *
       * @param list  a collection of values from which the various medians will 
@@ -123,6 +131,258 @@ Index: org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java
          fireDatasetChanged();
  
      }
+@@ -243,8 +242,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The mean value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMeanValue(int row, int column) {
+ 
+@@ -265,8 +262,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The mean value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMeanValue(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -285,8 +280,6 @@
+      * @param column  the column index (zero-based).
+      *
+      * @return The median value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMedianValue(int row, int column) {
+         Number result = null;
+@@ -305,8 +298,6 @@
+      * @param columnKey  the columnKey.
+      *
+      * @return The median value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMedianValue(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -325,8 +316,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The first quartile value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getQ1Value(int row, int column) {
+         Number result = null;
+@@ -345,8 +334,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The first quartile value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getQ1Value(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -365,8 +352,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The third quartile value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getQ3Value(int row, int column) {
+         Number result = null;
+@@ -385,8 +370,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The third quartile value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getQ3Value(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -404,8 +387,6 @@
+      * @param key  the column key.
+      *
+      * @return The column index.
+-     * 
+-     * @see #getColumnKey(int)
+      */
+     public int getColumnIndex(Comparable key) {
+         return this.data.getColumnIndex(key);
+@@ -417,8 +398,6 @@
+      * @param column  the column index (zero-based).
+      *
+      * @return The column key.
+-     * 
+-     * @see #getColumnIndex(Comparable)
+      */
+     public Comparable getColumnKey(int column) {
+         return this.data.getColumnKey(column);
+@@ -428,8 +407,6 @@
+      * Returns the column keys.
+      *
+      * @return The keys.
+-     * 
+-     * @see #getRowKeys()
+      */
+     public List getColumnKeys() {
+         return this.data.getColumnKeys();
+@@ -441,8 +418,6 @@
+      * @param key  the row key.
+      *
+      * @return The row index.
+-     * 
+-     * @see #getRowKey(int)
+      */
+     public int getRowIndex(Comparable key) {
+         return this.data.getRowIndex(key);
+@@ -454,8 +429,6 @@
+      * @param row  the row index (zero-based).
+      *
+      * @return The row key.
+-     * 
+-     * @see #getRowIndex(Comparable)
+      */
+     public Comparable getRowKey(int row) {
+         return this.data.getRowKey(row);
+@@ -465,8 +438,6 @@
+      * Returns the row keys.
+      *
+      * @return The keys.
+-     * 
+-     * @see #getColumnKeys()
+      */
+     public List getRowKeys() {
+         return this.data.getRowKeys();
+@@ -476,8 +447,6 @@
+      * Returns the number of rows in the table.
+      *
+      * @return The row count.
+-     * 
+-     * @see #getColumnCount()
+      */
+     public int getRowCount() {
+         return this.data.getRowCount();
+@@ -487,8 +456,6 @@
+      * Returns the number of columns in the table.
+      *
+      * @return The column count.
+-     * 
+-     * @see #getRowCount()
+      */
+     public int getColumnCount() {
+         return this.data.getColumnCount();
+@@ -501,8 +468,6 @@
+      *                         y-interval is taken into account.
+      * 
+      * @return The minimum value.
+-     * 
+-     * @see #getRangeUpperBound(boolean)
+      */
+     public double getRangeLowerBound(boolean includeInterval) {
+         return this.minimumRangeValue;
+@@ -515,8 +480,6 @@
+      *                         y-interval is taken into account.
+      * 
+      * @return The maximum value.
+-     * 
+-     * @see #getRangeLowerBound(boolean)
+      */
+     public double getRangeUpperBound(boolean includeInterval) {
+         return this.maximumRangeValue;
+@@ -541,8 +504,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The minimum regular value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMinRegularValue(int row, int column) {
+         Number result = null;
+@@ -561,8 +522,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The minimum regular value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMinRegularValue(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -581,8 +540,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The maximum regular value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMaxRegularValue(int row, int column) {
+         Number result = null;
+@@ -601,8 +558,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The maximum regular value.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMaxRegularValue(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -621,8 +576,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The minimum outlier.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMinOutlier(int row, int column) {
+         Number result = null;
+@@ -641,8 +594,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The minimum outlier.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMinOutlier(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -661,8 +612,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return The maximum outlier.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMaxOutlier(int row, int column) {
+         Number result = null;
+@@ -681,8 +630,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return The maximum outlier.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public Number getMaxOutlier(Comparable rowKey, Comparable columnKey) {
+         Number result = null;
+@@ -701,8 +648,6 @@
+      * @param column  the column index (zero-based).
+      * 
+      * @return A list of outlier values.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public List getOutliers(int row, int column) {
+         List result = null;
+@@ -721,8 +666,6 @@
+      * @param columnKey  the column key.
+      * 
+      * @return A list of outlier values.
+-     * 
+-     * @see #getItem(int, int)
+      */
+     public List getOutliers(Comparable rowKey, Comparable columnKey) {
+         List result = null;
 @@ -735,52 +678,6 @@
      }
      

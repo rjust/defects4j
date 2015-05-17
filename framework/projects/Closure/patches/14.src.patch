@@ -11,3 +11,24 @@ index 980deff..5c6927f 100644
              }
            }
            return computeFollowNode(fromNode, parent, cfa);
+diff --git a/com/google/javascript/jscomp/ControlFlowGraph.java b/com/google/javascript/jscomp/ControlFlowGraph.java
+index 49bbdd8..56ed9d7 100644
+--- a/com/google/javascript/jscomp/ControlFlowGraph.java
++++ b/com/google/javascript/jscomp/ControlFlowGraph.java
+@@ -113,15 +113,7 @@ class ControlFlowGraph<N> extends
+     ON_FALSE,
+     /** Unconditional branch. */
+     UNCOND,
+-    /**
+-     * Exception-handling code paths.
+-     * Conflates two kind of control flow passing:
+-     * - An exception is thrown, and falls into a catch or finally block
+-     * - During exception handling, a finally block finishes and control
+-     *   passes to the next finally block.
+-     * In theory, we need 2 different edge types. In practice, we
+-     * can just treat them as "the edges we can't really optimize".
+-     */
++    /** Exception related. */
+     ON_EX,
+     /** Possible folded-away template */
+     SYN_BLOCK;

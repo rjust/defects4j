@@ -2,6 +2,16 @@ diff --git a/org/apache/commons/lang/time/FastDateFormat.java b/org/apache/commo
 index 756290f..ac96c58 100644
 --- a/org/apache/commons/lang/time/FastDateFormat.java
 +++ b/org/apache/commons/lang/time/FastDateFormat.java
+@@ -16,9 +16,6 @@
+  */
+ package org.apache.commons.lang.time;
+ 
+-import java.io.IOException;
+-import java.io.ObjectInputStream;
+-
+ import java.text.DateFormat;
+ import java.text.DateFormatSymbols;
+ import java.text.FieldPosition;
 @@ -137,11 +134,11 @@ public class FastDateFormat extends Format {
      /**
       * The parsed rules.

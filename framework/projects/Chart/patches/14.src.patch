@@ -2,6 +2,15 @@ Index: org/jfree/chart/plot/CategoryPlot.java
 ===================================================================
 --- org/jfree/chart/plot/CategoryPlot.java	(revision 811)
 +++ org/jfree/chart/plot/CategoryPlot.java	(revision 809)
+@@ -157,8 +157,6 @@
+  * 14-Nov-2007 : Added missing event notifications (DG);
+  * 25-Mar-2008 : Added new methods with optional notification - see patch
+  *               1913751 (DG);
+- * 07-Apr-2008 : Fixed NPE in removeDomainMarker() and 
+- *               removeRangeMarker() (DG);
+  * 
+  *
+  */
 @@ -2163,9 +2161,6 @@
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));
@@ -40,6 +49,15 @@ Index: org/jfree/chart/plot/XYPlot.java
 ===================================================================
 --- org/jfree/chart/plot/XYPlot.java	(revision 811)
 +++ org/jfree/chart/plot/XYPlot.java	(revision 809)
+@@ -199,8 +199,6 @@
+  * 04-Jan-2008 : Fix for quadrant painting error - see patch 1849564 (DG);
+  * 25-Mar-2008 : Added new methods with optional notification - see patch
+  *               1913751 (DG);
+- * 07-Apr-2008 : Fixed NPE in removeDomainMarker() and 
+- *               removeRangeMarker() (DG);
+  * 
+  */
+ 
 @@ -2290,9 +2288,6 @@
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));

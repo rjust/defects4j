@@ -1,38 +1,14 @@
-diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
-index b09bc34..1298aa4 100644
---- a/com/google/javascript/jscomp/parsing/ParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/ParserTest.java
-@@ -691,33 +691,6 @@ public class ParserTest extends BaseJSTypeTestCase {
-     parse("/* \n * @type {number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
+diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+index a369e4c..de53fc7 100644
+--- a/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -466,9 +466,6 @@ public class CodePrinterTest extends TestCase {
+     // Test we correctly handle an in operator inside a comma.
+     assertPrintSame("for(x,(y in z);;)foo()");
+     assertPrintSame("for(var x,w=(y in z);;)foo()");
+-
+-    // And in operator inside a hook.
+-    assertPrintSame("for(a=c?0:(0 in d);;)foo()");
    }
  
--  public void testSuspiciousBlockCommentWarning3() {
--    parse("/* \n *@type {number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
--  }
--
--  public void testSuspiciousBlockCommentWarning4() {
--    parse(
--        "  /*\n" +
--        "   * @type {number}\n" +
--        "   */\n" +
--        "  var x = 3;",
--        SUSPICIOUS_COMMENT_WARNING);
--  }
--
--  public void testSuspiciousBlockCommentWarning5() {
--    parse(
--        "  /*\n" +
--        "   * some random text here\n" +
--        "   * @type {number}\n" +
--        "   */\n" +
--        "  var x = 3;",
--        SUSPICIOUS_COMMENT_WARNING);
--  }
--
--  public void testSuspiciousBlockCommentWarning6() {
--    parse("/* @type{number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
--  }
--
-   public void testCatchClauseForbidden() {
-     parseError("try { } catch (e if true) {}",
-         "Catch clauses are not supported");
+   public void testLiteralProperty() {

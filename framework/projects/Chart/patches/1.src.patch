@@ -2,6 +2,33 @@ Index: org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
 ===================================================================
 --- org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2266)
 +++ org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2264)
+@@ -2,7 +2,7 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2010, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2009, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+@@ -27,7 +27,7 @@
+  * ---------------------------------
+  * AbstractCategoryItemRenderer.java
+  * ---------------------------------
+- * (C) Copyright 2002-2010, by Object Refinery Limited.
++ * (C) Copyright 2002-2009, by Object Refinery Limited.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+  * Contributor(s):   Richard Atkinson;
+@@ -107,7 +107,7 @@
+  * 27-Mar-2009 : Added new findRangeBounds() method to account for hidden
+  *               series (DG);
+  * 01-Apr-2009 : Added new addEntity() method (DG);
+- * 09-Feb-2010 : Fixed bug 2947660 (DG);
++ * 26-Jun-2009 : Updated to support selections (DG);
+  *
+  */
+ 
 @@ -1794,7 +1794,7 @@
          }
          int index = this.plot.getIndexOf(this);

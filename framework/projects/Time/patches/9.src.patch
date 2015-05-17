@@ -19,6 +19,24 @@ index afa75d7..f62ab9c 100644
  
      /** The instance that is providing time zones. */
      private static Provider cProvider;
+@@ -230,7 +229,7 @@ public abstract class DateTimeZone implements Serializable {
+      * <p>
+      * This factory is a convenient way of constructing zones with a fixed offset.
+      * 
+-     * @param hoursOffset  the offset in hours from UTC, from -23 to +23
++     * @param hoursOffset  the offset in hours from UTC
+      * @return the DateTimeZone object for the offset
+      * @throws IllegalArgumentException if the offset is too large or too small
+      */
+@@ -246,7 +245,7 @@ public abstract class DateTimeZone implements Serializable {
+      * The minutes value is always positive and in the range 0 to 59.
+      * If constructed with the values (-2, 30), the resulting zone is '-02:30'.
+      * 
+-     * @param hoursOffset  the offset in hours from UTC, from -23 to +23
++     * @param hoursOffset  the offset in hours from UTC
+      * @param minutesOffset  the offset in minutes from UTC, must be between 0 and 59 inclusive
+      * @return the DateTimeZone object for the offset
+      * @throws IllegalArgumentException if the offset or minute is too large or too small
 @@ -255,19 +254,16 @@ public abstract class DateTimeZone implements Serializable {
          if (hoursOffset == 0 && minutesOffset == 0) {
              return DateTimeZone.UTC;

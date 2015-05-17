@@ -28,6 +28,14 @@ diff --git a/org/joda/time/base/BasePeriod.java b/org/joda/time/base/BasePeriod.
 index a5dcb74..e2da9f0 100644
 --- a/org/joda/time/base/BasePeriod.java
 +++ b/org/joda/time/base/BasePeriod.java
+@@ -28,7 +28,6 @@ import org.joda.time.ReadableDuration;
+ import org.joda.time.ReadableInstant;
+ import org.joda.time.ReadablePartial;
+ import org.joda.time.ReadablePeriod;
+-import org.joda.time.chrono.ISOChronology;
+ import org.joda.time.convert.ConverterManager;
+ import org.joda.time.convert.PeriodConverter;
+ import org.joda.time.field.FieldUtils;
 @@ -211,24 +210,6 @@ public abstract class BasePeriod
      }
  

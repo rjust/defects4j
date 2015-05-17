@@ -2,6 +2,16 @@ Index: org/jfree/chart/plot/CategoryPlot.java
 ===================================================================
 --- org/jfree/chart/plot/CategoryPlot.java	(revision 434)
 +++ org/jfree/chart/plot/CategoryPlot.java	(revision 430)
+@@ -150,8 +150,7 @@
+  * 06-Jul-2007 : Updated annotation handling (DG);
+  * 10-Jul-2007 : Added getRangeAxisIndex(ValueAxis) method (DG);
+  * 24-Sep-2007 : Implemented new zoom methods (DG);
+- * 25-Oct-2007 : Added some argument checks (DG);
+- *
++ * 
+  */
+ 
+ package org.jfree.chart.plot;
 @@ -685,19 +684,13 @@
       * Returns the index of the specified axis, or <code>-1</code> if the axis
       * is not assigned to the plot.

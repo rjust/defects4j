@@ -2,6 +2,35 @@ diff --git a/org/apache/commons/lang/enums/ValuedEnum.java b/org/apache/commons/
 index 419a0ea..bbd018c 100644
 --- a/org/apache/commons/lang/enums/ValuedEnum.java
 +++ b/org/apache/commons/lang/enums/ValuedEnum.java
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2002-2006 The Apache Software Foundation.
++ * Copyright 2002-2005 The Apache Software Foundation.
+  * 
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+@@ -15,8 +15,6 @@
+  */
+ package org.apache.commons.lang.enums;
+ 
+-import java.lang.reflect.InvocationTargetException;
+-import java.lang.reflect.Method;
+ import java.util.Iterator;
+ import java.util.List;
+ 
+@@ -167,11 +165,7 @@ public abstract class ValuedEnum extends Enum {
+      *
+      * <p>The default ordering is numeric by value, but this
+      * can be overridden by subclasses.</p>
+-     *
+-     * <p>NOTE: From v2.2 the enums must be of the same type.
+-     * If the parameter is in a different class loader than this instance,
+-     * reflection is used to compare the values.</p>
+-     *
++     * 
+      * @see java.lang.Comparable#compareTo(Object)
+      * @param other  the other object to compare to
+      * @return -ve if this is less than the other object, +ve if greater than,
 @@ -180,41 +174,10 @@ public abstract class ValuedEnum extends Enum {
       * @throws NullPointerException if other is <code>null</code>
       */

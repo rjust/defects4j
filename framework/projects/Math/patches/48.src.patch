@@ -2,6 +2,38 @@ diff --git a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/or
 index 0347525..c781a90 100644
 --- a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
 +++ b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -19,7 +19,6 @@ package org.apache.commons.math.analysis.solvers;
+ 
+ import org.apache.commons.math.util.FastMath;
+ import org.apache.commons.math.analysis.UnivariateRealFunction;
+-import org.apache.commons.math.exception.ConvergenceException;
+ import org.apache.commons.math.exception.MathInternalError;
+ 
+ /**
+@@ -62,8 +61,8 @@ public abstract class BaseSecantSolver
+     /**
+      * Construct a solver.
+      *
+-     * @param absoluteAccuracy Absolute accuracy.
+-     * @param method <em>Secant</em>-based root-finding method to use.
++     * @param absoluteAccuracy absolute accuracy
++     * @param method <em>Secant</em>-based root-finding method to use
+      */
+     protected BaseSecantSolver(final double absoluteAccuracy, final Method method) {
+         super(absoluteAccuracy);
+@@ -74,9 +73,9 @@ public abstract class BaseSecantSolver
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
+-     * @param method <em>Secant</em>-based root-finding method to use.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
++     * @param method <em>Secant</em>-based root-finding method to use
+      */
+     protected BaseSecantSolver(final double relativeAccuracy,
+                                final double absoluteAccuracy,
 @@ -184,11 +183,7 @@ public abstract class BaseSecantSolver
                      f0 *= f1 / (f1 + fx);
                      break;
@@ -15,3 +47,184 @@ index 0347525..c781a90 100644
                      break;
                  default:
                      // Should never happen.
+diff --git a/org/apache/commons/math/analysis/solvers/IllinoisSolver.java b/org/apache/commons/math/analysis/solvers/IllinoisSolver.java
+index 47c340c..ede0c27 100644
+--- a/org/apache/commons/math/analysis/solvers/IllinoisSolver.java
++++ b/org/apache/commons/math/analysis/solvers/IllinoisSolver.java
+@@ -26,9 +26,7 @@ package org.apache.commons.math.analysis.solvers;
+  * <p>Like the <em>Regula Falsi</em> method, convergence is guaranteed by
+  * maintaining a bracketed solution. The <em>Illinois</em> method however,
+  * should converge much faster than the original <em>Regula Falsi</em>
+- * method. Furthermore, this implementation of the <em>Illinois</em> method
+- * should not suffer from the same implementation issues as the <em>Regula
+- * Falsi</em> method, which may fail to convergence in certain cases.</p>
++ * method.</p>
+  *
+  * <p>The <em>Illinois</em> method assumes that the function is continuous,
+  * but not necessarily smooth.</p>
+@@ -51,7 +49,7 @@ public class IllinoisSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public IllinoisSolver(final double absoluteAccuracy) {
+         super(absoluteAccuracy, Method.ILLINOIS);
+@@ -60,8 +58,8 @@ public class IllinoisSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public IllinoisSolver(final double relativeAccuracy,
+                           final double absoluteAccuracy) {
+@@ -71,8 +69,8 @@ public class IllinoisSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      * @param functionValueAccuracy Maximum function value error.
+      */
+     public IllinoisSolver(final double relativeAccuracy,
+@@ -80,4 +78,5 @@ public class IllinoisSolver extends BaseSecantSolver {
+                           final double functionValueAccuracy) {
+         super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy, Method.PEGASUS);
+     }
++
+ }
+diff --git a/org/apache/commons/math/analysis/solvers/PegasusSolver.java b/org/apache/commons/math/analysis/solvers/PegasusSolver.java
+index 457c958..08fb0c7 100644
+--- a/org/apache/commons/math/analysis/solvers/PegasusSolver.java
++++ b/org/apache/commons/math/analysis/solvers/PegasusSolver.java
+@@ -24,13 +24,10 @@ package org.apache.commons.math.analysis.solvers;
+  *
+  * <p>Like the <em>Regula Falsi</em> method, convergence is guaranteed by
+  * maintaining a bracketed solution. The <em>Pegasus</em> method however,
+- * should converge much faster than the original <em>Regula Falsi</em>
+- * method. Furthermore, this implementation of the <em>Pegasus</em> method
+- * should not suffer from the same implementation issues as the <em>Regula
+- * Falsi</em> method, which may fail to convergence in certain cases. Also,
+- * the <em>Pegasus</em> method should converge faster than the
+- * {@link IllinoisSolver <em>Illinois</em>} method, another <em>Regula
+- * Falsi</em>-based method.</p>
++ * should converge much faster than the original <em>Regula Falsi</em> method.
++ * Furthermore, it should converge faster than the
++ * {@link IllinoisSolver <em>Illinois</em>} method, another
++ * <em>Regula Falsi</em>-based method.</p>
+  *
+  * <p>The <em>Pegasus</em> method assumes that the function is continuous,
+  * but not necessarily smooth.</p>
+@@ -53,7 +50,7 @@ public class PegasusSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public PegasusSolver(final double absoluteAccuracy) {
+         super(absoluteAccuracy, Method.PEGASUS);
+@@ -62,8 +59,8 @@ public class PegasusSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public PegasusSolver(final double relativeAccuracy,
+                          final double absoluteAccuracy) {
+@@ -73,8 +70,8 @@ public class PegasusSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      * @param functionValueAccuracy Maximum function value error.
+      */
+     public PegasusSolver(final double relativeAccuracy,
+@@ -82,4 +79,5 @@ public class PegasusSolver extends BaseSecantSolver {
+                          final double functionValueAccuracy) {
+         super(relativeAccuracy, absoluteAccuracy, functionValueAccuracy, Method.PEGASUS);
+     }
++
+ }
+diff --git a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java
+index 71224a0..89c50df 100644
+--- a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java
++++ b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolver.java
+@@ -17,30 +17,13 @@
+ 
+ package org.apache.commons.math.analysis.solvers;
+ 
++
+ /**
+  * Implements the <em>Regula Falsi</em> or <em>False position</em> method for
+  * root-finding (approximating a zero of a univariate real function). It is a
+- * modified {@link SecantSolver <em>Secant</em>} method.
+- *
+- * <p>The <em>Regula Falsi</em> method is included for completeness, for
+- * testing purposes, for educational purposes, for comparison to other
+- * algorithms, etc. It is however <strong>not</strong> intended to be used
+- * for actual problems, as one of the bounds often remains fixed, resulting
+- * in very slow convergence. Instead, one of the well-known modified
+- * <em>Regula Falsi</em> algorithms can be used ({@link IllinoisSolver
+- * <em>Illinois</em>} or {@link PegasusSolver <em>Pegasus</em>}). These two
+- * algorithms solve the fundamental issues of the original <em>Regula
+- * Falsi</em> algorithm, and greatly out-performs it for most, if not all,
+- * (practical) functions.
+- *
+- * <p>Unlike the <em>Secant</em> method, the <em>Regula Falsi</em> guarantees
+- * convergence, by maintaining a bracketed solution. Note however, that due to
+- * the finite/limited precision of Java's {@link Double double} type, which is
+- * used in this implementation, the algorithm may get stuck in a situation
+- * where it no longer makes any progress. Such cases are detected and result
+- * in a {@code ConvergenceException} exception being thrown. In other words,
+- * the algorithm theoretically guarantees convergence, but the implementation
+- * does not.</p>
++ * modified {@link SecantSolver <em>Secant</em>} method. Unlike the
++ * <em>Secant</em> method, convergence is guaranteed by maintaining a
++ * bracketed solution.
+  *
+  * <p>The <em>Regula Falsi</em> method assumes that the function is continuous,
+  * but not necessarily smooth.</p>
+@@ -63,7 +46,7 @@ public class RegulaFalsiSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public RegulaFalsiSolver(final double absoluteAccuracy) {
+         super(absoluteAccuracy, Method.REGULA_FALSI);
+@@ -72,8 +55,8 @@ public class RegulaFalsiSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      */
+     public RegulaFalsiSolver(final double relativeAccuracy,
+                              final double absoluteAccuracy) {
+@@ -83,8 +66,8 @@ public class RegulaFalsiSolver extends BaseSecantSolver {
+     /**
+      * Construct a solver.
+      *
+-     * @param relativeAccuracy Relative accuracy.
+-     * @param absoluteAccuracy Absolute accuracy.
++     * @param relativeAccuracy relative accuracy
++     * @param absoluteAccuracy absolute accuracy
+      * @param functionValueAccuracy Maximum function value error.
+      */
+     public RegulaFalsiSolver(final double relativeAccuracy,

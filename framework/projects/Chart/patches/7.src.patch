@@ -2,6 +2,32 @@ Index: org/jfree/data/time/TimePeriodValues.java
 ===================================================================
 --- org/jfree/data/time/TimePeriodValues.java	(revision 1087)
 +++ org/jfree/data/time/TimePeriodValues.java	(revision 1086)
+@@ -2,7 +2,7 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+@@ -27,7 +27,7 @@
+  * ---------------------
+  * TimePeriodValues.java
+  * ---------------------
+- * (C) Copyright 2003-2008, by Object Refinery Limited.
++ * (C) Copyright 2003-2007, by Object Refinery Limited.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+  * Contributor(s):   -;
+@@ -44,7 +44,6 @@
+  * 21-Jun-2007 : Removed JCommon dependencies (DG);
+  * 29-Jun-2007 : Changed first parameter in constructors from String to 
+  *               Comparable (DG);
+- * 07-Apr-2008 : Fixed bug with maxMiddleIndex in updateBounds() (DG);
+  *
+  */
+ 
 @@ -297,9 +296,9 @@
          }
          

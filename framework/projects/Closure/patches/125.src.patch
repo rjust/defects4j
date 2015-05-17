@@ -1,22 +1,32 @@
-diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
-index de14c04..ab71542 100644
---- a/com/google/javascript/jscomp/TypeCheck.java
-+++ b/com/google/javascript/jscomp/TypeCheck.java
-@@ -1176,7 +1176,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
-    * Returns true if any type in the chain has an implicitCast annotation for
-    * the given property.
-    */
--  private static boolean propertyIsImplicitCast(ObjectType type, String prop) {
-+  private boolean propertyIsImplicitCast(ObjectType type, String prop) {
-     for (; type != null; type = type.getImplicitPrototype()) {
-       JSDocInfo docInfo = type.getOwnPropertyJSDocInfo(prop);
-       if (docInfo != null && docInfo.isImplicitCast()) {
-@@ -1658,7 +1658,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
-     JSType type = getJSType(constructor).restrictByNotNullOrUndefined();
-     if (type.isConstructor() || type.isEmptyType() || type.isUnknownType()) {
-       FunctionType fnType = type.toMaybeFunctionType();
--      if (fnType != null && fnType.hasInstanceType()) {
-+      if (fnType != null) {
-         visitParameterList(t, n, fnType);
-         ensureTyped(t, n, fnType.getInstanceType());
-       } else {
+diff --git a/com/google/javascript/jscomp/MinimizeExitPoints.java b/com/google/javascript/jscomp/MinimizeExitPoints.java
+index bc9befe..ae6cde2 100644
+--- a/com/google/javascript/jscomp/MinimizeExitPoints.java
++++ b/com/google/javascript/jscomp/MinimizeExitPoints.java
+@@ -134,10 +134,10 @@ class MinimizeExitPoints
+         Node catchCodeBlock = catchNode.getLastChild();
+         tryMinimizeExits(catchCodeBlock, exitType, labelName);
+       }
+-      /* Don't try to minimize the exits of finally blocks, as this
+-       * can cause problems if it changes the completion type of the finally
+-       * block. See ECMA 262 Sections 8.9 & 12.14
+-       */
++      if (NodeUtil.hasFinally(n)) {
++        Node finallyBlock = n.getLastChild();
++        tryMinimizeExits(finallyBlock, exitType, labelName);
++      }
+     }
+ 
+     // Just a 'label'.
+diff --git a/com/google/javascript/jscomp/RemoveTryCatch.java b/com/google/javascript/jscomp/RemoveTryCatch.java
+index 23ec299..c4a5522 100644
+--- a/com/google/javascript/jscomp/RemoveTryCatch.java
++++ b/com/google/javascript/jscomp/RemoveTryCatch.java
+@@ -29,8 +29,6 @@ import java.util.Set;
+  * Removes try catch finally blocks from a parse tree for easier debugging
+  * (these statements impact both debugging in IE and sometimes even in FF).
+  *
+- * This changes the semantics of the code and should not be used in production!
+- *
+  */
+ class RemoveTryCatch implements CompilerPass {
+   private final AbstractCompiler compiler;

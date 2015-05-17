@@ -2,6 +2,33 @@ Index: org/jfree/chart/plot/PiePlot.java
 ===================================================================
 --- org/jfree/chart/plot/PiePlot.java	(revision 749)
 +++ org/jfree/chart/plot/PiePlot.java	(revision 747)
+@@ -2,7 +2,7 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+@@ -27,7 +27,7 @@
+  * ------------
+  * PiePlot.java
+  * ------------
+- * (C) Copyright 2000-2008, by Andrzej Porebski and Contributors.
++ * (C) Copyright 2000-2007, by Andrzej Porebski and Contributors.
+  *
+  * Original Author:  Andrzej Porebski;
+  * Contributor(s):   David Gilbert (for Object Refinery Limited);
+@@ -149,8 +149,6 @@
+  * 18-Jul-2007 : Added simple label option (DG);
+  * 21-Nov-2007 : Fixed labelling bugs, added debug code, restored default
+  *               white background (DG); 
+- * 19-Mar-2008 : Fixed IllegalArgumentException when drawing with null 
+- *               dataset (DG);
+  *    
+  */
+ 
 @@ -1375,9 +1373,6 @@
       * @return The percent.
       */

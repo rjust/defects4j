@@ -1,12 +1,42 @@
---- com.google.javascript.jscomp.TypeCheckTest::testFunctionArguments16
-junit.framework.AssertionFailedError: expected a warning
+--- com.google.javascript.jscomp.PeepholeFoldConstantsTest::testFoldBitShifts
+junit.framework.AssertionFailedError: 
+Expected: x=4294967295
+Result: x=-1
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: expected0] [synthetic: 1] [sourcefile: expected0]
+        EXPR_RESULT 1 [sourcefile: expected0]
+            ASSIGN 1 [sourcefile: expected0]
+                NAME x 1 [sourcefile: expected0]
+                NUMBER 4.294967295E9 1 [sourcefile: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: testcode] [synthetic: 1] [sourcefile: testcode]
+        EXPR_RESULT 1 [sourcefile: testcode]
+            ASSIGN 1 [sourcefile: testcode]
+                NAME x 1 [sourcefile: testcode]
+                NUMBER -1.0 1 [sourcefile: testcode]
+
+
+Subtree1: NUMBER 4.294967295E9 1 [sourcefile: expected0]
+
+
+Subtree2: NUMBER -1.0 1 [sourcefile: testcode]
+
 	at junit.framework.Assert.fail(Assert.java:57)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.TestCase.assertTrue(TestCase.java:192)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7294)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7274)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7227)
-	at com.google.javascript.jscomp.TypeCheckTest.testFunctionArguments16(TypeCheckTest.java:1362)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:792)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:301)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:270)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:258)
+	at com.google.javascript.jscomp.PeepholeFoldConstantsTest.fold(PeepholeFoldConstantsTest.java:58)
+	at com.google.javascript.jscomp.PeepholeFoldConstantsTest.testFoldBitShifts(PeepholeFoldConstantsTest.java:263)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

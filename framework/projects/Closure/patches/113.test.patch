@@ -1,18 +1,23 @@
-diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
-index a43169a..dbca8bc 100644
---- a/com/google/javascript/jscomp/VarCheckTest.java
-+++ b/com/google/javascript/jscomp/VarCheckTest.java
-@@ -365,13 +365,6 @@ public class VarCheckTest extends CompilerTestCase {
-         null, VarCheck.VAR_ARGUMENTS_SHADOWED_ERROR);
+diff --git a/com/google/javascript/jscomp/NameAnalyzerTest.java b/com/google/javascript/jscomp/NameAnalyzerTest.java
+index 857491b..0bc5ae4 100644
+--- a/com/google/javascript/jscomp/NameAnalyzerTest.java
++++ b/com/google/javascript/jscomp/NameAnalyzerTest.java
+@@ -1232,18 +1232,6 @@ public class NameAnalyzerTest extends CompilerTestCase {
+         "");
    }
  
--  public void testNoUndeclaredVarWhenUsingClosurePass() {
--    enableClosurePass();
--    // We don't want to get goog as an undeclared var here.
--    test("goog.require('namespace.Class1');\n", null,
--        ProcessClosurePrimitives.MISSING_PROVIDE_ERROR);
+-  public void testAssignWithCall() {
+-    test("var fun, x; (fun = function(){ x; })();",
+-        "var x; (function(){ x; })();");
 -  }
 -
-   private final static class VariableTestCheck implements CompilerPass {
- 
-     final AbstractCompiler compiler;
+-  // Currently this crashes the compiler because it erroneoursly removes var x
+-  // and later a sanity check fails.
+-  public void testAssignWithCall2() {
+-    test("var fun, x; (123, fun = function(){ x; })();",
+-        "(123, function(){ x; })();");
+-  }
+-
+   public void testNestedAssign1() {
+     test("var a, b = a = 1, c = 2", "");
+   }

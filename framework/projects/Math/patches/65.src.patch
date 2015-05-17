@@ -24,6 +24,14 @@ index 597f6c4..3abf3f0 100644
              }
          }
          int p;
+@@ -119,6 +119,7 @@ public class SingularValueDecompositionImpl implements
+                     new Array2DRowRealMatrix(matATA),1.0);
+             singularValues = eigenDecomposition.getRealEigenvalues();
+             cachedV = eigenDecomposition.getV();
++
+             // compute eigen decomposition of A*A^T
+             eigenDecomposition = new EigenDecompositionImpl(
+                     new Array2DRowRealMatrix(matAAT),1.0);
 @@ -140,7 +141,7 @@ public class SingularValueDecompositionImpl implements
              singularValues[i] = Math.sqrt(Math.abs(singularValues[i]));
          }

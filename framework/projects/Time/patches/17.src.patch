@@ -2,6 +2,13 @@ diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
 index 7219899..ec05941 100644
 --- a/org/joda/time/DateTimeZone.java
 +++ b/org/joda/time/DateTimeZone.java
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright 2001-2012 Stephen Colebourne
++ *  Copyright 2001-2011 Stephen Colebourne
+  *
+  *  Licensed under the Apache License, Version 2.0 (the "License");
+  *  you may not use this file except in compliance with the License.
 @@ -1161,37 +1161,14 @@ public abstract class DateTimeZone implements Serializable {
       * @return the adjusted instant millis
       */

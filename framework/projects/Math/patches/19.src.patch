@@ -12,6 +12,19 @@ index f6a4f28..b54cb37 100644
  import org.apache.commons.math3.exception.OutOfRangeException;
  import org.apache.commons.math3.exception.TooManyEvaluationsException;
  import org.apache.commons.math3.exception.util.LocalizedFormats;
+@@ -78,12 +78,6 @@ import org.apache.commons.math3.util.MathArrays;
+  *  <li><a href="http://en.wikipedia.org/wiki/CMA-ES">Wikipedia</a></li>
+  * </ul>
+  *
+- * When simple constraints (boundaries) are used, care must be taken that the
+- * difference between the upper and lower bounds does not overflow; should it
+- * be the case, a {@link NumberIsTooLargeException} will be thrown by the
+- * {@link BaseAbstractMultivariateSimpleBoundsOptimizer#optimize(int,
+- * MultivariateFunction,GoalType,double[],double[],double[]) optimize} method.
+- *
+  * @version $Id$
+  * @since 3.0
+  */
 @@ -535,21 +529,6 @@ public class CMAESOptimizer
                  boundaries = new double[2][];
                  boundaries[0] = lB;

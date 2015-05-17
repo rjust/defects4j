@@ -2,6 +2,28 @@ diff --git a/org/apache/commons/math/complex/Complex.java b/org/apache/commons/m
 index ed76a29..3822a89 100644
 --- a/org/apache/commons/math/complex/Complex.java
 +++ b/org/apache/commons/math/complex/Complex.java
+@@ -993,8 +993,8 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      *  </code>
+      * </pre>
+      * where the (real) functions on the right-hand side are
+-     * {@link FastMath#sin}, {@link FastMath#cos}, {@link FastMath#cosh} and
+-     * {@link FastMath#sinh}.
++     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},
++     * {@link FastMath#cosh} and {@link FastMath#sinh}.
+      * <br/>
+      * Returns {@link Complex#NaN} if either real or imaginary part of the
+      * input argument is {@code NaN}.
+@@ -1004,8 +1004,8 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      * <pre>
+      *  Examples:
+      *  <code>
+-     *   tan(a &plusmn; INFINITY i) = 0 &plusmn; i
+-     *   tan(&plusmn;INFINITY + bi) = NaN + NaN i
++     *   tan(1 &plusmn; INFINITY i) = 0 + NaN i
++     *   tan(&plusmn;INFINITY + i) = NaN + NaN i
+      *   tan(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i
+      *   tan(&plusmn;&pi;/2 + 0 i) = &plusmn;INFINITY + NaN i
+      *  </code>
 @@ -1015,15 +1015,9 @@ public class Complex implements FieldElement<Complex>, Serializable  {
       * @since 1.2
       */
@@ -19,6 +41,28 @@ index ed76a29..3822a89 100644
  
          double real2 = 2.0 * real;
          double imaginary2 = 2.0 * imaginary;
+@@ -1044,8 +1038,8 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      *  </code>
+      * </pre>
+      * where the (real) functions on the right-hand side are
+-     * {@link FastMath#sin}, {@link FastMath#cos}, {@link FastMath#cosh} and
+-     * {@link FastMath#sinh}.
++     * {@link java.lang.Math#sin}, {@link java.lang.Math#cos},
++     * {@link FastMath#cosh} and {@link FastMath#sinh}.
+      * <br/>
+      * Returns {@link Complex#NaN} if either real or imaginary part of the
+      * input argument is {@code NaN}.
+@@ -1055,8 +1049,8 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      * <pre>
+      *  Examples:
+      *  <code>
+-     *   tanh(a &plusmn; INFINITY i) = NaN + NaN i
+-     *   tanh(&plusmn;INFINITY + bi) = &plusmn;1 + 0 i
++     *   tanh(1 &plusmn; INFINITY i) = NaN + NaN i
++     *   tanh(&plusmn;INFINITY + i) = NaN + 0 i
+      *   tanh(&plusmn;INFINITY &plusmn; INFINITY i) = NaN + NaN i
+      *   tanh(0 + (&pi;/2)i) = NaN + INFINITY i
+      *  </code>
 @@ -1066,15 +1060,10 @@ public class Complex implements FieldElement<Complex>, Serializable  {
       * @since 1.2
       */

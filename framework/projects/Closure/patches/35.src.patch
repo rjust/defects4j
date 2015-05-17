@@ -26,3 +26,86 @@ index fb6be1e..13e1092 100644
      }
    }
  
+diff --git a/com/google/javascript/rhino/jstype/JSType.java b/com/google/javascript/rhino/jstype/JSType.java
+index 7317e94..8592ca6 100644
+--- a/com/google/javascript/rhino/jstype/JSType.java
++++ b/com/google/javascript/rhino/jstype/JSType.java
+@@ -1170,13 +1170,4 @@ public abstract class JSType implements Serializable {
+    *     annotations. Otherwise, it's for warnings.
+    */
+   abstract String toStringHelper(boolean forAnnotations);
+-
+-  /**
+-   * Modify this type so that it matches the specified type.
+-   *
+-   * This is useful for reverse type-inference, where we want to
+-   * infer that an object literal matches its contraint (much like
+-   * how the java compiler does reverse-inference to figure out generics).
+-   */
+-  public void matchConstraint(ObjectType contraint) {}
+ }
+diff --git a/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+index 1a51afb..f4b537d 100644
+--- a/com/google/javascript/rhino/jstype/PrototypeObjectType.java
++++ b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+@@ -550,30 +550,4 @@ class PrototypeObjectType extends ObjectType {
+     }
+     return this;
+   }
+-
+-  @Override
+-  public void matchConstraint(ObjectType constraintObj) {
+-    // Handle the case where the constraint object is a record type.
+-    //
+-    // param constraintObj {{prop: (number|undefined)}}
+-    // function f(constraintObj) {}
+-    // f({});
+-    //
+-    // We want to modify the object literal to match the constraint, by
+-    // taking any each property on the record and trying to match
+-    // properties on this object.
+-    if (constraintObj.isRecordType()) {
+-      for (String prop : constraintObj.getOwnPropertyNames()) {
+-        JSType propType = constraintObj.getPropertyType(prop);
+-        if (!isPropertyTypeDeclared(prop)) {
+-          JSType typeToInfer = propType;
+-          if (!hasProperty(prop)) {
+-            typeToInfer = getNativeType(JSTypeNative.VOID_TYPE)
+-                .getLeastSupertype(propType);
+-          }
+-          defineInferredProperty(prop, typeToInfer, null);
+-        }
+-      }
+-    }
+-  }
+ }
+diff --git a/com/google/javascript/rhino/jstype/ProxyObjectType.java b/com/google/javascript/rhino/jstype/ProxyObjectType.java
+index 66898e2..e025d51 100644
+--- a/com/google/javascript/rhino/jstype/ProxyObjectType.java
++++ b/com/google/javascript/rhino/jstype/ProxyObjectType.java
+@@ -419,9 +419,4 @@ class ProxyObjectType extends ObjectType {
+     }
+     return this;
+   }
+-
+-  @Override
+-  public void matchConstraint(ObjectType contraint) {
+-    referencedType.matchConstraint(contraint);
+-  }
+ }
+diff --git a/com/google/javascript/rhino/jstype/UnionType.java b/com/google/javascript/rhino/jstype/UnionType.java
+index fcb0172..f54d8d4 100644
+--- a/com/google/javascript/rhino/jstype/UnionType.java
++++ b/com/google/javascript/rhino/jstype/UnionType.java
+@@ -586,11 +586,4 @@ public class UnionType extends JSType {
+     }
+     return currentCommonSuper;
+   }
+-
+-  @Override
+-  public void matchConstraint(ObjectType constraintObj) {
+-    for (JSType alternate : alternates) {
+-      alternate.matchConstraint(constraintObj);
+-    }
+-  }
+ }

@@ -2,6 +2,26 @@ diff --git a/com/google/javascript/jscomp/CheckAccessControls.java b/com/google/
 index 09eaa26..3bf9a84 100644
 --- a/com/google/javascript/jscomp/CheckAccessControls.java
 +++ b/com/google/javascript/jscomp/CheckAccessControls.java
+@@ -35,11 +35,15 @@ import com.google.common.collect.HashMultimap;
+  * control restrictions indicated by JSDoc annotations, like
+  * {@code @private} and {@code @deprecated}.
+  *
++ * There are two parts to this pass:
++ * 1) JSDoc Inference: Attaching the appropriate JSDoc to
++ *    all programmer-defined types and properties.
++ * 2) Access Control Enforcement: Emitting warnings when the code does not
++ *    obey the restrictions attached to JSTypes in step 1.
++ *
+  * Because access control restrictions are attached to type information,
+- * it's important that TypedScopeCreator, TypeInference, and InferJSDocInfo
+- * all run before this pass. TypedScopeCreator creates and resolves types,
+- * TypeInference propagates those types across the AST, and InferJSDocInfo
+- * propagates JSDoc across the types.
++ * it's important that TypeCheck runs before this pass, so that all types
++ * are correctly resolved and propagated before this pass runs.
+  *
+  * @author nicksantos@google.com (Nick Santos)
+  */
 @@ -413,7 +417,7 @@ class CheckAccessControls implements ScopedCallback, HotSwapCompilerPass {
      if (objectType != null) {
        // Is this a normal property access, or are we trying to override

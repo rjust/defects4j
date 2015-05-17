@@ -42,51 +42,30 @@ use Vcs::Git;
 
 our @ISA = qw(Project);
 my $PID  = "Lang";
+my $RANDOM_TEST_FILE = "$SCRIPT_DIR/build-scripts/$PID/random_tests";
 
 sub new {
-    my $class= shift;
+    my $class = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "commons-lang";
-    my $src  = "src/main/java";
-    my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$SCRIPT_DIR/projects/$PID/commit-db",
+                             "$work_dir/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
 }
 
-sub src_dir {
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($revision_id);
+    my $dir = $self->{prog_root};
+    my $result = _layout1($dir) // _layout2($dir);
+    die "Unknown layout for revision: ${revision_id}" unless defined $result;
+    return $result;
 }
 
-sub test_dir {
-    my ($self, $revision_id) = @_;
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($revision_id);
-}
-
-#
 # Remove randomly failing tests in addition to the broken ones
-#
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
@@ -94,14 +73,16 @@ sub fix_tests {
     # Call fix_tests in super class to fix all broken methods
     $self->SUPER::fix_tests($revision_id);
 
+    # TODO: Exclusively use version ids rather than revision ids
+    $revision_id = $self->lookup($revision_id) if $revision_id =~ /\d+[bf]/;
+
     # Remove randomly failing tests
     my $work_dir = $self->{prog_root};
     my $dir = $self->test_dir($revision_id);
 
-    my $file = "$SCRIPT_DIR/projects/$PID/random_tests";
-    if (-e $file) {
-        # Remove broken test methods
-        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
+    if (-e $RANDOM_TEST_FILE) {
+        # Remove test methods that fail statistically
+        $self->exclude_tests_in_file($RANDOM_TEST_FILE, $dir);
     }
 }
 
@@ -111,25 +92,88 @@ sub _post_checkout {
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision/* $work_dir");
+        my $generated_buildfile_dir = "$SCRIPT_DIR/build-scripts/$PID/build_files/$revision";
+        unless (-e "$generated_buildfile_dir/build.xml") {
+            print "Maven buildfile -> Ant buildfile for: $revision...";
+            Utils::maven_to_ant("$SCRIPT_DIR/build-scripts/$PID/build.xml.patch",
+                                $work_dir,
+                                $generated_buildfile_dir);
+        }
+        system("cp $generated_buildfile_dir/* $work_dir") == 0 or die;
     }
 }
 
-sub _build_dir_map {
-    my $self = shift;
+sub initialize_revision {
+    my ($self, $revision) = @_;
+    $self->SUPER::initialize_revision($revision);
+    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($revision), $RANDOM_TEST_FILE);
+}
 
-    return if defined $self->{_dir_map};
+# Search for randomly failing tests in all java files
+sub _log_random_tests {
+    my ($test_dir, $out_file) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    # TODO: Move to Consts
+    my $PREFIX = "---";
+    my @list = `cd $test_dir && find . -name *.java`;
+    die if $?!=0 or !@list;
 
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
+    foreach my $file (@list) {
+        chomp $file;
+        open(IN, "<$test_dir/$file") or die $!;
+        my @reason = ();
+        my $rnd=0;
+        while (<IN>) {
+            if (!$rnd) {
+                next unless /(\*|\/\/).*randomly/;
+                $rnd=1;
+            }
+            if ($rnd and /\s*public\s*void\s*([^\(]*)\s*\(/) {
+                my $method=$1;
+                my $class = $file;
+                $class =~ s/\.\/(.*).java/$1/; $class =~ s/\//\./g;
+                my $key = "${class}::$method";
+
+                # Only print method if it is not already in the result file
+                Utils::append_to_file_unless_matches($out_file,
+                    join('', @reason) . "$PREFIX $key\n\n",
+                    qr/$PREFIX $key/
+                );
+                @reason = ();
+                $rnd=0; next;
+            }
+            push(@reason, $_);
+        }
+        close(IN);
     }
-    close IN;
-    $self->{_dir_map}=$cache;
+}
+
+# Existing build.xml and default.properties
+sub _layout1 {
+    my $dir = shift;
+    my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
+    my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*source.home\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*test.home\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+# Generated build.xml (mvn ant:ant) with maven-build.properties
+sub _layout2 {
+    my $dir = shift;
+    my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
+    my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*maven\.build\.srcDir\.0\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*maven\.build\.testDir\.0\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
 }
 
 1;

@@ -1,14 +1,38 @@
-diff --git a/com/google/javascript/jscomp/InlineVariablesTest.java b/com/google/javascript/jscomp/InlineVariablesTest.java
-index d1c0ed7..23f9fee 100644
---- a/com/google/javascript/jscomp/InlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/InlineVariablesTest.java
-@@ -1064,9 +1064,4 @@ public class InlineVariablesTest extends CompilerTestCase {
-         "F.prototype.inc = function() { this.a++; return 10; };" +
-         "F.prototype.bar = function() { var x = this.inc(); this.a += x; };");
+diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+index b09bc34..1298aa4 100644
+--- a/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+@@ -691,33 +691,6 @@ public class ParserTest extends BaseJSTypeTestCase {
+     parse("/* \n * @type {number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
    }
--
--  public void testExternalIssue1053() {
--    testSame(
--        "var u; function f() { u = Random(); var x = u; f(); alert(x===u)}");
+ 
+-  public void testSuspiciousBlockCommentWarning3() {
+-    parse("/* \n *@type {number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
 -  }
- }
+-
+-  public void testSuspiciousBlockCommentWarning4() {
+-    parse(
+-        "  /*\n" +
+-        "   * @type {number}\n" +
+-        "   */\n" +
+-        "  var x = 3;",
+-        SUSPICIOUS_COMMENT_WARNING);
+-  }
+-
+-  public void testSuspiciousBlockCommentWarning5() {
+-    parse(
+-        "  /*\n" +
+-        "   * some random text here\n" +
+-        "   * @type {number}\n" +
+-        "   */\n" +
+-        "  var x = 3;",
+-        SUSPICIOUS_COMMENT_WARNING);
+-  }
+-
+-  public void testSuspiciousBlockCommentWarning6() {
+-    parse("/* @type{number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
+-  }
+-
+   public void testCatchClauseForbidden() {
+     parseError("try { } catch (e if true) {}",
+         "Catch clauses are not supported");

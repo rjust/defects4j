@@ -1,93 +1,15 @@
---- com.google.javascript.jscomp.PeepholeSubstituteAlternateSyntaxTest::testIssue925
-junit.framework.AssertionFailedError: 
-Expected: x[--y]===1?x[y]=0:x[y]=1
-Result: x[y]=x[--y]===1?0:1
-Node tree inequality:
-Tree1:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
-        EXPR_RESULT 1 [source_file: expected0]
-            HOOK 1 [source_file: expected0]
-                SHEQ 1 [source_file: expected0]
-                    GETELEM 1 [source_file: expected0]
-                        NAME x 1 [source_file: expected0]
-                        DEC 1 [source_file: expected0]
-                            NAME y 1 [source_file: expected0]
-                    NUMBER 1.0 1 [source_file: expected0]
-                ASSIGN 1 [source_file: expected0]
-                    GETELEM 1 [source_file: expected0]
-                        NAME x 1 [source_file: expected0]
-                        NAME y 1 [source_file: expected0]
-                    NUMBER 0.0 1 [source_file: expected0]
-                ASSIGN 1 [source_file: expected0]
-                    GETELEM 1 [source_file: expected0]
-                        NAME x 1 [source_file: expected0]
-                        NAME y 1 [source_file: expected0]
-                    NUMBER 1.0 1 [source_file: expected0]
-
-
-Tree2:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
-        EXPR_RESULT 2 [source_file: testcode]
-            ASSIGN 2 [source_file: testcode]
-                GETELEM 2 [source_file: testcode]
-                    NAME x 2 [source_file: testcode]
-                    NAME y 2 [source_file: testcode]
-                HOOK 1 [source_file: testcode]
-                    SHEQ 1 [source_file: testcode]
-                        GETELEM 1 [source_file: testcode]
-                            NAME x 1 [source_file: testcode]
-                            DEC 1 [source_file: testcode]
-                                NAME y 1 [source_file: testcode]
-                        NUMBER 1.0 1 [source_file: testcode]
-                    NUMBER 0.0 2 [source_file: testcode]
-                    NUMBER 1.0 4 [source_file: testcode]
-
-
-Subtree1: HOOK 1 [source_file: expected0]
-    SHEQ 1 [source_file: expected0]
-        GETELEM 1 [source_file: expected0]
-            NAME x 1 [source_file: expected0]
-            DEC 1 [source_file: expected0]
-                NAME y 1 [source_file: expected0]
-        NUMBER 1.0 1 [source_file: expected0]
-    ASSIGN 1 [source_file: expected0]
-        GETELEM 1 [source_file: expected0]
-            NAME x 1 [source_file: expected0]
-            NAME y 1 [source_file: expected0]
-        NUMBER 0.0 1 [source_file: expected0]
-    ASSIGN 1 [source_file: expected0]
-        GETELEM 1 [source_file: expected0]
-            NAME x 1 [source_file: expected0]
-            NAME y 1 [source_file: expected0]
-        NUMBER 1.0 1 [source_file: expected0]
-
-
-Subtree2: ASSIGN 2 [source_file: testcode]
-    GETELEM 2 [source_file: testcode]
-        NAME x 2 [source_file: testcode]
-        NAME y 2 [source_file: testcode]
-    HOOK 1 [source_file: testcode]
-        SHEQ 1 [source_file: testcode]
-            GETELEM 1 [source_file: testcode]
-                NAME x 1 [source_file: testcode]
-                DEC 1 [source_file: testcode]
-                    NAME y 1 [source_file: testcode]
-            NUMBER 1.0 1 [source_file: testcode]
-        NUMBER 0.0 2 [source_file: testcode]
-        NUMBER 1.0 4 [source_file: testcode]
-
-	at junit.framework.Assert.fail(Assert.java:57)
-	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.Assert.assertNull(Assert.java:277)
-	at junit.framework.TestCase.assertNull(TestCase.java:447)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:924)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:459)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:385)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:354)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:342)
-	at com.google.javascript.jscomp.PeepholeSubstituteAlternateSyntaxTest.testIssue925(PeepholeSubstituteAlternateSyntaxTest.java:967)
+--- com.google.javascript.jscomp.parsing.JsDocInfoParserTest::testTextExtents
+java.lang.IllegalStateException: Recorded bad position information
+start-char: 14
+end-char: 13
+	at com.google.javascript.rhino.SourcePosition.setPositionInformation(SourcePosition.java:87)
+	at com.google.javascript.rhino.JSDocInfoBuilder.markText(JSDocInfoBuilder.java:172)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParser.extractMultilineTextualBlock(JsDocInfoParser.java:1503)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParser.extractMultilineTextualBlock(JsDocInfoParser.java:1379)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParser.parse(JsDocInfoParser.java:958)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParserTest.parse(JsDocInfoParserTest.java:2984)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParserTest.parse(JsDocInfoParserTest.java:2961)
+	at com.google.javascript.jscomp.parsing.JsDocInfoParserTest.testTextExtents(JsDocInfoParserTest.java:2756)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

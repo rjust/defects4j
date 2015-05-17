@@ -1,19 +1,29 @@
-diff --git a/com/google/javascript/jscomp/MinimizeExitPoints.java b/com/google/javascript/jscomp/MinimizeExitPoints.java
-index bc9befe..ae6cde2 100644
---- a/com/google/javascript/jscomp/MinimizeExitPoints.java
-+++ b/com/google/javascript/jscomp/MinimizeExitPoints.java
-@@ -134,10 +134,10 @@ class MinimizeExitPoints
-         Node catchCodeBlock = catchNode.getLastChild();
-         tryMinimizeExits(catchCodeBlock, exitType, labelName);
+diff --git a/com/google/javascript/jscomp/UnreachableCodeElimination.java b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+index e6d88a8..4cd1641 100644
+--- a/com/google/javascript/jscomp/UnreachableCodeElimination.java
++++ b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+@@ -167,23 +167,13 @@ class UnreachableCodeElimination implements CompilerPass {
+                 outEdges.get(0).getValue() == Branch.UNCOND);
+             Node fallThrough = computeFollowing(n);
+             Node nextCfgNode = outEdges.get(0).getDestination().getValue();
+-            if (nextCfgNode == fallThrough && !inFinally(n.getParent(), n)) {
++            if (nextCfgNode == fallThrough) {
+               removeNode(n);
+             }
+           }
        }
--      /* Don't try to minimize the exits of finally blocks, as this
--       * can cause problems if it changes the completion type of the finally
--       * block. See ECMA 262 Sections 8.9 & 12.14
--       */
-+      if (NodeUtil.hasFinally(n)) {
-+        Node finallyBlock = n.getLastChild();
-+        tryMinimizeExits(finallyBlock, exitType, labelName);
-+      }
      }
  
-     // Just a 'label'.
+-    private boolean inFinally(Node parent, Node child) {
+-      if (parent == null || parent.isFunction()) {
+-        return false;
+-      } else if (NodeUtil.isTryFinallyNode(parent, child)) {
+-        return true;
+-      } else {
+-        return inFinally(parent.getParent(), parent);
+-      }
+-    }
+-
+     private Node computeFollowing(Node n) {
+       Node next = ControlFlowAnalysis.computeFollowNode(n);
+       while (next != null && next.isBlock()) {

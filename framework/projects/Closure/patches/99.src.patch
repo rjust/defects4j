@@ -1,31 +1,474 @@
+diff --git a/com/google/javascript/jscomp/AbstractCommandLineRunner.java b/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+index 4e0d0d8..dd9a87d 100644
+--- a/com/google/javascript/jscomp/AbstractCommandLineRunner.java
++++ b/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+@@ -750,6 +750,8 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+    * exists.
+    *
+    * @param options The options to the Compiler.
++   * @param path The path of the generated file for which the source map was
++   *        created.
+    */
+   private void outputSourceMap(B options)
+       throws IOException {
 diff --git a/com/google/javascript/jscomp/CheckGlobalThis.java b/com/google/javascript/jscomp/CheckGlobalThis.java
-index 5108686..f11616d 100644
+index 1b6c93f..94c9411 100644
 --- a/com/google/javascript/jscomp/CheckGlobalThis.java
 +++ b/com/google/javascript/jscomp/CheckGlobalThis.java
-@@ -89,7 +89,6 @@ final class CheckGlobalThis implements Callback {
-       JSDocInfo jsDoc = getFunctionJsDocInfo(n);
-       if (jsDoc != null &&
-           (jsDoc.isConstructor() ||
--           jsDoc.isInterface() ||
-            jsDoc.hasThisType() ||
-            jsDoc.isOverride())) {
+@@ -26,15 +26,13 @@ import com.google.javascript.rhino.Token;
+  * Checks for certain uses of the {@code this} keyword that are considered
+  * unsafe because they are likely to reference the global {@code this} object
+  * unintentionally.
+- *
++ * 
+  * <p>A use of {@code this} is considered unsafe if it's on the left side of an
+- * assignment or a property access, and not inside one of the following:
++ * assignment and not inside one of the following:
+  * <ol>
+  * <li>a prototype method
+  * <li>a function annotated with {@code @constructor}
+  * <li>a function annotated with {@code @this}.
+- * <li>a function where there's no logical place to put a
+- *     {@code this} annotation.
+  * </ol>
+  *
+  * <p>Note that this check does not track assignments of {@code this} to
+@@ -64,7 +62,7 @@ final class CheckGlobalThis implements Callback {
+ 
+   private final AbstractCompiler compiler;
+   private final CheckLevel level;
+-  
++
+   /**
+    * If {@code assignLhsChild != null}, then the node being traversed is
+    * a descendant of the first child of an ASSIGN node. assignLhsChild's
+@@ -82,7 +80,7 @@ final class CheckGlobalThis implements Callback {
+    * is encountered, there is no reason to traverse non global contexts.
+    */
+   public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {
+-
++    
+     if (n.getType() == Token.FUNCTION) {
+       // Don't traverse functions that are constructors or have the @this
+       // annotation.
+@@ -90,21 +88,8 @@ final class CheckGlobalThis implements Callback {
+       if (jsDoc != null && (jsDoc.isConstructor() || jsDoc.hasThisType())) {
          return false;
-@@ -123,14 +122,12 @@ final class CheckGlobalThis implements Callback {
-       } else {
-         // Only traverse the right side if it's not an assignment to a prototype
-         // property or subproperty.
--        if (NodeUtil.isGet(lhs)) {
--          if (lhs.getType() == Token.GETPROP &&
--              lhs.getLastChild().getString().equals("prototype")) {
-+        if (lhs.getType() == Token.GETPROP) {
-+          if (lhs.getLastChild().getString().equals("prototype")) {
-             return false;
-           }
--          Node llhs = lhs.getFirstChild();
--          if (llhs.getType() == Token.GETPROP &&
--              llhs.getLastChild().getString().equals("prototype")) {
-+          String leftName = lhs.getQualifiedName();
-+          if (leftName != null && leftName.contains(".prototype.")) {
-             return false;
-           }
+       }
+-
+-      // Don't traverse functions unless they would normally
+-      // be able to have a @this annotation associated with them. e.g.,
+-      // var a = function() { }; // or
+-      // function a() {} // or
+-      // a.x = function() {};
+-      int pType = parent.getType();
+-      if (!(pType == Token.BLOCK ||
+-            pType == Token.SCRIPT ||
+-            pType == Token.NAME ||
+-            pType == Token.ASSIGN)) {
+-        return false;
+-      }
+     }
+-
++    
+     if (parent != null && parent.getType() == Token.ASSIGN) {
+       Node lhs = parent.getFirstChild();
+       Node rhs = lhs.getNext();
+@@ -130,12 +115,12 @@ final class CheckGlobalThis implements Callback {
          }
+       }
+     }
+-
++    
+     return true;
+   }
+ 
+   public void visit(NodeTraversal t, Node n, Node parent) {
+-    if (n.getType() == Token.THIS && shouldReportThis(n, parent)) {
++    if (assignLhsChild != null && n.getType() == Token.THIS) {
+       compiler.report(t.makeError(n, level, GLOBAL_THIS));
+     }
+     if (n == assignLhsChild) {
+@@ -143,16 +128,6 @@ final class CheckGlobalThis implements Callback {
+     }
+   }
+ 
+-  private boolean shouldReportThis(Node n, Node parent) {
+-    if (assignLhsChild != null) {
+-      // Always report a THIS on the left side of an assign.
+-      return true;
+-    }
+-
+-    // Also report a THIS with a property access.
+-    return parent != null && NodeUtil.isGet(parent);
+-  }
+-
+   /**
+    * Gets a function's JSDoc information, if it has any. Checks for a few
+    * patterns (ellipses show where JSDoc would be):
+diff --git a/com/google/javascript/jscomp/CodingConvention.java b/com/google/javascript/jscomp/CodingConvention.java
+index 02148cd..a410ed8 100644
+--- a/com/google/javascript/jscomp/CodingConvention.java
++++ b/com/google/javascript/jscomp/CodingConvention.java
+@@ -22,6 +22,7 @@ import com.google.javascript.rhino.jstype.JSTypeRegistry;
+ import com.google.javascript.rhino.jstype.ObjectType;
+ 
+ import java.util.Collection;
++import java.util.Collections;
+ import java.util.List;
+ 
+ /**
+diff --git a/com/google/javascript/jscomp/DefaultCodingConvention.java b/com/google/javascript/jscomp/DefaultCodingConvention.java
+index 82a9636..814b01c 100644
+--- a/com/google/javascript/jscomp/DefaultCodingConvention.java
++++ b/com/google/javascript/jscomp/DefaultCodingConvention.java
+@@ -15,6 +15,7 @@
+  */
+ package com.google.javascript.jscomp;
+ 
++import com.google.javascript.jscomp.CodingConvention.AssertionFunctionSpec;
+ import com.google.javascript.rhino.Node;
+ import com.google.javascript.rhino.jstype.FunctionType;
+ import com.google.javascript.rhino.jstype.JSTypeRegistry;
+diff --git a/com/google/javascript/jscomp/JSModuleGraph.java b/com/google/javascript/jscomp/JSModuleGraph.java
+index 47e1474..ecffc6f 100644
+--- a/com/google/javascript/jscomp/JSModuleGraph.java
++++ b/com/google/javascript/jscomp/JSModuleGraph.java
+@@ -290,7 +290,7 @@ public class JSModuleGraph {
+    * a symbol that is not required until a later module, then that
+    * file will be moved to the later module.
+    *
+-   * @param inputs The original list of sources. Used to ensure that the sort
++   * @param The original list of sources. Used to ensure that the sort
+    *     is stable.
+    * @return The sorted list of sources.
+    */
+diff --git a/com/google/javascript/jscomp/JsMessageExtractor.java b/com/google/javascript/jscomp/JsMessageExtractor.java
+index 7412463..0315635 100644
+--- a/com/google/javascript/jscomp/JsMessageExtractor.java
++++ b/com/google/javascript/jscomp/JsMessageExtractor.java
+@@ -19,6 +19,7 @@ package com.google.javascript.jscomp;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.Iterables;
+ import com.google.common.collect.Lists;
++import com.google.common.collect.Sets;
+ import com.google.javascript.rhino.Node;
+ 
+ import java.io.IOException;
+diff --git a/com/google/javascript/jscomp/LinkedFlowScope.java b/com/google/javascript/jscomp/LinkedFlowScope.java
+index 3747e09..47b0a5e 100644
+--- a/com/google/javascript/jscomp/LinkedFlowScope.java
++++ b/com/google/javascript/jscomp/LinkedFlowScope.java
+@@ -148,6 +148,7 @@ class LinkedFlowScope implements FlowScope {
+     return cache.getSlot(name);
+   }
+ 
++  /** @inheritDoc */
+   @Override
+   public StaticSlot<JSType> getOwnSlot(String name) {
+     throw new UnsupportedOperationException();
+diff --git a/com/google/javascript/jscomp/SanityCheck.java b/com/google/javascript/jscomp/SanityCheck.java
+index a363a9b..aa55427 100644
+--- a/com/google/javascript/jscomp/SanityCheck.java
++++ b/com/google/javascript/jscomp/SanityCheck.java
+@@ -18,6 +18,7 @@ package com.google.javascript.jscomp;
+ 
+ import com.google.common.base.Preconditions;
+ import com.google.javascript.rhino.Node;
++import com.google.javascript.rhino.Token;
+ 
+ /**
+  * A compiler pass that verifies the structure of the AST conforms
+diff --git a/com/google/javascript/jscomp/SourceFile.java b/com/google/javascript/jscomp/SourceFile.java
+index 0c40f03..f13ac25 100644
+--- a/com/google/javascript/jscomp/SourceFile.java
++++ b/com/google/javascript/jscomp/SourceFile.java
+@@ -371,7 +371,6 @@ public abstract class SourceFile {
+     /**
+      * Gets a reader for the code in this source file.
+      */
+-    @Override
+     public Reader getCodeReader() throws IOException {
+       if (hasSourceInMemory()) {
+         return super.getCodeReader();
+diff --git a/com/google/javascript/jscomp/Tracer.java b/com/google/javascript/jscomp/Tracer.java
+index 2a137ae..fe4229e 100644
+--- a/com/google/javascript/jscomp/Tracer.java
++++ b/com/google/javascript/jscomp/Tracer.java
+@@ -224,7 +224,7 @@ final class Tracer {
+   static final int MAX_TRACE_SIZE = 1000;
+ 
+   /**
+-   * For unit testing. Can't use {@link com.google.common.time.Clock} because
++   * For unit testing. Can't use {@link com.google.common.time} because
+    * this code is in base and has minimal dependencies.
+    */
+   static interface InternalClock {
+diff --git a/com/google/javascript/jscomp/TypedCodeGenerator.java b/com/google/javascript/jscomp/TypedCodeGenerator.java
+index de51a7a..9cedd0e 100644
+--- a/com/google/javascript/jscomp/TypedCodeGenerator.java
++++ b/com/google/javascript/jscomp/TypedCodeGenerator.java
+@@ -74,7 +74,7 @@ class TypedCodeGenerator extends CodeGenerator {
+   }
+ 
+   /**
+-   * @param fnNode A node for a function for which to generate a type annotation
++   * @param node A node for a function for which to generate a type annotation
+    */
+   private String getFunctionAnnotation(Node fnNode) {
+     Preconditions.checkState(fnNode.getType() == Token.FUNCTION);
+diff --git a/com/google/javascript/jscomp/deps/DependencyInfo.java b/com/google/javascript/jscomp/deps/DependencyInfo.java
+index 52e04cd..e65a03f 100644
+--- a/com/google/javascript/jscomp/deps/DependencyInfo.java
++++ b/com/google/javascript/jscomp/deps/DependencyInfo.java
+@@ -17,6 +17,8 @@
+ package com.google.javascript.jscomp.deps;
+ 
+ import java.util.Collection;
++import java.util.Collections;
++import java.util.List;
+ 
+ /**
+  * A data structure for JS dependency information for a single .js file.
+diff --git a/com/google/javascript/jscomp/deps/DepsFileParser.java b/com/google/javascript/jscomp/deps/DepsFileParser.java
+index ef1a9d7..e67a6ed 100644
+--- a/com/google/javascript/jscomp/deps/DepsFileParser.java
++++ b/com/google/javascript/jscomp/deps/DepsFileParser.java
+@@ -17,9 +17,12 @@
+ package com.google.javascript.jscomp.deps;
+ 
+ import com.google.common.base.CharMatcher;
++import com.google.common.base.Charsets;
+ import com.google.common.collect.Lists;
++import com.google.common.io.Files;
+ import com.google.javascript.jscomp.ErrorManager;
+ 
++import java.io.File;
+ import java.io.FileReader;
+ import java.io.IOException;
+ import java.io.Reader;
+diff --git a/com/google/javascript/jscomp/deps/JsFileLineParser.java b/com/google/javascript/jscomp/deps/JsFileLineParser.java
+index 06c9c1a..238f804 100644
+--- a/com/google/javascript/jscomp/deps/JsFileLineParser.java
++++ b/com/google/javascript/jscomp/deps/JsFileLineParser.java
+@@ -25,6 +25,7 @@ import com.google.javascript.jscomp.JSError;
+ import java.io.BufferedReader;
+ import java.io.IOException;
+ import java.io.Reader;
++import java.io.StringReader;
+ import java.util.List;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+diff --git a/com/google/javascript/jscomp/deps/JsFileParser.java b/com/google/javascript/jscomp/deps/JsFileParser.java
+index 0f8ab48..a06bf81 100644
+--- a/com/google/javascript/jscomp/deps/JsFileParser.java
++++ b/com/google/javascript/jscomp/deps/JsFileParser.java
+@@ -17,9 +17,13 @@
+ package com.google.javascript.jscomp.deps;
+ 
+ import com.google.common.base.CharMatcher;
++import com.google.common.base.Charsets;
+ import com.google.common.collect.Lists;
++import com.google.common.io.Files;
+ import com.google.javascript.jscomp.ErrorManager;
+ 
++import java.io.BufferedReader;
++import java.io.File;
+ import java.io.FileReader;
+ import java.io.IOException;
+ import java.io.Reader;
+diff --git a/com/google/javascript/jscomp/deps/SimpleDependencyInfo.java b/com/google/javascript/jscomp/deps/SimpleDependencyInfo.java
+index 8dc5364..399cc7f 100644
+--- a/com/google/javascript/jscomp/deps/SimpleDependencyInfo.java
++++ b/com/google/javascript/jscomp/deps/SimpleDependencyInfo.java
+@@ -17,6 +17,8 @@
+ package com.google.javascript.jscomp.deps;
+ 
+ import com.google.common.base.Objects;
++import com.google.common.collect.ImmutableList;
++import com.google.common.collect.Lists;
+ 
+ import java.util.Collection;
+ import java.util.Collections;
+diff --git a/com/google/javascript/jscomp/deps/SortedDependencies.java b/com/google/javascript/jscomp/deps/SortedDependencies.java
+index adb6d81..60cbec8 100644
+--- a/com/google/javascript/jscomp/deps/SortedDependencies.java
++++ b/com/google/javascript/jscomp/deps/SortedDependencies.java
+@@ -38,6 +38,8 @@ import java.util.List;
+ import java.util.Map;
+ import java.util.PriorityQueue;
+ import java.util.Set;
++import java.util.SortedSet;
++import java.util.TreeSet;
+ 
+ /**
+  * A sorted list of inputs with dependency information. Uses a stable
+diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+index 477b287..a0f264b 100644
+--- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+@@ -1034,6 +1034,14 @@ public final class JsDocInfoParser {
+       this.string = string;
+       this.token = token;
+     }
++
++    public String getString() {
++      return string;
++    }
++
++    public JsDocToken getToken() {
++      return token;
++    }
+   }
+ 
+   /**
+diff --git a/com/google/javascript/jscomp/parsing/ParserRunner.java b/com/google/javascript/jscomp/parsing/ParserRunner.java
+index 72a6668..7007f03 100644
+--- a/com/google/javascript/jscomp/parsing/ParserRunner.java
++++ b/com/google/javascript/jscomp/parsing/ParserRunner.java
+@@ -25,6 +25,7 @@ import com.google.javascript.jscomp.mozilla.rhino.EvaluatorException;
+ import com.google.javascript.jscomp.mozilla.rhino.Parser;
+ import com.google.javascript.jscomp.mozilla.rhino.ast.AstRoot;
+ import com.google.javascript.rhino.Node;
++import com.google.javascript.rhino.jstype.JSTypeRegistry;
+ 
+ import java.io.IOException;
+ import java.util.ResourceBundle;
+diff --git a/com/google/javascript/rhino/jstype/FunctionPrototypeType.java b/com/google/javascript/rhino/jstype/FunctionPrototypeType.java
+index b4f44fe..f1aeb7b 100644
+--- a/com/google/javascript/rhino/jstype/FunctionPrototypeType.java
++++ b/com/google/javascript/rhino/jstype/FunctionPrototypeType.java
+@@ -39,8 +39,12 @@
+ 
+ package com.google.javascript.rhino.jstype;
+ 
++import com.google.javascript.rhino.ErrorReporter;
+ import com.google.javascript.rhino.jstype.ObjectType;
+ 
++import java.util.List;
++import java.util.Set;
++
+ /**
+  * Represents the prototype of a {@link FunctionType}.
+  * @author nicksantos@google.com (Nick Santos)
+diff --git a/com/google/javascript/rhino/jstype/FunctionType.java b/com/google/javascript/rhino/jstype/FunctionType.java
+index 48e0f07..cbd4dc2 100644
+--- a/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -41,6 +41,8 @@ package com.google.javascript.rhino.jstype;
+ 
+ import static com.google.javascript.rhino.jstype.JSTypeNative.U2U_CONSTRUCTOR_TYPE;
+ 
++import com.google.common.annotations.VisibleForTesting;
++import com.google.common.base.Objects;
+ import com.google.common.base.Preconditions;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.Iterables;
+@@ -820,6 +822,11 @@ public class FunctionType extends PrototypeObjectType {
+     return super.resolveInternal(t, scope);
+   }
+ 
++  // A helper method for creating arrow types.
++  private ArrowType createArrowType(Node parameters, JSType returnType) {
++    return registry.createArrowType(parameters, returnType);
++  }
++
+   @Override
+   public String toDebugHashCodeString() {
+     if (this == registry.getNativeType(JSTypeNative.FUNCTION_INSTANCE_TYPE)) {
+diff --git a/com/google/javascript/rhino/jstype/InstanceObjectType.java b/com/google/javascript/rhino/jstype/InstanceObjectType.java
+index 256f014..ba1e47b 100644
+--- a/com/google/javascript/rhino/jstype/InstanceObjectType.java
++++ b/com/google/javascript/rhino/jstype/InstanceObjectType.java
+@@ -41,6 +41,10 @@ package com.google.javascript.rhino.jstype;
+ 
+ 
+ import com.google.common.base.Preconditions;
++import com.google.javascript.rhino.ErrorReporter;
++
++import java.util.List;
++import java.util.Set;
+ 
+ /**
+  * An object type that is an instance of some function constructor.
+diff --git a/com/google/javascript/rhino/jstype/JSTypeRegistry.java b/com/google/javascript/rhino/jstype/JSTypeRegistry.java
+index 76dd3b6..df73e94 100644
+--- a/com/google/javascript/rhino/jstype/JSTypeRegistry.java
++++ b/com/google/javascript/rhino/jstype/JSTypeRegistry.java
+@@ -147,7 +147,7 @@ public class JSTypeRegistry implements Serializable {
+ 
+   /**
+    * The type registry has three modes, which control how type ASTs are
+-   * converted to types in {@link #createFromTypeNodes}.
++   * converted to types in {@link @createFromTypeNodes}.
+    */
+   public static enum ResolveMode {
+     /**
+diff --git a/com/google/javascript/rhino/jstype/NamedType.java b/com/google/javascript/rhino/jstype/NamedType.java
+index 6af723c..b67876c 100644
+--- a/com/google/javascript/rhino/jstype/NamedType.java
++++ b/com/google/javascript/rhino/jstype/NamedType.java
+@@ -110,7 +110,6 @@ class NamedType extends ProxyObjectType {
+     this.charno = charno;
+   }
+ 
+-  @Override
+   void forgiveUnknownNames() {
+     forgiving = true;
+   }
+diff --git a/com/google/javascript/rhino/jstype/ObjectType.java b/com/google/javascript/rhino/jstype/ObjectType.java
+index 78583fe..2fcc8cf 100644
+--- a/com/google/javascript/rhino/jstype/ObjectType.java
++++ b/com/google/javascript/rhino/jstype/ObjectType.java
+@@ -42,11 +42,13 @@ package com.google.javascript.rhino.jstype;
+ import static com.google.javascript.rhino.jstype.TernaryValue.FALSE;
+ import static com.google.javascript.rhino.jstype.TernaryValue.UNKNOWN;
+ 
++import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableSet;
+ import com.google.common.collect.Sets;
+ import com.google.javascript.rhino.JSDocInfo;
+ 
+ import java.util.HashSet;
++import java.util.List;
+ import java.util.Set;
+ 
+ /**
+diff --git a/com/google/javascript/rhino/jstype/ProxyObjectType.java b/com/google/javascript/rhino/jstype/ProxyObjectType.java
+index bd23c71..8761a53 100644
+--- a/com/google/javascript/rhino/jstype/ProxyObjectType.java
++++ b/com/google/javascript/rhino/jstype/ProxyObjectType.java
+@@ -42,6 +42,7 @@ package com.google.javascript.rhino.jstype;
+ import com.google.javascript.rhino.ErrorReporter;
+ import com.google.javascript.rhino.JSDocInfo;
+ 
++import java.util.List;
+ import java.util.Set;
+ 
+ /**
+diff --git a/com/google/javascript/rhino/jstype/RecordTypeBuilder.java b/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
+index e9deda4..95fc082 100644
+--- a/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
++++ b/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
+@@ -40,6 +40,9 @@
+ package com.google.javascript.rhino.jstype;
+ 
+ import com.google.common.collect.ImmutableMap;
++import com.google.common.collect.Maps;
++
++import java.util.Map;
+ 
+ /**
+  * A builder for record types.
+diff --git a/com/google/javascript/rhino/jstype/UnresolvedTypeExpression.java b/com/google/javascript/rhino/jstype/UnresolvedTypeExpression.java
+index e485054..275c751 100644
+--- a/com/google/javascript/rhino/jstype/UnresolvedTypeExpression.java
++++ b/com/google/javascript/rhino/jstype/UnresolvedTypeExpression.java
+@@ -41,6 +41,7 @@ package com.google.javascript.rhino.jstype;
+ 
+ import com.google.common.base.Preconditions;
+ import com.google.javascript.rhino.ErrorReporter;
++import com.google.javascript.rhino.JSTypeExpression;
+ import com.google.javascript.rhino.Node;
+ 
+ /**

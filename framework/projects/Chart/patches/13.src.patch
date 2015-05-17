@@ -2,6 +2,112 @@ Index: org/jfree/chart/block/BorderArrangement.java
 ===================================================================
 --- org/jfree/chart/block/BorderArrangement.java	(revision 822)
 +++ org/jfree/chart/block/BorderArrangement.java	(revision 817)
+@@ -2,32 +2,32 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+- * This library is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU Lesser General Public License as published by
+- * the Free Software Foundation; either version 2.1 of the License, or
++ * This library is free software; you can redistribute it and/or modify it 
++ * under the terms of the GNU Lesser General Public License as published by 
++ * the Free Software Foundation; either version 2.1 of the License, or 
+  * (at your option) any later version.
+  *
+- * This library is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
++ * This library is distributed in the hope that it will be useful, but 
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
++ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+  * License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+- * USA.
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, 
++ * USA.  
+  *
+- * [Java is a trademark or registered trademark of Sun Microsystems, Inc.
++ * [Java is a trademark or registered trademark of Sun Microsystems, Inc. 
+  * in the United States and other countries.]
+  *
+  * ----------------------
+  * BorderArrangement.java
+  * ----------------------
+- * (C) Copyright 2004-2008, by Object Refinery Limited.
++ * (C) Copyright 2004-2007, by Object Refinery Limited.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+  * Contributor(s):   -;
+@@ -40,9 +40,7 @@
+  * 03-May-2005 : Implemented Serializable and added equals() method (DG);
+  * 13-May-2005 : Fixed bugs in the arrange() method (DG);
+  * 20-Jun-2007 : Removed JCommon dependencies (DG);
+- * 08-Apr-2008 : Fixed bug in arrangeFF() method where width is too small for
+- *               left and right blocks (DG);
+- *
++ * 
+  */
+ 
+ package org.jfree.chart.block;
+@@ -61,40 +59,40 @@
+  * Swing's BorderLayout class.
+  */
+ public class BorderArrangement implements Arrangement, Serializable {
+-
++    
+     /** For serialization. */
+     private static final long serialVersionUID = 506071142274883745L;
+-
++    
+     /** The block (if any) at the center of the layout. */
+     private Block centerBlock;
+ 
+     /** The block (if any) at the top of the layout. */
+     private Block topBlock;
+-
++    
+     /** The block (if any) at the bottom of the layout. */
+     private Block bottomBlock;
+-
++    
+     /** The block (if any) at the left of the layout. */
+     private Block leftBlock;
+-
++    
+     /** The block (if any) at the right of the layout. */
+     private Block rightBlock;
+-
++    
+     /**
+      * Creates a new instance.
+      */
+     public BorderArrangement() {
+     }
+-
++    
+     /**
+      * Adds a block to the arrangement manager at the specified edge.
+-     *
++     * 
+      * @param block  the block (<code>null</code> permitted).
+-     * @param key  the edge (an instance of {@link RectangleEdge}) or
++     * @param key  the edge (an instance of {@link RectangleEdge}) or 
+      *             <code>null</code> for the center block.
+      */
+     public void add(Block block, Object key) {
+-
++        
+         if (key == null) {
+             this.centerBlock = block;
+         }
 @@ -114,102 +112,114 @@
              }
          }

@@ -2,6 +2,16 @@ diff --git a/org/apache/commons/lang3/ClassUtils.java b/org/apache/commons/lang3
 index 3998966..85fda04 100644
 --- a/org/apache/commons/lang3/ClassUtils.java
 +++ b/org/apache/commons/lang3/ClassUtils.java
+@@ -890,8 +890,7 @@ public class ClassUtils {
+     }
+ 
+     /**
+-     * <p>Converts an array of <code>Object</code> in to an array of <code>Class</code> objects.
+-     * If any of these objects is null, a null element will be inserted into the array.</p>
++     * <p>Converts an array of <code>Object</code> in to an array of <code>Class</code> objects.</p>
+      *
+      * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+      *
 @@ -907,7 +906,7 @@ public class ClassUtils {
          }
          Class<?>[] classes = new Class[array.length];

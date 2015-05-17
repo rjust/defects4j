@@ -1,17 +1,146 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
-index c998d1e..f3d9583 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
-@@ -692,11 +692,7 @@ public class PeepholeFoldConstants extends AbstractPeepholeOptimization {
-           result = lvalInt >> rvalInt;
-           break;
-         case Token.URSH:
--          // JavaScript handles zero shifts on signed numbers differently than
--          // Java as an Java int can not represent the unsigned 32-bit number
--          // where JavaScript can so use a long here.
--          long lvalLong = lvalInt & 0xffffffffL;
--          result = lvalLong >>> rvalInt;
-+          result = lvalInt >>> rvalInt;
-           break;
-         default:
-           throw new AssertionError("Unknown shift operator: " +
+diff --git a/com/google/javascript/jscomp/CollapseProperties.java b/com/google/javascript/jscomp/CollapseProperties.java
+index b29886e..0e3c986 100644
+--- a/com/google/javascript/jscomp/CollapseProperties.java
++++ b/com/google/javascript/jscomp/CollapseProperties.java
+@@ -214,7 +214,7 @@ class CollapseProperties implements CompilerPass {
+           collector.getReferenceCollection(aliasVar);
+       if (aliasRefs.isWellDefined()
+           && aliasRefs.firstReferenceIsAssigningDeclaration()
+-          && aliasRefs.isAssignedOnceInLifetime()) {
++          && aliasRefs.isAssignedOnce()) {
+         // The alias is well-formed, so do the inlining now.
+         int size = aliasRefs.references.size();
+         Set<Node> newNodes = Sets.newHashSetWithExpectedSize(size - 1);
+diff --git a/com/google/javascript/jscomp/InlineVariables.java b/com/google/javascript/jscomp/InlineVariables.java
+index c14c845..b9538c3 100644
+--- a/com/google/javascript/jscomp/InlineVariables.java
++++ b/com/google/javascript/jscomp/InlineVariables.java
+@@ -178,7 +178,7 @@ class InlineVariables implements CompilerPass {
+           // another pass that handles unused variables much more elegantly.
+           if (referenceInfo != null && referenceInfo.references.size() >= 2 &&
+               referenceInfo.isWellDefined() &&
+-              referenceInfo.isAssignedOnceInLifetime()) {
++              referenceInfo.isAssignedOnce()) {
+             Reference init = referenceInfo.getInitializingReference();
+             Node value = init.getAssignedValue();
+             if (value != null && value.getType() == Token.NAME) {
+@@ -270,7 +270,7 @@ class InlineVariables implements CompilerPass {
+       // reference data is out of sync. We're better off just waiting for
+       // the next pass.)
+       if (!staleVars.contains(v) && referenceInfo.isWellDefined() &&
+-          referenceInfo.isAssignedOnceInLifetime()) {
++          referenceInfo.isAssignedOnce()) {
+         List<Reference> refs = referenceInfo.references;
+         for (int i = 1 /* start from a read */; i < refs.size(); i++) {
+           Node nameNode = refs.get(i).getNameNode();
+@@ -425,7 +425,7 @@ class InlineVariables implements CompilerPass {
+         return false;
+       }
+ 
+-      if (!refInfo.isAssignedOnceInLifetime()) {
++      if (!refInfo.isAssignedOnce()) {
+         return false;
+       }
+ 
+diff --git a/com/google/javascript/jscomp/ReferenceCollectingCallback.java b/com/google/javascript/jscomp/ReferenceCollectingCallback.java
+index da4ed3e..1e4b0ae 100644
+--- a/com/google/javascript/jscomp/ReferenceCollectingCallback.java
++++ b/com/google/javascript/jscomp/ReferenceCollectingCallback.java
+@@ -348,46 +348,22 @@ class ReferenceCollectingCallback implements ScopedCallback, CompilerPass {
+     }
+ 
+     /**
+-     * @return Whether the variable is only assigned a value once for its
+-     *     lifetime.
++     * @return Whether the variable is only assigned a value once.
+      */
+-    boolean isAssignedOnceInLifetime() {
+-      Reference ref = getOneAndOnlyAssignment();
+-      if (ref == null) {
+-        return false;
+-      }
+-
+-      // Make sure this assignment is not in a loop.
+-      for (BasicBlock block = ref.getBasicBlock();
+-           block != null; block = block.getParent()) {
+-        if (block.isFunction) {
+-          break;
+-        } else if (block.isLoop) {
+-          return false;
+-        }
+-      }
+-
+-      return true;
+-    }
+-
+-    /**
+-     * @return The one and only assignment. Returns if there are 0 or 2+
+-     *    assignments.
+-     */
+-    private Reference getOneAndOnlyAssignment() {
+-      Reference assignment = null;
++    boolean isAssignedOnce() {
++      boolean assigned = false;
+       int size = references.size();
+       for (int i = 0; i < size; i++) {
+         Reference ref = references.get(i);
+         if (ref.isLvalue() || ref.isInitializingDeclaration()) {
+-          if (assignment == null) {
+-            assignment = ref;
++          if (!assigned) {
++            assigned = true;
+           } else {
+-            return null;
++            return false;
+           }
+         }
+       }
+-      return assignment;
++      return assigned;
+     }
+ 
+     /**
+@@ -477,7 +453,7 @@ class ReferenceCollectingCallback implements ScopedCallback, CompilerPass {
+     }
+ 
+    /**
+-    * @return For an assignment, variable declaration, or function declaration
++    * @return For an assignment, variable declaration, or function declaration 
+     * return the assigned value, otherwise null.
+     */
+     Node getAssignedValue() {
+@@ -548,16 +524,6 @@ class ReferenceCollectingCallback implements ScopedCallback, CompilerPass {
+     private final boolean isHoisted;
+ 
+     /**
+-     * Whether this block denotes a function scope.
+-     */
+-    private final boolean isFunction;
+-
+-    /**
+-     * Whether this block denotes a loop.
+-     */
+-    private final boolean isLoop;
+-
+-    /**
+      * Creates a new block.
+      * @param parent The containing block.
+      * @param root The root node of the block.
+@@ -567,17 +533,6 @@ class ReferenceCollectingCallback implements ScopedCallback, CompilerPass {
+ 
+       // only named functions may be hoisted.
+       this.isHoisted = NodeUtil.isHoistedFunctionDeclaration(root);
+-
+-      this.isFunction = root.getType() == Token.FUNCTION;
+-
+-      if (root.getParent() != null) {
+-        int pType = root.getParent().getType();
+-        this.isLoop = pType == Token.DO ||
+-            pType == Token.WHILE ||
+-            pType == Token.FOR;
+-      } else {
+-        this.isLoop = false;
+-      }
+     }
+ 
+     BasicBlock getParent() {

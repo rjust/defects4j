@@ -2,6 +2,14 @@ diff --git a/com/google/javascript/jscomp/MaybeReachingVariableUse.java b/com/go
 index 8361ac9..9867a14 100644
 --- a/com/google/javascript/jscomp/MaybeReachingVariableUse.java
 +++ b/com/google/javascript/jscomp/MaybeReachingVariableUse.java
+@@ -22,7 +22,6 @@ import com.google.common.collect.Multimap;
+ import com.google.common.collect.Sets;
+ import com.google.javascript.jscomp.ControlFlowGraph.Branch;
+ import com.google.javascript.jscomp.Scope.Var;
+-import com.google.javascript.jscomp.graph.DiGraph.DiGraphEdge;
+ import com.google.javascript.jscomp.graph.GraphNode;
+ import com.google.javascript.jscomp.graph.LatticeElement;
+ import com.google.javascript.rhino.Node;
 @@ -146,26 +145,10 @@ class MaybeReachingVariableUse extends
    @Override
    ReachingUses flowThrough(Node n, ReachingUses input) {

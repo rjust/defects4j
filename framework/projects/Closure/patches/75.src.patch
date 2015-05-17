@@ -1,5 +1,5 @@
 diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
-index c97e091..212cc09 100644
+index c97e091..2094ae2 100644
 --- a/com/google/javascript/jscomp/NodeUtil.java
 +++ b/com/google/javascript/jscomp/NodeUtil.java
 @@ -310,11 +310,6 @@ public final class NodeUtil {
@@ -14,9 +14,27 @@ index c97e091..212cc09 100644
      String s = trimJsWhiteSpace(rawJsString);
      // return ScriptRuntime.toNumber(s);
      if (s.length() == 0) {
-@@ -374,14 +369,13 @@ public final class NodeUtil {
+@@ -358,12 +353,10 @@ public final class NodeUtil {
+   static String trimJsWhiteSpace(String s) {
+     int start = 0;
+     int end = s.length();
+-    while (end > 0
+-        && isStrWhiteSpaceChar(s.charAt(end - 1)) == TernaryValue.TRUE) {
++    while (end > 0 && isStrWhiteSpaceChar(s.charAt(end-1))) {
+       end--;
+     }
+-    while (start < end
+-        && isStrWhiteSpaceChar(s.charAt(start)) == TernaryValue.TRUE) {
++    while (start < end && isStrWhiteSpaceChar(s.charAt(start))) {
+       start++;
+     }
+     return s.substring(start, end);
+@@ -372,23 +365,21 @@ public final class NodeUtil {
+   /**
+    * Copied from Rhino's ScriptRuntime
     */
-   static TernaryValue isStrWhiteSpaceChar(int c) {
+-  static TernaryValue isStrWhiteSpaceChar(int c) {
++  static boolean isStrWhiteSpaceChar(int c) {
      switch (c) {
 -      case '\u000B': // <VT>
 -        return TernaryValue.UNKNOWN;  // IE says "no", EcmaScript says "yes"
@@ -30,3 +48,12 @@ index c97e091..212cc09 100644
        case '\u2028': // <LS>
        case '\u2029': // <PS>
        case '\uFEFF': // <BOM>
+-        return TernaryValue.TRUE;
++        return true;
+       default:
+-        return (Character.getType(c) == Character.SPACE_SEPARATOR)
+-            ? TernaryValue.TRUE : TernaryValue.FALSE;
++        return Character.getType(c) == Character.SPACE_SEPARATOR;
+     }
+   }
+ 

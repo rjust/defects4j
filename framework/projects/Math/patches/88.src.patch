@@ -2,6 +2,16 @@ diff --git a/org/apache/commons/math/optimization/linear/SimplexTableau.java b/o
 index a6d7419..ba57722 100644
 --- a/org/apache/commons/math/optimization/linear/SimplexTableau.java
 +++ b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+@@ -23,9 +23,7 @@ import java.io.ObjectOutputStream;
+ import java.io.Serializable;
+ import java.util.ArrayList;
+ import java.util.Collection;
+-import java.util.HashSet;
+ import java.util.List;
+-import java.util.Set;
+ 
+ import org.apache.commons.math.linear.MatrixUtils;
+ import org.apache.commons.math.linear.RealMatrix;
 @@ -323,27 +321,39 @@ class SimplexTableau implements Serializable {
       */
      protected RealPointValuePair getSolution() {

@@ -2,6 +2,14 @@ diff --git a/org/apache/commons/math/distribution/NormalDistributionImpl.java b/
 index a08eac5..ff54236 100644
 --- a/org/apache/commons/math/distribution/NormalDistributionImpl.java
 +++ b/org/apache/commons/math/distribution/NormalDistributionImpl.java
+@@ -20,7 +20,6 @@ package org.apache.commons.math.distribution;
+ import java.io.Serializable;
+ 
+ import org.apache.commons.math.MathException;
+-import org.apache.commons.math.MaxIterationsExceededException;
+ import org.apache.commons.math.special.Erf;
+ 
+ /**
 @@ -101,23 +100,11 @@ public class NormalDistributionImpl extends AbstractContinuousDistribution
       * For this disbution, X, this method returns P(X &lt; <code>x</code>).
       * @param x the value at which the CDF is evaluated.

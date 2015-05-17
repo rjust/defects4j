@@ -1,28 +1,22 @@
-diff --git a/com/google/javascript/jscomp/ExploitAssigns.java b/com/google/javascript/jscomp/ExploitAssigns.java
-index 1639f2c..1f925ba 100644
---- a/com/google/javascript/jscomp/ExploitAssigns.java
-+++ b/com/google/javascript/jscomp/ExploitAssigns.java
-@@ -73,7 +73,7 @@ class ExploitAssigns extends AbstractPeepholeOptimization {
-    * @param value The value node.
-    * @param isLValue Whether it's on the left-hand side of an expr.
+diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
+index de14c04..ab71542 100644
+--- a/com/google/javascript/jscomp/TypeCheck.java
++++ b/com/google/javascript/jscomp/TypeCheck.java
+@@ -1176,7 +1176,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+    * Returns true if any type in the chain has an implicitCast annotation for
+    * the given property.
     */
--  private static boolean isCollapsibleValue(Node value, boolean isLValue) {
-+  private boolean isCollapsibleValue(Node value, boolean isLValue) {
-     switch (value.getType()) {
-       case Token.GETPROP:
-         // Do not collapse GETPROPs on arbitrary objects, because
-@@ -210,11 +210,9 @@ class ExploitAssigns extends AbstractPeepholeOptimization {
-     }
-     Preconditions.checkArgument(node.isGetProp());
- 
--    while (node.isGetProp()) {
--      node = node.getFirstChild();
--    }
--    if (node.isName()
--        && isNameAssignedTo(node.getString(), replacement)) {
-+    Node name = node.getFirstChild();
-+    if (name.isName()
-+        && isNameAssignedTo(name.getString(), replacement)) {
-       return false;
-     }
- 
+-  private static boolean propertyIsImplicitCast(ObjectType type, String prop) {
++  private boolean propertyIsImplicitCast(ObjectType type, String prop) {
+     for (; type != null; type = type.getImplicitPrototype()) {
+       JSDocInfo docInfo = type.getOwnPropertyJSDocInfo(prop);
+       if (docInfo != null && docInfo.isImplicitCast()) {
+@@ -1658,7 +1658,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+     JSType type = getJSType(constructor).restrictByNotNullOrUndefined();
+     if (type.isConstructor() || type.isEmptyType() || type.isUnknownType()) {
+       FunctionType fnType = type.toMaybeFunctionType();
+-      if (fnType != null && fnType.hasInstanceType()) {
++      if (fnType != null) {
+         visitParameterList(t, n, fnType);
+         ensureTyped(t, n, fnType.getInstanceType());
+       } else {

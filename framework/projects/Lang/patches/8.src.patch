@@ -24,6 +24,16 @@ index c952309..cc1af9d 100644
              mStandard = getTimeZoneDisplay(timeZone, false, style, locale);
              mDaylight = getTimeZoneDisplay(timeZone, true, style, locale);
          }
+@@ -1118,9 +1116,6 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+          */
+         @Override
+         public int estimateLength() {
+-            // We have no access to the Calendar object that will be passed to
+-            // appendTo so base estimate on the TimeZone passed to the
+-            // constructor
+             return Math.max(mStandard.length(), mDaylight.length());
+         }
+ 
 @@ -1129,12 +1124,10 @@ public class FastDatePrinter implements DatePrinter, Serializable {
           */
          @Override

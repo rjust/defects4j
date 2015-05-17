@@ -1,34 +1,13 @@
-diff --git a/com/google/javascript/jscomp/ScopedAliasesTest.java b/com/google/javascript/jscomp/ScopedAliasesTest.java
-index 30aa190..9150a1c 100644
---- a/com/google/javascript/jscomp/ScopedAliasesTest.java
-+++ b/com/google/javascript/jscomp/ScopedAliasesTest.java
-@@ -494,7 +494,7 @@ public class ScopedAliasesTest extends CompilerTestCase {
+diff --git a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+index 8c0b429..e6e6f8c 100644
+--- a/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
++++ b/com/google/javascript/jscomp/ClosureReverseAbstractInterpreterTest.java
+@@ -205,7 +205,7 @@ public class ClosureReverseAbstractInterpreterTest extends
+   public void testGoogIsArray2() throws Exception {
+     testClosureFunction("goog.isArray",
+         ALL_TYPE,
+-        ARRAY_TYPE,
++        ALL_TYPE, // TODO(johnlenz): should be ARRAY_TYPE?
+         ALL_TYPE);
    }
  
-   public void testNonAliasLocal() {
--    testScopedFailure("try { } catch (e) {}",
-+    testScopedFailure("function f() {}",
-         ScopedAliases.GOOG_SCOPE_NON_ALIAS_LOCAL);
-   }
- 
-@@ -511,20 +511,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
-                "    return $jscomp.scope.x + $jscomp.scope.y; }");
-   }
- 
--  public void testFunctionDeclaration() {
--    testScoped("if (x) { function f() {} } g(f)",
--               SCOPE_NAMESPACE +
--               "if (x) { $jscomp.scope.f = function () {}; } " +
--               "g($jscomp.scope.f); ");
--  }
--
--  public void testHoistedFunctionDeclaration() {
--    testScoped(" g(f); function f() {} ",
--               SCOPE_NAMESPACE +
--               " $jscomp.scope.f = function () {}; " +
--               "g($jscomp.scope.f); ");
--  }
--
-   public void testAliasReassign() {
-     testScopedFailure("var x = 3; x = 5;",
-         ScopedAliases.GOOG_SCOPE_ALIAS_REDEFINED);

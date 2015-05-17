@@ -1,9 +1,20 @@
 diff --git a/org/joda/time/format/DateTimeParserBucket.java b/org/joda/time/format/DateTimeParserBucket.java
-index 7c37fc1..b985cef 100644
+index 7c37fc1..44255a6 100644
 --- a/org/joda/time/format/DateTimeParserBucket.java
 +++ b/org/joda/time/format/DateTimeParserBucket.java
-@@ -352,11 +352,6 @@ public class DateTimeParserBucket {
-             for (int i = 0; i < count; i++) {
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright 2001-2011 Stephen Colebourne
++ *  Copyright 2001-2009 Stephen Colebourne
+  *
+  *  Licensed under the Apache License, Version 2.0 (the "License");
+  *  you may not use this file except in compliance with the License.
+@@ -349,14 +349,9 @@ public class DateTimeParserBucket {
+ 
+         long millis = iMillis;
+         try {
+-            for (int i = 0; i < count; i++) {
++            for (int i=0; i<count; i++) {
                  millis = savedFields[i].set(millis, resetFields);
              }
 -            if (resetFields) {

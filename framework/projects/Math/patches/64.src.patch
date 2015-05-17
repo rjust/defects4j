@@ -82,6 +82,14 @@ index b41456e..4cf4ee0 100644
  
                  // compute the new point and the norm of the evolution direction
                  double lmNorm = 0;
+@@ -365,6 +357,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+                     lmNorm  += s * s;
+                 }
+                 lmNorm = Math.sqrt(lmNorm);
++
+                 // on the first iteration, adjust the initial step bound.
+                 if (firstIteration) {
+                     delta = Math.min(delta, lmNorm);
 @@ -372,6 +365,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
  
                  // evaluate the function at x + p and calculate its norm

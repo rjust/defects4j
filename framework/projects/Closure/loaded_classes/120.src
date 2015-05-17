@@ -131,6 +131,7 @@ com.google.javascript.rhino.jstype.NoResolvedType
 com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.rhino.jstype.StaticSymbolTable
 com.google.javascript.jscomp.TypedCodeGenerator
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.ReplaceIdGenerators
 com.google.javascript.rhino.jstype.TemplateTypeMapReplacer
 com.google.javascript.jscomp.CheckRequiresForConstructors

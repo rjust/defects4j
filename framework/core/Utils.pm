@@ -36,8 +36,10 @@ package Utils;
 use warnings;
 use strict;
 
+use Constants;
 use File::Basename;
 use Cwd qw(abs_path);
+use Fcntl qw(:flock SEEK_END);
 
 my $dir = dirname(abs_path(__FILE__));
 
@@ -57,7 +59,7 @@ be specified with C<tmp_root> (optional) -- the default is F</tmp>.
 
 =cut
 sub get_tmp_dir {
-    my $tmp_root = shift // "/tmp";
+    my $tmp_root = shift // $ENV{ALT_TMP} // "/tmp";
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 
@@ -215,4 +217,70 @@ sub read_config_file {
     }
     close(IN);
     return $hash;
+}
+
+=item B<maven_to_ant> C<maven_to_and(patch_file, work_dir, out_dir)>
+
+Generates a C<build.xml> from a C<pom.xml> that exists in C<work_dir>,
+and saves the output to C<out_dir>.
+
+Before invoking C<mvn ant:ant> to do this conversion,
+this method applies C<patch_file> to C<build.xml>.
+
+This method causes program crash on failure.
+
+=cut
+sub maven_to_ant {
+    my ($patch_file, $work_dir, $out_dir) = @_;
+    my $log = `cd $work_dir && mvn ant:ant 2>&1 \\
+               && patch build.xml $patch_file 2>&1 \\
+               && mkdir -p $out_dir 2>&1 \\
+               && cp maven-build.* $out_dir 2>&1 \\
+               && cp build.xml $out_dir 2>&1`;
+
+    my $ret = $?;
+    if ($ret==0) {
+        print "OK\n";
+    } else {
+        print "FAIL\n$log"; die;
+    }
+
+    # Check whether build.classpath and build.test.classpath exist
+    system("grep 'path id=\"build.classpath\"' $out_dir/maven-build.xml >/dev/null") == 0
+        or die "Could not find build.classpath";
+
+    system("grep 'path id=\"build.test.classpath\"' $out_dir/maven-build.xml >/dev/null") == 0
+       or die "Could not find build.test.classpath";
+}
+
+=item B<append_to_file_unless_matches> C<append_to_file_unless_matches(file, string, regexp)>
+
+This utility method appends C<string> to C<file>, unless C<file>
+contains a line that matches C<regexp>.
+
+This is done in a way that is safe for multiple processes accessing
+C<file> by acquiring flocks.
+
+=cut
+sub append_to_file_unless_matches {
+    my ($file, $string, $includes) = @_;
+    @_ == 3 or die $ARG_ERROR;
+
+    open my $fh, ">>$file" or die "Cannot open file for appending $file: $!";
+    flock ($fh, LOCK_EX) or die "Cannot exclusively lock  $file: $!";
+    open my $fh_in, "<$file" or die "Cannot open file for reading $file: $!";
+    my $seen = 0;
+    while (my $line = <$fh_in>) {
+        if ($line =~ /$includes/) {
+            $seen = 1;
+            last;
+        }
+    }
+    close $fh_in;
+    unless ($seen) {
+        seek ($fh, 0, SEEK_END) or die "Cannot seek: $!"; # seek if someone appended while we were waiting
+        print $fh $string;
+    }
+    close $fh;
+    return $seen == 1 ? 0 : 1;
 }

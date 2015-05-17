@@ -128,8 +128,6 @@ our $COMP_T2V2     = "compile_t2v2";
 our $FAIL_T2V2     = "num_fail_t2v2";
 our $COMP_V1       = "compile_v1";
 our $COMP_T2V1     = "compile_t2v1";
-our $MIN_SRC       = "minimized_src_patch";
-our $REVIEW_TESTS  = "reviewed_tests_t2v2";
 
 # Additional columns of TAB_TRIGGER
 our $FAIL_V2       = "num_fail_t2v2";
@@ -160,7 +158,7 @@ our $BRANCHES_COVERED = "branches_covered";
 # Table definitions
 my %tables = (
 # TAB_REV_PAIRS
-$TAB_REV_PAIRS => [$PROJECT, $ID, $DIFF_SRC, $DIFF_TEST, $COMP_V2, $COMP_T2V2, $FAIL_T2V2, $COMP_V1, $COMP_T2V1, $MIN_SRC, $REVIEW_TESTS],
+$TAB_REV_PAIRS => [$PROJECT, $ID, $DIFF_SRC, $DIFF_TEST, $COMP_V2, $COMP_T2V2, $FAIL_T2V2, $COMP_V1, $COMP_T2V1],
 # Table TAB_TRIGGER
 $TAB_TRIGGER => [$PROJECT, $ID, $FAIL_V2, $FAIL_C_V1, $FAIL_M_V1, $PASS_ISO_V2, $FAIL_ISO_V1],
 # Table TAB_BUG_DETECTION
@@ -168,7 +166,7 @@ $TAB_BUG_DETECTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $TEST_CLASS, $NUM_T
 # Table TAB_MUTATION
 $TAB_MUTATION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $MUT_GEN, $MUT_COV, $MUT_KILL],
 # Table TAB_COVERAGE
-$TAB_COVERAGE => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $LINES_TOTAL, $LINES_COVERED, $BRANCHES_TOTAL, $BRANCHES_COVERED],
+$TAB_COVERAGE => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $TEST_CLASS, $LINES_TOTAL, $LINES_COVERED, $BRANCHES_TOTAL, $BRANCHES_COVERED],
 );
 
 

@@ -2,6 +2,63 @@ Index: org/jfree/chart/plot/MultiplePiePlot.java
 ===================================================================
 --- org/jfree/chart/plot/MultiplePiePlot.java	(revision 852)
 +++ org/jfree/chart/plot/MultiplePiePlot.java	(revision 846)
+@@ -2,35 +2,35 @@
+  * JFreeChart : a free chart library for the Java(tm) platform
+  * ===========================================================
+  *
+- * (C) Copyright 2000-2008, by Object Refinery Limited and Contributors.
++ * (C) Copyright 2000-2007, by Object Refinery Limited and Contributors.
+  *
+  * Project Info:  http://www.jfree.org/jfreechart/index.html
+  *
+- * This library is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU Lesser General Public License as published by
+- * the Free Software Foundation; either version 2.1 of the License, or
++ * This library is free software; you can redistribute it and/or modify it 
++ * under the terms of the GNU Lesser General Public License as published by 
++ * the Free Software Foundation; either version 2.1 of the License, or 
+  * (at your option) any later version.
+  *
+- * This library is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
++ * This library is distributed in the hope that it will be useful, but 
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
++ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+  * License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+- * USA.
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, 
++ * USA.  
+  *
+- * [Java is a trademark or registered trademark of Sun Microsystems, Inc.
++ * [Java is a trademark or registered trademark of Sun Microsystems, Inc. 
+  * in the United States and other countries.]
+  *
+  * --------------------
+  * MultiplePiePlot.java
+  * --------------------
+- * (C) Copyright 2004-2008, by Object Refinery Limited.
++ * (C) Copyright 2004-2007, by Object Refinery Limited.
+  *
+  * Original Author:  David Gilbert (for Object Refinery Limited);
+- * Contributor(s):   Brian Cabana (patch 1943021);
++ * Contributor(s):   -;
+  *
+  * Changes
+  * -------
+@@ -48,8 +48,6 @@
+  * 17-May-2007 : Added argument check to setPieChart() (DG);
+  * 18-May-2007 : Set dataset for LegendItem (DG);
+  * 20-Jun-2007 : Removed JCommon dependencies (DG);
+- * 18-Apr-2008 : In the constructor, register the plot as a dataset listener -
+- *               see patch 1943021 from Brian Cabana (DG);
+  *
+  */
+ 
 @@ -90,65 +88,65 @@
  import org.jfree.data.general.PieDataset;
  
@@ -119,6 +176,153 @@ Index: org/jfree/chart/plot/MultiplePiePlot.java
          // change listeners...
          if (this.dataset != null) {
              this.dataset.removeChangeListener(this);
+@@ -189,22 +187,22 @@
+         // send a dataset change event to self to trigger plot change event
+         datasetChanged(new DatasetChangeEvent(this, dataset));
+     }
+-
++    
+     /**
+      * Returns the pie chart that is used to draw the individual pie plots.
+-     *
++     * 
+      * @return The pie chart (never <code>null</code>).
+-     *
++     * 
+      * @see #setPieChart(JFreeChart)
+      */
+     public JFreeChart getPieChart() {
+         return this.pieChart;
+     }
+-
++    
+     /**
+      * Sets the chart that is used to draw the individual pie plots.  The
+      * chart's plot must be an instance of {@link PiePlot}.
+-     *
++     * 
+      * @param pieChart  the pie chart (<code>null</code> not permitted).
+      *
+      * @see #getPieChart()
+@@ -220,20 +218,20 @@
+         this.pieChart = pieChart;
+         fireChangeEvent();
+     }
+-
++    
+     /**
+      * Returns the data extract order (by row or by column).
+-     *
++     * 
+      * @return The data extract order (never <code>null</code>).
+      */
+     public TableOrder getDataExtractOrder() {
+         return this.dataExtractOrder;
+     }
+-
++    
+     /**
+-     * Sets the data extract order (by row or by column) and sends a
++     * Sets the data extract order (by row or by column) and sends a 
+      * {@link PlotChangeEvent} to all registered listeners.
+-     *
++     * 
+      * @param order  the order (<code>null</code> not permitted).
+      */
+     public void setDataExtractOrder(TableOrder order) {
+@@ -243,46 +241,46 @@
+         this.dataExtractOrder = order;
+         fireChangeEvent();
+     }
+-
++    
+     /**
+-     * Returns the limit (as a percentage) below which small pie sections are
++     * Returns the limit (as a percentage) below which small pie sections are 
+      * aggregated.
+-     *
++     * 
+      * @return The limit percentage.
+      */
+     public double getLimit() {
+         return this.limit;
+     }
+-
++    
+     /**
+-     * Sets the limit below which pie sections are aggregated.
++     * Sets the limit below which pie sections are aggregated.  
+      * Set this to 0.0 if you don't want any aggregation to occur.
+-     *
++     * 
+      * @param limit  the limit percent.
+      */
+     public void setLimit(double limit) {
+         this.limit = limit;
+         fireChangeEvent();
+     }
+-
++    
+     /**
+      * Returns the key for aggregated items in the pie plots, if there are any.
+      * The default value is "Other".
+-     *
++     * 
+      * @return The aggregated items key.
+-     *
++     * 
+      * @since 1.0.2
+      */
+     public Comparable getAggregatedItemsKey() {
+         return this.aggregatedItemsKey;
+     }
+-
++    
+     /**
+-     * Sets the key for aggregated items in the pie plots.  You must ensure
++     * Sets the key for aggregated items in the pie plots.  You must ensure 
+      * that this doesn't clash with any keys in the dataset.
+-     *
++     * 
+      * @param key  the key (<code>null</code> not permitted).
+-     *
++     * 
+      * @since 1.0.2
+      */
+     public void setAggregatedItemsKey(Comparable key) {
+@@ -292,25 +290,25 @@
+         this.aggregatedItemsKey = key;
+         fireChangeEvent();
+     }
+-
++    
+     /**
+-     * Returns the paint used to draw the pie section representing the
++     * Returns the paint used to draw the pie section representing the 
+      * aggregated items.  The default value is <code>Color.lightGray</code>.
+-     *
++     * 
+      * @return The paint.
+-     *
++     * 
+      * @since 1.0.2
+      */
+     public Paint getAggregatedItemsPaint() {
+         return this.aggregatedItemsPaint;
+     }
+-
++    
+     /**
+      * Sets the paint used to draw the pie section representing the aggregated
+      * items and sends a {@link PlotChangeEvent} to all registered listeners.
+-     *
++     * 
+      * @param paint  the paint (<code>null</code> not permitted).
+-     *
++     * 
+      * @since 1.0.2
+      */
+     public void setAggregatedItemsPaint(Paint paint) {
 @@ -320,19 +318,19 @@
          this.aggregatedItemsPaint = paint;
          fireChangeEvent();
@@ -175,6 +379,15 @@ Index: org/jfree/chart/plot/MultiplePiePlot.java
              = (int) Math.ceil((double) pieCount / (double) displayCols);
  
          // swap rows and columns to match plotArea shape
+@@ -381,7 +379,7 @@
+         }
+ 
+         prefetchSectionPaints();
+-
++        
+         int x = (int) area.getX();
+         int y = (int) area.getY();
+         int width = ((int) area.getWidth()) / displayCols;
 @@ -393,7 +391,7 @@
          Rectangle rect = new Rectangle();
  
@@ -196,6 +409,33 @@ Index: org/jfree/chart/plot/MultiplePiePlot.java
                      this.dataExtractOrder, pieIndex);
              if (this.limit > 0.0) {
                  piedataset = DatasetUtilities.createConsolidatedPieDataset(
+@@ -418,7 +416,7 @@
+             PiePlot piePlot = (PiePlot) this.pieChart.getPlot();
+             piePlot.setDataset(piedataset);
+             piePlot.setPieIndex(pieIndex);
+-
++            
+             // update the section colors to match the global colors...
+             for (int i = 0; i < piedataset.getItemCount(); i++) {
+                 Comparable key = piedataset.getKey(i);
+@@ -431,7 +429,7 @@
+                 }
+                 piePlot.setSectionPaint(key, p);
+             }
+-
++            
+             ChartRenderingInfo subinfo = null;
+             if (info != null) {
+                 subinfo = new ChartRenderingInfo();
+@@ -442,7 +440,7 @@
+                         subinfo.getEntityCollection());
+                 info.addSubplotInfo(subinfo.getPlotInfo());
+             }
+-
++            
+             ++column;
+             if (column == displayCols) {
+                 column = 0;
 @@ -455,26 +453,26 @@
          }
  
@@ -242,6 +482,31 @@ Index: org/jfree/chart/plot/MultiplePiePlot.java
                  if (p == null) {
                      p = (Paint) this.sectionPaints.get(key);
                      if (p == null) {
+@@ -498,9 +496,9 @@
+                 this.sectionPaints.put(key, p);
+             }
+         }
+-
++        
+     }
+-
++    
+     /**
+      * Returns a collection of legend items for the pie chart.
+      *
+@@ -509,10 +507,10 @@
+     public LegendItemCollection getLegendItems() {
+ 
+         LegendItemCollection result = new LegendItemCollection();
+-
++        
+         if (this.dataset != null) {
+             List keys = null;
+-
++      
+             prefetchSectionPaints();
+             if (this.dataExtractOrder == TableOrder.BY_ROW) {
+                 keys = this.dataset.getColumnKeys();
 @@ -529,8 +527,8 @@
                      String label = key.toString();
                      String description = label;

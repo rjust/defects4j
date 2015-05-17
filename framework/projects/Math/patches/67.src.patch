@@ -17,3 +17,96 @@ index 26fd5e0..10bc9e6 100644
      }
  
      /** {@inheritDoc} */
+@@ -315,4 +315,5 @@ public class MultiStartUnivariateRealOptimizer implements UnivariateRealOptimize
+             throws ConvergenceException, FunctionEvaluationException {
+         return optimize(f, goalType, min, max);
+     }
++
+ }
+diff --git a/org/apache/commons/math/optimization/UnivariateRealOptimizer.java b/org/apache/commons/math/optimization/UnivariateRealOptimizer.java
+index 07d8c4f..bf406ab 100644
+--- a/org/apache/commons/math/optimization/UnivariateRealOptimizer.java
++++ b/org/apache/commons/math/optimization/UnivariateRealOptimizer.java
+@@ -36,7 +36,7 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+     void setMaxEvaluations(int maxEvaluations);
+ 
+     /** Get the maximal number of functions evaluations.
+-     * @return the maximal number of functions evaluations.
++     * @return maximal number of functions evaluations
+      */
+     int getMaxEvaluations();
+ 
+@@ -46,7 +46,7 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+      * {@link #optimize(UnivariateRealFunction, GoalType, double, double) optimize}
+      * method. It is 0 if the method has not been called yet.
+      * </p>
+-     * @return the number of evaluations of the objective function.
++     * @return number of evaluations of the objective function
+      */
+     int getEvaluations();
+ 
+@@ -57,16 +57,16 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+      * </p>
+      * @param f the function to optimize.
+      * @param goalType type of optimization goal: either {@link GoalType#MAXIMIZE}
+-     * or {@link GoalType#MINIMIZE}.
++     * or {@link GoalType#MINIMIZE}
+      * @param min the lower bound for the interval.
+      * @param max the upper bound for the interval.
+-     * @return a value where the function is optimum.
++     * @return a value where the function is optimum
+      * @throws ConvergenceException if the maximum iteration count is exceeded
+      * or the optimizer detects convergence problems otherwise.
+      * @throws FunctionEvaluationException if an error occurs evaluating the
+-     * function.
++     * function
+      * @throws IllegalArgumentException if min > max or the endpoints do not
+-     * satisfy the requirements specified by the optimizer.
++     * satisfy the requirements specified by the optimizer
+      */
+     double optimize(UnivariateRealFunction f, GoalType goalType,
+                     double min, double max)
+@@ -79,17 +79,17 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+      * </p>
+      * @param f the function to optimize.
+      * @param goalType type of optimization goal: either {@link GoalType#MAXIMIZE}
+-     * or {@link GoalType#MINIMIZE}.
++     * or {@link GoalType#MINIMIZE}
+      * @param min the lower bound for the interval.
+      * @param max the upper bound for the interval.
+-     * @param startValue the start value to use.
+-     * @return a value where the function is optimum.
++     * @param startValue the start value to use
++     * @return a value where the function is optimum
+      * @throws ConvergenceException if the maximum iteration count is exceeded
+      * or the optimizer detects convergence problems otherwise.
+      * @throws FunctionEvaluationException if an error occurs evaluating the
+-     * function.
++     * function
+      * @throws IllegalArgumentException if min > max or the arguments do not
+-     * satisfy the requirements specified by the optimizer.
++     * satisfy the requirements specified by the optimizer
+      */
+     double optimize(UnivariateRealFunction f, GoalType goalType,
+                     double min, double max, double startValue)
+@@ -98,7 +98,7 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+     /**
+      * Get the result of the last run of the optimizer.
+      *
+-     * @return the optimum.
++     * @return the last result.
+      * @throws IllegalStateException if there is no result available, either
+      * because no result was yet computed or the last attempt failed.
+      */
+@@ -107,9 +107,10 @@ public interface UnivariateRealOptimizer extends ConvergingAlgorithm {
+     /**
+      * Get the result of the last run of the optimizer.
+      *
+-     * @return the value of the function at the optimum.
++     * @return the value of the function at the last result.
+      * @throws IllegalStateException if there is no result available, either
+      * because no result was yet computed or the last attempt failed.
+      */
+     double getFunctionValue();
++
+ }

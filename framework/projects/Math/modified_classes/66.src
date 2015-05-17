@@ -1,1 +1,3 @@
 org.apache.commons.math.optimization.univariate.BrentOptimizer
+org.apache.commons.math.optimization.univariate.AbstractUnivariateRealOptimizer
+org.apache.commons.math.ConvergingAlgorithmImpl

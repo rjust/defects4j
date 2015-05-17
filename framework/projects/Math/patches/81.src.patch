@@ -17,6 +17,15 @@ index 3fc328d..53a40f0 100644
          minPivot = MathUtils.SAFE_MIN * Math.max(1.0, eMax * eMax);
  
      }
+@@ -651,7 +647,7 @@ public class EigenDecompositionImpl implements EigenDecomposition {
+ 
+                 tau = (range[1] - range[0]) * MathUtils.EPSILON * n + 2 * minPivot;
+ 
+-                // decompose T-&lambda;I as LDL<sup>T</sup>
++                // decompose T&lambda;I as LDL<sup>T</sup>
+                 ldlTDecomposition(lambda, begin, n);
+ 
+                 // apply general dqd/dqds method
 @@ -903,8 +899,8 @@ public class EigenDecompositionImpl implements EigenDecomposition {
                      diagMax    = work[4 * i0];
                      offDiagMin = work[4 * i0 + 2];

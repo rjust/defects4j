@@ -1,42 +1,146 @@
---- com.google.javascript.jscomp.PeepholeFoldConstantsTest::testFoldBitShifts
+--- com.google.javascript.jscomp.InlineVariablesTest::testNoInlineAliasesInLoop
 junit.framework.AssertionFailedError: 
-Expected: x=4294967295
-Result: x=-1
+Expected: function f(){var i=0;for(;i<5;i++){var x=extern();(function(){var y=x;window.setTimeout(function(){extern(y)},0)})()}}
+Result: function f(){var i=0;for(;i<5;i++){var x=extern();(function(){window.setTimeout(function(){extern(x)},0)})()}}
 Node tree inequality:
 Tree1:
 BLOCK [synthetic: 1]
-    SCRIPT 1 [sourcename: expected0] [synthetic: 1] [sourcefile: expected0]
-        EXPR_RESULT 1 [sourcefile: expected0]
-            ASSIGN 1 [sourcefile: expected0]
-                NAME x 1 [sourcefile: expected0]
-                NUMBER 4.294967295E9 1 [sourcefile: expected0]
+    SCRIPT 1 [sourcename: expected0] [synthetic: 1]
+        FUNCTION  1 [sourcename: expected0]
+            NAME f 1
+            LP 1
+            BLOCK 1
+                VAR 1
+                    NAME i 1
+                        NUMBER 0.0 1
+                FOR 1
+                    EMPTY 1
+                    LT 1
+                        NAME i 1
+                        NUMBER 5.0 1
+                    INC 1 [incrdecr: 1]
+                        NAME i 1
+                    BLOCK 1
+                        VAR 1
+                            NAME x 1
+                                CALL 1
+                                    NAME extern 1
+                        EXPR_RESULT 1
+                            CALL 1
+                                FUNCTION  1 [sourcename: expected0] [parenthesized: true]
+                                    NAME  1
+                                    LP 1
+                                    BLOCK 1
+                                        VAR 1
+                                            NAME y 1
+                                                NAME x 1
+                                        EXPR_RESULT 1
+                                            CALL 1
+                                                GETPROP 1
+                                                    NAME window 1
+                                                    STRING setTimeout 1
+                                                FUNCTION  1 [sourcename: expected0]
+                                                    NAME  1
+                                                    LP 1
+                                                    BLOCK 1
+                                                        EXPR_RESULT 1
+                                                            CALL 1
+                                                                NAME extern 1
+                                                                NAME y 1
+                                                NUMBER 0.0 1
 
 
 Tree2:
 BLOCK [synthetic: 1]
-    SCRIPT 1 [sourcename: testcode] [synthetic: 1] [sourcefile: testcode]
-        EXPR_RESULT 1 [sourcefile: testcode]
-            ASSIGN 1 [sourcefile: testcode]
-                NAME x 1 [sourcefile: testcode]
-                NUMBER -1.0 1 [sourcefile: testcode]
+    SCRIPT 1 [sourcename: testcode] [synthetic: 1]
+        FUNCTION  1 [sourcename: testcode]
+            NAME f 1
+            LP 1
+            BLOCK 1
+                VAR 1
+                    NAME i 1
+                        NUMBER 0.0 1
+                FOR 1
+                    EMPTY 1
+                    LT 1
+                        NAME i 1
+                        NUMBER 5.0 1
+                    INC 1 [incrdecr: 1]
+                        NAME i 1
+                    BLOCK 1
+                        VAR 1
+                            NAME x 1
+                                CALL 1
+                                    NAME extern 1
+                        EXPR_RESULT 1
+                            CALL 1
+                                FUNCTION  1 [sourcename: testcode] [parenthesized: true]
+                                    NAME  1
+                                    LP 1
+                                    BLOCK 1
+                                        EXPR_RESULT 1
+                                            CALL 1
+                                                GETPROP 1
+                                                    NAME window 1
+                                                    STRING setTimeout 1
+                                                FUNCTION  1 [sourcename: testcode]
+                                                    NAME  1
+                                                    LP 1
+                                                    BLOCK 1
+                                                        EXPR_RESULT 1
+                                                            CALL 1
+                                                                NAME extern 1
+                                                                NAME x 1
+                                                NUMBER 0.0 1
 
 
-Subtree1: NUMBER 4.294967295E9 1 [sourcefile: expected0]
+Subtree1: BLOCK 1
+    VAR 1
+        NAME y 1
+            NAME x 1
+    EXPR_RESULT 1
+        CALL 1
+            GETPROP 1
+                NAME window 1
+                STRING setTimeout 1
+            FUNCTION  1 [sourcename: expected0]
+                NAME  1
+                LP 1
+                BLOCK 1
+                    EXPR_RESULT 1
+                        CALL 1
+                            NAME extern 1
+                            NAME y 1
+            NUMBER 0.0 1
 
 
-Subtree2: NUMBER -1.0 1 [sourcefile: testcode]
+Subtree2: BLOCK 1
+    EXPR_RESULT 1
+        CALL 1
+            GETPROP 1
+                NAME window 1
+                STRING setTimeout 1
+            FUNCTION  1 [sourcename: testcode]
+                NAME  1
+                LP 1
+                BLOCK 1
+                    EXPR_RESULT 1
+                        CALL 1
+                            NAME extern 1
+                            NAME x 1
+            NUMBER 0.0 1
 
 	at junit.framework.Assert.fail(Assert.java:57)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
 	at junit.framework.Assert.assertNull(Assert.java:277)
 	at junit.framework.TestCase.assertNull(TestCase.java:447)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:792)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:777)
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:301)
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:270)
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:258)
-	at com.google.javascript.jscomp.PeepholeFoldConstantsTest.fold(PeepholeFoldConstantsTest.java:58)
-	at com.google.javascript.jscomp.PeepholeFoldConstantsTest.testFoldBitShifts(PeepholeFoldConstantsTest.java:263)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:486)
+	at com.google.javascript.jscomp.InlineVariablesTest.testNoInlineAliasesInLoop(InlineVariablesTest.java:617)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

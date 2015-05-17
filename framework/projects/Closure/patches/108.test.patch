@@ -1,27 +1,25 @@
-diff --git a/com/google/javascript/jscomp/ScopedAliasesTest.java b/com/google/javascript/jscomp/ScopedAliasesTest.java
-index 45ab1b0..a08cd49 100644
---- a/com/google/javascript/jscomp/ScopedAliasesTest.java
-+++ b/com/google/javascript/jscomp/ScopedAliasesTest.java
-@@ -566,22 +566,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
-          SCOPE_NAMESPACE + "/** @type {number} */ $jscomp.scope.a;");
+diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+index 84e538b..ad56475 100644
+--- a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
++++ b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+@@ -581,20 +581,6 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
+     assertFalse(type.isNominalConstructor());
    }
  
--  public void testIssue1144() {
--    test("var ns = {};" +
--         "ns.sub = {};" +
--         "/** @constructor */ ns.sub.C = function () {};" +
--         "goog.scope(function () {" +
--         "  var sub = ns.sub;" +
--         "  /** @type {sub.C} */" +
--         "  var x = null;" +
--         "});",
--         SCOPE_NAMESPACE +
--         "var ns = {};" +
--         "ns.sub = {};" +
--         "/** @constructor */ ns.sub.C = function () {};" +
--         "$jscomp.scope.x = null;");
+-  public void testStructuralConstructor2() throws Exception {
+-    JSType type = testParseType(
+-        "function (new:?)",
+-        // toString skips unknowns, but isConstructor reveals the truth.
+-        "function (): ?");
+-    assertTrue(type.isConstructor());
+-    assertFalse(type.isNominalConstructor());
 -  }
 -
-   // Alias Recording Tests
-   // TODO(tylerg) : update these to EasyMock style tests once available
-   public void testNoGoogScope() {
+-  public void testStructuralConstructor3() throws Exception {
+-    resolve(parse("@type {function (new:*)} */").getType(),
+-        "constructed type must be an object type");
+-  }
+-
+   public void testNominalConstructor() throws Exception {
+     ObjectType type = testParseType("Array", "(Array|null)").dereference();
+     assertTrue(type.getConstructor().isNominalConstructor());

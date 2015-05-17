@@ -36,6 +36,7 @@ com.google.javascript.rhino.jstype.FunctionType
 com.google.javascript.jscomp.parsing.JsDocToken
 com.google.javascript.jscomp.CheckUnreachableCode
 com.google.javascript.jscomp.ScopeCreator
+com.google.javascript.rhino.testing.TestErrorReporter
 com.google.javascript.jscomp.deps.DependencyInfo
 com.google.javascript.jscomp.FunctionTypeBuilder
 com.google.javascript.jscomp.CompilerOptions
@@ -93,6 +94,7 @@ com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.RhinoException
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.ReferenceCollectingCallback
 com.google.javascript.jscomp.MessageFormatter
 com.google.javascript.jscomp.LoggerErrorManager

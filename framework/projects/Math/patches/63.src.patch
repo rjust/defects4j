@@ -25,6 +25,19 @@ index ab0fe33..887dc66 100644
      }
  
      /**
+@@ -518,6 +524,12 @@ public final class MathUtils {
+      * @param y second array
+      * @return true if the values are both null or have same dimension
+      * and equal elements.
++     * @deprecated This method considers that {@code NaN == NaN}. In release
++     * 3.0, the semantics will change in order to comply with IEEE754 where it
++     * is specified that {@code NaN != NaN}.
++     * New methods have been added for those cases wher the old semantics is
++     * useful (see e.g. {@link #equalsIncludingNaN(double[],double[])
++     * equalsIncludingNaN}.
+      */
+     public static boolean equals(double[] x, double[] y) {
+         if ((x == null) || (y == null)) {
 @@ -1090,6 +1102,29 @@ public final class MathUtils {
      }
  

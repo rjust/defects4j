@@ -2,6 +2,18 @@ diff --git a/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java b/org
 index 984d56d..137d4c5 100644
 --- a/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
 +++ b/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
+@@ -50,11 +50,6 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
+         setDistribution(x);
+     }
+      /**
+-     * {@inheritDoc}
+-     * <p><strong>Note: </strong>This implementation rescales the 
+-     * <code>expected</code> array if necessary to ensure that the sum of the
+-     * expected and observed counts are equal.</p>
+-     * 
+      * @param observed array of observed frequency counts
+      * @param expected array of expected frequency counts
+      * @return chi-square test statistic
 @@ -63,6 +58,8 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
       */
      public double chiSquare(double[] expected, long[] observed)
@@ -52,3 +64,15 @@ index 984d56d..137d4c5 100644
       * @param observed array of observed frequency counts
       * @param expected array of exptected frequency counts
       * @return p-value
+@@ -117,11 +90,6 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
+     }
+ 
+     /**
+-     * {@inheritDoc}
+-     * <p><strong>Note: </strong>This implementation rescales the 
+-     * <code>expected</code> array if necessary to ensure that the sum of the
+-     * expected and observed counts are equal.</p>
+-     * 
+      * @param observed array of observed frequency counts
+      * @param expected array of exptected frequency counts
+      * @param alpha significance level of the test

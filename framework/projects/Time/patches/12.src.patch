@@ -2,6 +2,25 @@ diff --git a/org/joda/time/LocalDate.java b/org/joda/time/LocalDate.java
 index c86b9d7..7bb7a08 100644
 --- a/org/joda/time/LocalDate.java
 +++ b/org/joda/time/LocalDate.java
+@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
+ import java.io.Serializable;
+ import java.util.Calendar;
+ import java.util.Date;
+-import java.util.GregorianCalendar;
+ import java.util.HashSet;
+ import java.util.Locale;
+ import java.util.Set;
+@@ -198,8 +197,8 @@ public final class LocalDate
+      * will only pass in instances of <code>GregorianCalendar</code> however
+      * this is not validated.
+      *
+-     * @param calendar  the Calendar to extract fields from, not null
+-     * @return the created local date, not null
++     * @param calendar  the Calendar to extract fields from
++     * @return the created LocalDate
+      * @throws IllegalArgumentException if the calendar is null
+      * @throws IllegalArgumentException if the date is invalid for the ISO chronology
+      */
 @@ -207,10 +206,8 @@ public final class LocalDate
          if (calendar == null) {
              throw new IllegalArgumentException("The calendar must not be null");
@@ -14,6 +33,17 @@ index c86b9d7..7bb7a08 100644
              calendar.get(Calendar.MONTH) + 1,
              calendar.get(Calendar.DAY_OF_MONTH)
          );
+@@ -231,8 +228,8 @@ public final class LocalDate
+      * <p>
+      * This factory method always creates a LocalDate with ISO chronology.
+      *
+-     * @param date  the Date to extract fields from, not null
+-     * @return the created local date, not null
++     * @param date  the Date to extract fields from
++     * @return the created LocalDate
+      * @throws IllegalArgumentException if the calendar is null
+      * @throws IllegalArgumentException if the date is invalid for the ISO chronology
+      */
 @@ -241,12 +238,6 @@ public final class LocalDate
          if (date == null) {
              throw new IllegalArgumentException("The date must not be null");
@@ -31,6 +61,25 @@ diff --git a/org/joda/time/LocalDateTime.java b/org/joda/time/LocalDateTime.java
 index e75deca..325192b 100644
 --- a/org/joda/time/LocalDateTime.java
 +++ b/org/joda/time/LocalDateTime.java
+@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
+ import java.io.Serializable;
+ import java.util.Calendar;
+ import java.util.Date;
+-import java.util.GregorianCalendar;
+ import java.util.Locale;
+ import java.util.TimeZone;
+ 
+@@ -187,8 +186,8 @@ public final class LocalDateTime
+      * will only pass in instances of <code>GregorianCalendar</code> however
+      * this is not validated.
+      *
+-     * @param calendar  the Calendar to extract fields from, not null
+-     * @return the created local date-time, not null
++     * @param calendar  the Calendar to extract fields from
++     * @return the created LocalDateTime
+      * @throws IllegalArgumentException if the calendar is null
+      * @throws IllegalArgumentException if the date is invalid for the ISO chronology
+      */
 @@ -196,10 +195,8 @@ public final class LocalDateTime
          if (calendar == null) {
              throw new IllegalArgumentException("The calendar must not be null");
@@ -43,6 +92,17 @@ index e75deca..325192b 100644
              calendar.get(Calendar.MONTH) + 1,
              calendar.get(Calendar.DAY_OF_MONTH),
              calendar.get(Calendar.HOUR_OF_DAY),
+@@ -224,8 +221,8 @@ public final class LocalDateTime
+      * <p>
+      * This factory method always creates a LocalDateTime with ISO chronology.
+      *
+-     * @param date  the Date to extract fields from, not null
+-     * @return the created local date-time, not null
++     * @param date  the Date to extract fields from
++     * @return the created LocalDateTime
+      * @throws IllegalArgumentException if the calendar is null
+      * @throws IllegalArgumentException if the date is invalid for the ISO chronology
+      */
 @@ -234,12 +231,6 @@ public final class LocalDateTime
          if (date == null) {
              throw new IllegalArgumentException("The date must not be null");

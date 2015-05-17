@@ -1,0 +1,38 @@
+diff --git a/org/joda/time/chrono/ZonedChronology.java b/org/joda/time/chrono/ZonedChronology.java
+index c518b9a..3fc6b30 100644
+--- a/org/joda/time/chrono/ZonedChronology.java
++++ b/org/joda/time/chrono/ZonedChronology.java
+@@ -518,27 +518,15 @@ public final class ZonedChronology extends AssembledChronology {
+         }
+ 
+         public long roundFloor(long instant) {
+-            if (iTimeField) {
+-                int offset = getOffsetToAdd(instant);
+-                instant = iField.roundFloor(instant + offset);
+-                return instant - offset;
+-            } else {
+-                long localInstant = iZone.convertUTCToLocal(instant);
+-                localInstant = iField.roundFloor(localInstant);
+-                return iZone.convertLocalToUTC(localInstant, false);
+-            }
++            long localInstant = iZone.convertUTCToLocal(instant);
++            localInstant = iField.roundFloor(localInstant);
++            return iZone.convertLocalToUTC(localInstant, false);
+         }
+ 
+         public long roundCeiling(long instant) {
+-            if (iTimeField) {
+-                int offset = getOffsetToAdd(instant);
+-                instant = iField.roundCeiling(instant + offset);
+-                return instant - offset;
+-            } else {
+-                long localInstant = iZone.convertUTCToLocal(instant);
+-                localInstant = iField.roundCeiling(localInstant);
+-                return iZone.convertLocalToUTC(localInstant, false);
+-            }
++            long localInstant = iZone.convertUTCToLocal(instant);
++            localInstant = iField.roundCeiling(localInstant);
++            return iZone.convertLocalToUTC(localInstant, false);
+         }
+ 
+         public long remainder(long instant) {

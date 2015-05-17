@@ -1,16 +1,27 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
-index 5eb3523..298933a 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
-@@ -390,11 +390,6 @@ public class CommandLineRunnerTest extends TestCase {
-          "window.foo = 'foo';");
+diff --git a/com/google/javascript/jscomp/ScopedAliasesTest.java b/com/google/javascript/jscomp/ScopedAliasesTest.java
+index 45ab1b0..a08cd49 100644
+--- a/com/google/javascript/jscomp/ScopedAliasesTest.java
++++ b/com/google/javascript/jscomp/ScopedAliasesTest.java
+@@ -566,22 +566,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
+          SCOPE_NAMESPACE + "/** @type {number} */ $jscomp.scope.a;");
    }
  
--  public void testGetMsgWiringNoWarnings() throws Exception {
--    args.add("--compilation_level=ADVANCED_OPTIMIZATIONS");
--    test("/** @desc A bad foo. */ var MSG_FOO = 1;", "");
+-  public void testIssue1144() {
+-    test("var ns = {};" +
+-         "ns.sub = {};" +
+-         "/** @constructor */ ns.sub.C = function () {};" +
+-         "goog.scope(function () {" +
+-         "  var sub = ns.sub;" +
+-         "  /** @type {sub.C} */" +
+-         "  var x = null;" +
+-         "});",
+-         SCOPE_NAMESPACE +
+-         "var ns = {};" +
+-         "ns.sub = {};" +
+-         "/** @constructor */ ns.sub.C = function () {};" +
+-         "$jscomp.scope.x = null;");
 -  }
 -
-   public void testCssNameWiring() throws Exception {
-     test("var goog = {}; goog.getCssName = function() {};" +
-          "goog.setCssNameMapping = function() {};" +
+   // Alias Recording Tests
+   // TODO(tylerg) : update these to EasyMock style tests once available
+   public void testNoGoogScope() {

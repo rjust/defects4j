@@ -28,6 +28,14 @@ diff --git a/org/apache/commons/math3/optimization/general/AbstractLeastSquaresO
 index 982e559..b6c97e7 100644
 --- a/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
 +++ b/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
+@@ -26,7 +26,6 @@ import org.apache.commons.math3.exception.NumberIsTooSmallException;
+ import org.apache.commons.math3.exception.util.LocalizedFormats;
+ import org.apache.commons.math3.linear.ArrayRealVector;
+ import org.apache.commons.math3.linear.RealMatrix;
+-import org.apache.commons.math3.linear.DiagonalMatrix;
+ import org.apache.commons.math3.linear.DecompositionSolver;
+ import org.apache.commons.math3.linear.MatrixUtils;
+ import org.apache.commons.math3.linear.QRDecomposition;
 @@ -559,16 +558,7 @@ public abstract class AbstractLeastSquaresOptimizer
       * @return the square-root of the weight matrix.
       */

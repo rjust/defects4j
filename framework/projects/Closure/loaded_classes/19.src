@@ -60,6 +60,7 @@ com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.graph.SubGraph
 com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.rhino.jstype.NoType
+com.google.javascript.rhino.testing.Asserts
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.DependencyOptions
 com.google.javascript.jscomp.AbstractCompiler

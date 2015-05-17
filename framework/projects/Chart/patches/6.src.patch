@@ -2,6 +2,34 @@ Index: org/jfree/chart/util/ShapeList.java
 ===================================================================
 --- org/jfree/chart/util/ShapeList.java	(revision 1166)
 +++ org/jfree/chart/util/ShapeList.java	(revision 1164)
+@@ -36,7 +36,6 @@
+  * -------
+  * 13-Aug-2003 : Version 1 (DG);
+  * 21-Jun-2007 : Copied from JCommon (DG);
+- * 17-Jun-2008 : Fixed bug in equals() (DG);
+  *
+  */
+ 
+@@ -71,8 +70,7 @@
+     }
+ 
+     /**
+-     * Sets the {@link Shape} for an item in the list.  The list is expanded 
+-	 * if necessary.
++     * Sets the {@link Shape} for an item in the list.  The list is expanded if necessary.
+      *
+      * @param index  the index (zero-based).
+      * @param shape  the {@link Shape}.
+@@ -86,8 +84,7 @@
+      *
+      * @return A clone.
+      *
+-     * @throws CloneNotSupportedException if an item in the list does not
+-     *         support cloning.
++     * @throws CloneNotSupportedException if an item in the list does not support cloning.
+      */
+     public Object clone() throws CloneNotSupportedException {
+         return super.clone();
 @@ -96,27 +93,26 @@
      /**
       * Tests the list for equality with another object (typically also a list).

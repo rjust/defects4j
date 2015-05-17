@@ -145,7 +145,7 @@ reference to it.
 
 =cut
 sub create_project {
-    @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
+    @_ >= 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
@@ -153,7 +153,7 @@ sub create_project {
     eval { require $module };
     die "Invalid project_id: $pid\n$@" if $@;
 
-    return $class->new();
+    return $class->new(@_);
 }
 
 =pod
@@ -175,21 +175,19 @@ project is F</tmp/"project_id"_"current-time">.
 
 =cut
 sub new {
-    @_ >= 6 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $build_file) = @_;
-    my $prog_root = $ENV{PROG_ROOT}; $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
-    $build_file = "$SCRIPT_DIR/projects/$pid/$pid.build.xml" unless defined $build_file;
+    @_ >= 5 or die $ARG_ERROR;
+    my ($class, $pid, $prog, $vcs, $work_dir, $build_file) = @_;
 
     my $self = {
-        pid        => $pid,
-        prog_name  => $prog,
-        prog_root  => $prog_root,
-        _vcs       => $vcs,
-        _src_dir   => $src,
-        _test_dir  => $test,
-        _build_file =>$build_file,
+        pid         => $pid,
+        prog_name   => $prog,
+        prog_root   => $$ENV{PROG_ROOT} // "/tmp/${pid}_".time,
+        _vcs        => $vcs,
+        _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
+        _build_file => $build_file // "$SCRIPT_DIR/build-scripts/$pid/$pid.build.xml",
     };
     bless $self, $class;
+    $self->_load_layout_map();
     return $self;
 }
 
@@ -225,6 +223,51 @@ sub print_info {
     print "-"x80 . "\n";
 }
 
+# this method will load the cached layout map from the build-scripts dir
+sub _load_layout_map {
+    my $self = shift;
+    my $pid = $self->{pid};
+    my $map_file = "$SCRIPT_DIR/build-scripts/$pid/layout-map.csv";
+    return unless -e $map_file;
+
+    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
+    my $cache = {};
+    while (<IN>) {
+        chomp;
+        /([^,]+),([^,]+),(.+)/ or die;
+        $cache->{$1} = {src=>$2, test=>$3};
+    }
+    close IN;
+    $self->{_layout_cache}=$cache;
+}
+
+# this method adds missing mappings to layout-map in the build-scripts
+# dir synchronously with other processes that may be editing the file
+sub _add_to_layout_map {
+    my ($self, $revision, $src_dir, $test_dir) = @_;
+    die $ARG_ERROR unless @_ == 4;
+
+    my $pid = $self->{pid};
+    my $map_file = "$SCRIPT_DIR/build-scripts/$pid/layout-map.csv";
+    Utils::append_to_file_unless_matches($map_file, "${revision},${src_dir},${test_dir}\n", qr/${revision}/);
+}
+
+# this method checks for the existance of a particular revision in the cached
+# layout map, if not it invokes determine_layout (should be defined per project)
+# to determine src and test directories.
+sub _determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision_id) = @_;
+    unless (defined $self->{_layout_cache}->{$revision_id}) {
+        $self->{_layout_cache}->{$revision_id} = $self->determine_layout($revision_id);
+        $self->_add_to_layout_map($revision_id,
+            $self->{_layout_cache}->{$revision_id}->{src},
+            $self->{_layout_cache}->{$revision_id}->{test}
+        );
+    }
+    return $self->{_layout_cache}->{$revision_id};
+}
+
 =pod
 
 =item B<src_dir> C<src_dir(revision_id)>
@@ -236,7 +279,7 @@ C<revision_id>. The returned path is relative to the working directory.
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
-    return $self->{_src_dir};
+    return $self->_determine_layout($revision_id)->{src};
 }
 
 =pod
@@ -252,7 +295,7 @@ C<revision_id>. The returned path is relative to the working directory.
 sub test_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
-    return $self->{_test_dir};
+    return $self->_determine_layout($revision_id)->{test};
 }
 
 =pod
@@ -360,16 +403,17 @@ sub fix_tests {
 
     my $pid = $self->{pid};
     my $dir = $self->test_dir($revision_id);
+    my $work_dir = $self->{_work_dir};
 
     # TODO: Exclusively use version ids rather than revision ids
-    my $file = "$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id";
+    my $file = "${work_dir}/$pid/failing_tests/${revision_id}";
 
     if (-e $file) {
         $self->exclude_tests_in_file($file, $dir);
     }
 
     # This code added to exclude test dependencies
-    my $dependent_test_file = "$SCRIPT_DIR/projects/$pid/dependent_tests";
+    my $dependent_test_file = "${work_dir}/$pid/dependent_tests";
     if (-e $dependent_test_file) {
         $self->exclude_tests_in_file($dependent_test_file, $dir);
     }
@@ -479,7 +523,8 @@ sub run_evosuite {
     }
     close(IN);
 
-    my $cmd = "java -cp $SCRIPT_DIR/projects/lib/evosuite.jar org.evosuite.EvoSuite " .
+    # TODO: better layout of libs
+    my $cmd = "java -cp $SCRIPT_DIR/build-scripts/lib/evosuite.jar org.evosuite.EvoSuite " .
                 "-class $class " .
                 "-projectCP $cp " .
                 "-Dtest_dir=evosuite-$criterion " .
@@ -873,6 +918,11 @@ Delegate to the apply_patch method of the vcs backend -- see Vcs.pm
 sub apply_patch {
     my ($self, $work_dir, $patch_file, $path) = @_; shift;
     return $self->{_vcs}->apply_patch(@_);
+}
+
+
+sub initialize_revision {
+    my ($self, $revision) = @_; shift;
 }
 
 1;

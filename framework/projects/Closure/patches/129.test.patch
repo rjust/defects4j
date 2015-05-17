@@ -1,28 +1,36 @@
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
-index c7067e9..0c7ef23 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
-@@ -2415,23 +2415,6 @@ public class IntegrationTest extends IntegrationTestCase {
-     test(options, code, ConstCheck.CONST_REASSIGNED_VALUE_ERROR);
+diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+index bda75f7..77e5e95 100644
+--- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+@@ -27,11 +27,8 @@ import com.google.javascript.rhino.Node;
+ public class CollapsePropertiesTest extends CompilerTestCase {
+ 
+   private static String EXTERNS =
+-      "var window;\n" +
+-      "function alert(s) {}\n" +
+-      "function parseInt(s) {}\n" +
+-      "/** @constructor */ function String() {};\n" +
+-      "var arguments";
++      "var window; function alert(s) {} function parseInt(s) {}" +
++      "/** @constructor */ function String() {}";
+ 
+   private boolean collapsePropertiesOnExternTypes = false;
+ 
+@@ -1096,17 +1093,6 @@ public class CollapsePropertiesTest extends CompilerTestCase {
+          "}", null, null);
    }
  
--  public void testIssue937() {
--    CompilerOptions options = createCompilerOptions();
--    CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
--    level.setOptionsForCompilationLevel(options);
--    WarningLevel warnings = WarningLevel.DEFAULT;
--    warnings.setOptionsForWarningLevel(options);
--
--    String code = "" +
--        "console.log(" +
--            "/** @type {function():!string} */ ((new x())['abc'])() );";
--    String result = "" +
--        "console.log((new x()).abc());";
--    test(options, code, result);
+-  public void testIssue931() {
+-    collapsePropertiesOnExternTypes = true;
+-    testSame(
+-      "function f() {\n" +
+-      "  return function () {\n" +
+-      "    var args = arguments;\n" +
+-      "    setTimeout(function() { alert(args); }, 0);\n" +
+-      "  }\n" +
+-      "};\n");
 -  }
 -
--
--
-   public void testIssue787() {
-     CompilerOptions options = createCompilerOptions();
-     CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
+   public void testDoNotCollapsePropertyOnExternType() {
+     collapsePropertiesOnExternTypes = false;
+     test("String.myFunc = function() {}; String.myFunc()",

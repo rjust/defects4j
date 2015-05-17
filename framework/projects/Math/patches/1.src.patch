@@ -37,6 +37,16 @@ index 002dae9..08d3b95 100644
      }
  
      /**
+@@ -185,7 +182,8 @@ public class Fraction
+             throw new FractionConversionException(value, a0, 1l);
+         }
+ 
+-        // check for (almost) integer arguments, which should not go to iterations.
++        // check for (almost) integer arguments, which should not go
++        // to iterations.
+         if (FastMath.abs(a0 - value) < epsilon) {
+             this.numerator = (int) a0;
+             this.denominator = 1;
 @@ -208,13 +206,7 @@ public class Fraction
              long a1 = (long)FastMath.floor(r1);
              p2 = (a1 * p1) + p0;

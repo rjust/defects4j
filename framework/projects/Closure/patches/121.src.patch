@@ -1,21 +1,24 @@
-diff --git a/com/google/javascript/jscomp/InlineVariables.java b/com/google/javascript/jscomp/InlineVariables.java
-index 5c9df61..b150053 100644
---- a/com/google/javascript/jscomp/InlineVariables.java
-+++ b/com/google/javascript/jscomp/InlineVariables.java
-@@ -299,14 +299,8 @@ class InlineVariables implements CompilerPass {
-       // reference data is out of sync. We're better off just waiting for
-       // the next pass.)
-       if (!maybeModifiedArguments &&
--          !staleVars.contains(v) &&
--          referenceInfo.isWellDefined() &&
--          referenceInfo.isAssignedOnceInLifetime() &&
--          // Inlining the variable based solely on well-defined and assigned
--          // once is *NOT* correct. We relax the correctness requirement if
--          // the variable is declared constant.
--          (isInlineableDeclaredConstant(v, referenceInfo) ||
--           referenceInfo.isOnlyAssignmentSameScopeAsDeclaration())) {
-+          !staleVars.contains(v) && referenceInfo.isWellDefined() &&
-+          referenceInfo.isAssignedOnceInLifetime()) {
-         List<Reference> refs = referenceInfo.references;
-         for (int i = 1 /* start from a read */; i < refs.size(); i++) {
-           Node nameNode = refs.get(i).getNode();
+diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+index 936af02..c916cf8 100644
+--- a/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -74,7 +74,6 @@ import com.google.javascript.rhino.head.ast.WithStatement;
+ import com.google.javascript.rhino.jstype.StaticSourceFile;
+ 
+ import java.util.Set;
+-import java.util.regex.Pattern;
+ 
+ /**
+  * IRFactory transforms the new AST to the old AST.
+@@ -249,8 +248,9 @@ class IRFactory {
+    * Check to see if the given block comment looks like it should be JSDoc.
+    */
+   private void handleBlockComment(Comment comment) {
+-    Pattern p = Pattern.compile("(/|(\n[ \t]*))\\*[ \t]*@[a-zA-Z]");
+-    if (p.matcher(comment.getValue()).find()) {
++    String value = comment.getValue();
++    if (value.indexOf("/* @") != -1 ||
++        value.indexOf("\n * @") != -1) {
+       errorReporter.warning(
+           SUSPICIOUS_COMMENT_WARNING,
+           sourceName,

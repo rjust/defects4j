@@ -2,6 +2,45 @@ Index: org/jfree/data/xy/XYSeries.java
 ===================================================================
 --- org/jfree/data/xy/XYSeries.java	(revision 1696)
 +++ org/jfree/data/xy/XYSeries.java	(revision 1695)
+@@ -71,7 +71,6 @@
+  * 22-Nov-2007 : Reimplemented clone() (DG);
+  * 01-May-2008 : Fixed bug 1955483 in addOrUpdate() method, thanks to
+  *               Ted Schwartz (DG);
+- * 24-Nov-2008 : Further fix for 1955483 (DG);
+  *
+  */
+ 
+@@ -297,18 +296,14 @@
+     }
+ 
+     /**
+-     * Adds a new data item to the series (in the correct position if the
+-     * <code>autoSort</code> flag is set for the series) and sends a
+-     * {@link SeriesChangeEvent} to all registered listeners.
++     * Adds new data to the series and sends a {@link SeriesChangeEvent} to
++     * all registered listeners.
+      * <P>
+      * Throws an exception if the x-value is a duplicate AND the
+      * allowDuplicateXValues flag is false.
+      *
+      * @param x  the x-value (<code>null</code> not permitted).
+      * @param y  the y-value (<code>null</code> permitted).
+-     *
+-     * @throws SeriesException if the x-value is a duplicate and the
+-     *     <code>allowDuplicateXValues</code> flag is not set for this series.
+      */
+     public void add(Number x, Number y) {
+         // argument checking delegated...
+@@ -529,7 +524,8 @@
+ 
+     /**
+      * Adds or updates an item in the series and sends a
+-     * {@link SeriesChangeEvent} to all registered listeners.
++     * {@link org.jfree.data.general.SeriesChangeEvent} to all registered
++     * listeners.
+      *
+      * @param x  the x-value (<code>null</code> not permitted).
+      * @param y  the y-value (<code>null</code> permitted).
 @@ -541,15 +537,9 @@
          if (x == null) {
              throw new IllegalArgumentException("Null 'x' argument.");

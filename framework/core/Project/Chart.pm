@@ -45,15 +45,20 @@ my $PID = "Chart";
 
 sub new {
     my $class = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "jfreechart";
-    my $src  = "source";
-    my $test = "tests";
     my $vcs = Vcs::Svn->new($PID,
                             "file://$REPO_DIR/$name/trunk",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$work_dir/$PID/commit-db",
                             \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
+}
+
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision_id) = @_;
+    return {src=>"source", test=>"tests"};
 }
 
 sub _post_checkout {
@@ -62,7 +67,7 @@ sub _post_checkout {
     my ($vcs, $revision, $work_dir) = @_;
     my $name = $vcs->{prog_name};
 
-    my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
+    my $compile_errors = "$SCRIPT_DIR/build-scripts/$PID/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
     my @entries = readdir(DIR);
     closedir(DIR);

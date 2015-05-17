@@ -1,39 +1,100 @@
-diff --git a/com/google/javascript/jscomp/CompilerRunnerTest.java b/com/google/javascript/jscomp/CompilerRunnerTest.java
-index b9d7037..c51444f 100644
---- a/com/google/javascript/jscomp/CompilerRunnerTest.java
-+++ b/com/google/javascript/jscomp/CompilerRunnerTest.java
-@@ -40,11 +40,7 @@ public class CompilerRunnerTest extends TestCase {
-   /** Externs for the test */
-   private final JSSourceFile[] externs = new JSSourceFile[] {
-     JSSourceFile.fromCode("externs",
--        "var arguments;" +
--        "/** @constructor \n * @param {...*} var_args \n " +
--        "* @return {!Array} */ " +
--        "function Array(var_args) {}\n"
--        + "/** @constructor */ function Window() {}\n"
-+        "/** @constructor */ function Window() {}\n"
-         + "/** @type {string} */ Window.prototype.name;\n"
-         + "/** @type {Window} */ var window;"
-         + "/** @nosideeffects */ function noSideEffects() {}")
-@@ -172,21 +168,6 @@ public class CompilerRunnerTest extends TestCase {
-          "eval(\"1\");(0,eval)(\"2\");");
+diff --git a/com/google/javascript/jscomp/CheckUnreachableCodeTest.java b/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
+index 82d7bd9..a76b4a4 100644
+--- a/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
++++ b/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
+@@ -136,11 +136,6 @@ public class CheckUnreachableCodeTest extends CompilerTestCase {
+     testSame("switch (x) { default: throw x; break; }");
    }
  
--  public void testIssue115() {
--    CompilerRunner.FLAG_compilation_level.setForTest(
--        CompilationLevel.SIMPLE_OPTIMIZATIONS);
--    CompilerRunner.FLAG_warning_level.setForTest(
--        WarningLevel.VERBOSE);
--    test("function f() { " +
--         "  var arguments = Array.prototype.slice.call(arguments, 0);" +
--         "  return arguments[0]; " +
--         "}",
--         "function f() { " +
--         "  arguments = Array.prototype.slice.call(arguments, 0);" +
--         "  return arguments[0]; " +
--         "}");
+-  public void testInstanceOfThrowsException() {
+-    testSame("function f() {try { if (value instanceof type) return true; } " +
+-             "catch (e) { }}");
+-  }
+-  
+   private void assertUnreachable(String js) {
+     test(js, js, CheckUnreachableCode.UNREACHABLE_CODE);
+   }
+diff --git a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+index f63e937..4175682 100644
+--- a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
++++ b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+@@ -1240,18 +1240,12 @@ public class ControlFlowAnalysisTest extends TestCase {
+     testCfg(src, expectedWhenNotTraversingFunctions, false);
+   }
+ 
+-  public void testInstanceOf() {
+-    String src = "try { x instanceof 'x' } catch (e) { }";
+-    ControlFlowGraph<Node> cfg = createCfg(src, true);
+-    assertCrossEdge(cfg, Token.EXPR_RESULT, Token.BLOCK, Branch.ON_EX);
+-  }
+-  
+   public void testSynBlock() {
+     String src = "START(); var x; END()";
+     ControlFlowGraph<Node> cfg = createCfg(src, true);
+     assertDownEdge(cfg, Token.BLOCK, Token.EXPR_RESULT, Branch.SYN_BLOCK);
+   }
+-  
++
+   public void testPartialTraversalOfScope() {
+     Compiler compiler = new Compiler();
+     ControlFlowAnalysis cfa = new ControlFlowAnalysis(compiler, true);
+diff --git a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+index 7facdb3..3c2f0ea 100644
+--- a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
++++ b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+@@ -584,28 +584,6 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
+     testSets(true, js, "{a=[[Bar.prototype, Foo.prototype]]}");
+   }
+ 
+-  public void testSupertypeReferenceOfSubtypeProperty() {
+-    String externs = ""
+-        + "/** @constructor */ function Ext() {}"
+-        + "Ext.prototype.a;";
+-    String js = ""
+-        + "/** @constructor */ function Foo() {}\n"
+-        + "/** @constructor \n@extends Foo*/ function Bar() {}\n"
+-        + "Bar.prototype.a;\n"
+-        + "/** @param {Foo} foo */"
+-        + "function foo(foo) {\n"
+-        + "  var x = foo.a;\n"
+-        + "}\n";
+-    String result = ""
+-        + "function Foo() {}\n"
+-        + "function Bar() {}\n"
+-        + "Bar.prototype.Bar_prototype$a;\n"
+-        + "function foo(foo) {\n"
+-        + "  var x = foo.Bar_prototype$a;\n"
+-        + "}\n";
+-    testSets(false, externs, js, result, "{a=[[Bar.prototype]]}");
 -  }
 -
-   public void testDebugFlag1() {
-     CompilerRunner.FLAG_compilation_level.setForTest(
-         CompilationLevel.SIMPLE_OPTIMIZATIONS);
+   public void testObjectLiteralNotRenamed() {
+     String js = ""
+         + "var F = {a:'a', b:'b'};"
+@@ -913,26 +891,6 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
+     testSets(true, js, output, "{a=[[Bar.prototype], [Foo.prototype]]}");
+   }
+ 
+-  public void testCustomInherits() {
+-    String js = "Object.prototype.inheritsFrom = function(shuper) {\n" +
+-        "  /** @constructor */\n" +
+-        "  function Inheriter() { }\n" +
+-        "  Inheriter.prototype = shuper.prototype;\n" +
+-        "  this.prototype = new Inheriter();\n" +
+-        "  this.superConstructor = shuper;\n" +
+-        "};\n" +
+-        "function Foo(var1, var2, strength) {\n" +
+-        "  Foo.superConstructor.call(this, strength);\n" +
+-        "}" +
+-        "Foo.inheritsFrom(Object);";
+-
+-    String externs = "" +
+-        "function Function(var_args) {}" +
+-        "/** @return {*} */Function.prototype.call = function(var_args) {};";
+-
+-    testSets(false, externs, js, js, "{}");
+-  }
+-
+   public void runFindHighestTypeInChain() {
+     // Check that this doesn't go into an infinite loop.
+     DisambiguateProperties.forJSTypeSystem(new Compiler())

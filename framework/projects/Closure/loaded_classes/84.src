@@ -10,6 +10,8 @@ com.google.javascript.jscomp.parsing.Config
 com.google.javascript.rhino.ScriptRuntime
 com.google.javascript.rhino.jstype.ObjectType
 com.google.javascript.rhino.jstype.FunctionType
+com.google.javascript.rhino.testing.TestErrorReporter
+com.google.javascript.jscomp.testing.TestErrorReporter
 com.google.javascript.rhino.jstype.RecordTypeBuilder
 com.google.javascript.rhino.jstype.JSType
 com.google.javascript.rhino.jstype.UnresolvedTypeExpression
@@ -26,6 +28,7 @@ com.google.javascript.rhino.jstype.RecordType
 com.google.javascript.rhino.jstype.InstanceObjectType
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.RhinoException
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.jstype.IndexedType
 com.google.javascript.rhino.jstype.VoidType
 com.google.javascript.rhino.jstype.UnknownType

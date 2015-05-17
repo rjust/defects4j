@@ -2,6 +2,18 @@ diff --git a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
 index 3d4c238..ffd969f 100644
 --- a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
 +++ b/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
+@@ -20,10 +20,8 @@ import java.io.IOException;
+ import java.io.Writer;
+ 
+ /**
+- * Translate XML numeric entities of the form &#[xX]?\d+;? to 
++ * Translate XML numeric entities of the form &#[xX]?\d+; to 
+  * the specific codepoint.
+- *
+- * Note that the semi-colon is optional.
+  * 
+  * @since 3.0
+  * @version $Id$
 @@ -35,9 +33,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
       */
      @Override

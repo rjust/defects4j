@@ -2,6 +2,22 @@ Index: org/jfree/data/KeyedObjects2D.java
 ===================================================================
 --- org/jfree/data/KeyedObjects2D.java	(revision 227)
 +++ org/jfree/data/KeyedObjects2D.java	(revision 225)
+@@ -102,12 +102,10 @@
+     /**
+      * Returns the object for a given row and column.
+      *
+-     * @param row  the row index (in the range 0 to getRowCount() - 1).
+-     * @param column  the column index (in the range 0 to getColumnCount() - 1).
++     * @param row  the row index.
++     * @param column  the column index.
+      *
+-     * @return The object (possibly <code>null</code>).
+-     * 
+-     * @see #getObject(Comparable, Comparable)
++     * @return The object.
+      */
+     public Object getObject(int row, int column) {
+         Object result = null;
 @@ -201,52 +199,33 @@
      /**
       * Returns the object for the given row and column keys.

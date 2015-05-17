@@ -2,6 +2,25 @@ diff --git a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/com/goo
 index 0fcb778..7eb9926 100644
 --- a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
 +++ b/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+@@ -45,18 +45,7 @@ import java.util.Set;
+ class MakeDeclaredNamesUnique
+     implements NodeTraversal.ScopedCallback {
+ 
+-  // Arguments is special cased to handle cases where a local name shadows
+-  // the arguments declaration.
+   public static final String ARGUMENTS = "arguments";
+-
+-  // The name stack is similiar to how we model scopes but handles some
+-  // additional cases that are not handled by the current Scope object.
+-  // Specifically, a Scope currently has only two concepts of scope (global,
+-  // and function local).  But there are in reality a couple of additional
+-  // case to worry about:
+-  //   catch expressions
+-  //   function expressions names
+-  // Both belong to a scope by themselves.
+   private Deque<Renamer> nameStack = new ArrayDeque<Renamer>();
+   private final Renamer rootRenamer;
+ 
 @@ -88,7 +77,18 @@ class MakeDeclaredNamesUnique
        renamer = nameStack.peek().forChildScope();
      }

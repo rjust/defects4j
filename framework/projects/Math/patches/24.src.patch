@@ -2,6 +2,21 @@ diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.jav
 index cff5bfd..ee2227c 100644
 --- a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
 +++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+@@ -80,13 +80,12 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+         if (abs <= 0) {
+             throw new NotStrictlyPositiveException(abs);
+         }
+-
+         relativeThreshold = rel;
+         absoluteThreshold = abs;
+     }
+ 
+     /**
+-     * The arguments are used for implementing the original stopping criterion
++     * The arguments are used implement the original stopping criterion
+      * of Brent's algorithm.
+      * {@code abs} and {@code rel} define a tolerance
+      * {@code tol = rel |x| + abs}. {@code rel} should be no smaller than
 @@ -227,7 +226,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
  
                  if (checker != null) {

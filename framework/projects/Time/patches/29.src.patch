@@ -1,0 +1,35 @@
+diff --git a/org/joda/time/LocalDate.java b/org/joda/time/LocalDate.java
+index 47e2000..45415dc 100644
+--- a/org/joda/time/LocalDate.java
++++ b/org/joda/time/LocalDate.java
+@@ -826,9 +826,6 @@ public final class LocalDate
+      * Converts this object to an Interval representing the whole day
+      * in the default time zone.
+      * <p>
+-     * The interval may have more or less than 24 hours if this is a daylight
+-     * savings cutover date.
+-     * <p>
+      * This instance is immutable and unaffected by this method call.
+      *
+      * @return a interval over the day
+@@ -840,9 +837,6 @@ public final class LocalDate
+     /**
+      * Converts this object to an Interval representing the whole day.
+      * <p>
+-     * The interval may have more or less than 24 hours if this is a daylight
+-     * savings cutover date.
+-     * <p>
+      * This instance is immutable and unaffected by this method call.
+      *
+      * @param zone  the zone to get the Interval in, null means default
+@@ -850,9 +844,7 @@ public final class LocalDate
+      */
+     public Interval toInterval(DateTimeZone zone) {
+         zone = DateTimeUtils.getZone(zone);
+-        DateTime start = toDateTimeAtStartOfDay(zone);
+-        DateTime end = plusDays(1).toDateTimeAtStartOfDay(zone);
+-        return new Interval(start, end);
++        return toDateMidnight(zone).toInterval();
+     }
+ 
+     //-----------------------------------------------------------------------

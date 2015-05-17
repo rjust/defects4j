@@ -106,6 +106,7 @@ com.google.javascript.jscomp.Compiler
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.SourcePosition
 com.google.javascript.jscomp.CodingConventions
 com.google.javascript.rhino.jstype.StaticReference

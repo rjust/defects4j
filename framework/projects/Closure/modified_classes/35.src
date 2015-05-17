@@ -1,1 +1,5 @@
+com.google.javascript.rhino.jstype.UnionType
+com.google.javascript.rhino.jstype.PrototypeObjectType
+com.google.javascript.rhino.jstype.JSType
+com.google.javascript.rhino.jstype.ProxyObjectType
 com.google.javascript.jscomp.TypeInference

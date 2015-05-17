@@ -43,7 +43,7 @@ our @ISA = qw(Vcs);
 sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision, $work_dir) = @_;
-    return "git clone $self->{repo} ${work_dir} && cd $work_dir && git checkout $revision 2>&1";
+    return "git clone $self->{repo} ${work_dir} 2>&1 && cd $work_dir && git checkout $revision 2>&1";
 }
 
 sub _apply_cmd {
@@ -59,6 +59,15 @@ sub _diff_cmd {
     my ($self, $rev1, $rev2, $path) = @_;
     $path = defined $path ? ":$path" : "";
     return "git --git-dir=$self->{repo} diff ${rev1}$path ${rev2}$path";
+}
+
+# This helps define whether rev2 comes after another rev1
+sub comes_before {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $rev1, $rev2) = @_;
+    my $log = `git --git-dir=$self->{repo} log -n 1 ${rev1}^..${rev2}`;
+    die unless $? == 0;
+    return $log eq '' ? 0 : 1;
 }
 
 

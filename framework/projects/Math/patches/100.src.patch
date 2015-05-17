@@ -2,6 +2,15 @@ diff --git a/org/apache/commons/math/estimation/AbstractEstimator.java b/org/apa
 index 8e5fe1a..19e06a0 100644
 --- a/org/apache/commons/math/estimation/AbstractEstimator.java
 +++ b/org/apache/commons/math/estimation/AbstractEstimator.java
+@@ -149,7 +149,7 @@ public abstract class AbstractEstimator implements Estimator {
+     }
+ 
+     /**
+-     * Get the covariance matrix of unbound estimated parameters.
++     * Get the covariance matrix of estimated parameters.
+      * @param problem estimation problem
+      * @return covariance matrix
+      * @exception EstimationException if the covariance matrix
 @@ -163,7 +163,7 @@ public abstract class AbstractEstimator implements Estimator {
  
          // compute transpose(J).J, avoiding building big intermediate matrices
@@ -11,6 +20,15 @@ index 8e5fe1a..19e06a0 100644
          final int max  = cols * rows;
          double[][] jTj = new double[cols][cols];
          for (int i = 0; i < cols; ++i) {
+@@ -188,7 +188,7 @@ public abstract class AbstractEstimator implements Estimator {
+     }
+ 
+     /**
+-     * Guess the errors in unbound estimated parameters.
++     * Guess the errors in estimated parameters.
+      * <p>Guessing is covariance-based, it only gives rough order of magnitude.</p>
+      * @param problem estimation problem
+      * @return errors in estimated parameters
 @@ -199,12 +199,12 @@ public abstract class AbstractEstimator implements Estimator {
      public double[] guessParametersErrors(EstimationProblem problem)
        throws EstimationException {

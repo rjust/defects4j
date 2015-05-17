@@ -53,6 +53,7 @@ com.google.javascript.jscomp.parsing.ParserRunner
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.rhino.jstype.NoType
+com.google.javascript.rhino.testing.Asserts
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.DependencyOptions
 com.google.javascript.jscomp.AbstractCompiler
@@ -89,6 +90,7 @@ com.google.javascript.jscomp.Compiler
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.CodingConventions
 com.google.javascript.rhino.jstype.StaticReference
 com.google.javascript.jscomp.ReferenceCollectingCallback

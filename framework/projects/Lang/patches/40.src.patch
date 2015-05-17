@@ -2,6 +2,17 @@ diff --git a/org/apache/commons/lang/StringUtils.java b/org/apache/commons/lang/
 index 8351b3e..6ad364b 100644
 --- a/org/apache/commons/lang/StringUtils.java
 +++ b/org/apache/commons/lang/StringUtils.java
+@@ -1020,8 +1020,8 @@ public class StringUtils {
+ 
+     /**
+      * <p>Checks if String contains a search String irrespective of case,
+-     * handling <code>null</code>. Case-insensitivity is defined as by
+-     * {@link String#equalsIgnoreCase(String)}.
++     * handling <code>null</code>. This method uses
++     * {@link #contains(String, String)}.</p>
+      *
+      * <p>A <code>null</code> String will return <code>false</code>.</p>
+      *
 @@ -1045,14 +1045,7 @@ public class StringUtils {
          if (str == null || searchStr == null) {
              return false;

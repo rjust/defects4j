@@ -2,6 +2,22 @@ Index: org/jfree/data/time/TimeSeries.java
 ===================================================================
 --- org/jfree/data/time/TimeSeries.java	(revision 2227)
 +++ org/jfree/data/time/TimeSeries.java	(revision 2225)
+@@ -84,7 +84,6 @@
+  *               storage are cloned to keep series isolated from external
+  *               changes (DG);
+  * 10-Jun-2009 : Added addOrUpdate(TimeSeriesDataItem) method (DG);
+- * 31-Aug-2009 : Clear minY and maxY cache values in createCopy (DG);
+  *
+  */
+ 
+@@ -1047,6 +1046,7 @@
+      */
+     public TimeSeries createCopy(int start, int end)
+             throws CloneNotSupportedException {
++
+         if (start < 0) {
+             throw new IllegalArgumentException("Requires start >= 0.");
+         }
 @@ -1054,8 +1054,7 @@
              throw new IllegalArgumentException("Requires start <= end.");
          }

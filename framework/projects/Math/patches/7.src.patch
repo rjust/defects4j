@@ -48,3 +48,11 @@ index 6e0237f..00827db 100644
                      return eventT;
                  }
  
+@@ -385,7 +383,6 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+ 
+             }
+ 
+-            // last part of the step, after the last event
+             interpolator.setInterpolatedTime(currentT);
+             final double[] currentY = interpolator.getInterpolatedState();
+             for (final EventState state : eventsStates) {

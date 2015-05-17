@@ -1,22 +1,17 @@
-diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
-index 1dc33b7..2270c17 100644
---- a/com/google/javascript/jscomp/CodeGenerator.java
-+++ b/com/google/javascript/jscomp/CodeGenerator.java
-@@ -782,16 +782,13 @@ class CodeGenerator {
- 
-   static boolean isSimpleNumber(String s) {
-     int len = s.length();
--    if (len == 0) {
--      return false;
--    }
-     for (int index = 0; index < len; index++) {
-       char c = s.charAt(index);
-       if (c < '0' || c > '9') {
-         return false;
+diff --git a/com/google/javascript/jscomp/PrepareAst.java b/com/google/javascript/jscomp/PrepareAst.java
+index 42982af..eda524e 100644
+--- a/com/google/javascript/jscomp/PrepareAst.java
++++ b/com/google/javascript/jscomp/PrepareAst.java
+@@ -161,12 +161,6 @@ class PrepareAst implements CompilerPass {
+       // Keep track of of the "this" context of a call.  A call without an
+       // explicit "this" is a free call.
+       Node first = n.getFirstChild();
+-
+-      // ignore cast nodes.
+-      while (first.isCast()) {
+-        first = first.getFirstChild();
+-      }
+-
+       if (!NodeUtil.isGet(first)) {
+         n.putBooleanProp(Node.FREE_CALL, true);
        }
-     }
--    return len == 1 || s.charAt(0) != '0';
-+    return len > 0 && s.charAt(0) != '0';
-   }
- 
-   static double getSimpleNumber(String s) {

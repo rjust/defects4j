@@ -1,86 +1,30 @@
---- com.google.javascript.jscomp.ExploitAssignsTest::testIssue1017
-junit.framework.AssertionFailedError: 
-Expected: x=x.parentNode.parentNode;x=x.parentNode.parentNode
-Result: x=x=x.parentNode.parentNode
-Node tree inequality:
-Tree1:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
-        EXPR_RESULT 1 [source_file: expected0]
-            ASSIGN 1 [source_file: expected0]
-                NAME x 1 [source_file: expected0]
-                GETPROP 1 [source_file: expected0]
-                    GETPROP 1 [source_file: expected0]
-                        NAME x 1 [source_file: expected0]
-                        STRING parentNode 1 [source_file: expected0]
-                    STRING parentNode 1 [source_file: expected0]
-        EXPR_RESULT 1 [source_file: expected0]
-            ASSIGN 1 [source_file: expected0]
-                NAME x 1 [source_file: expected0]
-                GETPROP 1 [source_file: expected0]
-                    GETPROP 1 [source_file: expected0]
-                        NAME x 1 [source_file: expected0]
-                        STRING parentNode 1 [source_file: expected0]
-                    STRING parentNode 1 [source_file: expected0]
-
-
-Tree2:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
-        EXPR_RESULT 1 [source_file: testcode]
-            ASSIGN 1 [source_file: testcode]
-                NAME x 1 [source_file: testcode]
-                ASSIGN 1 [source_file: testcode]
-                    NAME x 1 [source_file: testcode]
-                    GETPROP 1 [source_file: testcode]
-                        GETPROP 1 [source_file: testcode]
-                            NAME x 1 [source_file: testcode]
-                            STRING parentNode 1 [source_file: testcode]
-                        STRING parentNode 1 [source_file: testcode]
-
-
-Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
-    EXPR_RESULT 1 [source_file: expected0]
-        ASSIGN 1 [source_file: expected0]
-            NAME x 1 [source_file: expected0]
-            GETPROP 1 [source_file: expected0]
-                GETPROP 1 [source_file: expected0]
-                    NAME x 1 [source_file: expected0]
-                    STRING parentNode 1 [source_file: expected0]
-                STRING parentNode 1 [source_file: expected0]
-    EXPR_RESULT 1 [source_file: expected0]
-        ASSIGN 1 [source_file: expected0]
-            NAME x 1 [source_file: expected0]
-            GETPROP 1 [source_file: expected0]
-                GETPROP 1 [source_file: expected0]
-                    NAME x 1 [source_file: expected0]
-                    STRING parentNode 1 [source_file: expected0]
-                STRING parentNode 1 [source_file: expected0]
-
-
-Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
-    EXPR_RESULT 1 [source_file: testcode]
-        ASSIGN 1 [source_file: testcode]
-            NAME x 1 [source_file: testcode]
-            ASSIGN 1 [source_file: testcode]
-                NAME x 1 [source_file: testcode]
-                GETPROP 1 [source_file: testcode]
-                    GETPROP 1 [source_file: testcode]
-                        NAME x 1 [source_file: testcode]
-                        STRING parentNode 1 [source_file: testcode]
-                    STRING parentNode 1 [source_file: testcode]
-
-	at junit.framework.Assert.fail(Assert.java:57)
-	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.Assert.assertNull(Assert.java:277)
-	at junit.framework.TestCase.assertNull(TestCase.java:447)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
-	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:599)
-	at com.google.javascript.jscomp.ExploitAssignsTest.testIssue1017(ExploitAssignsTest.java:161)
+--- com.google.javascript.jscomp.TypeCheckTest::testIssue1002
+java.lang.IllegalStateException
+	at com.google.common.base.Preconditions.checkState(Preconditions.java:133)
+	at com.google.javascript.rhino.jstype.FunctionType.getInstanceType(FunctionType.java:1071)
+	at com.google.javascript.jscomp.TypeCheck.visitNew(TypeCheck.java:1663)
+	at com.google.javascript.jscomp.TypeCheck.visit(TypeCheck.java:591)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:540)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseFunction(NodeTraversal.java:574)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:528)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseWithScope(NodeTraversal.java:353)
+	at com.google.javascript.jscomp.TypeCheck.check(TypeCheck.java:422)
+	at com.google.javascript.jscomp.TypeCheck.process(TypeCheck.java:393)
+	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:411)
+	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheckWithScope(TypeCheckTest.java:12021)
+	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheck(TypeCheckTest.java:11993)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:11960)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:11955)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:11891)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:11887)
+	at com.google.javascript.jscomp.TypeCheckTest.testIssue1002(TypeCheckTest.java:6741)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

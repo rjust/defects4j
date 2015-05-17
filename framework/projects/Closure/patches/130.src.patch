@@ -1,13 +1,22 @@
-diff --git a/com/google/javascript/jscomp/CollapseProperties.java b/com/google/javascript/jscomp/CollapseProperties.java
-index f86625f..ab2d2c7 100644
---- a/com/google/javascript/jscomp/CollapseProperties.java
-+++ b/com/google/javascript/jscomp/CollapseProperties.java
-@@ -169,7 +169,7 @@ class CollapseProperties implements CompilerPass {
-         continue;
-       }
+diff --git a/com/google/javascript/rhino/TokenStream.java b/com/google/javascript/rhino/TokenStream.java
+index cadb536..73fed17 100644
+--- a/com/google/javascript/rhino/TokenStream.java
++++ b/com/google/javascript/rhino/TokenStream.java
+@@ -190,15 +190,11 @@ public class TokenStream {
+     public static boolean isJSIdentifier(String s) {
+       int length = s.length();
  
--      if (!name.inExterns && name.globalSets == 1 && name.localSets == 0 &&
-+      if (name.globalSets == 1 && name.localSets == 0 &&
-           name.aliasingGets > 0) {
-         // {@code name} meets condition (b). Find all of its local aliases
-         // and try to inline them.
+-      if (length == 0 ||
+-          Character.isIdentifierIgnorable(s.charAt(0)) ||
+-          !Character.isJavaIdentifierStart(s.charAt(0))) {
++      if (length == 0 || !Character.isJavaIdentifierStart(s.charAt(0)))
+         return false;
+-      }
+ 
+       for (int i = 1; i < length; i++) {
+-        if (Character.isIdentifierIgnorable(s.charAt(i)) ||
+-            !Character.isJavaIdentifierPart(s.charAt(i))) {
++        if (!Character.isJavaIdentifierPart(s.charAt(i))) {
+           return false;
+         }
+       }

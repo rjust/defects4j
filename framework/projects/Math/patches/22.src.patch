@@ -11,6 +11,45 @@ index e301e2e..8b0993c 100644
      }
  
      /** {@inheritDoc} */
+diff --git a/org/apache/commons/math3/distribution/RealDistribution.java b/org/apache/commons/math3/distribution/RealDistribution.java
+index 90dc8fd..f09c5ac 100644
+--- a/org/apache/commons/math3/distribution/RealDistribution.java
++++ b/org/apache/commons/math3/distribution/RealDistribution.java
+@@ -137,26 +137,18 @@ public interface RealDistribution {
+     double getSupportUpperBound();
+ 
+     /**
+-     * Whether or not the lower bound of support is in the domain of the density
+-     * function.  Returns true iff {@code getSupporLowerBound()} is finite and
+-     * {@code density(getSupportLowerBound())} returns a non-NaN, non-infinite
+-     * value.
+-     *
+-     * @return true if the lower bound of support is finite and the density 
+-     * function returns a non-NaN, non-infinite value there
+-     * @deprecated to be removed in 4.0
++     * Use this method to get information about whether the lower bound
++     * of the support is inclusive or not.
++     *
++     * @return whether the lower bound of the support is inclusive or not
+      */
+     boolean isSupportLowerBoundInclusive();
+ 
+     /**
+-     * Whether or not the upper bound of support is in the domain of the density
+-     * function.  Returns true iff {@code getSupportUpperBound()} is finite and
+-     * {@code density(getSupportUpperBound())} returns a non-NaN, non-infinite
+-     * value.
+-     *
+-     * @return true if the upper bound of support is finite and the density 
+-     * function returns a non-NaN, non-infinite value there
+-     * @deprecated to be removed in 4.0
++     * Use this method to get information about whether the upper bound
++     * of the support is inclusive or not.
++     *
++     * @return whether the upper bound of the support is inclusive or not
+      */
+     boolean isSupportUpperBoundInclusive();
+ 
 diff --git a/org/apache/commons/math3/distribution/UniformRealDistribution.java b/org/apache/commons/math3/distribution/UniformRealDistribution.java
 index 0d279de..5d32f6e 100644
 --- a/org/apache/commons/math3/distribution/UniformRealDistribution.java

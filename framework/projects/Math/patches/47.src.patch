@@ -19,6 +19,18 @@ index 137765c..ac31e4b 100644
      }
  
      /**
+@@ -225,10 +222,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+      *  <li>If either {@code this} or {@code divisor} has a {@code NaN} value
+      *   in either part, {@link #NaN} is returned.
+      *  </li>
+-     *  <li>If {@code this} and {@code divisor} are both {@link #ZERO},
+-     *   {@link #NaN} is returned.
+-     *  </li>
+-     *  <li>If {@code divisor} equals {@link #ZERO}, {@link #INF} is returned.
++     *  <li>If {@code divisor} equals {@link #ZERO}, {@link #NaN} is returned.
+      *  </li>
+      *  <li>If {@code this} and {@code divisor} are both infinite,
+      *   {@link #NaN} is returned.
 @@ -255,17 +249,16 @@ public class Complex implements FieldElement<Complex>, Serializable  {
              return NaN;
          }

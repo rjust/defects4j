@@ -1,48 +1,28 @@
-diff --git a/com/google/javascript/jscomp/TypeValidator.java b/com/google/javascript/jscomp/TypeValidator.java
-index f57ae14..f70a52c 100644
---- a/com/google/javascript/jscomp/TypeValidator.java
-+++ b/com/google/javascript/jscomp/TypeValidator.java
-@@ -722,21 +722,6 @@ class TypeValidator {
-    *     to an Object type, if possible.
-    */
-   String getReadableJSTypeName(Node n, boolean dereference) {
--    JSType type = getJSType(n);
--    if (dereference) {
--      ObjectType dereferenced = type.dereference();
--      if (dereferenced != null) {
--        type = dereferenced;
--      }
--    }
--
--    // The best type name is the actual type name.
--    if (type.isFunctionPrototypeType() ||
--        (type.toObjectType() != null &&
--         type.toObjectType().getConstructor() != null)) {
--      return type.toString();
--    }
--
-     // If we're analyzing a GETPROP, the property may be inherited by the
-     // prototype chain. So climb the prototype chain and find out where
-     // the property was originally defined.
-@@ -765,8 +750,20 @@ class TypeValidator {
+diff --git a/com/google/javascript/jscomp/DisambiguateProperties.java b/com/google/javascript/jscomp/DisambiguateProperties.java
+index 01293c9..5224861 100644
+--- a/com/google/javascript/jscomp/DisambiguateProperties.java
++++ b/com/google/javascript/jscomp/DisambiguateProperties.java
+@@ -488,13 +488,9 @@ class DisambiguateProperties<T> implements CompilerPass {
+      * Processes a OBJECTLIT node.
+      */
+     private void handleObjectLit(NodeTraversal t, Node n) {
+-      for (Node child = n.getFirstChild();
+-          child != null;
+-          child = child.getNext()) {
++      Node child = n.getFirstChild();
++      while (child != null) {
+         // Maybe STRING, GET, SET
+-        if (child.isQuotedString()) {
+-          continue;
+-        }
+ 
+         // We should never see a mix of numbers and strings.
+         String name = child.getString();
+@@ -512,6 +508,7 @@ class DisambiguateProperties<T> implements CompilerPass {
+                 (type == null ? "null" : type.toString()), n.toString(), ""));
+           }
+         }
++        child = child.getNext();
        }
      }
  
-+    JSType type = getJSType(n);
-+    if (dereference) {
-+      ObjectType dereferenced = type.dereference();
-+      if (dereferenced != null) {
-+        type = dereferenced;
-+      }
-+    }
-+
-     String qualifiedName = n.getQualifiedName();
--    if (qualifiedName != null) {
-+    if (type.isFunctionPrototypeType() ||
-+        (type.toObjectType() != null &&
-+         type.toObjectType().getConstructor() != null)) {
-+      return type.toString();
-+    } else if (qualifiedName != null) {
-       return qualifiedName;
-     } else if (type.isFunctionType()) {
-       // Don't show complex function names.

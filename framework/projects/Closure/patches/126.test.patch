@@ -1,55 +1,184 @@
-diff --git a/com/google/javascript/jscomp/MinimizeExitPointsTest.java b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
-index 9732745..7db30f8 100644
---- a/com/google/javascript/jscomp/MinimizeExitPointsTest.java
-+++ b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
-@@ -120,12 +120,12 @@ public class MinimizeExitPointsTest extends CompilerTestCase {
-          "function f(){while(a())break}");
-     foldSame("function f(){for(x in a())break}");
- 
--    fold("function f(){try{return;}catch(e){throw 9;}finally{return}}",
--         "function f(){try{}catch(e){throw 9;}finally{return}}");
--    foldSame("function f(){try{throw 9;}finally{return;}}");
--
-+    fold("function f(){try{return;}catch(e){return;}finally{return}}",
-+         "function f(){try{}catch(e){}finally{}}");
-     fold("function f(){try{return;}catch(e){return;}}",
-          "function f(){try{}catch(e){}}");
-+    fold("function f(){try{return;}finally{return;}}",
-+         "function f(){try{}finally{}}");
-     fold("function f(){try{if(a()){return;}else{return;} return;}catch(e){}}",
-          "function f(){try{if(a()){}else{}}catch(e){}}");
- 
-@@ -133,8 +133,8 @@ public class MinimizeExitPointsTest extends CompilerTestCase {
-          "function f(){}");
-     fold("function f(){g:if(a()){return;}else{return;} return;}",
-          "function f(){g:if(a()){}else{}}");
--    fold("function f(){try{g:if(a()){throw 9;} return;}finally{return}}",
--         "function f(){try{g:if(a()){throw 9;}}finally{return}}");
-+    fold("function f(){try{g:if(a()){} return;}finally{return}}",
-+         "function f(){try{g:if(a()){}}finally{}}");
+diff --git a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+index d6785b0..4493c8d 100644
+--- a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
++++ b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+@@ -285,7 +285,7 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
    }
  
-   public void testWhileContinueOptimization() throws Exception {
-@@ -271,8 +271,4 @@ public class MinimizeExitPointsTest extends CompilerTestCase {
-     fold("function f() { if (x) return; foo(); function foo() {} }",
-          "function f() { if (x); else { function foo() {} foo(); } }");
+   public void testIssue4177428a() {
+-    testSame(
++    test(
+         "f = function() {\n" +
+         "  var action;\n" +
+         "  a: {\n" +
+@@ -294,15 +294,28 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      break a\n" +  // Keep this...
++        "      break a\n" +  // Remove this...
+         "    }\n" +
+         "  }\n" +
+-        "  alert(action)\n" + // and this.
+-        "};");
++        "  alert(action)\n" + // but not this.
++        "};",
++        "f = function() {\n" +
++        "  var action;\n" +
++        "  a: {\n" +
++        "    var proto = null;\n" +
++        "    try {\n" +
++        "      proto = new Proto\n" +
++        "    } finally {\n" +
++        "      action = proto;\n" +
++        "    }\n" +
++        "  }\n" +
++        "  alert(action)\n" +  // but not this.
++        "};"
++        );
+   }
+ 
+   public void testIssue4177428b() {
+-    testSame(
++    test(
+         "f = function() {\n" +
+         "  var action;\n" +
+         "  a: {\n" +
+@@ -312,17 +325,34 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      break a\n" +  // Keep this...
++        "      break a\n" +  // Remove this...
+         "    }\n" +
+         "    } finally {\n" +
+         "    }\n" +
+         "  }\n" +
+-        "  alert(action)\n" + // and this.
+-        "};");
++        "  alert(action)\n" + // but not this.
++        "};",
++        "f = function() {\n" +
++        "  var action;\n" +
++        "  a: {\n" +
++        "    var proto = null;\n" +
++        "    try {\n" +
++        "    try {\n" +
++        "      proto = new Proto\n" +
++        "    } finally {\n" +
++        "      action = proto;\n" +
++        "      break a\n" +  // Remove this...
++        "    }\n" +
++        "    } finally {\n" +
++        "    }\n" +
++        "  }\n" +
++        "  alert(action)\n" +  // but not this.
++        "};"
++        );
+   }
+ 
+   public void testIssue4177428c() {
+-    testSame(
++    test(
+         "f = function() {\n" +
+         "  var action;\n" +
+         "  a: {\n" +
+@@ -333,16 +363,32 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      break a\n" +  // Keep this...
++        "      break a\n" +  // Remove this...
+         "    }\n" +
+         "    }\n" +
+         "  }\n" +
+-        "  alert(action)\n" + // and this.
+-        "};");
++        "  alert(action)\n" + // but not this.
++        "};",
++        "f = function() {\n" +
++        "  var action;\n" +
++        "  a: {\n" +
++        "    var proto = null;\n" +
++        "    try {\n" +
++        "    } finally {\n" +
++        "    try {\n" +
++        "      proto = new Proto\n" +
++        "    } finally {\n" +
++        "      action = proto;\n" +
++        "    }\n" +
++        "    }\n" +
++        "  }\n" +
++        "  alert(action)\n" +  // but not this.
++        "};"
++        );
+   }
+ 
+   public void testIssue4177428_continue() {
+-    testSame(
++    test(
+         "f = function() {\n" +
+         "  var action;\n" +
+         "  a: do {\n" +
+@@ -351,11 +397,24 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      continue a\n" +  // Keep this...
++        "      continue a\n" +  // Remove this...
+         "    }\n" +
+         "  } while(false)\n" +
+-        "  alert(action)\n" + // and this.
+-        "};");
++        "  alert(action)\n" + // but not this.
++        "};",
++        "f = function() {\n" +
++        "  var action;\n" +
++        "  a: do {\n" +
++        "    var proto = null;\n" +
++        "    try {\n" +
++        "      proto = new Proto\n" +
++        "    } finally {\n" +
++        "      action = proto;\n" +
++        "    }\n" +
++        "  } while (false)\n" +
++        "  alert(action)\n" +
++        "};"
++        );
+   }
+ 
+   public void testIssue4177428_return() {
+@@ -368,10 +427,10 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      return\n" +  // Keep this...
++        "      return\n" +  // Remove this...
+         "    }\n" +
+         "  }\n" +
+-        "  alert(action)\n" + // and remove this.
++        "  alert(action)\n" + // and this.
+         "};",
+         "f = function() {\n" +
+         "  var action;\n" +
+@@ -381,7 +440,6 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+         "      proto = new Proto\n" +
+         "    } finally {\n" +
+         "      action = proto;\n" +
+-        "      return\n" +
+         "    }\n" +
+         "  }\n" +
+         "};"
+@@ -412,12 +470,4 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
+   public void testForInLoop() {
+     testSame("for(var x in y) {}");
    }
 -
 -  public void testDontRemoveBreakInTryFinally() throws Exception {
--    foldSame("function f() {b:try{throw 9} finally {break b} return 1;}");
+-    testSame("function f() {b:try{throw 9} finally {break b} return 1;}");
 -  }
- }
-diff --git a/com/google/javascript/jscomp/RemoveTryCatchTest.java b/com/google/javascript/jscomp/RemoveTryCatchTest.java
-index 53e3add..943950e 100644
---- a/com/google/javascript/jscomp/RemoveTryCatchTest.java
-+++ b/com/google/javascript/jscomp/RemoveTryCatchTest.java
-@@ -73,9 +73,4 @@ public class RemoveTryCatchTest extends CompilerTestCase {
-   public void testIfTryCatch() {
-     test("if(x)try{y;z}catch(e){}", "if(x){y;z}");
-   }
 -
--  public void testRemoveTryCatchIsNotAnOptimization() {
--    test("try { throw fire } finally { putOutFire() }",
--         "throw fire;putOutFire()");
+-  public void testDontRemoveBreakInTryFinallySwitch() throws Exception {
+-    testSame("function f() {b:try{throw 9} finally {switch(x) {case 1: break b} } return 1;}");
 -  }
  }

@@ -1,25 +1,17 @@
-diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
-index b05fbc4..8198efc 100644
---- a/com/google/javascript/jscomp/TypeCheck.java
-+++ b/com/google/javascript/jscomp/TypeCheck.java
-@@ -1403,17 +1403,9 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
- 
-     Iterator<Node> parameters = functionType.getParameters().iterator();
-     int ordinal = 0;
--    Node parameter = null;
--    Node argument = null;
--    while (arguments.hasNext() &&
--           (parameters.hasNext() ||
--            parameter != null && parameter.isVarArgs())) {
--      // If there are no parameters left in the list, then the while loop
--      // above implies that this must be a var_args function.
--      if (parameters.hasNext()) {
--        parameter = parameters.next();
--      }
--      argument = arguments.next();
-+    while (arguments.hasNext() && parameters.hasNext()) {
-+      Node parameter = parameters.next();
-+      Node argument = arguments.next();
-       ordinal++;
- 
-       validator.expectArgumentMatchesParameter(t, argument,
+diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+index c998d1e..f3d9583 100644
+--- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+@@ -692,11 +692,7 @@ public class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+           result = lvalInt >> rvalInt;
+           break;
+         case Token.URSH:
+-          // JavaScript handles zero shifts on signed numbers differently than
+-          // Java as an Java int can not represent the unsigned 32-bit number
+-          // where JavaScript can so use a long here.
+-          long lvalLong = lvalInt & 0xffffffffL;
+-          result = lvalLong >>> rvalInt;
++          result = lvalInt >>> rvalInt;
+           break;
+         default:
+           throw new AssertionError("Unknown shift operator: " +

@@ -1,8 +1,30 @@
 diff --git a/org/apache/commons/lang3/StringUtils.java b/org/apache/commons/lang3/StringUtils.java
-index 4733b7e..98319bf 100644
+index 4733b7e..ff6e35c 100644
 --- a/org/apache/commons/lang3/StringUtils.java
 +++ b/org/apache/commons/lang3/StringUtils.java
-@@ -779,16 +779,7 @@ public class StringUtils {
+@@ -758,8 +758,7 @@ public class StringUtils {
+     // Equals
+     //-----------------------------------------------------------------------
+     /**
+-     * <p>Compares two CharSequences, returning {@code true} if they represent
+-     * equal sequences of characters.</p>
++     * <p>Compares two CharSequences, returning {@code true} if they are equal.</p>
+      *
+      * <p>{@code null}s are handled without exceptions. Two {@code null}
+      * references are considered to be equal. The comparison is case sensitive.</p>
+@@ -772,28 +771,20 @@ public class StringUtils {
+      * StringUtils.equals("abc", "ABC") = false
+      * </pre>
+      *
+-     * @see java.lang.CharSequence#equals(Object)
+-     * @param cs1  the first CharSequence, may be {@code null}
+-     * @param cs2  the second CharSequence, may be {@code null}
+-     * @return {@code true} if the CharSequences are equal (case-sensitive), or both {@code null}
++     * @see java.lang.String#equals(Object)
++     * @param cs1  the first CharSequence, may be null
++     * @param cs2  the second CharSequence, may be null
++     * @return {@code true} if the CharSequences are equal, case sensitive, or
++     *  both {@code null}
       * @since 3.0 Changed signature from equals(String, String) to equals(CharSequence, CharSequence)
       */
      public static boolean equals(CharSequence cs1, CharSequence cs2) {
@@ -20,3 +42,10 @@ index 4733b7e..98319bf 100644
      }
  
      /**
+-     * <p>Compares two CharSequences, returning {@code true} if they represent
+-     * equal sequences of characters, ignoring case.</p>
++     * <p>Compares two CharSequences, returning {@code true} if they are equal ignoring
++     * the case.</p>
+      *
+      * <p>{@code null}s are handled without exceptions. Two {@code null}
+      * references are considered equal. Comparison is case insensitive.</p>

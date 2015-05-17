@@ -2,6 +2,14 @@ diff --git a/org/joda/time/chrono/GJChronology.java b/org/joda/time/chrono/GJChr
 index d1556f5..960fe47 100644
 --- a/org/joda/time/chrono/GJChronology.java
 +++ b/org/joda/time/chrono/GJChronology.java
+@@ -27,7 +27,6 @@ import org.joda.time.DateTimeZone;
+ import org.joda.time.DurationField;
+ import org.joda.time.IllegalFieldValueException;
+ import org.joda.time.Instant;
+-import org.joda.time.LocalDate;
+ import org.joda.time.ReadableInstant;
+ import org.joda.time.ReadablePartial;
+ import org.joda.time.field.BaseDateTimeField;
 @@ -193,10 +192,6 @@ public final class GJChronology extends AssembledChronology {
              cutoverInstant = DEFAULT_CUTOVER;
          } else {
@@ -31,6 +39,14 @@ index d1556f5..960fe47 100644
                          instant = gregorianToJulian(instant);
                      }
                  }
+@@ -999,7 +983,6 @@ public final class GJChronology extends AssembledChronology {
+                 if (instant >= iCutover) {
+                     // Only adjust if gap fully crossed.
+                     if (instant - iGapDuration >= iCutover) {
+-                        // no special handling for year zero as cutover always after year zero
+                         instant = julianToGregorian(instant);
+                     }
+                 }
 @@ -1013,17 +996,6 @@ public final class GJChronology extends AssembledChronology {
                  if (instant < iCutover) {
                      // Only adjust if gap fully crossed.
@@ -47,5 +63,13 @@ index d1556f5..960fe47 100644
 -                            }
 -                        }
                          instant = gregorianToJulian(instant);
+                     }
+                 }
+@@ -1032,7 +1004,6 @@ public final class GJChronology extends AssembledChronology {
+                 if (instant >= iCutover) {
+                     // Only adjust if gap fully crossed.
+                     if (instant - iGapDuration >= iCutover) {
+-                        // no special handling for year zero as cutover always after year zero
+                         instant = julianToGregorian(instant);
                      }
                  }

@@ -58,6 +58,7 @@ com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.jstype.ObjectType
 com.google.javascript.jscomp.SourceAst
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.rhino.jstype.FunctionType

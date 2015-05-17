@@ -1,5 +1,5 @@
 diff --git a/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java b/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
-index 4d010ea..3cbf1e1 100644
+index 4d010ea..0cb2ca8 100644
 --- a/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
 +++ b/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
 @@ -79,20 +79,27 @@ public abstract class CharSequenceTranslator {
@@ -22,12 +22,14 @@ index 4d010ea..3cbf1e1 100644
 -                pos+= c.length;
 -                continue;
 -            }
-+                out.write(Character.toChars(Character.codePointAt(input, i)));
-+            } else {
- //          // contract with translators is that they have to understand codepoints 
- //          // and they just took care of a surrogate pair
+-//          // contract with translators is that they have to understand codepoints 
+-//          // and they just took care of a surrogate pair
 -            for (int pt = 0; pt < consumed; pt++) {
 -                pos += Character.charCount(Character.codePointAt(input, pos));
++                out.write(Character.toChars(Character.codePointAt(input, i)));
++            } else {
++                // contract with translators is that they have to understand codepoints 
++                // and they just took care of a surrogate pair
 +                for (int j = 0; j < consumed; j++) {
 +                    if (i < sz - 2) {
 +                        i += Character.charCount(Character.codePointAt(input, i));

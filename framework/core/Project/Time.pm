@@ -43,17 +43,28 @@ use Vcs::Git;
 our @ISA = qw(Project);
 my $PID  = "Time";
 
+my $PATH_PREFIX = "JodaTime/";
+my $SPLIT_REVISION = '24145245526b789deb025bbb47cdaecdd4b84e04';
+
 sub new {
     my $class = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "joda-time";
-    my $src  = "src/main/java";
-    my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$work_dir/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
+}
+
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision_id) = @_;
+    my $work_dir = $self->{prog_root};
+    return (-e "$work_dir/src/main/java") ?
+        {src=>"src/main/java", test=>"src/test/java"} :
+        {src=>"src/java",      test=>"src/test"};
 }
 
 
@@ -67,41 +78,39 @@ sub _post_checkout {
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision/* $work_dir");
+        my $generated_buildfile_dir = "$SCRIPT_DIR/build-scripts/$PID/build_files/$revision";
+        unless (-e "$generated_buildfile_dir/build.xml") {
+            my $build_script_dir = "$SCRIPT_DIR/build-scripts/$PID";
+            my $log = `cd $work_dir && patch --dry-run pom.xml ${build_script_dir}/pom.xml.patch`;
+             if ($? == 0) {
+                print "Patching pom.xml..\n";
+                `cd $work_dir && patch pom.xml ${build_script_dir}/pom.xml.patch`;
+            }
+            print "Maven buildfile -> Ant buildfile for: $revision...";
+            Utils::maven_to_ant("$SCRIPT_DIR/build-scripts/$PID/build.xml.patch",
+                                $work_dir,
+                                $generated_buildfile_dir);
+        }
+        system("cp $generated_buildfile_dir/* $work_dir") == 0 or die;
     }
 
     # Check for a broken-build-revision
-    my $id = rev_lookup($vcs, $revision); # TODO: very ugly.
-    my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "${SCRIPT_DIR}/build-scripts/${PID}/broken-builds/build-${revision}.xml";
     if (-e $filename) {
         system ("cp $filename $work_dir/build.xml");
     }
 }
 
-sub rev_lookup {
-    my ($self, $revision) = @_;
-    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
-                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
-    die unless scalar(@answer) > 0;
-    return $answer[0];
-}
-
 sub export_diff {
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
-    if ($self->rev_lookup($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    $path = $PATH_PREFIX . ($path//'') if $self->{_vcs}->comes_before($rev1, $SPLIT_REVISION);
     return $self->{_vcs}->export_diff($rev1, $rev2, $out_file, $path);
 }
 
 
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_;
-    if ($self->rev_lookup($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    $path = $PATH_PREFIX . ($path//'') if $self->{_vcs}->comes_before($rev1, $SPLIT_REVISION);
     return $self->{_vcs}->diff($rev1, $rev2, $path);
 }
 

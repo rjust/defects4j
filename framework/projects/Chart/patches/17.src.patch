@@ -2,6 +2,14 @@ Index: org/jfree/data/time/TimeSeries.java
 ===================================================================
 --- org/jfree/data/time/TimeSeries.java	(revision 622)
 +++ org/jfree/data/time/TimeSeries.java	(revision 621)
+@@ -74,7 +74,6 @@
+  * 29-Jun-2007 : Changed first parameter in constructors from String to 
+  *               Comparable (DG);
+  * 31-Oct-2007 : Implemented faster hashCode() (DG);
+- * 21-Nov-2007 : Fixed clone() method (bug 1832432) (DG);
+  * 
+  */
+ 
 @@ -854,8 +853,7 @@
       *         subclasses may differ.
       */

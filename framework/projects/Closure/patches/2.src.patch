@@ -2,6 +2,14 @@ diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript
 index 96f256d..07ecdfa 100644
 --- a/com/google/javascript/jscomp/TypeCheck.java
 +++ b/com/google/javascript/jscomp/TypeCheck.java
+@@ -28,7 +28,6 @@ import static com.google.javascript.rhino.jstype.JSTypeNative.UNKNOWN_TYPE;
+ import static com.google.javascript.rhino.jstype.JSTypeNative.VOID_TYPE;
+ 
+ import com.google.common.base.Preconditions;
+-import com.google.common.collect.ImmutableSet;
+ import com.google.javascript.jscomp.CheckLevel;
+ import com.google.javascript.jscomp.Scope.Var;
+ import com.google.javascript.jscomp.type.ReverseAbstractInterpreter;
 @@ -1567,15 +1566,8 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
        String functionName, HashMap<String, ObjectType> properties,
        HashMap<String, ObjectType> currentProperties,

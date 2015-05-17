@@ -2,6 +2,15 @@ diff --git a/org/apache/commons/math/dfp/Dfp.java b/org/apache/commons/math/dfp/
 index 54aabc4..04e6613 100644
 --- a/org/apache/commons/math/dfp/Dfp.java
 +++ b/org/apache/commons/math/dfp/Dfp.java
+@@ -163,7 +163,7 @@ public class Dfp implements FieldElement<Dfp> {
+     /** Mantissa. */
+     protected int[] mant;
+ 
+-    /** Sign bit: 1 for positive, -1 for negative. */
++    /** Sign bit: & for positive, -1 for negative. */
+     protected byte sign;
+ 
+     /** Exponent. */
 @@ -269,10 +269,6 @@ public class Dfp implements FieldElement<Dfp> {
          if (exponent == -1023) {
              // Zero or sub-normal

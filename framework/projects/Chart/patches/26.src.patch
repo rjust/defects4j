@@ -2,6 +2,14 @@ Index: org/jfree/chart/axis/Axis.java
 ===================================================================
 --- org/jfree/chart/axis/Axis.java	(revision 103)
 +++ org/jfree/chart/axis/Axis.java	(revision 102)
+@@ -105,7 +105,6 @@
+ 
+ import javax.swing.event.EventListenerList;
+ 
+-import org.jfree.chart.ChartRenderingInfo;
+ import org.jfree.chart.entity.AxisLabelEntity;
+ import org.jfree.chart.entity.EntityCollection;
+ import org.jfree.chart.event.AxisChangeEvent;
 @@ -1188,13 +1187,11 @@
  
          }

@@ -2,6 +2,34 @@ diff --git a/org/apache/commons/math3/util/ContinuedFraction.java b/org/apache/c
 index 253f3c5..35fe916 100644
 --- a/org/apache/commons/math3/util/ContinuedFraction.java
 +++ b/org/apache/commons/math3/util/ContinuedFraction.java
+@@ -101,18 +101,19 @@ public abstract class ContinuedFraction {
+      * </p>
+      *
+      * <p>
+-     * The implementation of this method is based on the modified Lentz algorithm as described
+-     * on page 18 ff. in:
++     * The implementation of this method is based on equations 14-17 of:
+      * <ul>
+      * <li>
+-     *   I. J. Thompson,  A. R. Barnett. "Coulomb and Bessel Functions of Complex Arguments and Order."
+-     *   <a target="_blank" href="http://www.fresco.org.uk/papers/Thompson-JCP64p490.pdf">
+-     *   http://www.fresco.org.uk/papers/Thompson-JCP64p490.pdf</a>
++     *   Eric W. Weisstein. "Continued Fraction." From MathWorld--A Wolfram Web
++     *   Resource. <a target="_blank"
++     *   href="http://mathworld.wolfram.com/ContinuedFraction.html">
++     *   http://mathworld.wolfram.com/ContinuedFraction.html</a>
+      * </li>
+      * </ul>
+-     * Note: the implementation uses the terms a<sub>i</sub> and b<sub>i</sub> as defined in
+-     * <a href="http://mathworld.wolfram.com/ContinuedFraction.html">Continued Fraction / MathWorld</a>.
+-     * </p>
++     * The recurrence relationship defined in those equations can result in
++     * very large intermediate results which can result in numerical overflow.
++     * As a means to combat these overflow conditions, the intermediate results
++     * are scaled whenever they threaten to become numerically unstable.</p>
+      *
+      * @param x the evaluation point.
+      * @param epsilon maximum error allowed.
 @@ -121,53 +122,72 @@ public abstract class ContinuedFraction {
       * @throws ConvergenceException if the algorithm fails to converge.
       */

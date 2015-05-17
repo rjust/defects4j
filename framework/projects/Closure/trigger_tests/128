@@ -1,10 +1,58 @@
---- com.google.javascript.jscomp.CodePrinterTest::testIssue942
-junit.framework.ComparisonFailure: expected:<var x={[0]:1}> but was:<var x={["0"]:1}>
-	at junit.framework.Assert.assertEquals(Assert.java:100)
-	at junit.framework.Assert.assertEquals(Assert.java:107)
-	at junit.framework.TestCase.assertEquals(TestCase.java:269)
-	at com.google.javascript.jscomp.CodePrinterTest.assertPrint(CodePrinterTest.java:465)
-	at com.google.javascript.jscomp.CodePrinterTest.testIssue942(CodePrinterTest.java:1423)
+--- com.google.javascript.jscomp.IntegrationTest::testIssue937
+junit.framework.AssertionFailedError: 
+Expected: console.log((new x).abc())
+Result: console.log((0,(new x).abc)())
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: input0] [input_id: InputId: input0]
+        EXPR_RESULT 1 [source_file: input0]
+            CALL 1 [source_file: input0]
+                GETPROP 1 [source_file: input0]
+                    NAME console 1 [source_file: input0]
+                    STRING log 1 [source_file: input0]
+                CALL 1 [source_file: input0]
+                    GETPROP 1 [source_file: input0]
+                        NEW 1 [source_file: input0]
+                            NAME x 1 [source_file: input0]
+                        STRING abc 1 [source_file: input0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+        EXPR_RESULT 1 [source_file: i0]
+            CALL 1 [source_file: i0]
+                GETPROP 1 [source_file: i0]
+                    NAME console 1 [source_file: i0]
+                    STRING log 1 [source_file: i0]
+                CALL 1 [free_call: 1] [source_file: i0]
+                    GETPROP 1 [source_file: i0]
+                        NEW 1 [source_file: i0]
+                            NAME x 1 [source_file: i0]
+                        STRING abc 1 [source_file: i0]
+
+
+Subtree1: CALL 1 [source_file: input0]
+    GETPROP 1 [source_file: input0]
+        NEW 1 [source_file: input0]
+            NAME x 1 [source_file: input0]
+        STRING abc 1 [source_file: input0]
+
+
+Subtree2: CALL 1 [free_call: 1] [source_file: i0]
+    GETPROP 1 [source_file: i0]
+        NEW 1 [source_file: i0]
+            NAME x 1 [source_file: i0]
+        STRING abc 1 [source_file: i0]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.IntegrationTestCase.test(IntegrationTestCase.java:97)
+	at com.google.javascript.jscomp.IntegrationTestCase.test(IntegrationTestCase.java:79)
+	at com.google.javascript.jscomp.IntegrationTest.testIssue937(IntegrationTest.java:2430)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

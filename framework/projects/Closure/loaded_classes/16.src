@@ -122,6 +122,7 @@ com.google.javascript.rhino.jstype.InstanceObjectType
 com.google.javascript.jscomp.OptimizeCalls
 com.google.javascript.jscomp.Compiler
 com.google.javascript.rhino.jstype.FunctionBuilder
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.ReplaceIdGenerators

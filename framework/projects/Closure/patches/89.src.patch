@@ -17,6 +17,18 @@ diff --git a/com/google/javascript/jscomp/GlobalNamespace.java b/com/google/java
 index 8268339..26b13e8 100644
 --- a/com/google/javascript/jscomp/GlobalNamespace.java
 +++ b/com/google/javascript/jscomp/GlobalNamespace.java
+@@ -467,11 +467,6 @@ class GlobalNamespace {
+      *     declaration
+      */
+     private boolean isConstructorOrEnumDeclaration(Node n, Node parent) {
+-      // NOTE(nicksantos): This does not handle named constructors
+-      // function a() {}
+-      // For legacy reasons, we should not fix this, because we do not
+-      // know who's depending on the current behavior.
+-
+       JSDocInfo info;
+       int valueNodeType;
+       switch (parent.getType()) {
 @@ -916,8 +911,9 @@ class GlobalNamespace {
          return false;
        }

@@ -1,11 +1,86 @@
---- com.google.javascript.jscomp.CodePrinterTest::testPrintInOperatorInForLoop
-junit.framework.ComparisonFailure: expected:<for(a=c?0:[(0 in d)];;)foo()> but was:<for(a=c?0:[0 in d];;)foo()>
-	at junit.framework.Assert.assertEquals(Assert.java:100)
-	at junit.framework.Assert.assertEquals(Assert.java:107)
-	at junit.framework.TestCase.assertEquals(TestCase.java:269)
-	at com.google.javascript.jscomp.CodePrinterTest.assertPrint(CodePrinterTest.java:480)
-	at com.google.javascript.jscomp.CodePrinterTest.assertPrintSame(CodePrinterTest.java:485)
-	at com.google.javascript.jscomp.CodePrinterTest.testPrintInOperatorInForLoop(CodePrinterTest.java:471)
+--- com.google.javascript.jscomp.ExploitAssignsTest::testIssue1017
+junit.framework.AssertionFailedError: 
+Expected: x=x.parentNode.parentNode;x=x.parentNode.parentNode
+Result: x=x=x.parentNode.parentNode
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        EXPR_RESULT 1 [source_file: expected0]
+            ASSIGN 1 [source_file: expected0]
+                NAME x 1 [source_file: expected0]
+                GETPROP 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME x 1 [source_file: expected0]
+                        STRING parentNode 1 [source_file: expected0]
+                    STRING parentNode 1 [source_file: expected0]
+        EXPR_RESULT 1 [source_file: expected0]
+            ASSIGN 1 [source_file: expected0]
+                NAME x 1 [source_file: expected0]
+                GETPROP 1 [source_file: expected0]
+                    GETPROP 1 [source_file: expected0]
+                        NAME x 1 [source_file: expected0]
+                        STRING parentNode 1 [source_file: expected0]
+                    STRING parentNode 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        EXPR_RESULT 1 [source_file: testcode]
+            ASSIGN 1 [source_file: testcode]
+                NAME x 1 [source_file: testcode]
+                ASSIGN 1 [source_file: testcode]
+                    NAME x 1 [source_file: testcode]
+                    GETPROP 1 [source_file: testcode]
+                        GETPROP 1 [source_file: testcode]
+                            NAME x 1 [source_file: testcode]
+                            STRING parentNode 1 [source_file: testcode]
+                        STRING parentNode 1 [source_file: testcode]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        ASSIGN 1 [source_file: expected0]
+            NAME x 1 [source_file: expected0]
+            GETPROP 1 [source_file: expected0]
+                GETPROP 1 [source_file: expected0]
+                    NAME x 1 [source_file: expected0]
+                    STRING parentNode 1 [source_file: expected0]
+                STRING parentNode 1 [source_file: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        ASSIGN 1 [source_file: expected0]
+            NAME x 1 [source_file: expected0]
+            GETPROP 1 [source_file: expected0]
+                GETPROP 1 [source_file: expected0]
+                    NAME x 1 [source_file: expected0]
+                    STRING parentNode 1 [source_file: expected0]
+                STRING parentNode 1 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+    EXPR_RESULT 1 [source_file: testcode]
+        ASSIGN 1 [source_file: testcode]
+            NAME x 1 [source_file: testcode]
+            ASSIGN 1 [source_file: testcode]
+                NAME x 1 [source_file: testcode]
+                GETPROP 1 [source_file: testcode]
+                    GETPROP 1 [source_file: testcode]
+                        NAME x 1 [source_file: testcode]
+                        STRING parentNode 1 [source_file: testcode]
+                    STRING parentNode 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:599)
+	at com.google.javascript.jscomp.ExploitAssignsTest.testIssue1017(ExploitAssignsTest.java:161)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

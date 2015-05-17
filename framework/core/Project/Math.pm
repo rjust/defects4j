@@ -45,77 +45,69 @@ my $PID  = "Math";
 
 sub new {
     my $class = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "commons-math";
-    my $src  = "src/main/java";
-    my $test = "src/test";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db");
+                            "$work_dir/$PID/commit-db");
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
 }
 
-sub src_dir {
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($revision_id);
-}
-
-sub test_dir {
-    my ($self, $revision_id) = @_;
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($revision_id);
-}
-
-sub _build_dir_map {
-    my $self = shift;
-
-    return if defined $self->{_dir_map};
-
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
-    }
-    close IN;
-    $self->{_dir_map}=$cache;
+    my $dir = $self->{prog_root};
+    my $result = _layout1($dir) // _layout2($dir);
+    die "Unknown layout for revision: ${revision_id}" unless defined $result;
+    return $result;
 }
 
 
-#
-# Remove loopoing tests in addition to the broken ones
-#
+# Remove looping tests in addition to the broken ones
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $revision_id) = @_;
     $self->SUPER::fix_tests($revision_id);
 
+    # TODO: Exclusively use version ids rather than revision ids
+    $revision_id = $self->lookup($revision_id) if $revision_id =~ /\d+[bf]/;
+
     my $dir = $self->test_dir($revision_id);
 
-    # TODO: make this more precise
-    my $file = "$SCRIPT_DIR/projects/$PID/broken_tests";
+    # TODO: make this more precise (TODO: either explain this TODO or kill it)
+    my $file = "$SCRIPT_DIR/build-scripts/$PID/broken_tests";
     if (-e $file) {
         $self->exclude_tests_in_file($file, $dir);
     }
+}
+
+# Existing build.xml and default.properties
+sub _layout1 {
+    my $dir = shift;
+    my $src  = `grep 'name="source.home"' $dir/build.xml 2>/dev/null`; chomp $src;
+    my $test = `grep 'name="test.home"' $dir/build.xml 2>/dev/null`; chomp $test;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/.*"source\.home"\s*value\s*=\s*"(\S+)".*/$1/;
+    $test=~ s/.*"test\.home"\s*value\s*=\s*"(\S+)".*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+# Generated build.xml (mvn ant:ant) with maven-build.properties
+sub _layout2 {
+    my $dir = shift;
+    my $src  = `grep "<sourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $src;
+    my $test = `grep "<unitTestSourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $test;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/.*<sourceDirectory>\s*([^<]+)\s*<\/sourceDirectory>.*/$1/;
+    $test=~ s/.*<unitTestSourceDirectory>\s*([^<]+)\s*<\/unitTestSourceDirectory>.*/$1/;
+
+    return {src=>$src, test=>$test};
 }
 
 1;

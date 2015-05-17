@@ -2,6 +2,14 @@ Index: org/jfree/chart/renderer/category/StatisticalBarRenderer.java
 ===================================================================
 --- org/jfree/chart/renderer/category/StatisticalBarRenderer.java	(revision 164)
 +++ org/jfree/chart/renderer/category/StatisticalBarRenderer.java	(revision 162)
+@@ -54,7 +54,6 @@
+  * 20-Jun-2007 : Removed JCommon dependencies (DG);
+  * 06-Jul-2007 : Added errorIndicatorStroke attribute (DG);
+  * 11-Jul-2007 : Fixed serialization for new errorIndicatorStroke field (DG);
+- * 28-Aug-2007 : Fixed NullPointerException - see bug 1779941 (DG);
+  * 
+  */
+ 
 @@ -256,9 +255,6 @@
  
          // BAR X

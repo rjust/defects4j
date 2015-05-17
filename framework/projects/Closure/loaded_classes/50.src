@@ -92,6 +92,7 @@ com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.VarCheck
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.CodingConventions
 com.google.javascript.rhino.jstype.StaticReference
 com.google.javascript.jscomp.ReferenceCollectingCallback

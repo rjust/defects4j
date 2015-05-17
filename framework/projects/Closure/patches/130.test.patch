@@ -1,36 +1,21 @@
-diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
-index bda75f7..77e5e95 100644
---- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
-+++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
-@@ -27,11 +27,8 @@ import com.google.javascript.rhino.Node;
- public class CollapsePropertiesTest extends CompilerTestCase {
- 
-   private static String EXTERNS =
--      "var window;\n" +
--      "function alert(s) {}\n" +
--      "function parseInt(s) {}\n" +
--      "/** @constructor */ function String() {};\n" +
--      "var arguments";
-+      "var window; function alert(s) {} function parseInt(s) {}" +
-+      "/** @constructor */ function String() {}";
- 
-   private boolean collapsePropertiesOnExternTypes = false;
- 
-@@ -1096,17 +1093,6 @@ public class CollapsePropertiesTest extends CompilerTestCase {
-          "}", null, null);
+diff --git a/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java b/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
+index 755cb01..e3055d3 100644
+--- a/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
++++ b/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
+@@ -54,8 +54,6 @@ public class ConvertToDottedPropertiesTest extends CompilerTestCase {
+     testSame("a[$]");
+     testSame("a[p()]");
+     testSame("a['default']");
+-    // Ignorable control characters are ok in Java identifiers, but not in JS.
+-    testSame("a['A\u0004']");
+     // upper case lower half of o from phonetic extensions set.
+     // valid in Safari, not in Firefox, IE.
+     test("a['\u1d17A']", "a['\u1d17A']");
+@@ -69,7 +67,6 @@ public class ConvertToDottedPropertiesTest extends CompilerTestCase {
+     testSame("({'':0})");
+     testSame("({'1.0':0})");
+     testSame("({'\u1d17A':0})");
+-    testSame("({'a\u0004b':0})");
    }
  
--  public void testIssue931() {
--    collapsePropertiesOnExternTypes = true;
--    testSame(
--      "function f() {\n" +
--      "  return function () {\n" +
--      "    var args = arguments;\n" +
--      "    setTimeout(function() { alert(args); }, 0);\n" +
--      "  }\n" +
--      "};\n");
--  }
--
-   public void testDoNotCollapsePropertyOnExternType() {
-     collapsePropertiesOnExternTypes = false;
-     test("String.myFunc = function() {}; String.myFunc()",
+   public void test5746867() {

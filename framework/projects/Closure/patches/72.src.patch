@@ -1,22 +1,84 @@
 diff --git a/com/google/javascript/jscomp/FunctionToBlockMutator.java b/com/google/javascript/jscomp/FunctionToBlockMutator.java
-index 3fee1a9..07a499f 100644
+index 3fee1a9..3e0fb1e 100644
 --- a/com/google/javascript/jscomp/FunctionToBlockMutator.java
 +++ b/com/google/javascript/jscomp/FunctionToBlockMutator.java
-@@ -148,9 +148,6 @@ class FunctionToBlockMutator {
-                 idSupplier,
+@@ -140,30 +140,12 @@ class FunctionToBlockMutator {
+    * @param fnNode A mutable instance of the function to be inlined.
+    */
+   private void makeLocalNamesUnique(Node fnNode, boolean isCallInLoop) {
+-    Supplier<String> idSupplier = compiler.getUniqueNameIdSupplier();
+-    // Make variable names unique to this instance.
+     NodeTraversal.traverse(
+         compiler, fnNode, new MakeDeclaredNamesUnique(
+             new InlineRenamer(
+-                idSupplier,
++                compiler.getUniqueNameIdSupplier(),
                  "inline_",
                  isCallInLoop)));
 -    // Make label names unique to this instance.
 -    new RenameLabels(compiler, new LabelNameSupplier(idSupplier), false)
 -        .process(null, fnNode);
+-  }
+-
+-  static class LabelNameSupplier implements Supplier<String> {
+-    final Supplier<String> idSupplier;
+-
+-    LabelNameSupplier(Supplier<String> idSupplier) {
+-      this.idSupplier = idSupplier;
+-    }
+-
+-    @Override
+-    public String get() {
+-        return "JSCompiler_inline_label_" + idSupplier.get();
+-    }
    }
  
-   static class LabelNameSupplier implements Supplier<String> {
+   /**
 diff --git a/com/google/javascript/jscomp/RenameLabels.java b/com/google/javascript/jscomp/RenameLabels.java
-index 28e52ee..bb89efd 100644
+index 28e52ee..01ad536 100644
 --- a/com/google/javascript/jscomp/RenameLabels.java
 +++ b/com/google/javascript/jscomp/RenameLabels.java
-@@ -111,6 +111,10 @@ final class RenameLabels implements CompilerPass {
+@@ -17,7 +17,6 @@
+ package com.google.javascript.jscomp;
+ 
+ import com.google.common.base.Preconditions;
+-import com.google.common.base.Supplier;
+ import com.google.common.collect.Lists;
+ import com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
+ import com.google.javascript.rhino.Node;
+@@ -70,31 +69,9 @@ import java.util.Map;
+  */
+ final class RenameLabels implements CompilerPass {
+   private final AbstractCompiler compiler;
+-  private final Supplier<String> nameSupplier;
+-  private final boolean removeUnused;
+ 
+   RenameLabels(AbstractCompiler compiler) {
+-    this(compiler, new DefaultNameSupplier(), true);
+-  }
+-
+-  RenameLabels(
+-      AbstractCompiler compiler,
+-      Supplier<String> supplier,
+-      boolean removeUnused) {
+     this.compiler = compiler;
+-    this.nameSupplier = supplier;
+-    this.removeUnused = removeUnused;
+-  }
+-
+-  static class DefaultNameSupplier implements Supplier<String> {
+-    // NameGenerator is used to create safe label names.
+-    final NameGenerator nameGenerator =
+-        new NameGenerator(new HashSet<String>(), "", null);
+-
+-    @Override
+-    public String get() {
+-      return nameGenerator.generateNextName();
+-    }
+   }
+ 
+   /**
+@@ -111,6 +88,10 @@ final class RenameLabels implements CompilerPass {
      // inner scope, so a new namespace is created each time a scope is entered.
      final Deque<LabelNamespace> namespaceStack = Lists.newLinkedList();
  
@@ -27,7 +89,7 @@ index 28e52ee..bb89efd 100644
      // The list of generated names. Typically, the first name will be "a",
      // the second "b", etc.
      final ArrayList<String> names = new ArrayList<String>();
-@@ -148,7 +152,7 @@ final class RenameLabels implements CompilerPass {
+@@ -148,7 +129,7 @@ final class RenameLabels implements CompilerPass {
  
          // Create a new name, if needed, for this depth.
          if (names.size() < currentDepth) {
@@ -36,7 +98,7 @@ index 28e52ee..bb89efd 100644
          }
  
          String newName = getNameForId(currentDepth);
-@@ -212,7 +216,7 @@ final class RenameLabels implements CompilerPass {
+@@ -212,7 +193,7 @@ final class RenameLabels implements CompilerPass {
        String name = nameNode.getString();
        LabelInfo li = getLabelInfo(name);
        // This is a label...

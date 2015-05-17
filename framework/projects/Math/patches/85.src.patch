@@ -2,6 +2,24 @@ diff --git a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.
 index e6398f6..5b76415 100644
 --- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
 +++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
+@@ -131,7 +131,7 @@ public class UnivariateRealSolverUtils {
+      /**
+      * This method attempts to find two values a and b satisfying <ul>
+      * <li> <code> lowerBound <= a < initial < b <= upperBound</code> </li>
+-     * <li> <code> f(a) * f(b) <= 0 </code> </li>
++     * <li> <code> f(a) * f(b) < 0 </code> </li>
+      * </ul>
+      * If f is continuous on <code>[a,b],</code> this means that <code>a</code>
+      * and <code>b</code> bracket a root of f.
+@@ -141,7 +141,7 @@ public class UnivariateRealSolverUtils {
+      * function at <code>a</code> and <code>b</code> and keeps moving
+      * the endpoints out by one unit each time through a loop that terminates 
+      * when one of the following happens: <ul>
+-     * <li> <code> f(a) * f(b) <= 0 </code> --  success!</li>
++     * <li> <code> f(a) * f(b) < 0 </code> --  success!</li>
+      * <li> <code> a = lower </code> and <code> b = upper</code> 
+      * -- ConvergenceException </li>
+      * <li> <code> maximumIterations</code> iterations elapse 
 @@ -195,7 +195,7 @@ public class UnivariateRealSolverUtils {
          } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && 
                  ((a > lowerBound) || (b < upperBound)));
@@ -11,3 +29,16 @@ index e6398f6..5b76415 100644
              throw new ConvergenceException(
                        "number of iterations={0}, maximum iterations={1}, " +
                        "initial={2}, lower bound={3}, upper bound={4}, final a value={5}, " +
+diff --git a/org/apache/commons/math/distribution/AbstractContinuousDistribution.java b/org/apache/commons/math/distribution/AbstractContinuousDistribution.java
+index 419fbfa..808a573 100644
+--- a/org/apache/commons/math/distribution/AbstractContinuousDistribution.java
++++ b/org/apache/commons/math/distribution/AbstractContinuousDistribution.java
+@@ -65,7 +65,7 @@ public abstract class AbstractContinuousDistribution
+         }
+ 
+         // by default, do simple root finding using bracketing and default solver.
+-        // subclasses can override if there is a better method.
++        // subclasses can overide if there is a better method.
+         UnivariateRealFunction rootFindingFunction =
+             new UnivariateRealFunction() {
+             public double value(double x) throws FunctionEvaluationException {

@@ -2,6 +2,14 @@ Index: org/jfree/chart/util/ShapeUtilities.java
 ===================================================================
 --- org/jfree/chart/util/ShapeUtilities.java	(revision 1025)
 +++ org/jfree/chart/util/ShapeUtilities.java	(revision 1024)
+@@ -54,7 +54,6 @@
+  * 16-Mar-2005 : Fixed bug where equal(Shape, Shape) fails for two Polygon
+  *               instances (DG);
+  * 20-Jun-2007 : Copied from JCommon (DG);
+- * 02-Jun-2008 : Fixed bug in equal(GeneralPath, GeneralPath) (DG);
+  *
+  */
+ 
 @@ -272,7 +271,7 @@
              return false;
          }
@@ -15,6 +23,14 @@ Index: org/jfree/chart/util/SerialUtilities.java
 ===================================================================
 --- org/jfree/chart/util/SerialUtilities.java	(revision 1025)
 +++ org/jfree/chart/util/SerialUtilities.java	(revision 1024)
+@@ -40,7 +40,6 @@
+  * 22-Feb-2005 : Added support for Arc2D - see patch 1147035 by Arik Levin (DG);
+  * 29-Jul-2005 : Added support for AttributedString (DG);
+  * 21-Jun-2007 : Copied from JCommon (DG);
+- * 02-Jun-2008 : Fixed bug 1977609 in readShape() for GeneralPath (DG);
+  *
+  */
+ 
 @@ -315,18 +314,21 @@
                              gp.lineTo(args[0], args[1]);
                              break;

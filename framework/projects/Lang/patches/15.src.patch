@@ -1,5 +1,5 @@
 diff --git a/org/apache/commons/lang3/reflect/TypeUtils.java b/org/apache/commons/lang3/reflect/TypeUtils.java
-index 8db8abf..ed9dc3f 100644
+index 8db8abf..bf4942f 100644
 --- a/org/apache/commons/lang3/reflect/TypeUtils.java
 +++ b/org/apache/commons/lang3/reflect/TypeUtils.java
 @@ -216,9 +216,9 @@ public class TypeUtils {
@@ -15,7 +15,7 @@ index 8db8abf..ed9dc3f 100644
  
              // parameters must either be absent from the subject type, within
              // the bounds of the wildcard type, or be an exact match to the
-@@ -234,18 +234,6 @@ public class TypeUtils {
+@@ -234,19 +234,6 @@ public class TypeUtils {
          return true;
      }
  
@@ -31,14 +31,17 @@ index 8db8abf..ed9dc3f 100644
 -        } while (true);
 -        return result;
 -    }
- 
+-
      /**
       * <p> Checks if the subject type may be implicitly cast to the target
-@@ -672,7 +660,7 @@ public class TypeUtils {
+      * generic array type following the Java generics rules. </p>
+@@ -671,8 +658,8 @@ public class TypeUtils {
+         HashMap<TypeVariable<?>, Type> typeVarAssigns = subtypeVarAssigns == null ? new HashMap<TypeVariable<?>, Type>()
                  : new HashMap<TypeVariable<?>, Type>(subtypeVarAssigns);
  
-         // has target class been reached?
+-        // has target class been reached?
 -        if (toClass.equals(cls)) {
++        // no arguments for the parameters, or target class has been reached
 +        if (cls.getTypeParameters().length > 0 || toClass.equals(cls)) {
              return typeVarAssigns;
          }

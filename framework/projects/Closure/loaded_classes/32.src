@@ -37,6 +37,7 @@ com.google.javascript.jscomp.MessageBundle
 com.google.javascript.jscomp.CheckUnreachableCode
 com.google.javascript.jscomp.CleanupPasses
 com.google.javascript.jscomp.ScopeCreator
+com.google.javascript.rhino.testing.TestErrorReporter
 com.google.javascript.jscomp.Normalize
 com.google.javascript.jscomp.StrictWarningsGuard
 com.google.javascript.jscomp.CheckProvides
@@ -48,6 +49,7 @@ com.google.javascript.jscomp.CodePrinter
 com.google.javascript.jscomp.parsing.JsDocInfoParser
 com.google.javascript.jscomp.graph.GraphvizGraph
 com.google.javascript.jscomp.graph.LinkedDirectedGraph
+com.google.javascript.jscomp.testing.TestErrorReporter
 com.google.javascript.jscomp.AbstractMessageFormatter
 com.google.javascript.rhino.jstype.RecordTypeBuilder
 com.google.javascript.rhino.jstype.JSType
@@ -105,6 +107,7 @@ com.google.javascript.rhino.jstype.InstanceObjectType
 com.google.javascript.jscomp.OptimizeCalls
 com.google.javascript.jscomp.Compiler
 com.google.javascript.rhino.jstype.FunctionBuilder
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.jscomp.VarCheck
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.ReplaceIdGenerators

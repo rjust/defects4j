@@ -20,6 +20,14 @@ index 711852e..6b8c2e4 100644
  
          for (int i = startIndex; i < endIndex; i++) {
              if (i > startIndex) {
+@@ -3308,6 +3309,7 @@ public class StringUtils {
+         return buf.toString();
+     }
+ 
++
+     /**
+      * <p>Joins the elements of the provided array into a single String
+      * containing the provided list of elements.</p>
 @@ -3375,12 +3377,15 @@ public class StringUtils {
  
          // endIndex - startIndex > 0:   Len = NofStrings *(len(firstString) + len(separator))

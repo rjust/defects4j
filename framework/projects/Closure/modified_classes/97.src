@@ -1,1 +1,3 @@
-com.google.javascript.jscomp.PeepholeFoldConstants
+com.google.javascript.jscomp.ReferenceCollectingCallback
+com.google.javascript.jscomp.InlineVariables
+com.google.javascript.jscomp.CollapseProperties

@@ -1,0 +1,114 @@
+<project name="commons-lang-major" basedir="${basedir}">
+
+    <property name="compile.debug" value="yes" />
+
+    <!-- script.dir property has to be provided from caller! -->
+    <fail message="Property script.dir not set!" unless="script.dir" />
+    
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
+    <property name="easymock.jar" value="${script.dir}/build-scripts/Lang/lib/easymock.jar"/>
+    <property name="commons-io.jar" value="${script.dir}/build-scripts/Lang/lib/commons-io.jar"/>
+    <property name="cglib.jar" value="${script.dir}/build-scripts/Lang/lib/cglib.jar"/>
+    <property name="asm.jar" value="${script.dir}/build-scripts/Lang/lib/asm.jar"/>
+    <property name="maven.repo.local" value="${script.dir}/build-scripts/Lang/lib/" />
+
+    <!-- Do not download maven dependencies -->
+    <property name="maven.mode.offline" value="true" />
+
+    <!-- Include existing project build file -->
+    <import file="${basedir}/build.xml"/>
+    <!-- Include project build file, which provides targets to mutate classes
+         and run the mutation analysis-->
+    <import file="../project.build.xml"/>
+
+    <!-- Directory of the test sources, the default is the directory of the
+         existing tests --> 
+    <property name="bug-db.test.dir" value="${test.home}"/> 
+    <property name="classes.dir" value="${build.home}/classes"/> 
+    
+    <!-- Classpath to run mutation analysis --> 
+    <path id="major.classpath">
+        <path refid="test.classpath"/>
+        <pathelement path="${cglib.jar}" />
+        <pathelement path="${asm.jar}" />
+        <pathelement path="${easymock.jar}" />
+        <pathelement path="${commons-io.jar}" />
+    </path>
+
+<!-- 
+    Run mutation analysis 
+--> 
+    <target name="mutation.test" >
+        <!-- Test a generated test suite -->                      
+        <if><isset property="test.include"/>                   
+            <then>                                             
+                <fileset id="major.tests" dir="${bug-db.test.dir}">
+                    <include name="**/${test.include}"/>          
+                    <exclude name="**/WashingtonSuite.java"/>          
+                </fileset>                                     
+            </then>                                            
+            <else>                                             
+                <!-- Test existing test suite -->
+                <fileset id="major.tests" dir="${test.home}" excludes="${exclude.list}">
+                    <include name="**/*Test.java"/> 
+                    <exclude name="**/*Abstract*Test.java"/>
+                    <exclude name="**/RandomUtilsTest.java"/>
+                </fileset>                                     
+            </else>                                            
+        </if>                     
+        <!-- Call mutation test target with fileset and classpath -->
+        <antcall target="major.test" inheritRefs="true">          
+            <reference refid="major.tests"/>                   
+            <reference refid="major.classpath"/>               
+        </antcall>                                             
+    </target> 
+
+<!-- 
+    Run tests 
+--> 
+    <target name="test"  depends="compile.tests" description="Run unit tests">
+        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath refid="test.classpath"/>
+            <classpath>
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${cglib.jar}" />
+                <pathelement path="${asm.jar}" />
+                <path refid="cobertura.classpath.include" />            
+            </classpath>
+
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class">
+                    <fileset dir="${test.home}" excludes="${exclude.list}">
+                        <include name="**/*Test.java"/> 
+                        <exclude name="**/*Abstract*Test.java"/>                      
+                        <exclude name="**/RandomUtilsTest.java"/>
+                    </fileset>
+                </batchtest>
+        </junit>
+    </target>
+
+<!-- 
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+--> 
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
+            failonerror="true">
+
+            <arg value="${test.entry}"/>     
+            <jvmarg value="-verbose:class"/>     
+            <classpath refid="test.classpath"/>
+            <classpath>
+
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${cglib.jar}" />
+                <pathelement path="${asm.jar}" />
+                <pathelement path="${junit.jar}" />
+            </classpath>
+        </java>        
+    </target>
+</project>
+

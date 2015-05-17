@@ -2,6 +2,14 @@ diff --git a/org/apache/commons/math/linear/OpenMapRealMatrix.java b/org/apache/
 index f05c878..4369db7 100644
 --- a/org/apache/commons/math/linear/OpenMapRealMatrix.java
 +++ b/org/apache/commons/math/linear/OpenMapRealMatrix.java
+@@ -19,7 +19,6 @@ package org.apache.commons.math.linear;
+ 
+ import java.io.Serializable;
+ 
+-import org.apache.commons.math.exception.NumberIsTooLargeException;
+ import org.apache.commons.math.util.OpenIntToDoubleHashMap;
+ 
+ /**
 @@ -47,11 +46,6 @@ public class OpenMapRealMatrix extends AbstractRealMatrix
       */
      public OpenMapRealMatrix(int rowDimension, int columnDimension) {

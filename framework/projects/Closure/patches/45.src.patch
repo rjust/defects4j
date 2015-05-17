@@ -2,6 +2,15 @@ diff --git a/com/google/javascript/jscomp/RemoveUnusedVars.java b/com/google/jav
 index c93a073..393ced6 100644
 --- a/com/google/javascript/jscomp/RemoveUnusedVars.java
 +++ b/com/google/javascript/jscomp/RemoveUnusedVars.java
+@@ -693,7 +693,7 @@ class RemoveUnusedVars
+    * y.foo = 3; // is a reference.
+    * </code>
+    *
+-   * Interpreting assignments could mark a variable as referenced that
++   * Interpreting assigments could mark a variable as referenced that
+    * wasn't referenced before, in order to keep it alive. Because we find
+    * references by lazily traversing subtrees, marking a variable as
+    * referenced could trigger new traversals of new subtrees, which could
 @@ -729,7 +729,6 @@ class RemoveUnusedVars
              assignedToUnknownValue = true;
            }

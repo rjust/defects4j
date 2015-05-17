@@ -1,29 +1,22 @@
-diff --git a/com/google/javascript/jscomp/UnreachableCodeElimination.java b/com/google/javascript/jscomp/UnreachableCodeElimination.java
-index e6d88a8..4cd1641 100644
---- a/com/google/javascript/jscomp/UnreachableCodeElimination.java
-+++ b/com/google/javascript/jscomp/UnreachableCodeElimination.java
-@@ -167,23 +167,13 @@ class UnreachableCodeElimination implements CompilerPass {
-                 outEdges.get(0).getValue() == Branch.UNCOND);
-             Node fallThrough = computeFollowing(n);
-             Node nextCfgNode = outEdges.get(0).getDestination().getValue();
--            if (nextCfgNode == fallThrough && !inFinally(n.getParent(), n)) {
-+            if (nextCfgNode == fallThrough) {
-               removeNode(n);
-             }
-           }
+diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+index 1dc33b7..2270c17 100644
+--- a/com/google/javascript/jscomp/CodeGenerator.java
++++ b/com/google/javascript/jscomp/CodeGenerator.java
+@@ -782,16 +782,13 @@ class CodeGenerator {
+ 
+   static boolean isSimpleNumber(String s) {
+     int len = s.length();
+-    if (len == 0) {
+-      return false;
+-    }
+     for (int index = 0; index < len; index++) {
+       char c = s.charAt(index);
+       if (c < '0' || c > '9') {
+         return false;
        }
      }
+-    return len == 1 || s.charAt(0) != '0';
++    return len > 0 && s.charAt(0) != '0';
+   }
  
--    private boolean inFinally(Node parent, Node child) {
--      if (parent == null || parent.isFunction()) {
--        return false;
--      } else if (NodeUtil.isTryFinallyNode(parent, child)) {
--        return true;
--      } else {
--        return inFinally(parent.getParent(), parent);
--      }
--    }
--
-     private Node computeFollowing(Node n) {
-       Node next = ControlFlowAnalysis.computeFollowNode(n);
-       while (next != null && next.isBlock()) {
+   static double getSimpleNumber(String s) {
