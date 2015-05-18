@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function clean {
-    rm -r \
+    rm -rf \
     closure-compiler.git \
     commons-lang.git \
     commons-math.git \
@@ -26,7 +26,7 @@ wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/defects4j-repos
 new=$($cmd)
 
 # Exit if no newer file is available
-[ $old -eq $new ] && exit 0
+[ "$old" == "$new" ] && exit 0
 
 # Remove old files
 clean
