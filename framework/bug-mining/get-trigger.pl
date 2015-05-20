@@ -26,13 +26,12 @@
 
 =head1 NAME
 
-get-trigger.pl -- Determines triggering tests for all reviewed revision pairs in
-F<$DB_DIR/$TAB_REV_PAIRS>, or a single revesion specified by version_id or
-revisions in the specified range.
+get-trigger.pl -- Determines triggering tests for all reviewed version pairs in
+F<work_dir/$TAB_REV_PAIRS>, or a single version (or range) specified by version_id.
 
 =head1 SYNOPSIS
 
-get-trigger.pl -p project_id [ -v version_id] [-w work_dir]
+get-trigger.pl -p project_id  -w work_dir [ -v version_id]
 
 =head1 OPTIONS
 
@@ -40,29 +39,29 @@ get-trigger.pl -p project_id [ -v version_id] [-w work_dir]
 
 =item B<-p C<project_id>>
 
-The id of the project for which the revision pairs are analyzed.
-
-=item B<-v C<version_id>>
-
-Only analyze project for this version id or an interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
-the interval boundaries are included in the analysis.
-Per default all version ids are considered.
+The id of the project for which the version pairs are analyzed.
 
 =item B<-w C<work_dir>>
 
-Use C<work_dir> as the working directory. Defaults to F<$SCRIPT_DIR/projects/>.
+Use C<work_dir> as the working directory.
+
+=item B<-v C<version_id>>
+
+Only analyze this version id or interval of version ids (optional).
+The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+provided, the interval boundaries are included in the analysis.
+Per default all version ids are considered.
 
 =head1 DESCRIPTION
 
 Runs the following workflow for the project C<project_id> -- the results are
-written to F<$DB_DIR/TAB_TRIGGER>.
+written to F<work_dir/TAB_TRIGGER>.
 
-For all B<reviewed> revision pairs <rev1,rev2> in F<$DB_DIR/$TAB_REV_PAIRS>:
+For all B<reviewed> version pairs in F<work_dir/$TAB_REV_PAIRS>:
 
 =over 4
 
-=item 1) Checkout rev2
+=item 1) Checkout fixed version
 
 =item 2) Compile src and test
 
@@ -70,9 +69,9 @@ For all B<reviewed> revision pairs <rev1,rev2> in F<$DB_DIR/$TAB_REV_PAIRS>:
 
 =item
 
-=item 4) Checkout rev2
+=item 4) Checkout fixed version
 
-=item 5) Apply src patch (rev2->rev1)
+=item 5) Apply src patch (fixed -> buggy)
 
 =item 6) Compile src and test
 
@@ -89,17 +88,17 @@ For all B<reviewed> revision pairs <rev1,rev2> in F<$DB_DIR/$TAB_REV_PAIRS>:
 
 =item
 
-=item 8) Run every triggering test in isolation on rev2 and verify it passes
+=item 8) Run every triggering test in isolation on the fixed version and verify that it passes
 
-=item 9) Run every triggering test in isolation on rev1 and verify it fails
+=item 9) Run every triggering test in isolation on the buggy verision and verify that it fails
 
 =item 10) Export triggering tests to F<C<work_dir>/"project_id"/triggering_tests>
 
 =back
 
-The result for each individual step is stored in F<$DB_DIR/$TAB_TRIGGER>.
+The result for each individual step is stored in F<work_dir/$TAB_TRIGGER>.
 
-For each steps the output table contains a column, indicating the result of the
+For each step the output table contains a column, indicating the result of the
 the step or '-' if the step was not applicable.
 
 If the C<version_id> is provided in addition to the C<project_id>, then only
@@ -109,7 +108,6 @@ this C<version_id> is considered for the project.
 use warnings;
 use strict;
 use File::Basename;
-use List::Util qw(all);
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -121,24 +119,19 @@ use DB;
 use Utils;
 
 ############################## ARGUMENT PARSING
-# Issue usage message and quit
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id [-v version_id] [-w working_dir]";
-}
-
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or _usage();
+getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $VID, $working) =
+my ($PID, $VID, $WORK_DIR) =
     ($cmd_opts{p},
-     $cmd_opts{v} // undef,
-     $cmd_opts{w} // "$SCRIPT_DIR/projects"
+     $cmd_opts{v},
+     $cmd_opts{w}
     );
 
-_usage() unless all {defined} ($PID, $working); # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
 # TODO make output dir more flexible
-my $db_dir = defined $cmd_opts{w} ? $working : $DB_DIR;
+my $db_dir = $WORK_DIR;
 
 # Check format of target version id
 if (defined $VID) {
@@ -150,7 +143,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $working);
+my $project = Project::create_project($PID, $WORK_DIR);
 $project->{prog_root} = $TMP_DIR;
 
 # Get database handle for results
@@ -159,11 +152,11 @@ my $dbh_revs = DB::get_db_handle($TAB_REV_PAIRS, $db_dir);
 my @COLS = DB::get_tab_columns($TAB_TRIGGER) or die;
 
 # Set up directory for triggering tests
-my $OUT_DIR = "$working/$PID/trigger_tests";
+my $OUT_DIR = "$WORK_DIR/$PID/trigger_tests";
 system("mkdir -p $OUT_DIR");
 
 # dependent tests saved to this file
-my $DEP_TEST_FILE            = "$working/$PID/dependent_tests";
+my $DEP_TEST_FILE            = "$WORK_DIR/$PID/dependent_tests";
 
 # Temporary files used for saving failed test results in
 my $FAILED_TESTS_FILE        = "$TMP_DIR/test.run";
@@ -183,7 +176,7 @@ foreach my $id (@ids) {
     $data{$PROJECT} = $PID;
     $data{$ID} = $id;
 
-    my $patch_file     = "$working/$PID/patches/$id.src.patch";
+    my $patch_file     = "$WORK_DIR/$PID/patches/$id.src.patch";
     -e $patch_file or die "project does not have patch";
 
     # V2 must not have any failing tests

@@ -22,10 +22,43 @@
 # THE SOFTWARE.
 #-------------------------------------------------------------------------------
 
+=pod
+
+=head1 NAME
+
+initialize-revisions.pl -- Initialize all revisions: identify the directory 
+                           layout and perform a sanity check on each revision.
+
+=head1 SYNOPSIS
+
+initialize-revisions.pl -p project_id -w work_dir [ -v version_id]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-p C<project_id>>
+
+The id of the project for which the revisions are initialized.
+
+=item B<-w C<work_dir>>
+
+Use C<work_dir> as the working directory.
+
+=item B<-v C<version_id>>
+
+Only analyze this version id or interval of version ids (optional).
+The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+provided, the interval boundaries are included in the analysis.
+Per default all version ids are considered.
+
+=back
+
+=cut
+
 use warnings;
 use strict;
 use File::Basename;
-use List::Util qw(all);
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -37,23 +70,16 @@ use DB;
 use Utils;
 
 ############################## ARGUMENT PARSING
-#
-# Issue usage message and quit
-#
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id [-v version_id] [-w working_dir]";
-}
-
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or _usage();
+getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $VID, $working) =
+my ($PID, $VID, $WORK_DIR) =
     ($cmd_opts{p},
-     $cmd_opts{v} // undef,
-     $cmd_opts{w} // "$SCRIPT_DIR/projects"
+     $cmd_opts{v},
+     $cmd_opts{w}
     );
 
-_usage() unless all {defined} ($PID, $working); # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
 # Check format of target version id
 if (defined $VID) {
@@ -65,7 +91,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $working);
+my $project = Project::create_project($PID, $WORK_DIR);
 $project->{prog_root} = $TMP_DIR;
 
 ############################### MAIN LOOP

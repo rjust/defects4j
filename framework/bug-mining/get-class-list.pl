@@ -31,7 +31,7 @@ export class names of loaded and modified classes.
 
 =head1 SYNOPSIS
 
-get-class-list.pl -p project_id [-v version_id] [-w work_dir]
+get-class-list.pl -p project_id -w work_dir [-v version_id]
 
 =head1 OPTIONS
 
@@ -41,17 +41,16 @@ get-class-list.pl -p project_id [-v version_id] [-w work_dir]
 
 The id of the project for which loaded and modified classes are determined.
 
-=item B<-v C<version_id>>
-
-Only analyze this version id or an interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
-the interval boundaries are included in the analysis.
-Per default all version ids that have reviewed triggering test(s) in $TAB_TRIGGER
-are considered.
-
 =item B<-w C<work_dir>>
 
-Use C<work_dir> as the working directory. Defaults to F<$SCRIPT_DIR/projects/>.
+Use C<work_dir> as the working directory.
+
+=item B<-v C<version_id>>
+
+Only analyze this version id or interval of version ids (optional).
+The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+provided, the interval boundaries are included in the analysis.
+Per default all version ids are considered.
 
 =back
 
@@ -62,11 +61,11 @@ are written to F<C<work_dir>/"project_id"/loaded_classes> and the
 modified classes are written to
 F<C<work_dir>/projects/"project_id"/modified_classes>.
 
-For all revision pairs <rev1,rev2> that have reviewed triggering test(s) in $TAB_TRIGGER:
+For all version pairs that have reviewed triggering test(s) in $TAB_TRIGGER:
 
 =over 4
 
-=item 1) Checkout rev2.
+=item 1) Checkout fixed version.
 
 =item 2) Compile src and test.
 
@@ -78,14 +77,13 @@ For all revision pairs <rev1,rev2> that have reviewed triggering test(s) in $TAB
 
 =back
 
-For each loaded or modified (project-related) class, the corresponding result file contains one row
+For each loaded or modified (project-related) class, the corresponding output file contains one row
 with the fully-qualified classname.
 
 =cut
 use warnings;
 use strict;
 use File::Basename;
-use List::Util qw(all);
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -100,24 +98,19 @@ use DB;
 use Utils;
 
 ############################## ARGUMENT PARSING
-# Issue usage message and quit
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id [-v version_id] [-w working_dir]";
-}
-
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or _usage();
+getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $VID, $working) =
+my ($PID, $VID, $WORK_DIR) =
     ($cmd_opts{p},
-     $cmd_opts{v} // undef,
-     $cmd_opts{w} // "$SCRIPT_DIR/projects"
+     $cmd_opts{v},
+     $cmd_opts{w}
     );
 
-_usage() unless all {defined} ($PID, $working); # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
 # TODO make output dir more flexible
-my $db_dir = defined $cmd_opts{w} ? $working : $DB_DIR;
+my $db_dir = $WORK_DIR;
 
 # Check format of target version id
 if (defined $VID) {
@@ -129,16 +122,16 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $working);
+my $project = Project::create_project($PID, $WORK_DIR);
 $project->{prog_root} = $TMP_DIR;
 
 # Set up directory for loaded and modified classes
-my $LOADED = "$working/$PID/loaded_classes";
-my $MODIFIED = "$working/$PID/modified_classes";
+my $LOADED = "$WORK_DIR/$PID/loaded_classes";
+my $MODIFIED = "$WORK_DIR/$PID/modified_classes";
 system("mkdir -p $LOADED $MODIFIED");
 # Directory containing triggering tests and patches
-my $TRIGGER = "$working/$PID/trigger_tests";
-my $PATCHES = "$working/$PID/patches";
+my $TRIGGER = "$WORK_DIR/$PID/trigger_tests";
+my $PATCHES = "$WORK_DIR/$PID/patches";
 
 my @ids  = _get_version_ids($VID);
 foreach my $vid (@ids) {
@@ -280,7 +273,7 @@ sub _get_version_ids {
 All valid project_ids are listed in F<Project.pm>.
 Run after getting trigger tests by executing F<get-trigger.pl>.
 After running this script, you can determine the revisions that have minimized
-patched. Then you can use F<promote-to-directory.pl> to merge desired
+patches. Then you can use F<promote-to-directory.pl> to merge desired
 revisions with the main database.
 
 =cut

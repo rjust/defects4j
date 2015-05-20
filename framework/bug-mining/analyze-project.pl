@@ -39,7 +39,7 @@ analyze-project.pl -p project_id -w work_dir [ -v version_id]
 
 =item B<-p C<project_id>>
 
-The id of the project for which the revision pairs are analyzed.
+The id of the project for which the version pairs are analyzed.
 
 =item B<-w C<work_dir>>
 
@@ -47,7 +47,7 @@ Use C<work_dir> as the working directory.
 
 =item B<-v C<version_id>>
 
-Only analyze project for this version id or an interval of version ids (optional).
+Only analyze this version id or interval of version ids (optional).
 The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
 provided, the interval boundaries are included in the analysis.
 Per default all version ids are considered.
@@ -56,8 +56,8 @@ Per default all version ids are considered.
 
 =head1 DESCRIPTION
 
-Runs the following worflow for all revision pairs <rev1,rev2> in the project's
-C<commit-db>, or (if -v is specified) for a subset of revision pairs:
+Runs the following worflow for all versions in the project's
+C<commit-db>, or (if -v is specified) for a subset of versions:
 
 
 =over 4
@@ -68,7 +68,7 @@ C<commit-db>, or (if -v is specified) for a subset of revision pairs:
          Only exported if it does not exist. Exported files are named F<$vid.src.patch> and
          F<$vid.test.patch> for source and test diffs, accordingly.
 
-=item 3) Checkout rev2
+=item 3) Checkout fixed revision
 
 =item 4) Compile src and test
 
@@ -78,9 +78,9 @@ C<commit-db>, or (if -v is specified) for a subset of revision pairs:
          no more failing tests in F<$TEST_RUNS> consecutive executions.
          (Maximum limit of looping in this phase is specified by F<$MAX_TEST_RUNS>)
 
-=item 6) Checkout rev2
+=item 6) Checkout fixed version
 
-=item 7) Apply src patch (rev2 -> rev1)
+=item 7) Apply src patch (fixed -> buggy)
 
 =item 8) Compile src and test
 
@@ -92,10 +92,10 @@ For each steps the output table contains a column, indicating the result of the
 the step or '-' if the step was not applicable.
 
 =cut
+
 use warnings;
 use strict;
 use File::Basename;
-use List::Util qw(all);
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -110,16 +110,16 @@ use Utils;
 my %cmd_opts;
 getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $VID, $working) =
+my ($PID, $VID, $WORK_DIR) =
     ($cmd_opts{p},
      $cmd_opts{v},
      $cmd_opts{w}
     );
 
-_usage() unless all {defined} ($PID, $working); # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
 # TODO make output dir more flexible
-my $db_dir = $working;
+my $db_dir = $WORK_DIR;
 
 # Check format of target version id
 if (defined $VID) {
@@ -136,7 +136,7 @@ my $MAX_TEST_RUNS=10;
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $working);
+my $project = Project::create_project($PID, $WORK_DIR);
 $project->{prog_root} = $TMP_DIR;
 
 # Get database handle for results
@@ -144,14 +144,14 @@ my $dbh = DB::get_db_handle($TAB_REV_PAIRS, $db_dir);
 my @COLS = DB::get_tab_columns($TAB_REV_PAIRS) or die;
 
 # Set up directory for src and test patches
-my $PATCH_DIR = "$working/$PID/patches";
+my $PATCH_DIR = "$WORK_DIR/$PID/patches";
 system("mkdir -p $PATCH_DIR");
 
 # Directory for patches already minimized manually
 my $MINIMIZED_PATCHES = "$SCRIPT_DIR/minimized-patches/$PID";
 
 # Set up directory for failing tests
-my $FAIL_DIR = "$working/$PID/failing_tests";
+my $FAIL_DIR = "$WORK_DIR/$PID/failing_tests";
 system("mkdir -p $FAIL_DIR");
 
 
