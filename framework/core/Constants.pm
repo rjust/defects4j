@@ -94,7 +94,16 @@ our $UTIL_DIR = ($ENV{'UTIL_DIR'} or abs_path("$SCRIPT_DIR/util"));
 The base directory (I<$SCRIPT_DIR/..>)
 
 =cut
-our $BASE_DIR = ($ENV{'BASE_DIR'} or abs_path("$SCRIPT_DIR/../"));
+our $BASE_DIR = ($ENV{'BASE_DIR'} or abs_path("$SCRIPT_DIR/.."));
+
+=pod
+
+=item B<PROJECT_DIR>
+
+The directory that contains the commit-db for each configured project (I<$SCRIPT_DIR/projects>)
+
+=cut
+our $PROJECT_DIR = ($ENV{'PROJECT_DIR'} or abs_path("$SCRIPT_DIR/projects"));
 
 =pod
 
@@ -142,6 +151,7 @@ $CORE_DIR
 $LIB_DIR
 $UTIL_DIR
 $BASE_DIR
+$PROJECT_DIR
 $MAJOR_ROOT
 $REPO_DIR
 
