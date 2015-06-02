@@ -1,0 +1,68 @@
+<project name="<PID>" basedir="${basedir}">
+
+    <property name="compile.debug" value="yes" />
+
+    <!-- script.dir property has to be provided by caller! -->
+    <fail message="Property script.dir not set!" unless="script.dir" />
+
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
+
+    <!-- Include build file of the checked-out project version -->
+    <import file="${basedir}/build.xml"/>
+    <!-- Include project build file, which provides general targets -->
+    <import file="../project.build.xml"/>
+
+    <!-- TODO: Make sure that the following properties and paths are defined:
+           - source.home        ->  Direcotry of sources
+           - test.home          ->  Directory of test sources
+           - build.home         ->  Root directory for compiled (test) classes
+           - test.classpath     ->  Classpath to compile tests
+           - compile.classpath  ->  Classpath to compile sources
+    --> 
+ 
+    <!-- Provide directory of the test sources and target directory for classes -->
+    <property name="bug-db.test.dir" value="${test.home}"/>
+    <property name="classes.dir" value="${build.home}/classes"/>
+
+<!--
+    Run tests
+-->
+    <target name="test"  depends="compile.tests" description="Run unit tests">
+        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath refid="test.classpath"/>
+            <classpath>
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${junit.jar}" />
+            </classpath>
+
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class">
+                    <fileset dir="${test.home}" excludes="${exclude.list}">
+                        <include name="**/*Test.java"/>
+                        <exclude name="**/Abstract*.java"/>
+                    </fileset>
+                </batchtest>
+        </junit>
+    </target>
+
+<!--
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+-->
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
+            failonerror="true">
+
+            <arg value="${test.entry}"/>
+            <jvmarg value="-verbose:class"/>
+            <classpath refid="test.classpath"/>
+            <classpath>
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${junit.jar}" />
+            </classpath>
+        </java>
+    </target>
+</project>
