@@ -10,6 +10,10 @@
     <property name="jodaconvert.jar" value="${script.dir}/build-scripts/Time/lib/joda-convert-1.2.jar" />
     <property name="maven.repo.local" value="${script.dir}/build-scripts/Time/lib/" />
 
+    <!-- Generate all debugging information -->
+    <property name="compile.debuglevel" value="lines,source,vars" />
+
+    <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar" />
     <!-- Include existing project build file -->
     <import file="${basedir}/build.xml" />
 
