@@ -26,11 +26,11 @@
 
 =head1 NAME
 
-minimize_patch.pl -- View and minimize patch in a merge editor.
+minimize-patch.pl -- View and minimize patch in a merge editor.
 
 =head1 SYNOPSIS
 
-minimize_patch.pl -p project_id -w work_dir -v version_id
+minimize-patch.pl -p project_id -w work_dir -v version_id
 
 =head1 OPTIONS
 
