@@ -12,6 +12,7 @@
     <path id="compile.classpath">
         <!-- Add libraries if necessary -->
         <pathelement location="${dir.target.classes}" />
+        <pathelement location="lib/junit-4.11.jar"/>
     </path>
 
     <!-- Test classpath -->
