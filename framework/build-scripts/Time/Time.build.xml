@@ -148,7 +148,7 @@
 -->
     <target name="monitor.test"  description="Run unit test and monitor class loader">
         <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
-            failonerror="true">
+            failonerror="true" logError="true">
 
             <arg value="${test.entry}"/>
             <jvmarg value="-verbose:class"/>

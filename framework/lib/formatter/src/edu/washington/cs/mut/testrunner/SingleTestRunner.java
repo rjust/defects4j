@@ -1,32 +1,60 @@
 package edu.washington.cs.mut.testrunner;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 
 /**
- * Simple JUnit test runner that takes a test method as 
- * command line argument and executes only this method.
+ * Simple JUnit test runner that takes a single test class or test method as
+ * command line argument and executes only this class or method.
  *
- * Example:
+ * Examples:
  * org.x.y.z.TestClass::testMethod1
+ *   -> only testMethod1 in TestClass gets executed
  *
- * -> only testMethod1 in TestClass gets executed
+ * org.x.y.z.TestClass
+ *   -> only TestClass (with all its test methods) gets executed
  */
 public class SingleTestRunner {
-    public static void main(String... args) {
-        try{
-            String name=args[0];
-            int index = name.indexOf(':');
-            String className=name.substring(0,index);
-            String methName=name.substring(index+2);
 
-            Request req=null;
-            req = Request.method(Class.forName(className), methName);
-            Result res = new JUnitCore().run(req);
-            if(!res.wasSuccessful()) System.exit(1);
-        }catch(Exception e){
-            e.printStackTrace();
+    private static void usageAndExit() {
+        System.err.println("usage: java " + SingleTestRunner.class.getName() + " testClass[::testMethod]");
+        System.exit(1);
+    }
+
+    public static void main(String ... args) {
+        if (args.length != 1) {
+            usageAndExit();
+        }
+        Matcher m = Pattern.compile("(?<className>[^:]+)(::(?<methodName>[^:]+))?").matcher(args[0]);
+        if (!m.matches()) {
+            usageAndExit();
+        }
+
+        // Determine and load test class
+        String className=m.group("className");
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(className);
+        } catch(Exception e) {
+            System.err.println("Couldn't load class (" + className + "): " + e.getMessage());
+            System.exit(1);
+        }
+
+        // Check whether a test method is provided and create request
+        String methodName=m.group("methodName");
+        Request req;
+        if (methodName == null) {
+            req = Request.aClass(clazz);
+        } else {
+            req = Request.method(clazz, methodName);
+        }
+
+        Result res = new JUnitCore().run(req);
+        if (!res.wasSuccessful()) {
             System.exit(1);
         }
     }

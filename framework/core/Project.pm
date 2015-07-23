@@ -755,7 +755,7 @@ If the test execution fails, the returned reference is C<undef>.
 sub monitor_test {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $single_test, $revision_id) = @_;
-    $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
+    $single_test =~ /^([^:]+)(::([^:]+))?$/ or die "Wrong format for single test!";
 
     my $log_file = "$self->{prog_root}/classes.log";
 
