@@ -76,16 +76,25 @@ $cmd_descr{compile}="Compile a fixed or faulty program version";
 
 =item B<test>
 
-Test a fixed or faulty project version using the accompanying test suite
+Test a fixed or faulty project version using the accompanying test suite.
 
 =cut
 $cmd_descr{test}="Test a fixed or faulty program version";
 
 =pod
 
+=item B<monitor.test>
+
+Run a single test class or test method and monitor the class loader.
+
+=cut
+$cmd_descr{"monitor.test"}="Test a fixed or faulty program version";
+
+=pod
+
 =item B<mutation>
 
-Perform mutation analysis on a fixed or faulty project version using the accompanying test suite
+Perform mutation analysis on a fixed or faulty project version using the accompanying test suite.
 
 =cut
 $cmd_descr{"mutation"}="Perform mutation analysis on a fixed or faulty program version";
@@ -108,7 +117,7 @@ sub _d4j_usage {
     print("usage: " . basename($0) . " <command> [<args>]\n\n");
     print("Commands:\n");
     for my $cmd (sort keys %cmd_descr) {
-        printf("  %-8s  %-s\n", $cmd, $cmd_descr{$cmd});
+        printf("  %-12s  %-s\n", $cmd, $cmd_descr{$cmd});
     }
     exit 1;
 }
