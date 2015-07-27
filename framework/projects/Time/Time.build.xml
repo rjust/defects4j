@@ -110,6 +110,15 @@
       </else> </if>
     </target>
 
+    <!-- List of all tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.dir}" excludes="${exclude.list}">
+        <include name="**/TestAll.java" />
+        <exclude name="**/*Abstract*Test.java" />
+    </fileset>
+
+<!--
+    Run tests
+-->
     <target name="test" depends="compile.tests" 
             description="Runs the test cases">
 
@@ -128,15 +137,12 @@
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
 
               <batchtest unless="test.entry.class">
-                  <fileset dir="${test.dir}" excludes="${exclude.list}" id="testfileset">
-                    <include name="**/TestAll.java" /> 
-                    <exclude name="**/*Abstract*Test.java" />
-                  </fileset>
+                    <fileset refid="all.manual.tests" />
               </batchtest>
         </junit>
         <!-- fail build in case we are running all classes, but there are none in the fileset -->
         <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="testfileset" property="fileset.notempty" setonempty="false" />
+            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
             <fail unless="fileset.notempty" message="Test is running with empty fileset" />
         </then> </if>
     </target>

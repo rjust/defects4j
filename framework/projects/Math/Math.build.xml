@@ -63,53 +63,19 @@
     </then> </if>
     <!-- end of fixing ant script -->
 
-<!-- 
-    Run mutation analysis 
---> 
-    <target name="mutation.test" depends="compile.tests">
-        <!-- Test a generated test suite -->                      
-        <if><isset property="test.include"/>                   
-            <then>                                             
-                <fileset id="major.tests" dir="${bug-db.test.dir}">
-                    <include name="**/${test.include}"/>          
-                </fileset>                                     
-            </then>                                            
-            <else>                                             
-                <!-- Test existing test suite -->
-                <fileset id="major.tests" dir="${test.home}" excludes="${exclude.list}">
-                    <include name="**/*Test.java"/> 
-                    <include name="**/*TestBinary.java"/> 
-                    <include name="**/*TestPermutations.java"/> 
-                    <exclude name="**/*Abstract*Test.java"/>
-                    <exclude name="**/random/*.java"/>
-                </fileset>                                     
-            </else>                                            
-        </if>                     
-        <!-- Call mutation test target with fileset and classpath -->
-        <antcall target="major.test" inheritRefs="true">          
-            <reference refid="major.tests"/>                   
-            <reference refid="major.classpath"/>               
-        </antcall>                                             
-    </target> 
+    <!-- List of all tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${exclude.list}">
+        <include name="**/*Test.java"/>
+        <include name="**/*TestBinary.java"/>
+        <include name="**/*TestPermutations.java"/>
+        <exclude name="**/random/*.java"/>
+        <exclude name="**/*Abstract*Test.java"/>
+        <exclude name="**/random/*.java"/>
+    </fileset>
 
-<!-- 
-    Run individual test and monitor class loader
-    Test has to be provided as property "test.entry" (class::method)
-    and the output is redirected to "test.output"
---> 
-    <target name="monitor.test"  description="Run unit test and monitor class loader">
-        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
-            failonerror="true" logError="true">
-
-            <arg value="${test.entry}"/>     
-            <jvmarg value="-verbose:class"/>     
-            <classpath refid="test.classpath"/>
-            <classpath>
-                <pathelement path="${formatter_cp}" />
-            </classpath>
-        </java>        
-    </target>
-
+<!--
+    Run tests
+-->
     <target name="test"  depends="compile.tests" description="Run unit tests">
       <junit printsummary="no" fork="no" showOutput="no"> 
            <classpath refid="test.classpath"/>
@@ -121,15 +87,13 @@
            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class"/>
            <batchtest unless="test.entry.class" >
-              <fileset dir="${test.home}" excludes="${exclude.list}">
-                 <include name="**/*Test.java"/> 
-                 <include name="**/*TestBinary.java"/> 
-                 <include name="**/*TestPermutations.java"/> 
-                 <exclude name="**/random/*.java"/>
-                 <exclude name="**/*Abstract*Test.java"/>
-                 <exclude name="**/random/*.java"/>
-              </fileset>
+                <fileset refid="all.manual.tests" />
            </batchtest>
        </junit>
+        <!-- fail build in case we are running all classes, but there are none in the fileset -->
+        <if> <not> <isset property="test.entry.class" /> </not> <then>
+            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
+            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+        </then> </if>
   </target>
 </project>

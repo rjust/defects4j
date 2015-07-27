@@ -3,8 +3,7 @@
 
     <!-- Additional properties such as tests to exclude (exclude.list).
          This property file is automatically generated if necessary. -->
-    <property file="${basedir}/local.build.properties"/> 
-
+    <property file="${basedir}/local.build.properties"/>
 
     <property name="jcrasher.jar" value="${script.dir}/projects/lib/jcrasher-2.1.3.jar"/>
     <property name="cobertura.jar" value="${script.dir}/projects/lib/cobertura-2.0.3.jar"/>
@@ -18,36 +17,75 @@
         <fail unless="ant.refid:test.classpath"/>
         <fail unless="ant.refid:compile.classpath"/>
         <fail unless="ant.refid:major.classpath"/>
+        <fail unless="ant.refid:all.manual.tests" />
     </target>
 
-<!-- 
-    Mutate all classes 
---> 
+<!--
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+-->
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <fail message="Property test.entry not set!" unless="test.entry" />
+        <fail message="Property test.output not set!" unless="test.output" />
+
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner"
+              output="${test.output}" failonerror="true" logError="true">
+
+            <arg value="${test.entry}"/>
+            <jvmarg value="-verbose:class"/>
+            <classpath>
+                <path refid="major.classpath" />
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${junit.jar}" />
+            </classpath>
+        </java>
+    </target>
+
+<!--
+    Mutate all classes
+-->
     <target name="mutate">
-        <!-- 
+        <!--
         Set compiler property to change default compiler to compiler
-        adapter "MajorCompiler". This simple ant compiler adapter will 
-        invoke a compiler executable named "major", which has to be on 
+        adapter "MajorCompiler". This simple ant compiler adapter will
+        invoke a compiler executable named "major", which has to be on
         the PATH!
-        
+
         -->
         <property name="build.compiler" value="major.ant.MajorCompiler"/>
-        <!-- Call original compile target -->  
+        <!-- Call original compile target -->
         <antcall target="compile"/>
-    </target>    
+    </target>
 
-<!-- 
-    Properties for mutation kill map export 
---> 
-    <target name="major.test">
+<!--
+    Run mutation analysis
+-->
+    <target name="mutation.test" >
+        <!-- Test a generated test suite -->
+        <if><isset property="test.include"/>
+            <then>
+                <fileset id="major.tests" dir="${bug-db.test.dir}">
+                    <include name="**/${test.include}"/>
+                    <exclude name="**/WashingtonSuite.java"/>
+                </fileset>
+            </then>
+            <else>
+                <!-- Test existing test suite -->
+                <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
+                <fileset id="major.tests" refid="all.manual.tests" />
+            </else>
+        </if>
+
         <fail message="Property major.exclude not set!" unless="major.exclude" />
         <fail message="Property major.kill.log not set!" unless="major.kill.log" />
-        <echo message="Running mutation analysis ..."/>                       
-        <junit  
-            printsummary="false"                                   
+
+        <echo message="Running mutation analysis ..."/>
+        <junit
+            printsummary="false"
             showoutput="false"
-            fork="no"                                                      
-            
+            fork="no"
+
             mutationAnalysis="true"
             timeoutFactor="16"
             haltonfailure="true"
@@ -59,36 +97,36 @@
             Setting haltonfailure to false leads to the exclusion of
             failing tests -> usually all tests should pass!
             -->
-            
+
             <classpath>
                 <pathelement path="${build.home}/gen-tests" />
             </classpath>
-            <classpath refid="major.classpath"/>                        
-            
+            <classpath refid="major.classpath"/>
+
             <test name="${test.entry.class}" if="test.entry.class" />
             <batchtest unless="test.entry.class" fork="no">
                 <fileset refid="major.tests"/>
             </batchtest>
-        </junit>                                                       
-    </target> 
+        </junit>
+    </target>
 
-<!-- 
-    Compile generated unit tests 
---> 
-    <target name="compile.gen.tests" depends="compile"> 
+<!--
+    Compile generated unit tests
+-->
+    <target name="compile.gen.tests" depends="compile">
         <!-- bug-db.test.dir, build.home, and classes.dir properties have to be provided by caller! -->
         <fail message="Property bug-db.test.dir not set!" unless="bug-db.test.dir" />
         <fail message="Property build.home not set!" unless="build.home" />
         <fail message="Property classes.dir not set!" unless="classes.dir" />
-                    
+
         <echo message="classes.dir: ${classes.dir}" />
         <echo message="build.home: ${build.home}" />
 
         <mkdir dir="${build.home}/gen-tests" />
-        <javac srcdir="${bug-db.test.dir}"                               
-               destdir="${build.home}/gen-tests"                        
-               debug="true"                                            
-               deprecation="false"                                     
+        <javac srcdir="${bug-db.test.dir}"
+               destdir="${build.home}/gen-tests"
+               debug="true"
+               deprecation="false"
                optimize="false">
                <classpath>
                     <path refid="test.classpath" />
@@ -96,21 +134,21 @@
                     <!-- Add dependencies to test generation tools -->
                     <pathelement path="${jcrasher.jar}" />
                </classpath>
-        </javac>                                                       
-    </target> 
+        </javac>
+    </target>
 
-<!-- 
-    Run generated tests 
---> 
+<!--
+    Run generated tests
+-->
     <target name="run.gen.tests"  depends="compile.gen.tests" description="Run generated tests">
         <!-- test.dir, test.include, and class.dir properties have to be provided by caller! -->
         <fail message="Property bug-db.test.dir not set!" unless="bug-db.test.dir" />
         <fail message="Property test.include not set!" unless="test.include" />
         <fail message="Property classes.dir not set!" unless="classes.dir" />
-        
+
         <echo message="classes.dir: ${classes.dir}" />
         <echo message="build.home: ${build.home}" />
-        
+
         <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
             <classpath>
                 <pathelement path="${build.home}/gen-tests" />
@@ -122,21 +160,21 @@
                 <pathelement path="${cobertura.jar}" />
             </classpath>
             <classpath refid="major.classpath"/>
-            
+
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
                 <batchtest unless="test.entry.class">
                     <fileset dir="${bug-db.test.dir}">
-                        <include name="**/${test.include}"/> 
-                        <exclude name="**/WashingtonSuite.java"/> 
+                        <include name="**/${test.include}"/>
+                        <exclude name="**/WashingtonSuite.java"/>
                     </fileset>
                 </batchtest>
         </junit>
     </target>
 
 
-<!-- 
+<!--
     Instrument for cobertura
 -->
     <property name="cobertura.dir" value="${script.dir}/projects/lib/" />
@@ -153,7 +191,7 @@
 
     <target name="coverage.instrument" depends="compile">
         <pathconvert refid="cobertura.classpath" property="cobertura.classpath.property" />
-        
+
         <cobertura-instrument failOnError="true" toDir="${classes.dir}/instrumented">
             <fileset dir="${classes.dir}" includes="${instrument.list}" />
             <auxClasspath path="${cobertura.aux.classpath}" />
@@ -169,7 +207,6 @@
         </antcall>
     </target>
 
-
     <target name="coverage.report">
         <property name="coverage.dir" value="${basedir}/coverage" />
         <mkdir dir="${coverage.dir}" />
@@ -178,18 +215,28 @@
         <cobertura-report format="xml" destdir="${coverage.dir}" srcdir="${coverage.src.dir}" />
     </target>
 
-<!-- 
+<!--
     Export classpath for test generation
 -->
     <target name="export.classpath" depends="compile">
         <fail message="Property file.export not set!" unless="file.export" />
- 
+
         <path id="project.classpath">
             <pathelement path="${classes.dir}" />
             <path refid="compile.classpath" />
         </path>
-    
+
         <pathconvert targetos="unix" property="project.unix.classpath" refid="project.classpath" />
         <echo message="${project.unix.classpath}" file="${file.export}"/>
+    </target>
+
+<!--
+    Export list of all manual test classes
+-->
+    <target name="export.all.tests">
+        <fail message="Property file.export not set!" unless="file.export" />
+        <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
+        <pathconvert pathsep="${line.separator}" property="all.tests.filtered" refid="all.manual.tests" />
+        <echo message="${all.tests.filtered}" file="${file.export}"/>
     </target>
 </project>
