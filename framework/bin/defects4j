@@ -88,7 +88,7 @@ $cmd_descr{test}="Test a fixed or faulty program version";
 Run a single test class or test method and monitor the class loader.
 
 =cut
-$cmd_descr{"monitor.test"}="Test a fixed or faulty program version";
+$cmd_descr{"monitor.test"}="Run a single test class or method and monitor the class loader";
 
 =pod
 
