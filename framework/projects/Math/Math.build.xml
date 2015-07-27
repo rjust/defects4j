@@ -15,10 +15,10 @@
     <import file="../project.build.xml"/>
 
     <!-- Directory of the test sources, the default is the directory of the
-         existing tests --> 
-    <property name="bug-db.test.dir" value="${test.home}"/> 
+         existing tests -->
+    <property name="bug-db.test.dir" value="${test.home}"/>
 
-    <!-- Classpath to run mutation analysis --> 
+    <!-- Classpath to run mutation analysis -->
     <path id="major.classpath">
         <path refid="test.classpath"/>
         <pathelement path="${junit.jar}" />
@@ -39,7 +39,7 @@
         newTarget.setName(newtargetname);
             project.addTarget(newtargetname, newTarget);
         project.setProperty(setproperty, "yes");
-        }           
+        }
          ]]>
     </scriptdef>
 
@@ -77,7 +77,7 @@
     Run tests
 -->
     <target name="test"  depends="compile.tests" description="Run unit tests">
-      <junit printsummary="no" fork="no" showOutput="no"> 
+      <junit printsummary="no" fork="no" showOutput="no">
            <classpath refid="test.classpath"/>
            <classpath>
               <pathelement path="${formatter_cp}" />

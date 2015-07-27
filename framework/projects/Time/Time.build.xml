@@ -22,21 +22,21 @@
 
     <!-- Additional properties such as tests to exclude (exclude.list).
          This property file is automatically generated if necessary. -->
-    <property file="${basedir}/local.build.properties"/> 
+    <property file="${basedir}/local.build.properties"/>
 
 
     <!-- Values necessary for mutation scripting to work -->
-    <if> <isset property="ant.refid:compile.classpath" /> 
+    <if> <isset property="ant.refid:compile.classpath" />
           <then>
             <property name="test.dir" value="${test.home}" />
           </then>
-          <else> 
-            <property name="oldversion" value="yes" /> 
+          <else>
+            <property name="oldversion" value="yes" />
             <path id="compile.classpath" refid="build.classpath" />
             <path id="test.classpath"    refid="build.test.classpath" />
             <property name="test.dir" value="${maven.build.testDir.0}" />
             <property name="source.home" value="${maven.build.srcDir.0}" />
-          </else> 
+          </else>
     </if>
     <property name="test.home" value="${maven.build.testOutputDir}" />
     <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
@@ -44,7 +44,7 @@
     </condition>
     <property name="build.home" value="${classes.dir}/.." />
 
-    <!-- Classpath to run mutation analysis --> 
+    <!-- Classpath to run mutation analysis -->
     <path id="major.classpath">
         <path refid="compile.classpath" />
         <path refid="test.classpath" />
@@ -119,10 +119,10 @@
 <!--
     Run tests
 -->
-    <target name="test" depends="compile.tests" 
+    <target name="test" depends="compile.tests"
             description="Runs the test cases">
 
-        <junit printSummary="yes" 
+        <junit printSummary="yes"
                 haltonerror="no" haltonfailure="no" fork="no">
 
             <classpath>
@@ -146,55 +146,4 @@
             <fail unless="fileset.notempty" message="Test is running with empty fileset" />
         </then> </if>
     </target>
-
-<!-- 
-    Run individual test and monitor class loader
-    Test has to be provided as property "test.entry" (class::method)
-    and the output is redirected to "test.output"
---> 
-    <target name="monitor.test"  description="Run unit test and monitor class loader">
-        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
-            failonerror="true" logError="true">
-
-            <arg value="${test.entry}"/>     
-            <jvmarg value="-verbose:class"/>     
-            
-            <classpath>
-                <path refid="test.classpath" />
-                <pathelement location="${junit.jar}"/>
-                <pathelement path="${classes.dir}" />
-                <pathelement path="${test.home}" />
-                <pathelement path="${formatter_cp}" />
-            </classpath>
-        </java>        
-    </target>
-
-
-<!-- 
-    Run mutation analysis 
---> 
-    <target name="mutation.test" >
-        <!-- Test a generated test suite -->                      
-        <if><isset property="test.include"/>                   
-            <then>                                             
-                <fileset id="major.tests" dir="${bug-db.test.dir}">
-                    <include name="**/${test.include}"/>          
-                    <exclude name="**/WashingtonSuite.java"/>          
-                </fileset>                                     
-            </then>                                            
-            <else>                                             
-                <!-- Test existing test suite -->
-                <echo message="${test.dir}" />
-                <fileset id="major.tests" dir="${test.dir}" excludes="${exclude.list}">
-                    <include name="**/TestAll.java" /> 
-                    <exclude name="org/joda/time/chrono/gj/TestAll.java" /> 
-                </fileset>
-            </else>                                            
-        </if>                     
-        <!-- Call mutation test target with fileset and classpath -->
-        <antcall target="major.test" inheritRefs="true">          
-            <reference refid="major.tests"/>                   
-            <reference refid="major.classpath"/>               
-        </antcall>                                             
-    </target> 
 </project>
