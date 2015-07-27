@@ -110,6 +110,17 @@ Print information for a specific project or bug.
 =cut
 $cmd_descr{info}="Print information for a specific project";
 
+=pod
+
+=item B<export>
+
+Export a version-specific property.
+
+=back
+
+=cut
+$cmd_descr{export}="Export a version-specific property";
+
 #
 # Issue usage message and quit
 #

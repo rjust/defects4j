@@ -1,0 +1,144 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-export -- Export project-specific properties.
+
+=head1 SYNOPSIS
+
+d4j-export -p property_name [-o output_file] [-w work_dir] [-l]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-p C<property_name>>
+
+Export the value of this property (classpath, all.tests, relevant.tests).
+
+=item B<-o F<output_file>>
+
+Write output to this file (optional). By default the script prints the value(s)
+of the property to stdout.
+
+=item B<-w F<work_dir>>
+
+The working directory of the checked-out project version (optional). Default is
+the current directory.
+
+=back
+
+=head1 DESCRIPTION
+
+This script exports the value(s) for a specific property.
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use Utils;
+use Project;
+use Getopt::Std;
+
+my %props = (
+    "classpath" => "Classpath to run the checked-out project version",
+    "all.tests" => "List of all developer-written tests",
+    "rel.tests" => "List of relevant developer-written tests (i.e., all tests that directly or indirectly test the modified files.)",
+);
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print (STDERR "usage: $0 -p property_name [-o output_file] [-w work_dir]\n\n");
+    _list_props();
+    exit 1;
+}
+
+#
+# List valid properties
+#
+sub _list_props {
+    print(STDERR "Properties:\n");
+    for my $prop (sort keys %props) {
+        printf(STDERR "  %-10s  %-s\n", $prop, $props{$prop});
+    }
+}
+
+my %cmd_opts;
+getopts('p:o:w:', \%cmd_opts) or _usage();
+
+my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
+my $PROP     = $cmd_opts{p};
+my $OUT_FILE = $cmd_opts{o};
+defined $PROP or _usage();
+unless (defined $props{$PROP}) {
+    print(STDERR "Unknown property $PROP\n\n");
+    _list_props();
+    exit 1;
+}
+
+my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
+unless(defined $config) {
+    print(STDERR "$WORK_DIR is not a valid working directory!\n");
+    exit 1;
+}
+
+# Instantiate project and set working directory
+my $project = Project::create_project($config->{$CONFIG_PID});
+$project->{prog_root} = $WORK_DIR;
+
+# Export property to a temporary file
+my $tmp_file = "$WORK_DIR/.export.$PROP";
+$project->_ant_call("export.$PROP", "-Dfile.export=$tmp_file") == 0 
+    or die "Cannot export property $PROP";
+
+# Read temporary file and either print to STDOUT or out_file
+open(IN, "<$tmp_file") or die "Cannot read exported property from file system";
+my @result = <IN>;
+if (defined $OUT_FILE) {
+    open(OUT, ">$OUT_FILE") or die "Cannot write output file";
+    foreach (@result) {
+        print(OUT $_);
+    }
+    close(OUT);
+} else {
+    foreach (@result) {
+        print($_);
+    }
+    print("\n");
+}
+
+1;
+
+=pod
+
+=head1 SEE ALSO
+
+All valid project_ids are listed in F<Project.pm>
+
+=cut
