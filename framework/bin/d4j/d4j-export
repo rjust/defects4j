@@ -81,7 +81,7 @@ sub _usage {
 sub _list_props {
     print(STDERR "Properties:\n");
     for my $prop (sort keys %props) {
-        printf(STDERR "  %-10s  %-s\n", $prop, $props{$prop});
+        printf(STDERR "  %-15s  %-s\n", $prop, $props{$prop});
     }
 }
 
@@ -128,6 +128,7 @@ if (defined $OUT_FILE) {
     }
     print("\n");
 }
+system("rm -f $tmp_file");
 
 #
 # Determine list of properties that can be exported

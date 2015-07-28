@@ -221,6 +221,22 @@
 ################################################################################
 -->
 
+<!-- Source directory of classes -->
+    <target name="export.dir.src.classes"
+            description="Source directory of classes">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.dir.src.classes}" file="${file.export}"/>
+    </target>
+
+<!-- Source directory of tests -->
+    <target name="export.dir.src.tests"
+            description="Source directory of tests">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.dir.src.tests}" file="${file.export}"/>
+    </target>
+
 <!-- Compile classpath -->
     <target name="export.cp.compile" depends="compile"
             description="Classpath to compile the project">
