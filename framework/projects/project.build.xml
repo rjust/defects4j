@@ -216,9 +216,14 @@
     </target>
 
 <!--
-    Export compile classpath
+################################################################################
+    Export targets
+################################################################################
 -->
-    <target name="export.cp.compile" depends="compile" description="Export compile classpath">
+
+<!-- Compile classpath -->
+    <target name="export.cp.compile" depends="compile"
+            description="Classpath to compile the project">
         <fail message="Property file.export not set!" unless="file.export" />
 
         <path id="project.classpath">
@@ -226,27 +231,24 @@
             <path refid="compile.classpath" />
         </path>
 
-        <pathconvert targetos="unix" property="project.unix.classpath" refid="project.classpath" />
-        <echo message="${project.unix.classpath}" file="${file.export}"/>
+        <pathconvert property="cp.compile" refid="project.classpath" />
+        <echo message="${cp.compile}" file="${file.export}"/>
     </target>
 
-<!--
-    Export test classpath
--->
-    <target name="export.cp.test" depends="compile" description="Export test classpath">
+<!-- Test classpath -->
+    <target name="export.cp.test" depends="compile"
+            description="Classpath to compile and run the developer-written tests">
         <fail message="Property file.export not set!" unless="file.export" />
 
-        <pathconvert targetos="unix" property="project.unix.classpath" refid="test.classpath" />
-        <echo message="${project.unix.classpath}" file="${file.export}"/>
+        <pathconvert property="cp.test" refid="test.classpath" />
+        <echo message="${cp.test}" file="${file.export}"/>
     </target>
 
-<!--
-    Export list of all manual test classes
--->
-    <target name="export.all.tests" description="Export list of all developer-written tests">
+<!-- List of all manual test classes -->
+    <target name="export.all.tests" description="List of all developer-written tests">
         <fail message="Property file.export not set!" unless="file.export" />
         <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
-        <pathconvert pathsep="${line.separator}" property="all.tests.filtered" refid="all.manual.tests" />
-        <echo message="${all.tests.filtered}" file="${file.export}"/>
+        <pathconvert pathsep="${line.separator}" property="all.tests" refid="all.manual.tests" />
+        <echo message="${all.tests}" file="${file.export}"/>
     </target>
 </project>

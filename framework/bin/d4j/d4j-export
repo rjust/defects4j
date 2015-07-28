@@ -28,7 +28,7 @@ d4j-export -- Export project-specific properties.
 
 =head1 SYNOPSIS
 
-d4j-export -p property_name [-o output_file] [-w work_dir] [-l]
+d4j-export -p property_name [-o output_file] [-w work_dir]
 
 =head1 OPTIONS
 
@@ -36,7 +36,7 @@ d4j-export -p property_name [-o output_file] [-w work_dir] [-l]
 
 =item B<-p C<property_name>>
 
-Export the value of this property (classpath, all.tests, relevant.tests).
+Export the value(s) of this property.
 
 =item B<-o F<output_file>>
 
@@ -64,11 +64,7 @@ use Utils;
 use Project;
 use Getopt::Std;
 
-my %props = (
-    "classpath" => "Classpath to run the checked-out project version",
-    "all.tests" => "List of all developer-written tests",
-    "rel.tests" => "List of relevant developer-written tests (i.e., all tests that directly or indirectly test the modified files.)",
-);
+my %props = _get_props();
 
 #
 # Issue usage message and quit
@@ -131,6 +127,15 @@ if (defined $OUT_FILE) {
         print($_);
     }
     print("\n");
+}
+
+#
+# Determine list of properties that can be exported
+#
+sub _get_props {
+    my @list = `ant -f $SCRIPT_DIR/projects/project.build.xml -p -Dscript.dir=$SCRIPT_DIR | grep \"export\\.\"`;
+    my %props = map { /^\s*export\.([^ ]+)\s+(.+)$/; $1 => $2} @list;
+    return %props;
 }
 
 1;
