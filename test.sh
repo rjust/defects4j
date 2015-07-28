@@ -8,9 +8,13 @@
 #
 # TODO: we need unit tests and a better testing infrastructure.
 
+HALT_ON_ERROR=0
+
+# Log all errors to test.log
+> test.log
 die() {
-    echo "Error while running: $1"
-    exit 1
+    echo "Error while running: $1" >> test.log
+    [ $HALT_ON_ERROR == 1 ] && exit 1
 }
 
 DIR=$(dirname $0)
