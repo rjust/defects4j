@@ -5,14 +5,13 @@
 
     <!-- Include existing project build file -->
     <import file="${basedir}/build.xml"/>
-    <!-- Include project build file, which provides targets to mutate classes
-         and run the mutation analysis-->
 
     <!-- build.home is not set in old repository layout -->
     <property name="build.home" value="${classesdir}/.." />
     <property name="classes.dir" value="${build.home}/classes" />
 
-    <import file="../project.build.xml"/>
+    <!-- Import general build file -->
+    <import file="../defects4j.build.xml" />
 
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->

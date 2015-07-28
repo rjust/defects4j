@@ -134,6 +134,11 @@ our $CONFIG = ".defects4j.config";
 our $CONFIG_PID = "pid";
 our $CONFIG_VID = "vid";
 
+# Filename which stores build properties
+our $PROP_FILE       = "defects4j.build.properties";
+our $PROP_EXCLUDE    = "exclude.list";
+our $PROP_INSTRUMENT = "instrument.list";
+
 our $DEBUG = 0;
 
 our @EXPORT = qw(
@@ -151,6 +156,10 @@ $ABSTRACT_METHOD
 $CONFIG
 $CONFIG_PID
 $CONFIG_VID
+
+$PROP_FILE
+$PROP_EXCLUDE
+$PROP_INSTRUMENT
 
 $DEBUG
 );

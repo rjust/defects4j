@@ -3,7 +3,7 @@
 
     <!-- Additional properties such as tests to exclude (exclude.list).
          This property file is automatically generated if necessary. -->
-    <property file="${basedir}/local.build.properties"/>
+    <property file="${basedir}/defects4j.build.properties"/>
 
     <property name="jcrasher.jar" value="${script.dir}/projects/lib/jcrasher-2.1.3.jar"/>
     <property name="cobertura.jar" value="${script.dir}/projects/lib/cobertura-2.0.3.jar"/>

@@ -346,7 +346,7 @@ If the file F<$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id> exists, then
 =item All methods listed in the file will be removed from the source code
 
 =item All classes listed in the file will be added to the exclude list in
-F<"work_dir"/local.build.properties>
+F<"work_dir"/$PROP_FILE>
 
 =back
 
@@ -379,14 +379,14 @@ sub fix_tests {
 
 Excludes all broken tests in the checked out revision. Broken tests are determined
 based on the provided C<file>. The test sources exist in the C<tests_dir> relative
-to C<$self.{prog_root}>.
+to C<$self->{prog_root}>.
 
 =over 8
 
-=item All methods listed in the file will be removed from the source code
+=item All methods listed in F<file> will be removed from the source code
 
-=item All classes listed in the file will be added to the exclude list in
-F<"work_dir"/local.build.properties>
+=item All classes listed in F<file> will be added to the exclude list in
+F<"work_dir"/$PROP_FILE>
 
 =back
 
@@ -404,13 +404,16 @@ sub exclude_tests_in_file {
     my @classes= @{$failed->{classes}};
 
     return if scalar @classes == 0;
+# TODO: Some projects may define tests to include/exclude on the classes
+# directory -> .java won't work in that case.
     for (@classes) {
         s/\./\//g; s/(.*)/$1.java/;
     }
-    # Write exclude.list to local.build.properties, which is imported
-    # by the "project".build.xml file.
+    # Write exclude.list to properties file, which is imported
+    # by the defects4j.build.xml file.
     my $list = join(", ", @classes);
-    `echo "exclude.list=$list" >> $work_dir/local.build.properties`;
+    my $config = {$PROP_EXCLUDE => $list};
+    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 }
 
 =pod
@@ -443,10 +446,11 @@ sub coverage_instrument {
         push @classes_and_inners, "$_" . '\$' . "*.class";
     }
 
-    # Write instrument.list to local.build.properties, which is imported
-    # by the "project".build.xml file.
+    # Write instrument.list to properties file, which is imported
+    # by the defects4j.build.xml file.
     my $list = join(",", @classes_and_inners);
-    `echo "instrument.list=$list" >> $work_dir/local.build.properties`;
+    my $config = {$PROP_INSTRUMENT => $list};
+    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
 
     # Call ant to do the instrumentation

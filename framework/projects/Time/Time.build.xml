@@ -17,8 +17,8 @@
     <!-- Include existing project build file -->
     <import file="${basedir}/build.xml" />
 
-    <!-- Import overall biuld files for mutation targets -->
-    <import file="../project.build.xml" />
+    <!-- Import general build file -->
+    <import file="../defects4j.build.xml" />
 
     <!-- Values necessary for mutation scripting to work -->
     <if> <isset property="ant.refid:compile.classpath" />
