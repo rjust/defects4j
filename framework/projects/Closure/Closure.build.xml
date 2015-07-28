@@ -18,10 +18,6 @@
     <!-- Import overall biuld files for mutation targets -->
     <import file="../project.build.xml" />
 
-    <!-- Additional properties such as tests to exclude (exclude.list).
-         This property file is automatically generated if necessary. -->
-    <property file="${basedir}/local.build.properties"/>
-
     <!-- relevant classpaths from different build revisions -->
     <path id="test.classpath">
         <path refid="allclasspath.path" />
