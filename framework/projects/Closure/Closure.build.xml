@@ -51,7 +51,7 @@
     <!-- We need to compile rhino.testing package before we can
          compile the generated test suites -->
     <target name="compile.gen.tests" depends="compile-tests">
-       <antcall target="Bug-DB.compile.gen.tests" />
+       <antcall target="Defects4J.compile.gen.tests" />
     </target>
 
     <!-- List of all tests that reliably pass on the fixed version -->

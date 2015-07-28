@@ -465,7 +465,7 @@ sub run_evosuite {
     my ($self, $criterion, $time, $class, $timeout, $config_file, $log) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.classpath", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
+    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional evosuite configuration
@@ -523,7 +523,7 @@ sub run_randoop {
     my ($self, $target_classes, $timeout, $seed, $config_file, $log) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.classpath", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
+    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional randoop configuration

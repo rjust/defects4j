@@ -1,4 +1,4 @@
-<project name="Bug-DB" >
+<project name="Defects4J" >
     <taskdef resource="net/sf/antcontrib/antlib.xml" />
 
     <!-- Additional properties such as tests to exclude (exclude.list).
@@ -11,7 +11,7 @@
 <!--
      Check whether all properties and paths are configured
 -->
-    <target name="sanity.check" description="Check whether project is correctly set up">
+    <target name="sanity.check" description="Check whether project version is correctly set up">
         <fail unless="test.home"/>
         <fail unless="build.home"/>
         <fail unless="ant.refid:test.classpath"/>
@@ -25,7 +25,7 @@
     Test has to be provided as property "test.entry" (class::method)
     and the output is redirected to "test.output"
 -->
-    <target name="monitor.test"  description="Run unit test and monitor class loader">
+    <target name="monitor.test"  description="Run a single test class or method and monitor class loader">
         <fail message="Property test.entry not set!" unless="test.entry" />
         <fail message="Property test.output not set!" unless="test.output" />
 
@@ -61,7 +61,7 @@
 <!--
     Run mutation analysis
 -->
-    <target name="mutation.test" >
+    <target name="mutation.test" description="Perform mutation analysis">
         <!-- Test a generated test suite -->
         <if><isset property="test.include"/>
             <then>
@@ -113,7 +113,7 @@
 <!--
     Compile generated unit tests
 -->
-    <target name="compile.gen.tests" depends="compile">
+    <target name="compile.gen.tests" depends="compile" description="Compile generated tests">
         <!-- bug-db.test.dir, build.home, and classes.dir properties have to be provided by caller! -->
         <fail message="Property bug-db.test.dir not set!" unless="bug-db.test.dir" />
         <fail message="Property build.home not set!" unless="build.home" />
@@ -216,9 +216,9 @@
     </target>
 
 <!--
-    Export classpath for test generation
+    Export compile classpath
 -->
-    <target name="export.classpath" depends="compile">
+    <target name="export.cp.compile" depends="compile" description="Export compile classpath">
         <fail message="Property file.export not set!" unless="file.export" />
 
         <path id="project.classpath">
@@ -231,9 +231,19 @@
     </target>
 
 <!--
+    Export test classpath
+-->
+    <target name="export.cp.test" depends="compile" description="Export test classpath">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <pathconvert targetos="unix" property="project.unix.classpath" refid="test.classpath" />
+        <echo message="${project.unix.classpath}" file="${file.export}"/>
+    </target>
+
+<!--
     Export list of all manual test classes
 -->
-    <target name="export.all.tests">
+    <target name="export.all.tests" description="Export list of all developer-written tests">
         <fail message="Property file.export not set!" unless="file.export" />
         <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
         <pathconvert pathsep="${line.separator}" property="all.tests.filtered" refid="all.manual.tests" />
