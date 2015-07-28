@@ -38,6 +38,7 @@ use strict;
 
 use File::Basename;
 use Cwd qw(abs_path);
+use Carp qw(confess);
 
 my $dir = dirname(abs_path(__FILE__));
 
@@ -142,27 +143,6 @@ sub has_failing_tests {
 
 =pod
 
-=item B<parse_machines> C<parse_machines(filename)>
-
-Returns an array containing pairs of (machine_name, directory)
-in the file specified by C<filename>
-
-=cut
-sub parse_machines {
-    my $machines_file = shift;
-
-    open FH, $machines_file;
-    my @machines = ();
-    for (<FH>) {
-        m[(.*),(.*)/(.*?)$];
-        push @machines, ([$1, $2]);
-    }
-    close FH;
-    @machines;
-}
-
-=pod
-
 =item B<write_config_file> C<write_config_file(filename, config_hash)>
 
 Writes all key-value pairs of C<config_hash> to a config file named
@@ -187,12 +167,12 @@ sub write_config_file {
     close(OUT);
 }
 
+=pod
+
 =item B<read_config_file> C<read_config_file(filename)>
 
 Read all key-value pairs of the config file C<filename>. Format: key=value.
 Returns a hash containing all key-value pairs on success, undef otherwise.
-
-=back
 
 =cut
 sub read_config_file {
@@ -215,4 +195,19 @@ sub read_config_file {
     }
     close(IN);
     return $hash;
+}
+
+=pod
+
+=item B<check_vid> C<check_vid(vid)>
+
+Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
+
+=back
+
+=cut
+
+sub check_vid {
+    my $vid = shift;
+    $vid =~ /^\d+[bf]$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
 }
