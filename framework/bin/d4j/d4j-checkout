@@ -99,8 +99,7 @@ $project->fix_tests("${BID}f");
 if ($VID=~/^(\d+)b$/) {
     my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
     my $src_patch = "$patch_dir/${BID}.src.patch";
-    my $rev2 = $project->lookup("${BID}f");
-    my $src_path = $project->src_dir($rev2);
+    my $src_path = $project->src_dir($VID);
     $project->apply_patch($WORK_DIR, $src_patch, $src_path) == 0 or die;
 }
 # Update config file

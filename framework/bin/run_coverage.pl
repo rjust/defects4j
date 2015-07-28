@@ -282,8 +282,7 @@ sub _run_coverage {
 
     my $root = "$TMP_DIR/${vid}";
     $project->{prog_root} = "$root";
-    my $rev = $project->lookup("${bid}f");
-    my $src_dir = $project->src_dir($rev);
+    my $src_dir = $project->src_dir($vid);
     _checkout($project, $vid);
 
     # Compile the program version
@@ -328,8 +327,7 @@ sub _checkout {
         my $root = $project->{prog_root};
         my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
         my $src_patch = "$patch_dir/${bid}.src.patch";
-        my $rev2 = $project->lookup("${bid}f");
-        my $src_path = $project->src_dir($rev2);
+        my $src_path = $project->src_dir($vid);
         $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
         # Update config file
         my $config = Utils::read_config_file("$root/$CONFIG");
