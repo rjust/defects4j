@@ -85,6 +85,7 @@ Use `framework/bin/defects4j` to:
   - checkout and compile faulty or fixed project versions
   - run test suite on faulty or fixed project versions
   - perform mutation analysis on fixed project versions
+  - export properties such as classpath or list of tests
 
 Test execution framework
 --------------------------
