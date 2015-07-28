@@ -343,9 +343,9 @@ If the file F<$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id> exists, then
 
 =over 8
 
-=item All methods listed in the file will be removed from the source code
+=item All methods listed in F<file> will be removed from the source code
 
-=item All classes listed in the file will be added to the exclude list in
+=item All classes listed in F<file> will be added to the exclude list in
 F<"work_dir"/$PROP_FILE>
 
 =back
@@ -409,8 +409,8 @@ sub exclude_tests_in_file {
     for (@classes) {
         s/\./\//g; s/(.*)/$1.java/;
     }
-    # Write exclude.list to properties file, which is imported
-    # by the defects4j.build.xml file.
+    # Write list of test classes to exclude to properties file, which is
+    # imported by the defects4j.build.xml file.
     my $list = join(", ", @classes);
     my $config = {$PROP_EXCLUDE => $list};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
@@ -446,7 +446,7 @@ sub coverage_instrument {
         push @classes_and_inners, "$_" . '\$' . "*.class";
     }
 
-    # Write instrument.list to properties file, which is imported
+    # Write list of classes to instrument to properties file, which is imported
     # by the defects4j.build.xml file.
     my $list = join(",", @classes_and_inners);
     my $config = {$PROP_INSTRUMENT => $list};
@@ -783,6 +783,18 @@ sub _ant_call {
     return $ret;
 }
 
+# Write all version-specific properties to file
+sub _write_props {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $revision_id, $work_dir) = @_;
+
+    my $config = {
+        $PROP_DIR_SRC_CLASSES => $self->src_dir($revision_id),
+        $PROP_DIR_SRC_TESTS   => $self->test_dir($revision_id),
+    };
+    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+}
+
 =pod
 
 =head2 Version control system (Vcs) related object methods:
@@ -838,7 +850,17 @@ sub checkout_id {
         $work_dir = $self->{prog_root} ;
         push(@_, $work_dir);
     }
-    return $self->{_vcs}->checkout_id(@_);
+    my $ret = $self->{_vcs}->checkout_id(@_);
+
+    # Return if checkout failed
+    if ($ret != 0) {
+        return $ret;
+    }
+
+    # Write version-specific properties
+    $self->_write_props($revision_id, $work_dir);
+
+    return $ret;
 }
 
 

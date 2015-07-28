@@ -136,8 +136,10 @@ our $CONFIG_VID = "vid";
 
 # Filename which stores build properties
 our $PROP_FILE       = "defects4j.build.properties";
-our $PROP_EXCLUDE    = "exclude.list";
-our $PROP_INSTRUMENT = "instrument.list";
+our $PROP_EXCLUDE    = "d4j.tests.exclude";
+our $PROP_INSTRUMENT = "d4j.classes.instrument";
+our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
+our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 
 our $DEBUG = 0;
 
@@ -160,6 +162,8 @@ $CONFIG_VID
 $PROP_FILE
 $PROP_EXCLUDE
 $PROP_INSTRUMENT
+$PROP_DIR_SRC_CLASSES
+$PROP_DIR_SRC_TESTS
 
 $DEBUG
 );

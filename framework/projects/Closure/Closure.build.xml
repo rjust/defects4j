@@ -51,7 +51,7 @@
     </target>
 
     <!-- List of all tests that reliably pass on the fixed version -->
-    <fileset id="all.manual.tests" dir="${build.dir}/test" excludes="${exclude.list}">
+    <fileset id="all.manual.tests" dir="${build.dir}/test" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.class" />
     </fileset>
 

@@ -119,7 +119,7 @@
     </target>
 
     <!-- List of all tests that reliably pass on the fixed version -->
-    <fileset id="all.manual.tests" dir="${basedir}/tests" excludes="${exclude.list}">
+    <fileset id="all.manual.tests" dir="${basedir}/tests" excludes="${d4j.tests.exclude}">
         <include name="**/*Tests.java"/>
         <exclude name="**/*Package*.java"/>
     </fileset>

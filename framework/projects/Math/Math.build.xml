@@ -63,13 +63,12 @@
     <!-- end of fixing ant script -->
 
     <!-- List of all tests that reliably pass on the fixed version -->
-    <fileset id="all.manual.tests" dir="${test.home}" excludes="${exclude.list}">
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.java"/>
         <include name="**/*TestBinary.java"/>
         <include name="**/*TestPermutations.java"/>
         <exclude name="**/random/*.java"/>
         <exclude name="**/*Abstract*Test.java"/>
-        <exclude name="**/random/*.java"/>
     </fileset>
 
 <!--

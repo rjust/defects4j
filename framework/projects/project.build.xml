@@ -1,8 +1,8 @@
 <project name="Defects4J" >
     <taskdef resource="net/sf/antcontrib/antlib.xml" />
 
-    <!-- Additional properties such as tests to exclude (exclude.list).
-         This property file is automatically generated if necessary. -->
+    <!-- Additional properties such as tests to exclude.
+         This property file is automatically generated. -->
     <property file="${basedir}/defects4j.build.properties"/>
 
     <property name="jcrasher.jar" value="${script.dir}/projects/lib/jcrasher-2.1.3.jar"/>
@@ -193,7 +193,7 @@
         <pathconvert refid="cobertura.classpath" property="cobertura.classpath.property" />
 
         <cobertura-instrument failOnError="true" toDir="${classes.dir}/instrumented">
-            <fileset dir="${classes.dir}" includes="${instrument.list}" />
+            <fileset dir="${classes.dir}" includes="${d4j.classes.instrument}" />
             <auxClasspath path="${cobertura.aux.classpath}" />
         </cobertura-instrument>
         <copy todir="${classes.dir}" failOnError="true">
