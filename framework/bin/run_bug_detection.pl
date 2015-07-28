@@ -350,10 +350,10 @@ sub _run_tests {
 #
 # Run on buggy version
 #
-    # Lookup revision id, src directory, and patch
+    # Lookup src directory and patch
     my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
     my $src_patch = "$patch_dir/$bid.src.patch";
-    my $src_path =  $project->src_dir($project->lookup($vid));
+    my $src_path =  $project->src_dir($vid);
 
     # Check out fixed version, apply src patch (fixed -> buggy), and compile classes and tests
     $root = "$TMP_DIR/V_buggy";
