@@ -10,16 +10,17 @@
 
 HALT_ON_ERROR=0
 
-# Log all errors to test.log
-> test.log
 die() {
-    echo "Error while running: $1" >> test.log
+    echo "Error while running: $1" >> $BASE_DIR/test.log
     [ $HALT_ON_ERROR == 1 ] && exit 1
 }
 
 DIR=$(dirname $0)
 BASE_DIR=$(cd $DIR; pwd)
 export PATH=$PATH:$BASE_DIR/framework/bin:$BASE_DIR/framework/util
+
+# Log all errors to test.log
+> $BASE_DIR/test.log
 
 # Make sure that the project repos are available
 cd $BASE_DIR/project_repos && ./get_repos.sh
