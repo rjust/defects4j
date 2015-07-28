@@ -56,31 +56,41 @@ sub new {
 }
 
 sub src_dir {
-    my ($self, $revision_id) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
 
     # Init dir_map if necessary
     $self->_build_dir_map();
+
+    # Get revision hash
+    my $revision_id = $self->lookup($vid);
 
     # Get src directory from lookup table
     my $src = $self->{_dir_map}->{$revision_id}->{src};
     return $src if defined $src;
 
     # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($revision_id);
+    return $self->SUPER::src_dir($vid);
 }
 
 sub test_dir {
-    my ($self, $revision_id) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
 
     # Init dir_map if necessary
     $self->_build_dir_map();
+
+    # Get revision hash
+    my $revision_id = $self->lookup($vid);
 
     # Get test directory from lookup table
     my $test = $self->{_dir_map}->{$revision_id}->{test};
     return $test if defined $test;
 
     # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($revision_id);
+    return $self->SUPER::test_dir($vid);
 }
 
 sub _build_dir_map {
@@ -106,10 +116,12 @@ sub _build_dir_map {
 #
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
-    $self->SUPER::fix_tests($revision_id);
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
 
-    my $dir = $self->test_dir($revision_id);
+    $self->SUPER::fix_tests($vid);
+
+    my $dir = $self->test_dir($vid);
 
     # TODO: make this more precise
     my $file = "$SCRIPT_DIR/projects/$PID/broken_tests";

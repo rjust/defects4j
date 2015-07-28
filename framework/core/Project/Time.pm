@@ -58,7 +58,7 @@ sub new {
 
 
 sub _post_checkout {
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision_id, $work_dir) = @_;
     my $name = $vcs->{prog_name};
 
     if (-e "$work_dir/JodaTime") {
@@ -67,11 +67,11 @@ sub _post_checkout {
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision/* $work_dir");
+        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
     }
 
     # Check for a broken-build-revision
-    my $id = rev_lookup($vcs, $revision); # TODO: very ugly.
+    my $id = rev_lookup($vcs, $revision_id); # TODO: very ugly.
     my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $work_dir/build.xml");
@@ -94,7 +94,6 @@ sub export_diff {
     }
     return $self->{_vcs}->export_diff($rev1, $rev2, $out_file, $path);
 }
-
 
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_;

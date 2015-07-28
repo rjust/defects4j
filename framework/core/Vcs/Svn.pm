@@ -42,8 +42,8 @@ our @ISA = qw(Vcs);
 
 sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision, $work_dir) = @_;
-    return "svn -r ${revision} co $self->{repo} $work_dir";
+    my ($self, $revision_id, $work_dir) = @_;
+    return "svn -r ${revision_id} co $self->{repo} $work_dir";
 }
 
 sub _apply_cmd {

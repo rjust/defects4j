@@ -37,7 +37,7 @@ my $vcs = Vcs::Svn->new("project", "repo_url", "commit_db_file", \&_co_hook);
 $vcs->checkout_id("1b", "/tmp/1b");
 
 sub _co_hook {
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision_id, $work_dir) = @_;
 
     # do some post processing
 }
@@ -125,16 +125,18 @@ sub new {
 
 =over 4
 
-=item B<lookup> C<lookup(version_id)>
+=item B<lookup> C<lookup(vid)>
 
 Queries the commit database (commit-db) and returns the C<revision_id> for
-the given C<version_id>. The format of the C<version_id> is B<\d+[bf]>.
+the given version id C<vid>. The format of C<vid> is B<\d+[bf]>.
 
 =cut
 sub lookup {
-    my ($self, $version_id) = @_;
-    $version_id =~ /(\d+)([bf])/ or die "Wrong version_id format: $version_id! Expected: \\d+[bf]";
-    defined $self->{_cache}->{$1}->{$2} or die "Version_id does not exist: $version_id!";
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
+    $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid";
+    defined $self->{_cache}->{$1}->{$2} or die "Version id does not exist: $vid!";
     return $self->{_cache}->{$1}->{$2};
 }
 
@@ -154,7 +156,7 @@ sub num_revision_pairs {
 
 =item B<get_version_ids> C<get_version_ids()>
 
-Returns an array of all C<version_id>s in the C<commit-db>.
+Returns an array of all version ids in the C<commit-db>.
 
 =cut
 sub get_version_ids {
@@ -164,11 +166,11 @@ sub get_version_ids {
 
 =pod
 
-=item B<checkout_id> C<checkout_id(version_id, work_dir)>
+=item B<checkout_id> C<checkout_id(vid, work_dir)>
 
-Performs a lookup of C<version_id> in the C<commit-db> followed by a checkout of
+Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
 the corresponding revision with C<revision_id> to C<work_dir>.
-The format of the C<version_id> is B<\d+[bf]>.
+The format of C<vid> is B<\d+[bf]>.
 
 B<This method always performs a clean checkout, i.e., the working directory is
 deleted before the checkout if it already exists>.
@@ -176,12 +178,12 @@ deleted before the checkout if it already exists>.
 =cut
 sub checkout_id {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $version_id, $work_dir) = @_;
-    my $revision = $self->lookup($version_id);
-    die "Version_id not found in commit-db!" unless defined $revision;
+    my ($self, $vid, $work_dir) = @_;
+    Utils::check_vid($vid);
+    my $revision_id = $self->lookup($vid);
 
     # Get specific checkout command
-    my $cmd = $self->_checkout_cmd($revision, $work_dir);
+    my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
 
     my %config = ();
 
@@ -218,7 +220,7 @@ sub checkout_id {
         make_path($work_dir) or die "Failed to create working directory: $!";
     }
 
-    print "Checking out " . _trunc_rev_id($revision) . " to $work_dir ... ";
+    print "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir ... ";
     my $log = `$cmd`; my $ret = $?;
     if ($ret!=0) {
         print "FAIL\n$log";
@@ -226,11 +228,11 @@ sub checkout_id {
     }
 
     # Check whether post-checkout hook is provided
-    $self->{_co_hook}($self, $revision, $work_dir) if defined $self->{_co_hook};
+    $self->{_co_hook}($self, $revision_id, $work_dir) if defined $self->{_co_hook};
 
     # Update version info file
     $config{$CONFIG_PID} = $self->{pid};
-    $config{$CONFIG_VID} = $version_id;
+    $config{$CONFIG_VID} = $vid;
     Utils::write_config_file("$work_dir/$CONFIG", \%config);
 
     # Init (new) git repository to keep track of local changes
@@ -334,9 +336,9 @@ In most cases it is sufficient to override the following abstract methods to pro
 
 =over 4
 
-=item B<_checkout_cmd(revision, work_dir)>
+=item B<_checkout_cmd(revision_id, work_dir)>
 
-      Returns the cmd to checkout C<revision> to the working directory C<work_dir>
+      Returns the cmd to checkout C<revision_id> to the working directory C<work_dir>
 
 =cut
 sub _checkout_cmd { die $ABSTRACT_METHOD; }

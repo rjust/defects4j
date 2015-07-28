@@ -59,7 +59,7 @@ sub new {
 sub _post_checkout {
     # TODO: The src and test directories should not be modified in this hook
     # TODO: Then what should we do to fix compile errors?
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision_id, $work_dir) = @_;
     my $name = $vcs->{prog_name};
 
     my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
@@ -69,7 +69,7 @@ sub _post_checkout {
 
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($revision >= $1 && $revision <= $2) {
+            if ($revision_id >= $1 && $revision_id <= $2) {
                 $vcs->apply_patch($work_dir, "$compile_errors/$file") == 0 or die "could not apply $file: $!";
             }
         }

@@ -106,10 +106,6 @@ Every project has to provide an Apache Ant F<build.xml> build file.
 
 =item B<test>
 
-=item B<monitor.test>
-
-=item B<sanity.check>
-
 =back
 
 =head2 Optional targets in project's build file
@@ -227,31 +223,31 @@ sub print_info {
 
 =pod
 
-=item B<src_dir> C<src_dir(revision_id)>
+=item B<src_dir> C<src_dir(vid)>
 
 Returns the relative path to the directory of the source files for a given
-C<revision_id>. The returned path is relative to the working directory.
+version id C<vid>. The returned path is relative to the working directory.
 
 =cut
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
+    my ($self, $vid) = @_;
     return $self->{_src_dir};
 }
 
 =pod
 
-=item B<test_dir> C<test_dir(revision_id)>
+=item B<test_dir> C<test_dir(vid)>
 
 Returns the relative path to the directory of the junit test files for a given
-C<revision_id>. The returned path is relative to the working directory.
+version id C<vid>. The returned path is relative to the working directory.
 
 =back
 
 =cut
 sub test_dir {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
+    my ($self, $vid) = @_;
     return $self->{_test_dir};
 }
 
@@ -334,18 +330,18 @@ sub run_ext_tests {
 
 =pod
 
-=item B<fix_tests> C<fix_tests(revision_id)>
+=item B<fix_tests> C<fix_tests(vid)>
 
-Fix all broken tests in the checked out revision. Broken tests are determined
-based on the provided C<revision_id>.
+Fix all broken tests in the checked-out version. Broken tests are determined
+based on the provided version id C<vid>.
 
-If the file F<$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id> exists, then:
+All tests listed in F<$SCRIPT_DIR/projects/$pid/failing_tests/file> are removed:
 
 =over 8
 
-=item All methods listed in F<file> will be removed from the source code
+=item All test methods listed in F<file> are removed from the source code
 
-=item All classes listed in F<file> will be added to the exclude list in
+=item All test classes listed in F<file> are added to the exclude list in
 F<"work_dir"/$PROP_FILE>
 
 =back
@@ -353,15 +349,14 @@ F<"work_dir"/$PROP_FILE>
 =cut
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
-
-    # TODO: Exclusively use version ids rather than revision ids
-    $revision_id = $self->lookup($revision_id) if $revision_id =~ /\d+[bf]/;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
 
     my $pid = $self->{pid};
-    my $dir = $self->test_dir($revision_id);
+    my $dir = $self->test_dir($vid);
 
     # TODO: Exclusively use version ids rather than revision ids
+    my $revision_id = $self->lookup($vid);
     my $file = "$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id";
 
     if (-e $file) {
@@ -377,15 +372,15 @@ sub fix_tests {
 
 =item B<exclude_tests_in_file> C<exclude_tests_in_file(file, tests_dir)>
 
-Excludes all broken tests in the checked out revision. Broken tests are determined
-based on the provided C<file>. The test sources exist in the C<tests_dir> relative
-to C<$self->{prog_root}>.
+Excludes all broken tests in the checked out version. Broken tests are
+determined based on the provided C<file>. The test sources must exist in the
+C<tests_dir> directory, which is relative to C<$self->{prog_root}>.
 
 =over 8
 
-=item All methods listed in F<file> will be removed from the source code
+=item All test methods listed in F<file> are removed from the source code
 
-=item All classes listed in F<file> will be added to the exclude list in
+=item All test classes listed in F<file> are added to the exclude list in
 F<"work_dir"/$PROP_FILE>
 
 =back
@@ -713,7 +708,8 @@ If the test execution fails, the returned reference is C<undef>.
 =cut
 sub monitor_test {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $single_test, $revision_id) = @_;
+    my ($self, $single_test, $vid) = @_;
+    Utils::check_vid($vid);
     $single_test =~ /^([^:]+)(::([^:]+))?$/ or die "Wrong format for single test!";
 
     my $log_file = "$self->{prog_root}/classes.log";
@@ -726,8 +722,8 @@ sub monitor_test {
     my $ret = $self->_ant_call("monitor.test", "-Dformatter_cp=$LIB_DIR/formatter.jar -Dtest.entry=$single_test -Dtest.output=$log_file");
     $ret == 0 or return undef;
 
-    my $src = $self->_get_classes($self->src_dir($revision_id));
-    my $test= $self->_get_classes($self->test_dir($revision_id));
+    my $src = $self->_get_classes($self->src_dir($vid));
+    my $test= $self->_get_classes($self->test_dir($vid));
 
     my @log = `cat $log_file`;
     foreach (@log) {
@@ -786,11 +782,12 @@ sub _ant_call {
 # Write all version-specific properties to file
 sub _write_props {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $vid, $work_dir) = @_;
+    Utils::check_vid($vid);
 
     my $config = {
-        $PROP_DIR_SRC_CLASSES => $self->src_dir($revision_id),
-        $PROP_DIR_SRC_TESTS   => $self->test_dir($revision_id),
+        $PROP_DIR_SRC_CLASSES => $self->src_dir($vid),
+        $PROP_DIR_SRC_TESTS   => $self->test_dir($vid),
     };
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 }
@@ -807,8 +804,8 @@ Delegate to the lookup method of the vcs backend -- see Vcs.pm
 
 =cut
 sub lookup {
-    my ($self, $version_id) = @_;
-    return $self->{_vcs}->lookup($version_id);
+    my ($self, $vid) = @_;
+    return $self->{_vcs}->lookup($vid);
 }
 
 =pod
@@ -837,7 +834,7 @@ sub get_version_ids {
 }
 =pod
 
-=item B<checkout_id> C<checkout_id(version [, work_dir])>
+=item B<checkout_id> C<checkout_id(vid [, work_dir])>
 
 Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
 
@@ -845,7 +842,8 @@ C<work_dir> is optional, the default is F<"prog_root">.
 
 =cut
 sub checkout_id {
-    my ($self, $revision_id, $work_dir) = @_; shift;
+    my ($self, $vid, $work_dir) = @_; shift;
+    Utils::check_vid($vid);
     unless (defined $work_dir) {
         $work_dir = $self->{prog_root} ;
         push(@_, $work_dir);
@@ -858,7 +856,7 @@ sub checkout_id {
     }
 
     # Write version-specific properties
-    $self->_write_props($revision_id, $work_dir);
+    $self->_write_props($vid, $work_dir);
 
     return $ret;
 }

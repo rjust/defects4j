@@ -57,7 +57,7 @@ sub new {
 }
 
 sub _post_checkout {
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision_id, $work_dir) = @_;
     my $name = $vcs->{prog_name};
 
     open FH, "$work_dir/build.xml" or die $!;
