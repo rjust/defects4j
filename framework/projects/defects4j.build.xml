@@ -297,8 +297,12 @@
         <echo message="${trigger.tests}" file="${file.export}"/>
     </target>
 
+<!-- TODO: Closure defines the file set of tests on the target directory, which
+requires the dependency to the compile targets. Can we get rid of this special
+case? -->
 <!-- List of all manual test classes -->
-    <target name="export.all.tests" description="List of all developer-written tests">
+    <target name="export.tests.all" depends="compile, compile.tests"
+            description="List of all developer-written tests">
         <fail message="Property file.export not set!" unless="file.export" />
         <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
 
@@ -307,11 +311,13 @@
         <echo message="${tmp.tests}" file="${file.export}"/>
         <!-- Get fully qualified class names, i.e., remove path prefix,
              replace file separator by '.' and remove ".java" or ".class" -->
-        <property name="path.prefix" location="${basedir}${file.separator}${d4j.dir.src.tests}"/>
+        <property name="src.prefix" location="${basedir}${file.separator}${d4j.dir.src.tests}"/>
+        <property name="bin.prefix" location="${test.home}"/>
         <loadfile property="all.tests" srcFile="${file.export}">
         <filterchain>
             <tokenfilter>
-                <replaceregex pattern="${path.prefix}${file.separator}" replace="" />
+                <replaceregex pattern="${src.prefix}${file.separator}" replace="" />
+                <replaceregex pattern="${bin.prefix}${file.separator}" replace="" />
                 <replaceregex pattern="${file.separator}" replace="." flags="g" />
                 <replaceregex pattern=".java" replace="" />
                 <replaceregex pattern=".class" replace="" />
