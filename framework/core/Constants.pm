@@ -140,6 +140,8 @@ our $PROP_EXCLUDE    = "d4j.tests.exclude";
 our $PROP_INSTRUMENT = "d4j.classes.instrument";
 our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
+our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
+our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
 
 our $DEBUG = 0;
 
@@ -164,6 +166,8 @@ $PROP_EXCLUDE
 $PROP_INSTRUMENT
 $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
+$PROP_CLASSES_MODIFIED
+$PROP_TESTS_TRIGGER
 
 $DEBUG
 );

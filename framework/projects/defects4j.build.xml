@@ -12,6 +12,9 @@
      Check whether all properties and paths are configured
 -->
     <target name="sanity.check" description="Check whether project version is correctly set up">
+        <fail unless="d4j.dir.src.classes"/>
+        <fail unless="d4j.dir.src.tests"/>
+        <fail unless="d4j.classes.modified"/>
         <fail unless="test.home"/>
         <fail unless="build.home"/>
         <fail unless="ant.refid:test.classpath"/>
@@ -258,6 +261,40 @@
 
         <pathconvert property="cp.test" refid="test.classpath" />
         <echo message="${cp.test}" file="${file.export}"/>
+    </target>
+
+<!-- Modified classes -->
+    <target name="export.classes.modified"
+            description="Classes modified by the bug fix">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.classes.modified}" file="${file.export}"/>
+
+        <loadfile property="classes.mod" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${classes.mod}" file="${file.export}"/>
+    </target>
+
+<!-- Trigger tests -->
+    <target name="export.tests.trigger"
+            description="Trigger tests that expose the bug">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.tests.trigger}" file="${file.export}"/>
+
+        <loadfile property="trigger.tests" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${trigger.tests}" file="${file.export}"/>
     </target>
 
 <!-- List of all manual test classes -->

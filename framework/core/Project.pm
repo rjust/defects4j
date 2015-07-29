@@ -784,10 +784,29 @@ sub _write_props {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $vid, $work_dir) = @_;
     Utils::check_vid($vid);
+    $vid =~ /^(\d+)[bf]$/ or die "Unexpected version id: $vid!";
+    my $bid = $1;
+
+    # TODO: Provide a helper subroutine that returns a list of modified classes
+    my $project_dir = "$SCRIPT_DIR/projects/$self->{pid}";
+    open(IN, "<${project_dir}/modified_classes/${bid}.src") or die "Cannot read modified classes";
+    my @classes = <IN>;
+    close(IN);
+    my $mod_classes = shift(@classes); chomp($mod_classes);
+    defined $mod_classes or die "Set of modified classes is empty!";
+    foreach (@classes) {
+        chomp;
+        $mod_classes .= ",$_";
+    }
+
+    my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
+    my $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
 
     my $config = {
         $PROP_DIR_SRC_CLASSES => $self->src_dir($vid),
         $PROP_DIR_SRC_TESTS   => $self->test_dir($vid),
+        $PROP_CLASSES_MODIFIED=> $mod_classes,
+        $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 }
