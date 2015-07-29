@@ -81,7 +81,7 @@ sub _usage {
 sub _list_props {
     print(STDERR "Properties:\n");
     for my $prop (sort keys %props) {
-        printf(STDERR "  %-15s  %-s\n", $prop, $props{$prop});
+        printf(STDERR "  %-16s  %-s\n", $prop, $props{$prop});
     }
 }
 

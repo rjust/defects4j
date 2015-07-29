@@ -489,19 +489,19 @@ sub run_evosuite {
                 "-Dshow_progress=false " .
                 "$config";
 
-    print "Running EvoSuite ($criterion) using config $config_file ... ";
+    print(STDERR "Running EvoSuite ($criterion) using config $config_file ... ");
     my $output = `cd $self->{prog_root}; $cmd 2>&1`;
     my $ret = $?;
 
     if ($ret==0) {
-        print "OK\n";
+        print(STDERR "OK\n");
     } else {
-        print "FAIL\n$output";
+        print(STDERR "FAIL\n$output");
     }
 
     if (defined $log) {
         open(OUT, ">>$log") or die "Cannot open log file: $!";
-        print OUT "$output";
+        print(OUT "$output");
         close(OUT)
     }
 
@@ -543,19 +543,19 @@ sub run_randoop {
               "--randomseed=$seed " .
               "$config";
 
-    print "Running Randoop using config $config_file ... ";
+    print(STDERR "Running Randoop using config $config_file ... ");
     my $output = `cd $self->{prog_root}; $cmd 2>&1`;
     my $ret = $?;
 
     if ($ret==0) {
-        print "OK\n";
+        print(STDERR "OK\n");
     } else {
-        print "FAIL\n$output";
+        print(STDERR "FAIL\n$output");
     }
 
     if (defined $log) {
         open(OUT, ">>$log") or die "Cannot open log file: $!";
-        print OUT "$output";
+        print(OUT "$output");
         close(OUT)
     }
 
@@ -758,23 +758,23 @@ sub _ant_call {
     # TODO: Check also whether target is provided by the build file
     -f $file or die "Build file does not exist: $file";
 
-    print "Running ant ($target) ... ";
+    print(STDERR "Running ant ($target) ... ");
     my $log = `cd $self->{prog_root}; ant -f $self->{_build_file} -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1`;
     my $ret = $?;
 
     if (defined $log_file) {
         open(OUT, ">>$log_file") or die "Cannot open log file: $!";
-        print OUT "$log";
+        print(OUT "$log");
         close(OUT);
     }
     if ($ret==0) {
-        print "OK\n";
+        print(STDERR "OK\n");
         # Print log if debugging is enabled
-        print $log if $DEBUG;
+        print(STDERR $log) if $DEBUG;
     } else {
-        print "FAIL\n";
+        print(STDERR "FAIL\n");
         # Always print log if ant fails
-        print $log;
+        print(STDERR $log);
     }
     return $ret;
 }
