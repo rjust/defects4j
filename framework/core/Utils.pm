@@ -82,10 +82,10 @@ sub get_abs_path {
 
 =pod
 
-=item B<get_failing_tests> C<get_failing_tests(result_file)>
+=item B<get_failing_tests> C<get_failing_tests(test_result_file)>
 
 Returns a reference to a hash of references to lists with failing test classes
-and methods found in the C<result_file>. The C<result_file> may contain
+and methods found in F<test_result_file>. The F<test_result_file> may contain
 arbitrary lines -- this method only considers lines that match the pattern:
 B</--- ([^:]+)(::([^:]+))?/>.
 
@@ -104,7 +104,7 @@ sub get_failing_tests {
         classes => [],
         methods => []
     };
-    open FILE, $file_name or die "Cannot open result file: $!";
+    open FILE, $file_name or die "Cannot open test result file ($file_name): $!";
     while (<FILE>) {
         chomp;
         /--- ([^:]+)(::([^:]+))?/ or next;
