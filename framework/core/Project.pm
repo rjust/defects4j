@@ -688,11 +688,10 @@ sub mutation_analysis_ext {
 
 =pod
 
-=item B<monitor_test> C<monitor_test(single_test, revision_id)>
+=item B<monitor_test> C<monitor_test(single_test, vid)>
 
 Runs C<single_test>, monitors the class loader, and returns a reference to a
-hash of list references, which store the loaded classes. The decision whether a
-src or test class was loaded is made based on the provided C<revision_id>.
+hash of list references, which store the loaded src and test classes.
 
 The returned reference is a reference to a hash that looks like:
 
@@ -702,6 +701,9 @@ The returned reference is a reference to a hash that looks like:
 
 The string C<single_test> has to have the format: B<classname::methodname>.
 If the test execution fails, the returned reference is C<undef>.
+
+A class is included in the result if it exists in the source or test directory
+of the checked-out verion and if it was loaded during the test execution.
 
 =back
 
@@ -729,8 +731,16 @@ sub monitor_test {
     foreach (@log) {
         chomp;
         s/\[Loaded ([^\$]*)(\$\S*)? from.*/$1/;
-        push(@{$classes->{src}}, $_) if defined $src->{$_};
-        push(@{$classes->{test}}, $_) if defined $test->{$_};
+        if (defined $src->{$_}) {
+            push(@{$classes->{src}}, $_);
+            # Delete already loaded classes to avoid duplicates in the result
+            delete($src->{$_});
+        }
+        if (defined $test->{$_}) {
+            push(@{$classes->{test}}, $_);
+            # Delete already loaded classes to avoid duplicates in the result
+            delete($test->{$_});
+        }
     }
     return $classes;
 }

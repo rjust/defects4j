@@ -87,9 +87,9 @@ unless(defined $config) {
 my $project = Project::create_project($config->{$CONFIG_PID});
 $project->{prog_root} = $WORK_DIR;
 
-# Obtain revision_id and run test
-my $rev = $project->lookup($config->{$CONFIG_VID});
-my $classes = $project->monitor_test($TEST, $rev);
+# Obtain version and run test
+my $vid = $config->{$CONFIG_VID};
+my $classes = $project->monitor_test($TEST, $vid);
 defined $classes or die "Cannot run test!";
 
 open(OUT, ">$WORK_DIR/loaded_classes.src") or die "Cannot write loaded classes";
