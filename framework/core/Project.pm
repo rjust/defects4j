@@ -813,6 +813,9 @@ sub _write_props {
     my $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
 
     my $config = {
+        $PROP_PID             => $self->{pid},
+        $PROP_BID             => $bid,
+        $PROP_DIR_SRC_CLASSES => $self->src_dir($vid),
         $PROP_DIR_SRC_CLASSES => $self->src_dir($vid),
         $PROP_DIR_SRC_TESTS   => $self->test_dir($vid),
         $PROP_CLASSES_MODIFIED=> $mod_classes,

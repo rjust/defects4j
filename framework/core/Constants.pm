@@ -142,6 +142,8 @@ our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
 our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
+our $PROP_PID             = "d4j.project.id";
+our $PROP_BID             = "d4j.bug.id";
 
 our $DEBUG = 0;
 
@@ -168,6 +170,8 @@ $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
 $PROP_CLASSES_MODIFIED
 $PROP_TESTS_TRIGGER
+$PROP_PID
+$PROP_BID
 
 $DEBUG
 );
