@@ -1,11 +1,14 @@
 package edu.washington.cs.mut.testrunner;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
+
+import org.junit.runner.notification.Failure;
 
 /**
  * Simple JUnit test runner that takes a single test class or test method as
@@ -55,7 +58,14 @@ public class SingleTestRunner {
 
         Result res = new JUnitCore().run(req);
         if (!res.wasSuccessful()) {
-            System.exit(1);
+            System.err.println("Test failed!");
+            for (Failure f: res.getFailures()) {
+                System.err.println(f.toString());
+            }
+            System.exit(2);
         }
+        // Exit and indicate success. Use System.exit in case any waiting
+        // threads are preventing a proper JVM shutdown.
+        System.exit(0);
     }
 }

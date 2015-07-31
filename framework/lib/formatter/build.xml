@@ -35,6 +35,7 @@
     <target name="compile" depends="init" description="Compile the sources">
         <javac srcdir="${dir.src.classes}"
               destdir="${dir.target.classes}"
+    includeantruntime="false"
                 debug="true">
             <classpath refid="compile.classpath" />
         </javac>
@@ -43,6 +44,7 @@
     <target name="compile.tests" depends="compile" description="Compile the tests">
         <javac srcdir="${dir.src.tests}"
               destdir="${dir.target.tests}"
+    includeantruntime="false"
                 debug="true">
             <classpath refid="test.classpath" />
         </javac>
