@@ -31,6 +31,17 @@ Each bug has the following properties:
 (B)uggy and (f)ixed program revisions are labelled with `<id>b` and `<id>f`,
 respectively (`<id>` is an integer).
 
+Requirements
+----------------
+ - Java 1.7
+ - Apache Ant >=1.8
+ - Perl >= 5.0.10
+
+All bugs have been reproduced and triggering tests verified, using the latest
+version of Java 1.7.
+Note that using Java 1.8+ might result in unexpected failing tests on a fixed
+program version.
+
 Getting started
 ----------------
 1. Download the repositories for the projects by running:
@@ -85,7 +96,23 @@ Use `framework/bin/defects4j` to:
   - checkout and compile faulty or fixed project versions
   - run test suite on faulty or fixed project versions
   - perform mutation analysis on fixed project versions
-  - export properties such as classpath or list of tests
+  - export properties such as classpaths, directories, or lists of tests
+
+Export properties
+--------------------
+Use `defects4j export -p <property_name> [-o output_file]` in the working
+directory to export a version-specific property:
+
+| Property name    | Description                                                                         |
+|------------------|-------------------------------------------------------------------------------------|
+| classes.modified | Classes (source files) modified by the bug fix                                      |
+| cp.compile       | Classpath to compile and run the project                                            |
+| cp.test          | Classpath to compile and run the developer-written tests                            |
+| dir.src.classes  | Source directory of classes (relative to working directory)                         |
+| dir.src.tests    | Source directory of tests (relative to working directory)                           |
+| tests.all        | List of all developer-written tests                                                 |
+| tests.relevant   | List of relevant tests (i.e., tests that touch at least one of the modified classes |
+| tests.trigger    | List of tests that trigger (expose) the bug                                         |
 
 Test execution framework
 --------------------------
