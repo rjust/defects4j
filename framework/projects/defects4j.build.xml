@@ -297,6 +297,17 @@
         <echo message="${trigger.tests}" file="${file.export}"/>
     </target>
 
+<!-- Relevant tests -->
+    <target name="export.tests.relevant"
+            description="Relevant tests that touch at least one of the modified sources">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <loadfile property="relevant.tests"
+            srcFile="${script.dir}/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+        <echo message="${relevant.tests}" file="${file.export}" />
+    </target>
+
+
 <!-- TODO: Closure defines the file set of tests on the target directory, which
 requires the dependency to the compile targets. Can we get rid of this special
 case? -->
@@ -319,8 +330,8 @@ case? -->
                 <replaceregex pattern="${src.prefix}${file.separator}" replace="" />
                 <replaceregex pattern="${bin.prefix}${file.separator}" replace="" />
                 <replaceregex pattern="${file.separator}" replace="." flags="g" />
-                <replaceregex pattern=".java" replace="" />
-                <replaceregex pattern=".class" replace="" />
+                <replaceregex pattern=".java$" replace="" />
+                <replaceregex pattern=".class$" replace="" />
             </tokenfilter>
         </filterchain>
         </loadfile>
