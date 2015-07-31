@@ -1,0 +1,11 @@
+org.apache.commons.math.analysis.solvers.BisectionSolverTest
+org.apache.commons.math.analysis.solvers.BrentSolverTest
+org.apache.commons.math.analysis.solvers.NewtonSolverTest
+org.apache.commons.math.analysis.solvers.UnivariateRealSolverUtilsTest
+org.apache.commons.math.distribution.BetaDistributionTest
+org.apache.commons.math.distribution.ChiSquareDistributionTest
+org.apache.commons.math.distribution.FDistributionTest
+org.apache.commons.math.distribution.GammaDistributionTest
+org.apache.commons.math.distribution.NormalDistributionTest
+org.apache.commons.math.distribution.TDistributionTest
+org.apache.commons.math.stat.regression.SimpleRegressionTest

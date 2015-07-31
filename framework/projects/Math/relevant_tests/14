@@ -1,0 +1,9 @@
+org.apache.commons.math3.analysis.interpolation.SmoothingPolynomialBicubicSplineInterpolatorTest
+org.apache.commons.math3.fitting.CurveFitterTest
+org.apache.commons.math3.fitting.GaussianFitterTest
+org.apache.commons.math3.fitting.HarmonicFitterTest
+org.apache.commons.math3.fitting.PolynomialFitterTest
+org.apache.commons.math3.optim.nonlinear.vector.MultiStartMultivariateVectorOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.GaussNewtonOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquardtOptimizerTest
+org.apache.commons.math3.optim.nonlinear.vector.jacobian.MinpackTest

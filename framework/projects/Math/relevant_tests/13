@@ -1,0 +1,8 @@
+org.apache.commons.math3.optimization.MultivariateDifferentiableVectorMultiStartOptimizerTest
+org.apache.commons.math3.optimization.fitting.CurveFitterTest
+org.apache.commons.math3.optimization.fitting.GaussianFitterTest
+org.apache.commons.math3.optimization.fitting.HarmonicFitterTest
+org.apache.commons.math3.optimization.fitting.PolynomialFitterTest
+org.apache.commons.math3.optimization.general.GaussNewtonOptimizerTest
+org.apache.commons.math3.optimization.general.LevenbergMarquardtOptimizerTest
+org.apache.commons.math3.optimization.general.MinpackTest

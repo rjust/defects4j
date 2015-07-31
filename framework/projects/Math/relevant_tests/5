@@ -1,0 +1,10 @@
+org.apache.commons.math3.analysis.solvers.LaguerreSolverTest
+org.apache.commons.math3.complex.ComplexFieldTest
+org.apache.commons.math3.complex.ComplexFormatTest
+org.apache.commons.math3.complex.ComplexTest
+org.apache.commons.math3.complex.ComplexUtilsTest
+org.apache.commons.math3.complex.FrenchComplexFormatTest
+org.apache.commons.math3.linear.EigenDecompositionTest
+org.apache.commons.math3.transform.FastCosineTransformerTest
+org.apache.commons.math3.transform.FastFourierTransformerTest
+org.apache.commons.math3.transform.FastSineTransformerTest

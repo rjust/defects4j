@@ -1,0 +1,10 @@
+org.apache.commons.math.analysis.interpolation.SmoothingPolynomialBicubicSplineInterpolatorTest
+org.apache.commons.math.optimization.MultiStartDifferentiableMultivariateVectorialOptimizerTest
+org.apache.commons.math.optimization.fitting.CurveFitterTest
+org.apache.commons.math.optimization.fitting.GaussianFitterTest
+org.apache.commons.math.optimization.fitting.HarmonicFitterTest
+org.apache.commons.math.optimization.fitting.ParametricGaussianFunctionTest
+org.apache.commons.math.optimization.fitting.PolynomialFitterTest
+org.apache.commons.math.optimization.general.GaussNewtonOptimizerTest
+org.apache.commons.math.optimization.general.LevenbergMarquardtOptimizerTest
+org.apache.commons.math.optimization.general.MinpackTest

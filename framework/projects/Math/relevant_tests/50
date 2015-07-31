@@ -1,0 +1,6 @@
+org.apache.commons.math.analysis.solvers.IllinoisSolverTest
+org.apache.commons.math.analysis.solvers.PegasusSolverTest
+org.apache.commons.math.analysis.solvers.RegulaFalsiSolverTest
+org.apache.commons.math.analysis.solvers.SecantSolverTest
+org.apache.commons.math.ode.events.EventStateTest
+org.apache.commons.math.ode.events.OverlappingEventsTest

@@ -1,0 +1,11 @@
+org.apache.commons.math.estimation.GaussNewtonEstimatorTest
+org.apache.commons.math.estimation.LevenbergMarquardtEstimatorTest
+org.apache.commons.math.linear.BigMatrixImplTest
+org.apache.commons.math.linear.MatrixUtilsTest
+org.apache.commons.math.linear.QRDecompositionImplTest
+org.apache.commons.math.linear.RealMatrixImplTest
+org.apache.commons.math.optimization.NelderMeadTest
+org.apache.commons.math.stat.descriptive.MultivariateSummaryStatisticsTest
+org.apache.commons.math.stat.descriptive.moment.VectorialCovarianceTest
+org.apache.commons.math.stat.regression.GLSMultipleLinearRegressionTest
+org.apache.commons.math.stat.regression.OLSMultipleLinearRegressionTest

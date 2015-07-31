@@ -1,0 +1,17 @@
+org.apache.commons.math.distribution.BinomialDistributionTest
+org.apache.commons.math.distribution.ChiSquareDistributionTest
+org.apache.commons.math.distribution.FDistributionTest
+org.apache.commons.math.distribution.GammaDistributionTest
+org.apache.commons.math.distribution.NormalDistributionTest
+org.apache.commons.math.distribution.PascalDistributionTest
+org.apache.commons.math.distribution.PoissonDistributionTest
+org.apache.commons.math.distribution.TDistributionTest
+org.apache.commons.math.special.BetaTest
+org.apache.commons.math.special.ErfTest
+org.apache.commons.math.special.GammaTest
+org.apache.commons.math.stat.inference.ChiSquareFactoryTest
+org.apache.commons.math.stat.inference.ChiSquareTestTest
+org.apache.commons.math.stat.inference.TTestFactoryTest
+org.apache.commons.math.stat.inference.TTestTest
+org.apache.commons.math.stat.inference.TestUtilsTest
+org.apache.commons.math.stat.regression.SimpleRegressionTest

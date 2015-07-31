@@ -1,0 +1,5 @@
+org.apache.commons.math.optimization.fitting.CurveFitterTest
+org.apache.commons.math.optimization.fitting.HarmonicFitterTest
+org.apache.commons.math.optimization.fitting.PolynomialFitterTest
+org.apache.commons.math.optimization.general.LevenbergMarquardtOptimizerTest
+org.apache.commons.math.optimization.general.MinpackTest

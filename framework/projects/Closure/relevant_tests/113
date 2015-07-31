@@ -1,0 +1,13 @@
+com.google.javascript.jscomp.AmbiguatePropertiesTest
+com.google.javascript.jscomp.CheckRequiresForConstructorsTest
+com.google.javascript.jscomp.CommandLineRunnerTest
+com.google.javascript.jscomp.CompilerTest
+com.google.javascript.jscomp.InlinePropertiesTest
+com.google.javascript.jscomp.IntegrationTest
+com.google.javascript.jscomp.LooseTypeCheckTest
+com.google.javascript.jscomp.ProcessClosurePrimitivesTest
+com.google.javascript.jscomp.RenameVars2Test
+com.google.javascript.jscomp.RenameVarsTest
+com.google.javascript.jscomp.SymbolTableTest
+com.google.javascript.jscomp.TypeCheckTest
+com.google.javascript.jscomp.VarCheckTest
