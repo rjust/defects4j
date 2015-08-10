@@ -134,7 +134,7 @@ system("rm -f $tmp_file");
 # Determine list of properties that can be exported
 #
 sub _get_props {
-    my @list = `ant -f $SCRIPT_DIR/projects/defects4j.build.xml -p -Dscript.dir=$SCRIPT_DIR | grep \"export\\.\"`;
+    my @list = `ant -f $SCRIPT_DIR/projects/defects4j.build.xml -p -Dd4j.home=$BASE_DIR | grep \"export\\.\"`;
     my %props = map { /^\s*export\.([^ ]+)\s+(.+)$/; $1 => $2} @list;
     return %props;
 }

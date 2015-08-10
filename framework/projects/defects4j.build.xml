@@ -1,18 +1,19 @@
 <project name="Defects4J" >
-    <fail message="Property script.dir not set!" unless="script.dir" />
+
+    <fail message="Property d4j.home not set!" unless="d4j.home" />
 
     <taskdef resource="net/sf/antcontrib/antlib.xml"
-            classpath="${script.dir}/projects/lib/ant-contrib.jar"/>
+            classpath="${d4j.home}/framework/lib/ant-contrib.jar"/>
 
     <!-- Additional properties such as tests to exclude.
          This property file is automatically generated. -->
     <property file="${basedir}/defects4j.build.properties"/>
 
-    <property name="jcrasher.jar" value="${script.dir}/projects/lib/jcrasher-2.1.3.jar"/>
-    <property name="cobertura.jar" value="${script.dir}/projects/lib/cobertura-2.0.3.jar"/>
+    <property name="jcrasher.jar"  value="${d4j.home}/framework/projects/lib/jcrasher-2.1.3.jar"/>
+    <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
 
     <!-- Location of customized JUnit formatter-->
-    <property name="formatter.jar" value="${script.dir}/lib/formatter.jar"/>
+    <property name="formatter.jar" value="${d4j.home}/framework/lib/formatter.jar"/>
 
 <!--
      Check whether all properties and paths are configured
@@ -95,11 +96,10 @@
 -->
     <target name="mutation.test" description="Perform mutation analysis">
         <!-- Test a generated test suite -->
-        <if><isset property="test.include"/>
+        <if><isset property="d4j.test.include"/>
             <then>
-                <fileset id="major.tests" dir="${bug-db.test.dir}">
-                    <include name="**/${test.include}"/>
-                    <exclude name="**/WashingtonSuite.java"/>
+                <fileset id="major.tests" dir="${d4j.test.dir}">
+                    <include name="**/${d4j.test.include}"/>
                 </fileset>
             </then>
             <else>
@@ -146,8 +146,8 @@
     Compile generated unit tests
 -->
     <target name="compile.gen.tests" depends="compile" description="Compile generated tests">
-        <!-- bug-db.test.dir, build.home, and classes.dir properties have to be provided by caller! -->
-        <fail message="Property bug-db.test.dir not set!" unless="bug-db.test.dir" />
+        <!-- d4j.test.dir, build.home, and classes.dir properties have to be provided by caller! -->
+        <fail message="Property d4j.test.dir not set!" unless="d4j.test.dir" />
         <fail message="Property build.home not set!" unless="build.home" />
         <fail message="Property classes.dir not set!" unless="classes.dir" />
 
@@ -155,7 +155,7 @@
         <echo message="build.home: ${build.home}" />
 
         <mkdir dir="${build.home}/gen-tests" />
-        <javac srcdir="${bug-db.test.dir}"
+        <javac srcdir="${d4j.test.dir}"
                destdir="${build.home}/gen-tests"
                debug="true"
                deprecation="false"
@@ -173,9 +173,9 @@
     Run generated tests
 -->
     <target name="run.gen.tests"  depends="compile.gen.tests" description="Run generated tests">
-        <!-- test.dir, test.include, and class.dir properties have to be provided by caller! -->
-        <fail message="Property bug-db.test.dir not set!" unless="bug-db.test.dir" />
-        <fail message="Property test.include not set!" unless="test.include" />
+        <!-- d4j.test.dir, d4j.test.include, and class.dir properties have to be provided by caller! -->
+        <fail message="Property d4j.test.dir not set!" unless="d4j.test.dir" />
+        <fail message="Property d4j.test.include not set!" unless="d4j.test.include" />
         <fail message="Property classes.dir not set!" unless="classes.dir" />
 
         <echo message="classes.dir: ${classes.dir}" />
@@ -197,9 +197,8 @@
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
                 <batchtest unless="test.entry.class">
-                    <fileset dir="${bug-db.test.dir}">
-                        <include name="**/${test.include}"/>
-                        <exclude name="**/WashingtonSuite.java"/>
+                    <fileset dir="${d4j.test.dir}">
+                        <include name="**/${d4j.test.include}"/>
                     </fileset>
                 </batchtest>
         </junit>
@@ -210,7 +209,7 @@
     Instrument for cobertura
     TODO: Clean up the confusing classpath IDs and property names
 -->
-    <property name="cobertura.dir" value="${script.dir}/projects/lib/" />
+    <property name="cobertura.dir" value="${d4j.home}/framework/projects/lib/" />
     <path id="cobertura.classpath">
         <fileset dir="${cobertura.dir}">
             <include name="cobertura-2.0.3.jar" />
@@ -333,7 +332,7 @@
         <fail message="Property file.export not set!" unless="file.export" />
 
         <loadfile property="relevant.tests"
-            srcFile="${script.dir}/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+            srcFile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
         <echo message="${relevant.tests}" file="${file.export}" />
     </target>
 

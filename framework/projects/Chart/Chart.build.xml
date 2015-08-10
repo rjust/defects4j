@@ -1,9 +1,7 @@
 <project name="D4J-Chart"  basedir="${basedir}">
 
-    <!-- script.dir property has to be provided from caller! -->
-    <fail message="Property script.dir not set!" unless="script.dir" />
-
-    <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar"/>
+    <fail message="Property d4j.home not set!" unless="d4j.home" />
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
 
     <!-- Include existing project build file -->
     <import file="${basedir}/ant/build.xml" />

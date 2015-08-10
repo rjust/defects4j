@@ -302,7 +302,7 @@ sub compile_ext_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $dir, $log_file) = @_;
 
-    return $self->_ant_call("compile.gen.tests", "-Dbug-db.test.dir=$dir", $log_file);
+    return $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
 }
 
 =pod
@@ -325,7 +325,7 @@ sub run_ext_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("run.gen.tests", "-DOUTFILE=$out_file -Dbug-db.test.dir=$dir -Dtest.include=$include $single_test_opt");
+    return $self->_ant_call("run.gen.tests", "-DOUTFILE=$out_file -Dd4j.test.dir=$dir -Dd4j.test.include=$include $single_test_opt");
 }
 
 =pod
@@ -680,7 +680,7 @@ sub mutation_analysis_ext {
     my $basedir = $self->{prog_root};
 
     return $self->_ant_call("mutation.test",
-                            "-Dbug-db.test.dir=$dir -Dtest.include=$include " .
+                            "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$log");
@@ -769,7 +769,7 @@ sub _ant_call {
     -f $file or die "Build file does not exist: $file";
 
     print(STDERR "Running ant ($target) ... ");
-    my $log = `cd $self->{prog_root}; ant -f $self->{_build_file} -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1`;
+    my $log = `cd $self->{prog_root}; ant -f $self->{_build_file} -Dd4j.home=$BASE_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1`;
     my $ret = $?;
 
     if (defined $log_file) {

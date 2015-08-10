@@ -2,15 +2,13 @@
 
     <property name="compile.debug" value="yes" />
 
-    <!-- script.dir property has to be provided from caller! -->
-    <fail message="Property script.dir not set!" unless="script.dir" />
-
-    <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar"/>
-    <property name="easymock.jar" value="${script.dir}/projects/Lang/lib/easymock.jar"/>
-    <property name="commons-io.jar" value="${script.dir}/projects/Lang/lib/commons-io.jar"/>
-    <property name="cglib.jar" value="${script.dir}/projects/Lang/lib/cglib.jar"/>
-    <property name="asm.jar" value="${script.dir}/projects/Lang/lib/asm.jar"/>
-    <property name="maven.repo.local" value="${script.dir}/projects/Lang/lib/" />
+    <fail message="Property d4j.home not set!" unless="d4j.home" />
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
+    <property name="easymock.jar" value="${d4j.home}/framework/projects/Lang/lib/easymock.jar"/>
+    <property name="commons-io.jar" value="${d4j.home}/framework/projects/Lang/lib/commons-io.jar"/>
+    <property name="cglib.jar" value="${d4j.home}/framework/projects/Lang/lib/cglib.jar"/>
+    <property name="asm.jar" value="${d4j.home}/framework/projects/Lang/lib/asm.jar"/>
+    <property name="maven.repo.local" value="${d4j.home}/framework/projects/Lang/lib/" />
 
     <!-- Do not download maven dependencies -->
     <property name="maven.mode.offline" value="true" />
@@ -23,7 +21,7 @@
 
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->
-    <property name="bug-db.test.dir" value="${test.home}"/>
+    <property name="d4j.test.dir" value="${test.home}"/>
     <property name="classes.dir" value="${build.home}/classes"/>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->

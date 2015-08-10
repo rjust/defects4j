@@ -107,7 +107,7 @@ $project->compile_tests() == 0 or die "Cannot compile tests!";
 
 # Perform mutation analysis
 my $tmp = "$WORK_DIR/.mutation.log";
-# Be default we do not exclude any mutants
+# By default we do not exclude any mutants
 system("touch $WORK_DIR/exclude.txt") unless -e "$WORK_DIR/exclude.txt";
 if ($project->mutation_analysis($tmp) != 0) {
     system("cat $tmp");
