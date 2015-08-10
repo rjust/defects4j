@@ -1,5 +1,8 @@
 <project name="Defects4J" >
-    <taskdef resource="net/sf/antcontrib/antlib.xml" />
+    <fail message="Property script.dir not set!" unless="script.dir" />
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml"
+            classpath="${script.dir}/projects/lib/ant-contrib.jar"/>
 
     <!-- Additional properties such as tests to exclude.
          This property file is automatically generated. -->
@@ -7,6 +10,9 @@
 
     <property name="jcrasher.jar" value="${script.dir}/projects/lib/jcrasher-2.1.3.jar"/>
     <property name="cobertura.jar" value="${script.dir}/projects/lib/cobertura-2.0.3.jar"/>
+
+    <!-- Location of customized JUnit formatter-->
+    <property name="formatter.jar" value="${script.dir}/lib/formatter.jar"/>
 
 <!--
      Check whether all properties and paths are configured
@@ -17,10 +23,34 @@
         <fail unless="d4j.classes.modified"/>
         <fail unless="test.home"/>
         <fail unless="build.home"/>
-        <fail unless="ant.refid:test.classpath"/>
+        <fail unless="ant.refid:d4j.test.classpath"/>
         <fail unless="ant.refid:compile.classpath"/>
-        <fail unless="ant.refid:major.classpath"/>
         <fail unless="ant.refid:all.manual.tests" />
+    </target>
+
+<!--
+    Run developer-written tests
+-->
+    <target name="run.dev.tests"  depends="compile.tests" description="Run unit tests">
+        <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath refid="d4j.test.classpath"/>
+            <classpath refid="cobertura.classpath.include"/>
+            <classpath>
+                <pathelement path="${formatter.jar}" />
+            </classpath>
+
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class">
+                    <fileset refid="all.manual.tests" />
+                </batchtest>
+        </junit>
+        <!-- fail build in case we are running all classes, but there are none in the fileset -->
+        <if> <not> <isset property="test.entry.class" /> </not> <then>
+            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
+            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+        </then> </if>
     </target>
 
 <!--
@@ -37,10 +67,9 @@
 
             <arg value="${test.entry}"/>
             <jvmarg value="-verbose:class"/>
+            <classpath refid="d4j.test.classpath"/>
             <classpath>
-                <path refid="major.classpath" />
-                <pathelement path="${formatter_cp}" />
-                <pathelement path="${junit.jar}" />
+                <pathelement path="${formatter.jar}" />
             </classpath>
         </java>
     </target>
@@ -101,10 +130,10 @@
             failing tests -> usually all tests should pass!
             -->
 
+            <classpath refid="d4j.test.classpath"/>
             <classpath>
                 <pathelement path="${build.home}/gen-tests" />
             </classpath>
-            <classpath refid="major.classpath"/>
 
             <test name="${test.entry.class}" if="test.entry.class" />
             <batchtest unless="test.entry.class" fork="no">
@@ -132,7 +161,7 @@
                deprecation="false"
                optimize="false">
                <classpath>
-                    <path refid="test.classpath" />
+                    <path refid="d4j.test.classpath" />
                     <pathelement path="${classes.dir}" />
                     <!-- Add dependencies to test generation tools -->
                     <pathelement path="${jcrasher.jar}" />
@@ -153,16 +182,16 @@
         <echo message="build.home: ${build.home}" />
 
         <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath refid="d4j.test.classpath"/>
             <classpath>
                 <pathelement path="${build.home}/gen-tests" />
-                <pathelement path="${formatter_cp}" />
+                <pathelement path="${formatter.jar}" />
                 <pathelement path="${classes.dir}" />
                 <!-- Add dependencies to test generation tools -->
                 <pathelement path="${jcrasher.jar}" />
                 <!-- Add dependencies to code coverage tools -->
                 <pathelement path="${cobertura.jar}" />
             </classpath>
-            <classpath refid="major.classpath"/>
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
@@ -179,6 +208,7 @@
 
 <!--
     Instrument for cobertura
+    TODO: Clean up the confusing classpath IDs and property names
 -->
     <property name="cobertura.dir" value="${script.dir}/projects/lib/" />
     <path id="cobertura.classpath">
@@ -259,7 +289,7 @@
             description="Classpath to compile and run the developer-written tests">
         <fail message="Property file.export not set!" unless="file.export" />
 
-        <pathconvert property="cp.test" refid="test.classpath" />
+        <pathconvert property="cp.test" refid="d4j.test.classpath" />
         <echo message="${cp.test}" file="${file.export}"/>
     </target>
 

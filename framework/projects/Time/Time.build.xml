@@ -1,4 +1,4 @@
-<project name="Time"  basedir="${basedir}">
+<project name="D4J-Time"  basedir="${basedir}">
 
     <!-- script.dir property has to be provided from caller! -->
     <fail message="Property script.dir not set!" unless="script.dir" />
@@ -13,7 +13,6 @@
     <!-- Generate all debugging information -->
     <property name="compile.debuglevel" value="lines,source,vars" />
 
-    <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar" />
     <!-- Include existing project build file -->
     <import file="${basedir}/build.xml" />
 
@@ -39,16 +38,7 @@
     </condition>
     <property name="build.home" value="${classes.dir}/.." />
 
-    <!-- Classpath to run mutation analysis -->
-    <path id="major.classpath">
-        <path refid="compile.classpath" />
-        <path refid="test.classpath" />
-        <pathelement path="${classes.dir}" />
-        <pathelement path="${test.home}" />
-    </path>
-
     <target name="compile.tests" depends="joda-time.compile.tests"> </target>
-
 
     <property name="tz.build.notneeded" value="true" />
     <target name="compile" depends="joda-time.compile">
@@ -100,45 +90,20 @@
           <arg value="backward" />
           <arg value="systemv" />
         </java>
-
-
       </else> </if>
     </target>
 
-    <!-- List of all tests that reliably pass on the fixed version -->
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
         <include name="**/TestAll.java" />
         <exclude name="**/*Abstract*Test.java" />
     </fileset>
 
-<!--
-    Run tests
--->
-    <target name="test" depends="compile.tests"
-            description="Runs the test cases">
-
-        <junit printSummary="yes"
-                haltonerror="no" haltonfailure="no" fork="no">
-
-            <classpath>
-                <path refid="test.classpath" />
-                <pathelement path="${classes.dir}" />
-                <pathelement path="${test.home}" />
-                <pathelement path="${formatter_cp}" />
-				<path refid="cobertura.classpath.include" />
-            </classpath>
-            <sysproperty key="OUTFILE" value="${OUTFILE}" />
-            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
-            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
-
-              <batchtest unless="test.entry.class">
-                    <fileset refid="all.manual.tests" />
-              </batchtest>
-        </junit>
-        <!-- fail build in case we are running all classes, but there are none in the fileset -->
-        <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
-        </then> </if>
-    </target>
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="compile.classpath" />
+        <path refid="test.classpath" />
+        <pathelement path="${classes.dir}" />
+        <pathelement path="${test.home}" />
+    </path>
 </project>

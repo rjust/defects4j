@@ -325,7 +325,7 @@ sub run_ext_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("run.gen.tests", "-Dformatter_cp=$LIB_DIR/formatter.jar -DOUTFILE=$out_file -Dbug-db.test.dir=$dir -Dtest.include=$include $single_test_opt");
+    return $self->_ant_call("run.gen.tests", "-DOUTFILE=$out_file -Dbug-db.test.dir=$dir -Dtest.include=$include $single_test_opt");
 }
 
 =pod
@@ -602,7 +602,7 @@ sub run_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("test", "-Dformatter_cp=$LIB_DIR/formatter.jar -DOUTFILE=$out_file $single_test_opt");
+    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
 }
 
 =pod
@@ -622,7 +622,7 @@ sub coverage {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("coverage", "-Dformatter_cp=$LIB_DIR/formatter.jar -DOUTFILE=$out_file $single_test_opt");
+    return $self->_ant_call("coverage", "-DOUTFILE=$out_file $single_test_opt");
 }
 
 sub coverage_report {
@@ -721,7 +721,7 @@ sub monitor_test {
         test => []
     };
 
-    my $ret = $self->_ant_call("monitor.test", "-Dformatter_cp=$LIB_DIR/formatter.jar -Dtest.entry=$single_test -Dtest.output=$log_file");
+    my $ret = $self->_ant_call("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file");
     $ret == 0 or return undef;
 
     my $src = $self->_get_classes($self->src_dir($vid));

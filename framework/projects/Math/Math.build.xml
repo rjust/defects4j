@@ -1,4 +1,4 @@
-<project name="Math"  basedir="${basedir}">
+<project name="D4J-Math"  basedir="${basedir}">
 
     <property name="script.dir" value="${user.dir}"/>
     <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar"/>
@@ -16,12 +16,6 @@
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->
     <property name="bug-db.test.dir" value="${test.home}"/>
-
-    <!-- Classpath to run mutation analysis -->
-    <path id="major.classpath">
-        <path refid="test.classpath"/>
-        <pathelement path="${junit.jar}" />
-    </path>
 
     <!-- Fixing ant script in case compile-tests is defined instead of compile.tests -->
     <scriptdef name="hastarget" language="javascript">
@@ -62,7 +56,7 @@
     </then> </if>
     <!-- end of fixing ant script -->
 
-    <!-- List of all tests that reliably pass on the fixed version -->
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.java"/>
         <include name="**/*TestBinary.java"/>
@@ -71,27 +65,11 @@
         <exclude name="**/*Abstract*Test.java"/>
     </fileset>
 
-<!--
-    Run tests
--->
-    <target name="test"  depends="compile.tests" description="Run unit tests">
-      <junit printsummary="no" fork="no" showOutput="no">
-           <classpath refid="test.classpath"/>
-           <classpath>
-              <pathelement path="${formatter_cp}" />
-              <path refid="cobertura.classpath.include" />
-           </classpath>
-           <sysproperty key="OUTFILE" value="${OUTFILE}"/>
-           <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
-           <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class"/>
-           <batchtest unless="test.entry.class" >
-                <fileset refid="all.manual.tests" />
-           </batchtest>
-       </junit>
-        <!-- fail build in case we are running all classes, but there are none in the fileset -->
-        <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
-        </then> </if>
-  </target>
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="test.classpath"/>
+        <pathelement path="${junit.jar}" />
+    </path>
+
+
 </project>

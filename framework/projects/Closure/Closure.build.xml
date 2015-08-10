@@ -1,4 +1,4 @@
-<project name="Closure"  basedir="${basedir}">
+<project name="D4J-Closure"  basedir="${basedir}">
 
     <property name="javac.debug" value="true" />
 
@@ -32,13 +32,6 @@
     <property name="test.home" value="${testClasses.dir}" />
     <property name="build.home" value="${build.dir}" />
 
-    <!-- Classpath to run mutation analysis -->
-    <path id="major.classpath">
-        <path refid="compile.classpath" />
-        <path refid="test.classpath" />
-    </path>
-
-
     <!-- property needs to be set for coverage to work -->
     <property name="cobertura.aux.classpath" value="${basedir}/lib/guava.jar" />
 
@@ -50,37 +43,14 @@
        <antcall target="Defects4J.compile.gen.tests" />
     </target>
 
-    <!-- List of all tests that reliably pass on the fixed version -->
+    <!-- List of all devloper-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${build.dir}/test" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.class" />
     </fileset>
 
-<!--
-    Run tests
--->
-    <target name="test" depends="compile.tests"
-            description="Runs the test cases">
-
-        <junit printSummary="yes"
-                haltonerror="no" haltonfailure="no" fork="no">
-
-            <classpath>
-                <path refid="test.classpath" />
-				<path refid="cobertura.classpath.include" />
-                <pathelement path="${formatter_cp}" />
-            </classpath>
-            <sysproperty key="OUTFILE" value="${OUTFILE}" />
-            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
-            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
-
-            <batchtest unless="test.entry.class">
-                <fileset refid="all.manual.tests" />
-            </batchtest>
-        </junit>
-        <!-- fail build in case we are running all classes, but there are none in the fileset -->
-        <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
-        </then> </if>
-    </target>
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="compile.classpath" />
+        <path refid="test.classpath" />
+    </path>
 </project>

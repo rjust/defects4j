@@ -1,4 +1,4 @@
-<project name="commons-lang-major" basedir="${basedir}">
+<project name="D4J-Lang" basedir="${basedir}">
 
     <property name="compile.debug" value="yes" />
 
@@ -26,46 +26,19 @@
     <property name="bug-db.test.dir" value="${test.home}"/>
     <property name="classes.dir" value="${build.home}/classes"/>
 
-    <!-- Classpath to run mutation analysis -->
-    <path id="major.classpath">
-        <path refid="test.classpath"/>
-        <pathelement path="${cglib.jar}" />
-        <pathelement path="${asm.jar}" />
-        <pathelement path="${easymock.jar}" />
-        <pathelement path="${commons-io.jar}" />
-    </path>
-
-    <!-- List of all tests that reliably pass on the fixed version -->
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.java"/>
         <exclude name="**/*Abstract*Test.java"/>
         <exclude name="**/RandomUtilsTest.java"/>
     </fileset>
 
-<!--
-    Run tests
--->
-    <target name="test"  depends="compile.tests" description="Run unit tests">
-        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
-            <classpath refid="test.classpath"/>
-            <classpath>
-                <pathelement path="${formatter_cp}" />
-                <pathelement path="${cglib.jar}" />
-                <pathelement path="${asm.jar}" />
-                <path refid="cobertura.classpath.include" />
-            </classpath>
-
-            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
-            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
-            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
-                <batchtest unless="test.entry.class">
-                    <fileset refid="all.manual.tests" />
-                </batchtest>
-        </junit>
-        <!-- fail build in case we are running all classes, but there are none in the fileset -->
-        <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
-        </then> </if>
-    </target>
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="test.classpath"/>
+        <pathelement path="${cglib.jar}" />
+        <pathelement path="${asm.jar}" />
+        <pathelement path="${easymock.jar}" />
+        <pathelement path="${commons-io.jar}" />
+    </path>
 </project>
