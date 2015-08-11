@@ -8,7 +8,7 @@
 #
 # TODO: we need unit tests and a better testing infrastructure.
 
-HALT_ON_ERROR=0
+HALT_ON_ERROR=1
 
 die() {
     echo "Error while running: $1" >> $BASE_DIR/test.log
@@ -129,6 +129,7 @@ for pid in Chart Closure Lang Math Time; do
     sanity_check.pl -p $pid || or die "sanity check $pid"
 done
 
+HALT_ON_ERROR=0
 ################################################################################
 # Run test target on all buggy and fixed program versions, and verify trigger tests
 ################################################################################

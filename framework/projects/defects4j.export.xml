@@ -1,0 +1,127 @@
+<project name="D4J-export">
+<!--############################################################################
+    This file defines all export targets for Defects4J
+#############################################################################-->
+
+<!-- Source directory of classes -->
+    <target name="export.dir.src.classes"
+            description="Source directory of classes"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.dir.src.classes}" file="${file.export}"/>
+    </target>
+
+<!-- Source directory of tests -->
+    <target name="export.dir.src.tests"
+            description="Source directory of tests"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.dir.src.tests}" file="${file.export}"/>
+    </target>
+
+<!-- Compile classpath -->
+    <target name="export.cp.compile"
+            description="Classpath to compile the project"
+            depends="sanity.check,compile">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <path id="project.classpath">
+            <pathelement path="${classes.dir}" />
+            <path refid="compile.classpath" />
+        </path>
+
+        <pathconvert property="cp.compile" refid="project.classpath" />
+        <echo message="${cp.compile}" file="${file.export}"/>
+    </target>
+
+<!-- Test classpath -->
+    <target name="export.cp.test"
+            description="Classpath to compile and run the developer-written tests"
+            depends="sanity.check,compile">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <pathconvert property="cp.test" refid="d4j.test.classpath" />
+        <echo message="${cp.test}" file="${file.export}"/>
+    </target>
+
+<!-- Modified classes -->
+    <target name="export.classes.modified"
+            description="Classes modified by the bug fix"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.classes.modified}" file="${file.export}"/>
+
+        <loadfile property="classes.mod" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${classes.mod}" file="${file.export}"/>
+    </target>
+
+<!-- Trigger tests -->
+    <target name="export.tests.trigger"
+            description="Trigger tests that expose the bug"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.tests.trigger}" file="${file.export}"/>
+
+        <loadfile property="trigger.tests" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${trigger.tests}" file="${file.export}"/>
+    </target>
+
+<!-- Relevant tests -->
+    <target name="export.tests.relevant"
+            description="Relevant tests that touch at least one of the modified sources"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <loadfile property="relevant.tests"
+            srcFile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+        <echo message="${relevant.tests}" file="${file.export}" />
+    </target>
+
+
+<!-- TODO: Closure defines the file set of tests on the target directory, which
+requires the dependency to the compile targets. Can we get rid of this special
+case? -->
+<!-- List of all manual test classes -->
+    <target name="export.tests.all"
+            description="List of all developer-written tests"
+            depends="sanity.check,compile,compile.tests">
+        <fail message="Property file.export not set!" unless="file.export" />
+        <fail message="File set all.manual.tests not set!" unless="ant.refid:all.manual.tests" />
+
+        <!-- Get all developer-written tests, separated by newline -->
+        <pathconvert pathsep="${line.separator}" property="tmp.tests" refid="all.manual.tests" />
+        <echo message="${tmp.tests}" file="${file.export}"/>
+        <!-- Get fully qualified class names, i.e., remove path prefix,
+             replace file separator by '.' and remove ".java" or ".class" -->
+        <property name="src.prefix" location="${d4j.workdir}${file.separator}${d4j.dir.src.tests}"/>
+        <property name="bin.prefix" location="${test.home}"/>
+        <loadfile property="all.tests" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="${src.prefix}${file.separator}" replace="" />
+                <replaceregex pattern="${bin.prefix}${file.separator}" replace="" />
+                <replaceregex pattern="${file.separator}" replace="." flags="g" />
+                <replaceregex pattern=".java$" replace="" />
+                <replaceregex pattern=".class$" replace="" />
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${all.tests}" file="${file.export}"/>
+    </target>
+</project>

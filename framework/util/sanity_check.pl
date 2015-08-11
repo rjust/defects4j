@@ -100,10 +100,14 @@ foreach my $id (@ids) {
         $project->sanity_check() == 0 or die "Could not perform sanity check on ${vid}";
 
         my $src_dir = $project->src_dir($vid);
+        my $exp_src_dir = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -pdir.src.classes`; chomp $exp_src_dir;
         -e "$TMP_DIR/$src_dir" or die "Provided source directory does not exist in ${vid}";
+        $exp_src_dir eq $src_dir or die "Exported source directory does not match expected one ($exp_src_dir != $src_dir) in ${vid}";
 
         my $test_dir = $project->test_dir($vid);
+        my $exp_test_dir = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -pdir.src.tests`; chomp $exp_test_dir;
         -e "$TMP_DIR/$test_dir" or die "Provided test directory does not exist in ${vid}";
+        $exp_test_dir eq $test_dir or die "Exported test directory does not match expected one ($exp_test_dir != $test_dir) in ${vid}";
     }
 }
 # Clean up
