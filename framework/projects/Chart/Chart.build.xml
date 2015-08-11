@@ -1,18 +1,11 @@
-<project name="D4J-Chart"  basedir="${basedir}">
-
-    <fail message="Property d4j.home not set!" unless="d4j.home" />
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-
+<project name="D4J-Chart">
     <!-- Include existing project build file -->
-    <import file="${basedir}/ant/build.xml" />
-
-    <!-- Import general build file -->
-    <import file="../defects4j.build.xml" />
+    <import file="${d4j.workdir}/ant/build.xml" />
 
     <!-- Values necessary for mutation scripting to work -->
-    <property name="test.home" value="${basedir}/build-tests" />
-    <property name="build.home" value="${basedir}" />
-    <property name="classes.dir" value="${basedir}/build" />
+    <property name="test.home" value="${d4j.workdir}/build-tests" />
+    <property name="build.home" value="${d4j.workdir}" />
+    <property name="classes.dir" value="${d4j.workdir}/build" />
     <path id="compile.classpath" refid="build.classpath" />
 
     <!-- target used for compiling sources. This was replicated to avoid deleting the compilation directory -->
@@ -20,10 +13,10 @@
             description="Compile the JFreeChart source code.">
 
         <!-- create a temp build directory -->
-        <mkdir dir="${basedir}/build" />
+        <mkdir dir="${d4j.workdir}/build" />
 
-        <javac srcdir="${basedir}/source"
-               destdir="${basedir}/build"
+        <javac srcdir="${d4j.workdir}/source"
+               destdir="${d4j.workdir}/build"
                debug="on"
                deprecation="false"
                source="1.4"
@@ -33,26 +26,26 @@
         </javac>
 
         <!-- copy across gorilla.jpg -->
-        <copy file="${basedir}/source/org/jfree/chart/gorilla.jpg" tofile="${basedir}/build/org/jfree/chart/gorilla.jpg" />
+        <copy file="${d4j.workdir}/source/org/jfree/chart/gorilla.jpg" tofile="${d4j.workdir}/build/org/jfree/chart/gorilla.jpg" />
 
         <!-- copy across .properties files -->
-        <copy todir="${basedir}/build/org/jfree/chart/">
-            <fileset dir="${basedir}/source/org/jfree/chart">
+        <copy todir="${d4j.workdir}/build/org/jfree/chart/">
+            <fileset dir="${d4j.workdir}/source/org/jfree/chart">
                 <include name="*.properties" />
             </fileset>
         </copy>
-        <copy todir="${basedir}/build/org/jfree/chart/plot">
-            <fileset dir="${basedir}/source/org/jfree/chart/plot">
+        <copy todir="${d4j.workdir}/build/org/jfree/chart/plot">
+            <fileset dir="${d4j.workdir}/source/org/jfree/chart/plot">
                 <include name="*.properties" />
             </fileset>
         </copy>
-        <copy todir="${basedir}/build/org/jfree/chart/editor">
-            <fileset dir="${basedir}/source/org/jfree/chart/editor">
+        <copy todir="${d4j.workdir}/build/org/jfree/chart/editor">
+            <fileset dir="${d4j.workdir}/source/org/jfree/chart/editor">
                 <include name="*.properties" />
             </fileset>
         </copy>
-        <copy todir="${basedir}/build/org/jfree/chart/ui">
-            <fileset dir="${basedir}/source/org/jfree/chart/ui">
+        <copy todir="${d4j.workdir}/build/org/jfree/chart/ui">
+            <fileset dir="${d4j.workdir}/source/org/jfree/chart/ui">
                 <include name="*.properties" />
             </fileset>
         </copy>
@@ -64,15 +57,15 @@
             description="Compile the JFreeChart experimental classes">
 
         <!-- create a temp build directory -->
-        <mkdir dir="${basedir}/build" />
+        <mkdir dir="${d4j.workdir}/build" />
 
         <path id="build.experimental.classpath">
             <pathelement location="${servlet.jar}"/>
         </path>
 
         <!-- compile the source -->
-        <javac srcdir="${basedir}/experimental"
-               destdir="${basedir}/build"
+        <javac srcdir="${d4j.workdir}/experimental"
+               destdir="${d4j.workdir}/build"
                debug="on"
                deprecation="false"
                source="1.4"
@@ -86,9 +79,9 @@
 
     <!-- dummy target, used to rename -->
     <target name="compile.tests" depends="compile, compile-experimental">
-         <mkdir dir="${basedir}/build-tests"/>
-        <javac srcdir="${basedir}/tests"
-               destdir="${basedir}/build-tests"
+         <mkdir dir="${d4j.workdir}/build-tests"/>
+        <javac srcdir="${d4j.workdir}/tests"
+               destdir="${d4j.workdir}/build-tests"
                source="1.4"
                target="1.4"
                debug="true"
@@ -98,13 +91,13 @@
                 <path refid="build.classpath"/>
                 <pathelement location="${junit.jar}"/>
                 <pathelement location="${classes.dir}" />
-                <pathelement location="${basedir}/build-tests"/>
+                <pathelement location="${d4j.workdir}/build-tests"/>
             </classpath>
         </javac>
     </target>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
-    <fileset id="all.manual.tests" dir="${basedir}/tests" excludes="${d4j.tests.exclude}">
+    <fileset id="all.manual.tests" dir="${d4j.workdir}/tests" excludes="${d4j.tests.exclude}">
         <include name="**/*Tests.java"/>
         <exclude name="**/*Package*.java"/>
     </fileset>
@@ -114,6 +107,6 @@
         <path refid="build.classpath"/>
         <pathelement location="${junit.jar}"/>
         <pathelement location="${classes.dir}" />
-        <pathelement location="${basedir}/build-tests"/>
+        <pathelement location="${d4j.workdir}/build-tests"/>
     </path>
 </project>

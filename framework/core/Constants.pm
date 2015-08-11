@@ -111,10 +111,19 @@ our $REPO_DIR = ($ENV{'REPO_DIR'} or "$BASE_DIR/project_repos");
 
 The root directory of the Major framework (I<$BASE_DIR/major>)
 
+=cut
+our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} or "$BASE_DIR/major");
+
+=pod
+
+=item B<D4J_BUILD_FILE>
+
+The top-level (ant) build file (I<$SCRIPT_DIR/projects/defects4j.build.xml>)
+
 =back
 
 =cut
-our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} or "$BASE_DIR/major");
+our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
 
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
@@ -155,6 +164,8 @@ $UTIL_DIR
 $BASE_DIR
 $MAJOR_ROOT
 $REPO_DIR
+
+$D4J_BUILD_FILE
 
 $ARG_ERROR
 $ABSTRACT_METHOD

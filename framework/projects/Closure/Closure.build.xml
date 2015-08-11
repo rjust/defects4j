@@ -1,20 +1,14 @@
-<project name="D4J-Closure"  basedir="${basedir}">
-
+<project name="D4J-Closure">
+    <!-- Compile with debugging information enabled -->
     <property name="javac.debug" value="true" />
 
-    <fail message="Property d4j.home not set!" unless="d4j.home" />
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-
-    <!-- Dummy paths, in case not defined -->
+    <!-- Dummy paths, in case not defined in project build file -->
     <path id="allclasspath.path" />
     <path id="srcclasspath.path" />
     <path id="classpath.path" />
 
     <!-- Include existing project build file -->
-    <import file="${basedir}/build.xml" />
-
-    <!-- Import general build file -->
-    <import file="../defects4j.build.xml" />
+    <import file="${d4j.workdir}/build.xml" />
 
     <!-- relevant classpaths from different build revisions -->
     <path id="test.classpath">
@@ -31,14 +25,15 @@
     <property name="build.home" value="${build.dir}" />
 
     <!-- property needs to be set for coverage to work -->
-    <property name="cobertura.aux.classpath" value="${basedir}/lib/guava.jar" />
+    <property name="cobertura.aux.classpath" value="${d4j.workdir}/lib/guava.jar" />
 
     <target name="compile.tests" depends="compile-tests" />
 
     <!-- We need to compile rhino.testing package before we can
-         compile the generated test suites -->
+         compile the generated test suites => Override the compile.gen.tests target -->
     <target name="compile.gen.tests" depends="compile-tests">
-       <antcall target="Defects4J.compile.gen.tests" />
+        <!-- Call overridden target -->
+        <antcall target="Defects4J.compile.gen.tests" />
     </target>
 
     <!-- List of all devloper-written tests that reliably pass on the fixed version -->

@@ -1,19 +1,27 @@
-<project name="Defects4J" >
-
+<project name="Defects4J" basedir="${basedir}">
+    <!-- Ensure basedir is properly set -->
+    <fail message="Provided basedir (${basedir}) does not point to Defects4J working directory!">
+        <condition>
+            <not> <available file="${basedir}/defects4j.build.properties" /> </not>
+        </condition>
+    </fail>
+    <property name="d4j.workdir" value="${basedir}" />
+    <!-- Check whether d4j.home is set -->
     <fail message="Property d4j.home not set!" unless="d4j.home" />
 
     <taskdef resource="net/sf/antcontrib/antlib.xml"
             classpath="${d4j.home}/framework/lib/ant-contrib.jar"/>
 
-    <!-- Additional properties such as tests to exclude.
-         This property file is automatically generated. -->
-    <property file="${basedir}/defects4j.build.properties"/>
-
+    <!-- Dependencies used by all projects -->
+    <property name="junit.jar"  value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
     <property name="jcrasher.jar"  value="${d4j.home}/framework/projects/lib/jcrasher-2.1.3.jar"/>
     <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
-
     <!-- Location of customized JUnit formatter-->
     <property name="formatter.jar" value="${d4j.home}/framework/lib/formatter.jar"/>
+
+    <!-- Additional properties such as tests to exclude.
+         This property file is automatically generated. -->
+    <property file="${d4j.workdir}/defects4j.build.properties"/>
 
 <!--
      Check whether all properties and paths are configured
@@ -43,9 +51,9 @@
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
-                <batchtest unless="test.entry.class">
-                    <fileset refid="all.manual.tests" />
-                </batchtest>
+            <batchtest unless="test.entry.class">
+                <fileset refid="all.manual.tests" />
+            </batchtest>
         </junit>
         <!-- fail build in case we are running all classes, but there are none in the fileset -->
         <if> <not> <isset property="test.entry.class" /> </not> <then>
@@ -240,7 +248,7 @@
     </target>
 
     <target name="coverage.report">
-        <property name="coverage.dir" value="${basedir}/coverage" />
+        <property name="coverage.dir" value="${d4j.workdir}/coverage" />
         <mkdir dir="${coverage.dir}" />
 
         <!-- <cobertura-report format="html" destdir="${coverage.dir}" srcdir="${coverage.src.dir}" /> -->
@@ -351,7 +359,7 @@ case? -->
         <echo message="${tmp.tests}" file="${file.export}"/>
         <!-- Get fully qualified class names, i.e., remove path prefix,
              replace file separator by '.' and remove ".java" or ".class" -->
-        <property name="src.prefix" location="${basedir}${file.separator}${d4j.dir.src.tests}"/>
+        <property name="src.prefix" location="${d4j.workdir}${file.separator}${d4j.dir.src.tests}"/>
         <property name="bin.prefix" location="${test.home}"/>
         <loadfile property="all.tests" srcFile="${file.export}">
         <filterchain>
@@ -366,4 +374,7 @@ case? -->
         </loadfile>
         <echo message="${all.tests}" file="${file.export}"/>
     </target>
+
+    <!-- Include project-specific build file -->
+    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
 </project>

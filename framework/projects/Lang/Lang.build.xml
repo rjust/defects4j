@@ -1,23 +1,19 @@
-<project name="D4J-Lang" basedir="${basedir}">
-
-    <property name="compile.debug" value="yes" />
-
-    <fail message="Property d4j.home not set!" unless="d4j.home" />
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
+<project name="D4J-Lang">
+    <!-- Project-specific dependencies -->
     <property name="easymock.jar" value="${d4j.home}/framework/projects/Lang/lib/easymock.jar"/>
     <property name="commons-io.jar" value="${d4j.home}/framework/projects/Lang/lib/commons-io.jar"/>
     <property name="cglib.jar" value="${d4j.home}/framework/projects/Lang/lib/cglib.jar"/>
     <property name="asm.jar" value="${d4j.home}/framework/projects/Lang/lib/asm.jar"/>
-    <property name="maven.repo.local" value="${d4j.home}/framework/projects/Lang/lib/" />
 
     <!-- Do not download maven dependencies -->
     <property name="maven.mode.offline" value="true" />
+    <property name="maven.repo.local" value="${d4j.home}/framework/projects/Lang/lib/" />
+
+    <!-- Compile with debugging information enabled -->
+    <property name="compile.debug" value="yes" />
 
     <!-- Include existing project build file -->
-    <import file="${basedir}/build.xml"/>
-
-    <!-- Import general build file -->
-    <import file="../defects4j.build.xml"/>
+    <import file="${d4j.workdir}/build.xml"/>
 
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->

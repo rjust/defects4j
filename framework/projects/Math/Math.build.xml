@@ -1,17 +1,10 @@
-<project name="D4J-Math"  basedir="${basedir}">
-
-    <fail message="Property d4j.home not set!" unless="d4j.home" />
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-
+<project name="D4J-Math">
     <!-- Include existing project build file -->
-    <import file="${basedir}/build.xml"/>
+    <import file="${d4j.workdir}/build.xml"/>
 
     <!-- build.home is not set in old repository layout -->
     <property name="build.home" value="${classesdir}/.." />
     <property name="classes.dir" value="${build.home}/classes" />
-
-    <!-- Import general build file -->
-    <import file="../defects4j.build.xml" />
 
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->
@@ -41,7 +34,7 @@
     <pathelement location="${d4j.home}/framework/projects/Math/lib/commons-discovery-0.5.jar" />
     </path>
     <if> <isset property="oldLayout" /> <then>
-        <property name ="test.home" value="${basedir}/src/test" />
+        <property name ="test.home" value="${d4j.workdir}/src/test" />
         <property name ="build.home" value="${defaulttargetdir}" />
         <property name="noget" value="true" />
         <path id="test.classpath">
@@ -70,6 +63,4 @@
         <path refid="test.classpath"/>
         <pathelement path="${junit.jar}" />
     </path>
-
-
 </project>

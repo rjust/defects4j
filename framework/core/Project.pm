@@ -769,7 +769,7 @@ sub _ant_call {
     -f $file or die "Build file does not exist: $file";
 
     print(STDERR "Running ant ($target) ... ");
-    my $log = `cd $self->{prog_root}; ant -f $self->{_build_file} -Dd4j.home=$BASE_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1`;
+    my $log = `cd $self->{prog_root}; ant -f $D4J_BUILD_FILE -Dd4j.home=$BASE_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1`;
     my $ret = $?;
 
     if (defined $log_file) {

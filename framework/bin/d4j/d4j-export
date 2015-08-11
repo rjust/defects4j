@@ -64,14 +64,14 @@ use Utils;
 use Project;
 use Getopt::Std;
 
-my %props = _get_props();
+my %props = ();
 
 #
 # Issue usage message and quit
 #
 sub _usage {
     print (STDERR "usage: $0 -p property_name [-o output_file] [-w work_dir]\n\n");
-    _list_props();
+    _list_props() unless scalar(keys %props) == 0;
     exit 1;
 }
 
@@ -91,6 +91,7 @@ getopts('p:o:w:', \%cmd_opts) or _usage();
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
 my $PROP     = $cmd_opts{p};
 my $OUT_FILE = $cmd_opts{o};
+%props = _get_props();
 defined $PROP or _usage();
 unless (defined $props{$PROP}) {
     print(STDERR "Unknown property $PROP\n\n");
@@ -134,7 +135,7 @@ system("rm -f $tmp_file");
 # Determine list of properties that can be exported
 #
 sub _get_props {
-    my @list = `ant -f $SCRIPT_DIR/projects/defects4j.build.xml -p -Dd4j.home=$BASE_DIR | grep \"export\\.\"`;
+    my @list = `ant -f $SCRIPT_DIR/projects/defects4j.build.xml -p -Dbasedir=$WORK_DIR -Dd4j.home=$BASE_DIR | grep \"export\\.\"`;
     my %props = map { /^\s*export\.([^ ]+)\s+(.+)$/; $1 => $2} @list;
     return %props;
 }
