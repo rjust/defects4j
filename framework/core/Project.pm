@@ -92,32 +92,6 @@ name of the corresponding project.
 
 =back
 
-Every project has to provide an Apache Ant F<build.xml> build file.
-
-=head2 Mandatory targets in project's build file
-
-=over 4
-
-=item B<compile>
-
-=item B<compile.tests>
-
-=item B<mutate>
-
-=item B<test>
-
-=back
-
-=head2 Optional targets in project's build file
-
-=over 4
-
-=item B<compile.gen.tests>
-
-=item B<run.gen.tests>
-
-=back
-
 =cut
 package Project;
 
@@ -399,14 +373,15 @@ sub exclude_tests_in_file {
     my @classes= @{$failed->{classes}};
 
     return if scalar @classes == 0;
-# TODO: Some projects may define tests to include/exclude on the classes
-# directory -> .java won't work in that case.
     for (@classes) {
-        s/\./\//g; s/(.*)/$1.java/;
+        s/\./\//g;
+        # Use ".*" as suffix because the file set of tests might be defined over
+        # source or class files.
+        s/(.*)/$1.*/;
     }
-    # Write list of test classes to exclude to properties file, which is
-    # imported by the defects4j.build.xml file.
-    my $list = join(", ", @classes);
+    # Write list of tests to exclude to properties file, which is
+    # imported by the top-level build file.
+    my $list = join(",", @classes);
     my $config = {$PROP_EXCLUDE => $list};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 }
@@ -589,7 +564,7 @@ sub mutate {
 Run all of the tests in the project, unless C<single_test> is provided.
 If C<single_test> is provided, only this test method is run.
 The string C<single_test> has to have the format: B<classname::methodname>.
-Failing tests are written to C<result_file>
+Failing tests are written to C<result_file>.
 
 =cut
 sub run_tests {
@@ -603,6 +578,21 @@ sub run_tests {
     }
 
     return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
+}
+
+=pod
+
+=item B<run_relevant_tests> C<run_relevant_tests(result_file)>
+
+Run only tests that are relevant to the bug of the checked-out version.
+Failing tests are written to C<result_file>.
+
+=cut
+sub run_relevant_tests {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $out_file) = @_;
+
+    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
 }
 
 =pod

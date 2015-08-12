@@ -51,6 +51,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
          This property file is automatically generated. -->
     <property file="${d4j.workdir}/defects4j.build.properties"/>
 
+    <!-- Include build file that defines all export targets -->
+    <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
+
+    <!-- Include project-specific build file -->
+    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
+
+
 <!--
      Check whether all properties and paths are configured
 -->
@@ -72,7 +79,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 <!--
     Run developer-written tests
 -->
-    <target name="run.dev.tests"  depends="compile.tests" description="Run unit tests">
+    <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">
         <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
             <classpath refid="d4j.test.classpath"/>
             <classpath refid="cobertura.classpath.include"/>
@@ -245,7 +252,6 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         </junit>
     </target>
 
-
 <!--
     Instrument for cobertura
     TODO: Clean up the confusing classpath IDs and property names
@@ -258,7 +264,6 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         </fileset>
     </path>
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-
 
     <path id="cobertura.classpath.include" />
 
@@ -288,9 +293,23 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <cobertura-report format="xml" destdir="${coverage.dir}" srcdir="${coverage.src.dir}" />
     </target>
 
-    <!-- Include build file that defines all export targets -->
-    <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
-
-    <!-- Include project-specific build file -->
-    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
+<!--
+    Update list of all manual tests to only include relevant tests
+-->
+    <target name="update.all.tests" if="d4j.relevant.tests.only">
+        <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
+                   build file should not rely on the current directory structure
+              => D4J should provide properly filtered files in the working directory-->
+        <loadfile srcfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
+                 property="rel.files">
+            <filterchain>
+                <tokenfilter>
+                    <replaceregex pattern="\." replace="/" flags="g"/>
+                </tokenfilter>
+                <suffixlines suffix=".*,"/>
+                <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+        <fileset id="all.manual.tests" dir="${test.home}" includes="${rel.files}"/>
+    </target>
 </project>

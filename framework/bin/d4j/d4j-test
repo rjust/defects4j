@@ -28,7 +28,7 @@ d4j-test -- Run test suite of a checked-out project version.
 
 =head1 SYNOPSIS
 
-d4j-test [-w work_dir]
+d4j-test [-w work_dir] [-r]
 
 =head1 OPTIONS
 
@@ -38,6 +38,10 @@ d4j-test [-w work_dir]
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.
+
+=item B<-r>
+
+Only execute relevant tests (optional). By default all tests are executed.
 
 =back
 
@@ -59,14 +63,15 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 [-w work_dir]\n";
+    print "usage: $0 [-w work_dir] [-r]\n";
     exit 1;
 }
 
 my %cmd_opts;
-getopts('w:', \%cmd_opts) or _usage();
+getopts('w:r', \%cmd_opts) or _usage();
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
+my $REL_TESTS = defined $cmd_opts{r} ? 1 : 0;
 
 my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
 unless(defined $config) {
@@ -84,7 +89,11 @@ my $tmp = "$WORK_DIR/.failing_tests";
 
 # Clean temporary file that holds test results
 `>$tmp`;
-$project->run_tests($tmp) == 0 or die "Cannot run tests!";
+if ($REL_TESTS) {
+    $project->run_relevant_tests($tmp) == 0 or die "Cannot run tests!";
+} else {
+    $project->run_tests($tmp) == 0 or die "Cannot run tests!";
+}
 
 my $trigger = Utils::get_failing_tests($tmp) or die "Cannot determine triggering tests!";
 my $count = scalar(@{$trigger->{methods}}) + scalar(@{$trigger->{classes}});
