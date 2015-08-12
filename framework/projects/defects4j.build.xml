@@ -111,6 +111,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <classpath refid="d4j.test.classpath"/>
             <classpath>
                 <pathelement path="${formatter.jar}" />
+                <pathelement path="${junit.jar}" />
             </classpath>
         </java>
     </target>

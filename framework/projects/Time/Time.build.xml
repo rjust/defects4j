@@ -116,8 +116,12 @@ of the checked-out project version.
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
-        <include name="**/TestAll.java" />
+        <include name="**/Test*.java" />
+        <exclude name="**/TestAll*.java" />
+        <exclude name="**/TestParseISO.java" />
         <exclude name="**/*Abstract*Test.java" />
+        <exclude name="**/gj/*.java" />
+        <include name="**/gj/TestAll.java" />
     </fileset>
 
     <!-- Classpath to run developer-written tests -->
