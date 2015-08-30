@@ -28,7 +28,7 @@ d4j-test -- Run test suite of a checked-out project version.
 
 =head1 SYNOPSIS
 
-d4j-test [-w work_dir] [-r]
+d4j-test [-w work_dir] [-r | -t single_test]
 
 =head1 OPTIONS
 
@@ -42,6 +42,11 @@ the current directory.
 =item B<-r>
 
 Only execute relevant tests (optional). By default all tests are executed.
+
+=item B<-t C<single_test>>
+
+Only run this single test method (format: <test_class>::<test_method>)
+(optional). By default all tests are executed.
 
 =back
 
@@ -63,15 +68,17 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 [-w work_dir] [-r]\n";
+    print "usage: $0 [-w work_dir] [-r | -t single_test]\n";
     exit 1;
 }
 
 my %cmd_opts;
-getopts('w:r', \%cmd_opts) or _usage();
+getopts('w:rt:', \%cmd_opts) or _usage();
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
 my $REL_TESTS = defined $cmd_opts{r} ? 1 : 0;
+my $SINGLE_TEST = $cmd_opts{t};
+_usage() if (defined $SINGLE_TEST && $REL_TESTS==1);
 
 my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
 unless(defined $config) {
@@ -92,7 +99,7 @@ my $tmp = "$WORK_DIR/.failing_tests";
 if ($REL_TESTS) {
     $project->run_relevant_tests($tmp) == 0 or die "Cannot run tests!";
 } else {
-    $project->run_tests($tmp) == 0 or die "Cannot run tests!";
+    $project->run_tests($tmp, $SINGLE_TEST) == 0 or die "Cannot run tests!";
 }
 
 my $trigger = Utils::get_failing_tests($tmp) or die "Cannot determine triggering tests!";
