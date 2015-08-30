@@ -220,10 +220,10 @@ sub checkout_id {
         make_path($work_dir) or die "Failed to create working directory: $!";
     }
 
-    print "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir ... ";
+    print STDERR "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir ... ";
     my $log = `$cmd`; my $ret = $?;
     if ($ret!=0) {
-        print "FAIL\n$log";
+        print STDERR "FAIL\n$log";
         return $ret;
     }
 
@@ -248,11 +248,11 @@ sub checkout_id {
     $log = `$cmd`; $ret=$?;
 
     if ($ret!=0) {
-        print "FAIL\n$log";
+        print STDERR "FAIL\n$log";
         die "Cannot init local git repository!";
     }
 
-    print "OK\n";
+    print STDERR "OK\n";
     return $ret;
 }
 
@@ -270,14 +270,14 @@ sub diff {
     @_ >= 3 or die "Invalid number of arguments!";
     my ($self, $rev1, $rev2, $path) = @_;
     my $opt = defined $path ? $path : "";
-    printf("Diff $opt %.16s : %.16s ... ", $rev1, $rev2);
+    printf(STDERR "Diff $opt %.16s : %.16s ... ", $rev1, $rev2);
     my $cmd = $self->_diff_cmd($rev1, $rev2, $path);
     my $diff = `$cmd`; my $ret = $?;
     if ($ret!=0) {
-        print "FAIL\n$diff";
+        print STDERR "FAIL\n$diff";
         return undef;
     }
-    print "OK\n";
+    print STDERR "OK\n";
     return $diff;
 }
 
@@ -316,13 +316,13 @@ to be patched. Note that C<path> is relative to the root of the working director
 sub apply_patch {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $work_dir, $patch_file, $path) = @_;
-    print "Applying patch ... ";
+    print STDERR "Applying patch ... ";
     my $cmd = $self->_apply_cmd($work_dir, $patch_file, $path);
     my $log = `$cmd`; my $ret = $?;
     if ($ret==0) {
-        print "OK\n";
+        print STDERR "OK\n";
     } else {
-        print "FAIL\n$log";
+        print STDERR "FAIL\n$log";
     }
     return $ret;
 }
