@@ -40,6 +40,8 @@ use File::Basename;
 use Cwd qw(abs_path);
 use Carp qw(confess);
 
+use Constants;
+
 my $dir = dirname(abs_path(__FILE__));
 
 =pod
@@ -70,7 +72,7 @@ Returns the absolute path to the directory F<dir>.
 
 =cut
 sub get_abs_path {
-    @_ == 1 or die "Invalid number of arguments!";
+    @_ == 1 or die $ARG_ERROR;
     my $dir = shift;
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
@@ -97,7 +99,7 @@ The data structure of the returned hash reference looks like:
 
 =cut
 sub get_failing_tests {
-    @_ == 1 or die "Invalid number of arguments!";
+    @_ == 1 or die $ARG_ERROR;
     my $file_name = shift;
 
     my $list = {
@@ -129,7 +131,7 @@ failing test methods. Returns 0 otherwise.
 
 =cut
 sub has_failing_tests {
-    @_ == 1 or die "Invalid number of arguments!";
+    @_ == 1 or die $ARG_ERROR;
     my $file_name = shift;
 
     my $list = get_failing_tests($file_name) or die "Could not parse file";
@@ -151,6 +153,7 @@ to the config file -- all existing but unmodified entries are preserved.
 
 =cut
 sub write_config_file {
+    @_ == 2 or die $ARG_ERROR;
     my ($file, $hash) = @_;
     my %newconf = %{$hash};
     if (-e $file) {
@@ -176,6 +179,7 @@ Returns a hash containing all key-value pairs on success, undef otherwise.
 
 =cut
 sub read_config_file {
+    @_ == 1 or die $ARG_ERROR;
     my $file = shift;
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
@@ -203,11 +207,55 @@ sub read_config_file {
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
+=cut
+sub check_vid {
+    @_ == 1 or die $ARG_ERROR;
+    my $vid = shift;
+    $vid =~ /^(\d+)([bf])$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
+    return {valid => 1, bid => $1, type => $2};
+}
+
+=pod
+
+=item B<tag_prefix> C<tag_prefix(pid, vid)>
+
+Returns the Defects4J prefix for a git tag, given project and version id.
+
+=cut
+sub tag_prefix {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $vid) = @_;
+    my $bid = check_vid($vid)->{bid};
+    return "D4J_" . $pid . "_" . $bid . "_";
+}
+
+=pod
+
+=item B<exec_cmd> C<exec_cmd(cmd, description)>
+
+Runs a system command and indicates whether it succeeded or failed. This
+subroutine captures the output (B<stdout>) of the command and logs the output to
+B<stderr> only if the command fails or if C<Constants::DEBUG> is set to true.
+This subroutine also converts exit codes into boolean values, i.e., it returns
+B<1> if the command succeeded and B<0> otherwise.
+
 =back
 
 =cut
+sub exec_cmd {
+    @_ == 2 or die $ARG_ERROR;
+    my ($cmd, $descr) = @_;
+    print(STDERR "$descr ... ");
+    my $log = `$cmd`; my $ret = $?;
+    if ($ret!=0) {
+        print("FAIL\n$log");
+        return 0;
+    }
+    print(STDERR "OK\n");
+    # Upon success, only print log messages if debugging is enabled
+    print(STDERR $log) if $DEBUG;
 
-sub check_vid {
-    my $vid = shift;
-    $vid =~ /^\d+[bf]$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
+    return 1;
 }
+
+1;

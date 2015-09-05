@@ -783,9 +783,7 @@ sub _ant_call {
 sub _write_props {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $vid, $work_dir) = @_;
-    Utils::check_vid($vid);
-    $vid =~ /^(\d+)[bf]$/ or die "Unexpected version id: $vid!";
-    my $bid = $1;
+    my $bid = Utils::check_vid($vid)->{bid};
 
     # TODO: Provide a helper subroutine that returns a list of modified classes
     my $project_dir = "$SCRIPT_DIR/projects/$self->{pid}";
@@ -858,31 +856,120 @@ sub get_version_ids {
 
 =item B<checkout_vid> C<checkout_vid(vid [, work_dir])>
 
-Delegate to the checkout_vid method of the vcs backend -- see Vcs.pm
+Wrapper of the checkout_vid method of the vcs backend to enable post processing
+and proper tagging of the program versions -- see Vcs.pm for further details.
 
 C<work_dir> is optional, the default is F<"prog_root">.
 
 =cut
 sub checkout_vid {
     my ($self, $vid, $work_dir) = @_; shift;
-    Utils::check_vid($vid);
+    my $tmp = Utils::check_vid($vid);
+    my $bid = $tmp->{bid};
+    my $version_type = $tmp->{type};
+
+    my $pid = $self->{pid};
+    my $revision_id = $self->lookup($vid);
     unless (defined $work_dir) {
         $work_dir = $self->{prog_root} ;
-        push(@_, $work_dir);
     }
-    my $ret = $self->{_vcs}->checkout_vid(@_);
 
-    # Return if checkout failed
-    if ($ret != 0) {
-        return $ret;
+    my $ret = $self->{_vcs}->checkout_vid("${bid}f", $work_dir);
+    return 0 unless $ret;
+
+    # Init (new) git repository and commit and tag post-fix revision
+    my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX;
+    my $cmd = "cd $work_dir" .
+              " && git init 2>&1" .
+              " && git config user.name defects4j 2>&1" .
+              " && git config user.email defects4j\@localhost 2>&1" .
+              " && echo \".svn\" > .gitignore" .
+              " && git add -A 2>&1" .
+              " && git commit -a -m $tag_name 2>&1" .
+              " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Init local repository") or confess("Couldn't init local git repository!");
+
+    # Check whether post-checkout hook is provided
+    if (defined $self->{_vcs}->{_co_hook}) {
+        # Execute post-checkout hook
+        $self->{_vcs}->{_co_hook}($self, $revision_id, $work_dir);
+        # TODO: We need a better solution for tracking changes of the
+        # post-checkout hook.
+        my $changes = `cd $work_dir && git status -s | wc -l`; chomp $changes;
+        $? == 0 or confess("Inconsistent local repository!");
+        # Anything to commit?
+        if ($changes) {
+            # Commit and tag the compilable post-fix revision
+            my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX_COMP;
+            $cmd = "cd $work_dir" .
+                   " && git add -A 2>&1" .
+                   " && git commit -a -m \"$tag_name\" 2>&1" .
+                   " && git tag $tag_name 2>&1";
+            Utils::exec_cmd($cmd, "Run post-checkout hook") or confess("Couldn't tag version after applying checkout hook!");
+        }
     }
+
+    # Fix test suite if necessary
+    $self->fix_tests("${bid}f");
 
     # Write version-specific properties
     $self->_write_props($vid, $work_dir);
 
-    return $ret;
-}
+    # Write program and version id of fixed program version to config file
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}f"});
 
+    # Commit and tag the fixed program version
+    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_FIXED;
+    $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
+           " && git commit -a -m \"$tag_name\" 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Initialize fixed version") or confess("Couldn't tag fixed program version!");
+
+    # Apply patch to obtain buggy version
+    my $patch_dir = "$SCRIPT_DIR/projects/$pid/patches";
+    my $src_patch = "$patch_dir/${bid}.src.patch";
+    my $src_path = $self->src_dir($vid);
+    $self->apply_patch($work_dir, $src_patch, $src_path) or return 0;
+
+    # Write program and version id of buggy program version to config file
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => $vid});
+
+    # Commit and tag the buggy program version
+    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_BUGGY;
+    $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
+           " && git commit -a -m \"$tag_name\" 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Initialize buggy version") or confess("Couldn't tag buggy program version!");
+
+    # Checkout post-fix revision and apply unmodified diff to obtain the pre-fix revision
+    my $tmp_file = "$work_dir/.defects4j.diff";
+    $cmd = "cd $work_dir && git checkout " . Utils::tag_prefix($pid, $vid) . "$TAG_POST_FIX 2>&1";
+    `$cmd`; $?==0 or confess("Couldn't checkout $TAG_POST_FIX");
+    my $rev1 = $self->lookup("${bid}f");
+    my $rev2 = $self->lookup("${bid}b");
+    $self->export_diff($rev1, $rev2, $tmp_file);
+    $self->apply_patch($work_dir, $tmp_file);
+
+    # Remove temporary diff file
+    system("rm $tmp_file");
+
+    # Commit and tag the pre-fix revision
+    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_PRE_FIX;
+    $cmd = "cd $work_dir" .
+           " && git commit -a -m \"$tag_name\" 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Initialize buggy version") or confess("Couldn't tag buggy program version!");
+
+    # Checkout the requested program version
+    $tag_name = Utils::tag_prefix($pid, $vid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
+    $cmd = "cd $work_dir && git checkout $tag_name";
+    Utils::exec_cmd($cmd, "Check out program version") or confess("Couldn't check out program version!");
+
+    # Successfully checked out program version
+    return 1;
+}
 
 =pod
 

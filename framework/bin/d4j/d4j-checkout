@@ -89,23 +89,8 @@ my $WORK_DIR = Utils::get_abs_path($cmd_opts{w});
 my $project = Project::create_project($PID);
 $project->{prog_root} = $WORK_DIR;
 
-# TODO: Implement in core module
-$VID =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $VID!";
-my $BID = $1;
-# Checkout fixed project version
-$project->checkout_vid("${BID}f") == 0 or die "Cannot checkout!";
-$project->fix_tests("${BID}f");
-# Apply patch to obtain buggy version if necessary
-if ($VID=~/^(\d+)b$/) {
-    my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
-    my $src_patch = "$patch_dir/${BID}.src.patch";
-    my $src_path = $project->src_dir($VID);
-    $project->apply_patch($WORK_DIR, $src_patch, $src_path) == 0 or die;
-}
-# Update config file
-my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
-$config->{$CONFIG_VID} = $VID;
-Utils::write_config_file("$WORK_DIR/$CONFIG", $config);
+# Checkout program version
+$project->checkout_vid($VID) or die "Cannot checkout program version!";
 
 1;
 

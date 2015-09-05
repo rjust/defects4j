@@ -218,7 +218,7 @@ suite: foreach (@list) {
 
     printf ("$sep\n$name\n$sep\n");
 
-    _checkout($project, $vid);
+    $project->checkout_vid($vid);
 
     # Copy generated tests
     system("mkdir $TMP_DIR/$src && cd $TMP_DIR/$src && cp $SUITE_DIR/$name . && tar -xjf $name");
@@ -311,32 +311,6 @@ $LOG->close();
 
 # Clean up
 system("rm -rf $TMP_DIR") unless $DEBUG;
-
-#
-# Checkout buggy or fixed project version
-# TODO: Implement in core module
-#
-sub _checkout {
-    my ($project, $vid) = @_;
-    $vid =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $vid!";
-    my $bid = $1;
-    # Checkout fixed project version
-    $project->checkout_vid("${bid}f") == 0 or die "Cannot checkout!";
-    $project->fix_tests("${bid}f");
-    # Apply patch to obtain buggy version if necessary
-    if ($vid=~/^(\d+)b$/) {
-        my $root = $project->{prog_root};
-        my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
-        my $src_patch = "$patch_dir/${bid}.src.patch";
-        my $src_path = $project->src_dir($vid);
-        $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
-        # Update config file
-        my $config = Utils::read_config_file("$root/$CONFIG");
-        $config->{$CONFIG_VID} = $vid;
-        Utils::write_config_file("$root/$CONFIG", $config);
-    }
-}
-
 
 #
 # Remove uncompilable source files based on the compiler's log

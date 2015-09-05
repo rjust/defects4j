@@ -65,6 +65,7 @@ use strict;
 use Constants;
 use Utils;
 use File::Path qw(make_path);
+use Carp qw(confess);
 use PatchReader::Raw;
 use PatchReader::NarrowPatchRegexp;
 use PatchReader::DiffPrinter::raw;
@@ -181,15 +182,12 @@ sub checkout_vid {
     my ($self, $vid, $work_dir) = @_;
     Utils::check_vid($vid);
     my $revision_id = $self->lookup($vid);
-
-    # Get specific checkout command
-    my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
-
-    my %config = ();
+    my $pid = $self->{pid};
 
     # Check whether working directory exists
     if (-d $work_dir) {
-        # Check whether we should not delete the existing directory
+        # Check whether we should not delete the existing directory: do not
+        # delete if it is not empty or not a previously used working directory
 
         # Is the existing directory empty?
         opendir(DIR, $work_dir) or die "Could not open directory: $work_dir!";
@@ -205,55 +203,23 @@ sub checkout_vid {
         # If the directory is not empty check whether it is a previously used
         # working directory, and delete all files if so.
         unless ($dir_empty) {
-            my $old_config = Utils::read_config_file("$work_dir/$CONFIG");
-            unless(defined $old_config) {
+            my $config = Utils::read_config_file("$work_dir/$CONFIG");
+            unless(defined $config) {
                 die "Directory exists but is not a previously used working directory: $work_dir";
             }
-            # Preserve old config
-            %config = %{$old_config};
+            # TODO: Avoid re-cloning the repo if the pid didn't change
             foreach (@entries) {
                 next if m/^\.\.?$/;
-                system("rm -rf $work_dir/$_") == 0 or die "Failed to clean working directory: $!";
+                system("rm -rf $work_dir/$_") == 0 or confess("Failed to clean working directory: $!");
             }
         }
     } else {
-        make_path($work_dir) or die "Failed to create working directory: $!";
+        make_path($work_dir) or confess("Failed to create working directory: $!");
     }
 
-    print STDERR "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir ... ";
-    my $log = `$cmd`; my $ret = $?;
-    if ($ret!=0) {
-        print STDERR "FAIL\n$log";
-        return $ret;
-    }
-
-    # Check whether post-checkout hook is provided
-    $self->{_co_hook}($self, $revision_id, $work_dir) if defined $self->{_co_hook};
-
-    # Update version info file
-    $config{$CONFIG_PID} = $self->{pid};
-    $config{$CONFIG_VID} = $vid;
-    Utils::write_config_file("$work_dir/$CONFIG", \%config);
-
-    # Init (new) git repository to keep track of local changes
-    # Note that we commit after executing the checkout hook,
-    # so we can easily revert without re-applying patches etc.
-    #
-    $cmd = "cd $work_dir && git init 2>&1" .
-                        "&& git config user.name \"defects4j\" 2>&1" .
-                        "&& git config user.email \"defects4j\@localhost\" 2>&1" .
-                        "&& git add -A 2>&1" .
-                        "&& git commit -a -m \"Original version\" 2>&1";
-
-    $log = `$cmd`; $ret=$?;
-
-    if ($ret!=0) {
-        print STDERR "FAIL\n$log";
-        die "Cannot init local git repository!";
-    }
-
-    print STDERR "OK\n";
-    return $ret;
+    # Get and run specific checkout command
+    my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
+    return Utils::exec_cmd($cmd, "Check out " . _trunc_rev_id($revision_id) . " to $work_dir");
 }
 
 =pod
@@ -316,15 +282,8 @@ to be patched. Note that C<path> is relative to the root of the working director
 sub apply_patch {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $work_dir, $patch_file, $path) = @_;
-    print STDERR "Applying patch ... ";
     my $cmd = $self->_apply_cmd($work_dir, $patch_file, $path);
-    my $log = `$cmd`; my $ret = $?;
-    if ($ret==0) {
-        print STDERR "OK\n";
-    } else {
-        print STDERR "FAIL\n$log";
-    }
-    return $ret;
+    return Utils::exec_cmd($cmd, "Apply patch");
 }
 
 =pod

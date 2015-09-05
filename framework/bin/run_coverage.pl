@@ -280,17 +280,18 @@ sub _run_coverage {
     my $bid   = $1;
     my $type  = $2;
 
+    # Checkout program version
     my $root = "$TMP_DIR/${vid}";
     $project->{prog_root} = "$root";
-    my $src_dir = $project->src_dir($vid);
-    _checkout($project, $vid);
+    $project->checkout_vid($vid) or die "Checkout failed";
 
     # Compile the program version
-	$project->compile() == 0 or die "compilation failed";
+	$project->compile() == 0 or die "Compilation failed";
 
     # Compile generated tests
     $project->compile_ext_tests($test_dir) == 0 or die "Tests do not compile!";
 
+    my $src_dir = $project->src_dir($vid);
     my $test_log = "$TMP_DIR/.coverage.log"; `>$test_log`;
     my $cov_info = Coverage::coverage_ext($project, "$CLASS_DIR/$bid.src", $src_dir, $test_dir, $INCL, $test_log);
     if (Utils::has_failing_tests($test_log)) {
@@ -309,31 +310,6 @@ sub _run_coverage {
     # Insert results into database and copy log files
     Coverage::insert_row($cov_info, $OUT_DIR);
     Coverage::copy_coverage_logs($project, $vid, $suite_src, $test_id, $LOG_DIR);
-}
-
-#
-# Checkout buggy or fixed project version
-# TODO: Implement in core module
-#
-sub _checkout {
-    my ($project, $vid) = @_;
-    $vid =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $vid!";
-    my $bid = $1;
-    # Checkout fixed project version
-    $project->checkout_vid("${bid}f") == 0 or die "Cannot checkout!";
-    $project->fix_tests("${bid}f");
-    # Apply patch to obtain buggy version if necessary
-    if ($vid=~/^(\d+)b$/) {
-        my $root = $project->{prog_root};
-        my $patch_dir = "$SCRIPT_DIR/projects/$PID/patches";
-        my $src_patch = "$patch_dir/${bid}.src.patch";
-        my $src_path = $project->src_dir($vid);
-        $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
-        # Update config file
-        my $config = Utils::read_config_file("$root/$CONFIG");
-        $config->{$CONFIG_VID} = $vid;
-        Utils::write_config_file("$root/$CONFIG", $config);
-    }
 }
 
 =pod
