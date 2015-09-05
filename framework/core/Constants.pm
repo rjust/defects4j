@@ -47,6 +47,9 @@ our @ISA = qw(Exporter);
 
 my $dir = dirname(abs_path(__FILE__));
 
+# Enable debugging and verbose output
+our $DEBUG = 0;
+
 =pod
 
 =head3 Exported properties (I<default value>):
@@ -154,7 +157,11 @@ our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
 our $PROP_PID             = "d4j.project.id";
 our $PROP_BID             = "d4j.bug.id";
 
-our $DEBUG = 0;
+our $TAG_POST_FIX         = "POST_FIX_REVISION";
+our $TAG_POST_FIX_COMP    = "POST_FIX_COMPILABLE";
+our $TAG_FIXED            = "FIXED_VERSION";
+our $TAG_BUGGY            = "BUGGY_VERSION";
+our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
 our @EXPORT = qw(
 $SCRIPT_DIR
@@ -183,6 +190,12 @@ $PROP_CLASSES_MODIFIED
 $PROP_TESTS_TRIGGER
 $PROP_PID
 $PROP_BID
+
+$TAG_POST_FIX
+$TAG_POST_FIX_COMP
+$TAG_FIXED
+$TAG_BUGGY
+$TAG_PRE_FIX
 
 $DEBUG
 );
