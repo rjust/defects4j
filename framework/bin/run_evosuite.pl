@@ -192,7 +192,7 @@ my $LOG_FILE = "$LOG_DIR/$PID.$VID.log";
 system("mkdir -p $LOG_DIR");
 
 # Checkout and compile project
-$project->checkout_id($VID) == 0 or die "Cannot checkout!";
+$project->checkout_vid($VID) == 0 or die "Cannot checkout!";
 $project->compile() == 0 or die "Cannot compile!";
 
 # Open temporary log file

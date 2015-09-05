@@ -856,21 +856,21 @@ sub get_version_ids {
 }
 =pod
 
-=item B<checkout_id> C<checkout_id(vid [, work_dir])>
+=item B<checkout_vid> C<checkout_vid(vid [, work_dir])>
 
-Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
+Delegate to the checkout_vid method of the vcs backend -- see Vcs.pm
 
 C<work_dir> is optional, the default is F<"prog_root">.
 
 =cut
-sub checkout_id {
+sub checkout_vid {
     my ($self, $vid, $work_dir) = @_; shift;
     Utils::check_vid($vid);
     unless (defined $work_dir) {
         $work_dir = $self->{prog_root} ;
         push(@_, $work_dir);
     }
-    my $ret = $self->{_vcs}->checkout_id(@_);
+    my $ret = $self->{_vcs}->checkout_vid(@_);
 
     # Return if checkout failed
     if ($ret != 0) {

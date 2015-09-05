@@ -93,7 +93,7 @@ $project->{prog_root} = $WORK_DIR;
 $VID =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $VID!";
 my $BID = $1;
 # Checkout fixed project version
-$project->checkout_id("${BID}f") == 0 or die "Cannot checkout!";
+$project->checkout_vid("${BID}f") == 0 or die "Cannot checkout!";
 $project->fix_tests("${BID}f");
 # Apply patch to obtain buggy version if necessary
 if ($VID=~/^(\d+)b$/) {

@@ -34,7 +34,7 @@ use Vcs::Svn;
 
 my $vcs = Vcs::Svn->new("project", "repo_url", "commit_db_file", \&_co_hook);
 
-$vcs->checkout_id("1b", "/tmp/1b");
+$vcs->checkout_vid("1b", "/tmp/1b");
 
 sub _co_hook {
     my ($vcs, $revision_id, $work_dir) = @_;
@@ -166,7 +166,7 @@ sub get_version_ids {
 
 =pod
 
-=item B<checkout_id> C<checkout_id(vid, work_dir)>
+=item B<checkout_vid> C<checkout_vid(vid, work_dir)>
 
 Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
 the corresponding revision with C<revision_id> to C<work_dir>.
@@ -176,7 +176,7 @@ B<This method always performs a clean checkout, i.e., the working directory is
 deleted before the checkout if it already exists>.
 
 =cut
-sub checkout_id {
+sub checkout_vid {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $vid, $work_dir) = @_;
     Utils::check_vid($vid);

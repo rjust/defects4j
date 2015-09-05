@@ -320,7 +320,7 @@ sub _checkout {
     $vid =~ /^(\d+)([bf])$/ or die "Wrong version_id format (\\d+[bf]): $vid!";
     my $bid = $1;
     # Checkout fixed project version
-    $project->checkout_id("${bid}f") == 0 or die "Cannot checkout!";
+    $project->checkout_vid("${bid}f") == 0 or die "Cannot checkout!";
     $project->fix_tests("${bid}f");
     # Apply patch to obtain buggy version if necessary
     if ($vid=~/^(\d+)b$/) {

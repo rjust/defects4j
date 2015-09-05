@@ -96,7 +96,7 @@ foreach my $id (@ids) {
     printf ("%4d: $project->{prog_name}\n", $id);
     foreach my $v ("b", "f") {
         my $vid = "${id}$v";
-        $project->checkout_id($vid) == 0 or die "Could not checkout ${vid}";
+        $project->checkout_vid($vid) == 0 or die "Could not checkout ${vid}";
         $project->sanity_check() == 0 or die "Could not perform sanity check on ${vid}";
 
         my $src_dir = $project->src_dir($vid);

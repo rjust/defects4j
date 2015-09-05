@@ -321,7 +321,7 @@ sub _run_tests {
     # Check out fixed version, and compile classes and tests
     my $root = "$TMP_DIR/V_fixed";
     $project->{prog_root} = $root;
-    $project->checkout_id("${bid}f");
+    $project->checkout_vid("${bid}f");
     $project->compile() == 0 or die "Fixed version does not compile!";
     # Compile generated tests
     my $ret = $project->compile_ext_tests($test_dir);
@@ -358,7 +358,7 @@ sub _run_tests {
     # Check out fixed version, apply src patch (fixed -> buggy), and compile classes and tests
     $root = "$TMP_DIR/V_buggy";
     $project->{prog_root} = $root;
-    $project->checkout_id("${bid}f");
+    $project->checkout_vid("${bid}f");
     # Apply patch to obtain buggy version
     $project->apply_patch($root, $src_patch, $src_path) == 0 or die;
     $project->compile() == 0 or die "Buggy version does not compile!";
