@@ -245,7 +245,7 @@ B<1> if the command succeeded and B<0> otherwise.
 sub exec_cmd {
     @_ == 2 or die $ARG_ERROR;
     my ($cmd, $descr) = @_;
-    print(STDERR "$descr ... ");
+    print(STDERR substr($descr . '.'x50, 0, 50), " ");
     my $log = `$cmd`; my $ret = $?;
     if ($ret!=0) {
         print("FAIL\n$log");

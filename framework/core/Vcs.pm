@@ -235,15 +235,16 @@ of the working directory.
 sub diff {
     @_ >= 3 or die "Invalid number of arguments!";
     my ($self, $rev1, $rev2, $path) = @_;
-    my $opt = defined $path ? $path : "";
-    printf(STDERR "Diff $opt %.16s : %.16s ... ", $rev1, $rev2);
+    my $opt = defined $path ? "($path)" : "";
+    my $txt = sprintf("Diff %.8s:%.8s$opt", $rev1, $rev2);
+    print(STDERR substr($txt . '.'x50, 0, 50), " ");
     my $cmd = $self->_diff_cmd($rev1, $rev2, $path);
     my $diff = `$cmd`; my $ret = $?;
     if ($ret!=0) {
-        print STDERR "FAIL\n$diff";
+        print(STDERR "FAIL\n$diff");
         return undef;
     }
-    print STDERR "OK\n";
+    print(STDERR "OK\n");
     return $diff;
 }
 
@@ -348,7 +349,7 @@ sub _build_db_cache {
 sub _trunc_rev_id {
     my $id = shift;
     if (length($id) > 8) {
-        $id = substr($id, 0, 8) . "...";
+        $id = substr($id, 0, 8);
     }
     return $id;
 }

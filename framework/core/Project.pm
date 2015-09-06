@@ -877,17 +877,22 @@ sub checkout_vid {
     my $ret = $self->{_vcs}->checkout_vid("${bid}f", $work_dir);
     return 0 unless $ret;
 
-    # Init (new) git repository and commit and tag post-fix revision
-    my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX;
+    # Init (new) git repository
     my $cmd = "cd $work_dir" .
               " && git init 2>&1" .
               " && git config user.name defects4j 2>&1" .
-              " && git config user.email defects4j\@localhost 2>&1" .
-              " && echo \".svn\" > .gitignore" .
-              " && git add -A 2>&1" .
-              " && git commit -a -m $tag_name 2>&1" .
-              " && git tag $tag_name 2>&1";
+              " && git config user.email defects4j\@localhost 2>&1";
     Utils::exec_cmd($cmd, "Init local repository") or confess("Couldn't init local git repository!");
+
+    # Commit and tag the post-fix revision
+    my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX;
+    $cmd = "cd $work_dir" .
+           " && git init 2>&1" .
+           " && echo \".svn\" > .gitignore" .
+           " && git add -A 2>&1" .
+           " && git commit -a -m $tag_name 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Tag post-fix revision") or confess("Couldn't tag post-fix revision!");
 
     # Check whether post-checkout hook is provided
     if (defined $self->{_vcs}->{_co_hook}) {
@@ -924,7 +929,7 @@ sub checkout_vid {
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
-    Utils::exec_cmd($cmd, "Initialize fixed version") or confess("Couldn't tag fixed program version!");
+    Utils::exec_cmd($cmd, "Initialize fixed program version") or confess("Couldn't tag fixed program version!");
 
     # Apply patch to obtain buggy version
     my $patch_dir = "$SCRIPT_DIR/projects/$pid/patches";
@@ -941,7 +946,7 @@ sub checkout_vid {
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
-    Utils::exec_cmd($cmd, "Initialize buggy version") or confess("Couldn't tag buggy program version!");
+    Utils::exec_cmd($cmd, "Initialize buggy program version") or confess("Couldn't tag buggy program version!");
 
     # Checkout post-fix revision and apply unmodified diff to obtain the pre-fix revision
     my $tmp_file = "$work_dir/.defects4j.diff";
@@ -960,12 +965,12 @@ sub checkout_vid {
     $cmd = "cd $work_dir" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
-    Utils::exec_cmd($cmd, "Initialize buggy version") or confess("Couldn't tag buggy program version!");
+    Utils::exec_cmd($cmd, "Tag pre-fix revision") or confess("Couldn't tag pre-fix revision!");
 
     # Checkout the requested program version
     $tag_name = Utils::tag_prefix($pid, $vid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
-    $cmd = "cd $work_dir && git checkout $tag_name";
-    Utils::exec_cmd($cmd, "Check out program version") or confess("Couldn't check out program version!");
+    $cmd = "cd $work_dir && git checkout $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Check out program version: $pid-$vid") or confess("Couldn't check out program version!");
 
     # Successfully checked out program version
     return 1;

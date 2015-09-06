@@ -43,7 +43,7 @@ our @ISA = qw(Vcs);
 sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
-    return "git clone $self->{repo} ${work_dir} && cd $work_dir && git checkout $revision_id 2>&1";
+    return "git clone $self->{repo} ${work_dir} 2>&1 && cd $work_dir && git checkout $revision_id 2>&1";
 }
 
 sub _apply_cmd {
