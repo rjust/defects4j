@@ -182,7 +182,6 @@ sub checkout_vid {
     my ($self, $vid, $work_dir) = @_;
     Utils::check_vid($vid);
     my $revision_id = $self->lookup($vid);
-    my $pid = $self->{pid};
 
     # Check whether working directory exists
     if (-d $work_dir) {
@@ -207,7 +206,7 @@ sub checkout_vid {
             unless(defined $config) {
                 die "Directory exists but is not a previously used working directory: $work_dir";
             }
-            # TODO: Avoid re-cloning the repo if the pid didn't change
+
             foreach (@entries) {
                 next if m/^\.\.?$/;
                 system("rm -rf $work_dir/$_") == 0 or confess("Failed to clean working directory: $!");
@@ -233,7 +232,7 @@ of the working directory.
 
 =cut
 sub diff {
-    @_ >= 3 or die "Invalid number of arguments!";
+    @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
     my $opt = defined $path ? "($path)" : "";
     my $txt = sprintf("Diff %.8s:%.8s$opt", $rev1, $rev2);

@@ -875,6 +875,32 @@ sub checkout_vid {
         $work_dir = $self->{prog_root} ;
     }
 
+    # Check whether the working directory can be re-used (same pid and bid)
+    if (-d $work_dir) {
+        # If the directory is a previously used working directory, check whether
+        # we can just checkout a previously generated tag.
+        my $config = Utils::read_config_file("$work_dir/$CONFIG");
+        if (defined $config) {
+            my $old_pid = $config->{$CONFIG_PID};
+            my $old_vid = $config->{$CONFIG_VID};
+
+            # TODO: Avoid re-cloning the repo if the pid didn't change but the
+            #       bid did. We currently only re-use a working directory for
+            #       the same pid and bid.
+            if (_can_reuse_work_dir($pid, $vid, $old_pid, $old_vid)) {
+                my $version_type = Utils::check_vid($vid)->{type};
+                my $tag_name = Utils::tag_prefix($pid, $vid) .
+                        ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
+                my $cmd = "cd $work_dir" .
+                          " && git checkout $tag_name 2>&1" .
+                          " && git clean -xdf 2>&1";
+                # Simply checkout previously tagged version and return
+                return Utils::exec_cmd($cmd, "Check out program version: $pid-$vid")
+                        or confess("Couldn't check out program version!");
+            }
+        }
+    }
+
     my $ret = $self->{_vcs}->checkout_vid("${bid}f", $work_dir);
     return 0 unless $ret;
 
@@ -972,11 +998,30 @@ sub checkout_vid {
     # Checkout the requested program version
     $tag_name = Utils::tag_prefix($pid, $vid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
     $cmd = "cd $work_dir && git checkout $tag_name 2>&1";
-    Utils::exec_cmd($cmd, "Check out program version: $pid-$vid") or confess("Couldn't check out program version!");
+    return Utils::exec_cmd($cmd, "Check out program version: $pid-$vid") or confess("Couldn't check out program version!");
+}
 
-    # Successfully checked out program version
+#
+# Can we re-use an existing working directory?
+#
+sub _can_reuse_work_dir {
+    @_ == 4 or die $ARG_ERROR;
+    my ($new_pid, $new_vid, $old_pid, $old_vid) = @_;
+    if ($new_pid ne $old_pid) {
+        return 0;
+    }
+
+    my $tmp = Utils::check_vid($new_vid);
+    my $new_bid = $tmp->{bid};
+    $tmp = Utils::check_vid($old_vid);
+    my $old_bid = $tmp->{bid};
+    if ($new_bid ne $old_bid) {
+        return 0;
+    }
+
     return 1;
 }
+
 
 =pod
 
