@@ -99,6 +99,7 @@ use warnings;
 use strict;
 use Constants;
 use Utils;
+use Carp qw(confess);
 
 =pod
 
@@ -900,7 +901,8 @@ sub checkout_vid {
         $self->{_vcs}->{_co_hook}($self, $revision_id, $work_dir);
         # TODO: We need a better solution for tracking changes of the
         # post-checkout hook.
-        my $changes = `cd $work_dir && git status -s | wc -l`; chomp $changes;
+        my $changes = `cd $work_dir && git status -s | wc -l`;
+        $changes =~ /\s*(\d+)\s*/; $changes = $1;
         $? == 0 or confess("Inconsistent local repository!");
         # Anything to commit?
         if ($changes) {
