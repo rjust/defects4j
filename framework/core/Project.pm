@@ -982,6 +982,8 @@ sub checkout_vid {
     `$cmd`; $?==0 or confess("Couldn't checkout $TAG_POST_FIX");
     my $rev1 = $self->lookup("${bid}f");
     my $rev2 = $self->lookup("${bid}b");
+    # TODO: svn doesn't support diffing of binary files
+    #       -> checkout and tag the pre-fix revision instead
     $self->export_diff($rev1, $rev2, $tmp_file);
     $self->apply_patch($work_dir, $tmp_file);
 
