@@ -876,7 +876,7 @@ sub checkout_vid {
     }
 
     # Check whether the working directory can be re-used (same pid and bid)
-    if (-d $work_dir) {
+    if (-e "$work_dir/$CONFIG") {
         # If the directory is a previously used working directory, check whether
         # we can just checkout a previously generated tag.
         my $config = Utils::read_config_file("$work_dir/$CONFIG");
