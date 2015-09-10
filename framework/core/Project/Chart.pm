@@ -58,8 +58,8 @@ sub new {
 
 sub _post_checkout {
     # Fix compilation errors if necessary
-    my ($vcs, $revision_id, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $revision_id, $work_dir) = @_;
 
     my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
@@ -69,7 +69,7 @@ sub _post_checkout {
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
             if ($revision_id >= $1 && $revision_id <= $2) {
-                $vcs->apply_patch($work_dir, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
+                $self->{_vcs}->apply_patch($work_dir, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
             }
         }
     }

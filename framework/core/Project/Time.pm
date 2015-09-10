@@ -58,8 +58,8 @@ sub new {
 
 
 sub _post_checkout {
-    my ($vcs, $revision_id, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $revision_id, $work_dir) = @_;
 
     if (-e "$work_dir/JodaTime") {
         system("mv $work_dir/JodaTime/* $work_dir");
@@ -71,7 +71,7 @@ sub _post_checkout {
     }
 
     # Check for a broken-build-revision
-    my $id = rev_lookup($vcs, $revision_id); # TODO: very ugly.
+    my $id = $self->rev_lookup($revision_id); # TODO: very ugly.
     my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $work_dir/build.xml");

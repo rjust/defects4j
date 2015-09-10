@@ -115,8 +115,7 @@ sub fix_tests {
 }
 
 sub _post_checkout {
-    my ($vcs, $revision_id, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
+    my ($self, $revision_id, $work_dir) = @_;
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {

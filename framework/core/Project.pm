@@ -870,7 +870,7 @@ sub checkout_vid {
     my $version_type = $tmp->{type};
 
     my $pid = $self->{pid};
-    my $revision_id = $self->lookup($vid);
+    my $revision_id = $self->lookup("${bid}f");
     unless (defined $work_dir) {
         $work_dir = $self->{prog_root} ;
     }
@@ -984,8 +984,8 @@ sub checkout_vid {
     my $rev2 = $self->lookup("${bid}b");
     # TODO: svn doesn't support diffing of binary files
     #       -> checkout and tag the pre-fix revision instead
-    $self->export_diff($rev1, $rev2, $tmp_file);
-    $self->apply_patch($work_dir, $tmp_file);
+    $self->{_vcs}->export_diff($rev1, $rev2, $tmp_file);
+    $self->{_vcs}->apply_patch($work_dir, $tmp_file);
 
     # Remove temporary diff file
     system("rm $tmp_file");

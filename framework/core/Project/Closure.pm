@@ -57,8 +57,8 @@ sub new {
 }
 
 sub _post_checkout {
-    my ($vcs, $revision_id, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $revision_id, $work_dir) = @_;
 
     open FH, "$work_dir/build.xml" or die $!;
     my $build_file = do { local $/; <FH> };
@@ -70,10 +70,7 @@ sub _post_checkout {
     open FH, ">$work_dir/build.xml" or die $!;
     print FH $build_file;
     close FH;
-
 }
-
-
 
 1;
 
