@@ -649,6 +649,7 @@ sub mutation_analysis {
     return $self->_ant_call("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
+                            "-Dd4j.relevant.tests.only=true " .
                             "$log $single_test_opt");
 }
 
