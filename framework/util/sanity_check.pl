@@ -97,7 +97,7 @@ foreach my $id (@ids) {
     foreach my $v ("b", "f") {
         my $vid = "${id}$v";
         $project->checkout_vid($vid) or die "Could not checkout ${vid}";
-        $project->sanity_check() == 0 or die "Could not perform sanity check on ${vid}";
+        $project->sanity_check() or die "Could not perform sanity check on ${vid}";
 
         my $src_dir = $project->src_dir($vid);
         my $exp_src_dir = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -pdir.src.classes`; chomp $exp_src_dir;

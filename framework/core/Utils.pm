@@ -231,22 +231,24 @@ sub tag_prefix {
 
 =pod
 
-=item B<exec_cmd> C<exec_cmd(cmd, description)>
+=item B<exec_cmd> C<exec_cmd(cmd, description [, log_ref])>
 
 Runs a system command and indicates whether it succeeded or failed. This
 subroutine captures the output (B<stdout>) of the command and logs the output to
 B<stderr> only if the command fails or if C<Constants::DEBUG> is set to true.
-This subroutine also converts exit codes into boolean values, i.e., it returns
-B<1> if the command succeeded and B<0> otherwise.
+This subroutine converts exit codes into boolean values, i.e., it returns
+B<1> if the command succeeded and B<0> otherwise. If the optional reference
+C<log_ref> is provided, the captured output is stored in that variable.
 
 =back
 
 =cut
 sub exec_cmd {
-    @_ == 2 or die $ARG_ERROR;
-    my ($cmd, $descr) = @_;
-    print(STDERR substr($descr . '.'x50, 0, 50), " ");
+    @_ >= 2 or die $ARG_ERROR;
+    my ($cmd, $descr, $log_ref) = @_;
+    print(STDERR substr($descr . '.'x75, 0, 75), " ");
     my $log = `$cmd`; my $ret = $?;
+    $$log_ref = $log if defined $log_ref;
     if ($ret!=0) {
         print("FAIL\n$log");
         return 0;

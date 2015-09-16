@@ -103,13 +103,13 @@ $ENV{MML} = $mml_file;
 $project->mutate() > 0 or die "Cannot mutate project!";
 
 # Compile tests
-$project->compile_tests() == 0 or die "Cannot compile tests!";
+$project->compile_tests() or die "Cannot compile tests!";
 
 # Perform mutation analysis
 my $tmp = "$WORK_DIR/.mutation.log";
 # By default we do not exclude any mutants
 system("touch $WORK_DIR/exclude.txt") unless -e "$WORK_DIR/exclude.txt";
-if ($project->mutation_analysis($tmp) != 0) {
+if (! $project->mutation_analysis($tmp)) {
     system("cat $tmp");
     exit 1;
 }

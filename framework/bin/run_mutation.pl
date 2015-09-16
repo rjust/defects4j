@@ -298,7 +298,7 @@ sub _run_mutation {
     $gen_mutants > 0 or die "No mutants generated for $vid!";
 
     # Compile generated tests
-    $project->compile_ext_tests($test_dir) == 0 or die "Tests do not compile!";
+    $project->compile_ext_tests($test_dir) or die "Tests do not compile!";
 
     # No need to run the test suite first. Major's preprocessing verifies that
     # all tests in the test suite pass before performing the mutation analysis.

@@ -234,16 +234,15 @@ of the working directory.
 sub diff {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
-    my $opt = defined $path ? "($path)" : "";
-    my $txt = sprintf("Diff %.8s:%.8s$opt", $rev1, $rev2);
-    print(STDERR substr($txt . '.'x50, 0, 50), " ");
-    my $cmd = $self->_diff_cmd($rev1, $rev2, $path);
-    my $diff = `$cmd`; my $ret = $?;
-    if ($ret!=0) {
-        print(STDERR "FAIL\n$diff");
+    my $opt   = defined $path ? "($path)" : "";
+    my $descr = sprintf("Diff %.8s:%.8s$opt", $rev1, $rev2);
+    my $cmd   = $self->_diff_cmd($rev1, $rev2, $path);
+
+    my $diff;
+    if (! Utils::exec_cmd($cmd, $descr, \$diff)) {
         return undef;
     }
-    print(STDERR "OK\n");
+
     return $diff;
 }
 
@@ -260,14 +259,14 @@ sub export_diff {
     @_ >= 4 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
     my $diff = $self->diff($rev1, $rev2, $path);
-    return 1 unless defined $diff;
+    return 0 unless defined $diff;
 
     # Export diff to file
     open(OUT, ">$out_file") or die "Cannot open diff file ($out_file): $!";
-    print OUT $diff;
-    close OUT;
+    print(OUT $diff);
+    close(OUT);
 
-    return 0;
+    return 1;
 }
 
 =pod

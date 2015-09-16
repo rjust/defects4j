@@ -286,10 +286,10 @@ sub _run_coverage {
     $project->checkout_vid($vid) or die "Checkout failed";
 
     # Compile the program version
-	$project->compile() == 0 or die "Compilation failed";
+	$project->compile() or die "Compilation failed";
 
     # Compile generated tests
-    $project->compile_ext_tests($test_dir) == 0 or die "Tests do not compile!";
+    $project->compile_ext_tests($test_dir) or die "Tests do not compile!";
 
     my $src_dir = $project->src_dir($vid);
     my $test_log = "$TMP_DIR/.coverage.log"; `>$test_log`;

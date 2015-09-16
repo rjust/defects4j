@@ -97,9 +97,9 @@ my $tmp = "$WORK_DIR/.failing_tests";
 # Clean temporary file that holds test results
 `>$tmp`;
 if ($REL_TESTS) {
-    $project->run_relevant_tests($tmp) == 0 or die "Cannot run tests!";
+    $project->run_relevant_tests($tmp) or die "Cannot run tests!";
 } else {
-    $project->run_tests($tmp, $SINGLE_TEST) == 0 or die "Cannot run tests!";
+    $project->run_tests($tmp, $SINGLE_TEST) or die "Cannot run tests!";
 }
 
 my $trigger = Utils::get_failing_tests($tmp) or die "Cannot determine triggering tests!";

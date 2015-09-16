@@ -79,11 +79,11 @@ sub coverage {
 
 	my $pid = $project->{pid};
 
-	$project->coverage_instrument($modified_classes_file) == 0 or return undef;
+	$project->coverage_instrument($modified_classes_file) or return undef;
 
 	my $failure_file = "$project->{prog_root}/$FAIL_FILE";
 	system(">$failure_file");
-	$project->coverage($failure_file) == 0 or return undef;
+	$project->coverage($failure_file) or return undef;
     Utils::has_failing_tests($failure_file) and return undef;
 
 	my $root = $project->{prog_root};
@@ -105,7 +105,7 @@ sub coverage {
 
 	} else {
 		# Generate XML directly if merge is not needed.
-		$project->coverage_report($src_dir) == 0 or die "could not create report";
+		$project->coverage_report($src_dir) or die "could not create report";
 	}
 
 	return  _get_info_from_xml($xmlfile);
@@ -130,13 +130,13 @@ sub coverage_ext {
 	my ($project, $classes_file, $src_dir, $test_dir, $include, $log_file) = @_;
 
     # Instrument all classes provided
-	$project->coverage_instrument($classes_file) == 0 or return undef;
+	$project->coverage_instrument($classes_file) or return undef;
 
     # Execute test suite
-	$project->run_ext_tests($test_dir, $include, $log_file) == 0 or die "Could not run test suite";
+	$project->run_ext_tests($test_dir, $include, $log_file) or die "Could not run test suite";
 
     # Generate coverage report
-	$project->coverage_report($src_dir) == 0 or die "Could not create report";
+	$project->coverage_report($src_dir) or die "Could not create report";
 
     # Parse xml output and return coverage ratios
 	my $xmlfile  = "$project->{prog_root}/$XML_FILE";

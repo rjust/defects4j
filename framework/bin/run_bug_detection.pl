@@ -322,17 +322,15 @@ sub _run_tests {
     my $root = "$TMP_DIR/V_fixed";
     $project->{prog_root} = $root;
     $project->checkout_vid("${bid}f");
-    $project->compile() == 0 or die "Fixed version does not compile!";
+    $project->compile() or die "Fixed version does not compile!";
     # Compile generated tests
-    my $ret = $project->compile_ext_tests($test_dir);
-    if ($ret != 0) {
+    if (! $project->compile_ext_tests($test_dir)) {
         $LOG->log_msg(" - Tests do not compile on fixed version: $archive");
         return undef;
     }
     # Run generated tests and log results
     my $log = "$TMP_DIR/run_V_fixed.log"; `>$log`;
-    $ret = $project->run_ext_tests($test_dir, "$INCL", $log);
-    if ($ret != 0) {
+    if (! $project->run_ext_tests($test_dir, "$INCL", $log)) {
         $LOG->log_msg(" - Tests not executable on fixed version: $archive");
         return undef;
     }
@@ -359,17 +357,15 @@ sub _run_tests {
     $root = "$TMP_DIR/V_buggy";
     $project->{prog_root} = $root;
     $project->checkout_vid("${bid}b");
-    $project->compile() == 0 or die "Buggy version does not compile!";
+    $project->compile() or die "Buggy version does not compile!";
     # Compile generated tests
-    $ret = $project->compile_ext_tests($test_dir);
-    if ($ret != 0) {
+    if (! $project->compile_ext_tests($test_dir)) {
         $LOG->log_msg(" - Tests do not compile on buggy version: $archive");
         return undef;
     }
     # Run generated tests and log results
     $log = "$TMP_DIR/run_V_buggy.log"; `>$log`;
-    $ret = $project->run_ext_tests($test_dir, "$INCL", $log);
-    if ($ret != 0) {
+    if (! $project->run_ext_tests($test_dir, "$INCL", $log)) {
         $LOG->log_msg(" - Tests not executable on buggy version: $archive");
         return undef;
     }

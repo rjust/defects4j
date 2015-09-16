@@ -425,7 +425,7 @@ sub coverage_instrument {
 
 
     # Call ant to do the instrumentation
-    $self->_ant_call("coverage.instrument");
+    return $self->_ant_call("coverage.instrument");
 }
 
 =pod
@@ -437,10 +437,10 @@ Run EvoSuite on the project version that is currently checked out.
 =cut
 sub run_evosuite {
     @_ >= 6 or die $ARG_ERROR;
-    my ($self, $criterion, $time, $class, $timeout, $config_file, $log) = @_;
+    my ($self, $criterion, $time, $class, $timeout, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
+    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional evosuite configuration
@@ -454,7 +454,8 @@ sub run_evosuite {
     }
     close(IN);
 
-    my $cmd = "java -cp $SCRIPT_DIR/projects/lib/evosuite.jar org.evosuite.EvoSuite " .
+    my $cmd = "cd $self->{prog_root}" .
+              " && java -cp $SCRIPT_DIR/projects/lib/evosuite.jar org.evosuite.EvoSuite " .
                 "-class $class " .
                 "-projectCP $cp " .
                 "-Dtest_dir=evosuite-$criterion " .
@@ -463,21 +464,14 @@ sub run_evosuite {
                 "-Dassertion_timeout=$timeout " .
                 "-Djunit_suffix=EvoSuite_$criterion " .
                 "-Dshow_progress=false " .
-                "$config";
+                "$config 2>&1";
 
-    print(STDERR "Running EvoSuite ($criterion) using config $config_file ... ");
-    my $output = `cd $self->{prog_root}; $cmd 2>&1`;
-    my $ret = $?;
+    my $log;
+    my $ret = Utils::exec_cmd($cmd, "Run EvoSuite ($criterion;$config_file)", \$log);
 
-    if ($ret==0) {
-        print(STDERR "OK\n");
-    } else {
-        print(STDERR "FAIL\n$output");
-    }
-
-    if (defined $log) {
-        open(OUT, ">>$log") or die "Cannot open log file: $!";
-        print(OUT "$output");
+    if (defined $log_file) {
+        open(OUT, ">>$log_file") or die "Cannot open log file: $!";
+        print(OUT "$log");
         close(OUT)
     }
 
@@ -495,10 +489,10 @@ Run Randoop on the project version that is currently checked out.
 =cut
 sub run_randoop {
     @_ >= 5 or die $ARG_ERROR;
-    my ($self, $target_classes, $timeout, $seed, $config_file, $log) = @_;
+    my ($self, $target_classes, $timeout, $seed, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") == 0 or die "Cannot determine project classpath";
+    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional randoop configuration
@@ -512,26 +506,20 @@ sub run_randoop {
     }
     close(IN);
 
-    my $cmd = "java -ea -classpath $SCRIPT_DIR/projects/lib/randoop.jar:$cp randoop.main.Main gentests " .
-              "$target_classes " .
-              "--junit-output-dir=randoop " .
-              "--timelimit=$timeout " .
-              "--randomseed=$seed " .
-              "$config";
+    my $cmd = "cd $self->{prog_root}" .
+              " && java -ea -classpath $SCRIPT_DIR/projects/lib/randoop.jar:$cp randoop.main.Main gentests " .
+                "$target_classes " .
+                "--junit-output-dir=randoop " .
+                "--timelimit=$timeout " .
+                "--randomseed=$seed " .
+                "$config 2>&1";
 
-    print(STDERR "Running Randoop using config $config_file ... ");
-    my $output = `cd $self->{prog_root}; $cmd 2>&1`;
-    my $ret = $?;
+    my $log;
+    my $ret = Utils::exec_cmd($cmd, "Run Randoop ($config_file)", \$log);
 
-    if ($ret==0) {
-        print(STDERR "OK\n");
-    } else {
-        print(STDERR "FAIL\n$output");
-    }
-
-    if (defined $log) {
-        open(OUT, ">>$log") or die "Cannot open log file: $!";
-        print(OUT "$output");
+    if (defined $log_file) {
+        open(OUT, ">>$log_file") or die "Cannot open log file: $!";
+        print(OUT "$log");
         close(OUT)
     }
 
@@ -549,7 +537,9 @@ Returns the number of generated mutants on success, -1 otherwise.
 =cut
 sub mutate {
     my $self = shift;
-    return -1 if ($self->_ant_call("mutate") != 0);
+    if (! $self->_ant_call("mutate")) {
+        return -1;
+    }
 
     # Determine number of generated mutants
     open(MUT_LOG, "<$self->{prog_root}/mutants.log") or die "Cannot open mutants log: $!";
@@ -713,8 +703,9 @@ sub monitor_test {
         test => []
     };
 
-    my $ret = $self->_ant_call("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file");
-    $ret == 0 or return undef;
+    if (! $self->_ant_call("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file")) {
+        return undef;
+    }
 
     my $src = $self->_get_classes($self->src_dir($vid));
     my $test= $self->_get_classes($self->test_dir($vid));
@@ -760,27 +751,17 @@ sub _ant_call {
     # TODO: Check also whether target is provided by the build file
     -f $file or die "Build file does not exist: $file";
 
-    print(STDERR "Running ant ($target) ... ");
     # Set up environment before running ant
     my $cmd = "export TZ='America/Los_Angeles'" .
               " && cd $self->{prog_root}" .
               " && ant -f $D4J_BUILD_FILE -Dd4j.home=$BASE_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1";
-    my $log = `$cmd`;
-    my $ret = $?;
+    my $log;
+    my $ret = Utils::exec_cmd($cmd, "Running ant ($target)", \$log);
 
     if (defined $log_file) {
         open(OUT, ">>$log_file") or die "Cannot open log file: $!";
         print(OUT "$log");
         close(OUT);
-    }
-    if ($ret==0) {
-        print(STDERR "OK\n");
-        # Print log if debugging is enabled
-        print(STDERR $log) if $DEBUG;
-    } else {
-        print(STDERR "FAIL\n");
-        # Always print log if ant fails
-        print(STDERR $log);
     }
     return $ret;
 }
@@ -906,8 +887,7 @@ sub checkout_vid {
         }
     }
 
-    my $ret = $self->{_vcs}->checkout_vid("${bid}f", $work_dir);
-    return 0 unless $ret;
+    $self->{_vcs}->checkout_vid("${bid}f", $work_dir) or return 0;
 
     # Init (new) git repository
     my $cmd = "cd $work_dir" .

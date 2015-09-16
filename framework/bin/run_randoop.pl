@@ -172,7 +172,7 @@ system("mkdir -p $LOG_DIR");
 
 # Checkout and compile project
 $project->checkout_vid($VID) or die "Cannot checkout!";
-$project->compile() == 0 or die "Cannot compile!";
+$project->compile() or die "Cannot compile!";
 
 # Open temporary log file
 my $LOG = Log::create_log("$TMP_DIR/run_randoop.log");
@@ -198,7 +198,7 @@ my $config = "$UTIL_DIR/randoop.config";
 $config = $ENV{RANDOOP_CONFIG_FILE} // $config;
 
 # Use test_id and bug_id as random seed -- randoop is by default NOT random!
-$project->run_randoop($target_classes, $TIME, ($TID*1000 + $BID), $config, $log) == 0 or die "Failed to generate tests!";
+$project->run_randoop($target_classes, $TIME, ($TID*1000 + $BID), $config, $log) or die "Failed to generate tests!";
 
 # Copy log file for this version id and test criterion to output directory
 system("mv $log $LOG_DIR") == 0 or die "Cannot copy log file!";
