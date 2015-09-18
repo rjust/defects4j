@@ -1,0 +1,220 @@
+#
+# This file provides common helper subroutines and variables used in the
+# Defects4J testing scripts.
+#
+# TODO: we need unit tests for the core modules and a better testing
+# infrastructure.
+
+################################################################################
+# Set up directories and PATH variable
+TEST_DIR=$(cd $(dirname $0); pwd)
+BASE_DIR=$(cd $TEST_DIR/../..; pwd)
+REPOS_DIR=$BASE_DIR/project_repos
+export PATH=$PATH:$BASE_DIR/framework/bin:$BASE_DIR/framework/util
+
+# Set default log file (LOG)
+script=$(basename $0)
+log_file=$(echo $script | sed 's/\.sh$/\.log/')
+LOG=$TEST_DIR/${log_file}
+
+# Set default temporary directory
+TMP=/tmp/test_d4j
+
+# By default exit on first error
+HALT_ON_ERROR=1
+
+# Indicate whether an error occured
+ERROR=0
+
+################################################################################
+# Initialize Defects4J and log file
+# init
+init() {
+    trap "exit 1" TERM
+    export SCRIPT_PID=$$
+    # Make sure that the project repos are available
+    cd $REPOS_DIR && ./get_repos.sh
+    # Truncate log file
+    > $LOG
+    # Create tmp directory, if necessary
+    mkdir -p $TMP
+}
+
+# Print error message to log file
+# log <log_message>
+log() {
+    echo "$1" >> $LOG
+}
+
+# Indicate test result
+# print_result
+print_result() {
+    printf '=%.s' $(seq 1 80) 1>&2
+    if [ $ERROR -eq 0 ]; then
+        text="PASSED"    
+    else
+        text="FAILED"
+    fi
+    printf "\n$text\n" 1>&2
+}
+
+# Print and log error message, and exit with error code 1
+# die <error_text>
+die() {
+    echo "Error: $1" 1>&2
+    log "Error: $1"
+    ERROR=1
+    if [ $HALT_ON_ERROR == 1 ]; then
+        failed
+        # Exit the entire script
+        kill -s TERM $SCRIPT_PID
+    fi
+}
+
+# Determine and print triggering tests listed in <file_name>
+# get_triggers <file_name>
+get_triggers() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <file_name>"
+    grep "\\---" $1 | cut -f2 -d' '
+}
+
+# Determine and print number of triggering tests listed in <file_name>
+# num_triggers <file_name>
+num_triggers() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <file_name>"
+    grep "\\---" $1 | wc -l
+}
+
+# Determine and print number of lines in file
+# num_lines <file_name>
+num_lines() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <file_name>"
+    wc -l < $1
+}
+
+################################################################################
+# Determine and print all test suites that exist in the provided suite_dir
+# get_test_suites <pid> <suite_dir>
+get_test_suites() {
+    [ $# -eq 2 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir>"
+    local pid=$1
+    local suite_dir=$2
+        
+    ls $suite_dir/$pid-*.tar.bz2
+}
+
+# Determine and set information about a specific test suite archive
+# set_test_suite_info <suite_archive>
+#
+# Naming convention for Defects4J test suite archives:
+# <PID>-<VID>-<SUITE_SRC>.<SUITE_NUM>.tar.bz2
+set_test_suite_info() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <suite_archive>"
+    local archive=$1
+    local file=$(echo $archive | sed 's/.*\///')
+
+    PID=$(echo $file | cut -f1 -d'-')
+    VID=$(echo $file | cut -f2 -d'-')
+    BID=$(echo $VID | sed 's/[bf]//')
+    SUITE_SRC=$(echo $file | cut -f3,4 -d'-' | cut -f1 -d'.')
+    SUITE_NUM=$(echo $file | cut -f3,4 -d'-' | cut -f2 -d'.')
+
+    echo "[PID=$PID, VID=$VID, BID=$BID, SUITE_SRC=$SUITE_SRC, SUITE_NUM=$SUITE_NUM]" 2>&1
+}
+
+# Run bug detection analysis
+# test_bug_detection <pid> <suite_dir>
+test_bug_detection() {
+    [ $# -eq 2 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir>"
+    local pid=$1
+    local suite_dir=$2
+
+    local db_dir=$TMP/result_db
+    # Clean result table
+    rm -f $db_dir/bug_detection
+   
+    # Run bug detection analysis for all test suites in suite_dir 
+    run_bug_detection.pl -p $pid -d $suite_dir -o $db_dir || die "run bug detection analysis"
+
+    # Check results for each test suite
+    for file in $(get_test_suites $pid $suite_dir); do
+        # Extract test suite information (pid, vid, etc.) from archive file name
+        set_test_suite_info $file
+
+        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/bug_detection \
+                || die "read bug detection results (data row is missing)"
+        # Check log files
+        [ -f "$db_dir/bug_detection_log/$PID/run_bug_detection.pl.log" ] \
+                || die "read bug detection log file"
+        [ -f "$db_dir/bug_detection_log/$PID/$SUITE_SRC/${BID}f.${SUITE_NUM}.trigger.log" ] \
+                || die "read trigger file (fixed version)"
+        [ -f "$db_dir/bug_detection_log/$PID/$SUITE_SRC/${BID}b.${SUITE_NUM}.trigger.log" ] \
+                || die "read trigger file (buggy version)"
+    done
+}
+
+# Run mutation analysis
+# test_mutation <pid> <suite_dir>
+test_mutation() {
+    [ $# -eq 2 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir>"
+    local pid=$1
+    local suite_dir=$2
+
+    local db_dir=$TMP/result_db
+    # Clean result table
+    rm -f $db_dir/mutation
+
+    # Run mutation analysis for all test suites in suite_dir 
+    run_mutation.pl -p $pid -d $suite_dir -o $db_dir || die "run mutation analysis"
+    
+    # Check results for each test suite
+    for file in $(get_test_suites $pid $suite_dir); do
+        # Extract test suite information (pid, vid, etc.) from archive file name
+        set_test_suite_info $file
+        
+        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/mutation \
+                || die "read mutation results (data row is missing)"
+        # Check log files
+        [ -f "$db_dir/mutation_log/$PID/run_mutation.pl.log" ] \
+                || die "read mutation log file"
+        [ -f "$db_dir/mutation_log/$PID/$SUITE_SRC/$VID.$SUITE_NUM.log" ] \
+                || die "read Major's log file"
+        [ -f "$db_dir/mutation_log/$PID/$SUITE_SRC/$VID.mutants.log" ] \
+                || die "read mutation analysis log (mutant generation)"
+        [ -f "$db_dir/mutation_log/$PID/$SUITE_SRC/$VID.$SUITE_NUM.summary.csv" ] \
+                || die "read mutation analysis log (summary)"
+        [ -f "$db_dir/mutation_log/$PID/$SUITE_SRC/$VID.$SUITE_NUM.kill.csv" ] \
+                || die "read mutation analysis log (kill details)"
+    done
+}
+
+# Run coverage analysis
+# test_coverage <pid> <suite_dir>
+test_coverage() {
+    [ $# -eq 2 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir>"
+    local pid=$1
+    local suite_dir=$2
+
+    local db_dir=$TMP/result_db
+    # Clean result table
+    rm -f $db_dir/coverage
+
+    # Run coverage analysis for all test suites in suite_dir 
+    run_coverage.pl -p $pid -d $suite_dir -o $db_dir || die "run coverage analysis"
+
+    # Check results for each test suite
+    for file in $(get_test_suites $pid $suite_dir); do
+        # Extract test suite information (pid, vid, etc.) from archive file name
+        set_test_suite_info $file
+        
+        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/coverage \
+                || die "read coverage results (data row is missing)"
+        # Check log files
+        [ -f "$db_dir/coverage_log/$PID/run_coverage.pl.log" ] \
+                || die "read coverage log file"
+        [ -f "$db_dir/coverage_log/$PID/$SUITE_SRC/$VID.$SUITE_NUM.ser" ] \
+                || die "read cobertura log (ser data file)"
+        [ -f "$db_dir/coverage_log/$PID/$SUITE_SRC/$VID.$SUITE_NUM.xml" ] \
+                || die "read cobertura log (xml report)"
+    done
+}

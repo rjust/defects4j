@@ -230,8 +230,7 @@ suite: foreach (@list) {
     while ($counter > 0) {
         # Compile generated tests
         my $comp_log = "$TMP_DIR/comp_tests.log";
-        my $ret = $project->compile_ext_tests("$TMP_DIR/$src", $comp_log);
-        if ($ret != 0) {
+        if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
             $LOG->log_msg(" - Tests do not compile: $name");
             _rm_classes($comp_log, $src, $name);
             # Indicate that test suite changed
@@ -244,8 +243,7 @@ suite: foreach (@list) {
 
         # Check for errors of runtime system
         `>$tests`;
-        $ret = $project->run_ext_tests("$TMP_DIR/$src", "$INCL", $tests);
-        if ($ret != 0) {
+        if (! $project->run_ext_tests("$TMP_DIR/$src", "$INCL", $tests)) {
             $LOG->log_file(" - Tests not executable: $name", $tests);
             next suite;
         }
