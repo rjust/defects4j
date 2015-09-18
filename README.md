@@ -67,7 +67,7 @@ Getting started
     - `defects4j compile`
     - `defects4j test`
 
-7. More examples of how to use the framework are available in `test.sh`
+7. More examples of how to use the framework are available in `framework/test`
 
 Publications
 ------------------
@@ -89,14 +89,18 @@ Detailed documentation for any script or module can be viewed with:
 
 Database abstraction
 -----------------------
-Use `framework/bin/defects4j` to:
+Use `framework/bin/defects4j` to execute any of the following commands:
 
-  - view configuration of a specific project
-  - view summary of a specific bug
-  - checkout and compile faulty or fixed project versions
-  - run test suite on faulty or fixed project versions
-  - perform mutation analysis on fixed project versions
-  - export properties such as classpaths, directories, or lists of tests
+| Command name   | Description                                                                                       |
+|----------------|---------------------------------------------------------------------------------------------------|
+| info           | View configuration of a specific project or summary of a specific bug                             |
+| checkout       | Checkout a buggy or a fixed project version                                                       |
+| compile        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| test           | Run developer-written tests on a buggy or a fixed project version                                 |
+| mutation       | Run mutation analysis for the developer-written tests on a faulty or a fixed project version      |
+| coverage       | Run code coverage analysis for the developer-written tests on a faulty or a fixed project version |
+| export         | Export properties such as classpaths, directories, or lists of tests                              |
+
 
 Export properties
 --------------------
@@ -157,7 +161,9 @@ The directory structure is as follows:
            |
            |--- util:          Util scripts used by Defects4J.
            |
-           |--- projects:      Project-specific resource files
+           |--- projects:      Project-specific resource files.
+           |
+           |--- test:          Scripts to test the framework.
 
 License
 ---------

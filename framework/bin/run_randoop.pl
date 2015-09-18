@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-run_randoop.pl -- Run randoop for a particular project and version_id. Tests are
+run_randoop.pl -- Run Randoop for a particular project and version id. Tests are
 generated for all loaded classes (i.e., all classes that were loaded during the
 execution of the fault-triggering test).
 
