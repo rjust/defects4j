@@ -17,7 +17,7 @@ defects4j info -p Lang -v 1 || die "print bug info"
 pid=Lang
 bid=1
 vid=${bid}b
-work_dir=$TMP/$pid-$vid
+work_dir=$TMP_DIR/$pid-$vid
 
 # Checkout buggy version
 defects4j checkout -p $pid -v $vid -w $work_dir || die "checkout program version $pid-$vid"

@@ -17,7 +17,7 @@ init
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
 
-work_dir=$TMP/test_trigger
+work_dir=$TMP_DIR/test_trigger
 for pid in Chart Closure Lang Math Time; do
     num_bugs=$(num_lines $BASE_DIR/framework/projects/$pid/commit-db)
     for bid in $(seq 1 1 $num_bugs); do

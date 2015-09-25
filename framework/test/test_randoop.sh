@@ -9,7 +9,7 @@ source test.include
 init
 
 # Directory for Randoop test suites
-randoop_dir=$TMP/randoop
+randoop_dir=$TMP_DIR/randoop
 # Generate tests for Lang-2
 pid=Lang
 bid=2

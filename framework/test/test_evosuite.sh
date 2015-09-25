@@ -9,7 +9,7 @@ source test.include
 init
 
 # Directory for EvoSuite test suites
-evo_dir=$TMP/evosuite
+evo_dir=$TMP_DIR/evosuite
 # Generate tests for Lang-2
 pid=Lang
 bid=2

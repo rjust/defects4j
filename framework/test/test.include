@@ -10,7 +10,7 @@
 TEST_DIR=$(cd $(dirname $0); pwd)
 BASE_DIR=$(cd $TEST_DIR/../..; pwd)
 REPOS_DIR=$BASE_DIR/project_repos
-export PATH=$PATH:$BASE_DIR/framework/bin:$BASE_DIR/framework/util
+export PATH=$BASE_DIR/framework/bin:$BASE_DIR/framework/util:$PATH
 
 # Set default log file (LOG)
 script=$(basename $0)
@@ -18,7 +18,7 @@ log_file=$(echo $script | sed 's/\.sh$/\.log/')
 LOG=$TEST_DIR/${log_file}
 
 # Set default temporary directory
-TMP=/tmp/test_d4j
+TMP_DIR=/tmp/test_d4j
 
 # By default exit on first error
 HALT_ON_ERROR=1
@@ -30,14 +30,16 @@ ERROR=0
 # Initialize Defects4J and log file
 # init
 init() {
+    # Properly handle errors and print test result on exit
     trap "exit 1" TERM
     export SCRIPT_PID=$$
+    trap "print_result" EXIT
     # Make sure that the project repos are available
     cd $REPOS_DIR && ./get_repos.sh
     # Truncate log file
     > $LOG
     # Create tmp directory, if necessary
-    mkdir -p $TMP
+    mkdir -p $TMP_DIR || die "create temporary test directory"
 }
 
 # Print error message to log file
@@ -58,14 +60,13 @@ print_result() {
     printf "\n$text\n" 1>&2
 }
 
-# Print and log error message, and exit with error code 1
+# Print and log error message, and terminate script if HALT_ON_ERROR is set
 # die <error_text>
 die() {
     echo "Error: $1" 1>&2
     log "Error: $1"
     ERROR=1
     if [ $HALT_ON_ERROR == 1 ]; then
-        failed
         # Exit the entire script
         kill -s TERM $SCRIPT_PID
     fi
@@ -129,7 +130,7 @@ test_bug_detection() {
     local pid=$1
     local suite_dir=$2
 
-    local db_dir=$TMP/result_db
+    local db_dir=$TMP_DIR/result_db
     # Clean result table
     rm -f $db_dir/bug_detection
    
@@ -160,7 +161,7 @@ test_mutation() {
     local pid=$1
     local suite_dir=$2
 
-    local db_dir=$TMP/result_db
+    local db_dir=$TMP_DIR/result_db
     # Clean result table
     rm -f $db_dir/mutation
 
@@ -195,7 +196,7 @@ test_coverage() {
     local pid=$1
     local suite_dir=$2
 
-    local db_dir=$TMP/result_db
+    local db_dir=$TMP_DIR/result_db
     # Clean result table
     rm -f $db_dir/coverage
 
