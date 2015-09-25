@@ -83,9 +83,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">
         <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
             <classpath refid="d4j.test.classpath"/>
-            <classpath refid="cobertura.classpath.include"/>
             <classpath>
                 <pathelement path="${formatter.jar}" />
+                <pathelement path="${cobertura.jar}" />
             </classpath>
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>

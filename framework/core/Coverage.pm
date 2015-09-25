@@ -77,13 +77,16 @@ sub coverage {
 	@_ >= 3 or die $ARG_ERROR;
 	my ($project, $modified_classes_file, $src_dir, $single_test, $merge_with) = @_;
 
-	my $pid = $project->{pid};
-
+    # Instrument all classes provided
 	$project->coverage_instrument($modified_classes_file) or return undef;
 
+    # Init file for failing test cases (for debugging purposes only -- the test
+    # suite is required to pass)
 	my $failure_file = "$project->{prog_root}/$FAIL_FILE";
 	system(">$failure_file");
-	$project->coverage($failure_file) or return undef;
+
+    # Execute test suite
+    $project->run_relevant_tests($failure_file) or return undef;
     Utils::has_failing_tests($failure_file) and return undef;
 
 	my $root = $project->{prog_root};
@@ -92,6 +95,7 @@ sub coverage {
 	my $xmldir   = "$root/$XML_DIR";
 	my $my_ser   = "$root/$SER_FILE";
 
+    # Generate coverage report
 	my $result_xml;
 	if (defined $merge_with) {
 		print "Merging & creating new report via shell script..\n";

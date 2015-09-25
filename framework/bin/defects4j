@@ -101,6 +101,15 @@ $cmd_descr{"mutation"}="Perform mutation analysis on a fixed or faulty program v
 
 =pod
 
+=item B<coverage>
+
+Perform code coverage analysis on a fixed or faulty project version using the accompanying test suite.
+
+=cut
+$cmd_descr{"coverage"}="Perform code coverage analysis on a fixed or faulty program version";
+
+=pod
+
 =item B<info>
 
 Print information for a specific project or bug.

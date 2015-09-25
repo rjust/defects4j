@@ -1,0 +1,119 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-coverage -- Run coverage analysis on a checked-out project version.
+
+=head1 SYNOPSIS
+
+d4j-coverage [-w work_dir] [-r | -t single_test]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-w F<work_dir>>
+
+The working directory of the checked-out project version (optional). Default is
+the current directory.
+
+=item B<-r>
+
+Only execute relevant tests (optional). By default all tests are executed.
+
+=item B<-t C<single_test>>
+
+Only run this single test method (format: <test_class>::<test_method>)
+(optional). By default all tests are executed.
+
+=back
+
+=head1 DESCRIPTION
+
+This script runs all accompanying tests of a checked-out project version.
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use Utils;
+use Project;
+use Coverage;
+use Getopt::Std;
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 [-w work_dir] [-r | -t single_test]\n";
+    exit 1;
+}
+
+my %cmd_opts;
+getopts('w:rt:', \%cmd_opts) or _usage();
+
+my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
+my $REL_TESTS = defined $cmd_opts{r} ? 1 : 0;
+my $SINGLE_TEST = $cmd_opts{t};
+_usage() if (defined $SINGLE_TEST && $REL_TESTS==1);
+
+my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
+unless(defined $config) {
+    print(STDERR "$WORK_DIR is not a valid working directory!\n");
+    exit 1;
+}
+my $pid = $config->{$CONFIG_PID};
+my $vid = $config->{$CONFIG_VID};
+my $bid = Utils::check_vid($vid)->{bid};
+
+# Instantiate project and set working directory
+my $project = Project::create_project($pid);
+$project->{prog_root} = $WORK_DIR;
+
+my $src_dir = $project->src_dir($vid);
+my $classes = "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
+
+my $coverage = Coverage::coverage($project, $classes, $src_dir) or die "Cannot determine code coverage!";
+
+printf("%18s: %d\n", "Lines total", $coverage->{lines_total});
+printf("%18s: %d\n", "Lines covered", $coverage->{lines_covered});
+printf("%18s: %d\n", "Conditions total", $coverage->{branches_total});
+printf("%18s: %d\n", "Conditions covered", $coverage->{branches_covered});
+printf("%18s: %.1f%%\n", "Line coverage", $coverage->{lines_covered}/$coverage->{lines_total}*100);
+printf("%18s: %.1f%%\n", "Condition coverage", $coverage->{branches_covered}/$coverage->{branches_total}*100);
+#printf("%17s: %.1f seconds\n", "Total run time", ($timeAnalysis));
+
+
+1;
+
+=pod
+
+=head1 SEE ALSO
+
+All valid project_ids are listed in F<Project.pm>
+
+=cut
