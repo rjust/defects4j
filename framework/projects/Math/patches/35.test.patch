@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java b/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
+diff --git a/src/test/java/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java b/src/test/java/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
 index dbfc9f1..f2d1871 100644
---- a/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
-+++ b/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
+--- a/src/test/java/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
++++ b/src/test/java/org/apache/commons/math3/genetics/ElitisticListPopulationTest.java
 @@ -17,10 +17,6 @@
  package org.apache.commons.math3.genetics;
  

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateFormatTest.java b/org/apache/commons/lang3/time/FastDateFormatTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/time/FastDateFormatTest.java b/src/test/java/org/apache/commons/lang3/time/FastDateFormatTest.java
 index 3853cdd..45156e3 100644
---- a/org/apache/commons/lang3/time/FastDateFormatTest.java
-+++ b/org/apache/commons/lang3/time/FastDateFormatTest.java
+--- a/src/test/java/org/apache/commons/lang3/time/FastDateFormatTest.java
++++ b/src/test/java/org/apache/commons/lang3/time/FastDateFormatTest.java
 @@ -322,16 +322,4 @@ public class FastDateFormatTest extends TestCase {
          FastDateFormat format = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", TimeZone.getTimeZone("GMT"));
          assertEquals("dateTime", dateTime, format.format(cal));

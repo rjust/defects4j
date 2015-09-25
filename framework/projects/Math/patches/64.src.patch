@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
 index c4b1985..152c30c 100644
---- a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
-+++ b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+--- a/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
 @@ -247,7 +247,12 @@ public abstract class AbstractLeastSquaresOptimizer implements DifferentiableMul
       * @return chi-square value
       */
@@ -16,10 +16,10 @@ index c4b1985..152c30c 100644
      }
  
      /**
-diff --git a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-index b41456e..4cf4ee0 100644
---- a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-+++ b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+index b41456e..d582962 100644
+--- a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
 @@ -255,8 +255,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
          double[] diag    = new double[cols];
          double[] oldX    = new double[cols];
@@ -82,7 +82,7 @@ index b41456e..4cf4ee0 100644
  
                  // compute the new point and the norm of the evolution direction
                  double lmNorm = 0;
-@@ -372,6 +365,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -372,6 +364,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
  
                  // evaluate the function at x + p and calculate its norm
                  updateResidualsAndCost();
@@ -90,7 +90,7 @@ index b41456e..4cf4ee0 100644
  
                  // compute the scaled actual reduction
                  double actRed = -1.0;
-@@ -427,15 +421,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -427,15 +420,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
                          xNorm    += xK * xK;
                      }
                      xNorm = Math.sqrt(xNorm);
@@ -106,7 +106,7 @@ index b41456e..4cf4ee0 100644
                  } else {
                      // failed iteration, reset the previous values
                      cost = previousCost;
-@@ -446,18 +431,24 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -446,18 +430,24 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
                      tmpVec    = residuals;
                      residuals = oldRes;
                      oldRes    = tmpVec;

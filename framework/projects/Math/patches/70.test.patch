@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java b/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java b/src/test/java/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
 index a13ad2e..d0fcafd 100644
---- a/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
-+++ b/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
+--- a/src/test/java/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
++++ b/src/test/java/org/apache/commons/math/analysis/solvers/BisectionSolverTest.java
 @@ -95,12 +95,6 @@ public final class BisectionSolverTest extends TestCase {
          assertTrue(solver.getIterationCount() > 0);
      }

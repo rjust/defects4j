@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java b/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
+diff --git a/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java b/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
 index 4d010ea..3cbf1e1 100644
---- a/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
-+++ b/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
+--- a/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
++++ b/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
 @@ -79,20 +79,27 @@ public abstract class CharSequenceTranslator {
          if (input == null) {
              return;

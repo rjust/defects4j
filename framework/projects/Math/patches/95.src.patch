@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/distribution/FDistributionImpl.java b/org/apache/commons/math/distribution/FDistributionImpl.java
+diff --git a/src/java/org/apache/commons/math/distribution/FDistributionImpl.java b/src/java/org/apache/commons/math/distribution/FDistributionImpl.java
 index 59aeb07..3959403 100644
---- a/org/apache/commons/math/distribution/FDistributionImpl.java
-+++ b/org/apache/commons/math/distribution/FDistributionImpl.java
+--- a/src/java/org/apache/commons/math/distribution/FDistributionImpl.java
++++ b/src/java/org/apache/commons/math/distribution/FDistributionImpl.java
 @@ -141,13 +141,8 @@ public class FDistributionImpl
       * @return initial domain value
       */

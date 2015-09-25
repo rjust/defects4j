@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/ArrayUtilsAddTest.java b/org/apache/commons/lang3/ArrayUtilsAddTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/ArrayUtilsAddTest.java b/src/test/java/org/apache/commons/lang3/ArrayUtilsAddTest.java
 index 8d2e0e1..e38e481 100644
---- a/org/apache/commons/lang3/ArrayUtilsAddTest.java
-+++ b/org/apache/commons/lang3/ArrayUtilsAddTest.java
+--- a/src/test/java/org/apache/commons/lang3/ArrayUtilsAddTest.java
++++ b/src/test/java/org/apache/commons/lang3/ArrayUtilsAddTest.java
 @@ -221,25 +221,6 @@ public class ArrayUtilsAddTest extends TestCase {
          assertTrue(Arrays.equals((new Object[]{null}), newArray));
          assertEquals(Object.class, newArray.getClass().getComponentType());

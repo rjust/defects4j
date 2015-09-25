@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/chrono/ZonedChronology.java b/org/joda/time/chrono/ZonedChronology.java
+diff --git a/src/main/java/org/joda/time/chrono/ZonedChronology.java b/src/main/java/org/joda/time/chrono/ZonedChronology.java
 index 819f64e..f165f3d 100644
---- a/org/joda/time/chrono/ZonedChronology.java
-+++ b/org/joda/time/chrono/ZonedChronology.java
+--- a/src/main/java/org/joda/time/chrono/ZonedChronology.java
++++ b/src/main/java/org/joda/time/chrono/ZonedChronology.java
 @@ -433,7 +433,7 @@ public final class ZonedChronology extends AssembledChronology {
              } else {
                 long localInstant = iZone.convertUTCToLocal(instant);
@@ -64,10 +64,10 @@ index 819f64e..f165f3d 100644
              }
          }
  
-diff --git a/org/joda/time/field/LenientDateTimeField.java b/org/joda/time/field/LenientDateTimeField.java
+diff --git a/src/main/java/org/joda/time/field/LenientDateTimeField.java b/src/main/java/org/joda/time/field/LenientDateTimeField.java
 index 6cf4c71..450a4ef 100644
---- a/org/joda/time/field/LenientDateTimeField.java
-+++ b/org/joda/time/field/LenientDateTimeField.java
+--- a/src/main/java/org/joda/time/field/LenientDateTimeField.java
++++ b/src/main/java/org/joda/time/field/LenientDateTimeField.java
 @@ -72,6 +72,6 @@ public class LenientDateTimeField extends DelegatedDateTimeField {
          long localInstant = iBase.getZone().convertUTCToLocal(instant);
          long difference = FieldUtils.safeSubtract(value, get(instant));

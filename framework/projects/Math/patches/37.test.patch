@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/complex/ComplexTest.java b/org/apache/commons/math/complex/ComplexTest.java
+diff --git a/src/test/java/org/apache/commons/math/complex/ComplexTest.java b/src/test/java/org/apache/commons/math/complex/ComplexTest.java
 index c31cb90..f694310 100644
---- a/org/apache/commons/math/complex/ComplexTest.java
-+++ b/org/apache/commons/math/complex/ComplexTest.java
+--- a/src/test/java/org/apache/commons/math/complex/ComplexTest.java
++++ b/src/test/java/org/apache/commons/math/complex/ComplexTest.java
 @@ -996,13 +996,6 @@ public class ComplexTest {
          Complex z = new Complex(3, 4);
          Complex expected = new Complex(-0.000187346, 0.999356);

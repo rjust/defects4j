@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtilsTest.java b/org/apache/commons/lang3/StringUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang3/StringUtilsTest.java b/src/test/org/apache/commons/lang3/StringUtilsTest.java
 index 7a74598..bb0acf8 100644
---- a/org/apache/commons/lang3/StringUtilsTest.java
-+++ b/org/apache/commons/lang3/StringUtilsTest.java
+--- a/src/test/org/apache/commons/lang3/StringUtilsTest.java
++++ b/src/test/org/apache/commons/lang3/StringUtilsTest.java
 @@ -1033,10 +1033,6 @@ public class StringUtilsTest extends TestCase {
                  "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "N", "O", "P", "Q", 
                  "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E", "F", "G", 

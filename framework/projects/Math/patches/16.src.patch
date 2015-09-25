@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/util/FastMath.java b/org/apache/commons/math3/util/FastMath.java
+diff --git a/src/main/java/org/apache/commons/math3/util/FastMath.java b/src/main/java/org/apache/commons/math3/util/FastMath.java
 index fd1ce2d..22ed157 100644
---- a/org/apache/commons/math3/util/FastMath.java
-+++ b/org/apache/commons/math3/util/FastMath.java
+--- a/src/main/java/org/apache/commons/math3/util/FastMath.java
++++ b/src/main/java/org/apache/commons/math3/util/FastMath.java
 @@ -78,8 +78,6 @@ import java.io.PrintStream;
   * @since 2.2
   */

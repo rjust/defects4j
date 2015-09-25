@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/ExtendedMessageFormat.java b/org/apache/commons/lang/text/ExtendedMessageFormat.java
+diff --git a/src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java b/src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
 index 4af3955..404be49 100644
---- a/org/apache/commons/lang/text/ExtendedMessageFormat.java
-+++ b/org/apache/commons/lang/text/ExtendedMessageFormat.java
+--- a/src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
++++ b/src/java/org/apache/commons/lang/text/ExtendedMessageFormat.java
 @@ -419,7 +419,6 @@ public class ExtendedMessageFormat extends MessageFormat {
          int start = pos.getIndex();
          char[] c = pattern.toCharArray();

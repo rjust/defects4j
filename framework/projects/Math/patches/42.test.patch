@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 index 46afe77..169d07d 100644
---- a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 @@ -30,20 +30,6 @@ import org.junit.Test;
  public class SimplexSolverTest {
  

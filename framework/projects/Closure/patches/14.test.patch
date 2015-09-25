@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckMissingReturnTest.java b/com/google/javascript/jscomp/CheckMissingReturnTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckMissingReturnTest.java b/test/com/google/javascript/jscomp/CheckMissingReturnTest.java
 index 3a33aae..5b43e17 100644
---- a/com/google/javascript/jscomp/CheckMissingReturnTest.java
-+++ b/com/google/javascript/jscomp/CheckMissingReturnTest.java
+--- a/test/com/google/javascript/jscomp/CheckMissingReturnTest.java
++++ b/test/com/google/javascript/jscomp/CheckMissingReturnTest.java
 @@ -191,12 +191,6 @@ public class CheckMissingReturnTest extends CompilerTestCase {
      testNotMissing("if (a) { return 1} else { while (1) {return 1} }");
    }
@@ -15,10 +15,10 @@ index 3a33aae..5b43e17 100644
    private static String createFunction(String returnType, String body) {
      return "/** @return {" + returnType + "} */ function foo() {" + body + "}";
    }
-diff --git a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+diff --git a/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
 index 5560e2c..90422d5 100644
---- a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
-+++ b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+--- a/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
++++ b/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
 @@ -1104,7 +1104,7 @@ public class ControlFlowAnalysisTest extends TestCase {
      // BREAK to FINALLY.
      assertCrossEdge(cfg, Token.BREAK, Token.BLOCK, Branch.UNCOND);

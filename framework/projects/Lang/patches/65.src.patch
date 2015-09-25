@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/DateUtils.java b/org/apache/commons/lang/time/DateUtils.java
+diff --git a/src/java/org/apache/commons/lang/time/DateUtils.java b/src/java/org/apache/commons/lang/time/DateUtils.java
 index 79c13f0..f042237 100644
---- a/org/apache/commons/lang/time/DateUtils.java
-+++ b/org/apache/commons/lang/time/DateUtils.java
+--- a/src/java/org/apache/commons/lang/time/DateUtils.java
++++ b/src/java/org/apache/commons/lang/time/DateUtils.java
 @@ -621,51 +621,6 @@ public class DateUtils {
              throw new ArithmeticException("Calendar value too large for accurate calculations");
          }

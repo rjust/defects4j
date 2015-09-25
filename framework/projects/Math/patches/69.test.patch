@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java b/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java b/src/test/java/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
 index 7c05686..28a7b8e 100644
---- a/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
-+++ b/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
+--- a/src/test/java/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
++++ b/src/test/java/org/apache/commons/math/stat/correlation/PearsonsCorrelationTest.java
 @@ -160,27 +160,6 @@ public class PearsonsCorrelationTest extends TestCase {
           fillUpper(rPMatrix, 0d);
           TestUtils.assertEquals("correlation p values", rPMatrix, corrInstance.getCorrelationPValues(), 10E-15);

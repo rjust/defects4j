@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
+diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
 index ec05941..855cad0 100644
---- a/org/joda/time/DateTimeZone.java
-+++ b/org/joda/time/DateTimeZone.java
+--- a/src/main/java/org/joda/time/DateTimeZone.java
++++ b/src/main/java/org/joda/time/DateTimeZone.java
 @@ -897,7 +897,7 @@ public abstract class DateTimeZone implements Serializable {
                      return offsetLocal;
                  }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/linear/SparseRealVectorTest.java b/org/apache/commons/math3/linear/SparseRealVectorTest.java
+diff --git a/src/test/java/org/apache/commons/math3/linear/SparseRealVectorTest.java b/src/test/java/org/apache/commons/math3/linear/SparseRealVectorTest.java
 index 3978fa5..d5e09f9 100644
---- a/org/apache/commons/math3/linear/SparseRealVectorTest.java
-+++ b/org/apache/commons/math3/linear/SparseRealVectorTest.java
+--- a/src/test/java/org/apache/commons/math3/linear/SparseRealVectorTest.java
++++ b/src/test/java/org/apache/commons/math3/linear/SparseRealVectorTest.java
 @@ -237,25 +237,14 @@ public class SparseRealVectorTest extends RealVectorAbstractTest {
  
          @Override

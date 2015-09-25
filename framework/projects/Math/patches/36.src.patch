@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/fraction/BigFraction.java b/org/apache/commons/math/fraction/BigFraction.java
+diff --git a/src/main/java/org/apache/commons/math/fraction/BigFraction.java b/src/main/java/org/apache/commons/math/fraction/BigFraction.java
 index a6672e4..e93d76d 100644
---- a/org/apache/commons/math/fraction/BigFraction.java
-+++ b/org/apache/commons/math/fraction/BigFraction.java
+--- a/src/main/java/org/apache/commons/math/fraction/BigFraction.java
++++ b/src/main/java/org/apache/commons/math/fraction/BigFraction.java
 @@ -682,16 +682,7 @@ public class BigFraction
       */
      @Override

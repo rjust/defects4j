@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/WordUtils.java b/org/apache/commons/lang/WordUtils.java
+diff --git a/src/java/org/apache/commons/lang/WordUtils.java b/src/java/org/apache/commons/lang/WordUtils.java
 index 91c6615..748b547 100644
---- a/org/apache/commons/lang/WordUtils.java
-+++ b/org/apache/commons/lang/WordUtils.java
+--- a/src/java/org/apache/commons/lang/WordUtils.java
++++ b/src/java/org/apache/commons/lang/WordUtils.java
 @@ -611,11 +611,6 @@ public class WordUtils {
              return StringUtils.EMPTY;
          }

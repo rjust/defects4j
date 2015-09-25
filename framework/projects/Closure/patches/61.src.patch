@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
 index f9ce42e..3634939 100644
---- a/com/google/javascript/jscomp/NodeUtil.java
-+++ b/com/google/javascript/jscomp/NodeUtil.java
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
 @@ -954,14 +954,6 @@ public final class NodeUtil {
          return false;
        }

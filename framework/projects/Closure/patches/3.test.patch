@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+diff --git a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 index 09caf56..6e5c400 100644
---- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+--- a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 @@ -142,51 +142,6 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
      noInline("var y = noSFX(); do { var z = y.foo(); } while (true);");
    }

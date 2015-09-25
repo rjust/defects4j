@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtilsTest.java b/org/apache/commons/lang3/StringUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/StringUtilsTest.java b/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
 index a49311b..aaa02d5 100644
---- a/org/apache/commons/lang3/StringUtilsTest.java
-+++ b/org/apache/commons/lang3/StringUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
 @@ -67,14 +67,6 @@ public class StringUtilsTest extends TestCase {
      private static final String[] ARRAY_LIST = { "foo", "bar", "baz" };
      private static final String[] EMPTY_ARRAY_LIST = {};

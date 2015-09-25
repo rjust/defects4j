@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java b/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
 index dbfc006..246d9b2 100644
---- a/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/ClassicalRungeKuttaIntegratorTest.java
 @@ -41,59 +41,6 @@ public class ClassicalRungeKuttaIntegratorTest
      super(name);
    }
@@ -62,10 +62,10 @@ index dbfc006..246d9b2 100644
    public void testSanityChecks() {
      try  {
        TestProblem1 pb = new TestProblem1();
-diff --git a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 index 3ce842a..bb36cda 100644
---- a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 @@ -18,7 +18,6 @@
  package org.apache.commons.math.ode.nonstiff;
  

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/jstype/UnionTypeTest.java b/com/google/javascript/rhino/jstype/UnionTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/UnionTypeTest.java b/test/com/google/javascript/rhino/jstype/UnionTypeTest.java
 index bec0550..2dc4818 100644
---- a/com/google/javascript/rhino/jstype/UnionTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/UnionTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/UnionTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/UnionTypeTest.java
 @@ -145,19 +145,10 @@ public class UnionTypeTest extends BaseJSTypeTestCase {
     * Tests {@link JSType#getGreatestSubtype(JSType)} on union types.
     */

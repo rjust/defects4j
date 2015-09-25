@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FoldConstants.java b/com/google/javascript/jscomp/FoldConstants.java
+diff --git a/src/com/google/javascript/jscomp/FoldConstants.java b/src/com/google/javascript/jscomp/FoldConstants.java
 index 657ee0a..f6d6a27 100644
---- a/com/google/javascript/jscomp/FoldConstants.java
-+++ b/com/google/javascript/jscomp/FoldConstants.java
+--- a/src/com/google/javascript/jscomp/FoldConstants.java
++++ b/src/com/google/javascript/jscomp/FoldConstants.java
 @@ -1474,24 +1474,22 @@ class FoldConstants extends AbstractPostOrderCallback
  
      String joinString = NodeUtil.getStringValue(right);

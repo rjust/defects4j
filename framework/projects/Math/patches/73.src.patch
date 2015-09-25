@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BrentSolver.java b/org/apache/commons/math/analysis/solvers/BrentSolver.java
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
 index e0cb427..4e95ed5 100644
---- a/org/apache/commons/math/analysis/solvers/BrentSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BrentSolver.java
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
 @@ -32,11 +32,6 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
   */
  public class BrentSolver extends UnivariateRealSolverImpl {

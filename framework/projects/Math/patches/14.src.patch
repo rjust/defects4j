@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optim/nonlinear/vector/Weight.java b/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
 index aa3299a..789bc25 100644
---- a/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
-+++ b/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
 @@ -18,7 +18,7 @@ package org.apache.commons.math3.optim.nonlinear.vector;
  
  import org.apache.commons.math3.optim.OptimizationData;
@@ -23,11 +23,11 @@ index aa3299a..789bc25 100644
      }
  
      /**
-diff --git a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
-index ef52943..b7bb6f5 100644
---- a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
-@@ -264,16 +263,7 @@ public abstract class AbstractLeastSquaresOptimizer
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
+index ef52943..5055849 100644
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
+@@ -264,16 +264,7 @@ public abstract class AbstractLeastSquaresOptimizer
       * @return the square-root of the weight matrix.
       */
      private RealMatrix squareRoot(RealMatrix m) {

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/LightweightMessageFormatter.java b/com/google/javascript/jscomp/LightweightMessageFormatter.java
+diff --git a/src/com/google/javascript/jscomp/LightweightMessageFormatter.java b/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
 index 420dbc0..f529b7d 100644
---- a/com/google/javascript/jscomp/LightweightMessageFormatter.java
-+++ b/com/google/javascript/jscomp/LightweightMessageFormatter.java
+--- a/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
++++ b/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
 @@ -92,10 +92,8 @@ public class LightweightMessageFormatter extends AbstractMessageFormatter {
        int charno = error.getCharno();
  

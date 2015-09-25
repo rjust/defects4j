@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionInjector.java b/com/google/javascript/jscomp/FunctionInjector.java
+diff --git a/src/com/google/javascript/jscomp/FunctionInjector.java b/src/com/google/javascript/jscomp/FunctionInjector.java
 index 5b38600..accf4c5 100644
---- a/com/google/javascript/jscomp/FunctionInjector.java
-+++ b/com/google/javascript/jscomp/FunctionInjector.java
+--- a/src/com/google/javascript/jscomp/FunctionInjector.java
++++ b/src/com/google/javascript/jscomp/FunctionInjector.java
 @@ -694,6 +694,16 @@ class FunctionInjector {
  
      Node block = fnNode.getLastChild();

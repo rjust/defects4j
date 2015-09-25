@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/SerializationUtils.java b/org/apache/commons/lang3/SerializationUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/SerializationUtils.java b/src/main/java/org/apache/commons/lang3/SerializationUtils.java
 index 7c89b61..5926a9b 100644
---- a/org/apache/commons/lang3/SerializationUtils.java
-+++ b/org/apache/commons/lang3/SerializationUtils.java
+--- a/src/main/java/org/apache/commons/lang3/SerializationUtils.java
++++ b/src/main/java/org/apache/commons/lang3/SerializationUtils.java
 @@ -236,8 +236,6 @@ public class SerializationUtils {
       * class here is a workaround, see the JIRA issue LANG-626. </p>
       */

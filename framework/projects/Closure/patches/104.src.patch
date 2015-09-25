@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/jstype/UnionType.java b/com/google/javascript/rhino/jstype/UnionType.java
+diff --git a/src/com/google/javascript/rhino/jstype/UnionType.java b/src/com/google/javascript/rhino/jstype/UnionType.java
 index 6f0d798..c200b64 100644
---- a/com/google/javascript/rhino/jstype/UnionType.java
-+++ b/com/google/javascript/rhino/jstype/UnionType.java
+--- a/src/com/google/javascript/rhino/jstype/UnionType.java
++++ b/src/com/google/javascript/rhino/jstype/UnionType.java
 @@ -43,6 +43,7 @@ import static com.google.javascript.rhino.jstype.TernaryValue.UNKNOWN;
  
  import com.google.common.collect.ImmutableSet;

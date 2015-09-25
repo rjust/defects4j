@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/LocaleUtils.java b/org/apache/commons/lang/LocaleUtils.java
+diff --git a/src/java/org/apache/commons/lang/LocaleUtils.java b/src/java/org/apache/commons/lang/LocaleUtils.java
 index 139d9a7..ceb886e 100644
---- a/org/apache/commons/lang/LocaleUtils.java
-+++ b/org/apache/commons/lang/LocaleUtils.java
+--- a/src/java/org/apache/commons/lang/LocaleUtils.java
++++ b/src/java/org/apache/commons/lang/LocaleUtils.java
 @@ -220,7 +220,7 @@ public class LocaleUtils {
       * @return true if the locale is a known locale
       */

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/geometry/Vector3D.java b/org/apache/commons/math/geometry/Vector3D.java
+diff --git a/src/main/java/org/apache/commons/math/geometry/Vector3D.java b/src/main/java/org/apache/commons/math/geometry/Vector3D.java
 index 2d915e5..0a4adb8 100644
---- a/org/apache/commons/math/geometry/Vector3D.java
-+++ b/org/apache/commons/math/geometry/Vector3D.java
+--- a/src/main/java/org/apache/commons/math/geometry/Vector3D.java
++++ b/src/main/java/org/apache/commons/math/geometry/Vector3D.java
 @@ -454,41 +454,10 @@ public class Vector3D implements Serializable {
     * @param v2 second vector
     * @return the cross product v1 ^ v2 as a new Vector

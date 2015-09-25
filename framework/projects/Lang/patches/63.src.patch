@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/DurationFormatUtils.java b/org/apache/commons/lang/time/DurationFormatUtils.java
+diff --git a/src/java/org/apache/commons/lang/time/DurationFormatUtils.java b/src/java/org/apache/commons/lang/time/DurationFormatUtils.java
 index 3a9d9f6..f777d48 100644
---- a/org/apache/commons/lang/time/DurationFormatUtils.java
-+++ b/org/apache/commons/lang/time/DurationFormatUtils.java
+--- a/src/java/org/apache/commons/lang/time/DurationFormatUtils.java
++++ b/src/java/org/apache/commons/lang/time/DurationFormatUtils.java
 @@ -303,21 +303,23 @@ public class DurationFormatUtils {
              days -= 1;
          }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/DateUtils.java b/org/apache/commons/lang/time/DateUtils.java
+diff --git a/src/java/org/apache/commons/lang/time/DateUtils.java b/src/java/org/apache/commons/lang/time/DateUtils.java
 index e5138b5..9ca1bc5 100644
---- a/org/apache/commons/lang/time/DateUtils.java
-+++ b/org/apache/commons/lang/time/DateUtils.java
+--- a/src/java/org/apache/commons/lang/time/DateUtils.java
++++ b/src/java/org/apache/commons/lang/time/DateUtils.java
 @@ -640,18 +640,18 @@ public class DateUtils {
          int millisecs = val.get(Calendar.MILLISECOND);
          if (!round || millisecs < 500) {

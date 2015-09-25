@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 index 56b0597..b41c030 100644
---- a/org/apache/commons/lang3/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 @@ -115,20 +115,7 @@ public class NumberUtilsTest {
          assertTrue("toFloat(String,int) 1 failed", NumberUtils.toFloat("1.2345", 5.1f) == 1.2345f);
          assertTrue("toFloat(String,int) 2 failed", NumberUtils.toFloat("a", 5.0f) == 5.0f);

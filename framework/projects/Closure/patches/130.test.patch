@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 index bda75f7..77e5e95 100644
---- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
-+++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 @@ -27,11 +27,8 @@ import com.google.javascript.rhino.Node;
  public class CollapsePropertiesTest extends CompilerTestCase {
  

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/dfp/DfpTest.java b/org/apache/commons/math3/dfp/DfpTest.java
+diff --git a/src/test/java/org/apache/commons/math3/dfp/DfpTest.java b/src/test/java/org/apache/commons/math3/dfp/DfpTest.java
 index 6f22466..f754976 100644
---- a/org/apache/commons/math3/dfp/DfpTest.java
-+++ b/org/apache/commons/math3/dfp/DfpTest.java
+--- a/src/test/java/org/apache/commons/math3/dfp/DfpTest.java
++++ b/src/test/java/org/apache/commons/math3/dfp/DfpTest.java
 @@ -906,17 +906,13 @@ public class DfpTest {
               nan,
               0, "Multiply #36");

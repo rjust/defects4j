@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BisectionSolver.java b/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
 index 180caef..3f66927 100644
---- a/org/apache/commons/math/analysis/solvers/BisectionSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BisectionSolver.java
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BisectionSolver.java
 @@ -69,7 +69,7 @@ public class BisectionSolver extends UnivariateRealSolverImpl {
      /** {@inheritDoc} */
      public double solve(final UnivariateRealFunction f, double min, double max, double initial)

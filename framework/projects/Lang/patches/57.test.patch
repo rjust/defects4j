@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/LocaleUtilsTest.java b/org/apache/commons/lang/LocaleUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/LocaleUtilsTest.java b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
 index 76cba2f..d1dd7f5 100644
---- a/org/apache/commons/lang/LocaleUtilsTest.java
-+++ b/org/apache/commons/lang/LocaleUtilsTest.java
+--- a/src/test/org/apache/commons/lang/LocaleUtilsTest.java
++++ b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
 @@ -75,13 +75,6 @@ public class LocaleUtilsTest extends TestCase {
          return suite;
      }

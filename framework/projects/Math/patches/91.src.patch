@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/fraction/Fraction.java b/org/apache/commons/math/fraction/Fraction.java
+diff --git a/src/java/org/apache/commons/math/fraction/Fraction.java b/src/java/org/apache/commons/math/fraction/Fraction.java
 index d6d2f18..fa396fb 100644
---- a/org/apache/commons/math/fraction/Fraction.java
-+++ b/org/apache/commons/math/fraction/Fraction.java
+--- a/src/java/org/apache/commons/math/fraction/Fraction.java
++++ b/src/java/org/apache/commons/math/fraction/Fraction.java
 @@ -256,9 +256,20 @@ public class Fraction extends Number implements Comparable<Fraction> {
       *         than <tt>object</tt>, 0 if they are equal.
       */

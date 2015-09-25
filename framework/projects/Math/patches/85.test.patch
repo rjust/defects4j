@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
+diff --git a/src/test/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java b/src/test/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
 index e87094f..9afd18e 100644
---- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
-+++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
+--- a/src/test/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
++++ b/src/test/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtilsTest.java
 @@ -17,12 +17,13 @@
  
  package org.apache.commons.math.analysis.solvers;
@@ -34,10 +34,10 @@ index e87094f..9afd18e 100644
      public void testBadParameters() throws MathException {
          try { // null function
              UnivariateRealSolverUtils.bracket(null, 1.5, 0, 2.0);
-diff --git a/org/apache/commons/math/distribution/NormalDistributionTest.java b/org/apache/commons/math/distribution/NormalDistributionTest.java
+diff --git a/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java b/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
 index 8f3433c..dd607f3 100644
---- a/org/apache/commons/math/distribution/NormalDistributionTest.java
-+++ b/org/apache/commons/math/distribution/NormalDistributionTest.java
+--- a/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
++++ b/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
 @@ -17,8 +17,6 @@
  
  package org.apache.commons.math.distribution;

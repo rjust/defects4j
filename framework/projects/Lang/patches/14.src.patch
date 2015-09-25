@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtils.java b/org/apache/commons/lang3/StringUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/StringUtils.java b/src/main/java/org/apache/commons/lang3/StringUtils.java
 index 4733b7e..98319bf 100644
---- a/org/apache/commons/lang3/StringUtils.java
-+++ b/org/apache/commons/lang3/StringUtils.java
+--- a/src/main/java/org/apache/commons/lang3/StringUtils.java
++++ b/src/main/java/org/apache/commons/lang3/StringUtils.java
 @@ -779,16 +779,7 @@ public class StringUtils {
       * @since 3.0 Changed signature from equals(String, String) to equals(CharSequence, CharSequence)
       */

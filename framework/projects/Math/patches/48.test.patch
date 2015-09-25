@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java b/src/test/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
 index db09897..fea0abc 100644
---- a/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
-+++ b/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
+--- a/src/test/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
++++ b/src/test/java/org/apache/commons/math/analysis/solvers/RegulaFalsiSolverTest.java
 @@ -18,7 +18,7 @@
  package org.apache.commons.math.analysis.solvers;
  

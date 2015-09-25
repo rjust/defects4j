@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/AnalyzePrototypeProperties.java b/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
+diff --git a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
 index 4472638..2b966b5 100644
---- a/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
-+++ b/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
+--- a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
++++ b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
 @@ -313,9 +313,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
  
      private boolean isPrototypePropertyAssign(Node assign) {

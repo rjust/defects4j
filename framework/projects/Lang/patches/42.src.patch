@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/Entities.java b/org/apache/commons/lang/Entities.java
+diff --git a/src/java/org/apache/commons/lang/Entities.java b/src/java/org/apache/commons/lang/Entities.java
 index 0d8f7f4..900e1a8 100644
---- a/org/apache/commons/lang/Entities.java
-+++ b/org/apache/commons/lang/Entities.java
+--- a/src/java/org/apache/commons/lang/Entities.java
++++ b/src/java/org/apache/commons/lang/Entities.java
 @@ -825,15 +825,10 @@ class Entities {
      public void escape(Writer writer, String str) throws IOException {
          int len = str.length();

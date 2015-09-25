@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java b/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java b/src/test/java/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
 index 71f6ecb..8652af3 100644
---- a/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
-+++ b/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/direct/MultiDirectionalTest.java
 @@ -17,19 +17,24 @@
  
  package org.apache.commons.math.optimization.direct;

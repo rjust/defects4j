@@ -1,8 +1,8 @@
-diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
-index a127604..afa75d7 100644
---- a/org/joda/time/DateTimeZone.java
-+++ b/org/joda/time/DateTimeZone.java
-@@ -276,17 +258,14 @@ public abstract class DateTimeZone implements Serializable {
+diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
+index a127604..7d1719b 100644
+--- a/src/main/java/org/joda/time/DateTimeZone.java
++++ b/src/main/java/org/joda/time/DateTimeZone.java
+@@ -276,17 +276,14 @@ public abstract class DateTimeZone implements Serializable {
          if (hoursOffset < -23 || hoursOffset > 23) {
              throw new IllegalArgumentException("Hours out of range: " + hoursOffset);
          }

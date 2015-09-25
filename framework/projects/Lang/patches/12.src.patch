@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/RandomStringUtils.java b/org/apache/commons/lang3/RandomStringUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/RandomStringUtils.java b/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
 index a799057..f27fb6d 100644
---- a/org/apache/commons/lang3/RandomStringUtils.java
-+++ b/org/apache/commons/lang3/RandomStringUtils.java
+--- a/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
++++ b/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
 @@ -227,20 +227,13 @@ public class RandomStringUtils {
          } else if (count < 0) {
              throw new IllegalArgumentException("Requested random string length " + count + " is less than 0.");

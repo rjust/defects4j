@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/builder/EqualsBuilderTest.java b/org/apache/commons/lang/builder/EqualsBuilderTest.java
+diff --git a/src/test/org/apache/commons/lang/builder/EqualsBuilderTest.java b/src/test/org/apache/commons/lang/builder/EqualsBuilderTest.java
 index 3455561..57c6459 100644
---- a/org/apache/commons/lang/builder/EqualsBuilderTest.java
-+++ b/org/apache/commons/lang/builder/EqualsBuilderTest.java
+--- a/src/test/org/apache/commons/lang/builder/EqualsBuilderTest.java
++++ b/src/test/org/apache/commons/lang/builder/EqualsBuilderTest.java
 @@ -16,7 +16,6 @@
   */
  package org.apache.commons.lang.builder;

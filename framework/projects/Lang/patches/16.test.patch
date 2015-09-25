@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 index 8d7e75c..0b2d454 100644
---- a/org/apache/commons/lang3/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 @@ -193,10 +193,8 @@ public class NumberUtilsTest {
          assertEquals("createNumber(String) 6 failed", Long.valueOf(12345), NumberUtils.createNumber("12345l"));
          assertEquals("createNumber(String) 7 failed", Float.valueOf("-1234.5"), NumberUtils.createNumber("-1234.5"));

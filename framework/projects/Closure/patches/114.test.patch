@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NameAnalyzerTest.java b/com/google/javascript/jscomp/NameAnalyzerTest.java
+diff --git a/test/com/google/javascript/jscomp/NameAnalyzerTest.java b/test/com/google/javascript/jscomp/NameAnalyzerTest.java
 index 857491b..0bc5ae4 100644
---- a/com/google/javascript/jscomp/NameAnalyzerTest.java
-+++ b/com/google/javascript/jscomp/NameAnalyzerTest.java
+--- a/test/com/google/javascript/jscomp/NameAnalyzerTest.java
++++ b/test/com/google/javascript/jscomp/NameAnalyzerTest.java
 @@ -1232,18 +1232,6 @@ public class NameAnalyzerTest extends CompilerTestCase {
          "");
    }

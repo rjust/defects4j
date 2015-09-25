@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/distribution/PoissonDistributionTest.java b/org/apache/commons/math/distribution/PoissonDistributionTest.java
+diff --git a/src/test/java/org/apache/commons/math/distribution/PoissonDistributionTest.java b/src/test/java/org/apache/commons/math/distribution/PoissonDistributionTest.java
 index a02d1bb..06f455e 100644
---- a/org/apache/commons/math/distribution/PoissonDistributionTest.java
-+++ b/org/apache/commons/math/distribution/PoissonDistributionTest.java
+--- a/src/test/java/org/apache/commons/math/distribution/PoissonDistributionTest.java
++++ b/src/test/java/org/apache/commons/math/distribution/PoissonDistributionTest.java
 @@ -18,7 +18,6 @@ package org.apache.commons.math.distribution;
  
  import org.apache.commons.math.MathException;

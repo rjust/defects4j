@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java b/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
+diff --git a/src/test/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java b/src/test/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
 index 6bb7d4f..2d302bc 100644
---- a/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
-+++ b/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
+--- a/src/test/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
++++ b/src/test/org/apache/commons/math/linear/CholeskyDecompositionImplTest.java
 @@ -17,9 +17,6 @@
  
  package org.apache.commons.math.linear;

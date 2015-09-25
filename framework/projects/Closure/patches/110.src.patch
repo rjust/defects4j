@@ -1,8 +1,8 @@
-diff --git a/com/google/javascript/jscomp/ScopedAliases.java b/com/google/javascript/jscomp/ScopedAliases.java
-index fbd46d3..3a771c9 100644
---- a/com/google/javascript/jscomp/ScopedAliases.java
-+++ b/com/google/javascript/jscomp/ScopedAliases.java
-@@ -355,7 +354,6 @@ class ScopedAliases implements HotSwapCompilerPass {
+diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
+index fbd46d3..5028d3a 100644
+--- a/src/com/google/javascript/jscomp/ScopedAliases.java
++++ b/src/com/google/javascript/jscomp/ScopedAliases.java
+@@ -355,7 +355,6 @@ class ScopedAliases implements HotSwapCompilerPass {
          Node n = v.getNode();
          Node parent = n.getParent();
          boolean isVar = parent.isVar();
@@ -10,7 +10,7 @@ index fbd46d3..3a771c9 100644
          if (isVar && n.getFirstChild() != null && n.getFirstChild().isQualifiedName()) {
            recordAlias(v);
          } else if (v.isBleedingFunction()) {
-@@ -364,14 +362,10 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -364,14 +363,10 @@ class ScopedAliases implements HotSwapCompilerPass {
          } else if (parent.getType() == Token.LP) {
            // Parameters of the scope function also get a BAD_PARAMETERS
            // error.
@@ -28,7 +28,7 @@ index fbd46d3..3a771c9 100644
            String name = n.getString();
            int nameCount = scopedAliasNames.count(name);
            scopedAliasNames.add(name);
-@@ -380,33 +374,6 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -380,33 +375,6 @@ class ScopedAliases implements HotSwapCompilerPass {
  
            compiler.ensureLibraryInjected("base");
  
@@ -62,7 +62,7 @@ index fbd46d3..3a771c9 100644
            // Add $jscomp.scope.name = EXPR;
            // Make sure we copy over all the jsdoc and debug info.
            if (value != null || v.getJSDocInfo() != null) {
-@@ -418,12 +385,7 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -418,12 +386,7 @@ class ScopedAliases implements HotSwapCompilerPass {
                  .useSourceInfoIfMissingFromForTree(n);
              NodeUtil.setDebugInformation(
                  newDecl.getFirstChild().getFirstChild(), n, name);
@@ -76,7 +76,7 @@ index fbd46d3..3a771c9 100644
            }
  
            // Rewrite "var name = EXPR;" to "var name = $jscomp.scope.name;"
-@@ -433,7 +395,7 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -433,7 +396,7 @@ class ScopedAliases implements HotSwapCompilerPass {
  
            recordAlias(v);
          } else {
@@ -85,10 +85,10 @@ index fbd46d3..3a771c9 100644
            report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
          }
        }
-diff --git a/com/google/javascript/rhino/Node.java b/com/google/javascript/rhino/Node.java
+diff --git a/src/com/google/javascript/rhino/Node.java b/src/com/google/javascript/rhino/Node.java
 index 6a3e9e0..558a3aa 100644
---- a/com/google/javascript/rhino/Node.java
-+++ b/com/google/javascript/rhino/Node.java
+--- a/src/com/google/javascript/rhino/Node.java
++++ b/src/com/google/javascript/rhino/Node.java
 @@ -551,10 +551,6 @@ public class Node implements Cloneable, Serializable {
        return null;
      }

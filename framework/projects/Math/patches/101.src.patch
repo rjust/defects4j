@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/complex/ComplexFormat.java b/org/apache/commons/math/complex/ComplexFormat.java
+diff --git a/src/java/org/apache/commons/math/complex/ComplexFormat.java b/src/java/org/apache/commons/math/complex/ComplexFormat.java
 index 0757d9b..c22d873 100644
---- a/org/apache/commons/math/complex/ComplexFormat.java
-+++ b/org/apache/commons/math/complex/ComplexFormat.java
+--- a/src/java/org/apache/commons/math/complex/ComplexFormat.java
++++ b/src/java/org/apache/commons/math/complex/ComplexFormat.java
 @@ -374,9 +374,7 @@ public class ComplexFormat extends Format implements Serializable {
          int n = getImaginaryCharacter().length();
          startIndex = pos.getIndex();

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java b/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java b/src/main/java/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
 index 952e565..aa14ce6 100644
---- a/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
-+++ b/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
+--- a/src/main/java/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java
 @@ -143,22 +143,18 @@ public class MultiStartUnivariateRealOptimizer<FUNC extends UnivariateRealFuncti
                                                   final GoalType goal,
                                                   final double min, final double max)

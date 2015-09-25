@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+diff --git a/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 index 954ad7c..8066185 100644
---- a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+--- a/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
++++ b/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 @@ -64,18 +64,6 @@ public class SimplexSolverTest {
          assertEquals(57.0, solution.getValue(), 0.0);
      }

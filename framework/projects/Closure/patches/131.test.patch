@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java b/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java b/test/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
 index 755cb01..e3055d3 100644
---- a/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
-+++ b/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
+--- a/test/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
++++ b/test/com/google/javascript/jscomp/ConvertToDottedPropertiesTest.java
 @@ -54,8 +54,6 @@ public class ConvertToDottedPropertiesTest extends CompilerTestCase {
      testSame("a[$]");
      testSame("a[p()]");

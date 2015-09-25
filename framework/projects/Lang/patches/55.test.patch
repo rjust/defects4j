@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/StopWatchTest.java b/org/apache/commons/lang/time/StopWatchTest.java
+diff --git a/src/test/org/apache/commons/lang/time/StopWatchTest.java b/src/test/org/apache/commons/lang/time/StopWatchTest.java
 index bb7b412..46f063a 100644
---- a/org/apache/commons/lang/time/StopWatchTest.java
-+++ b/org/apache/commons/lang/time/StopWatchTest.java
+--- a/src/test/org/apache/commons/lang/time/StopWatchTest.java
++++ b/src/test/org/apache/commons/lang/time/StopWatchTest.java
 @@ -108,18 +108,6 @@ public class StopWatchTest extends TestCase {
          assertTrue(totalTime < 1300);
      }

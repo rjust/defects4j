@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/ClassUtils.java b/org/apache/commons/lang/ClassUtils.java
+diff --git a/src/java/org/apache/commons/lang/ClassUtils.java b/src/java/org/apache/commons/lang/ClassUtils.java
 index 478b377..ebfd25a 100644
---- a/org/apache/commons/lang/ClassUtils.java
-+++ b/org/apache/commons/lang/ClassUtils.java
+--- a/src/java/org/apache/commons/lang/ClassUtils.java
++++ b/src/java/org/apache/commons/lang/ClassUtils.java
 @@ -188,24 +188,6 @@ public class ClassUtils {
              return StringUtils.EMPTY;
          }

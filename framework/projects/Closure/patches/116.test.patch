@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionInjectorTest.java b/com/google/javascript/jscomp/FunctionInjectorTest.java
+diff --git a/test/com/google/javascript/jscomp/FunctionInjectorTest.java b/test/com/google/javascript/jscomp/FunctionInjectorTest.java
 index 59f271e..4d684da 100644
---- a/com/google/javascript/jscomp/FunctionInjectorTest.java
-+++ b/com/google/javascript/jscomp/FunctionInjectorTest.java
+--- a/test/com/google/javascript/jscomp/FunctionInjectorTest.java
++++ b/test/com/google/javascript/jscomp/FunctionInjectorTest.java
 @@ -23,7 +23,6 @@ import com.google.javascript.jscomp.FunctionInjector.CanInlineResult;
  import com.google.javascript.jscomp.FunctionInjector.InliningMode;
  import com.google.javascript.jscomp.NodeTraversal.Callback;
@@ -30,10 +30,10 @@ index 59f271e..4d684da 100644
    /**
     * Test case
     *
-diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 index a865b10..d8bb32f 100644
---- a/com/google/javascript/jscomp/InlineFunctionsTest.java
-+++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 @@ -30,14 +30,9 @@ public class InlineFunctionsTest extends CompilerTestCase {
    boolean assumeStrictThis = false;
    boolean assumeMinimumCapture = false;

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilder.java b/org/apache/commons/lang/text/StrBuilder.java
+diff --git a/src/java/org/apache/commons/lang/text/StrBuilder.java b/src/java/org/apache/commons/lang/text/StrBuilder.java
 index c7cbfb3..e202d73 100644
---- a/org/apache/commons/lang/text/StrBuilder.java
-+++ b/org/apache/commons/lang/text/StrBuilder.java
+--- a/src/java/org/apache/commons/lang/text/StrBuilder.java
++++ b/src/java/org/apache/commons/lang/text/StrBuilder.java
 @@ -1773,9 +1773,8 @@ public class StrBuilder implements Cloneable {
              return -1;
          }

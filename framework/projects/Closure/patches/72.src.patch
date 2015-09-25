@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionToBlockMutator.java b/com/google/javascript/jscomp/FunctionToBlockMutator.java
+diff --git a/src/com/google/javascript/jscomp/FunctionToBlockMutator.java b/src/com/google/javascript/jscomp/FunctionToBlockMutator.java
 index 3fee1a9..07a499f 100644
---- a/com/google/javascript/jscomp/FunctionToBlockMutator.java
-+++ b/com/google/javascript/jscomp/FunctionToBlockMutator.java
+--- a/src/com/google/javascript/jscomp/FunctionToBlockMutator.java
++++ b/src/com/google/javascript/jscomp/FunctionToBlockMutator.java
 @@ -148,9 +148,6 @@ class FunctionToBlockMutator {
                  idSupplier,
                  "inline_",
@@ -12,10 +12,10 @@ index 3fee1a9..07a499f 100644
    }
  
    static class LabelNameSupplier implements Supplier<String> {
-diff --git a/com/google/javascript/jscomp/RenameLabels.java b/com/google/javascript/jscomp/RenameLabels.java
+diff --git a/src/com/google/javascript/jscomp/RenameLabels.java b/src/com/google/javascript/jscomp/RenameLabels.java
 index 28e52ee..bb89efd 100644
---- a/com/google/javascript/jscomp/RenameLabels.java
-+++ b/com/google/javascript/jscomp/RenameLabels.java
+--- a/src/com/google/javascript/jscomp/RenameLabels.java
++++ b/src/com/google/javascript/jscomp/RenameLabels.java
 @@ -111,6 +111,10 @@ final class RenameLabels implements CompilerPass {
      // inner scope, so a new namespace is created each time a scope is entered.
      final Deque<LabelNamespace> namespaceStack = Lists.newLinkedList();

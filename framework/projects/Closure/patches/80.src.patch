@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
 index dfcd3eb..477d444 100644
---- a/com/google/javascript/jscomp/NodeUtil.java
-+++ b/com/google/javascript/jscomp/NodeUtil.java
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
 @@ -1258,8 +1258,6 @@ public final class NodeUtil {
        case Token.INSTANCEOF:
        // Inversion

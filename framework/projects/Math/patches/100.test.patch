@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java b/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
+diff --git a/src/test/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java b/src/test/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
 index 24f0f50..4d15b4b 100644
---- a/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
-+++ b/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
+--- a/src/test/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
++++ b/src/test/org/apache/commons/math/estimation/GaussNewtonEstimatorTest.java
 @@ -448,44 +448,6 @@ public class GaussNewtonEstimatorTest
  
    }

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+diff --git a/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
 index d6785b0..4493c8d 100644
---- a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
-+++ b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+--- a/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
++++ b/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
 @@ -285,7 +285,7 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
    }
  

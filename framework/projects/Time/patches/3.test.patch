@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestMutableDateTime_Adds.java b/org/joda/time/TestMutableDateTime_Adds.java
+diff --git a/src/test/java/org/joda/time/TestMutableDateTime_Adds.java b/src/test/java/org/joda/time/TestMutableDateTime_Adds.java
 index 97228fc..a10e75d 100644
---- a/org/joda/time/TestMutableDateTime_Adds.java
-+++ b/org/joda/time/TestMutableDateTime_Adds.java
+--- a/src/test/java/org/joda/time/TestMutableDateTime_Adds.java
++++ b/src/test/java/org/joda/time/TestMutableDateTime_Adds.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2013 Stephen Colebourne
@@ -213,10 +213,10 @@ index 97228fc..a10e75d 100644
 -    }
 -
  }
-diff --git a/org/joda/time/TestMutableDateTime_Sets.java b/org/joda/time/TestMutableDateTime_Sets.java
+diff --git a/src/test/java/org/joda/time/TestMutableDateTime_Sets.java b/src/test/java/org/joda/time/TestMutableDateTime_Sets.java
 index aab5bf3..00e6abf 100644
---- a/org/joda/time/TestMutableDateTime_Sets.java
-+++ b/org/joda/time/TestMutableDateTime_Sets.java
+--- a/src/test/java/org/joda/time/TestMutableDateTime_Sets.java
++++ b/src/test/java/org/joda/time/TestMutableDateTime_Sets.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2013 Stephen Colebourne

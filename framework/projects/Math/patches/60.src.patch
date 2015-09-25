@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/distribution/NormalDistributionImpl.java b/org/apache/commons/math/distribution/NormalDistributionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/distribution/NormalDistributionImpl.java b/src/main/java/org/apache/commons/math/distribution/NormalDistributionImpl.java
 index 0d7ce7d..456555b 100644
---- a/org/apache/commons/math/distribution/NormalDistributionImpl.java
-+++ b/org/apache/commons/math/distribution/NormalDistributionImpl.java
+--- a/src/main/java/org/apache/commons/math/distribution/NormalDistributionImpl.java
++++ b/src/main/java/org/apache/commons/math/distribution/NormalDistributionImpl.java
 @@ -114,20 +114,26 @@ public class NormalDistributionImpl extends AbstractContinuousDistribution
  
      /**

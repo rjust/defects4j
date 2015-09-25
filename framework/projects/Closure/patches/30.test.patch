@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+diff --git a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 index d3eeb7d..839e00e 100644
---- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+--- a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 @@ -25,7 +25,6 @@ import com.google.javascript.rhino.Node;
  public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
  

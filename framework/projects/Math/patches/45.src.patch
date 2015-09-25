@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/linear/OpenMapRealMatrix.java b/org/apache/commons/math/linear/OpenMapRealMatrix.java
-index f05c878..4369db7 100644
---- a/org/apache/commons/math/linear/OpenMapRealMatrix.java
-+++ b/org/apache/commons/math/linear/OpenMapRealMatrix.java
-@@ -47,11 +46,6 @@ public class OpenMapRealMatrix extends AbstractRealMatrix
+diff --git a/src/main/java/org/apache/commons/math/linear/OpenMapRealMatrix.java b/src/main/java/org/apache/commons/math/linear/OpenMapRealMatrix.java
+index f05c878..174eda6 100644
+--- a/src/main/java/org/apache/commons/math/linear/OpenMapRealMatrix.java
++++ b/src/main/java/org/apache/commons/math/linear/OpenMapRealMatrix.java
+@@ -47,11 +47,6 @@ public class OpenMapRealMatrix extends AbstractRealMatrix
       */
      public OpenMapRealMatrix(int rowDimension, int columnDimension) {
          super(rowDimension, columnDimension);

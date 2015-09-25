@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilderTest.java b/org/apache/commons/lang/text/StrBuilderTest.java
+diff --git a/src/test/org/apache/commons/lang/text/StrBuilderTest.java b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 index 900b922..f17b138 100644
---- a/org/apache/commons/lang/text/StrBuilderTest.java
-+++ b/org/apache/commons/lang/text/StrBuilderTest.java
+--- a/src/test/org/apache/commons/lang/text/StrBuilderTest.java
++++ b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 @@ -1728,17 +1728,4 @@ public class StrBuilderTest extends TestCase {
          assertEquals(new StringBuffer("junit").toString(), sb.toStringBuffer().toString());
      }

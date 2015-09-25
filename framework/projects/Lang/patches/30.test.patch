@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java b/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java b/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
 index d336c70..234a455 100644
---- a/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
-+++ b/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
+--- a/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
++++ b/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
 @@ -29,407 +29,28 @@ import junit.framework.TestCase;
   * @version $Id$
   */

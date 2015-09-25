@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilder.java b/org/apache/commons/lang/text/StrBuilder.java
+diff --git a/src/java/org/apache/commons/lang/text/StrBuilder.java b/src/java/org/apache/commons/lang/text/StrBuilder.java
 index 4c14509..886d424 100644
---- a/org/apache/commons/lang/text/StrBuilder.java
-+++ b/org/apache/commons/lang/text/StrBuilder.java
+--- a/src/java/org/apache/commons/lang/text/StrBuilder.java
++++ b/src/java/org/apache/commons/lang/text/StrBuilder.java
 @@ -881,7 +881,7 @@ public class StrBuilder implements Cloneable {
              String str = (obj == null ? getNullText() : obj.toString());
              int strLen = str.length();

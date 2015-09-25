@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/univariate/BrentOptimizer.java b/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/univariate/BrentOptimizer.java b/src/main/java/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
 index 46c4afa..4544d6e 100644
---- a/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
-+++ b/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
+--- a/src/main/java/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/univariate/BrentOptimizer.java
 @@ -41,10 +41,7 @@ public class BrentOptimizer extends AbstractUnivariateRealOptimizer {
       * Construct a solver.
       */

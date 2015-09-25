@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/field/FieldUtils.java b/org/joda/time/field/FieldUtils.java
+diff --git a/src/main/java/org/joda/time/field/FieldUtils.java b/src/main/java/org/joda/time/field/FieldUtils.java
 index 1e045b2..55ed991 100644
---- a/org/joda/time/field/FieldUtils.java
-+++ b/org/joda/time/field/FieldUtils.java
+--- a/src/main/java/org/joda/time/field/FieldUtils.java
++++ b/src/main/java/org/joda/time/field/FieldUtils.java
 @@ -118,7 +118,8 @@ public class FieldUtils {
      public static int safeMultiply(int val1, int val2) {
          long total = (long) val1 * (long) val2;

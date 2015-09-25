@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/FastDateFormatTest.java b/org/apache/commons/lang/time/FastDateFormatTest.java
+diff --git a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
 index 878dd34..e7394f0 100644
---- a/org/apache/commons/lang/time/FastDateFormatTest.java
-+++ b/org/apache/commons/lang/time/FastDateFormatTest.java
+--- a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
++++ b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
 @@ -132,46 +132,6 @@ public class FastDateFormatTest extends TestCase {
          }
      }

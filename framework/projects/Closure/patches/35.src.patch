@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeInference.java b/com/google/javascript/jscomp/TypeInference.java
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
 index fb6be1e..13e1092 100644
---- a/com/google/javascript/jscomp/TypeInference.java
-+++ b/com/google/javascript/jscomp/TypeInference.java
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
 @@ -1118,8 +1118,21 @@ class TypeInference
  
      ObjectType constraintObj =

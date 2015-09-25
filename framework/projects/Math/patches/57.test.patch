@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java b/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
 index 0bb0420..33b2d8a 100644
---- a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
-+++ b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+--- a/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
++++ b/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
 @@ -20,9 +20,7 @@ package org.apache.commons.math.stat.clustering;
  import static org.junit.Assert.assertEquals;
  import static org.junit.Assert.assertTrue;

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java b/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
+diff --git a/src/main/java/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java b/src/main/java/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
 index a161737..a4acf2f 100644
---- a/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
-+++ b/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
+--- a/src/main/java/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
++++ b/src/main/java/org/apache/commons/math3/stat/inference/MannWhitneyUTest.java
 @@ -170,11 +170,11 @@ public class MannWhitneyUTest {
                                               final int n2)
          throws ConvergenceException, MaxCountExceededException {

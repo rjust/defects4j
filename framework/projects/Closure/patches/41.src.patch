@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionTypeBuilder.java b/com/google/javascript/jscomp/FunctionTypeBuilder.java
-index e20d788..e2f0f43 100644
---- a/com/google/javascript/jscomp/FunctionTypeBuilder.java
-+++ b/com/google/javascript/jscomp/FunctionTypeBuilder.java
+diff --git a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
+index e20d788..ff6667a 100644
+--- a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
++++ b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
 @@ -287,12 +287,6 @@ final class FunctionTypeBuilder {
                codingConvention.isVarArgsParameter(currentParam));
          }

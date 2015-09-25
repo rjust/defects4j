@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/FDistribution.java b/org/apache/commons/math3/distribution/FDistribution.java
+diff --git a/src/main/java/org/apache/commons/math3/distribution/FDistribution.java b/src/main/java/org/apache/commons/math3/distribution/FDistribution.java
 index e301e2e..8b0993c 100644
---- a/org/apache/commons/math3/distribution/FDistribution.java
-+++ b/org/apache/commons/math3/distribution/FDistribution.java
+--- a/src/main/java/org/apache/commons/math3/distribution/FDistribution.java
++++ b/src/main/java/org/apache/commons/math3/distribution/FDistribution.java
 @@ -272,7 +272,7 @@ public class FDistribution extends AbstractRealDistribution {
  
      /** {@inheritDoc} */
@@ -11,10 +11,10 @@ index e301e2e..8b0993c 100644
      }
  
      /** {@inheritDoc} */
-diff --git a/org/apache/commons/math3/distribution/UniformRealDistribution.java b/org/apache/commons/math3/distribution/UniformRealDistribution.java
+diff --git a/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java b/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java
 index 0d279de..5d32f6e 100644
---- a/org/apache/commons/math3/distribution/UniformRealDistribution.java
-+++ b/org/apache/commons/math3/distribution/UniformRealDistribution.java
+--- a/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java
++++ b/src/main/java/org/apache/commons/math3/distribution/UniformRealDistribution.java
 @@ -181,7 +181,7 @@ public class UniformRealDistribution extends AbstractRealDistribution {
  
      /** {@inheritDoc} */

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java b/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java b/src/test/java/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
 index bc70699..cbb8135 100644
---- a/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
-+++ b/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
+--- a/src/test/java/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
++++ b/src/test/java/org/apache/commons/math/stat/descriptive/UnivariateStatisticAbstractTest.java
 @@ -113,35 +113,6 @@ public abstract class UnivariateStatisticAbstractTest {
          System.arraycopy(testArray, testArray.length - 5, arrayEnd, 0, 5);
          Assert.assertEquals(stat.evaluate(arrayEnd), stat.evaluate(testArray, testArray.length - 5, 5), 0);

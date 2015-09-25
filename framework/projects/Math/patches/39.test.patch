@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 index f622998..7d5e9b7 100644
---- a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 @@ -177,32 +177,6 @@ public class DormandPrince853IntegratorTest {
    }
  
@@ -35,10 +35,10 @@ index f622998..7d5e9b7 100644
    public void testBackward()
        {
  
-diff --git a/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java b/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
 index f516b2b..0be4a0c 100644
---- a/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/GraggBulirschStoerIntegratorTest.java
 @@ -256,32 +256,6 @@ public class GraggBulirschStoerIntegratorTest {
    }
  

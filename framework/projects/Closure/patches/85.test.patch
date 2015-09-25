@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+diff --git a/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java b/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
 index f79beeb..6807925 100644
---- a/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
-+++ b/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
+--- a/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
++++ b/test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java
 @@ -233,42 +233,11 @@ public class UnreachableCodeEliminationTest extends CompilerTestCase {
  
    public void testCascadedRemovalOfUnlessUnconditonalJumps() {

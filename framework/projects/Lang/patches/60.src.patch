@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilder.java b/org/apache/commons/lang/text/StrBuilder.java
+diff --git a/src/java/org/apache/commons/lang/text/StrBuilder.java b/src/java/org/apache/commons/lang/text/StrBuilder.java
 index 886d424..c7cbfb3 100644
---- a/org/apache/commons/lang/text/StrBuilder.java
-+++ b/org/apache/commons/lang/text/StrBuilder.java
+--- a/src/java/org/apache/commons/lang/text/StrBuilder.java
++++ b/src/java/org/apache/commons/lang/text/StrBuilder.java
 @@ -1670,7 +1670,7 @@ public class StrBuilder implements Cloneable {
       */
      public boolean contains(char ch) {

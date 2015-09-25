@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/fraction/FractionTest.java b/org/apache/commons/math3/fraction/FractionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 index 37e22d1..c112ab7 100644
---- a/org/apache/commons/math3/fraction/FractionTest.java
-+++ b/org/apache/commons/math3/fraction/FractionTest.java
+--- a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
++++ b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 @@ -60,7 +60,6 @@ public class FractionTest {
          } catch (MathArithmeticException ex) {
              // success

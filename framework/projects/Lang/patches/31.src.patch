@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtils.java b/org/apache/commons/lang3/StringUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/StringUtils.java b/src/main/java/org/apache/commons/lang3/StringUtils.java
 index 4aac02d..e60c449 100644
---- a/org/apache/commons/lang3/StringUtils.java
-+++ b/org/apache/commons/lang3/StringUtils.java
+--- a/src/main/java/org/apache/commons/lang3/StringUtils.java
++++ b/src/main/java/org/apache/commons/lang3/StringUtils.java
 @@ -1437,32 +1437,20 @@ public class StringUtils {
       * <code>false</code> if no match or null input
       * @since 2.4

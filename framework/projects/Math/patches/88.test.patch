@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+diff --git a/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 index 8066185..f658a95 100644
---- a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+--- a/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
++++ b/src/test/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 @@ -17,38 +17,19 @@
  
  package org.apache.commons.math.optimization.linear;

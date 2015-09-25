@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
-index e6398f6..5b76415 100644
---- a/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
-+++ b/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
+diff --git a/src/java/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java b/src/java/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
+index e6398f6..bf3e4bf 100644
+--- a/src/java/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
++++ b/src/java/org/apache/commons/math/analysis/solvers/UnivariateRealSolverUtils.java
 @@ -195,7 +195,7 @@ public class UnivariateRealSolverUtils {
          } while ((fa * fb > 0.0) && (numIterations < maximumIterations) && 
                  ((a > lowerBound) || (b < upperBound)));

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/LooseTypeCheckTest.java b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 index 94ee207..f88a769 100644
---- a/com/google/javascript/jscomp/LooseTypeCheckTest.java
-+++ b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 @@ -18,7 +18,6 @@ package com.google.javascript.jscomp;
  
  import com.google.common.base.Joiner;
@@ -52,10 +52,10 @@ index 94ee207..f88a769 100644
      }
    }
  
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index ad43d21..fc24441 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -18,7 +18,6 @@ package com.google.javascript.jscomp;
  
  import com.google.common.base.Joiner;

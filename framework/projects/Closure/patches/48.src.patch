@@ -1,8 +1,8 @@
-diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
-index 09aba12..b29ff9c 100644
---- a/com/google/javascript/jscomp/TypedScopeCreator.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreator.java
-@@ -1196,22 +1194,14 @@ final class TypedScopeCreator implements ScopeCreator {
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 09aba12..c436ea9 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1196,22 +1196,14 @@ final class TypedScopeCreator implements ScopeCreator {
       * Check if the given node is a property of a name in the global scope.
       */
      private boolean isQnameRootedInGlobalScope(Node n) {
@@ -27,7 +27,7 @@ index 09aba12..b29ff9c 100644
      }
  
      /**
-@@ -1518,14 +1484,11 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -1518,14 +1510,11 @@ final class TypedScopeCreator implements ScopeCreator {
              || FunctionTypeBuilder.isFunctionTypeDeclaration(info));
        }
  
@@ -46,7 +46,7 @@ index 09aba12..b29ff9c 100644
        }
  
        if (!inferred) {
-@@ -1546,7 +1509,8 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -1546,7 +1535,8 @@ final class TypedScopeCreator implements ScopeCreator {
          // If the property is already declared, the error will be
          // caught when we try to declare it in the current scope.
          defineSlot(n, parent, valueType, inferred);

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/FrequencyTest.java b/org/apache/commons/math/stat/FrequencyTest.java
+diff --git a/src/test/org/apache/commons/math/stat/FrequencyTest.java b/src/test/org/apache/commons/math/stat/FrequencyTest.java
 index b2e0b3a..cc8fd03 100644
---- a/org/apache/commons/math/stat/FrequencyTest.java
-+++ b/org/apache/commons/math/stat/FrequencyTest.java
+--- a/src/test/org/apache/commons/math/stat/FrequencyTest.java
++++ b/src/test/org/apache/commons/math/stat/FrequencyTest.java
 @@ -189,22 +189,6 @@ public final class FrequencyTest extends TestCase {
          }
      }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/fraction/BigFractionTest.java b/org/apache/commons/math3/fraction/BigFractionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/fraction/BigFractionTest.java b/src/test/java/org/apache/commons/math3/fraction/BigFractionTest.java
 index 71efb97..7b06ded 100644
---- a/org/apache/commons/math3/fraction/BigFractionTest.java
-+++ b/org/apache/commons/math3/fraction/BigFractionTest.java
+--- a/src/test/java/org/apache/commons/math3/fraction/BigFractionTest.java
++++ b/src/test/java/org/apache/commons/math3/fraction/BigFractionTest.java
 @@ -154,9 +154,6 @@ public class BigFractionTest {
          assertFraction(8, 13, new BigFraction(0.6152, 99));
          assertFraction(510, 829, new BigFraction(0.6152, 999));
@@ -12,10 +12,10 @@ index 71efb97..7b06ded 100644
      }
  
      @Test
-diff --git a/org/apache/commons/math3/fraction/FractionTest.java b/org/apache/commons/math3/fraction/FractionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 index 96b7c08..37e22d1 100644
---- a/org/apache/commons/math3/fraction/FractionTest.java
-+++ b/org/apache/commons/math3/fraction/FractionTest.java
+--- a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
++++ b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 @@ -129,9 +129,6 @@ public class FractionTest {
          assertFraction(8, 13,     new Fraction(0.6152,   99));
          assertFraction(510, 829,  new Fraction(0.6152,  999));

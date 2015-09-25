@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
 index 866c8fd..f6a4f28 100644
---- a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-+++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
 @@ -585,8 +585,8 @@ public class CMAESOptimizer
          // initialize sigma
          double[][] sigmaArray = new double[guess.length][1];

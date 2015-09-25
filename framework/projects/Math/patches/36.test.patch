@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/fraction/BigFractionTest.java b/org/apache/commons/math/fraction/BigFractionTest.java
+diff --git a/src/test/java/org/apache/commons/math/fraction/BigFractionTest.java b/src/test/java/org/apache/commons/math/fraction/BigFractionTest.java
 index f2fbe0d..42051ca 100644
---- a/org/apache/commons/math/fraction/BigFractionTest.java
-+++ b/org/apache/commons/math/fraction/BigFractionTest.java
+--- a/src/test/java/org/apache/commons/math/fraction/BigFractionTest.java
++++ b/src/test/java/org/apache/commons/math/fraction/BigFractionTest.java
 @@ -198,30 +198,6 @@ public class BigFractionTest {
          Assert.assertEquals(1.0 / 3.0, second.doubleValue(), 0.0);
      }

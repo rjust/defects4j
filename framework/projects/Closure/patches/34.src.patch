@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
 index d50320a..83cdb42 100644
---- a/com/google/javascript/jscomp/CodeGenerator.java
-+++ b/com/google/javascript/jscomp/CodeGenerator.java
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
 @@ -100,6 +100,8 @@ class CodeGenerator {
            "Bad binary operator \"%s\": expected 2 arguments but got %s",
            opstr, childCount);
@@ -89,10 +89,10 @@ index d50320a..83cdb42 100644
    static boolean isSimpleNumber(String s) {
      int len = s.length();
      for (int index = 0; index < len; index++) {
-diff --git a/com/google/javascript/jscomp/CodePrinter.java b/com/google/javascript/jscomp/CodePrinter.java
+diff --git a/src/com/google/javascript/jscomp/CodePrinter.java b/src/com/google/javascript/jscomp/CodePrinter.java
 index 31c62d9..52dfa9b 100644
---- a/com/google/javascript/jscomp/CodePrinter.java
-+++ b/com/google/javascript/jscomp/CodePrinter.java
+--- a/src/com/google/javascript/jscomp/CodePrinter.java
++++ b/src/com/google/javascript/jscomp/CodePrinter.java
 @@ -331,7 +331,7 @@ class CodePrinter {
      @Override
      void appendOp(String op, boolean binOp) {

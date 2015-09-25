@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/Entities.java b/org/apache/commons/lang/Entities.java
+diff --git a/src/java/org/apache/commons/lang/Entities.java b/src/java/org/apache/commons/lang/Entities.java
 index a45e004..495c981 100644
---- a/org/apache/commons/lang/Entities.java
-+++ b/org/apache/commons/lang/Entities.java
+--- a/src/java/org/apache/commons/lang/Entities.java
++++ b/src/java/org/apache/commons/lang/Entities.java
 @@ -847,9 +847,6 @@ class Entities {
                              } else {
                                  entityValue = Integer.parseInt(entityName.substring(1));

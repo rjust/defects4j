@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/DateUtilsTest.java b/org/apache/commons/lang3/time/DateUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java b/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
 index 3fc737a..4fb8ec2 100644
---- a/org/apache/commons/lang3/time/DateUtilsTest.java
-+++ b/org/apache/commons/lang3/time/DateUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
 @@ -227,14 +227,6 @@ public class DateUtilsTest extends TestCase {
          cal2.set(2004, 6, 9, 13, 45, 0);
          cal2.set(Calendar.MILLISECOND, 0);

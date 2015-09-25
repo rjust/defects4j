@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/ClassUtilsTest.java b/org/apache/commons/lang3/ClassUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/ClassUtilsTest.java b/src/test/java/org/apache/commons/lang3/ClassUtilsTest.java
 index 010ea93..2ea74e7 100644
---- a/org/apache/commons/lang3/ClassUtilsTest.java
-+++ b/org/apache/commons/lang3/ClassUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/ClassUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/ClassUtilsTest.java
 @@ -906,9 +906,6 @@ public class ClassUtilsTest extends TestCase {
  
          assertTrue(Arrays.equals(new Class[] { String.class, Integer.class, Double.class },

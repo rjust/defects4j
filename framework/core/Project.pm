@@ -896,6 +896,9 @@ sub checkout_vid {
               " && git config user.email defects4j\@localhost 2>&1";
     Utils::exec_cmd($cmd, "Init local repository") or confess("Couldn't init local git repository!");
 
+    # Write program and version id of fixed program version to config file
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}f"});
+
     # Commit and tag the post-fix revision
     my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX;
     $cmd = "cd $work_dir" .
@@ -932,9 +935,6 @@ sub checkout_vid {
 
     # Write version-specific properties
     $self->_write_props($vid, $work_dir);
-
-    # Write program and version id of fixed program version to config file
-    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}f"});
 
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_FIXED;

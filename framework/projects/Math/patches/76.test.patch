@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/SingularValueSolverTest.java b/org/apache/commons/math/linear/SingularValueSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/SingularValueSolverTest.java b/src/test/java/org/apache/commons/math/linear/SingularValueSolverTest.java
 index a13652d..0416787 100644
---- a/org/apache/commons/math/linear/SingularValueSolverTest.java
-+++ b/org/apache/commons/math/linear/SingularValueSolverTest.java
+--- a/src/test/java/org/apache/commons/math/linear/SingularValueSolverTest.java
++++ b/src/test/java/org/apache/commons/math/linear/SingularValueSolverTest.java
 @@ -139,32 +139,6 @@ public class SingularValueSolverTest {
      }
  

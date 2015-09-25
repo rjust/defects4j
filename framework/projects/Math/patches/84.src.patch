@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/optimization/direct/MultiDirectional.java b/org/apache/commons/math/optimization/direct/MultiDirectional.java
-index 929560c..955d0d8 100644
---- a/org/apache/commons/math/optimization/direct/MultiDirectional.java
-+++ b/org/apache/commons/math/optimization/direct/MultiDirectional.java
-@@ -61,7 +60,6 @@ public class MultiDirectional extends DirectSearchOptimizer {
+diff --git a/src/main/java/org/apache/commons/math/optimization/direct/MultiDirectional.java b/src/main/java/org/apache/commons/math/optimization/direct/MultiDirectional.java
+index 929560c..e5c9c64 100644
+--- a/src/main/java/org/apache/commons/math/optimization/direct/MultiDirectional.java
++++ b/src/main/java/org/apache/commons/math/optimization/direct/MultiDirectional.java
+@@ -61,7 +61,6 @@ public class MultiDirectional extends DirectSearchOptimizer {
      protected void iterateSimplex(final Comparator<RealPointValuePair> comparator)
          throws FunctionEvaluationException, OptimizationException, IllegalArgumentException {
  
@@ -10,7 +10,7 @@ index 929560c..955d0d8 100644
          while (true) {
  
              incrementIterationsCounter();
-@@ -93,16 +91,6 @@ public class MultiDirectional extends DirectSearchOptimizer {
+@@ -93,16 +92,6 @@ public class MultiDirectional extends DirectSearchOptimizer {
                  return;
              }
  

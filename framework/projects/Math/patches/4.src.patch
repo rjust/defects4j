@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java b/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
+diff --git a/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java b/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
 index aad7b65..a146cb6 100644
---- a/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
-+++ b/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
+--- a/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
++++ b/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/SubLine.java
 @@ -111,9 +111,6 @@ public class SubLine {
  
          // compute the intersection on infinite line
@@ -12,10 +12,10 @@ index aad7b65..a146cb6 100644
  
          // check location of point with respect to first sub-line
          Location loc1 = remainingRegion.checkPoint(line.toSubSpace(v1D));
-diff --git a/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java b/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
+diff --git a/src/main/java/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java b/src/main/java/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
 index ea9e96a..a9d621a 100644
---- a/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
-+++ b/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
+--- a/src/main/java/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
++++ b/src/main/java/org/apache/commons/math3/geometry/euclidean/twod/SubLine.java
 @@ -115,9 +115,6 @@ public class SubLine extends AbstractSubHyperplane<Euclidean2D, Euclidean1D> {
  
          // compute the intersection on infinite line

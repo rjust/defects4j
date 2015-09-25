@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/fraction/ProperFractionFormat.java b/org/apache/commons/math/fraction/ProperFractionFormat.java
-index a98b665..5dfa386 100644
---- a/org/apache/commons/math/fraction/ProperFractionFormat.java
-+++ b/org/apache/commons/math/fraction/ProperFractionFormat.java
-@@ -161,12 +152,6 @@ public class ProperFractionFormat extends FractionFormat {
+diff --git a/src/java/org/apache/commons/math/fraction/ProperFractionFormat.java b/src/java/org/apache/commons/math/fraction/ProperFractionFormat.java
+index a98b665..30e5d1a 100644
+--- a/src/java/org/apache/commons/math/fraction/ProperFractionFormat.java
++++ b/src/java/org/apache/commons/math/fraction/ProperFractionFormat.java
+@@ -161,12 +161,6 @@ public class ProperFractionFormat extends FractionFormat {
              pos.setIndex(initialIndex);
              return null;
          }
@@ -15,7 +15,7 @@ index a98b665..5dfa386 100644
  
          // parse '/'
          int startIndex = pos.getIndex();
-@@ -200,12 +185,6 @@ public class ProperFractionFormat extends FractionFormat {
+@@ -200,12 +194,6 @@ public class ProperFractionFormat extends FractionFormat {
              pos.setIndex(initialIndex);
              return null;
          }

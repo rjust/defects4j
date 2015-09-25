@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/MinimizeExitPoints.java b/com/google/javascript/jscomp/MinimizeExitPoints.java
+diff --git a/src/com/google/javascript/jscomp/MinimizeExitPoints.java b/src/com/google/javascript/jscomp/MinimizeExitPoints.java
 index bc9befe..ae6cde2 100644
---- a/com/google/javascript/jscomp/MinimizeExitPoints.java
-+++ b/com/google/javascript/jscomp/MinimizeExitPoints.java
+--- a/src/com/google/javascript/jscomp/MinimizeExitPoints.java
++++ b/src/com/google/javascript/jscomp/MinimizeExitPoints.java
 @@ -134,10 +134,10 @@ class MinimizeExitPoints
          Node catchCodeBlock = catchNode.getLastChild();
          tryMinimizeExits(catchCodeBlock, exitType, labelName);

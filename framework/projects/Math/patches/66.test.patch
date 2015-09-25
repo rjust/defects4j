@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java b/src/test/java/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
 index a865bda..159588d 100644
---- a/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
-+++ b/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizerTest.java
 @@ -48,8 +48,8 @@ public class MultiStartUnivariateRealOptimizerTest {
              assertEquals(-1.0, f.value(optima[i]), 1.0e-10);
              assertEquals(f.value(optima[i]), optimaValues[i], 1.0e-10);
@@ -39,10 +39,10 @@ index a865bda..159588d 100644
 +        assertTrue(minimizer.getIterationCount() <= 140);
      }
  }
-diff --git a/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java b/src/test/java/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
 index 176b9ad..9c73d21 100644
---- a/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
-+++ b/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/univariate/BrentOptimizerTest.java
 @@ -29,7 +29,6 @@ import org.apache.commons.math.analysis.SinFunction;
  import org.apache.commons.math.analysis.UnivariateRealFunction;
  import org.apache.commons.math.optimization.GoalType;

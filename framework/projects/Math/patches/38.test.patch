@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java b/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java b/src/test/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
 index fe64f9e..7eb7742 100644
---- a/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
-+++ b/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizerTest.java
 @@ -231,60 +231,6 @@ public class BOBYQAOptimizerTest {
                  1e-13, 1e-6, 2000, expected);
      }

@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-index b54cb37..d01cd15 100644
---- a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-+++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-@@ -416,7 +414,7 @@ public class CMAESOptimizer
+diff --git a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+index b54cb37..83c337b 100644
+--- a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+@@ -416,7 +416,7 @@ public class CMAESOptimizer
                      bestValue = bestFitness;
                      lastResult = optimum;
                      optimum = new PointValuePair(
@@ -11,7 +11,7 @@ index b54cb37..d01cd15 100644
                              isMinimize ? bestFitness : -bestFitness);
                      if (getConvergenceChecker() != null && lastResult != null) {
                          if (getConvergenceChecker().converged(iterations, optimum, lastResult)) {
-@@ -915,16 +913,6 @@ public class CMAESOptimizer
+@@ -915,16 +915,6 @@ public class CMAESOptimizer
  
          /**
           * @param x Normalized objective variables.

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ScopedAliasesTest.java b/com/google/javascript/jscomp/ScopedAliasesTest.java
+diff --git a/test/com/google/javascript/jscomp/ScopedAliasesTest.java b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
 index 30aa190..9150a1c 100644
---- a/com/google/javascript/jscomp/ScopedAliasesTest.java
-+++ b/com/google/javascript/jscomp/ScopedAliasesTest.java
+--- a/test/com/google/javascript/jscomp/ScopedAliasesTest.java
++++ b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
 @@ -494,7 +494,7 @@ public class ScopedAliasesTest extends CompilerTestCase {
    }
  

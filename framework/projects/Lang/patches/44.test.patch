@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/NumberUtilsTest.java b/org/apache/commons/lang/NumberUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/NumberUtilsTest.java b/src/test/org/apache/commons/lang/NumberUtilsTest.java
 index 19aa348..f95727b 100644
---- a/org/apache/commons/lang/NumberUtilsTest.java
-+++ b/org/apache/commons/lang/NumberUtilsTest.java
+--- a/src/test/org/apache/commons/lang/NumberUtilsTest.java
++++ b/src/test/org/apache/commons/lang/NumberUtilsTest.java
 @@ -520,17 +520,5 @@ public class NumberUtilsTest extends TestCase {
              fail( "Error calling public no-arg constructor" );
          }

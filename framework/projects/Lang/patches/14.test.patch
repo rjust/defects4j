@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java b/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java b/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
 index 63fe774..334188d 100644
---- a/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
-+++ b/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
+--- a/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
++++ b/src/test/java/org/apache/commons/lang3/StringUtilsEqualsIndexOfTest.java
 @@ -19,8 +19,6 @@ package org.apache.commons.lang3;
  import java.util.Locale;
  

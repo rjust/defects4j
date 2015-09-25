@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/chrono/TestAll.java b/org/joda/time/chrono/TestAll.java
+diff --git a/src/test/java/org/joda/time/chrono/TestAll.java b/src/test/java/org/joda/time/chrono/TestAll.java
 index f1fcb39..0db38e5 100644
---- a/org/joda/time/chrono/TestAll.java
-+++ b/org/joda/time/chrono/TestAll.java
+--- a/src/test/java/org/joda/time/chrono/TestAll.java
++++ b/src/test/java/org/joda/time/chrono/TestAll.java
 @@ -47,7 +47,6 @@ public class TestAll extends TestCase {
          suite.addTest(TestJulianChronology.suite());
          suite.addTest(TestISOChronology.suite());
@@ -10,10 +10,10 @@ index f1fcb39..0db38e5 100644
          
          return suite;
      }
-diff --git a/org/joda/time/chrono/TestGJDate.java b/org/joda/time/chrono/TestGJDate.java
+diff --git a/src/test/java/org/joda/time/chrono/TestGJDate.java b/src/test/java/org/joda/time/chrono/TestGJDate.java
 deleted file mode 100644
 index ba2a1fb..0000000
---- a/org/joda/time/chrono/TestGJDate.java
+--- a/src/test/java/org/joda/time/chrono/TestGJDate.java
 +++ /dev/null
 @@ -1,138 +0,0 @@
 -/*

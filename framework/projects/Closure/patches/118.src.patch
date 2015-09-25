@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/DisambiguateProperties.java b/com/google/javascript/jscomp/DisambiguateProperties.java
+diff --git a/src/com/google/javascript/jscomp/DisambiguateProperties.java b/src/com/google/javascript/jscomp/DisambiguateProperties.java
 index 01293c9..5224861 100644
---- a/com/google/javascript/jscomp/DisambiguateProperties.java
-+++ b/com/google/javascript/jscomp/DisambiguateProperties.java
+--- a/src/com/google/javascript/jscomp/DisambiguateProperties.java
++++ b/src/com/google/javascript/jscomp/DisambiguateProperties.java
 @@ -488,13 +488,9 @@ class DisambiguateProperties<T> implements CompilerPass {
       * Processes a OBJECTLIT node.
       */

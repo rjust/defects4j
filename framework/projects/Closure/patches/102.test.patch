@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CompilerRunnerTest.java b/com/google/javascript/jscomp/CompilerRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CompilerRunnerTest.java b/test/com/google/javascript/jscomp/CompilerRunnerTest.java
 index b9d7037..c51444f 100644
---- a/com/google/javascript/jscomp/CompilerRunnerTest.java
-+++ b/com/google/javascript/jscomp/CompilerRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CompilerRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CompilerRunnerTest.java
 @@ -40,11 +40,7 @@ public class CompilerRunnerTest extends TestCase {
    /** Externs for the test */
    private final JSSourceFile[] externs = new JSSourceFile[] {

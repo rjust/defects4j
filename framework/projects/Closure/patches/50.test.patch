@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java b/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java b/test/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
 index d0f0daf..3a6e5b7 100644
---- a/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java
 @@ -74,22 +74,17 @@ public class PeepholeReplaceKnownMethodsTest extends CompilerTestCase {
      fold("x = [,,'a'].join(',')", "x = ',,a'");
    }

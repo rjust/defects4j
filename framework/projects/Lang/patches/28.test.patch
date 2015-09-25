@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java b/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java b/src/test/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java
 deleted file mode 100644
 index 3ea7138..0000000
---- a/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java
+--- a/src/test/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaperTest.java
 +++ /dev/null
 @@ -1,36 +0,0 @@
 -/*

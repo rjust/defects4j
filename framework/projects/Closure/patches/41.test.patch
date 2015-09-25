@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/LooseTypeCheckTest.java b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 index 152da7e..4c481b4 100644
---- a/com/google/javascript/jscomp/LooseTypeCheckTest.java
-+++ b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 @@ -1775,7 +1775,10 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
          "/** @constructor \n * @extends {F} */ " +
          "function G() {}" +
@@ -14,10 +14,10 @@ index 152da7e..4c481b4 100644
    }
  
    public void testMethodInference7() throws Exception {
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index 7544dde..1161365 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -2030,7 +2030,10 @@ public class TypeCheckTest extends CompilerTypeTestCase {
          "/** @constructor \n * @extends {F} */ " +
          "function G() {}" +

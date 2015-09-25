@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
 index 43a296f..7abdbae 100644
---- a/com/google/javascript/jscomp/NodeUtil.java
-+++ b/com/google/javascript/jscomp/NodeUtil.java
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
 @@ -105,9 +105,6 @@ public final class NodeUtil {
          // ignoring side-effects
          return TernaryValue.TRUE;
@@ -35,10 +35,10 @@ index 43a296f..7abdbae 100644
      }
  
      return TernaryValue.UNKNOWN;
-diff --git a/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java b/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java b/src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
 index d8be2fd..a9c1250 100644
---- a/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
-+++ b/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
+--- a/src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
++++ b/src/com/google/javascript/jscomp/PeepholeRemoveDeadCode.java
 @@ -134,7 +134,7 @@ class PeepholeRemoveDeadCode extends AbstractPeepholeOptimization {
     * @return the replacement node, if changed, or the original if not
     */

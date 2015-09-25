@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/Fraction.java b/org/apache/commons/lang3/math/Fraction.java
+diff --git a/src/main/java/org/apache/commons/lang3/math/Fraction.java b/src/main/java/org/apache/commons/lang3/math/Fraction.java
 index bf15a49..15272e5 100644
---- a/org/apache/commons/lang3/math/Fraction.java
-+++ b/org/apache/commons/lang3/math/Fraction.java
+--- a/src/main/java/org/apache/commons/lang3/math/Fraction.java
++++ b/src/main/java/org/apache/commons/lang3/math/Fraction.java
 @@ -579,15 +579,8 @@ public final class Fraction extends Number implements Comparable<Fraction> {
       * @return the greatest common divisor, never zero
       */

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java b/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
+diff --git a/src/test/java/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java b/src/test/java/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
 index c693b14..1c41113 100644
---- a/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
-+++ b/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
+--- a/src/test/java/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
++++ b/src/test/java/org/apache/commons/math3/distribution/RealDistributionAbstractTest.java
 @@ -338,38 +338,6 @@ public abstract class RealDistributionAbstractTest {
                                      integrationTestPoints.get(i)), tol);
          }

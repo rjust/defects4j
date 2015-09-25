@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java b/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java b/src/test/java/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
 index e2bde90..845a2bd 100644
---- a/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
-+++ b/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
+--- a/src/test/java/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
++++ b/src/test/java/org/apache/commons/lang3/text/ExtendedMessageFormatTest.java
 @@ -265,48 +265,6 @@ public class ExtendedMessageFormatTest extends TestCase {
      }
  

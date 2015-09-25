@@ -1,8 +1,8 @@
-diff --git a/org/joda/time/chrono/GJChronology.java b/org/joda/time/chrono/GJChronology.java
-index d1556f5..960fe47 100644
---- a/org/joda/time/chrono/GJChronology.java
-+++ b/org/joda/time/chrono/GJChronology.java
-@@ -193,10 +192,6 @@ public final class GJChronology extends AssembledChronology {
+diff --git a/src/main/java/org/joda/time/chrono/GJChronology.java b/src/main/java/org/joda/time/chrono/GJChronology.java
+index d1556f5..b970403 100644
+--- a/src/main/java/org/joda/time/chrono/GJChronology.java
++++ b/src/main/java/org/joda/time/chrono/GJChronology.java
+@@ -193,10 +193,6 @@ public final class GJChronology extends AssembledChronology {
              cutoverInstant = DEFAULT_CUTOVER;
          } else {
              cutoverInstant = gregorianCutover.toInstant();
@@ -13,7 +13,7 @@ index d1556f5..960fe47 100644
          }
  
          GJChronology chrono;
-@@ -980,17 +975,6 @@ public final class GJChronology extends AssembledChronology {
+@@ -980,17 +976,6 @@ public final class GJChronology extends AssembledChronology {
                  if (instant < iCutover) {
                      // Only adjust if gap fully crossed.
                      if (instant + iGapDuration < iCutover) {
@@ -31,7 +31,7 @@ index d1556f5..960fe47 100644
                          instant = gregorianToJulian(instant);
                      }
                  }
-@@ -1013,17 +996,6 @@ public final class GJChronology extends AssembledChronology {
+@@ -1013,17 +998,6 @@ public final class GJChronology extends AssembledChronology {
                  if (instant < iCutover) {
                      // Only adjust if gap fully crossed.
                      if (instant + iGapDuration < iCutover) {

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 index 19ee30a..7fcbb1b 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 @@ -787,22 +787,6 @@ public class CommandLineRunnerTest extends TestCase {
      test("var let", RhinoErrorReporter.PARSE_ERROR);
    }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/fraction/Fraction.java b/org/apache/commons/math3/fraction/Fraction.java
+diff --git a/src/main/java/org/apache/commons/math3/fraction/Fraction.java b/src/main/java/org/apache/commons/math3/fraction/Fraction.java
 index 08d3b95..f81ff0a 100644
---- a/org/apache/commons/math3/fraction/Fraction.java
-+++ b/org/apache/commons/math3/fraction/Fraction.java
+--- a/src/main/java/org/apache/commons/math3/fraction/Fraction.java
++++ b/src/main/java/org/apache/commons/math3/fraction/Fraction.java
 @@ -178,7 +178,7 @@ public class Fraction
          long overflow = Integer.MAX_VALUE;
          double r0 = value;

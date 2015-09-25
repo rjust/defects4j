@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/RandomStringUtilsTest.java b/org/apache/commons/lang3/RandomStringUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/RandomStringUtilsTest.java b/src/test/java/org/apache/commons/lang3/RandomStringUtilsTest.java
 index a7f57bf..6c7b0c1 100644
---- a/org/apache/commons/lang3/RandomStringUtilsTest.java
-+++ b/org/apache/commons/lang3/RandomStringUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/RandomStringUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/RandomStringUtilsTest.java
 @@ -130,17 +130,6 @@ public class RandomStringUtilsTest extends junit.framework.TestCase {
          assertEquals("aaa", RandomStringUtils.random(3,0,0,false,false,new char[]{'a'},new Random(seed)));
      }

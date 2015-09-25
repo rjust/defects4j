@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeInferenceTest.java b/com/google/javascript/jscomp/TypeInferenceTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeInferenceTest.java b/test/com/google/javascript/jscomp/TypeInferenceTest.java
 index 91119b5..a370ae2 100644
---- a/com/google/javascript/jscomp/TypeInferenceTest.java
-+++ b/com/google/javascript/jscomp/TypeInferenceTest.java
+--- a/test/com/google/javascript/jscomp/TypeInferenceTest.java
++++ b/test/com/google/javascript/jscomp/TypeInferenceTest.java
 @@ -44,7 +44,6 @@ import com.google.javascript.rhino.jstype.JSType;
  import com.google.javascript.rhino.jstype.JSTypeNative;
  import com.google.javascript.rhino.jstype.JSTypeRegistry;

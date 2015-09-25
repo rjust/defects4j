@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/ArrayUtils.java b/org/apache/commons/lang3/ArrayUtils.java
+diff --git a/src/java/org/apache/commons/lang3/ArrayUtils.java b/src/java/org/apache/commons/lang3/ArrayUtils.java
 index b9413e8..9011bff 100644
---- a/org/apache/commons/lang3/ArrayUtils.java
-+++ b/org/apache/commons/lang3/ArrayUtils.java
+--- a/src/java/org/apache/commons/lang3/ArrayUtils.java
++++ b/src/java/org/apache/commons/lang3/ArrayUtils.java
 @@ -2956,19 +2956,10 @@ public class ArrayUtils {
          } else if (array2 == null) {
              return clone(array1);

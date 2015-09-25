@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/format/DateTimeFormatterBuilder.java b/org/joda/time/format/DateTimeFormatterBuilder.java
+diff --git a/src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java b/src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java
 index ebb4b08..558a586 100644
---- a/org/joda/time/format/DateTimeFormatterBuilder.java
-+++ b/org/joda/time/format/DateTimeFormatterBuilder.java
+--- a/src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java
++++ b/src/main/java/org/joda/time/format/DateTimeFormatterBuilder.java
 @@ -2539,18 +2539,12 @@ public class DateTimeFormatterBuilder {
  
          public int parseInto(DateTimeParserBucket bucket, String text, int position) {

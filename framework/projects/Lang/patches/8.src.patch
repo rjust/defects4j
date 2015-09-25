@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDatePrinter.java b/org/apache/commons/lang3/time/FastDatePrinter.java
-index c952309..cc1af9d 100644
---- a/org/apache/commons/lang3/time/FastDatePrinter.java
-+++ b/org/apache/commons/lang3/time/FastDatePrinter.java
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
+index c952309..15be67b 100644
+--- a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
++++ b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
 @@ -1093,8 +1093,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
       * <p>Inner class to output a time zone name.</p>
       */
@@ -24,7 +24,7 @@ index c952309..cc1af9d 100644
              mStandard = getTimeZoneDisplay(timeZone, false, style, locale);
              mDaylight = getTimeZoneDisplay(timeZone, true, style, locale);
          }
-@@ -1129,12 +1124,10 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+@@ -1129,12 +1127,10 @@ public class FastDatePrinter implements DatePrinter, Serializable {
           */
          @Override
          public void appendTo(StringBuffer buffer, Calendar calendar) {

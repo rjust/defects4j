@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDateTimeZoneCutover.java b/org/joda/time/TestDateTimeZoneCutover.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 index e128457..1dae4b5 100644
---- a/org/joda/time/TestDateTimeZoneCutover.java
-+++ b/org/joda/time/TestDateTimeZoneCutover.java
+--- a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
++++ b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 @@ -659,11 +659,6 @@ public class TestDateTimeZoneCutover extends TestCase {
          doTest_getOffsetFromLocal(11, 4, 8, 0, "2007-11-04T08:00:00.000-05:00", ZONE_NEW_YORK);
      }

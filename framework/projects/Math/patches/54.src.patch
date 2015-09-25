@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/dfp/Dfp.java b/org/apache/commons/math/dfp/Dfp.java
-index 54aabc4..04e6613 100644
---- a/org/apache/commons/math/dfp/Dfp.java
-+++ b/org/apache/commons/math/dfp/Dfp.java
+diff --git a/src/main/java/org/apache/commons/math/dfp/Dfp.java b/src/main/java/org/apache/commons/math/dfp/Dfp.java
+index 54aabc4..bb35cb4 100644
+--- a/src/main/java/org/apache/commons/math/dfp/Dfp.java
++++ b/src/main/java/org/apache/commons/math/dfp/Dfp.java
 @@ -269,10 +269,6 @@ public class Dfp implements FieldElement<Dfp> {
          if (exponent == -1023) {
              // Zero or sub-normal

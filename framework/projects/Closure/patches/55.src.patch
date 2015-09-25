@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionRewriter.java b/com/google/javascript/jscomp/FunctionRewriter.java
+diff --git a/src/com/google/javascript/jscomp/FunctionRewriter.java b/src/com/google/javascript/jscomp/FunctionRewriter.java
 index 9d8ebc3..0166c6e 100644
---- a/com/google/javascript/jscomp/FunctionRewriter.java
-+++ b/com/google/javascript/jscomp/FunctionRewriter.java
+--- a/src/com/google/javascript/jscomp/FunctionRewriter.java
++++ b/src/com/google/javascript/jscomp/FunctionRewriter.java
 @@ -113,11 +113,6 @@ class FunctionRewriter implements CompilerPass {
      return (root != null) ? root.removeFirstChild() : null;
    }

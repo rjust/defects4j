@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/Period.java b/org/joda/time/Period.java
+diff --git a/src/main/java/org/joda/time/Period.java b/src/main/java/org/joda/time/Period.java
 index 5ea67a7..5b36bc5 100644
---- a/org/joda/time/Period.java
-+++ b/org/joda/time/Period.java
+--- a/src/main/java/org/joda/time/Period.java
++++ b/src/main/java/org/joda/time/Period.java
 @@ -1614,30 +1614,23 @@ public final class Period
       * @since 1.5
       */

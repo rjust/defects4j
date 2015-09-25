@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckGlobalNamesTest.java b/com/google/javascript/jscomp/CheckGlobalNamesTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckGlobalNamesTest.java b/test/com/google/javascript/jscomp/CheckGlobalNamesTest.java
 index 46152b9..1050872 100644
---- a/com/google/javascript/jscomp/CheckGlobalNamesTest.java
-+++ b/com/google/javascript/jscomp/CheckGlobalNamesTest.java
+--- a/test/com/google/javascript/jscomp/CheckGlobalNamesTest.java
++++ b/test/com/google/javascript/jscomp/CheckGlobalNamesTest.java
 @@ -336,13 +336,4 @@ public class CheckGlobalNamesTest extends CompilerTestCase {
          "SubFoo.superClazz();",
           UNDEFINED_NAME_WARNING);
@@ -16,10 +16,10 @@ index 46152b9..1050872 100644
 -        "}");
 -  }
  }
-diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 index 4a812ce..5102087 100644
---- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
-+++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 @@ -1689,13 +1689,4 @@ public class CollapsePropertiesTest extends CompilerTestCase {
          "  log(namespace$Param$optParam);\n" +
          "}");

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CompilerTestCase.java b/com/google/javascript/jscomp/CompilerTestCase.java
+diff --git a/test/com/google/javascript/jscomp/CompilerTestCase.java b/test/com/google/javascript/jscomp/CompilerTestCase.java
 index b412416..d0cf9fc 100644
---- a/com/google/javascript/jscomp/CompilerTestCase.java
-+++ b/com/google/javascript/jscomp/CompilerTestCase.java
+--- a/test/com/google/javascript/jscomp/CompilerTestCase.java
++++ b/test/com/google/javascript/jscomp/CompilerTestCase.java
 @@ -88,11 +88,6 @@ public abstract class CompilerTestCase extends TestCase  {
    private boolean acceptES5 = true;
  
@@ -60,10 +60,10 @@ index b412416..d0cf9fc 100644
          assertFalse(
              "compiler.reportCodeChange() was called " +
              "even though nothing changed",
-diff --git a/com/google/javascript/jscomp/NormalizeTest.java b/com/google/javascript/jscomp/NormalizeTest.java
+diff --git a/test/com/google/javascript/jscomp/NormalizeTest.java b/test/com/google/javascript/jscomp/NormalizeTest.java
 index adbfc8d..fe21010 100644
---- a/com/google/javascript/jscomp/NormalizeTest.java
-+++ b/com/google/javascript/jscomp/NormalizeTest.java
+--- a/test/com/google/javascript/jscomp/NormalizeTest.java
++++ b/test/com/google/javascript/jscomp/NormalizeTest.java
 @@ -381,11 +381,6 @@ public class NormalizeTest extends CompilerTestCase {
           "}");
    }
@@ -85,10 +85,10 @@ index adbfc8d..fe21010 100644
      Node n = getLastCompiler().getRoot();
  
      Set<Node> constantNodes = findNodesWithProperty(n, Node.IS_CONSTANT_NAME);
-diff --git a/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java b/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
+diff --git a/test/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java b/test/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
 index a5d110c..6e481c0 100644
---- a/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
-+++ b/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
+--- a/test/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
++++ b/test/com/google/javascript/jscomp/ObjectPropertyStringPreprocessTest.java
 @@ -31,11 +31,6 @@ public class ObjectPropertyStringPreprocessTest extends CompilerTestCase {
      return 1;
    }
@@ -101,10 +101,10 @@ index a5d110c..6e481c0 100644
    public void testDeclaration() {
      test("goog.testing.ObjectPropertyString = function() {}",
           "JSCompiler_ObjectPropertyString = function() {}");
-diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/VarCheckTest.java b/test/com/google/javascript/jscomp/VarCheckTest.java
 index 438c349..d62d33d 100644
---- a/com/google/javascript/jscomp/VarCheckTest.java
-+++ b/com/google/javascript/jscomp/VarCheckTest.java
+--- a/test/com/google/javascript/jscomp/VarCheckTest.java
++++ b/test/com/google/javascript/jscomp/VarCheckTest.java
 @@ -39,7 +39,6 @@ public class VarCheckTest extends CompilerTestCase {
    @Override
    protected void setUp() throws Exception {

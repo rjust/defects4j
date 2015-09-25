@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CompilerOptions.java b/com/google/javascript/jscomp/CompilerOptions.java
+diff --git a/src/com/google/javascript/jscomp/CompilerOptions.java b/src/com/google/javascript/jscomp/CompilerOptions.java
 index 233ab47..4fecfbe 100644
---- a/com/google/javascript/jscomp/CompilerOptions.java
-+++ b/com/google/javascript/jscomp/CompilerOptions.java
+--- a/src/com/google/javascript/jscomp/CompilerOptions.java
++++ b/src/com/google/javascript/jscomp/CompilerOptions.java
 @@ -1150,8 +1150,8 @@ public class CompilerOptions implements Serializable, Cloneable {
  
    /**
@@ -12,10 +12,10 @@ index 233ab47..4fecfbe 100644
    public void setRemoveUnusedVariable(Reach reach) {
      setRemoveUnusedVariables(reach);
    }
-diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 index f9943a1..215f036 100644
---- a/com/google/javascript/jscomp/TypedScopeCreator.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -408,18 +408,6 @@ final class TypedScopeCreator implements ScopeCreator {
      private final List<Node> nonExternFunctions = Lists.newArrayList();
  

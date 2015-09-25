@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/NumberUtils.java b/org/apache/commons/lang/NumberUtils.java
+diff --git a/src/java/org/apache/commons/lang/NumberUtils.java b/src/java/org/apache/commons/lang/NumberUtils.java
 index c5ca8cd..18a05ef 100644
---- a/org/apache/commons/lang/NumberUtils.java
-+++ b/org/apache/commons/lang/NumberUtils.java
+--- a/src/java/org/apache/commons/lang/NumberUtils.java
++++ b/src/java/org/apache/commons/lang/NumberUtils.java
 @@ -142,9 +142,6 @@ public final class NumberUtils {
          if (val.length() == 0) {
              throw new NumberFormatException("\"\" is not a valid number.");

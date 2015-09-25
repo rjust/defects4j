@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java b/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 index 469d9ed..9d43a54 100644
---- a/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/linear/SimplexSolverTest.java
 @@ -57,22 +57,7 @@ public class SimplexSolverTest {
        RealPointValuePair solution = new SimplexSolver().optimize(f, constraints, GoalType.MAXIMIZE, true);
        assertEquals(6.9, solution.getValue(), .0000001);

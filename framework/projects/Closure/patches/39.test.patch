@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ExternExportsPassTest.java b/com/google/javascript/jscomp/ExternExportsPassTest.java
+diff --git a/test/com/google/javascript/jscomp/ExternExportsPassTest.java b/test/com/google/javascript/jscomp/ExternExportsPassTest.java
 index 0c23a69..0e0dc0a 100755
---- a/com/google/javascript/jscomp/ExternExportsPassTest.java
-+++ b/com/google/javascript/jscomp/ExternExportsPassTest.java
+--- a/test/com/google/javascript/jscomp/ExternExportsPassTest.java
++++ b/test/com/google/javascript/jscomp/ExternExportsPassTest.java
 @@ -397,22 +397,6 @@ public class ExternExportsPassTest extends TestCase {
        assertEquals(0, libraryCompileResult.errors.length);
    }
@@ -25,10 +25,10 @@ index 0c23a69..0e0dc0a 100755
    private void compileAndCheck(String js, String expected) {
      Result result = compileAndExportExterns(js);
  
-diff --git a/com/google/javascript/rhino/jstype/RecordTypeTest.java b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
 index 4afd4db..4840532 100644
---- a/com/google/javascript/rhino/jstype/RecordTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
 @@ -56,8 +56,6 @@ public class RecordTypeTest extends BaseJSTypeTestCase {
      loop.setReferencedType(record);
      assertEquals("{loop: {...}, number: number, string: string}",

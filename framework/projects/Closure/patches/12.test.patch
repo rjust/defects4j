@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+diff --git a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 index 6e5c400..103262c 100644
---- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+--- a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 @@ -500,24 +500,6 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
          "function f(x) { var a    ; var b = x; var c    ; x = 3; return b; }");
    }
@@ -27,10 +27,10 @@ index 6e5c400..103262c 100644
    private void noInline(String input) {
      inline(input, input);
    }
-diff --git a/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java b/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
+diff --git a/test/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java b/test/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
 index c6086fe..7924eb3 100644
---- a/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
-+++ b/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
+--- a/test/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
++++ b/test/com/google/javascript/jscomp/MaybeReachingVariableUseTest.java
 @@ -108,13 +108,6 @@ public class MaybeReachingVariableUseTest extends TestCase {
      assertMatch("var x = [], foo; D: for (x in foo) { U:x }");
    }

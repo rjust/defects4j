@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/lang/time/FastDateFormat.java b/org/apache/commons/lang/time/FastDateFormat.java
-index 756290f..ac96c58 100644
---- a/org/apache/commons/lang/time/FastDateFormat.java
-+++ b/org/apache/commons/lang/time/FastDateFormat.java
-@@ -137,11 +134,11 @@ public class FastDateFormat extends Format {
+diff --git a/src/java/org/apache/commons/lang/time/FastDateFormat.java b/src/java/org/apache/commons/lang/time/FastDateFormat.java
+index 756290f..bd43159 100644
+--- a/src/java/org/apache/commons/lang/time/FastDateFormat.java
++++ b/src/java/org/apache/commons/lang/time/FastDateFormat.java
+@@ -137,11 +137,11 @@ public class FastDateFormat extends Format {
      /**
       * The parsed rules.
       */
@@ -16,7 +16,7 @@ index 756290f..ac96c58 100644
  
      //-----------------------------------------------------------------------
      /**
-@@ -1016,13 +1013,6 @@ public class FastDateFormat extends Format {
+@@ -1016,13 +1016,6 @@ public class FastDateFormat extends Format {
      public String toString() {
          return "FastDateFormat[" + mPattern + "]";
      }

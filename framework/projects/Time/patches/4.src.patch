@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/Partial.java b/org/joda/time/Partial.java
-index 8e8e603..aaf0a0f 100644
---- a/org/joda/time/Partial.java
-+++ b/org/joda/time/Partial.java
+diff --git a/src/main/java/org/joda/time/Partial.java b/src/main/java/org/joda/time/Partial.java
+index 8e8e603..c0512db 100644
+--- a/src/main/java/org/joda/time/Partial.java
++++ b/src/main/java/org/joda/time/Partial.java
 @@ -459,9 +459,8 @@ public final class Partial
              newValues[i] = value;
              System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1);

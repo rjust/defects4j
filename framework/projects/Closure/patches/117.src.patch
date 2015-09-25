@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeValidator.java b/com/google/javascript/jscomp/TypeValidator.java
+diff --git a/src/com/google/javascript/jscomp/TypeValidator.java b/src/com/google/javascript/jscomp/TypeValidator.java
 index f57ae14..f70a52c 100644
---- a/com/google/javascript/jscomp/TypeValidator.java
-+++ b/com/google/javascript/jscomp/TypeValidator.java
+--- a/src/com/google/javascript/jscomp/TypeValidator.java
++++ b/src/com/google/javascript/jscomp/TypeValidator.java
 @@ -722,21 +722,6 @@ class TypeValidator {
     *     to an Object type, if possible.
     */

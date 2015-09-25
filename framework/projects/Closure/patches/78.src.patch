@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 index 1afb7a8..0df495d 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+--- a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 @@ -32,6 +32,10 @@ import java.util.Locale;
   */
  class PeepholeFoldConstants extends AbstractPeepholeOptimization {

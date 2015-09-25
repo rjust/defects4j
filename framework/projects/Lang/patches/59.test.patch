@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java b/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
+diff --git a/src/test/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java b/src/test/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
 index 8feb53c..c154913 100644
---- a/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
-+++ b/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
+--- a/src/test/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
++++ b/src/test/org/apache/commons/lang/text/StrBuilderAppendInsertTest.java
 @@ -596,13 +596,6 @@ public class StrBuilderAppendInsertTest extends TestCase {
          assertEquals("null-", sb.toString());
      }

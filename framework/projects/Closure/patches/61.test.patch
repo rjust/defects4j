@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java b/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java b/test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
 index 58acc52..9423741 100644
---- a/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
-+++ b/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeRemoveDeadCodeTest.java
 @@ -16,14 +16,21 @@
  
  package com.google.javascript.jscomp;

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/fitting/PolynomialFitterTest.java b/org/apache/commons/math3/fitting/PolynomialFitterTest.java
+diff --git a/src/test/java/org/apache/commons/math3/fitting/PolynomialFitterTest.java b/src/test/java/org/apache/commons/math3/fitting/PolynomialFitterTest.java
 index 73603cd..b695ee6 100644
---- a/org/apache/commons/math3/fitting/PolynomialFitterTest.java
-+++ b/org/apache/commons/math3/fitting/PolynomialFitterTest.java
+--- a/src/test/java/org/apache/commons/math3/fitting/PolynomialFitterTest.java
++++ b/src/test/java/org/apache/commons/math3/fitting/PolynomialFitterTest.java
 @@ -220,33 +220,6 @@ public class PolynomialFitterTest {
          checkUnsolvableProblem(new GaussNewtonOptimizer(true, new SimpleVectorValueChecker(1e-15, 1e-15)), false);
      }

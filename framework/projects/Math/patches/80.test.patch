@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/EigenDecompositionImplTest.java b/org/apache/commons/math/linear/EigenDecompositionImplTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/EigenDecompositionImplTest.java b/src/test/java/org/apache/commons/math/linear/EigenDecompositionImplTest.java
 index 3bee919..2ed181f 100644
---- a/org/apache/commons/math/linear/EigenDecompositionImplTest.java
-+++ b/org/apache/commons/math/linear/EigenDecompositionImplTest.java
+--- a/src/test/java/org/apache/commons/math/linear/EigenDecompositionImplTest.java
++++ b/src/test/java/org/apache/commons/math/linear/EigenDecompositionImplTest.java
 @@ -142,52 +142,6 @@ public class EigenDecompositionImplTest extends TestCase {
  
      }

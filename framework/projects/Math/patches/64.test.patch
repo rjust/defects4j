@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/general/MinpackTest.java b/org/apache/commons/math/optimization/general/MinpackTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java b/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
 index 620df2d..59467b2 100644
---- a/org/apache/commons/math/optimization/general/MinpackTest.java
-+++ b/org/apache/commons/math/optimization/general/MinpackTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
 @@ -152,14 +152,14 @@ public class MinpackTest extends TestCase {
      minpackTest(new FreudensteinRothFunction(new double[] { 5.0, -20.0 },
                                               12432.833948863, 6.9988751744895,

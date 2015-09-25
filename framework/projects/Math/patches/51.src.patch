@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
 index b3a23a1..fde7172 100644
---- a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
 @@ -169,37 +169,25 @@ public abstract class BaseSecantSolver
  
              // Update the bounds with the new approximation.

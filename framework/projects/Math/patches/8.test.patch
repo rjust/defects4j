@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java b/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java b/src/test/java/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
 index cd639f6..1a7ef53 100644
---- a/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
-+++ b/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
+--- a/src/test/java/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
++++ b/src/test/java/org/apache/commons/math3/distribution/DiscreteRealDistributionTest.java
 @@ -16,15 +16,11 @@
   */
  package org.apache.commons.math3.distribution;

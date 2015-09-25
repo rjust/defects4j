@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ControlFlowAnalysis.java b/com/google/javascript/jscomp/ControlFlowAnalysis.java
+diff --git a/src/com/google/javascript/jscomp/ControlFlowAnalysis.java b/src/com/google/javascript/jscomp/ControlFlowAnalysis.java
 index 980deff..5c6927f 100644
---- a/com/google/javascript/jscomp/ControlFlowAnalysis.java
-+++ b/com/google/javascript/jscomp/ControlFlowAnalysis.java
+--- a/src/com/google/javascript/jscomp/ControlFlowAnalysis.java
++++ b/src/com/google/javascript/jscomp/ControlFlowAnalysis.java
 @@ -764,7 +764,7 @@ final class ControlFlowAnalysis implements Callback, CompilerPass {
          } else if (parent.getLastChild() == node){
            if (cfa != null) {

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodeConsumer.java b/com/google/javascript/jscomp/CodeConsumer.java
+diff --git a/src/com/google/javascript/jscomp/CodeConsumer.java b/src/com/google/javascript/jscomp/CodeConsumer.java
 index 3a66750..d9ff87a 100644
---- a/com/google/javascript/jscomp/CodeConsumer.java
-+++ b/com/google/javascript/jscomp/CodeConsumer.java
+--- a/src/com/google/javascript/jscomp/CodeConsumer.java
++++ b/src/com/google/javascript/jscomp/CodeConsumer.java
 @@ -238,7 +238,7 @@ abstract class CodeConsumer {
        add(" ");
      }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java b/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java b/src/test/java/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
 index 827180e..a5b31c6 100644
---- a/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
-+++ b/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/fitting/GaussianFitterTest.java
 @@ -17,11 +17,12 @@
  
  package org.apache.commons.math.optimization.fitting;

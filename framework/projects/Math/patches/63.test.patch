@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MathUtilsTest.java b/org/apache/commons/math/util/MathUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/math/util/MathUtilsTest.java b/src/test/java/org/apache/commons/math/util/MathUtilsTest.java
 index fa42e84..a2dc70b 100644
---- a/org/apache/commons/math/util/MathUtilsTest.java
-+++ b/org/apache/commons/math/util/MathUtilsTest.java
+--- a/src/test/java/org/apache/commons/math/util/MathUtilsTest.java
++++ b/src/test/java/org/apache/commons/math/util/MathUtilsTest.java
 @@ -447,18 +447,16 @@ public final class MathUtilsTest extends TestCase {
          assertFalse(MathUtils.equals(new double[] { 1d }, new double[0]));
          assertTrue(MathUtils.equals(new double[] { 1d }, new double[] { 1d }));

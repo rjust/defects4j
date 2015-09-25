@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDateTimeZone.java b/org/joda/time/TestDateTimeZone.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZone.java b/src/test/java/org/joda/time/TestDateTimeZone.java
 index 3b4221e..106363f 100644
---- a/org/joda/time/TestDateTimeZone.java
-+++ b/org/joda/time/TestDateTimeZone.java
+--- a/src/test/java/org/joda/time/TestDateTimeZone.java
++++ b/src/test/java/org/joda/time/TestDateTimeZone.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2013 Stephen Colebourne

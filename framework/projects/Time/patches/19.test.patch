@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDateTimeZoneCutover.java b/org/joda/time/TestDateTimeZoneCutover.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 index a7a5175..a62d624 100644
---- a/org/joda/time/TestDateTimeZoneCutover.java
-+++ b/org/joda/time/TestDateTimeZoneCutover.java
+--- a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
++++ b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 @@ -1246,35 +1246,14 @@ public class TestDateTimeZoneCutover extends TestCase {
  
      // ensure Summer time picked

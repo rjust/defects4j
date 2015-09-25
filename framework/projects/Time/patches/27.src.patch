@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/format/PeriodFormatterBuilder.java b/org/joda/time/format/PeriodFormatterBuilder.java
+diff --git a/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java b/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
 index f7c7738..f78830c 100644
---- a/org/joda/time/format/PeriodFormatterBuilder.java
-+++ b/org/joda/time/format/PeriodFormatterBuilder.java
+--- a/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
++++ b/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
 @@ -798,11 +798,9 @@ public class PeriodFormatterBuilder {
          int size = elementPairs.size();
          if (size >= 2 && elementPairs.get(0) instanceof Separator) {

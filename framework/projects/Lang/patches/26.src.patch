@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateFormat.java b/org/apache/commons/lang3/time/FastDateFormat.java
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java b/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
 index 95925fc..e30da2a 100644
---- a/org/apache/commons/lang3/time/FastDateFormat.java
-+++ b/org/apache/commons/lang3/time/FastDateFormat.java
+--- a/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
++++ b/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
 @@ -817,7 +817,7 @@ public class FastDateFormat extends Format {
       * @return the formatted string
       */

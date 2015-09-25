@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeInferenceTest.java b/com/google/javascript/jscomp/TypeInferenceTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeInferenceTest.java b/test/com/google/javascript/jscomp/TypeInferenceTest.java
 index 9269bff..3f097b7 100644
---- a/com/google/javascript/jscomp/TypeInferenceTest.java
-+++ b/com/google/javascript/jscomp/TypeInferenceTest.java
+--- a/test/com/google/javascript/jscomp/TypeInferenceTest.java
++++ b/test/com/google/javascript/jscomp/TypeInferenceTest.java
 @@ -996,11 +996,4 @@ public class TypeInferenceTest extends TestCase {
  
      assertEquals("{foo: (number|undefined)}", getType("y").toString());

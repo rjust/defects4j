@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java b/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
 index 4ebd1b0..9d43909 100644
---- a/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
-+++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
 @@ -350,8 +350,8 @@ public class CMAESOptimizerTest {
  
      @Test

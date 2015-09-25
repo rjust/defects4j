@@ -1,8 +1,8 @@
-diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
-index 936af02..c916cf8 100644
---- a/com/google/javascript/jscomp/parsing/IRFactory.java
-+++ b/com/google/javascript/jscomp/parsing/IRFactory.java
-@@ -249,8 +248,9 @@ class IRFactory {
+diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
+index 936af02..119bebf 100644
+--- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -249,8 +249,9 @@ class IRFactory {
     * Check to see if the given block comment looks like it should be JSDoc.
     */
    private void handleBlockComment(Comment comment) {

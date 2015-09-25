@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/complex/ComplexTest.java b/org/apache/commons/math/complex/ComplexTest.java
+diff --git a/src/test/org/apache/commons/math/complex/ComplexTest.java b/src/test/org/apache/commons/math/complex/ComplexTest.java
 index 61ff86f..4ba7a65 100644
---- a/org/apache/commons/math/complex/ComplexTest.java
-+++ b/org/apache/commons/math/complex/ComplexTest.java
+--- a/src/test/org/apache/commons/math/complex/ComplexTest.java
++++ b/src/test/org/apache/commons/math/complex/ComplexTest.java
 @@ -690,10 +690,4 @@ public class ComplexTest extends TestCase {
      public void testTanhCritical() {
          TestUtils.assertSame(nanInf, new Complex(0, pi/2).tanh());

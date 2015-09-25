@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionInjectorTest.java b/com/google/javascript/jscomp/FunctionInjectorTest.java
+diff --git a/test/com/google/javascript/jscomp/FunctionInjectorTest.java b/test/com/google/javascript/jscomp/FunctionInjectorTest.java
 index 19ece5a..d21107f 100644
---- a/com/google/javascript/jscomp/FunctionInjectorTest.java
-+++ b/com/google/javascript/jscomp/FunctionInjectorTest.java
+--- a/test/com/google/javascript/jscomp/FunctionInjectorTest.java
++++ b/test/com/google/javascript/jscomp/FunctionInjectorTest.java
 @@ -867,8 +867,8 @@ public class FunctionInjectorTest extends TestCase {
          "function foo(a){return a;}; " +
          "function x() { foo(x++); }",
@@ -159,10 +159,10 @@ index 19ece5a..d21107f 100644
          "foo", INLINE_BLOCK);
    }
  
-diff --git a/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java b/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
+diff --git a/test/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java b/test/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
 index 7e1a21d..a2b38e9 100644
---- a/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
-+++ b/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
+--- a/test/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
++++ b/test/com/google/javascript/jscomp/FunctionToBlockMutatorTest.java
 @@ -112,7 +112,7 @@ public class FunctionToBlockMutatorTest extends TestCase {
      helperMutate(
          "function foo(a){return a;}; " +
@@ -230,10 +230,10 @@ index 7e1a21d..a2b38e9 100644
          "foo", null);
    }
  
-diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 index 1515f97..0f5e864 100644
---- a/com/google/javascript/jscomp/InlineFunctionsTest.java
-+++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 @@ -175,18 +175,18 @@ public class InlineFunctionsTest extends CompilerTestCase {
      // don't inline if the input parameter is modified.
      test("function INC(x){return x++}" +
@@ -846,10 +846,10 @@ index 1515f97..0f5e864 100644
          "  }\n" +
          "}");
    }
-diff --git a/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java b/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+diff --git a/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java b/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
 index 5b85c15..30c9518 100644
---- a/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
-+++ b/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+--- a/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
++++ b/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
 @@ -69,7 +69,7 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
      useDefaultRenamer = false;
    }

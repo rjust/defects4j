@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/UnreachableCodeElimination.java b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+diff --git a/src/com/google/javascript/jscomp/UnreachableCodeElimination.java b/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
 index e6d88a8..4cd1641 100644
---- a/com/google/javascript/jscomp/UnreachableCodeElimination.java
-+++ b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+--- a/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
++++ b/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
 @@ -167,23 +167,13 @@ class UnreachableCodeElimination implements CompilerPass {
                  outEdges.get(0).getValue() == Branch.UNCOND);
              Node fallThrough = computeFollowing(n);

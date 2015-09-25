@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/complex/ComplexFormatAbstractTest.java b/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
+diff --git a/src/test/org/apache/commons/math/complex/ComplexFormatAbstractTest.java b/src/test/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
 index 2260a09..2cb1eff 100644
---- a/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
-+++ b/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
+--- a/src/test/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
++++ b/src/test/org/apache/commons/math/complex/ComplexFormatAbstractTest.java
 @@ -19,7 +19,6 @@ package org.apache.commons.math.complex;
  
  import java.text.NumberFormat;

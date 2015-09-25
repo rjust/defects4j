@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/regression/SimpleRegressionTest.java b/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
+diff --git a/src/test/org/apache/commons/math/stat/regression/SimpleRegressionTest.java b/src/test/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
 index b6aa67c..a649b10 100644
---- a/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
-+++ b/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
+--- a/src/test/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
++++ b/src/test/org/apache/commons/math/stat/regression/SimpleRegressionTest.java
 @@ -237,7 +237,6 @@ public final class SimpleRegressionTest extends TestCase {
          }
          assertEquals(0.0, regression.getSignificance(), 1.0e-5);

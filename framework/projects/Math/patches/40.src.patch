@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
 index 59dc461..93dd3bb 100644
---- a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolver.java
 @@ -232,16 +232,10 @@ public class BracketingNthOrderBrentSolver
              double targetY;
              if (agingA >= MAXIMAL_AGING) {

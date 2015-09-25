@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BrentSolver.java b/org/apache/commons/math/analysis/solvers/BrentSolver.java
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
 index 7fc090e..e0cb427 100644
---- a/org/apache/commons/math/analysis/solvers/BrentSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BrentSolver.java
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BrentSolver.java
 @@ -112,7 +112,7 @@ public class BrentSolver extends UnivariateRealSolverImpl {
          // return the first endpoint if it is good enough
          double yMin = f.value(min);

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 index 5eb3523..298933a 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 @@ -390,11 +390,6 @@ public class CommandLineRunnerTest extends TestCase {
           "window.foo = 'foo';");
    }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java b/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java b/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
 index 6ee9bd5..935bb8b 100644
---- a/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
-+++ b/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsBashforthIntegrator.java
 @@ -271,16 +271,8 @@ public class AdamsBashforthIntegrator extends AdamsIntegrator {
                      if (manager.evaluateStep(interpolatorTmp)) {
                          final double dt = manager.getEventTime() - stepStart;
@@ -21,10 +21,10 @@ index 6ee9bd5..935bb8b 100644
                          } else {
                              // reject the step to match exactly the next switch time
                              hNew = dt;
-diff --git a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java b/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
 index e0e2f0d..27ade7b 100644
---- a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
-+++ b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegrator.java
 @@ -289,16 +289,8 @@ public class AdamsMoultonIntegrator extends AdamsIntegrator {
                      if (manager.evaluateStep(interpolatorTmp)) {
                          final double dt = manager.getEventTime() - stepStart;
@@ -44,10 +44,10 @@ index e0e2f0d..27ade7b 100644
                          } else {
                              // reject the step to match exactly the next switch time
                              hNew = dt;
-diff --git a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java b/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
 index e03be9e..34b3dc1 100644
---- a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
-+++ b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
 @@ -292,16 +292,8 @@ public abstract class EmbeddedRungeKuttaIntegrator
            if (manager.evaluateStep(interpolator)) {
                final double dt = manager.getEventTime() - stepStart;
@@ -67,10 +67,10 @@ index e03be9e..34b3dc1 100644
                } else {
                    // reject the step to match exactly the next switch time
                    hNew = dt;
-diff --git a/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java b/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java b/src/main/java/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
 index b61b0b1..3227b98 100644
---- a/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
-+++ b/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/nonstiff/RungeKuttaIntegrator.java
 @@ -172,15 +172,8 @@ public abstract class RungeKuttaIntegrator extends AbstractIntegrator {
          if (manager.evaluateStep(interpolator)) {
              final double dt = manager.getEventTime() - stepStart;

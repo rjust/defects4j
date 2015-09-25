@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
-index 7219899..ec05941 100644
---- a/org/joda/time/DateTimeZone.java
-+++ b/org/joda/time/DateTimeZone.java
+diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
+index 7219899..0de0ae6 100644
+--- a/src/main/java/org/joda/time/DateTimeZone.java
++++ b/src/main/java/org/joda/time/DateTimeZone.java
 @@ -1161,37 +1161,14 @@ public abstract class DateTimeZone implements Serializable {
       * @return the adjusted instant millis
       */

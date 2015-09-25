@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/BigMatrixImplTest.java b/org/apache/commons/math/linear/BigMatrixImplTest.java
+diff --git a/src/test/org/apache/commons/math/linear/BigMatrixImplTest.java b/src/test/org/apache/commons/math/linear/BigMatrixImplTest.java
 index 2f52c35..f30e04b 100644
---- a/org/apache/commons/math/linear/BigMatrixImplTest.java
-+++ b/org/apache/commons/math/linear/BigMatrixImplTest.java
+--- a/src/test/org/apache/commons/math/linear/BigMatrixImplTest.java
++++ b/src/test/org/apache/commons/math/linear/BigMatrixImplTest.java
 @@ -435,20 +435,6 @@ public final class BigMatrixImplTest extends TestCase {
              ;
          }      
@@ -23,10 +23,10 @@ index 2f52c35..f30e04b 100644
      
      /** test transpose */
      public void testTranspose() {
-diff --git a/org/apache/commons/math/linear/RealMatrixImplTest.java b/org/apache/commons/math/linear/RealMatrixImplTest.java
+diff --git a/src/test/org/apache/commons/math/linear/RealMatrixImplTest.java b/src/test/org/apache/commons/math/linear/RealMatrixImplTest.java
 index 383a959..7553f36 100644
---- a/org/apache/commons/math/linear/RealMatrixImplTest.java
-+++ b/org/apache/commons/math/linear/RealMatrixImplTest.java
+--- a/src/test/org/apache/commons/math/linear/RealMatrixImplTest.java
++++ b/src/test/org/apache/commons/math/linear/RealMatrixImplTest.java
 @@ -342,18 +342,6 @@ public final class RealMatrixImplTest extends TestCase {
              ;
          }      

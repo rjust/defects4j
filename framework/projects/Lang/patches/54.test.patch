@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/LocaleUtilsTest.java b/org/apache/commons/lang/LocaleUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/LocaleUtilsTest.java b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
 index 2c4324c..1855544 100644
---- a/org/apache/commons/lang/LocaleUtilsTest.java
-+++ b/org/apache/commons/lang/LocaleUtilsTest.java
+--- a/src/test/org/apache/commons/lang/LocaleUtilsTest.java
++++ b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
 @@ -498,11 +498,4 @@ public class LocaleUtilsTest extends TestCase {
          } catch (UnsupportedOperationException ex) {}
      }

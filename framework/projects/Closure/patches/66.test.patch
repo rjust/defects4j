@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index 604db37..160759d 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -7779,16 +7779,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
      assertEquals(100.0, getTypedPercent(js), 0.1);
    }

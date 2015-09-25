@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/ParserTest.java b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 index 22fef60..b98f8e5 100644
---- a/com/google/javascript/jscomp/parsing/ParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 @@ -958,19 +958,6 @@ public class ParserTest extends BaseJSTypeTestCase {
      assertNotNull(partialTree);
    }

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java b/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java b/src/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
 index afaf85a..1c4a345 100644
---- a/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
-+++ b/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
+--- a/src/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
++++ b/src/com/google/javascript/jscomp/PeepholeReplaceKnownMethods.java
 @@ -372,10 +372,8 @@ class PeepholeReplaceKnownMethods extends AbstractPeepholeOptimization{
      }
  

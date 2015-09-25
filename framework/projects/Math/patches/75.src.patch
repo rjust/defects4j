@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/Frequency.java b/org/apache/commons/math/stat/Frequency.java
+diff --git a/src/main/java/org/apache/commons/math/stat/Frequency.java b/src/main/java/org/apache/commons/math/stat/Frequency.java
 index 68c8bf2..c45d728 100644
---- a/org/apache/commons/math/stat/Frequency.java
-+++ b/org/apache/commons/math/stat/Frequency.java
+--- a/src/main/java/org/apache/commons/math/stat/Frequency.java
++++ b/src/main/java/org/apache/commons/math/stat/Frequency.java
 @@ -300,7 +300,7 @@ public class Frequency implements Serializable {
       */
      @Deprecated

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 index 848acbd..7919be5 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 @@ -555,11 +555,11 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
      fold("x = 2.25 * 3", "x = 6.75");
      fold("z = x * y", "z = x * y");

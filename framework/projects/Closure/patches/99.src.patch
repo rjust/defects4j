@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckGlobalThis.java b/com/google/javascript/jscomp/CheckGlobalThis.java
+diff --git a/src/com/google/javascript/jscomp/CheckGlobalThis.java b/src/com/google/javascript/jscomp/CheckGlobalThis.java
 index 5108686..f11616d 100644
---- a/com/google/javascript/jscomp/CheckGlobalThis.java
-+++ b/com/google/javascript/jscomp/CheckGlobalThis.java
+--- a/src/com/google/javascript/jscomp/CheckGlobalThis.java
++++ b/src/com/google/javascript/jscomp/CheckGlobalThis.java
 @@ -89,7 +89,6 @@ final class CheckGlobalThis implements Callback {
        JSDocInfo jsDoc = getFunctionJsDocInfo(n);
        if (jsDoc != null &&

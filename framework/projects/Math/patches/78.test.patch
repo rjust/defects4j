@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/events/EventStateTest.java b/org/apache/commons/math/ode/events/EventStateTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java b/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java
 deleted file mode 100644
 index 7044970..0000000
---- a/org/apache/commons/math/ode/events/EventStateTest.java
+--- a/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java
 +++ /dev/null
 @@ -1,71 +0,0 @@
 -/*

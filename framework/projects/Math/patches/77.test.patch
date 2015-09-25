@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/ArrayRealVectorTest.java b/org/apache/commons/math/linear/ArrayRealVectorTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/ArrayRealVectorTest.java b/src/test/java/org/apache/commons/math/linear/ArrayRealVectorTest.java
 index 171f23f..1632316 100644
---- a/org/apache/commons/math/linear/ArrayRealVectorTest.java
-+++ b/org/apache/commons/math/linear/ArrayRealVectorTest.java
+--- a/src/test/java/org/apache/commons/math/linear/ArrayRealVectorTest.java
++++ b/src/test/java/org/apache/commons/math/linear/ArrayRealVectorTest.java
 @@ -40,7 +40,6 @@ public class ArrayRealVectorTest extends TestCase {
      protected double[] vec2 = {4d, 5d, 6d};
      protected double[] vec3 = {7d, 8d, 9d};
@@ -41,10 +41,10 @@ index 171f23f..1632316 100644
  
          //octave =  sqrt(sumsq(v1-v2))
          double dist = v1.getDistance(v2);
-diff --git a/org/apache/commons/math/linear/SparseRealVectorTest.java b/org/apache/commons/math/linear/SparseRealVectorTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java b/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
 index 2becb69..db27f96 100644
---- a/org/apache/commons/math/linear/SparseRealVectorTest.java
-+++ b/org/apache/commons/math/linear/SparseRealVectorTest.java
+--- a/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
++++ b/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
 @@ -40,7 +40,6 @@ public class SparseRealVectorTest extends TestCase {
      protected double[] vec2 = {4d, 5d, 6d};
      protected double[] vec3 = {7d, 8d, 9d};

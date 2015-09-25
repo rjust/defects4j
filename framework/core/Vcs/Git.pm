@@ -51,14 +51,14 @@ sub _apply_cmd {
     my ($self, $work_dir, $patch_file, $path) = @_;
     # Path to patch directory within the working directory
     $path = $path // ".";
-    return "git --work-tree=$work_dir apply --directory=$work_dir/$path $patch_file 2>&1";
+    return "cd $work_dir && git apply $patch_file 2>&1";
 }
 
 sub _diff_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
-    $path = defined $path ? ":$path" : "";
-    return "git --git-dir=$self->{repo} diff --binary ${rev1}$path ${rev2}$path";
+    $path = defined $path ? "-- $path $path" : "";
+    return "git --git-dir=$self->{repo} diff --binary ${rev1} ${rev2} $path";
 }
 
 

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+diff --git a/test/com/google/javascript/jscomp/NodeUtilTest.java b/test/com/google/javascript/jscomp/NodeUtilTest.java
 index 2d6c9f1..36f5c6b 100644
---- a/com/google/javascript/jscomp/NodeUtilTest.java
-+++ b/com/google/javascript/jscomp/NodeUtilTest.java
+--- a/test/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/test/com/google/javascript/jscomp/NodeUtilTest.java
 @@ -1018,9 +1018,8 @@ public class NodeUtilTest extends TestCase {
      assertFalse(testLocalValue("this"));
      assertFalse(testLocalValue("arguments"));
@@ -14,10 +14,10 @@ index 2d6c9f1..36f5c6b 100644
  
      // property references are assume to be non-local
      assertFalse(testLocalValue("(new x()).y"));
-diff --git a/com/google/javascript/jscomp/PureFunctionIdentifierTest.java b/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
+diff --git a/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java b/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
 index 3321842..36dfdfc 100644
---- a/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
-+++ b/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
+--- a/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
++++ b/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
 @@ -36,11 +36,8 @@ public class PureFunctionIdentifierTest extends CompilerTestCase {
  
    boolean regExpHaveSideEffects = true;

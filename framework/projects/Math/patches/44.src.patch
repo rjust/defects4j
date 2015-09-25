@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/AbstractIntegrator.java b/org/apache/commons/math/ode/AbstractIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java b/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
 index 8f315e3..2d878b1 100644
---- a/org/apache/commons/math/ode/AbstractIntegrator.java
-+++ b/org/apache/commons/math/ode/AbstractIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
 @@ -40,6 +40,7 @@ import org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
  import org.apache.commons.math.ode.sampling.StepHandler;
  import org.apache.commons.math.util.FastMath;

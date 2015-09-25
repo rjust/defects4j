@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FoldConstantsTest.java b/com/google/javascript/jscomp/FoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/FoldConstantsTest.java b/test/com/google/javascript/jscomp/FoldConstantsTest.java
 index 6edfbb2..c5544a6 100644
---- a/com/google/javascript/jscomp/FoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/FoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/FoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/FoldConstantsTest.java
 @@ -641,22 +641,8 @@ public class FoldConstantsTest extends CompilerTestCase {
      // Only optimize if it's a size win.
      fold("x = ['a', '5', 'c'].join('a very very very long chain')",

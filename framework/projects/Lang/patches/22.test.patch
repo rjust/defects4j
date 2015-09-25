@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/FractionTest.java b/org/apache/commons/lang3/math/FractionTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/math/FractionTest.java b/src/test/java/org/apache/commons/lang3/math/FractionTest.java
 index 8e21e7c..3116f4e 100644
---- a/org/apache/commons/lang3/math/FractionTest.java
-+++ b/org/apache/commons/lang3/math/FractionTest.java
+--- a/src/test/java/org/apache/commons/lang3/math/FractionTest.java
++++ b/src/test/java/org/apache/commons/lang3/math/FractionTest.java
 @@ -330,11 +330,6 @@ public class FractionTest extends TestCase {
              f = Fraction.getReducedFraction(-7, Integer.MIN_VALUE);  
              fail("Expecting ArithmeticException");

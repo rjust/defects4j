@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ScopedAliases.java b/com/google/javascript/jscomp/ScopedAliases.java
+diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
 index c248002..7a943f8 100644
---- a/com/google/javascript/jscomp/ScopedAliases.java
-+++ b/com/google/javascript/jscomp/ScopedAliases.java
+--- a/src/com/google/javascript/jscomp/ScopedAliases.java
++++ b/src/com/google/javascript/jscomp/ScopedAliases.java
 @@ -275,24 +275,19 @@ class ScopedAliases implements HotSwapCompilerPass {
          Node n = v.getNode();
          int type = n.getType();

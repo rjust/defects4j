@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/geometry/euclidean/threed/Rotation.java b/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
+diff --git a/src/main/java/org/apache/commons/math/geometry/euclidean/threed/Rotation.java b/src/main/java/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
 index ada0a8f..bfa7f26 100644
---- a/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
-+++ b/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
+--- a/src/main/java/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
++++ b/src/main/java/org/apache/commons/math/geometry/euclidean/threed/Rotation.java
 @@ -313,51 +313,92 @@ public class Rotation implements Serializable {
    public Rotation(Vector3D u1, Vector3D u2, Vector3D v1, Vector3D v2) {
  

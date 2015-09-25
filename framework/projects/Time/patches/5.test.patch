@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestPeriod_Basics.java b/org/joda/time/TestPeriod_Basics.java
+diff --git a/src/test/java/org/joda/time/TestPeriod_Basics.java b/src/test/java/org/joda/time/TestPeriod_Basics.java
 index 82030f8..f291c9b 100644
---- a/org/joda/time/TestPeriod_Basics.java
-+++ b/org/joda/time/TestPeriod_Basics.java
+--- a/src/test/java/org/joda/time/TestPeriod_Basics.java
++++ b/src/test/java/org/joda/time/TestPeriod_Basics.java
 @@ -217,7 +217,6 @@ public class TestPeriod_Basics extends TestCase {
      }
      

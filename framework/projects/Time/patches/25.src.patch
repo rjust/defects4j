@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
+diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
 index 81f5872..23f70a5 100644
---- a/org/joda/time/DateTimeZone.java
-+++ b/org/joda/time/DateTimeZone.java
+--- a/src/main/java/org/joda/time/DateTimeZone.java
++++ b/src/main/java/org/joda/time/DateTimeZone.java
 @@ -866,22 +866,18 @@ public abstract class DateTimeZone implements Serializable {
       * Input: 02:00  Output: 02:00<br />
       * Input: 02:30  Output: 02:30<br />

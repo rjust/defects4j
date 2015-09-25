@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/DeadAssignmentsElimination.java b/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+diff --git a/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java b/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
 index 879056f..e07b5fc 100644
---- a/com/google/javascript/jscomp/DeadAssignmentsElimination.java
-+++ b/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+--- a/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
++++ b/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
 @@ -293,7 +293,7 @@ class DeadAssignmentsElimination extends AbstractPostOrderCallback implements
        for(Node sibling = n.getNext(); sibling != null;
            sibling = sibling.getNext()) {

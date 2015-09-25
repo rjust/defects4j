@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/linear/SimplexSolver.java b/org/apache/commons/math3/optimization/linear/SimplexSolver.java
+diff --git a/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java b/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
 index dec310b..c2fa14d 100644
---- a/org/apache/commons/math3/optimization/linear/SimplexSolver.java
-+++ b/org/apache/commons/math3/optimization/linear/SimplexSolver.java
+--- a/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
++++ b/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
 @@ -116,14 +116,12 @@ public class SimplexSolver extends AbstractLinearOptimizer {
              // there's a degeneracy as indicated by a tie in the minimum ratio test
  

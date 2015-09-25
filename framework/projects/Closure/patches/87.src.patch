@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 index 6c4ee4a..11f0af2 100644
---- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-+++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+--- a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
++++ b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 @@ -272,7 +272,7 @@ public class PeepholeSubstituteAlternateSyntax
      Node elseBranch = thenBranch.getNext();
  

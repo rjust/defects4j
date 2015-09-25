@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/tz/DefaultNameProvider.java b/org/joda/time/tz/DefaultNameProvider.java
-index 89e6739..24423f8 100644
---- a/org/joda/time/tz/DefaultNameProvider.java
-+++ b/org/joda/time/tz/DefaultNameProvider.java
+diff --git a/src/main/java/org/joda/time/tz/DefaultNameProvider.java b/src/main/java/org/joda/time/tz/DefaultNameProvider.java
+index 89e6739..8bda07d 100644
+--- a/src/main/java/org/joda/time/tz/DefaultNameProvider.java
++++ b/src/main/java/org/joda/time/tz/DefaultNameProvider.java
 @@ -62,37 +62,25 @@ public class DefaultNameProvider implements NameProvider {
          Map<String, Object> byNameKeyCache = byIdCache.get(id);
          if (byNameKeyCache == null) {

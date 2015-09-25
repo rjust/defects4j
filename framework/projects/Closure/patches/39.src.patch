@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+diff --git a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 index f4b537d..dffe3a5 100644
---- a/com/google/javascript/rhino/jstype/PrototypeObjectType.java
-+++ b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+--- a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
++++ b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 @@ -377,10 +377,10 @@ class PrototypeObjectType extends ObjectType {
  
          sb.append(property);

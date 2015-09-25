@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java b/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
-index 3d4c238..ffd969f 100644
---- a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
-+++ b/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
-@@ -35,9 +33,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
+diff --git a/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java b/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
+index 3d4c238..e59de0a 100644
+--- a/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
++++ b/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
+@@ -35,9 +35,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
       */
      @Override
      public int translate(CharSequence input, int index, Writer out) throws IOException {
@@ -13,7 +13,7 @@ index 3d4c238..ffd969f 100644
              int start = index + 2;
              boolean isHex = false;
  
-@@ -45,19 +41,10 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
+@@ -45,19 +43,10 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
              if(firstChar == 'x' || firstChar == 'X') {
                  start++;
                  isHex = true;
@@ -34,7 +34,7 @@ index 3d4c238..ffd969f 100644
                  end++;
              }
  
-@@ -69,7 +56,6 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
+@@ -69,7 +58,6 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
                      entityValue = Integer.parseInt(input.subSequence(start, end).toString(), 10);
                  }
              } catch(NumberFormatException nfe) {
@@ -42,7 +42,7 @@ index 3d4c238..ffd969f 100644
                  return 0;
              }
  
-@@ -80,10 +66,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
+@@ -80,10 +68,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
              } else {
                  out.write(entityValue);
              }

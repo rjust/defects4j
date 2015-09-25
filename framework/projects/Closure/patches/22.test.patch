@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckSideEffectsTest.java b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckSideEffectsTest.java b/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
 index e6ba218..6c15df6 100644
---- a/com/google/javascript/jscomp/CheckSideEffectsTest.java
-+++ b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+--- a/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
++++ b/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
 @@ -68,10 +68,6 @@ public class CheckSideEffectsTest extends CompilerTestCase {
           "var a, b; a = 5, JSCOMPILER_PRESERVE(b == 6)", e);
      test("var a, b; a = (5, 6)",

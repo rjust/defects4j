@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ExploitAssignsTest.java b/com/google/javascript/jscomp/ExploitAssignsTest.java
+diff --git a/test/com/google/javascript/jscomp/ExploitAssignsTest.java b/test/com/google/javascript/jscomp/ExploitAssignsTest.java
 index 72cf253..318652d 100644
---- a/com/google/javascript/jscomp/ExploitAssignsTest.java
-+++ b/com/google/javascript/jscomp/ExploitAssignsTest.java
+--- a/test/com/google/javascript/jscomp/ExploitAssignsTest.java
++++ b/test/com/google/javascript/jscomp/ExploitAssignsTest.java
 @@ -157,10 +157,6 @@ public class ExploitAssignsTest extends CompilerTestCase {
      testSame("this.$e$ = []; this.$b$ = null;");
    }

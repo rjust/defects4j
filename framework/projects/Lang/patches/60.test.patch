@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilderTest.java b/org/apache/commons/lang/text/StrBuilderTest.java
+diff --git a/src/test/org/apache/commons/lang/text/StrBuilderTest.java b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 index 67e1ce1..900b922 100644
---- a/org/apache/commons/lang/text/StrBuilderTest.java
-+++ b/org/apache/commons/lang/text/StrBuilderTest.java
+--- a/src/test/org/apache/commons/lang/text/StrBuilderTest.java
++++ b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 @@ -1741,12 +1741,4 @@ public class StrBuilderTest extends TestCase {
          assertEquals(-1, sb.indexOf("three"));
      }

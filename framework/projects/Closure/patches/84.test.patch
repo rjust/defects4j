@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 index 585df22..de413dd 100644
---- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
-+++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+--- a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 @@ -85,11 +85,11 @@ public class CheckGlobalThisTest extends CompilerTestCase {
    }
  
@@ -16,10 +16,10 @@ index 585df22..de413dd 100644
    }
  
    public void testStaticFunction8() {
-diff --git a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+diff --git a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 index 486fe5a..2d82661 100644
---- a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
-+++ b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+--- a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
++++ b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 @@ -91,7 +91,7 @@ public class DeadAssignmentsEliminationTest extends CompilerTestCase {
      inFunction("var x; if(x=1==4&&1){}", "var x; if(1==4&&1) {}");
      inFunction("var x; if(0&&(x=1)){}", "var x; if(0&&1){}");
@@ -29,10 +29,10 @@ index 486fe5a..2d82661 100644
  
      inFunction("var x,y; if( (x=1)+(y=2) > 3){}",
          "var x,y; if( 1+2 > 3){}");
-diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+diff --git a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 index bc4ba6f..4eab4b4 100644
---- a/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+--- a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
 @@ -103,10 +103,8 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
    }
  
@@ -55,10 +55,10 @@ index bc4ba6f..4eab4b4 100644
      noInline("var x = 1; x=-1,foo(x)");
      noInline("var x = 1; x-=1,foo(x)");
    }
-diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 index aa72d7a..c92661e 100644
---- a/com/google/javascript/jscomp/InlineFunctionsTest.java
-+++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 @@ -1249,9 +1249,9 @@ public class InlineFunctionsTest extends CompilerTestCase {
    }
  
@@ -71,10 +71,10 @@ index aa72d7a..c92661e 100644
    }
  
    public void testComplexInlineInExpresssions4() {
-diff --git a/com/google/javascript/jscomp/LooseTypeCheckTest.java b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 index 7488dec..b2b3dde 100644
---- a/com/google/javascript/jscomp/LooseTypeCheckTest.java
-+++ b/com/google/javascript/jscomp/LooseTypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
 @@ -82,7 +82,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
    }
  
@@ -84,10 +84,10 @@ index 7488dec..b2b3dde 100644
          "increment/decrement\n" +
          "found   : undefined\n" +
          "required: number");
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index f2a279d..8a42af9 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -78,7 +78,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
    }
  
@@ -97,10 +97,10 @@ index f2a279d..8a42af9 100644
          "increment/decrement\n" +
          "found   : undefined\n" +
          "required: number");
-diff --git a/com/google/javascript/jscomp/parsing/IRFactoryTest.java b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java b/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
 index 6801b27..6b982b5 100644
---- a/com/google/javascript/jscomp/parsing/IRFactoryTest.java
-+++ b/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+--- a/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
++++ b/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
 @@ -1013,51 +1013,7 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
      assertNodePosition(2, 0, bName);
      assertNodePosition(3, 8, fnNode);
@@ -175,10 +175,10 @@ index 6801b27..6b982b5 100644
  
      return root;
    }
-diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/ParserTest.java b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 index e09390d..0d7e9eb 100644
---- a/com/google/javascript/jscomp/parsing/ParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 @@ -622,9 +622,7 @@ public class ParserTest extends BaseJSTypeTestCase {
    }
  

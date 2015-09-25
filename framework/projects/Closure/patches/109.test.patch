@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 index 84e538b..ad56475 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 @@ -581,20 +581,6 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
      assertFalse(type.isNominalConstructor());
    }

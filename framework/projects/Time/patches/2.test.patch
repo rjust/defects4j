@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestPartial_Basics.java b/org/joda/time/TestPartial_Basics.java
+diff --git a/src/test/java/org/joda/time/TestPartial_Basics.java b/src/test/java/org/joda/time/TestPartial_Basics.java
 index 5c154a3..ceaa150 100644
---- a/org/joda/time/TestPartial_Basics.java
-+++ b/org/joda/time/TestPartial_Basics.java
+--- a/src/test/java/org/joda/time/TestPartial_Basics.java
++++ b/src/test/java/org/joda/time/TestPartial_Basics.java
 @@ -448,30 +448,6 @@ public class TestPartial_Basics extends TestCase {
          assertSame(test, result);
      }

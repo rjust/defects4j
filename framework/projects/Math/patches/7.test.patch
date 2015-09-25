@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java b/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java b/src/test/java/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
 index fcba93c..77b7197 100644
---- a/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
-+++ b/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
+--- a/src/test/java/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
++++ b/src/test/java/org/apache/commons/math3/ode/nonstiff/DormandPrince853IntegratorTest.java
 @@ -333,73 +333,6 @@ public class DormandPrince853IntegratorTest {
      Assert.assertEquals(8.0, y[0], 1.0e-12);
    }

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
+diff --git a/src/com/google/javascript/jscomp/TypeCheck.java b/src/com/google/javascript/jscomp/TypeCheck.java
 index 5edb4f0..74f1564 100644
---- a/com/google/javascript/jscomp/TypeCheck.java
-+++ b/com/google/javascript/jscomp/TypeCheck.java
+--- a/src/com/google/javascript/jscomp/TypeCheck.java
++++ b/src/com/google/javascript/jscomp/TypeCheck.java
 @@ -226,11 +226,6 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
            "Interface {0} has a property {1} with incompatible types in " +
            "its super interfaces {2} and {3}");

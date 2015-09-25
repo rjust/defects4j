@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 index 5bccc06..dc7b2b0 100644
---- a/com/google/javascript/jscomp/TypedScopeCreator.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -1378,6 +1378,24 @@ final class TypedScopeCreator implements ScopeCreator {
        String propName = n.getLastChild().getString();
        Preconditions.checkArgument(qName != null && ownerName != null);
@@ -66,10 +66,10 @@ index 5bccc06..dc7b2b0 100644
  
        if (valueType == null) {
          if (parent.getType() == Token.EXPR_RESULT) {
-diff --git a/com/google/javascript/rhino/jstype/FunctionType.java b/com/google/javascript/rhino/jstype/FunctionType.java
+diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
 index a87be07..0499e5e 100644
---- a/com/google/javascript/rhino/jstype/FunctionType.java
-+++ b/com/google/javascript/rhino/jstype/FunctionType.java
+--- a/src/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
 @@ -338,6 +338,7 @@ public class FunctionType extends PrototypeObjectType {
      //
      // In the second case, we just use the anonymous object as the prototype.
@@ -99,10 +99,10 @@ index a87be07..0499e5e 100644
      if (isConstructor() || isInterface()) {
        FunctionType superClass = getSuperClassConstructor();
        if (superClass != null) {
-diff --git a/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+diff --git a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 index 2faffbd..3af3336 100644
---- a/com/google/javascript/rhino/jstype/PrototypeObjectType.java
-+++ b/com/google/javascript/rhino/jstype/PrototypeObjectType.java
+--- a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
++++ b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 @@ -587,7 +587,7 @@ class PrototypeObjectType extends ObjectType {
    }
  

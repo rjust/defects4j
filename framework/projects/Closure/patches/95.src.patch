@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 index c7005b2..8a2ec94 100644
---- a/com/google/javascript/jscomp/TypedScopeCreator.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -892,20 +892,7 @@ final class TypedScopeCreator implements ScopeCreator {
        String variableName = n.getQualifiedName();
        Preconditions.checkArgument(!variableName.isEmpty());

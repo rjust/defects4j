@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+diff --git a/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java b/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
 index d2bbf67..13ced27 100644
---- a/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
-+++ b/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
+--- a/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
++++ b/src/main/java/org/apache/commons/math/ode/nonstiff/EmbeddedRungeKuttaIntegrator.java
 @@ -247,15 +247,6 @@ public abstract class EmbeddedRungeKuttaIntegrator
          }
  

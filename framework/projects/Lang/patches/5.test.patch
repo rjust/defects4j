@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/LocaleUtilsTest.java b/org/apache/commons/lang3/LocaleUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/LocaleUtilsTest.java b/src/test/java/org/apache/commons/lang3/LocaleUtilsTest.java
 index b30b3e3..84e3b66 100644
---- a/org/apache/commons/lang3/LocaleUtilsTest.java
-+++ b/org/apache/commons/lang3/LocaleUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/LocaleUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/LocaleUtilsTest.java
 @@ -493,53 +493,7 @@ public class LocaleUtilsTest  {
       */
      @Test

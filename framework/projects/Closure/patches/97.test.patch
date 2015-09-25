@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 index 14c507a..57e68f9 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 @@ -239,13 +239,11 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
  
    public void testFoldBitShifts() {

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckUnreachableCodeTest.java b/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckUnreachableCodeTest.java b/test/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
 index 82d7bd9..a76b4a4 100644
---- a/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
-+++ b/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
+--- a/test/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
++++ b/test/com/google/javascript/jscomp/CheckUnreachableCodeTest.java
 @@ -136,11 +136,6 @@ public class CheckUnreachableCodeTest extends CompilerTestCase {
      testSame("switch (x) { default: throw x; break; }");
    }
@@ -14,10 +14,10 @@ index 82d7bd9..a76b4a4 100644
    private void assertUnreachable(String js) {
      test(js, js, CheckUnreachableCode.UNREACHABLE_CODE);
    }
-diff --git a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+diff --git a/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java b/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
 index f63e937..4175682 100644
---- a/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
-+++ b/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
+--- a/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
++++ b/test/com/google/javascript/jscomp/ControlFlowAnalysisTest.java
 @@ -1240,18 +1240,12 @@ public class ControlFlowAnalysisTest extends TestCase {
      testCfg(src, expectedWhenNotTraversingFunctions, false);
    }
@@ -38,10 +38,10 @@ index f63e937..4175682 100644
    public void testPartialTraversalOfScope() {
      Compiler compiler = new Compiler();
      ControlFlowAnalysis cfa = new ControlFlowAnalysis(compiler, true);
-diff --git a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
 index 7facdb3..3c2f0ea 100644
---- a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
-+++ b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
 @@ -584,28 +584,6 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
      testSets(true, js, "{a=[[Bar.prototype, Foo.prototype]]}");
    }

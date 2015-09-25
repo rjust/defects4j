@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineVariables.java b/com/google/javascript/jscomp/InlineVariables.java
+diff --git a/src/com/google/javascript/jscomp/InlineVariables.java b/src/com/google/javascript/jscomp/InlineVariables.java
 index 47b8e8a..857845b 100644
---- a/com/google/javascript/jscomp/InlineVariables.java
-+++ b/com/google/javascript/jscomp/InlineVariables.java
+--- a/src/com/google/javascript/jscomp/InlineVariables.java
++++ b/src/com/google/javascript/jscomp/InlineVariables.java
 @@ -558,23 +558,16 @@ class InlineVariables implements CompilerPass {
          return false;
        }

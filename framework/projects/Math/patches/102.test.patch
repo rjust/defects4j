@@ -1,7 +1,7 @@
-diff --git a/R/chiSquareTestCases b/R/chiSquareTestCases
+diff --git a/src/test/R/chiSquareTestCases b/src/test/R/chiSquareTestCases
 index 747b5e8..bdc7f2d 100644
---- a/R/chiSquareTestCases
-+++ b/R/chiSquareTestCases
+--- a/src/test/R/chiSquareTestCases
++++ b/src/test/R/chiSquareTestCases
 @@ -49,9 +49,8 @@ verifyTable <- function(counts, expectedP, expectedStat, tol, desc) {
  
  verifyHomogeneity <- function(obs, exp, expectedP, expectedStat, 
@@ -32,10 +32,10 @@ index 747b5e8..bdc7f2d 100644
     "testChiSquareLargeTestStatistic")
  
  counts <- matrix(c(40, 22, 43, 91, 21, 28, 60, 10, 22), nc = 3);
-diff --git a/org/apache/commons/math/stat/inference/ChiSquareTestTest.java b/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
+diff --git a/src/test/org/apache/commons/math/stat/inference/ChiSquareTestTest.java b/src/test/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
 index 98a9e93..e043c9d 100644
---- a/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
-+++ b/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
+--- a/src/test/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
++++ b/src/test/org/apache/commons/math/stat/inference/ChiSquareTestTest.java
 @@ -57,10 +57,10 @@ public class ChiSquareTestTest extends TestCase {
          
          long[] observed1 = { 500, 623, 72, 70, 31 };
@@ -60,10 +60,10 @@ index 98a9e93..e043c9d 100644
      }
      
      /** Contingency table containing zeros - PR # 32531 */
-diff --git a/org/apache/commons/math/stat/inference/TestUtilsTest.java b/org/apache/commons/math/stat/inference/TestUtilsTest.java
+diff --git a/src/test/org/apache/commons/math/stat/inference/TestUtilsTest.java b/src/test/org/apache/commons/math/stat/inference/TestUtilsTest.java
 index f2ef73f..e0f16f7 100644
---- a/org/apache/commons/math/stat/inference/TestUtilsTest.java
-+++ b/org/apache/commons/math/stat/inference/TestUtilsTest.java
+--- a/src/test/org/apache/commons/math/stat/inference/TestUtilsTest.java
++++ b/src/test/org/apache/commons/math/stat/inference/TestUtilsTest.java
 @@ -55,10 +55,10 @@ public class TestUtilsTest extends TestCase {
          
          long[] observed1 = { 500, 623, 72, 70, 31 };

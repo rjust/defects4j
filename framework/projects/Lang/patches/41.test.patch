@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/ClassUtilsTest.java b/org/apache/commons/lang/ClassUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/ClassUtilsTest.java b/src/test/org/apache/commons/lang/ClassUtilsTest.java
 index 896d542..48986d6 100644
---- a/org/apache/commons/lang/ClassUtilsTest.java
-+++ b/org/apache/commons/lang/ClassUtilsTest.java
+--- a/src/test/org/apache/commons/lang/ClassUtilsTest.java
++++ b/src/test/org/apache/commons/lang/ClassUtilsTest.java
 @@ -92,35 +92,6 @@ public class ClassUtilsTest extends TestCase {
          assertEquals("ClassUtils", ClassUtils.getShortClassName(ClassUtils.class));
          assertEquals("Map.Entry", ClassUtils.getShortClassName(Map.Entry.class));

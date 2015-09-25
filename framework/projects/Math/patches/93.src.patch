@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
+diff --git a/src/java/org/apache/commons/math/util/MathUtils.java b/src/java/org/apache/commons/math/util/MathUtils.java
 index 1389d5a..50ed22a 100644
---- a/org/apache/commons/math/util/MathUtils.java
-+++ b/org/apache/commons/math/util/MathUtils.java
+--- a/src/java/org/apache/commons/math/util/MathUtils.java
++++ b/src/java/org/apache/commons/math/util/MathUtils.java
 @@ -311,13 +311,6 @@ public final class MathUtils {
          }
          return true;

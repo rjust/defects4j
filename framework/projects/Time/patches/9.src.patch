@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/DateTimeZone.java b/org/joda/time/DateTimeZone.java
-index afa75d7..f62ab9c 100644
---- a/org/joda/time/DateTimeZone.java
-+++ b/org/joda/time/DateTimeZone.java
+diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
+index afa75d7..ea61846 100644
+--- a/src/main/java/org/joda/time/DateTimeZone.java
++++ b/src/main/java/org/joda/time/DateTimeZone.java
 @@ -32,6 +32,7 @@ import org.joda.convert.FromString;
  import org.joda.convert.ToString;
  import org.joda.time.chrono.BaseChronology;

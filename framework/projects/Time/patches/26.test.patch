@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/MockZone.java b/org/joda/time/MockZone.java
+diff --git a/src/test/java/org/joda/time/MockZone.java b/src/test/java/org/joda/time/MockZone.java
 index b2f8f22..4915d05 100644
---- a/org/joda/time/MockZone.java
-+++ b/org/joda/time/MockZone.java
+--- a/src/test/java/org/joda/time/MockZone.java
++++ b/src/test/java/org/joda/time/MockZone.java
 @@ -19,17 +19,15 @@ public class MockZone extends DateTimeZone {
  
      long transition;
@@ -22,10 +22,10 @@ index b2f8f22..4915d05 100644
      }
  
      public int getStandardOffset(long instant) {
-diff --git a/org/joda/time/TestDateTimeZoneCutover.java b/org/joda/time/TestDateTimeZoneCutover.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 index 1dae4b5..c3f29ed 100644
---- a/org/joda/time/TestDateTimeZoneCutover.java
-+++ b/org/joda/time/TestDateTimeZoneCutover.java
+--- a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
++++ b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 @@ -18,7 +18,6 @@ package org.joda.time;
  import junit.framework.TestCase;
  import junit.framework.TestSuite;
@@ -198,10 +198,10 @@ index 1dae4b5..c3f29ed 100644
      //-----------------------------------------------------------------------
      //-----------------------------------------------------------------------
      private void doTest_getOffsetFromLocal(int month, int day, int hour, int min,
-diff --git a/org/joda/time/TestLocalDate_Basics.java b/org/joda/time/TestLocalDate_Basics.java
+diff --git a/src/test/java/org/joda/time/TestLocalDate_Basics.java b/src/test/java/org/joda/time/TestLocalDate_Basics.java
 index 9a85bd5..b67929b 100644
---- a/org/joda/time/TestLocalDate_Basics.java
-+++ b/org/joda/time/TestLocalDate_Basics.java
+--- a/src/test/java/org/joda/time/TestLocalDate_Basics.java
++++ b/src/test/java/org/joda/time/TestLocalDate_Basics.java
 @@ -68,7 +68,7 @@ public class TestLocalDate_Basics extends TestCase {
      /** Mock zone simulating Asia/Gaza cutover at midnight 2007-04-01 */
      private static long CUTOVER_GAZA = 1175378400000L;
@@ -211,10 +211,10 @@ index 9a85bd5..b67929b 100644
  
      private long TEST_TIME_NOW =
              (31L + 28L + 31L + 30L + 31L + 9L -1L) * DateTimeConstants.MILLIS_PER_DAY;
-diff --git a/org/joda/time/chrono/TestLenientChronology.java b/org/joda/time/chrono/TestLenientChronology.java
+diff --git a/src/test/java/org/joda/time/chrono/TestLenientChronology.java b/src/test/java/org/joda/time/chrono/TestLenientChronology.java
 index 3e3db7d..531ed1c 100644
---- a/org/joda/time/chrono/TestLenientChronology.java
-+++ b/org/joda/time/chrono/TestLenientChronology.java
+--- a/src/test/java/org/joda/time/chrono/TestLenientChronology.java
++++ b/src/test/java/org/joda/time/chrono/TestLenientChronology.java
 @@ -120,7 +120,7 @@ public class TestLenientChronology extends TestCase {
      /** Mock zone simulating America/Grand_Turk cutover at midnight 2007-04-01 */
      private static long CUTOVER_TURK = 1175403600000L;

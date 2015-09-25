@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/BrentSolverTest.java b/org/apache/commons/math/analysis/BrentSolverTest.java
+diff --git a/src/test/org/apache/commons/math/analysis/BrentSolverTest.java b/src/test/org/apache/commons/math/analysis/BrentSolverTest.java
 index 49c93aa..ea1ba68 100644
---- a/org/apache/commons/math/analysis/BrentSolverTest.java
-+++ b/org/apache/commons/math/analysis/BrentSolverTest.java
+--- a/src/test/org/apache/commons/math/analysis/BrentSolverTest.java
++++ b/src/test/org/apache/commons/math/analysis/BrentSolverTest.java
 @@ -31,7 +31,7 @@ import junit.framework.TestSuite;
   * default absolute accuracy of 10E-8 for sinus and the quintic function around
   * zero, and 5..10 iterations for the other zeros.

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 index 2d59cd7..5dc9662 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 @@ -247,18 +247,6 @@ public class CommandLineRunnerTest extends TestCase {
           "}");
    }
@@ -21,10 +21,10 @@ index 2d59cd7..5dc9662 100644
    public void testDebugFlag1() {
      args.add("--compilation_level=SIMPLE_OPTIMIZATIONS");
      args.add("--debug=false");
-diff --git a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+diff --git a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 index 2d82661..a74acb4 100644
---- a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
-+++ b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+--- a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
++++ b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 @@ -361,95 +361,6 @@ public class DeadAssignmentsEliminationTest extends CompilerTestCase {
    }
  

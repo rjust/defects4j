@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/RandomStringUtils.java b/org/apache/commons/lang3/RandomStringUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/RandomStringUtils.java b/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
 index 9dfee22..a799057 100644
---- a/org/apache/commons/lang3/RandomStringUtils.java
-+++ b/org/apache/commons/lang3/RandomStringUtils.java
+--- a/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
++++ b/src/main/java/org/apache/commons/lang3/RandomStringUtils.java
 @@ -242,10 +242,6 @@ public class RandomStringUtils {
                      start = ' ';                
                  }

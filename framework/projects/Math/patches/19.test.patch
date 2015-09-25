@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java b/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
 index c17f72d..3881879 100644
---- a/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
-+++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/direct/CMAESOptimizerTest.java
 @@ -26,13 +26,11 @@ import org.apache.commons.math3.exception.NumberIsTooLargeException;
  import org.apache.commons.math3.exception.NumberIsTooSmallException;
  import org.apache.commons.math3.exception.DimensionMismatchException;

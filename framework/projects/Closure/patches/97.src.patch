@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 index c998d1e..f3d9583 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+--- a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 @@ -692,11 +692,7 @@ public class PeepholeFoldConstants extends AbstractPeepholeOptimization {
            result = lvalInt >> rvalInt;
            break;

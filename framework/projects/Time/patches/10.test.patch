@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDays.java b/org/joda/time/TestDays.java
+diff --git a/src/test/java/org/joda/time/TestDays.java b/src/test/java/org/joda/time/TestDays.java
 index 073f8e0..f99db34 100644
---- a/org/joda/time/TestDays.java
-+++ b/org/joda/time/TestDays.java
+--- a/src/test/java/org/joda/time/TestDays.java
++++ b/src/test/java/org/joda/time/TestDays.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2013 Stephen Colebourne
@@ -65,10 +65,10 @@ index 073f8e0..f99db34 100644
      public void testFactory_standardDaysIn_RPeriod() {
          assertEquals(0, Days.standardDaysIn((ReadablePeriod) null).getDays());
          assertEquals(0, Days.standardDaysIn(Period.ZERO).getDays());
-diff --git a/org/joda/time/TestMonths.java b/org/joda/time/TestMonths.java
+diff --git a/src/test/java/org/joda/time/TestMonths.java b/src/test/java/org/joda/time/TestMonths.java
 index ec44f9e..e562391 100644
---- a/org/joda/time/TestMonths.java
-+++ b/org/joda/time/TestMonths.java
+--- a/src/test/java/org/joda/time/TestMonths.java
++++ b/src/test/java/org/joda/time/TestMonths.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2013 Stephen Colebourne

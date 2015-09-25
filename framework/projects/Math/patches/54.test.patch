@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/dfp/DfpTest.java b/org/apache/commons/math/dfp/DfpTest.java
+diff --git a/src/test/java/org/apache/commons/math/dfp/DfpTest.java b/src/test/java/org/apache/commons/math/dfp/DfpTest.java
 index d8426c3..db5c05c 100644
---- a/org/apache/commons/math/dfp/DfpTest.java
-+++ b/org/apache/commons/math/dfp/DfpTest.java
+--- a/src/test/java/org/apache/commons/math/dfp/DfpTest.java
++++ b/src/test/java/org/apache/commons/math/dfp/DfpTest.java
 @@ -17,8 +17,6 @@
  
  package org.apache.commons.math.dfp;

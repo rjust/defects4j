@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeCheck.java b/com/google/javascript/jscomp/TypeCheck.java
+diff --git a/src/com/google/javascript/jscomp/TypeCheck.java b/src/com/google/javascript/jscomp/TypeCheck.java
 index b05fbc4..8198efc 100644
---- a/com/google/javascript/jscomp/TypeCheck.java
-+++ b/com/google/javascript/jscomp/TypeCheck.java
+--- a/src/com/google/javascript/jscomp/TypeCheck.java
++++ b/src/com/google/javascript/jscomp/TypeCheck.java
 @@ -1403,17 +1403,9 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
  
      Iterator<Node> parameters = functionType.getParameters().iterator();

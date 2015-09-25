@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java b/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
 index e418c08..6003ed6 100644
---- a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
-+++ b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+--- a/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
++++ b/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
 @@ -159,28 +159,27 @@ public class SingularValueDecompositionImpl implements SingularValueDecompositio
              if (m >= n) {
                  // the tridiagonal matrix is Bt.B, where B is upper bidiagonal

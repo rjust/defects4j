@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java b/src/test/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
 index 06f1721..aabeab6 100644
---- a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
-+++ b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizerTest.java
 @@ -485,7 +485,7 @@ public class LevenbergMarquardtOptimizerTest
              circle.addPoint(points[i][0], points[i][1]);
          }
@@ -11,10 +11,10 @@ index 06f1721..aabeab6 100644
          VectorialPointValuePair optimum =
              optimizer.optimize(circle, target, weights, new double[] { -12, -12 });
          Point2D.Double center = new Point2D.Double(optimum.getPointRef()[0], optimum.getPointRef()[1]);
-diff --git a/org/apache/commons/math/optimization/general/MinpackTest.java b/org/apache/commons/math/optimization/general/MinpackTest.java
+diff --git a/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java b/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
 index 59467b2..7ff3331 100644
---- a/org/apache/commons/math/optimization/general/MinpackTest.java
-+++ b/org/apache/commons/math/optimization/general/MinpackTest.java
+--- a/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
++++ b/src/test/java/org/apache/commons/math/optimization/general/MinpackTest.java
 @@ -152,14 +152,14 @@ public class MinpackTest extends TestCase {
      minpackTest(new FreudensteinRothFunction(new double[] { 5.0, -20.0 },
                                               12432.833948863, 6.9988751744895,

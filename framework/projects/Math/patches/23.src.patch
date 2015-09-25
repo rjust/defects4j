@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-index 25f2f50..cff5bfd 100644
---- a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-+++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-@@ -147,8 +141,6 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+diff --git a/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+index 25f2f50..9d9f71d 100644
+--- a/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+@@ -147,8 +147,6 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
          UnivariatePointValuePair previous = null;
          UnivariatePointValuePair current
              = new UnivariatePointValuePair(x, isMinim ? fx : -fx);
@@ -11,7 +11,7 @@ index 25f2f50..cff5bfd 100644
  
          int iter = 0;
          while (true) {
-@@ -232,15 +224,10 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+@@ -232,15 +230,10 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
                  // User-defined convergence checker.
                  previous = current;
                  current = new UnivariatePointValuePair(u, isMinim ? fu : -fu);
@@ -28,7 +28,7 @@ index 25f2f50..cff5bfd 100644
                      }
                  }
  
-@@ -277,11 +264,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+@@ -277,11 +270,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
                      }
                  }
              } else { // Default termination (Brent's criterion).
@@ -41,7 +41,7 @@ index 25f2f50..cff5bfd 100644
              }
              ++iter;
          }
-@@ -309,9 +291,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+@@ -309,9 +298,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
          }
  
          if (isMinim) {

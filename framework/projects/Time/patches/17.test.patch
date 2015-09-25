@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDateTimeZoneCutover.java b/org/joda/time/TestDateTimeZoneCutover.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 index d86b68e..a7a5175 100644
---- a/org/joda/time/TestDateTimeZoneCutover.java
-+++ b/org/joda/time/TestDateTimeZoneCutover.java
+--- a/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
++++ b/src/test/java/org/joda/time/TestDateTimeZoneCutover.java
 @@ -1,5 +1,5 @@
  /*
 - *  Copyright 2001-2012 Stephen Colebourne

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/FrequencyTest.java b/org/apache/commons/math/stat/FrequencyTest.java
+diff --git a/src/test/org/apache/commons/math/stat/FrequencyTest.java b/src/test/org/apache/commons/math/stat/FrequencyTest.java
 index dc18d92..b2e0b3a 100644
---- a/org/apache/commons/math/stat/FrequencyTest.java
-+++ b/org/apache/commons/math/stat/FrequencyTest.java
+--- a/src/test/org/apache/commons/math/stat/FrequencyTest.java
++++ b/src/test/org/apache/commons/math/stat/FrequencyTest.java
 @@ -192,16 +192,16 @@ public final class FrequencyTest extends TestCase {
      // Check what happens when non-Comparable objects are added
      public void testAddNonComparable(){

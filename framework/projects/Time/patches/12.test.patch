@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestLocalDateTime_Constructors.java b/org/joda/time/TestLocalDateTime_Constructors.java
+diff --git a/src/test/java/org/joda/time/TestLocalDateTime_Constructors.java b/src/test/java/org/joda/time/TestLocalDateTime_Constructors.java
 index e00ce5d..1dbb381 100644
---- a/org/joda/time/TestLocalDateTime_Constructors.java
-+++ b/org/joda/time/TestLocalDateTime_Constructors.java
+--- a/src/test/java/org/joda/time/TestLocalDateTime_Constructors.java
++++ b/src/test/java/org/joda/time/TestLocalDateTime_Constructors.java
 @@ -102,30 +102,11 @@ public class TestLocalDateTime_Constructors extends TestCase {
      }
  
@@ -78,10 +78,10 @@ index e00ce5d..1dbb381 100644
          try {
              LocalDateTime.fromDateFields((Date) null);
              fail();
-diff --git a/org/joda/time/TestLocalDate_Constructors.java b/org/joda/time/TestLocalDate_Constructors.java
+diff --git a/src/test/java/org/joda/time/TestLocalDate_Constructors.java b/src/test/java/org/joda/time/TestLocalDate_Constructors.java
 index ee5fa9d..acd703c 100644
---- a/org/joda/time/TestLocalDate_Constructors.java
-+++ b/org/joda/time/TestLocalDate_Constructors.java
+--- a/src/test/java/org/joda/time/TestLocalDate_Constructors.java
++++ b/src/test/java/org/joda/time/TestLocalDate_Constructors.java
 @@ -94,30 +94,11 @@ public class TestLocalDate_Constructors extends TestCase {
      }
  

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/DurationFormatUtilsTest.java b/org/apache/commons/lang/time/DurationFormatUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/time/DurationFormatUtilsTest.java b/src/test/org/apache/commons/lang/time/DurationFormatUtilsTest.java
 index 1deeb0e..3397b5a 100644
---- a/org/apache/commons/lang/time/DurationFormatUtilsTest.java
-+++ b/org/apache/commons/lang/time/DurationFormatUtilsTest.java
+--- a/src/test/org/apache/commons/lang/time/DurationFormatUtilsTest.java
++++ b/src/test/org/apache/commons/lang/time/DurationFormatUtilsTest.java
 @@ -411,29 +411,6 @@ public class DurationFormatUtilsTest extends TestCase {
          assertEquals( "0000/00/30 16:00:00 000", DurationFormatUtils.formatPeriod(cal1.getTime().getTime(), cal2.getTime().getTime(), "yyyy/MM/dd HH:mm:ss SSS") );
      }

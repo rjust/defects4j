@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
 index 9049aae..5262f2d 100644
---- a/com/google/javascript/jscomp/NodeUtil.java
-+++ b/com/google/javascript/jscomp/NodeUtil.java
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
 @@ -2459,10 +2459,7 @@ public final class NodeUtil {
              || isToStringMethodCall(value)
              || locals.apply(value);

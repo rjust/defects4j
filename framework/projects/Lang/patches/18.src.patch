@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/lang3/time/FastDateFormat.java b/org/apache/commons/lang3/time/FastDateFormat.java
-index 51da48e..8be2e61 100644
---- a/org/apache/commons/lang3/time/FastDateFormat.java
-+++ b/org/apache/commons/lang3/time/FastDateFormat.java
-@@ -492,10 +486,10 @@ public class FastDateFormat extends Format {
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java b/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
+index 51da48e..e043323 100644
+--- a/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
++++ b/src/main/java/org/apache/commons/lang3/time/FastDateFormat.java
+@@ -492,10 +492,10 @@ public class FastDateFormat extends Format {
                  rule = new TextField(Calendar.ERA, ERAs);
                  break;
              case 'y': // year (number)

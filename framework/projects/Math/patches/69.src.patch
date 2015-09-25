@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java b/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
+diff --git a/src/main/java/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java b/src/main/java/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
 index dc83314..83b4c41 100644
---- a/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
-+++ b/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
+--- a/src/main/java/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
++++ b/src/main/java/org/apache/commons/math/stat/correlation/PearsonsCorrelation.java
 @@ -168,7 +168,7 @@ public class PearsonsCorrelation {
                  } else {
                      double r = correlationMatrix.getEntry(i, j);

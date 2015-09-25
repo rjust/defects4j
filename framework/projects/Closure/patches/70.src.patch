@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypedScopeCreator.java b/com/google/javascript/jscomp/TypedScopeCreator.java
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 index aa7e245..210bb66 100644
---- a/com/google/javascript/jscomp/TypedScopeCreator.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreator.java
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -1742,7 +1742,7 @@ final class TypedScopeCreator implements ScopeCreator {
            for (Node astParameter : astParameters.children()) {
              if (jsDocParameter != null) {

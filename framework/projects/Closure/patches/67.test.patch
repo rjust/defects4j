@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java b/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java b/test/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
 index 5663d6d..e412f29 100644
---- a/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
-+++ b/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/RemoveUnusedPrototypePropertiesTest.java
 @@ -80,7 +80,7 @@ public class RemoveUnusedPrototypePropertiesTest extends CompilerTestCase {
             "var x = new e; x.a()");
    }

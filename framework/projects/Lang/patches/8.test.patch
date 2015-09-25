@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDatePrinterTest.java b/org/apache/commons/lang3/time/FastDatePrinterTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/time/FastDatePrinterTest.java b/src/test/java/org/apache/commons/lang3/time/FastDatePrinterTest.java
 index bcea1a0..85ac8a9 100644
---- a/org/apache/commons/lang3/time/FastDatePrinterTest.java
-+++ b/org/apache/commons/lang3/time/FastDatePrinterTest.java
+--- a/src/test/java/org/apache/commons/lang3/time/FastDatePrinterTest.java
++++ b/src/test/java/org/apache/commons/lang3/time/FastDatePrinterTest.java
 @@ -16,7 +16,6 @@
   */
  package org.apache.commons.lang3.time;

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+diff --git a/test/com/google/javascript/jscomp/NodeUtilTest.java b/test/com/google/javascript/jscomp/NodeUtilTest.java
 index 61d4c31..aa052ec 100644
---- a/com/google/javascript/jscomp/NodeUtilTest.java
-+++ b/com/google/javascript/jscomp/NodeUtilTest.java
+--- a/test/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/test/com/google/javascript/jscomp/NodeUtilTest.java
 @@ -18,7 +18,6 @@ package com.google.javascript.jscomp;
  
  import com.google.common.base.Preconditions;
@@ -46,10 +46,10 @@ index 61d4c31..aa052ec 100644
 -    return NodeUtil.isValidDefineValue(value, defines);   
 -  }
  }
-diff --git a/com/google/javascript/jscomp/ProcessDefinesTest.java b/com/google/javascript/jscomp/ProcessDefinesTest.java
+diff --git a/test/com/google/javascript/jscomp/ProcessDefinesTest.java b/test/com/google/javascript/jscomp/ProcessDefinesTest.java
 index 6ab1ae7..b4b3816 100644
---- a/com/google/javascript/jscomp/ProcessDefinesTest.java
-+++ b/com/google/javascript/jscomp/ProcessDefinesTest.java
+--- a/test/com/google/javascript/jscomp/ProcessDefinesTest.java
++++ b/test/com/google/javascript/jscomp/ProcessDefinesTest.java
 @@ -84,15 +84,10 @@ public class ProcessDefinesTest extends CompilerTestCase {
          null, ProcessDefines.INVALID_DEFINE_TYPE_ERROR);
    }

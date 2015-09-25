@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/EigenDecompositionImpl.java b/org/apache/commons/math/linear/EigenDecompositionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
 index 468dca7..d1531a8 100644
---- a/org/apache/commons/math/linear/EigenDecompositionImpl.java
-+++ b/org/apache/commons/math/linear/EigenDecompositionImpl.java
+--- a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
++++ b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
 @@ -561,7 +561,7 @@ public class EigenDecompositionImpl implements EigenDecomposition {
                              z[ia][i] = c * z[ia][i] - s * p;
                          }
@@ -11,10 +11,10 @@ index 468dca7..d1531a8 100644
                          continue;
                      realEigenvalues[j] -= u;
                      e[j] = q;
-diff --git a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
-index 597f6c4..3abf3f0 100644
---- a/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
-+++ b/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java b/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
+index 597f6c4..5828e33 100644
+--- a/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
++++ b/src/main/java/org/apache/commons/math/linear/SingularValueDecompositionImpl.java
 @@ -108,7 +108,7 @@ public class SingularValueDecompositionImpl implements
                  for (int k = 0; k < n; k++) {
                      matAAT[i][j] += localcopy[i][k] * localcopy[j][k];
@@ -24,7 +24,7 @@ index 597f6c4..3abf3f0 100644
              }
          }
          int p;
-@@ -140,7 +141,7 @@ public class SingularValueDecompositionImpl implements
+@@ -140,7 +140,7 @@ public class SingularValueDecompositionImpl implements
              singularValues[i] = Math.sqrt(Math.abs(singularValues[i]));
          }
          // Up to this point, U and V are computed independently of each other.
@@ -33,10 +33,10 @@ index 597f6c4..3abf3f0 100644
          // The sign is set such that A.V_i=sigma_i.U_i (i<=p)
          // The right sign corresponds to a positive dot product of A.V_i and U_i
          for (int i = 0; i < p; i++) {
-diff --git a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
 index 5a60da8..10f7762 100644
---- a/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
-+++ b/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
+--- a/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java
 @@ -237,20 +237,23 @@ public abstract class AbstractLeastSquaresOptimizer implements DifferentiableMul
       * @return RMS value
       */

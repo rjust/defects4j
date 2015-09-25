@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 index 79f6dc0..a825b18 100644
---- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
-+++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 @@ -276,50 +276,28 @@ public class CollapsePropertiesTest extends CompilerTestCase {
    }
  

@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/lang3/text/ExtendedMessageFormat.java b/org/apache/commons/lang3/text/ExtendedMessageFormat.java
-index 55ee7d1..e4742ad 100644
---- a/org/apache/commons/lang3/text/ExtendedMessageFormat.java
-+++ b/org/apache/commons/lang3/text/ExtendedMessageFormat.java
-@@ -70,7 +69,6 @@ import org.apache.commons.lang3.Validate;
+diff --git a/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java b/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
+index 55ee7d1..e0a991e 100644
+--- a/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
++++ b/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
+@@ -70,7 +70,6 @@ import org.apache.commons.lang3.Validate;
   */
  public class ExtendedMessageFormat extends MessageFormat {
      private static final long serialVersionUID = -2362048321261811743L;
@@ -10,7 +10,7 @@ index 55ee7d1..e4742ad 100644
  
      private static final String DUMMY_PATTERN = "";
      private static final String ESCAPED_QUOTE = "''";
-@@ -256,49 +254,6 @@ public class ExtendedMessageFormat extends MessageFormat {
+@@ -256,49 +255,6 @@ public class ExtendedMessageFormat extends MessageFormat {
      }
  
      /**

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ExploitAssigns.java b/com/google/javascript/jscomp/ExploitAssigns.java
+diff --git a/src/com/google/javascript/jscomp/ExploitAssigns.java b/src/com/google/javascript/jscomp/ExploitAssigns.java
 index 1639f2c..1f925ba 100644
---- a/com/google/javascript/jscomp/ExploitAssigns.java
-+++ b/com/google/javascript/jscomp/ExploitAssigns.java
+--- a/src/com/google/javascript/jscomp/ExploitAssigns.java
++++ b/src/com/google/javascript/jscomp/ExploitAssigns.java
 @@ -73,7 +73,7 @@ class ExploitAssigns extends AbstractPeepholeOptimization {
     * @param value The value node.
     * @param isLValue Whether it's on the left-hand side of an expr.

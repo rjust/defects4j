@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/format/TestDateTimeFormatterBuilder.java b/org/joda/time/format/TestDateTimeFormatterBuilder.java
+diff --git a/src/test/java/org/joda/time/format/TestDateTimeFormatterBuilder.java b/src/test/java/org/joda/time/format/TestDateTimeFormatterBuilder.java
 index 54033bb..31aa53c 100644
---- a/org/joda/time/format/TestDateTimeFormatterBuilder.java
-+++ b/org/joda/time/format/TestDateTimeFormatterBuilder.java
+--- a/src/test/java/org/joda/time/format/TestDateTimeFormatterBuilder.java
++++ b/src/test/java/org/joda/time/format/TestDateTimeFormatterBuilder.java
 @@ -252,16 +252,6 @@ public class TestDateTimeFormatterBuilder extends TestCase {
          assertEquals(dt, f.withOffsetParsed().parseDateTime("2007-03-04 12:30 Europe/Paris"));
      }

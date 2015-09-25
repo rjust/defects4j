@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java b/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
+diff --git a/src/test/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java b/src/test/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
 index 7c160d3..411e1ee 100644
---- a/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
-+++ b/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
+--- a/src/test/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
++++ b/src/test/org/apache/commons/lang/StringUtilsEqualsIndexOfTest.java
 @@ -16,8 +16,6 @@
   */
  package org.apache.commons.lang;

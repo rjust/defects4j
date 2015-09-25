@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/DiscreteDistribution.java b/org/apache/commons/math3/distribution/DiscreteDistribution.java
+diff --git a/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java b/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java
 index 879eb2a..8c08dbe 100644
---- a/org/apache/commons/math3/distribution/DiscreteDistribution.java
-+++ b/org/apache/commons/math3/distribution/DiscreteDistribution.java
+--- a/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java
++++ b/src/main/java/org/apache/commons/math3/distribution/DiscreteDistribution.java
 @@ -16,9 +16,9 @@
   */
  package org.apache.commons.math3.distribution;

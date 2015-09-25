@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CollapseVariableDeclarations.java b/com/google/javascript/jscomp/CollapseVariableDeclarations.java
+diff --git a/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java b/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
 index e0466ea..47c2c4f 100644
---- a/com/google/javascript/jscomp/CollapseVariableDeclarations.java
-+++ b/com/google/javascript/jscomp/CollapseVariableDeclarations.java
+--- a/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
++++ b/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
 @@ -199,17 +199,11 @@ class CollapseVariableDeclarations implements CompilerPass {
        }
  

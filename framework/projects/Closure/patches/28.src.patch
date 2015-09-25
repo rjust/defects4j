@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodeConsumer.java b/com/google/javascript/jscomp/CodeConsumer.java
+diff --git a/src/com/google/javascript/jscomp/CodeConsumer.java b/src/com/google/javascript/jscomp/CodeConsumer.java
 index 5b5ab44..3522e89 100644
---- a/com/google/javascript/jscomp/CodeConsumer.java
-+++ b/com/google/javascript/jscomp/CodeConsumer.java
+--- a/src/com/google/javascript/jscomp/CodeConsumer.java
++++ b/src/com/google/javascript/jscomp/CodeConsumer.java
 @@ -257,19 +257,15 @@ abstract class CodeConsumer {
          }
        }
@@ -25,10 +25,10 @@ index 5b5ab44..3522e89 100644
    static boolean isNegativeZero(double x) {
      return x == 0.0 && Math.copySign(1, x) == -1.0;
    }
-diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
 index e793ddf..da05c4f 100644
---- a/com/google/javascript/jscomp/CodeGenerator.java
-+++ b/com/google/javascript/jscomp/CodeGenerator.java
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
 @@ -550,7 +550,7 @@ class CodeGenerator {
  
        case Token.NULL:
@@ -53,10 +53,10 @@ index e793ddf..da05c4f 100644
          break;
  
        case Token.CONTINUE:
-diff --git a/com/google/javascript/jscomp/InlineCostEstimator.java b/com/google/javascript/jscomp/InlineCostEstimator.java
+diff --git a/src/com/google/javascript/jscomp/InlineCostEstimator.java b/src/com/google/javascript/jscomp/InlineCostEstimator.java
 index 65694ab..9d0dde7 100644
---- a/com/google/javascript/jscomp/InlineCostEstimator.java
-+++ b/com/google/javascript/jscomp/InlineCostEstimator.java
+--- a/src/com/google/javascript/jscomp/InlineCostEstimator.java
++++ b/src/com/google/javascript/jscomp/InlineCostEstimator.java
 @@ -94,14 +94,5 @@ class InlineCostEstimator {
      void addIdentifier(String identifier) {
        add(ESTIMATED_IDENTIFIER);

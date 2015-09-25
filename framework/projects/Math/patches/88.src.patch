@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexTableau.java b/org/apache/commons/math/optimization/linear/SimplexTableau.java
-index a6d7419..ba57722 100644
---- a/org/apache/commons/math/optimization/linear/SimplexTableau.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexTableau.java
-@@ -323,27 +321,39 @@ class SimplexTableau implements Serializable {
+diff --git a/src/java/org/apache/commons/math/optimization/linear/SimplexTableau.java b/src/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
+index a6d7419..222eefe 100644
+--- a/src/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
++++ b/src/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
+@@ -323,27 +323,39 @@ class SimplexTableau implements Serializable {
       */
      protected RealPointValuePair getSolution() {
          double[] coefficients = new double[getOriginalNumDecisionVariables()];

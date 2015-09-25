@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/DeadAssignmentsElimination.java b/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+diff --git a/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java b/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
 index aaab0d6..879056f 100644
---- a/com/google/javascript/jscomp/DeadAssignmentsElimination.java
-+++ b/com/google/javascript/jscomp/DeadAssignmentsElimination.java
+--- a/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
++++ b/src/com/google/javascript/jscomp/DeadAssignmentsElimination.java
 @@ -290,47 +290,18 @@ class DeadAssignmentsElimination extends AbstractPostOrderCallback implements
    private boolean isVariableStillLiveWithinExpression(
        Node n, Node exprRoot, String variable) {

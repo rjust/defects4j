@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/builder/ToStringStyle.java b/org/apache/commons/lang3/builder/ToStringStyle.java
+diff --git a/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java b/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java
 index 26214ed..95b580b 100644
---- a/org/apache/commons/lang3/builder/ToStringStyle.java
-+++ b/org/apache/commons/lang3/builder/ToStringStyle.java
+--- a/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java
++++ b/src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java
 @@ -144,8 +144,9 @@ public abstract class ToStringStyle implements Serializable {
       *
       * @return Set the registry of objects being traversed

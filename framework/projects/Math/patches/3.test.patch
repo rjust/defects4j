@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/util/MathArraysTest.java b/org/apache/commons/math3/util/MathArraysTest.java
+diff --git a/src/test/java/org/apache/commons/math3/util/MathArraysTest.java b/src/test/java/org/apache/commons/math3/util/MathArraysTest.java
 index 7d6b812..e16afbc 100644
---- a/org/apache/commons/math3/util/MathArraysTest.java
-+++ b/org/apache/commons/math3/util/MathArraysTest.java
+--- a/src/test/java/org/apache/commons/math3/util/MathArraysTest.java
++++ b/src/test/java/org/apache/commons/math3/util/MathArraysTest.java
 @@ -582,15 +582,6 @@ public class MathArraysTest {
          }
      }

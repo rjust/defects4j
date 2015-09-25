@@ -1,8 +1,8 @@
-diff --git a/org/joda/time/LocalDate.java b/org/joda/time/LocalDate.java
-index c86b9d7..7bb7a08 100644
---- a/org/joda/time/LocalDate.java
-+++ b/org/joda/time/LocalDate.java
-@@ -207,10 +206,8 @@ public final class LocalDate
+diff --git a/src/main/java/org/joda/time/LocalDate.java b/src/main/java/org/joda/time/LocalDate.java
+index c86b9d7..ff0e40c 100644
+--- a/src/main/java/org/joda/time/LocalDate.java
++++ b/src/main/java/org/joda/time/LocalDate.java
+@@ -207,10 +207,8 @@ public final class LocalDate
          if (calendar == null) {
              throw new IllegalArgumentException("The calendar must not be null");
          }
@@ -14,7 +14,7 @@ index c86b9d7..7bb7a08 100644
              calendar.get(Calendar.MONTH) + 1,
              calendar.get(Calendar.DAY_OF_MONTH)
          );
-@@ -241,12 +238,6 @@ public final class LocalDate
+@@ -241,12 +239,6 @@ public final class LocalDate
          if (date == null) {
              throw new IllegalArgumentException("The date must not be null");
          }
@@ -27,11 +27,11 @@ index c86b9d7..7bb7a08 100644
          return new LocalDate(
              date.getYear() + 1900,
              date.getMonth() + 1,
-diff --git a/org/joda/time/LocalDateTime.java b/org/joda/time/LocalDateTime.java
-index e75deca..325192b 100644
---- a/org/joda/time/LocalDateTime.java
-+++ b/org/joda/time/LocalDateTime.java
-@@ -196,10 +195,8 @@ public final class LocalDateTime
+diff --git a/src/main/java/org/joda/time/LocalDateTime.java b/src/main/java/org/joda/time/LocalDateTime.java
+index e75deca..e12b39f 100644
+--- a/src/main/java/org/joda/time/LocalDateTime.java
++++ b/src/main/java/org/joda/time/LocalDateTime.java
+@@ -196,10 +196,8 @@ public final class LocalDateTime
          if (calendar == null) {
              throw new IllegalArgumentException("The calendar must not be null");
          }
@@ -43,7 +43,7 @@ index e75deca..325192b 100644
              calendar.get(Calendar.MONTH) + 1,
              calendar.get(Calendar.DAY_OF_MONTH),
              calendar.get(Calendar.HOUR_OF_DAY),
-@@ -234,12 +231,6 @@ public final class LocalDateTime
+@@ -234,12 +232,6 @@ public final class LocalDateTime
          if (date == null) {
              throw new IllegalArgumentException("The date must not be null");
          }

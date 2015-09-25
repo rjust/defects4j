@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
 index d1ffc4c..85cfe4f 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
 @@ -1934,21 +1934,6 @@ public class IntegrationTest extends TestCase {
          "print(3/0);print(3/-0);");
    }

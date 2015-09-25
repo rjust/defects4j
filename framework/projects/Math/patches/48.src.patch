@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
-index 0347525..c781a90 100644
---- a/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
-+++ b/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
-@@ -184,11 +183,7 @@ public abstract class BaseSecantSolver
+diff --git a/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java b/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+index 0347525..f2c1cfa 100644
+--- a/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
++++ b/src/main/java/org/apache/commons/math/analysis/solvers/BaseSecantSolver.java
+@@ -184,11 +184,7 @@ public abstract class BaseSecantSolver
                      f0 *= f1 / (f1 + fx);
                      break;
                  case REGULA_FALSI:

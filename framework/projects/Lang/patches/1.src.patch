@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtils.java b/org/apache/commons/lang3/math/NumberUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/math/NumberUtils.java b/src/main/java/org/apache/commons/lang3/math/NumberUtils.java
 index 70b8d64..1e6ccdc 100644
---- a/org/apache/commons/lang3/math/NumberUtils.java
-+++ b/org/apache/commons/lang3/math/NumberUtils.java
+--- a/src/main/java/org/apache/commons/lang3/math/NumberUtils.java
++++ b/src/main/java/org/apache/commons/lang3/math/NumberUtils.java
 @@ -464,20 +464,11 @@ public class NumberUtils {
              }
          }

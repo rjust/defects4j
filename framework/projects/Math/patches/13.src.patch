@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/Weight.java b/org/apache/commons/math3/optimization/Weight.java
+diff --git a/src/main/java/org/apache/commons/math3/optimization/Weight.java b/src/main/java/org/apache/commons/math3/optimization/Weight.java
 index 28c1619..8e7538f 100644
---- a/org/apache/commons/math3/optimization/Weight.java
-+++ b/org/apache/commons/math3/optimization/Weight.java
+--- a/src/main/java/org/apache/commons/math3/optimization/Weight.java
++++ b/src/main/java/org/apache/commons/math3/optimization/Weight.java
 @@ -18,7 +18,7 @@
  package org.apache.commons.math3.optimization;
  
@@ -24,11 +24,11 @@ index 28c1619..8e7538f 100644
      }
  
      /**
-diff --git a/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java b/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
-index 982e559..b6c97e7 100644
---- a/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
-+++ b/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
-@@ -559,16 +558,7 @@ public abstract class AbstractLeastSquaresOptimizer
+diff --git a/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
+index 982e559..22de45b 100644
+--- a/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
+@@ -559,16 +559,7 @@ public abstract class AbstractLeastSquaresOptimizer
       * @return the square-root of the weight matrix.
       */
      private RealMatrix squareRoot(RealMatrix m) {

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/AbstractRealVector.java b/org/apache/commons/math/linear/AbstractRealVector.java
+diff --git a/src/main/java/org/apache/commons/math/linear/AbstractRealVector.java b/src/main/java/org/apache/commons/math/linear/AbstractRealVector.java
 index ace4b8d..cf103c0 100644
---- a/org/apache/commons/math/linear/AbstractRealVector.java
-+++ b/org/apache/commons/math/linear/AbstractRealVector.java
+--- a/src/main/java/org/apache/commons/math/linear/AbstractRealVector.java
++++ b/src/main/java/org/apache/commons/math/linear/AbstractRealVector.java
 @@ -206,40 +206,6 @@ public abstract class AbstractRealVector implements RealVector {
      }
  
@@ -43,10 +43,10 @@ index ace4b8d..cf103c0 100644
      public double getDistance(double[] v) throws IllegalArgumentException {
          return getDistance(new ArrayRealVector(v,false));
      }
-diff --git a/org/apache/commons/math/linear/ArrayRealVector.java b/org/apache/commons/math/linear/ArrayRealVector.java
+diff --git a/src/main/java/org/apache/commons/math/linear/ArrayRealVector.java b/src/main/java/org/apache/commons/math/linear/ArrayRealVector.java
 index 22d0a28..45c0919 100644
---- a/org/apache/commons/math/linear/ArrayRealVector.java
-+++ b/org/apache/commons/math/linear/ArrayRealVector.java
+--- a/src/main/java/org/apache/commons/math/linear/ArrayRealVector.java
++++ b/src/main/java/org/apache/commons/math/linear/ArrayRealVector.java
 @@ -694,7 +694,6 @@ public class ArrayRealVector extends AbstractRealVector implements Serializable
      }
  
@@ -76,10 +76,10 @@ index 22d0a28..45c0919 100644
          }
          return max;
      }
-diff --git a/org/apache/commons/math/linear/OpenMapRealVector.java b/org/apache/commons/math/linear/OpenMapRealVector.java
+diff --git a/src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java b/src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java
 index eb5be1b..febea7a 100644
---- a/org/apache/commons/math/linear/OpenMapRealVector.java
-+++ b/org/apache/commons/math/linear/OpenMapRealVector.java
+--- a/src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java
++++ b/src/main/java/org/apache/commons/math/linear/OpenMapRealVector.java
 @@ -495,6 +495,17 @@ public class OpenMapRealVector extends AbstractRealVector implements SparseRealV
          return max;
      }

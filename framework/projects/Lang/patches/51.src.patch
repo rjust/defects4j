@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/BooleanUtils.java b/org/apache/commons/lang/BooleanUtils.java
+diff --git a/src/java/org/apache/commons/lang/BooleanUtils.java b/src/java/org/apache/commons/lang/BooleanUtils.java
 index 8b5028c..3fda4ec 100644
---- a/org/apache/commons/lang/BooleanUtils.java
-+++ b/org/apache/commons/lang/BooleanUtils.java
+--- a/src/java/org/apache/commons/lang/BooleanUtils.java
++++ b/src/java/org/apache/commons/lang/BooleanUtils.java
 @@ -679,7 +679,6 @@ public class BooleanUtils {
                          (str.charAt(1) == 'E' || str.charAt(1) == 'e') &&
                          (str.charAt(2) == 'S' || str.charAt(2) == 's');

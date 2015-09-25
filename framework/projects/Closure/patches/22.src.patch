@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckSideEffects.java b/com/google/javascript/jscomp/CheckSideEffects.java
+diff --git a/src/com/google/javascript/jscomp/CheckSideEffects.java b/src/com/google/javascript/jscomp/CheckSideEffects.java
 index 722d225..ee0fc6d 100644
---- a/com/google/javascript/jscomp/CheckSideEffects.java
-+++ b/com/google/javascript/jscomp/CheckSideEffects.java
+--- a/src/com/google/javascript/jscomp/CheckSideEffects.java
++++ b/src/com/google/javascript/jscomp/CheckSideEffects.java
 @@ -95,23 +95,58 @@ final class CheckSideEffects extends AbstractPostOrderCallback
        return;
      }
@@ -74,10 +74,10 @@ index 722d225..ee0fc6d 100644
        String msg = "This code lacks side-effects. Is there a bug?";
        if (n.isString()) {
          msg = "Is there a missing '+' on the previous line?";
-diff --git a/com/google/javascript/jscomp/NodeUtil.java b/com/google/javascript/jscomp/NodeUtil.java
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
 index 00e31e0..5de1e6f 100644
---- a/com/google/javascript/jscomp/NodeUtil.java
-+++ b/com/google/javascript/jscomp/NodeUtil.java
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
 @@ -3111,7 +3111,6 @@ public final class NodeUtil {
      // TODO(johnlenz): consider sharing some code with trySimpleUnusedResult.
      Node parent = expr.getParent();

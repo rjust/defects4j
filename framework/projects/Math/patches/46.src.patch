@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/complex/Complex.java b/org/apache/commons/math/complex/Complex.java
+diff --git a/src/main/java/org/apache/commons/math/complex/Complex.java b/src/main/java/org/apache/commons/math/complex/Complex.java
 index dd0b00a..137765c 100644
---- a/org/apache/commons/math/complex/Complex.java
-+++ b/org/apache/commons/math/complex/Complex.java
+--- a/src/main/java/org/apache/commons/math/complex/Complex.java
++++ b/src/main/java/org/apache/commons/math/complex/Complex.java
 @@ -256,8 +256,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
          }
  

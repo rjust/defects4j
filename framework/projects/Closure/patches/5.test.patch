@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
 index 00afc7d..369fc2f 100644
---- a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
-+++ b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+--- a/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
++++ b/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
 @@ -348,13 +348,6 @@ public class InlineObjectLiteralsTest extends CompilerTestCase {
          "   '[object Function]';");
    }

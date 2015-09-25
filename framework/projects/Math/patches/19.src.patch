@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-index f6a4f28..b54cb37 100644
---- a/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
-+++ b/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
+index f6a4f28..a131bc3 100644
+--- a/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/direct/CMAESOptimizer.java
 @@ -24,8 +24,8 @@ import java.util.List;
  import org.apache.commons.math3.analysis.MultivariateFunction;
  import org.apache.commons.math3.exception.DimensionMismatchException;
@@ -12,7 +12,7 @@ index f6a4f28..b54cb37 100644
  import org.apache.commons.math3.exception.OutOfRangeException;
  import org.apache.commons.math3.exception.TooManyEvaluationsException;
  import org.apache.commons.math3.exception.util.LocalizedFormats;
-@@ -535,21 +529,6 @@ public class CMAESOptimizer
+@@ -535,21 +535,6 @@ public class CMAESOptimizer
                  boundaries = new double[2][];
                  boundaries[0] = lB;
                  boundaries[1] = uB;

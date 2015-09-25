@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+diff --git a/test/com/google/javascript/jscomp/CodePrinterTest.java b/test/com/google/javascript/jscomp/CodePrinterTest.java
 index 8ba5d99..a70f048 100644
---- a/com/google/javascript/jscomp/CodePrinterTest.java
-+++ b/com/google/javascript/jscomp/CodePrinterTest.java
+--- a/test/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/test/com/google/javascript/jscomp/CodePrinterTest.java
 @@ -1354,13 +1354,6 @@ public class CodePrinterTest extends TestCase {
      assertPrint("var a = { '$\\\\' : 5 };", "var a={\"$\\\\\":5}");
    }

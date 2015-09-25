@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java b/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
+diff --git a/src/test/java/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java b/src/test/java/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
 index 1d357fd..4da9b42 100644
---- a/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
-+++ b/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
+--- a/src/test/java/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
++++ b/src/test/java/org/apache/commons/math3/analysis/differentiation/DerivativeStructureTest.java
 @@ -808,33 +808,6 @@ public class DerivativeStructureTest {
      }
  

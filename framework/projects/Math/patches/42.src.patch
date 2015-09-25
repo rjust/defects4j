@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexTableau.java b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/linear/SimplexTableau.java b/src/main/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
 index d96c916..fd89432 100644
---- a/org/apache/commons/math/optimization/linear/SimplexTableau.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexTableau.java
+--- a/src/main/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
++++ b/src/main/java/org/apache/commons/math/optimization/linear/SimplexTableau.java
 @@ -407,12 +407,7 @@ class SimplexTableau implements Serializable {
              continue;
            }

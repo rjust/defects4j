@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java b/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java b/src/main/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
 index ba3fe26..e31b156 100644
---- a/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
-+++ b/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
+--- a/src/main/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java
 @@ -1657,12 +1657,10 @@ public class BOBYQAOptimizer
                      final int tmp2 = jpt;
                      jpt = ipt - n;

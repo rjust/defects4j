@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/descriptive/moment/Variance.java b/org/apache/commons/math/stat/descriptive/moment/Variance.java
+diff --git a/src/main/java/org/apache/commons/math/stat/descriptive/moment/Variance.java b/src/main/java/org/apache/commons/math/stat/descriptive/moment/Variance.java
 index 1de139f..e5518e3 100644
---- a/org/apache/commons/math/stat/descriptive/moment/Variance.java
-+++ b/org/apache/commons/math/stat/descriptive/moment/Variance.java
+--- a/src/main/java/org/apache/commons/math/stat/descriptive/moment/Variance.java
++++ b/src/main/java/org/apache/commons/math/stat/descriptive/moment/Variance.java
 @@ -517,7 +517,7 @@ public class Variance extends AbstractStorelessUnivariateStatistic implements Se
                  }
  

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/SystemUtilsTest.java b/org/apache/commons/lang3/SystemUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/SystemUtilsTest.java b/src/test/java/org/apache/commons/lang3/SystemUtilsTest.java
 index b6bbf8f..10a9492 100644
---- a/org/apache/commons/lang3/SystemUtilsTest.java
-+++ b/org/apache/commons/lang3/SystemUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/SystemUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/SystemUtilsTest.java
 @@ -207,22 +207,22 @@ public class SystemUtilsTest extends TestCase {
      }
  

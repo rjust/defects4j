@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringUtilsTest.java b/org/apache/commons/lang3/StringUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/StringUtilsTest.java b/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
 index bad56e9..b11a633 100644
---- a/org/apache/commons/lang3/StringUtilsTest.java
-+++ b/org/apache/commons/lang3/StringUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/StringUtilsTest.java
 @@ -2181,14 +2181,4 @@ public class StringUtilsTest {
          expectedBytes = expectedString.getBytes(encoding);
          assertEquals(expectedString, StringUtils.toString(expectedBytes, encoding));

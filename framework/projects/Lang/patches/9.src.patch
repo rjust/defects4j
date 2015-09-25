@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateParser.java b/org/apache/commons/lang3/time/FastDateParser.java
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDateParser.java b/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
 index 38857c7..8df302f 100644
---- a/org/apache/commons/lang3/time/FastDateParser.java
-+++ b/org/apache/commons/lang3/time/FastDateParser.java
+--- a/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
++++ b/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
 @@ -141,9 +141,6 @@ public class FastDateParser implements DateParser, Serializable {
              currentFormatField= nextFormatField;
              currentStrategy= nextStrategy;

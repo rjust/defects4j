@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ProcessCommonJSModules.java b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+diff --git a/src/com/google/javascript/jscomp/ProcessCommonJSModules.java b/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
 index 6777957..bed92d0 100644
---- a/com/google/javascript/jscomp/ProcessCommonJSModules.java
-+++ b/com/google/javascript/jscomp/ProcessCommonJSModules.java
+--- a/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
++++ b/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
 @@ -114,14 +114,9 @@ public class ProcessCommonJSModules implements CompilerPass {
    }
  

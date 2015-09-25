@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 index bb94ab3..779eb74 100644
---- a/org/apache/commons/lang3/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 @@ -1139,10 +1139,6 @@ public class NumberUtilsTest extends TestCase {
          // LANG-521
          val = "2.";

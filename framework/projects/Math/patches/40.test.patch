@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java b/src/test/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
 index 13bd8f4..3324b79 100644
---- a/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
-+++ b/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
+--- a/src/test/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
++++ b/src/test/java/org/apache/commons/math/analysis/solvers/BracketingNthOrderBrentSolverTest.java
 @@ -41,7 +41,7 @@ public final class BracketingNthOrderBrentSolverTest extends BaseSecantSolverAbs
      /** {@inheritDoc} */
      @Override

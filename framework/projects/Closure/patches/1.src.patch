@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/RemoveUnusedVars.java b/com/google/javascript/jscomp/RemoveUnusedVars.java
+diff --git a/src/com/google/javascript/jscomp/RemoveUnusedVars.java b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
 index 4c84735..a0520d2 100644
---- a/com/google/javascript/jscomp/RemoveUnusedVars.java
-+++ b/com/google/javascript/jscomp/RemoveUnusedVars.java
+--- a/src/com/google/javascript/jscomp/RemoveUnusedVars.java
++++ b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
 @@ -367,18 +367,7 @@ class RemoveUnusedVars
     * @param fnScope The scope inside the function
     */

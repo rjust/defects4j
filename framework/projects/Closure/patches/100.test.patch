@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 index 74b9276..c0fa439 100644
---- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
-+++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+--- a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 @@ -35,7 +35,7 @@ public class CheckGlobalThisTest extends CompilerTestCase {
    private void testFailure(String js) {
      test(js, null, CheckGlobalThis.GLOBAL_THIS);
@@ -88,10 +88,10 @@ index 74b9276..c0fa439 100644
 -        "function f() { var x = {}; x.y(function() { return this.x; }); }");
 -  }
  }
-diff --git a/com/google/javascript/jscomp/CompilerTestCase.java b/com/google/javascript/jscomp/CompilerTestCase.java
+diff --git a/test/com/google/javascript/jscomp/CompilerTestCase.java b/test/com/google/javascript/jscomp/CompilerTestCase.java
 index 477a91b..55beb9f 100644
---- a/com/google/javascript/jscomp/CompilerTestCase.java
-+++ b/com/google/javascript/jscomp/CompilerTestCase.java
+--- a/test/com/google/javascript/jscomp/CompilerTestCase.java
++++ b/test/com/google/javascript/jscomp/CompilerTestCase.java
 @@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
  import com.google.common.collect.Lists;
  import com.google.javascript.jscomp.CodeChangeHandler.RecentChange;
@@ -100,10 +100,10 @@ index 477a91b..55beb9f 100644
  import com.google.javascript.rhino.testing.BaseJSTypeTestCase;
  
  import junit.framework.TestCase;
-diff --git a/com/google/javascript/jscomp/ConcreteTypeTest.java b/com/google/javascript/jscomp/ConcreteTypeTest.java
+diff --git a/test/com/google/javascript/jscomp/ConcreteTypeTest.java b/test/com/google/javascript/jscomp/ConcreteTypeTest.java
 index d368f0d..d7a7e01 100644
---- a/com/google/javascript/jscomp/ConcreteTypeTest.java
-+++ b/com/google/javascript/jscomp/ConcreteTypeTest.java
+--- a/test/com/google/javascript/jscomp/ConcreteTypeTest.java
++++ b/test/com/google/javascript/jscomp/ConcreteTypeTest.java
 @@ -244,7 +244,7 @@ public class ConcreteTypeTest extends TestCase {
        return registry;
      }
@@ -197,10 +197,10 @@ index d368f0d..d7a7e01 100644
      public boolean isTypeInferred() { return true; }
    }
  }
-diff --git a/com/google/javascript/jscomp/DataFlowAnalysisTest.java b/com/google/javascript/jscomp/DataFlowAnalysisTest.java
+diff --git a/test/com/google/javascript/jscomp/DataFlowAnalysisTest.java b/test/com/google/javascript/jscomp/DataFlowAnalysisTest.java
 index fc4fa22..a7036cc 100644
---- a/com/google/javascript/jscomp/DataFlowAnalysisTest.java
-+++ b/com/google/javascript/jscomp/DataFlowAnalysisTest.java
+--- a/test/com/google/javascript/jscomp/DataFlowAnalysisTest.java
++++ b/test/com/google/javascript/jscomp/DataFlowAnalysisTest.java
 @@ -338,7 +338,14 @@ public class DataFlowAnalysisTest extends TestCase {
       * Constructor.
       *
@@ -216,10 +216,10 @@ index fc4fa22..a7036cc 100644
      ConstPropLatticeElement(boolean isTop) {
        this.isTop = isTop;
        this.constMap = Maps.newHashMap();
-diff --git a/com/google/javascript/jscomp/InferJSDocInfoTest.java b/com/google/javascript/jscomp/InferJSDocInfoTest.java
+diff --git a/test/com/google/javascript/jscomp/InferJSDocInfoTest.java b/test/com/google/javascript/jscomp/InferJSDocInfoTest.java
 index ce273b7..6832419 100644
---- a/com/google/javascript/jscomp/InferJSDocInfoTest.java
-+++ b/com/google/javascript/jscomp/InferJSDocInfoTest.java
+--- a/test/com/google/javascript/jscomp/InferJSDocInfoTest.java
++++ b/test/com/google/javascript/jscomp/InferJSDocInfoTest.java
 @@ -24,6 +24,8 @@ import com.google.javascript.jscomp.ScopeCreator;
  import com.google.javascript.rhino.Node;
  import com.google.javascript.rhino.jstype.FunctionType;
@@ -258,10 +258,10 @@ index ce273b7..6832419 100644
 +    return (ObjectType) registry.getNativeType(type);
 +  }
  }
-diff --git a/com/google/javascript/rhino/jstype/FunctionTypeTest.java b/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
 index e58037d..76eb013 100644
---- a/com/google/javascript/rhino/jstype/FunctionTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
 @@ -38,6 +38,7 @@
  
  package com.google.javascript.rhino.jstype;
@@ -270,10 +270,10 @@ index e58037d..76eb013 100644
  import com.google.javascript.rhino.testing.BaseJSTypeTestCase;
  
  
-diff --git a/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java b/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java b/test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
 index 8d3f2ce..04338c2 100644
---- a/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
-+++ b/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
+--- a/test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
++++ b/test/com/google/javascript/rhino/jstype/JSTypeRegistryTest.java
 @@ -46,6 +46,7 @@ import com.google.javascript.rhino.testing.Asserts;
  
  import junit.framework.TestCase;
@@ -282,10 +282,10 @@ index 8d3f2ce..04338c2 100644
  /**
   * Tests {@link JSTypeRegistry}.
   *
-diff --git a/com/google/javascript/rhino/jstype/JSTypeTest.java b/com/google/javascript/rhino/jstype/JSTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/JSTypeTest.java b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
 index f26fa45..eb429f8 100644
---- a/com/google/javascript/rhino/jstype/JSTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/JSTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/JSTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
 @@ -4863,8 +4863,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
    }
  

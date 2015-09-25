@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java b/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
+diff --git a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
 index b941ffa..f060cfb 100644
---- a/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
-+++ b/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
+--- a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
++++ b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/SubLineTest.java
 @@ -152,13 +152,5 @@ public class SubLineTest {
          Assert.assertNull(sub1.intersection(sub2, true));
          Assert.assertNull(sub1.intersection(sub2, false));
@@ -16,10 +16,10 @@ index b941ffa..f060cfb 100644
 -    }
  
  }
-diff --git a/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java b/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
+diff --git a/src/test/java/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java b/src/test/java/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
 index 7a9defe..bc276d1 100644
---- a/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
-+++ b/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
+--- a/src/test/java/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
++++ b/src/test/java/org/apache/commons/math3/geometry/euclidean/twod/SubLineTest.java
 @@ -144,12 +144,4 @@ public class SubLineTest {
          Assert.assertNull(sub1.intersection(sub2, false));
      }

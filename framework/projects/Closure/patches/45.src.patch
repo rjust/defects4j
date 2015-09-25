@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/RemoveUnusedVars.java b/com/google/javascript/jscomp/RemoveUnusedVars.java
-index c93a073..393ced6 100644
---- a/com/google/javascript/jscomp/RemoveUnusedVars.java
-+++ b/com/google/javascript/jscomp/RemoveUnusedVars.java
+diff --git a/src/com/google/javascript/jscomp/RemoveUnusedVars.java b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
+index c93a073..b403db2 100644
+--- a/src/com/google/javascript/jscomp/RemoveUnusedVars.java
++++ b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
 @@ -729,7 +729,6 @@ class RemoveUnusedVars
              assignedToUnknownValue = true;
            }

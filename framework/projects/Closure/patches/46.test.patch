@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/jstype/JSTypeTest.java b/com/google/javascript/rhino/jstype/JSTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/JSTypeTest.java b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
 index 2081855..ce46b96 100644
---- a/com/google/javascript/rhino/jstype/JSTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/JSTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/JSTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
 @@ -2716,11 +2716,14 @@ public class JSTypeTest extends BaseJSTypeTestCase {
      builder.addProperty("e", NUMBER_TYPE, null);
      builder.addProperty("b", STRING_TYPE, null);
@@ -57,10 +57,10 @@ index 2081855..ce46b96 100644
          abType,
          abcType,
          registry.getNativeType(JSTypeNative.NO_OBJECT_TYPE),
-diff --git a/com/google/javascript/rhino/jstype/RecordTypeTest.java b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+diff --git a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
 index 4840532..d11199f 100644
---- a/com/google/javascript/rhino/jstype/RecordTypeTest.java
-+++ b/com/google/javascript/rhino/jstype/RecordTypeTest.java
+--- a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
 @@ -72,35 +72,4 @@ public class RecordTypeTest extends BaseJSTypeTestCase {
      assertEquals("{a1: number, a2: number, a3: number, a4: number, ...}",
          record.toString());

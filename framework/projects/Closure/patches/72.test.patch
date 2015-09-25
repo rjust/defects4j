@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 index 2811bc0..d9a413f 100644
---- a/com/google/javascript/jscomp/InlineFunctionsTest.java
-+++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 @@ -383,13 +383,6 @@ public class InlineFunctionsTest extends CompilerTestCase {
          "foo();");
    }
@@ -16,10 +16,10 @@ index 2811bc0..d9a413f 100644
    public void testMixedModeInlining1() {
      // Base line tests, direct inlining
      test("function foo(){return 1}" +
-diff --git a/com/google/javascript/jscomp/RenameLabelsTest.java b/com/google/javascript/jscomp/RenameLabelsTest.java
+diff --git a/test/com/google/javascript/jscomp/RenameLabelsTest.java b/test/com/google/javascript/jscomp/RenameLabelsTest.java
 index 5528113..ccfa8e2 100644
---- a/com/google/javascript/jscomp/RenameLabelsTest.java
-+++ b/com/google/javascript/jscomp/RenameLabelsTest.java
+--- a/test/com/google/javascript/jscomp/RenameLabelsTest.java
++++ b/test/com/google/javascript/jscomp/RenameLabelsTest.java
 @@ -85,8 +85,4 @@ public class RenameLabelsTest extends CompilerTestCase {
           "a(); while (1) break;");
    }

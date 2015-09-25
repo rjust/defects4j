@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java b/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java b/src/test/java/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
 index ad4f2fe..b4bf643 100644
---- a/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
-+++ b/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/linear/SimplexSolverTest.java
 @@ -50,28 +50,7 @@ public class SimplexSolverTest {
          Assert.assertEquals(1.0d, solution.getValue(), epsilon);
          Assert.assertTrue(validSolution(solution, constraints, epsilon));

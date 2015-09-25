@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/format/TestPeriodFormatterBuilder.java b/org/joda/time/format/TestPeriodFormatterBuilder.java
+diff --git a/src/test/java/org/joda/time/format/TestPeriodFormatterBuilder.java b/src/test/java/org/joda/time/format/TestPeriodFormatterBuilder.java
 index 6684366..53d31b0 100644
---- a/org/joda/time/format/TestPeriodFormatterBuilder.java
-+++ b/org/joda/time/format/TestPeriodFormatterBuilder.java
+--- a/src/test/java/org/joda/time/format/TestPeriodFormatterBuilder.java
++++ b/src/test/java/org/joda/time/format/TestPeriodFormatterBuilder.java
 @@ -843,30 +843,4 @@ public class TestPeriodFormatterBuilder extends TestCase {
          assertNotNull(bld.toParser());
      }

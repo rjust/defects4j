@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/fraction/FractionTest.java b/org/apache/commons/math/fraction/FractionTest.java
+diff --git a/src/test/org/apache/commons/math/fraction/FractionTest.java b/src/test/org/apache/commons/math/fraction/FractionTest.java
 index 3644b0e..7eb2bbd 100644
---- a/org/apache/commons/math/fraction/FractionTest.java
-+++ b/org/apache/commons/math/fraction/FractionTest.java
+--- a/src/test/org/apache/commons/math/fraction/FractionTest.java
++++ b/src/test/org/apache/commons/math/fraction/FractionTest.java
 @@ -169,15 +169,6 @@ public class FractionTest extends TestCase {
          assertEquals(0, first.compareTo(third));
          assertEquals(1, first.compareTo(second));

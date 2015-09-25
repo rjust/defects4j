@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+diff --git a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
 index 3f39c07..d31bdcd 100644
---- a/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
-+++ b/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
+--- a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
++++ b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
 @@ -154,7 +154,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
  
    @Override
@@ -20,10 +20,10 @@ index 3f39c07..d31bdcd 100644
              if (defNode != null &&
                  !reachingDef.dependsOnOuterScopeVars(name, cfgNode)) {
                candidates.add(new Candidate(name, defNode, n, cfgNode));
-diff --git a/com/google/javascript/jscomp/MustBeReachingVariableDef.java b/com/google/javascript/jscomp/MustBeReachingVariableDef.java
+diff --git a/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java b/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java
 index 589f673..cc7dd73 100644
---- a/com/google/javascript/jscomp/MustBeReachingVariableDef.java
-+++ b/com/google/javascript/jscomp/MustBeReachingVariableDef.java
+--- a/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java
++++ b/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java
 @@ -68,8 +68,6 @@ final class MustBeReachingVariableDef extends
    private static class Definition {
      final Node node;

@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-index 28aee43..ea0f20d 100644
---- a/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-+++ b/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-@@ -163,7 +157,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+diff --git a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+index 28aee43..16ef72f 100644
+--- a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
++++ b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
+@@ -163,7 +163,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
          setMaxIterations(1000);
  
          // default values for the tuning parameters
@@ -10,7 +10,7 @@ index 28aee43..ea0f20d 100644
          setInitialStepBoundFactor(100.0);
          setCostRelativeTolerance(1.0e-10);
          setParRelativeTolerance(1.0e-10);
-@@ -245,13 +235,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -245,13 +244,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
          // outer loop
          lmPar = 0;
          boolean firstIteration = true;
@@ -24,7 +24,7 @@ index 28aee43..ea0f20d 100644
              updateJacobian();
              qrDecomposition();
  
-@@ -303,7 +291,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -303,7 +300,7 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
              }
              if (maxCosine <= orthoTolerance) {
                  // convergence has been reached
@@ -33,7 +33,7 @@ index 28aee43..ea0f20d 100644
              }
  
              // rescale if necessary
-@@ -345,7 +333,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -345,7 +342,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
  
                  // evaluate the function at x + p and calculate its norm
                  updateResidualsAndCost();
@@ -41,7 +41,7 @@ index 28aee43..ea0f20d 100644
  
                  // compute the scaled actual reduction
                  double actRed = -1.0;
-@@ -414,19 +401,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -414,19 +410,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
                  }
  
                  // tests for convergence.

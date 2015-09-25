@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java b/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
+diff --git a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
 index 6c996c7..5da16c9 100644
---- a/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
-+++ b/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
+--- a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
++++ b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/LineTest.java
 @@ -129,20 +129,4 @@ public class LineTest {
          Assert.assertNull(l.intersection(new Line(new Vector3D(0, -4, 0), new Vector3D(1, -4, 0))));
      }

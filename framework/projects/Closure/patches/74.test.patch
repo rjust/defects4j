@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 index ad698eb..78bd30a 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 @@ -616,7 +616,7 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
      fold("x = -1 >= 9", "x = false");
  

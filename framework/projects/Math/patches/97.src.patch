@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/analysis/BrentSolver.java b/org/apache/commons/math/analysis/BrentSolver.java
-index 57f64a9..01a9ee5 100644
---- a/org/apache/commons/math/analysis/BrentSolver.java
-+++ b/org/apache/commons/math/analysis/BrentSolver.java
+diff --git a/src/java/org/apache/commons/math/analysis/BrentSolver.java b/src/java/org/apache/commons/math/analysis/BrentSolver.java
+index 57f64a9..909fb0b 100644
+--- a/src/java/org/apache/commons/math/analysis/BrentSolver.java
++++ b/src/java/org/apache/commons/math/analysis/BrentSolver.java
 @@ -128,41 +128,20 @@ public class BrentSolver extends UnivariateRealSolverImpl {
          clearResult();
          verifyInterval(min, max);

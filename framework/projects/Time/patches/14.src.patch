@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java b/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
+diff --git a/src/main/java/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java b/src/main/java/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
 index 2892a2d..42a32e7 100644
---- a/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
-+++ b/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
+--- a/src/main/java/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
++++ b/src/main/java/org/joda/time/chrono/BasicMonthOfYearDateTimeField.java
 @@ -206,12 +206,6 @@ class BasicMonthOfYearDateTimeField extends ImpreciseDateTimeField {
          if (valueToAdd == 0) {
              return values;

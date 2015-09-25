@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/RemoveUnusedNamesTest.java b/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
+diff --git a/test/com/google/javascript/jscomp/RemoveUnusedNamesTest.java b/test/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
 index d4a2b65..45a58de 100644
---- a/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
-+++ b/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
+--- a/test/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
++++ b/test/com/google/javascript/jscomp/RemoveUnusedNamesTest.java
 @@ -128,11 +128,7 @@ public class RemoveUnusedNamesTest extends CompilerTestCase {
    }
  
@@ -15,10 +15,10 @@ index d4a2b65..45a58de 100644
          "function e(){}" +
             "var x = e.prototype.method1 = function(){};" +
             "var y = new e; x()",
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index 71c85bc..28277b9 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -4543,45 +4543,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
          "required: number");
    }

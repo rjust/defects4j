@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/StringUtils.java b/org/apache/commons/lang/StringUtils.java
-index 8351b3e..6ad364b 100644
---- a/org/apache/commons/lang/StringUtils.java
-+++ b/org/apache/commons/lang/StringUtils.java
+diff --git a/src/java/org/apache/commons/lang/StringUtils.java b/src/java/org/apache/commons/lang/StringUtils.java
+index 8351b3e..72b4a49 100644
+--- a/src/java/org/apache/commons/lang/StringUtils.java
++++ b/src/java/org/apache/commons/lang/StringUtils.java
 @@ -1045,14 +1045,7 @@ public class StringUtils {
          if (str == null || searchStr == null) {
              return false;

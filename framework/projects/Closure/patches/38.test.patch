@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodePrinterTest.java b/com/google/javascript/jscomp/CodePrinterTest.java
+diff --git a/test/com/google/javascript/jscomp/CodePrinterTest.java b/test/com/google/javascript/jscomp/CodePrinterTest.java
 index a76dfa6..420ffba 100644
---- a/com/google/javascript/jscomp/CodePrinterTest.java
-+++ b/com/google/javascript/jscomp/CodePrinterTest.java
+--- a/test/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/test/com/google/javascript/jscomp/CodePrinterTest.java
 @@ -1367,10 +1367,4 @@ public class CodePrinterTest extends TestCase {
      String actual = printNode(current).replace("\n", "");
      assertEquals(expected, actual);

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/FastDateFormatTest.java b/org/apache/commons/lang/time/FastDateFormatTest.java
+diff --git a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
 index e981682..96f6a46 100644
---- a/org/apache/commons/lang/time/FastDateFormatTest.java
-+++ b/org/apache/commons/lang/time/FastDateFormatTest.java
+--- a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
++++ b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
 @@ -28,8 +28,6 @@ import junit.framework.TestCase;
  import junit.framework.TestSuite;
  import junit.textui.TestRunner;

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstants.java b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 index 9d2f97a..4295d9c 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstants.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstants.java
+--- a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 @@ -904,9 +904,8 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
            && right.getString().equals("undefined"))
            || (Token.VOID == right.getType()

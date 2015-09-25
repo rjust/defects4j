@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineObjectLiterals.java b/com/google/javascript/jscomp/InlineObjectLiterals.java
+diff --git a/src/com/google/javascript/jscomp/InlineObjectLiterals.java b/src/com/google/javascript/jscomp/InlineObjectLiterals.java
 index d92b16c..a754450 100644
---- a/com/google/javascript/jscomp/InlineObjectLiterals.java
-+++ b/com/google/javascript/jscomp/InlineObjectLiterals.java
+--- a/src/com/google/javascript/jscomp/InlineObjectLiterals.java
++++ b/src/com/google/javascript/jscomp/InlineObjectLiterals.java
 @@ -327,30 +327,25 @@ class InlineObjectLiterals implements CompilerPass {
                     NodeUtil.newUndefinedNode(null)));
        }

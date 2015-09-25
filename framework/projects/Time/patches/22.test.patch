@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDuration_Basics.java b/org/joda/time/TestDuration_Basics.java
+diff --git a/src/test/java/org/joda/time/TestDuration_Basics.java b/src/test/java/org/joda/time/TestDuration_Basics.java
 index 5850b56..4caa6e2 100644
---- a/org/joda/time/TestDuration_Basics.java
-+++ b/org/joda/time/TestDuration_Basics.java
+--- a/src/test/java/org/joda/time/TestDuration_Basics.java
++++ b/src/test/java/org/joda/time/TestDuration_Basics.java
 @@ -444,51 +444,15 @@ public class TestDuration_Basics extends TestCase {
  
      //-----------------------------------------------------------------------
@@ -63,10 +63,10 @@ index 5850b56..4caa6e2 100644
      }
  
      //-----------------------------------------------------------------------
-diff --git a/org/joda/time/TestPeriod_Constructors.java b/org/joda/time/TestPeriod_Constructors.java
+diff --git a/src/test/java/org/joda/time/TestPeriod_Constructors.java b/src/test/java/org/joda/time/TestPeriod_Constructors.java
 index 29f7bdf..d1369ee 100644
---- a/org/joda/time/TestPeriod_Constructors.java
-+++ b/org/joda/time/TestPeriod_Constructors.java
+--- a/src/test/java/org/joda/time/TestPeriod_Constructors.java
++++ b/src/test/java/org/joda/time/TestPeriod_Constructors.java
 @@ -171,31 +171,6 @@ public class TestPeriod_Constructors extends TestCase {
          assertEquals(8, test.getMillis());
      }

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
 index c2d4b77..e72ac65 100644
---- a/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
-+++ b/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
 @@ -117,18 +117,6 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
      testSets(true, js, js, expected);
    }

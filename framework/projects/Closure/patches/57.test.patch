@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ClosureCodingConventionTest.java b/com/google/javascript/jscomp/ClosureCodingConventionTest.java
+diff --git a/test/com/google/javascript/jscomp/ClosureCodingConventionTest.java b/test/com/google/javascript/jscomp/ClosureCodingConventionTest.java
 index e7f60f7..9704d8e 100644
---- a/com/google/javascript/jscomp/ClosureCodingConventionTest.java
-+++ b/com/google/javascript/jscomp/ClosureCodingConventionTest.java
+--- a/test/com/google/javascript/jscomp/ClosureCodingConventionTest.java
++++ b/test/com/google/javascript/jscomp/ClosureCodingConventionTest.java
 @@ -191,13 +191,6 @@ public class ClosureCodingConventionTest extends TestCase {
      assertFunctionBind("Function.prototype.bind.call(obj, p1)");
    }

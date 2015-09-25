@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java b/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
+diff --git a/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java b/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
 index a21671a..12a0663 100644
---- a/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
-+++ b/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
+--- a/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
++++ b/src/main/java/org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java
 @@ -60,13 +60,8 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
                  return 0;
              }

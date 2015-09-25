@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/SparseRealVectorTest.java b/org/apache/commons/math/linear/SparseRealVectorTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java b/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
 index 8ab628c..e23bfa0 100644
---- a/org/apache/commons/math/linear/SparseRealVectorTest.java
-+++ b/org/apache/commons/math/linear/SparseRealVectorTest.java
+--- a/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
++++ b/src/test/java/org/apache/commons/math/linear/SparseRealVectorTest.java
 @@ -998,30 +998,4 @@ public class SparseRealVectorTest {
              Assert.assertEquals(msg + " " +  i + " elements differ", m[i],n[i],tolerance);
          }

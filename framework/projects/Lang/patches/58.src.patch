@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/math/NumberUtils.java b/org/apache/commons/lang/math/NumberUtils.java
+diff --git a/src/java/org/apache/commons/lang/math/NumberUtils.java b/src/java/org/apache/commons/lang/math/NumberUtils.java
 index eb74e72..c0f06a4 100644
---- a/org/apache/commons/lang/math/NumberUtils.java
-+++ b/org/apache/commons/lang/math/NumberUtils.java
+--- a/src/java/org/apache/commons/lang/math/NumberUtils.java
++++ b/src/java/org/apache/commons/lang/math/NumberUtils.java
 @@ -451,7 +451,8 @@ public class NumberUtils {
                  case 'L' :
                      if (dec == null

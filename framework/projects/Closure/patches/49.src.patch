@@ -1,8 +1,8 @@
-diff --git a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-index 0fcb778..7eb9926 100644
---- a/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-+++ b/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-@@ -88,7 +77,18 @@ class MakeDeclaredNamesUnique
+diff --git a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+index 0fcb778..12fa6ef 100644
+--- a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
++++ b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+@@ -88,7 +88,18 @@ class MakeDeclaredNamesUnique
        renamer = nameStack.peek().forChildScope();
      }
  
@@ -22,7 +22,7 @@ index 0fcb778..7eb9926 100644
        // Add the block declarations
        findDeclaredNames(declarationRoot, null, renamer);
      }
-@@ -123,23 +123,6 @@ class MakeDeclaredNamesUnique
+@@ -123,23 +134,6 @@ class MakeDeclaredNamesUnique
          }
          break;
  
@@ -46,7 +46,7 @@ index 0fcb778..7eb9926 100644
        case Token.CATCH:
          {
            Renamer renamer = nameStack.peek().forChildScope();
-@@ -172,18 +155,10 @@ class MakeDeclaredNamesUnique
+@@ -172,18 +166,10 @@ class MakeDeclaredNamesUnique
          break;
  
        case Token.FUNCTION:

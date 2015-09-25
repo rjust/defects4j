@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/BinomialDistributionTest.java b/org/apache/commons/math3/distribution/BinomialDistributionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/distribution/BinomialDistributionTest.java b/src/test/java/org/apache/commons/math3/distribution/BinomialDistributionTest.java
 index 0844d60..188efd1 100644
---- a/org/apache/commons/math3/distribution/BinomialDistributionTest.java
-+++ b/org/apache/commons/math3/distribution/BinomialDistributionTest.java
+--- a/src/test/java/org/apache/commons/math3/distribution/BinomialDistributionTest.java
++++ b/src/test/java/org/apache/commons/math3/distribution/BinomialDistributionTest.java
 @@ -129,17 +129,4 @@ public class BinomialDistributionTest extends IntegerDistributionAbstractTest {
          Assert.assertEquals(dist.getNumericalVariance(), 30d * 0.3d * (1d - 0.3d), tol);
      }
@@ -20,10 +20,10 @@ index 0844d60..188efd1 100644
 -
 -    }
  }
-diff --git a/org/apache/commons/math3/distribution/FDistributionTest.java b/org/apache/commons/math3/distribution/FDistributionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/distribution/FDistributionTest.java b/src/test/java/org/apache/commons/math3/distribution/FDistributionTest.java
 index 82b345c..ce73502 100644
---- a/org/apache/commons/math3/distribution/FDistributionTest.java
-+++ b/org/apache/commons/math3/distribution/FDistributionTest.java
+--- a/src/test/java/org/apache/commons/math3/distribution/FDistributionTest.java
++++ b/src/test/java/org/apache/commons/math3/distribution/FDistributionTest.java
 @@ -142,18 +142,4 @@ public class FDistributionTest extends RealDistributionAbstractTest {
          Assert.assertEquals(dist.getNumericalMean(), 5d / (5d - 2d), tol);
          Assert.assertEquals(dist.getNumericalVariance(), (2d * 5d * 5d * 4d) / 9d, tol);

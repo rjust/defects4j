@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/lang/enums/ValuedEnum.java b/org/apache/commons/lang/enums/ValuedEnum.java
-index 419a0ea..bbd018c 100644
---- a/org/apache/commons/lang/enums/ValuedEnum.java
-+++ b/org/apache/commons/lang/enums/ValuedEnum.java
-@@ -180,41 +174,10 @@ public abstract class ValuedEnum extends Enum {
+diff --git a/src/java/org/apache/commons/lang/enums/ValuedEnum.java b/src/java/org/apache/commons/lang/enums/ValuedEnum.java
+index 419a0ea..da3cc0f 100644
+--- a/src/java/org/apache/commons/lang/enums/ValuedEnum.java
++++ b/src/java/org/apache/commons/lang/enums/ValuedEnum.java
+@@ -180,41 +180,10 @@ public abstract class ValuedEnum extends Enum {
       * @throws NullPointerException if other is <code>null</code>
       */
      public int compareTo(Object other) {

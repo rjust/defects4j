@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckSideEffectsTest.java b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckSideEffectsTest.java b/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
 index b3d1169..76dc726 100644
---- a/com/google/javascript/jscomp/CheckSideEffectsTest.java
-+++ b/com/google/javascript/jscomp/CheckSideEffectsTest.java
+--- a/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
++++ b/test/com/google/javascript/jscomp/CheckSideEffectsTest.java
 @@ -81,9 +81,4 @@ public class CheckSideEffectsTest extends CompilerTestCase {
      test("function A() { this.foo; }", e);
      test("function A() { /** @type Number */ this.foo; }", ok);
@@ -12,10 +12,10 @@ index b3d1169..76dc726 100644
 -    test("function A() { /* This is a normal comment */ this.foo; }", e);
 -  }
  }
-diff --git a/com/google/javascript/jscomp/CollapsePropertiesTest.java b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+diff --git a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 index cac15c2..b5c2960 100644
---- a/com/google/javascript/jscomp/CollapsePropertiesTest.java
-+++ b/com/google/javascript/jscomp/CollapsePropertiesTest.java
+--- a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
 @@ -1096,19 +1096,4 @@ public class CollapsePropertiesTest extends CompilerTestCase {
           "var a$b = CreateClass({c: function() {}});" +
           "var a$d = CreateClass({c: a$b.prototype.c});");

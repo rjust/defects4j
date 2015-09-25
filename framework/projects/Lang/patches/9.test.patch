@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateParserTest.java b/org/apache/commons/lang3/time/FastDateParserTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/time/FastDateParserTest.java b/src/test/java/org/apache/commons/lang3/time/FastDateParserTest.java
 index e2f12c1..ee5a500 100644
---- a/org/apache/commons/lang3/time/FastDateParserTest.java
-+++ b/org/apache/commons/lang3/time/FastDateParserTest.java
+--- a/src/test/java/org/apache/commons/lang3/time/FastDateParserTest.java
++++ b/src/test/java/org/apache/commons/lang3/time/FastDateParserTest.java
 @@ -333,11 +333,6 @@ public class FastDateParserTest {
          assertEquals(cal.getTime(), fdf.parse("'20030210A'B153320989'"));
      }

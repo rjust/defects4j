@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/OpenMapRealMatrixTest.java b/org/apache/commons/math/linear/OpenMapRealMatrixTest.java
+diff --git a/src/test/java/org/apache/commons/math/linear/OpenMapRealMatrixTest.java b/src/test/java/org/apache/commons/math/linear/OpenMapRealMatrixTest.java
 deleted file mode 100644
 index b44be39..0000000
---- a/org/apache/commons/math/linear/OpenMapRealMatrixTest.java
+--- a/src/test/java/org/apache/commons/math/linear/OpenMapRealMatrixTest.java
 +++ /dev/null
 @@ -1,29 +0,0 @@
 -/*

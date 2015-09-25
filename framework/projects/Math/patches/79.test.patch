@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java b/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
 index dfe89ad..da1d8a9 100644
---- a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
-+++ b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
+--- a/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
++++ b/src/test/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClustererTest.java
 @@ -93,27 +93,5 @@ public class KMeansPlusPlusClustererTest {
          assertTrue(cluster3Found);
  

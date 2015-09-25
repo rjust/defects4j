@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckAccessControlsTest.java b/com/google/javascript/jscomp/CheckAccessControlsTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckAccessControlsTest.java b/test/com/google/javascript/jscomp/CheckAccessControlsTest.java
 index 9dd3a11..ac91c51 100644
---- a/com/google/javascript/jscomp/CheckAccessControlsTest.java
-+++ b/com/google/javascript/jscomp/CheckAccessControlsTest.java
+--- a/test/com/google/javascript/jscomp/CheckAccessControlsTest.java
++++ b/test/com/google/javascript/jscomp/CheckAccessControlsTest.java
 @@ -405,7 +405,7 @@ public class CheckAccessControlsTest extends CompilerTestCase {
        "/** @constructor \n * @extends {Foo} */ " +
        "function SubFoo() {};" +

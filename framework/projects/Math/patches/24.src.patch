@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-index cff5bfd..ee2227c 100644
---- a/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-+++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
-@@ -227,7 +226,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+diff --git a/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+index cff5bfd..63c3fbe 100644
+--- a/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optimization/univariate/BrentOptimizer.java
+@@ -227,7 +227,7 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
  
                  if (checker != null) {
                      if (checker.converged(iter, previous, current)) {
@@ -11,7 +11,7 @@ index cff5bfd..ee2227c 100644
                      }
                  }
  
-@@ -264,36 +263,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
+@@ -264,36 +264,9 @@ public class BrentOptimizer extends BaseAbstractUnivariateOptimizer {
                      }
                  }
              } else { // Default termination (Brent's criterion).

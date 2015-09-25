@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/MutablePeriod.java b/org/joda/time/MutablePeriod.java
+diff --git a/src/main/java/org/joda/time/MutablePeriod.java b/src/main/java/org/joda/time/MutablePeriod.java
 index 78db791..4e40d55 100644
---- a/org/joda/time/MutablePeriod.java
-+++ b/org/joda/time/MutablePeriod.java
+--- a/src/main/java/org/joda/time/MutablePeriod.java
++++ b/src/main/java/org/joda/time/MutablePeriod.java
 @@ -177,7 +177,7 @@ public class MutablePeriod
       * @param duration  the duration, in milliseconds
       */
@@ -11,10 +11,10 @@ index 78db791..4e40d55 100644
      }
  
      /**
-diff --git a/org/joda/time/Period.java b/org/joda/time/Period.java
+diff --git a/src/main/java/org/joda/time/Period.java b/src/main/java/org/joda/time/Period.java
 index 7ec8072..1e0a6d8 100644
---- a/org/joda/time/Period.java
-+++ b/org/joda/time/Period.java
+--- a/src/main/java/org/joda/time/Period.java
++++ b/src/main/java/org/joda/time/Period.java
 @@ -379,7 +379,7 @@ public final class Period
       * @param duration  the duration, in milliseconds
       */
@@ -24,11 +24,11 @@ index 7ec8072..1e0a6d8 100644
      }
  
      /**
-diff --git a/org/joda/time/base/BasePeriod.java b/org/joda/time/base/BasePeriod.java
-index a5dcb74..e2da9f0 100644
---- a/org/joda/time/base/BasePeriod.java
-+++ b/org/joda/time/base/BasePeriod.java
-@@ -211,24 +210,6 @@ public abstract class BasePeriod
+diff --git a/src/main/java/org/joda/time/base/BasePeriod.java b/src/main/java/org/joda/time/base/BasePeriod.java
+index a5dcb74..6434365 100644
+--- a/src/main/java/org/joda/time/base/BasePeriod.java
++++ b/src/main/java/org/joda/time/base/BasePeriod.java
+@@ -211,24 +211,6 @@ public abstract class BasePeriod
      }
  
      /**

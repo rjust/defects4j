@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
 index bf644af..20842be 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
 @@ -362,8 +362,8 @@ public class IntegrationTest extends IntegrationTestCase {
          + "}",
          "function someTest() {\n"
@@ -118,10 +118,10 @@ index bf644af..20842be 100644
    public void testManyAdds() {
      CompilerOptions options = createCompilerOptions();
      CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
-diff --git a/com/google/javascript/jscomp/IntegrationTestCase.java b/com/google/javascript/jscomp/IntegrationTestCase.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTestCase.java b/test/com/google/javascript/jscomp/IntegrationTestCase.java
 index e3007a6..a04b6ad 100644
---- a/com/google/javascript/jscomp/IntegrationTestCase.java
-+++ b/com/google/javascript/jscomp/IntegrationTestCase.java
+--- a/test/com/google/javascript/jscomp/IntegrationTestCase.java
++++ b/test/com/google/javascript/jscomp/IntegrationTestCase.java
 @@ -208,6 +208,10 @@ abstract class IntegrationTestCase extends TestCase {
  
      (new CreateSyntheticBlocks(

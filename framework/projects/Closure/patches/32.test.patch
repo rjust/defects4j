@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
 index efdad8c..0f49999 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
 @@ -1657,23 +1657,6 @@ public class IntegrationTest extends TestCase {
      testSame(options, code);
    }
@@ -26,10 +26,10 @@ index efdad8c..0f49999 100644
    public void testCoaleseVariables() {
      CompilerOptions options = createCompilerOptions();
  
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 index 26accc9..2673121 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 @@ -1275,7 +1275,7 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
      this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
      String comment = "@preserve Foo\nBar\n\nBaz*/";

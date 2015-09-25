@@ -1,8 +1,8 @@
-diff --git a/org/joda/time/MutableDateTime.java b/org/joda/time/MutableDateTime.java
-index 9aa8602..237b256 100644
---- a/org/joda/time/MutableDateTime.java
-+++ b/org/joda/time/MutableDateTime.java
-@@ -636,9 +637,7 @@ public class MutableDateTime
+diff --git a/src/main/java/org/joda/time/MutableDateTime.java b/src/main/java/org/joda/time/MutableDateTime.java
+index 9aa8602..4cc0554 100644
+--- a/src/main/java/org/joda/time/MutableDateTime.java
++++ b/src/main/java/org/joda/time/MutableDateTime.java
+@@ -636,9 +636,7 @@ public class MutableDateTime
          if (type == null) {
              throw new IllegalArgumentException("Field must not be null");
          }
@@ -13,7 +13,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -659,9 +658,7 @@ public class MutableDateTime
+@@ -659,9 +657,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addYears(final int years) {
@@ -24,7 +24,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -682,9 +679,7 @@ public class MutableDateTime
+@@ -682,9 +678,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addWeekyears(final int weekyears) {
@@ -35,7 +35,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -705,9 +700,7 @@ public class MutableDateTime
+@@ -705,9 +699,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addMonths(final int months) {
@@ -46,7 +46,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -728,9 +721,7 @@ public class MutableDateTime
+@@ -728,9 +720,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addWeeks(final int weeks) {
@@ -57,7 +57,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -771,9 +762,7 @@ public class MutableDateTime
+@@ -771,9 +761,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addDays(final int days) {
@@ -68,7 +68,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -794,9 +783,7 @@ public class MutableDateTime
+@@ -794,9 +782,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addHours(final int hours) {
@@ -79,7 +79,7 @@ index 9aa8602..237b256 100644
      }
      
      //-----------------------------------------------------------------------
-@@ -827,9 +814,7 @@ public class MutableDateTime
+@@ -827,9 +813,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addMinutes(final int minutes) {
@@ -90,7 +90,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -860,9 +845,7 @@ public class MutableDateTime
+@@ -860,9 +844,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addSeconds(final int seconds) {
@@ -101,7 +101,7 @@ index 9aa8602..237b256 100644
      }
  
      //-----------------------------------------------------------------------
-@@ -895,9 +878,7 @@ public class MutableDateTime
+@@ -895,9 +877,7 @@ public class MutableDateTime
       * @throws IllegalArgumentException if the value is invalid
       */
      public void addMillis(final int millis) {

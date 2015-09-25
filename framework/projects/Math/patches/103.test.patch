@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/distribution/NormalDistributionTest.java b/org/apache/commons/math/distribution/NormalDistributionTest.java
+diff --git a/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java b/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
 index 8ce73c1..894215b 100644
---- a/org/apache/commons/math/distribution/NormalDistributionTest.java
-+++ b/org/apache/commons/math/distribution/NormalDistributionTest.java
+--- a/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
++++ b/src/test/org/apache/commons/math/distribution/NormalDistributionTest.java
 @@ -120,26 +120,4 @@ public class NormalDistributionTest extends ContinuousDistributionAbstractTest
              // Expected
          }

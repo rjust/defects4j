@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/estimation/AbstractEstimator.java b/org/apache/commons/math/estimation/AbstractEstimator.java
-index 8e5fe1a..19e06a0 100644
---- a/org/apache/commons/math/estimation/AbstractEstimator.java
-+++ b/org/apache/commons/math/estimation/AbstractEstimator.java
+diff --git a/src/java/org/apache/commons/math/estimation/AbstractEstimator.java b/src/java/org/apache/commons/math/estimation/AbstractEstimator.java
+index 8e5fe1a..ea5083d 100644
+--- a/src/java/org/apache/commons/math/estimation/AbstractEstimator.java
++++ b/src/java/org/apache/commons/math/estimation/AbstractEstimator.java
 @@ -163,7 +163,7 @@ public abstract class AbstractEstimator implements Estimator {
  
          // compute transpose(J).J, avoiding building big intermediate matrices

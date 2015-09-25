@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/LookupTranslator.java b/org/apache/commons/lang3/text/translate/LookupTranslator.java
+diff --git a/src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java b/src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java
 index 9cf45f8..d6cb077 100644
---- a/org/apache/commons/lang3/text/translate/LookupTranslator.java
-+++ b/org/apache/commons/lang3/text/translate/LookupTranslator.java
+--- a/src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java
++++ b/src/main/java/org/apache/commons/lang3/text/translate/LookupTranslator.java
 @@ -23,32 +23,31 @@ import java.util.HashMap;
  /**
   * Translates a value using a lookup table.

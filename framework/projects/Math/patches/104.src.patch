@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/special/Beta.java b/org/apache/commons/math/special/Beta.java
+diff --git a/src/java/org/apache/commons/math/special/Beta.java b/src/java/org/apache/commons/math/special/Beta.java
 index 904e156..4239c25 100644
---- a/org/apache/commons/math/special/Beta.java
-+++ b/org/apache/commons/math/special/Beta.java
+--- a/src/java/org/apache/commons/math/special/Beta.java
++++ b/src/java/org/apache/commons/math/special/Beta.java
 @@ -33,7 +33,7 @@ public class Beta implements Serializable {
      private static final long serialVersionUID = -3833485397404128220L;
  
@@ -11,10 +11,10 @@ index 904e156..4239c25 100644
  
      /**
       * Default constructor.  Prohibit instantiation.
-diff --git a/org/apache/commons/math/special/Gamma.java b/org/apache/commons/math/special/Gamma.java
+diff --git a/src/java/org/apache/commons/math/special/Gamma.java b/src/java/org/apache/commons/math/special/Gamma.java
 index ba2c4db..8c565cb 100644
---- a/org/apache/commons/math/special/Gamma.java
-+++ b/org/apache/commons/math/special/Gamma.java
+--- a/src/java/org/apache/commons/math/special/Gamma.java
++++ b/src/java/org/apache/commons/math/special/Gamma.java
 @@ -34,7 +34,7 @@ public class Gamma implements Serializable {
      private static final long serialVersionUID = -6587513359895466954L;
  

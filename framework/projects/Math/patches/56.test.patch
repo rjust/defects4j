@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MultidimensionalCounterTest.java b/org/apache/commons/math/util/MultidimensionalCounterTest.java
+diff --git a/src/test/java/org/apache/commons/math/util/MultidimensionalCounterTest.java b/src/test/java/org/apache/commons/math/util/MultidimensionalCounterTest.java
 index a3110b9..827030d 100644
---- a/org/apache/commons/math/util/MultidimensionalCounterTest.java
-+++ b/org/apache/commons/math/util/MultidimensionalCounterTest.java
+--- a/src/test/java/org/apache/commons/math/util/MultidimensionalCounterTest.java
++++ b/src/test/java/org/apache/commons/math/util/MultidimensionalCounterTest.java
 @@ -121,32 +121,20 @@ public class MultidimensionalCounterTest {
  
      @Test

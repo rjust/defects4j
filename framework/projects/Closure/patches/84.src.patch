@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
 index d2a4e5d..3568fc5 100644
---- a/com/google/javascript/jscomp/parsing/IRFactory.java
-+++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+--- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
 @@ -337,15 +337,7 @@ public class IRFactory {
  
      @Override

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
-index ab0fe33..887dc66 100644
---- a/org/apache/commons/math/util/MathUtils.java
-+++ b/org/apache/commons/math/util/MathUtils.java
+diff --git a/src/main/java/org/apache/commons/math/util/MathUtils.java b/src/main/java/org/apache/commons/math/util/MathUtils.java
+index ab0fe33..9fb94ae 100644
+--- a/src/main/java/org/apache/commons/math/util/MathUtils.java
++++ b/src/main/java/org/apache/commons/math/util/MathUtils.java
 @@ -407,14 +407,20 @@ public final class MathUtils {
  
      /**
@@ -25,7 +25,7 @@ index ab0fe33..887dc66 100644
      }
  
      /**
-@@ -1090,6 +1102,29 @@ public final class MathUtils {
+@@ -1090,6 +1096,29 @@ public final class MathUtils {
      }
  
      /**
@@ -55,7 +55,7 @@ index ab0fe33..887dc66 100644
       * Scale a number by 2<sup>scaleFactor</sup>.
       * <p>If <code>d</code> is 0 or NaN or Infinite, it is returned unchanged.</p>
       *
-@@ -1283,23 +1318,23 @@ public final class MathUtils {
+@@ -1283,23 +1312,23 @@ public final class MathUtils {
          switch (roundingMethod) {
          case BigDecimal.ROUND_CEILING :
              if (sign == -1) {
@@ -85,7 +85,7 @@ index ab0fe33..887dc66 100644
              double fraction = unscaled - FastMath.floor(unscaled);
              if (fraction > 0.5) {
                  unscaled = FastMath.ceil(unscaled);
-@@ -1326,7 +1361,7 @@ public final class MathUtils {
+@@ -1326,7 +1355,7 @@ public final class MathUtils {
              break;
          }
          case BigDecimal.ROUND_HALF_UP : {
@@ -94,7 +94,7 @@ index ab0fe33..887dc66 100644
              double fraction = unscaled - FastMath.floor(unscaled);
              if (fraction >= 0.5) {
                  unscaled = FastMath.ceil(unscaled);
-@@ -1341,7 +1376,7 @@ public final class MathUtils {
+@@ -1341,7 +1370,7 @@ public final class MathUtils {
              }
              break;
          case BigDecimal.ROUND_UP :
@@ -103,7 +103,7 @@ index ab0fe33..887dc66 100644
              break;
          default :
              throw MathRuntimeException.createIllegalArgumentException(
-@@ -1870,6 +1905,24 @@ public final class MathUtils {
+@@ -1870,6 +1899,24 @@ public final class MathUtils {
      }
  
      /**

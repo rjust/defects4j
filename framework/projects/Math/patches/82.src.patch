@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/optimization/linear/SimplexSolver.java b/org/apache/commons/math/optimization/linear/SimplexSolver.java
+diff --git a/src/main/java/org/apache/commons/math/optimization/linear/SimplexSolver.java b/src/main/java/org/apache/commons/math/optimization/linear/SimplexSolver.java
 index 60a1b3a..16d3bae 100644
---- a/org/apache/commons/math/optimization/linear/SimplexSolver.java
-+++ b/org/apache/commons/math/optimization/linear/SimplexSolver.java
+--- a/src/main/java/org/apache/commons/math/optimization/linear/SimplexSolver.java
++++ b/src/main/java/org/apache/commons/math/optimization/linear/SimplexSolver.java
 @@ -77,10 +77,9 @@ public class SimplexSolver extends AbstractLinearOptimizer {
          double minRatio = Double.MAX_VALUE;
          Integer minRatioPos = null;

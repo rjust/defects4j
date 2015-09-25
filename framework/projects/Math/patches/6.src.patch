@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optim/BaseOptimizer.java b/org/apache/commons/math3/optim/BaseOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java b/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java
 index 927e17f..75c9757 100644
---- a/org/apache/commons/math3/optim/BaseOptimizer.java
-+++ b/org/apache/commons/math3/optim/BaseOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java
 @@ -48,7 +48,7 @@ public abstract class BaseOptimizer<PAIR> {
          this.checker = checker;
  
@@ -11,10 +11,10 @@ index 927e17f..75c9757 100644
      }
  
      /**
-diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java b/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
 index bd12b54..e010781 100644
---- a/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java
 @@ -211,15 +211,16 @@ public class NonLinearConjugateGradientOptimizer
          }
  
@@ -43,10 +43,10 @@ index bd12b54..e010781 100644
                  beta < 0) {
                  // Break conjugation: reset search direction.
                  searchDirection = steepestDescent.clone();
-diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
 index fed67b1..c7216f9 100644
---- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
 @@ -385,8 +385,6 @@ public class CMAESOptimizer
  
          generationLoop:
@@ -56,10 +56,10 @@ index fed67b1..c7216f9 100644
              // Generate and evaluate lambda offspring
              final RealMatrix arz = randn1(dimension, lambda);
              final RealMatrix arx = zeros(dimension, lambda);
-diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
 index afe8d2f..9572820 100644
---- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
 @@ -188,8 +188,9 @@ public class PowellOptimizer
          double[] x = guess;
          double fVal = computeObjectiveValue(x);
@@ -80,10 +80,10 @@ index afe8d2f..9572820 100644
                  }
              }
              if (stop) {
-diff --git a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
 index 0dd644e..3d16aa8 100644
---- a/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
 @@ -155,7 +155,7 @@ public class SimplexOptimizer extends MultivariateOptimizer {
          int iteration = 0;
          final ConvergenceChecker<PointValuePair> checker = getConvergenceChecker();
@@ -103,10 +103,10 @@ index 0dd644e..3d16aa8 100644
          }
      }
  
-diff --git a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
 index 844ed22..a2834f2 100644
---- a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java
 @@ -103,8 +103,9 @@ public class GaussNewtonOptimizer extends AbstractLeastSquaresOptimizer {
  
          // iterate until convergence is reached
@@ -127,10 +127,10 @@ index 844ed22..a2834f2 100644
                  if (converged) {
                      setCost(computeCost(currentResiduals));
                      return current;
-diff --git a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
+diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
 index 4016131..ca2d138 100644
---- a/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
-+++ b/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
+--- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
++++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java
 @@ -319,10 +319,10 @@ public class LevenbergMarquardtOptimizer
          // Outer loop.
          lmPar = 0;

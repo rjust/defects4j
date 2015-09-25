@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/FastMathTest.java b/org/apache/commons/math/util/FastMathTest.java
+diff --git a/src/test/java/org/apache/commons/math/util/FastMathTest.java b/src/test/java/org/apache/commons/math/util/FastMathTest.java
 index ec3aff1..3a60dd8 100644
---- a/org/apache/commons/math/util/FastMathTest.java
-+++ b/org/apache/commons/math/util/FastMathTest.java
+--- a/src/test/java/org/apache/commons/math/util/FastMathTest.java
++++ b/src/test/java/org/apache/commons/math/util/FastMathTest.java
 @@ -76,18 +76,18 @@ public class FastMathTest {
  
      @Test

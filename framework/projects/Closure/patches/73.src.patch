@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
 index 823d897..558e74f 100644
---- a/com/google/javascript/jscomp/CodeGenerator.java
-+++ b/com/google/javascript/jscomp/CodeGenerator.java
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
 @@ -1042,7 +1042,7 @@ class CodeGenerator {
              // No charsetEncoder provided - pass straight latin characters
              // through, and escape the rest.  Doing the explicit character

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+diff --git a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 index 86521bd..813a2ee 100644
---- a/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-+++ b/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+--- a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
++++ b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 @@ -210,15 +210,9 @@ class PeepholeSubstituteAlternateSyntax
      Node callTarget = n.getFirstChild();
      if (callTarget != null && callTarget.isName() &&

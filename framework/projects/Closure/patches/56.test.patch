@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java b/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
+diff --git a/test/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java b/test/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
 index 2d988a3..e1efc22 100644
---- a/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
-+++ b/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
+--- a/test/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
++++ b/test/com/google/javascript/jscomp/JSCompilerSourceExcerptProviderTest.java
 @@ -29,12 +29,10 @@ public class JSCompilerSourceExcerptProviderTest extends TestCase {
          "foo:first line\nfoo:second line\nfoo:third line\n");
      JSSourceFile bar = JSSourceFile.fromCode("bar",
@@ -30,10 +30,10 @@ index 2d988a3..e1efc22 100644
    public void testExcerptRegion() throws Exception {
      assertRegionWellFormed("foo", 1);
      assertRegionWellFormed("foo", 2);
-diff --git a/com/google/javascript/jscomp/JsMessageExtractorTest.java b/com/google/javascript/jscomp/JsMessageExtractorTest.java
+diff --git a/test/com/google/javascript/jscomp/JsMessageExtractorTest.java b/test/com/google/javascript/jscomp/JsMessageExtractorTest.java
 index c88b37d..89a5d0c 100644
---- a/com/google/javascript/jscomp/JsMessageExtractorTest.java
-+++ b/com/google/javascript/jscomp/JsMessageExtractorTest.java
+--- a/test/com/google/javascript/jscomp/JsMessageExtractorTest.java
++++ b/test/com/google/javascript/jscomp/JsMessageExtractorTest.java
 @@ -56,10 +56,8 @@ public class JsMessageExtractorTest extends TestCase {
        extractMessage("if (true) {}}");
        fail("Expected exception");

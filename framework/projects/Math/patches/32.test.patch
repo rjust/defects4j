@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java b/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
+diff --git a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
 index a55f017..6c77671 100644
---- a/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
-+++ b/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
+--- a/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
++++ b/src/test/java/org/apache/commons/math3/geometry/euclidean/threed/PolyhedronsSetTest.java
 @@ -16,18 +16,13 @@
   */
  package org.apache.commons.math3.geometry.euclidean.threed;

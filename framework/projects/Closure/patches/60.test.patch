@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 index b0bcbac..9a5c9b7 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 @@ -360,12 +360,6 @@ public class CommandLineRunnerTest extends TestCase {
           "}");
    }
@@ -26,10 +26,10 @@ index b0bcbac..9a5c9b7 100644
    /**
     * Asserts that when compiling, there is an error or warning.
     */
-diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+diff --git a/test/com/google/javascript/jscomp/NodeUtilTest.java b/test/com/google/javascript/jscomp/NodeUtilTest.java
 index 67571d6..238013e 100644
---- a/com/google/javascript/jscomp/NodeUtilTest.java
-+++ b/com/google/javascript/jscomp/NodeUtilTest.java
+--- a/test/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/test/com/google/javascript/jscomp/NodeUtilTest.java
 @@ -89,114 +89,114 @@ public class NodeUtilTest extends TestCase {
    }
  

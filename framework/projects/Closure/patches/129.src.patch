@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PrepareAst.java b/com/google/javascript/jscomp/PrepareAst.java
+diff --git a/src/com/google/javascript/jscomp/PrepareAst.java b/src/com/google/javascript/jscomp/PrepareAst.java
 index 42982af..eda524e 100644
---- a/com/google/javascript/jscomp/PrepareAst.java
-+++ b/com/google/javascript/jscomp/PrepareAst.java
+--- a/src/com/google/javascript/jscomp/PrepareAst.java
++++ b/src/com/google/javascript/jscomp/PrepareAst.java
 @@ -161,12 +161,6 @@ class PrepareAst implements CompilerPass {
        // Keep track of of the "this" context of a call.  A call without an
        // explicit "this" is a free call.

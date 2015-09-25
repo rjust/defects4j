@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineObjectLiterals.java b/com/google/javascript/jscomp/InlineObjectLiterals.java
+diff --git a/src/com/google/javascript/jscomp/InlineObjectLiterals.java b/src/com/google/javascript/jscomp/InlineObjectLiterals.java
 index 8c3159d..62ff35d 100644
---- a/com/google/javascript/jscomp/InlineObjectLiterals.java
-+++ b/com/google/javascript/jscomp/InlineObjectLiterals.java
+--- a/src/com/google/javascript/jscomp/InlineObjectLiterals.java
++++ b/src/com/google/javascript/jscomp/InlineObjectLiterals.java
 @@ -86,22 +86,22 @@ class InlineObjectLiterals implements CompilerPass {
          Var v = it.next();
  

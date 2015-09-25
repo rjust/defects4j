@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java b/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java b/src/test/java/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
 index 67419f8..af4d684 100644
---- a/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
-+++ b/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
+--- a/src/test/java/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
++++ b/src/test/java/org/apache/commons/lang3/text/translate/LookupTranslatorTest.java
 @@ -39,14 +39,4 @@ public class LookupTranslatorTest  {
          assertEquals("Incorrect value", "two", out.toString());
      }

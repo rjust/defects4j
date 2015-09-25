@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MathUtils.java b/org/apache/commons/math/util/MathUtils.java
+diff --git a/src/main/java/org/apache/commons/math/util/MathUtils.java b/src/main/java/org/apache/commons/math/util/MathUtils.java
 index ad77a56..46368dc 100644
---- a/org/apache/commons/math/util/MathUtils.java
-+++ b/org/apache/commons/math/util/MathUtils.java
+--- a/src/main/java/org/apache/commons/math/util/MathUtils.java
++++ b/src/main/java/org/apache/commons/math/util/MathUtils.java
 @@ -1621,9 +1621,9 @@ public final class MathUtils {
       * @return the L<sub>2</sub> distance between the two points
       */

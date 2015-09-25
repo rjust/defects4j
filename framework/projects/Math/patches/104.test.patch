@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/special/BetaTest.java b/org/apache/commons/math/special/BetaTest.java
+diff --git a/src/test/org/apache/commons/math/special/BetaTest.java b/src/test/org/apache/commons/math/special/BetaTest.java
 index 01446af..5e916e2 100644
---- a/org/apache/commons/math/special/BetaTest.java
-+++ b/org/apache/commons/math/special/BetaTest.java
+--- a/src/test/org/apache/commons/math/special/BetaTest.java
++++ b/src/test/org/apache/commons/math/special/BetaTest.java
 @@ -38,7 +38,7 @@ public class BetaTest extends TestCase {
      {
          try {
@@ -29,10 +29,10 @@ index 01446af..5e916e2 100644
      }
  }
 \ No newline at end of file
-diff --git a/org/apache/commons/math/special/GammaTest.java b/org/apache/commons/math/special/GammaTest.java
+diff --git a/src/test/org/apache/commons/math/special/GammaTest.java b/src/test/org/apache/commons/math/special/GammaTest.java
 index e7d4596..e7524f1 100644
---- a/org/apache/commons/math/special/GammaTest.java
-+++ b/org/apache/commons/math/special/GammaTest.java
+--- a/src/test/org/apache/commons/math/special/GammaTest.java
++++ b/src/test/org/apache/commons/math/special/GammaTest.java
 @@ -37,8 +37,8 @@ public class GammaTest extends TestCase {
          try {
              double actualP = Gamma.regularizedGammaP(a, x);

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java b/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java b/src/test/java/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java
 deleted file mode 100644
 index 6fbfdfd..0000000
---- a/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java
+--- a/src/test/java/org/apache/commons/math3/linear/RectangularCholeskyDecompositionTest.java
 +++ /dev/null
 @@ -1,112 +0,0 @@
 -/*
@@ -116,10 +116,10 @@ index 6fbfdfd..0000000
 -    }
 -
 -}
-diff --git a/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java b/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
+diff --git a/src/test/java/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java b/src/test/java/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
 index eba52a3..167382a 100644
---- a/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
-+++ b/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
+--- a/src/test/java/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
++++ b/src/test/java/org/apache/commons/math3/random/CorrelatedRandomVectorGeneratorTest.java
 @@ -17,13 +17,8 @@
  
  package org.apache.commons.math3.random;

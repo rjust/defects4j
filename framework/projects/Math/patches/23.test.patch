@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
 index 55b62ca..2151c48 100644
---- a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
-+++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
 @@ -185,43 +185,6 @@ public final class BrentOptimizerTest {
      }
  

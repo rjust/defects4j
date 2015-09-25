@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/format/TestDateTimeFormatter.java b/org/joda/time/format/TestDateTimeFormatter.java
+diff --git a/src/test/java/org/joda/time/format/TestDateTimeFormatter.java b/src/test/java/org/joda/time/format/TestDateTimeFormatter.java
 index 5d104df..0152ce7 100644
---- a/org/joda/time/format/TestDateTimeFormatter.java
-+++ b/org/joda/time/format/TestDateTimeFormatter.java
+--- a/src/test/java/org/joda/time/format/TestDateTimeFormatter.java
++++ b/src/test/java/org/joda/time/format/TestDateTimeFormatter.java
 @@ -905,62 +905,6 @@ public class TestDateTimeFormatter extends TestCase {
          assertEquals(new MutableDateTime(2004, 2, 29, 12, 20, 30, 0, LONDON), result);
      }

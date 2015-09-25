@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
 index c7067e9..0c7ef23 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
 @@ -2415,23 +2415,6 @@ public class IntegrationTest extends IntegrationTestCase {
      test(options, code, ConstCheck.CONST_REASSIGNED_VALUE_ERROR);
    }

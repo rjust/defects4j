@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/TestDateTimeZone.java b/org/joda/time/TestDateTimeZone.java
+diff --git a/src/test/java/org/joda/time/TestDateTimeZone.java b/src/test/java/org/joda/time/TestDateTimeZone.java
 index a6eaac3..bc98acf 100644
---- a/org/joda/time/TestDateTimeZone.java
-+++ b/org/joda/time/TestDateTimeZone.java
+--- a/src/test/java/org/joda/time/TestDateTimeZone.java
++++ b/src/test/java/org/joda/time/TestDateTimeZone.java
 @@ -29,9 +29,7 @@ import java.security.Permissions;
  import java.security.Policy;
  import java.security.ProtectionDomain;

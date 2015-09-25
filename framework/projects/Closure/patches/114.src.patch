@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NameAnalyzer.java b/com/google/javascript/jscomp/NameAnalyzer.java
-index a7b95b0..fe64ce5 100644
---- a/com/google/javascript/jscomp/NameAnalyzer.java
-+++ b/com/google/javascript/jscomp/NameAnalyzer.java
+diff --git a/src/com/google/javascript/jscomp/NameAnalyzer.java b/src/com/google/javascript/jscomp/NameAnalyzer.java
+index a7b95b0..eafea3b 100644
+--- a/src/com/google/javascript/jscomp/NameAnalyzer.java
++++ b/src/com/google/javascript/jscomp/NameAnalyzer.java
 @@ -575,13 +575,7 @@ final class NameAnalyzer implements CompilerPass {
            } else {
              recordDepScope(nameNode, ns);

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 index b5a907b..92ef4b9 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 @@ -771,10 +771,6 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
          PeepholeFoldConstants.INDEX_OUT_OF_BOUNDS_ERROR);
      fold("x = [10, 20][2]",     "",

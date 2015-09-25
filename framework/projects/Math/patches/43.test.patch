@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java b/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java b/src/test/java/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
 index 53cf565..0194778 100644
---- a/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
-+++ b/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
+--- a/src/test/java/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
++++ b/src/test/java/org/apache/commons/math/stat/descriptive/SummaryStatisticsTest.java
 @@ -18,10 +18,7 @@ package org.apache.commons.math.stat.descriptive;
  
  

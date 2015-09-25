@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/WordUtilsTest.java b/org/apache/commons/lang/WordUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/WordUtilsTest.java b/src/test/org/apache/commons/lang/WordUtilsTest.java
 index be8698f..e8cf102 100644
---- a/org/apache/commons/lang/WordUtilsTest.java
-+++ b/org/apache/commons/lang/WordUtilsTest.java
+--- a/src/test/org/apache/commons/lang/WordUtilsTest.java
++++ b/src/test/org/apache/commons/lang/WordUtilsTest.java
 @@ -387,7 +387,6 @@ public class WordUtilsTest extends TestCase {
          assertEquals("01234", WordUtils.abbreviate("01234 56789", 5, 10, null));
          assertEquals("01 23 45 67", WordUtils.abbreviate("01 23 45 67 89", 9, -1, null));

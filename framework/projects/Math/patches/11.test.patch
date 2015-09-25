@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java b/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java b/src/test/java/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
 index 9666618..756c009 100644
---- a/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
-+++ b/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
+--- a/src/test/java/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
++++ b/src/test/java/org/apache/commons/math3/distribution/MultivariateNormalDistributionTest.java
 @@ -20,7 +20,6 @@ package org.apache.commons.math3.distribution;
  import org.apache.commons.math3.stat.correlation.Covariance;
  import org.apache.commons.math3.linear.RealMatrix;

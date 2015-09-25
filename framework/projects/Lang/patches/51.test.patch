@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/BooleanUtilsTest.java b/org/apache/commons/lang/BooleanUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/BooleanUtilsTest.java b/src/test/org/apache/commons/lang/BooleanUtilsTest.java
 index 9706846..cc44051 100644
---- a/org/apache/commons/lang/BooleanUtilsTest.java
-+++ b/org/apache/commons/lang/BooleanUtilsTest.java
+--- a/src/test/org/apache/commons/lang/BooleanUtilsTest.java
++++ b/src/test/org/apache/commons/lang/BooleanUtilsTest.java
 @@ -330,8 +330,6 @@ public class BooleanUtilsTest extends TestCase {
          assertEquals(true, BooleanUtils.toBoolean("YeS"));
          assertEquals(true, BooleanUtils.toBoolean("YEs"));

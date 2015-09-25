@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/MinimizeExitPointsTest.java b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
+diff --git a/test/com/google/javascript/jscomp/MinimizeExitPointsTest.java b/test/com/google/javascript/jscomp/MinimizeExitPointsTest.java
 index 9732745..7db30f8 100644
---- a/com/google/javascript/jscomp/MinimizeExitPointsTest.java
-+++ b/com/google/javascript/jscomp/MinimizeExitPointsTest.java
+--- a/test/com/google/javascript/jscomp/MinimizeExitPointsTest.java
++++ b/test/com/google/javascript/jscomp/MinimizeExitPointsTest.java
 @@ -120,12 +120,12 @@ public class MinimizeExitPointsTest extends CompilerTestCase {
           "function f(){while(a())break}");
      foldSame("function f(){for(x in a())break}");
@@ -39,10 +39,10 @@ index 9732745..7db30f8 100644
 -    foldSame("function f() {b:try{throw 9} finally {break b} return 1;}");
 -  }
  }
-diff --git a/com/google/javascript/jscomp/RemoveTryCatchTest.java b/com/google/javascript/jscomp/RemoveTryCatchTest.java
+diff --git a/test/com/google/javascript/jscomp/RemoveTryCatchTest.java b/test/com/google/javascript/jscomp/RemoveTryCatchTest.java
 index 53e3add..943950e 100644
---- a/com/google/javascript/jscomp/RemoveTryCatchTest.java
-+++ b/com/google/javascript/jscomp/RemoveTryCatchTest.java
+--- a/test/com/google/javascript/jscomp/RemoveTryCatchTest.java
++++ b/test/com/google/javascript/jscomp/RemoveTryCatchTest.java
 @@ -73,9 +73,4 @@ public class RemoveTryCatchTest extends CompilerTestCase {
    public void testIfTryCatch() {
      test("if(x)try{y;z}catch(e){}", "if(x){y;z}");

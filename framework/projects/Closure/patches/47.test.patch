@@ -1,7 +1,7 @@
-diff --git a/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java b/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
+diff --git a/test/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java b/test/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
 index 1d3c3a3..b3b2399 100644
---- a/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
-+++ b/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
+--- a/test/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
++++ b/test/com/google/debugging/sourcemap/SourceMapGeneratorV1Test.java
 @@ -25,10 +25,6 @@ import com.google.javascript.jscomp.SourceMap.Format;
   */
  public class SourceMapGeneratorV1Test extends SourceMapTestCase {
@@ -13,10 +13,10 @@ index 1d3c3a3..b3b2399 100644
    @Override
    protected SourceMapConsumer getSourceMapConsumer() {
      return new SourceMapConsumerV1();
-diff --git a/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java b/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
+diff --git a/test/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java b/test/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
 index 0932b54..370467c 100644
---- a/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
-+++ b/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
+--- a/test/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
++++ b/test/com/google/debugging/sourcemap/SourceMapGeneratorV2Test.java
 @@ -28,10 +28,6 @@ import java.io.IOException;
   */
  public class SourceMapGeneratorV2Test extends SourceMapTestCase {
@@ -28,10 +28,10 @@ index 0932b54..370467c 100644
    @Override
    protected SourceMapConsumer getSourceMapConsumer() {
      return new SourceMapConsumerV2();
-diff --git a/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java b/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
+diff --git a/test/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java b/test/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
 index 6e2f45e..1d008f6 100644
---- a/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
-+++ b/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
+--- a/test/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
++++ b/test/com/google/debugging/sourcemap/SourceMapGeneratorV3Test.java
 @@ -32,9 +32,6 @@ import java.util.List;
   */
  public class SourceMapGeneratorV3Test extends SourceMapTestCase {
@@ -144,10 +144,10 @@ index 6e2f45e..1d008f6 100644
              "CAAlyCH,CAAsyCI;\",\n" +
          "\"sources\":[\"c:\\\\myfile.js\"],\n" +
          "\"names\":[\"foo\",\"a\",\"c\",\"d\",\"e\"]\n" +
-diff --git a/com/google/debugging/sourcemap/SourceMapTestCase.java b/com/google/debugging/sourcemap/SourceMapTestCase.java
+diff --git a/test/com/google/debugging/sourcemap/SourceMapTestCase.java b/test/com/google/debugging/sourcemap/SourceMapTestCase.java
 index 694f93f..802fef5 100644
---- a/com/google/debugging/sourcemap/SourceMapTestCase.java
-+++ b/com/google/debugging/sourcemap/SourceMapTestCase.java
+--- a/test/com/google/debugging/sourcemap/SourceMapTestCase.java
++++ b/test/com/google/debugging/sourcemap/SourceMapTestCase.java
 @@ -37,15 +37,7 @@ import java.util.Map.Entry;
   */
  public abstract class SourceMapTestCase extends TestCase {
@@ -182,10 +182,10 @@ index 694f93f..802fef5 100644
        // Ensure that if the token name does not being with an 'STR' (meaning a
        // string) it has an original name.
        if (!inputToken.tokenName.startsWith("STR")) {
-diff --git a/com/google/javascript/jscomp/SourceMapTest.java b/com/google/javascript/jscomp/SourceMapTest.java
+diff --git a/test/com/google/javascript/jscomp/SourceMapTest.java b/test/com/google/javascript/jscomp/SourceMapTest.java
 index 84f4492..10fcfd1 100644
---- a/com/google/javascript/jscomp/SourceMapTest.java
-+++ b/com/google/javascript/jscomp/SourceMapTest.java
+--- a/test/com/google/javascript/jscomp/SourceMapTest.java
++++ b/test/com/google/javascript/jscomp/SourceMapTest.java
 @@ -31,9 +31,6 @@ import java.util.List;
   */
  public class SourceMapTest extends SourceMapTestCase {

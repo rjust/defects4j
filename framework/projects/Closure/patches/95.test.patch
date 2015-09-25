@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index c8cc8ef..1424a3b 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -4757,29 +4757,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
          "};");
    }
@@ -32,10 +32,10 @@ index c8cc8ef..1424a3b 100644
    public void testSheqRefinedScope() throws Exception {
      Node n = parseAndTypeCheck(
          "/** @constructor */function A() {}\n" +
-diff --git a/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+diff --git a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
 index 400293f..789c546 100644
---- a/com/google/javascript/jscomp/TypedScopeCreatorTest.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+--- a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
++++ b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
 @@ -772,18 +772,6 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
          "{}", findTokenType(Token.OBJECTLIT, globalScope).toString());
    }

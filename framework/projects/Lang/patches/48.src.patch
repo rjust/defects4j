@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/builder/EqualsBuilder.java b/org/apache/commons/lang/builder/EqualsBuilder.java
+diff --git a/src/java/org/apache/commons/lang/builder/EqualsBuilder.java b/src/java/org/apache/commons/lang/builder/EqualsBuilder.java
 index 6901c8e..afd1666 100644
---- a/org/apache/commons/lang/builder/EqualsBuilder.java
-+++ b/org/apache/commons/lang/builder/EqualsBuilder.java
+--- a/src/java/org/apache/commons/lang/builder/EqualsBuilder.java
++++ b/src/java/org/apache/commons/lang/builder/EqualsBuilder.java
 @@ -377,12 +377,8 @@ public class EqualsBuilder {
          }
          Class lhsClass = lhs.getClass();

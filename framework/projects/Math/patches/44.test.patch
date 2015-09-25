@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/events/EventStateTest.java b/org/apache/commons/math/ode/events/EventStateTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java b/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java
 index 722584b..07178e5 100644
---- a/org/apache/commons/math/ode/events/EventStateTest.java
-+++ b/org/apache/commons/math/ode/events/EventStateTest.java
+--- a/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java
++++ b/src/test/java/org/apache/commons/math/ode/events/EventStateTest.java
 @@ -19,8 +19,6 @@ package org.apache.commons.math.ode.events;
  
  

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/Compiler.java b/com/google/javascript/jscomp/Compiler.java
+diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
 index 45d88ba..a4a41a8 100644
---- a/com/google/javascript/jscomp/Compiler.java
-+++ b/com/google/javascript/jscomp/Compiler.java
+--- a/src/com/google/javascript/jscomp/Compiler.java
++++ b/src/com/google/javascript/jscomp/Compiler.java
 @@ -1427,9 +1427,7 @@ public class Compiler extends AbstractCompiler {
                cb.getLineIndex(), cb.getColumnIndex());
          }

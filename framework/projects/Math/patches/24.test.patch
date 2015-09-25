@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java b/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
 index 2151c48..7ccbd27 100644
---- a/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
-+++ b/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/univariate/BrentOptimizerTest.java
 @@ -20,8 +20,6 @@ package org.apache.commons.math3.optimization.univariate;
  import org.apache.commons.math3.analysis.QuinticFunction;
  import org.apache.commons.math3.analysis.UnivariateFunction;

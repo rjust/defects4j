@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java b/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
+diff --git a/test/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java b/test/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
 index f392a6c..5be0a1f 100644
---- a/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
-+++ b/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
+--- a/test/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
++++ b/test/com/google/javascript/jscomp/ProcessClosurePrimitivesTest.java
 @@ -771,21 +771,6 @@ public class ProcessClosurePrimitivesTest extends CompilerTestCase {
          });
    }

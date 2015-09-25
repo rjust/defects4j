@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
+diff --git a/src/main/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java b/src/main/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
 index e09bbc3..b73ac9d 100644
---- a/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
-+++ b/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
+--- a/src/main/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
++++ b/src/main/java/org/apache/commons/math/stat/clustering/KMeansPlusPlusClusterer.java
 @@ -172,7 +172,7 @@ public class KMeansPlusPlusClusterer<T extends Clusterable<T>> {
          while (resultSet.size() < k) {
              // For each data point x, compute D(x), the distance between x and

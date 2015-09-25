@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CheckGlobalThisTest.java b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+diff --git a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 index b168fd9..98e17aa 100644
---- a/com/google/javascript/jscomp/CheckGlobalThisTest.java
-+++ b/com/google/javascript/jscomp/CheckGlobalThisTest.java
+--- a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
++++ b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
 @@ -108,11 +108,6 @@ public class CheckGlobalThisTest extends CompilerTestCase {
      testSame("/** @constructor */a.A = function() { this.m2 = 5; }");
    }

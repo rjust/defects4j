@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math3/util/ContinuedFraction.java b/org/apache/commons/math3/util/ContinuedFraction.java
-index 253f3c5..35fe916 100644
---- a/org/apache/commons/math3/util/ContinuedFraction.java
-+++ b/org/apache/commons/math3/util/ContinuedFraction.java
-@@ -121,53 +122,72 @@ public abstract class ContinuedFraction {
+diff --git a/src/main/java/org/apache/commons/math3/util/ContinuedFraction.java b/src/main/java/org/apache/commons/math3/util/ContinuedFraction.java
+index 253f3c5..2dc10e3 100644
+--- a/src/main/java/org/apache/commons/math3/util/ContinuedFraction.java
++++ b/src/main/java/org/apache/commons/math3/util/ContinuedFraction.java
+@@ -121,53 +121,72 @@ public abstract class ContinuedFraction {
       * @throws ConvergenceException if the algorithm fails to converge.
       */
      public double evaluate(double x, double epsilon, int maxIterations) {
@@ -115,7 +115,7 @@ index 253f3c5..35fe916 100644
          }
  
          if (n >= maxIterations) {
-@@ -175,7 +195,6 @@ public abstract class ContinuedFraction {
+@@ -175,7 +194,6 @@ public abstract class ContinuedFraction {
                                                  maxIterations, x);
          }
  

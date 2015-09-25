@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java b/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
+diff --git a/src/test/java/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java b/src/test/java/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
 index 5bbad9f..910ba1b 100644
---- a/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
-+++ b/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
+--- a/src/test/java/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
++++ b/src/test/java/org/apache/commons/math3/optimization/fitting/HarmonicFitterTest.java
 @@ -22,7 +22,6 @@ import java.util.Random;
  import org.apache.commons.math3.analysis.function.HarmonicOscillator;
  import org.apache.commons.math3.optimization.general.LevenbergMarquardtOptimizer;

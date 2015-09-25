@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
 index 20dd424..0355800 100644
---- a/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/AdamsMoultonIntegratorTest.java
 @@ -145,9 +145,9 @@ public class AdamsMoultonIntegratorTest {
              integ.integrate(pb, pb.getInitialTime(), pb.getInitialState(),
                              pb.getFinalTime(), new double[pb.getDimension()]);
@@ -14,10 +14,10 @@ index 20dd424..0355800 100644
              }
          }
  
-diff --git a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 index bb36cda..895ceff 100644
---- a/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/DormandPrince853IntegratorTest.java
 @@ -147,8 +147,8 @@ public class DormandPrince853IntegratorTest
        integ.integrate(pb, pb.getInitialTime(), pb.getInitialState(),
                        pb.getFinalTime(), new double[pb.getDimension()]);
@@ -29,10 +29,10 @@ index bb36cda..895ceff 100644
        assertEquals(0, handler.getMaximalTimeError(), 1.0e-12);
        assertEquals("Dormand-Prince 8 (5, 3)", integ.getName());
    }
-diff --git a/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java b/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
 index 56663c9..0785d97 100644
---- a/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54IntegratorTest.java
 @@ -387,7 +387,7 @@ public class HighamHall54IntegratorTest
          maxError = error;
        }
@@ -42,10 +42,10 @@ index 56663c9..0785d97 100644
          assertTrue(nbSteps < 670);
        }
      }
-diff --git a/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java b/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
+diff --git a/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java b/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
 index a2645b7..9094b2a 100644
---- a/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
-+++ b/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
+--- a/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
++++ b/src/test/java/org/apache/commons/math/ode/nonstiff/HighamHall54StepInterpolatorTest.java
 @@ -49,7 +49,7 @@ public class HighamHall54StepInterpolatorTest {
      HighamHall54Integrator integ = new HighamHall54Integrator(minStep, maxStep,
                                                                scalAbsoluteTolerance,

@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java b/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
-index 984d56d..137d4c5 100644
---- a/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
-+++ b/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
-@@ -63,6 +58,8 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
+diff --git a/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java b/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
+index 984d56d..59091da 100644
+--- a/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
++++ b/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
+@@ -63,6 +63,8 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
       */
      public double chiSquare(double[] expected, long[] observed)
          throws IllegalArgumentException {
@@ -11,7 +11,7 @@ index 984d56d..137d4c5 100644
          if ((expected.length < 2) || (expected.length != observed.length)) {
              throw new IllegalArgumentException(
                      "observed, expected array lengths incorrect");
-@@ -71,38 +68,14 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
+@@ -71,38 +73,14 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
              throw new IllegalArgumentException(
                  "observed counts must be non-negative and expected counts must be postive");
          }

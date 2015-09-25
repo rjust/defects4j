@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/util/MathUtilsTest.java b/org/apache/commons/math/util/MathUtilsTest.java
+diff --git a/src/test/org/apache/commons/math/util/MathUtilsTest.java b/src/test/org/apache/commons/math/util/MathUtilsTest.java
 index 0648cb3..8b95357 100644
---- a/org/apache/commons/math/util/MathUtilsTest.java
-+++ b/org/apache/commons/math/util/MathUtilsTest.java
+--- a/src/test/org/apache/commons/math/util/MathUtilsTest.java
++++ b/src/test/org/apache/commons/math/util/MathUtilsTest.java
 @@ -14,10 +14,6 @@
  package org.apache.commons.math.util;
  

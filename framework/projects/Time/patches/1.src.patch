@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/Partial.java b/org/joda/time/Partial.java
+diff --git a/src/main/java/org/joda/time/Partial.java b/src/main/java/org/joda/time/Partial.java
 index 6ff2771..3b84fdc 100644
---- a/org/joda/time/Partial.java
-+++ b/org/joda/time/Partial.java
+--- a/src/main/java/org/joda/time/Partial.java
++++ b/src/main/java/org/joda/time/Partial.java
 @@ -214,20 +214,11 @@ public final class Partial
              DateTimeFieldType loopType = types[i];
              DurationField loopUnitField = loopType.getDurationType().getField(iChronology);
@@ -24,10 +24,10 @@ index 6ff2771..3b84fdc 100644
                      if (types[i - 1].getRangeDurationType() == null) {
                          if (loopType.getRangeDurationType() == null) {
                              throw new IllegalArgumentException("Types array must not contain duplicate: " +
-diff --git a/org/joda/time/field/UnsupportedDurationField.java b/org/joda/time/field/UnsupportedDurationField.java
+diff --git a/src/main/java/org/joda/time/field/UnsupportedDurationField.java b/src/main/java/org/joda/time/field/UnsupportedDurationField.java
 index bf44e01..7e0ce57 100644
---- a/org/joda/time/field/UnsupportedDurationField.java
-+++ b/org/joda/time/field/UnsupportedDurationField.java
+--- a/src/main/java/org/joda/time/field/UnsupportedDurationField.java
++++ b/src/main/java/org/joda/time/field/UnsupportedDurationField.java
 @@ -224,6 +224,9 @@ public final class UnsupportedDurationField extends DurationField implements Ser
       * @return zero always
       */

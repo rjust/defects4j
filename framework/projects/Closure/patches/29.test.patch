@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java b/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
 index 369fc2f..2e15d4f 100644
---- a/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
-+++ b/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
+--- a/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
++++ b/test/com/google/javascript/jscomp/InlineObjectLiteralsTest.java
 @@ -172,7 +172,14 @@ public class InlineObjectLiteralsTest extends CompilerTestCase {
           "JSCompiler_object_inline_a_0=a,JSCompiler_object_inline_b_1=b,true;" +
           "if(JSCompiler_object_inline_a_0) g(JSCompiler_object_inline_b_1)");
@@ -65,10 +65,10 @@ index 369fc2f..2e15d4f 100644
    private final String LOCAL_PREFIX = "function local(){";
    private final String LOCAL_POSTFIX = "}";
  
-diff --git a/com/google/javascript/jscomp/IntegrationTest.java b/com/google/javascript/jscomp/IntegrationTest.java
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
 index 2a1766e..a9e2d90 100644
---- a/com/google/javascript/jscomp/IntegrationTest.java
-+++ b/com/google/javascript/jscomp/IntegrationTest.java
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
 @@ -1669,24 +1669,6 @@ public class IntegrationTest extends IntegrationTestCase {
      assertEquals(result, lastCompiler.toSource());
    }

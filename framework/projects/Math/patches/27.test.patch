@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/fraction/FractionTest.java b/org/apache/commons/math3/fraction/FractionTest.java
+diff --git a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 index c112ab7..c5071cc 100644
---- a/org/apache/commons/math3/fraction/FractionTest.java
-+++ b/org/apache/commons/math3/fraction/FractionTest.java
+--- a/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
++++ b/src/test/java/org/apache/commons/math3/fraction/FractionTest.java
 @@ -243,17 +243,6 @@ public class FractionTest {
      }
  

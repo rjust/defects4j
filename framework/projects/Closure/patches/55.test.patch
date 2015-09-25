@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/FunctionRewriterTest.java b/com/google/javascript/jscomp/FunctionRewriterTest.java
+diff --git a/test/com/google/javascript/jscomp/FunctionRewriterTest.java b/test/com/google/javascript/jscomp/FunctionRewriterTest.java
 index 77a0b2a..b62c6fa 100644
---- a/com/google/javascript/jscomp/FunctionRewriterTest.java
-+++ b/com/google/javascript/jscomp/FunctionRewriterTest.java
+--- a/test/com/google/javascript/jscomp/FunctionRewriterTest.java
++++ b/test/com/google/javascript/jscomp/FunctionRewriterTest.java
 @@ -162,23 +162,6 @@ public class FunctionRewriterTest extends CompilerTestCase {
      checkCompilesToSame("a.prototype.foo = function(a) {return a + 1}", 10);
    }

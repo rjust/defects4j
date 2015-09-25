@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CodeGenerator.java b/com/google/javascript/jscomp/CodeGenerator.java
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
 index 22df685..8cd3ab9 100644
---- a/com/google/javascript/jscomp/CodeGenerator.java
-+++ b/com/google/javascript/jscomp/CodeGenerator.java
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
 @@ -963,7 +963,6 @@ class CodeGenerator {
      for (int i = 0; i < s.length(); i++) {
        char c = s.charAt(i);

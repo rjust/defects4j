@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/VarCheckTest.java b/com/google/javascript/jscomp/VarCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/VarCheckTest.java b/test/com/google/javascript/jscomp/VarCheckTest.java
 index a43169a..dbca8bc 100644
---- a/com/google/javascript/jscomp/VarCheckTest.java
-+++ b/com/google/javascript/jscomp/VarCheckTest.java
+--- a/test/com/google/javascript/jscomp/VarCheckTest.java
++++ b/test/com/google/javascript/jscomp/VarCheckTest.java
 @@ -365,13 +365,6 @@ public class VarCheckTest extends CompilerTestCase {
          null, VarCheck.VAR_ARGUMENTS_SHADOWED_ERROR);
    }

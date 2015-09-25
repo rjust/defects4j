@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 index e6910a7..b5a907b 100644
---- a/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
-+++ b/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
 @@ -577,12 +577,6 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
      fold("x = '' + []", "x = ''");      // cannot fold (but nice if we can)
    }

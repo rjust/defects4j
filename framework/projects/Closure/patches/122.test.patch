@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/ParserTest.java b/com/google/javascript/jscomp/parsing/ParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/ParserTest.java b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 index b09bc34..1298aa4 100644
---- a/com/google/javascript/jscomp/parsing/ParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/ParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/ParserTest.java
 @@ -691,33 +691,6 @@ public class ParserTest extends BaseJSTypeTestCase {
      parse("/* \n * @type {number} */ var x = 3;", SUSPICIOUS_COMMENT_WARNING);
    }

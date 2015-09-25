@@ -1,7 +1,7 @@
-diff --git a/org/joda/time/base/BaseSingleFieldPeriod.java b/org/joda/time/base/BaseSingleFieldPeriod.java
-index 839d3b8..79283b5 100644
---- a/org/joda/time/base/BaseSingleFieldPeriod.java
-+++ b/org/joda/time/base/BaseSingleFieldPeriod.java
+diff --git a/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java b/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
+index 839d3b8..cdf3e49 100644
+--- a/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
++++ b/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
 @@ -48,8 +48,6 @@ public abstract class BaseSingleFieldPeriod
  
      /** Serialization version. */

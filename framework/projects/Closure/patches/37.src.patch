@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeTraversal.java b/com/google/javascript/jscomp/NodeTraversal.java
+diff --git a/src/com/google/javascript/jscomp/NodeTraversal.java b/src/com/google/javascript/jscomp/NodeTraversal.java
 index 435b4a8..8201b41 100644
---- a/com/google/javascript/jscomp/NodeTraversal.java
-+++ b/com/google/javascript/jscomp/NodeTraversal.java
+--- a/src/com/google/javascript/jscomp/NodeTraversal.java
++++ b/src/com/google/javascript/jscomp/NodeTraversal.java
 @@ -538,7 +538,7 @@ public class NodeTraversal {
  
      // Body
@@ -11,10 +11,10 @@ index 435b4a8..8201b41 100644
      traverseBranch(body, n);
  
      popScope();
-diff --git a/com/google/javascript/jscomp/parsing/IRFactory.java b/com/google/javascript/jscomp/parsing/IRFactory.java
+diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
 index 26cbc19..c6b70c5 100644
---- a/com/google/javascript/jscomp/parsing/IRFactory.java
-+++ b/com/google/javascript/jscomp/parsing/IRFactory.java
+--- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
 @@ -664,13 +664,6 @@ class IRFactory {
        node.addChildToBack(lp);
  

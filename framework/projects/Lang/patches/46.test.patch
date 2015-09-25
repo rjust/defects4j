@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/StringEscapeUtilsTest.java b/org/apache/commons/lang/StringEscapeUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java b/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
 index e993ae6..b0b38f9 100644
---- a/org/apache/commons/lang/StringEscapeUtilsTest.java
-+++ b/org/apache/commons/lang/StringEscapeUtilsTest.java
+--- a/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
++++ b/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
 @@ -97,22 +97,6 @@ public class StringEscapeUtilsTest extends TestCase {
                  "\uABCD\u1234\u012C");
      }

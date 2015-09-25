@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/enums/EnumEqualsTest.java b/org/apache/commons/lang/enums/EnumEqualsTest.java
+diff --git a/src/test/org/apache/commons/lang/enums/EnumEqualsTest.java b/src/test/org/apache/commons/lang/enums/EnumEqualsTest.java
 index ceacf10..9cd2f5d 100644
---- a/org/apache/commons/lang/enums/EnumEqualsTest.java
-+++ b/org/apache/commons/lang/enums/EnumEqualsTest.java
+--- a/src/test/org/apache/commons/lang/enums/EnumEqualsTest.java
++++ b/src/test/org/apache/commons/lang/enums/EnumEqualsTest.java
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2004-2006 The Apache Software Foundation.
@@ -53,10 +53,10 @@ index ceacf10..9cd2f5d 100644
      //-----------------------------------------------------------------------
      public void testCompareTo() {
          try {
-diff --git a/org/apache/commons/lang/enums/ValuedEnumTest.java b/org/apache/commons/lang/enums/ValuedEnumTest.java
+diff --git a/src/test/org/apache/commons/lang/enums/ValuedEnumTest.java b/src/test/org/apache/commons/lang/enums/ValuedEnumTest.java
 index 8ceea27..579bb58 100644
---- a/org/apache/commons/lang/enums/ValuedEnumTest.java
-+++ b/org/apache/commons/lang/enums/ValuedEnumTest.java
+--- a/src/test/org/apache/commons/lang/enums/ValuedEnumTest.java
++++ b/src/test/org/apache/commons/lang/enums/ValuedEnumTest.java
 @@ -1,5 +1,5 @@
  /*
 - * Copyright 2002-2006 The Apache Software Foundation.
@@ -194,10 +194,10 @@ index 8ceea27..579bb58 100644
 -    }
 -
  }
-diff --git a/org/apache/commons/lang/enums/ValuedLanguageEnum.java b/org/apache/commons/lang/enums/ValuedLanguageEnum.java
+diff --git a/src/test/org/apache/commons/lang/enums/ValuedLanguageEnum.java b/src/test/org/apache/commons/lang/enums/ValuedLanguageEnum.java
 deleted file mode 100644
 index edfb37f..0000000
---- a/org/apache/commons/lang/enums/ValuedLanguageEnum.java
+--- a/src/test/org/apache/commons/lang/enums/ValuedLanguageEnum.java
 +++ /dev/null
 @@ -1,56 +0,0 @@
 -/*

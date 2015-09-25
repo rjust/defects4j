@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/linear/OpenMapRealVector.java b/org/apache/commons/math3/linear/OpenMapRealVector.java
+diff --git a/src/main/java/org/apache/commons/math3/linear/OpenMapRealVector.java b/src/main/java/org/apache/commons/math3/linear/OpenMapRealVector.java
 index 294ac57..2ca3447 100644
---- a/org/apache/commons/math3/linear/OpenMapRealVector.java
-+++ b/org/apache/commons/math3/linear/OpenMapRealVector.java
+--- a/src/main/java/org/apache/commons/math3/linear/OpenMapRealVector.java
++++ b/src/main/java/org/apache/commons/math3/linear/OpenMapRealVector.java
 @@ -341,14 +341,10 @@ public class OpenMapRealVector extends SparseRealVector
      public OpenMapRealVector ebeDivide(RealVector v) {
          checkVectorDimensions(v.getDimension());

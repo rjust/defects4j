@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/StringEscapeUtilsTest.java b/org/apache/commons/lang3/StringEscapeUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/StringEscapeUtilsTest.java b/src/test/java/org/apache/commons/lang3/StringEscapeUtilsTest.java
 index 132ea05..5127ca3 100644
---- a/org/apache/commons/lang3/StringEscapeUtilsTest.java
-+++ b/org/apache/commons/lang3/StringEscapeUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/StringEscapeUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/StringEscapeUtilsTest.java
 @@ -423,11 +423,4 @@ public class StringEscapeUtilsTest extends TestCase {
  
          assertEquals( "Hiragana character unicode behaviour has changed - expected no unescaping", escaped, unescaped);

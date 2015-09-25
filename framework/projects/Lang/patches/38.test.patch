@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateFormatTest.java b/org/apache/commons/lang3/time/FastDateFormatTest.java
+diff --git a/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java b/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
 index 4a20ddf..32bed7f 100644
---- a/org/apache/commons/lang3/time/FastDateFormatTest.java
-+++ b/org/apache/commons/lang3/time/FastDateFormatTest.java
+--- a/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
++++ b/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
 @@ -333,17 +333,4 @@ public class FastDateFormatTest extends TestCase {
          format = (FastDateFormat) SerializationUtils.deserialize( SerializationUtils.serialize( format ) );
          assertEquals(output, format.format(cal));

@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 index 167e2cb..9ceae7c 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+--- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 @@ -865,9 +865,9 @@ public final class JsDocInfoParser {
                          }
                          break;

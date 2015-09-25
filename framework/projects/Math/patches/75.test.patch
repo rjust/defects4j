@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/FrequencyTest.java b/org/apache/commons/math/stat/FrequencyTest.java
+diff --git a/src/test/java/org/apache/commons/math/stat/FrequencyTest.java b/src/test/java/org/apache/commons/math/stat/FrequencyTest.java
 index f216eda..4fcbe2b 100644
---- a/org/apache/commons/math/stat/FrequencyTest.java
-+++ b/org/apache/commons/math/stat/FrequencyTest.java
+--- a/src/test/java/org/apache/commons/math/stat/FrequencyTest.java
++++ b/src/test/java/org/apache/commons/math/stat/FrequencyTest.java
 @@ -144,8 +144,6 @@ public final class FrequencyTest extends TestCase {
          assertEquals("one pct",0.25,f.getPct(1),tolerance);
          assertEquals("two pct",0.25,f.getPct(Long.valueOf(2)),tolerance);

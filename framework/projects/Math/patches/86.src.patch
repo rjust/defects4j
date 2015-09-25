@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/CholeskyDecompositionImpl.java b/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
+diff --git a/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java b/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
 index 67e372f..39faa9a 100644
---- a/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
-+++ b/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
+--- a/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
++++ b/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
 @@ -111,6 +111,11 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
  
              final double[] lI = lTData[i];

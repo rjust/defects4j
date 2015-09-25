@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java b/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
+diff --git a/src/main/java/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java b/src/main/java/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
 index aba7b98..38584d4 100644
---- a/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
-+++ b/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
+--- a/src/main/java/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
++++ b/src/main/java/org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java
 @@ -62,10 +62,11 @@ public class RectangularCholeskyDecomposition {
      public RectangularCholeskyDecomposition(RealMatrix matrix, double small)
          throws NonPositiveDefiniteMatrixException {

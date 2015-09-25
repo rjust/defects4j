@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/SourceFile.java b/com/google/javascript/jscomp/SourceFile.java
+diff --git a/src/com/google/javascript/jscomp/SourceFile.java b/src/com/google/javascript/jscomp/SourceFile.java
 index 22414f6..fdc952a 100644
---- a/com/google/javascript/jscomp/SourceFile.java
-+++ b/com/google/javascript/jscomp/SourceFile.java
+--- a/src/com/google/javascript/jscomp/SourceFile.java
++++ b/src/com/google/javascript/jscomp/SourceFile.java
 @@ -235,18 +235,8 @@ public class SourceFile implements StaticSourceFile, Serializable {
      lastOffset = pos;
      lastLine = lineNumber;

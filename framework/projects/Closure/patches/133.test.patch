@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+diff --git a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 index 279aff2..59c1ef7 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+--- a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
 @@ -2752,11 +2752,6 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
      parse("@ngInject \n@ngInject*/", "extra @ngInject tag");
    }

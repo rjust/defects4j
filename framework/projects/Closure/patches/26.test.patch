@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunnerTest.java b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 index fd8f632..f189883 100644
---- a/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/com/google/javascript/jscomp/CommandLineRunnerTest.java
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
 @@ -1046,7 +1046,9 @@ public class CommandLineRunnerTest extends TestCase {
      args.add("--common_js_entry_module=foo/bar");
      setFilename(0, "foo/bar.js");
@@ -24,10 +24,10 @@ index fd8f632..f189883 100644
    }
  
    /* Helper functions */
-diff --git a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+diff --git a/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
 index 7525531..4f6f053 100644
---- a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
-+++ b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+--- a/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
++++ b/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
 @@ -43,7 +43,9 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
          "var module$test = {};" +
          "goog.require('module$name');" +

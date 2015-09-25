@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 index bdd2a24..56b0597 100644
---- a/org/apache/commons/lang3/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+--- a/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/math/NumberUtilsTest.java
 @@ -246,43 +246,6 @@ public class NumberUtilsTest {
          assertEquals(BigDecimal.class, bigNum.getClass());
      }

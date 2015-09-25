@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/NodeUtilTest.java b/com/google/javascript/jscomp/NodeUtilTest.java
+diff --git a/test/com/google/javascript/jscomp/NodeUtilTest.java b/test/com/google/javascript/jscomp/NodeUtilTest.java
 index 13e495f..98e8e92 100644
---- a/com/google/javascript/jscomp/NodeUtilTest.java
-+++ b/com/google/javascript/jscomp/NodeUtilTest.java
+--- a/test/com/google/javascript/jscomp/NodeUtilTest.java
++++ b/test/com/google/javascript/jscomp/NodeUtilTest.java
 @@ -1165,8 +1165,6 @@ public class NodeUtilTest extends TestCase {
      assertTrue(testLocalValue("o.toString()"));
  

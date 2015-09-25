@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java b/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
+diff --git a/src/test/java/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java b/src/test/java/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
 index fe125ce..b8c11c3 100644
---- a/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
-+++ b/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
+--- a/src/test/java/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
++++ b/src/test/java/org/apache/commons/math/geometry/euclidean/threed/RotationTest.java
 @@ -17,6 +17,11 @@
  
  package org.apache.commons.math.geometry.euclidean.threed;

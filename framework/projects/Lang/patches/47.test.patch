@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/text/StrBuilderTest.java b/org/apache/commons/lang/text/StrBuilderTest.java
+diff --git a/src/test/org/apache/commons/lang/text/StrBuilderTest.java b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 index d589308..67e1ce1 100644
---- a/org/apache/commons/lang/text/StrBuilderTest.java
-+++ b/org/apache/commons/lang/text/StrBuilderTest.java
+--- a/src/test/org/apache/commons/lang/text/StrBuilderTest.java
++++ b/src/test/org/apache/commons/lang/text/StrBuilderTest.java
 @@ -1749,17 +1749,4 @@ public class StrBuilderTest extends TestCase {
          assertEquals( "The indexOf(char) method is looking beyond the end of the string", -1, sb.indexOf('h'));
      }

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/LocaleUtils.java b/org/apache/commons/lang/LocaleUtils.java
+diff --git a/src/java/org/apache/commons/lang/LocaleUtils.java b/src/java/org/apache/commons/lang/LocaleUtils.java
 index 9607953..139d9a7 100644
---- a/org/apache/commons/lang/LocaleUtils.java
-+++ b/org/apache/commons/lang/LocaleUtils.java
+--- a/src/java/org/apache/commons/lang/LocaleUtils.java
++++ b/src/java/org/apache/commons/lang/LocaleUtils.java
 @@ -111,9 +111,6 @@ public class LocaleUtils {
                  throw new IllegalArgumentException("Invalid locale format: " + str);
              }

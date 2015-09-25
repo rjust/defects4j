@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/IRTest.java b/com/google/javascript/rhino/IRTest.java
+diff --git a/test/com/google/javascript/rhino/IRTest.java b/test/com/google/javascript/rhino/IRTest.java
 deleted file mode 100644
 index 751c9e5..0000000
---- a/com/google/javascript/rhino/IRTest.java
+--- a/test/com/google/javascript/rhino/IRTest.java
 +++ /dev/null
 @@ -1,91 +0,0 @@
 -/*

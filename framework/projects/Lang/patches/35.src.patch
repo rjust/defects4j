@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/ArrayUtils.java b/org/apache/commons/lang3/ArrayUtils.java
-index 3a543ce..79c80bd 100644
---- a/org/apache/commons/lang3/ArrayUtils.java
-+++ b/org/apache/commons/lang3/ArrayUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/ArrayUtils.java b/src/main/java/org/apache/commons/lang3/ArrayUtils.java
+index 3a543ce..b927339 100644
+--- a/src/main/java/org/apache/commons/lang3/ArrayUtils.java
++++ b/src/main/java/org/apache/commons/lang3/ArrayUtils.java
 @@ -3280,21 +3280,13 @@ public class ArrayUtils {
       * @param element  the object to add, may be <code>null</code>
       * @return A new array containing the existing elements plus the new element
@@ -28,7 +28,7 @@ index 3a543ce..79c80bd 100644
          T[] newArray = (T[]) copyArrayGrow1(array, type);
          newArray[newArray.length - 1] = element;
          return newArray;
-@@ -3571,7 +3562,9 @@ public class ArrayUtils {
+@@ -3571,7 +3563,9 @@ public class ArrayUtils {
          } else if (element != null) {
              clss = element.getClass();
          } else {

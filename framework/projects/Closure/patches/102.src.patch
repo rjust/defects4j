@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/Normalize.java b/com/google/javascript/jscomp/Normalize.java
+diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
 index 1db94e2..4aa4555 100644
---- a/com/google/javascript/jscomp/Normalize.java
-+++ b/com/google/javascript/jscomp/Normalize.java
+--- a/src/com/google/javascript/jscomp/Normalize.java
++++ b/src/com/google/javascript/jscomp/Normalize.java
 @@ -86,12 +86,12 @@ class Normalize implements CompilerPass, Callback {
    @Override
    public void process(Node externs, Node root) {
@@ -16,10 +16,10 @@ index 1db94e2..4aa4555 100644
      new PropogateConstantAnnotations(compiler, assertOnChange)
          .process(externs, root);
    }
-diff --git a/com/google/javascript/jscomp/SyntacticScopeCreator.java b/com/google/javascript/jscomp/SyntacticScopeCreator.java
+diff --git a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
 index db99202..bb3e388 100644
---- a/com/google/javascript/jscomp/SyntacticScopeCreator.java
-+++ b/com/google/javascript/jscomp/SyntacticScopeCreator.java
+--- a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
++++ b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
 @@ -37,10 +37,6 @@ class SyntacticScopeCreator implements ScopeCreator {
    private String sourceName;
    private final RedeclarationHandler redeclarationHandler;

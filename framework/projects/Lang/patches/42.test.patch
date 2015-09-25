@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/StringEscapeUtilsTest.java b/org/apache/commons/lang/StringEscapeUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java b/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
 index 18e6233..e993ae6 100644
---- a/org/apache/commons/lang/StringEscapeUtilsTest.java
-+++ b/org/apache/commons/lang/StringEscapeUtilsTest.java
+--- a/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
++++ b/src/test/org/apache/commons/lang/StringEscapeUtilsTest.java
 @@ -415,18 +415,4 @@ public class StringEscapeUtilsTest extends TestCase {
              fail("Threw: " + e);
          }

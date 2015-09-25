@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeCheckTest.java b/com/google/javascript/jscomp/TypeCheckTest.java
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
 index 2d3be5d..c18ecd7 100644
---- a/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/com/google/javascript/jscomp/TypeCheckTest.java
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
 @@ -5260,72 +5260,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
          "required: number");
    }
@@ -75,10 +75,10 @@ index 2d3be5d..c18ecd7 100644
    /**
     * Tests that the || operator is type checked correctly, that is of
     * the type of the first argument or of the second argument. See
-diff --git a/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+diff --git a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
 index 4fe01a0..048fc9e 100644
---- a/com/google/javascript/jscomp/TypedScopeCreatorTest.java
-+++ b/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+--- a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
++++ b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
 @@ -372,9 +372,8 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
          RhinoErrorReporter.TYPE_PARSE_ERROR);
      ObjectType x = (ObjectType) findNameType("x", globalScope);

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/DateUtilsTest.java b/org/apache/commons/lang/time/DateUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/time/DateUtilsTest.java b/src/test/org/apache/commons/lang/time/DateUtilsTest.java
 index 6ded24d..6f6a434 100644
---- a/org/apache/commons/lang/time/DateUtilsTest.java
-+++ b/org/apache/commons/lang/time/DateUtilsTest.java
+--- a/src/test/org/apache/commons/lang/time/DateUtilsTest.java
++++ b/src/test/org/apache/commons/lang/time/DateUtilsTest.java
 @@ -693,69 +693,6 @@ public class DateUtilsTest extends TestCase {
      }
  

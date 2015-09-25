@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/math/NumberUtilsTest.java b/org/apache/commons/lang3/math/NumberUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang3/math/NumberUtilsTest.java b/src/test/org/apache/commons/lang3/math/NumberUtilsTest.java
 index 80df562..31eb376 100644
---- a/org/apache/commons/lang3/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang3/math/NumberUtilsTest.java
+--- a/src/test/org/apache/commons/lang3/math/NumberUtilsTest.java
++++ b/src/test/org/apache/commons/lang3/math/NumberUtilsTest.java
 @@ -208,9 +208,6 @@ public class NumberUtilsTest extends TestCase {
                  .createNumber("10" + Integer.MAX_VALUE));
          assertEquals("createNumber(String) 18 failed", new BigInteger("10" + Long.MAX_VALUE), NumberUtils

@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/stat/descriptive/SummaryStatistics.java b/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
+diff --git a/src/main/java/org/apache/commons/math/stat/descriptive/SummaryStatistics.java b/src/main/java/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
 index da987cd..1203d51 100644
---- a/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
-+++ b/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
+--- a/src/main/java/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
++++ b/src/main/java/org/apache/commons/math/stat/descriptive/SummaryStatistics.java
 @@ -155,13 +155,13 @@ public class SummaryStatistics implements StatisticalSummary, Serializable {
          secondMoment.increment(value);
          // If mean, variance or geomean have been overridden,

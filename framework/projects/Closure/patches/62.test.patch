@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/LightweightMessageFormatterTest.java b/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
+diff --git a/test/com/google/javascript/jscomp/LightweightMessageFormatterTest.java b/test/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
 index 6cc204f..0c432a1 100644
---- a/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
-+++ b/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
+--- a/test/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
++++ b/test/com/google/javascript/jscomp/LightweightMessageFormatterTest.java
 @@ -84,24 +84,6 @@ public class LightweightMessageFormatterTest extends TestCase {
          "\t\t    ^\n", formatter.formatError(error));
    }

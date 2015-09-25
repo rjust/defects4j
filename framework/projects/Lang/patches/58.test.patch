@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/math/NumberUtilsTest.java b/org/apache/commons/lang/math/NumberUtilsTest.java
+diff --git a/src/test/org/apache/commons/lang/math/NumberUtilsTest.java b/src/test/org/apache/commons/lang/math/NumberUtilsTest.java
 index f3e7cc4..5753238 100644
---- a/org/apache/commons/lang/math/NumberUtilsTest.java
-+++ b/org/apache/commons/lang/math/NumberUtilsTest.java
+--- a/src/test/org/apache/commons/lang/math/NumberUtilsTest.java
++++ b/src/test/org/apache/commons/lang/math/NumberUtilsTest.java
 @@ -1364,11 +1364,5 @@ public class NumberUtilsTest extends TestCase {
          assertTrue(NumberUtils.FLOAT_ONE.floatValue() == 1.0f);
          assertTrue(NumberUtils.FLOAT_MINUS_ONE.floatValue() == -1.0f);

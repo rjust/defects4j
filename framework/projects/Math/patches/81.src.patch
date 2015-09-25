@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/linear/EigenDecompositionImpl.java b/org/apache/commons/math/linear/EigenDecompositionImpl.java
-index 3fc328d..53a40f0 100644
---- a/org/apache/commons/math/linear/EigenDecompositionImpl.java
-+++ b/org/apache/commons/math/linear/EigenDecompositionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
+index 3fc328d..26fa7bd 100644
+--- a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
++++ b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
 @@ -595,12 +595,8 @@ public class EigenDecompositionImpl implements EigenDecomposition {
          }
  

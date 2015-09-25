@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/LocaleUtils.java b/org/apache/commons/lang3/LocaleUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/LocaleUtils.java b/src/main/java/org/apache/commons/lang3/LocaleUtils.java
 index a7a6051..7568f2c 100644
---- a/org/apache/commons/lang3/LocaleUtils.java
-+++ b/org/apache/commons/lang3/LocaleUtils.java
+--- a/src/main/java/org/apache/commons/lang3/LocaleUtils.java
++++ b/src/main/java/org/apache/commons/lang3/LocaleUtils.java
 @@ -85,66 +85,41 @@ public class LocaleUtils {
       * @return a Locale, null if null input
       * @throws IllegalArgumentException if the string is an invalid format

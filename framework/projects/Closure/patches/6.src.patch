@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/TypeValidator.java b/com/google/javascript/jscomp/TypeValidator.java
+diff --git a/src/com/google/javascript/jscomp/TypeValidator.java b/src/com/google/javascript/jscomp/TypeValidator.java
 index 12ce5b3..be049b0 100644
---- a/com/google/javascript/jscomp/TypeValidator.java
-+++ b/com/google/javascript/jscomp/TypeValidator.java
+--- a/src/com/google/javascript/jscomp/TypeValidator.java
++++ b/src/com/google/javascript/jscomp/TypeValidator.java
 @@ -363,22 +363,28 @@ class TypeValidator {
        JSType leftType, Node owner, String propName) {
      // The NoType check is a hack to make typedefs work OK.
@@ -79,10 +79,10 @@ index 12ce5b3..be049b0 100644
      }
    }
  
-diff --git a/com/google/javascript/rhino/jstype/FunctionType.java b/com/google/javascript/rhino/jstype/FunctionType.java
+diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
 index ba82d2a..5a6cf9a 100644
---- a/com/google/javascript/rhino/jstype/FunctionType.java
-+++ b/com/google/javascript/rhino/jstype/FunctionType.java
+--- a/src/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
 @@ -1007,14 +1007,17 @@ public class FunctionType extends PrototypeObjectType {
          // An interface function cannot be assigned to anything.
          return false;

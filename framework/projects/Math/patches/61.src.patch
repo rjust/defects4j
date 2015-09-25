@@ -1,8 +1,8 @@
-diff --git a/org/apache/commons/math/distribution/PoissonDistribution.java b/org/apache/commons/math/distribution/PoissonDistribution.java
-index d20eb53..6aca509 100644
---- a/org/apache/commons/math/distribution/PoissonDistribution.java
-+++ b/org/apache/commons/math/distribution/PoissonDistribution.java
-@@ -40,6 +41,18 @@ public interface PoissonDistribution extends IntegerDistribution {
+diff --git a/src/main/java/org/apache/commons/math/distribution/PoissonDistribution.java b/src/main/java/org/apache/commons/math/distribution/PoissonDistribution.java
+index d20eb53..2281d00 100644
+--- a/src/main/java/org/apache/commons/math/distribution/PoissonDistribution.java
++++ b/src/main/java/org/apache/commons/math/distribution/PoissonDistribution.java
+@@ -40,6 +40,18 @@ public interface PoissonDistribution extends IntegerDistribution {
      double getMean();
  
      /**
@@ -21,16 +21,16 @@ index d20eb53..6aca509 100644
       * Calculates the Poisson distribution function using a normal approximation.
       *
       * @param x the upper bound, inclusive
-@@ -47,4 +60,5 @@ public interface PoissonDistribution extends IntegerDistribution {
+@@ -47,4 +59,5 @@ public interface PoissonDistribution extends IntegerDistribution {
       * @throws MathException if an error occurs computing the normal approximation
       */
      double normalApproximateProbability(int x) throws MathException;
 +
  }
-diff --git a/org/apache/commons/math/distribution/PoissonDistributionImpl.java b/org/apache/commons/math/distribution/PoissonDistributionImpl.java
+diff --git a/src/main/java/org/apache/commons/math/distribution/PoissonDistributionImpl.java b/src/main/java/org/apache/commons/math/distribution/PoissonDistributionImpl.java
 index 0a81233..64f792b 100644
---- a/org/apache/commons/math/distribution/PoissonDistributionImpl.java
-+++ b/org/apache/commons/math/distribution/PoissonDistributionImpl.java
+--- a/src/main/java/org/apache/commons/math/distribution/PoissonDistributionImpl.java
++++ b/src/main/java/org/apache/commons/math/distribution/PoissonDistributionImpl.java
 @@ -19,7 +19,7 @@ package org.apache.commons.math.distribution;
  import java.io.Serializable;
  

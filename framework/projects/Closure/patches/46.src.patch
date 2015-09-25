@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/rhino/jstype/RecordType.java b/com/google/javascript/rhino/jstype/RecordType.java
+diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
 index b418dbd..a8ed1d1 100755
---- a/com/google/javascript/rhino/jstype/RecordType.java
-+++ b/com/google/javascript/rhino/jstype/RecordType.java
+--- a/src/com/google/javascript/rhino/jstype/RecordType.java
++++ b/src/com/google/javascript/rhino/jstype/RecordType.java
 @@ -137,9 +137,33 @@ class RecordType extends PrototypeObjectType {
          propertyNode);
    }

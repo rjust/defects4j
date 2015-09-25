@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/geometry/Vector3DTest.java b/org/apache/commons/math/geometry/Vector3DTest.java
+diff --git a/src/test/java/org/apache/commons/math/geometry/Vector3DTest.java b/src/test/java/org/apache/commons/math/geometry/Vector3DTest.java
 index 4dc474c..1a80543 100644
---- a/org/apache/commons/math/geometry/Vector3DTest.java
-+++ b/org/apache/commons/math/geometry/Vector3DTest.java
+--- a/src/test/java/org/apache/commons/math/geometry/Vector3DTest.java
++++ b/src/test/java/org/apache/commons/math/geometry/Vector3DTest.java
 @@ -153,19 +153,6 @@ public class Vector3DTest {
      }
  

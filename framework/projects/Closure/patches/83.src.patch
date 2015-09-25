@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CommandLineRunner.java b/com/google/javascript/jscomp/CommandLineRunner.java
+diff --git a/src/com/google/javascript/jscomp/CommandLineRunner.java b/src/com/google/javascript/jscomp/CommandLineRunner.java
 index 4c3b258..7b3d77b 100644
---- a/com/google/javascript/jscomp/CommandLineRunner.java
-+++ b/com/google/javascript/jscomp/CommandLineRunner.java
+--- a/src/com/google/javascript/jscomp/CommandLineRunner.java
++++ b/src/com/google/javascript/jscomp/CommandLineRunner.java
 @@ -331,11 +331,7 @@ public class CommandLineRunner extends
  
        @Override

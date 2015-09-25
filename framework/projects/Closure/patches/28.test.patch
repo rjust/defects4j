@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineCostEstimatorTest.java b/com/google/javascript/jscomp/InlineCostEstimatorTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineCostEstimatorTest.java b/test/com/google/javascript/jscomp/InlineCostEstimatorTest.java
 index 5756732..5524e6e 100644
---- a/com/google/javascript/jscomp/InlineCostEstimatorTest.java
-+++ b/com/google/javascript/jscomp/InlineCostEstimatorTest.java
+--- a/test/com/google/javascript/jscomp/InlineCostEstimatorTest.java
++++ b/test/com/google/javascript/jscomp/InlineCostEstimatorTest.java
 @@ -46,13 +46,11 @@ public class InlineCostEstimatorTest extends TestCase {
  
    public void testCost() {
@@ -17,10 +17,10 @@ index 5756732..5524e6e 100644
      checkCost("1 + foo(a,b)", "1+xx(xx,xx)");
      checkCost("a ? 1 : 0", "xx?1:0");
      checkCost("a.b", "xx.xx");
-diff --git a/com/google/javascript/jscomp/InlineFunctionsTest.java b/com/google/javascript/jscomp/InlineFunctionsTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 index 80ab5cc..1515f97 100644
---- a/com/google/javascript/jscomp/InlineFunctionsTest.java
-+++ b/com/google/javascript/jscomp/InlineFunctionsTest.java
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
 @@ -2164,18 +2164,6 @@ public class InlineFunctionsTest extends CompilerTestCase {
          "}");
    }

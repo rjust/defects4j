@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/text/translate/EntityArrays.java b/org/apache/commons/lang3/text/translate/EntityArrays.java
+diff --git a/src/main/java/org/apache/commons/lang3/text/translate/EntityArrays.java b/src/main/java/org/apache/commons/lang3/text/translate/EntityArrays.java
 index ef839c6..8caca58 100644
---- a/org/apache/commons/lang3/text/translate/EntityArrays.java
-+++ b/org/apache/commons/lang3/text/translate/EntityArrays.java
+--- a/src/main/java/org/apache/commons/lang3/text/translate/EntityArrays.java
++++ b/src/main/java/org/apache/commons/lang3/text/translate/EntityArrays.java
 @@ -71,33 +71,33 @@ public class EntityArrays {
          {"\u00C7", "&Ccedil;"}, // Ç - uppercase C, cedilla
          {"\u00C8", "&Egrave;"}, // È - uppercase E, grave accent

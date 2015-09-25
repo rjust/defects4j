@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 index cfdccbe..f1f5735 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+--- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 @@ -1352,19 +1352,10 @@ public final class JsDocInfoParser {
  
      boolean ignoreStar = false;

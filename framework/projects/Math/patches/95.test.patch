@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/math/distribution/FDistributionTest.java b/org/apache/commons/math/distribution/FDistributionTest.java
+diff --git a/src/test/org/apache/commons/math/distribution/FDistributionTest.java b/src/test/org/apache/commons/math/distribution/FDistributionTest.java
 index de153e0..d345d68 100644
---- a/org/apache/commons/math/distribution/FDistributionTest.java
-+++ b/org/apache/commons/math/distribution/FDistributionTest.java
+--- a/src/test/org/apache/commons/math/distribution/FDistributionTest.java
++++ b/src/test/org/apache/commons/math/distribution/FDistributionTest.java
 @@ -105,19 +105,4 @@ public class FDistributionTest extends ContinuousDistributionAbstractTest {
          double x = fd.inverseCumulativeProbability(p);
          assertEquals(.999, x, 1.0e-5);

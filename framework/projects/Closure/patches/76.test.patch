@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+diff --git a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 index b66a823..486fe5a 100644
---- a/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
-+++ b/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
+--- a/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
++++ b/test/com/google/javascript/jscomp/DeadAssignmentsEliminationTest.java
 @@ -445,76 +445,11 @@ public class DeadAssignmentsEliminationTest extends CompilerTestCase {
    }
  

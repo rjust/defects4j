@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/UnreachableCodeElimination.java b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+diff --git a/src/com/google/javascript/jscomp/UnreachableCodeElimination.java b/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
 index e6d4320..5d705d1 100644
---- a/com/google/javascript/jscomp/UnreachableCodeElimination.java
-+++ b/com/google/javascript/jscomp/UnreachableCodeElimination.java
+--- a/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
++++ b/src/com/google/javascript/jscomp/UnreachableCodeElimination.java
 @@ -150,7 +150,27 @@ class UnreachableCodeElimination extends AbstractPostOrderCallback
        return n;
      }

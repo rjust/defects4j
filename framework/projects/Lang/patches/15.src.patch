@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/reflect/TypeUtils.java b/org/apache/commons/lang3/reflect/TypeUtils.java
+diff --git a/src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java b/src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java
 index 8db8abf..ed9dc3f 100644
---- a/org/apache/commons/lang3/reflect/TypeUtils.java
-+++ b/org/apache/commons/lang3/reflect/TypeUtils.java
+--- a/src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java
++++ b/src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java
 @@ -216,9 +216,9 @@ public class TypeUtils {
                  toClass, typeVarAssigns);
  

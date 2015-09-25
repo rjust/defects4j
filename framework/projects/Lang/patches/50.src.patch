@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/time/FastDateFormat.java b/org/apache/commons/lang/time/FastDateFormat.java
+diff --git a/src/java/org/apache/commons/lang/time/FastDateFormat.java b/src/java/org/apache/commons/lang/time/FastDateFormat.java
 index d1caaa8..0be752b 100644
---- a/org/apache/commons/lang/time/FastDateFormat.java
-+++ b/org/apache/commons/lang/time/FastDateFormat.java
+--- a/src/java/org/apache/commons/lang/time/FastDateFormat.java
++++ b/src/java/org/apache/commons/lang/time/FastDateFormat.java
 @@ -281,15 +281,16 @@ public class FastDateFormat extends Format {
          if (timeZone != null) {
              key = new Pair(key, timeZone);

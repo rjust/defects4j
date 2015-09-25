@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+diff --git a/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java b/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
 index 43bc8ed..7525531 100644
---- a/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
-+++ b/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
+--- a/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
++++ b/test/com/google/javascript/jscomp/ProcessCommonJSModulesTest.java
 @@ -129,9 +129,5 @@ public class ProcessCommonJSModulesTest extends CompilerTestCase {
      ProcessCommonJSModules pass = new ProcessCommonJSModules(null, "foo");
      assertEquals("module$baz",

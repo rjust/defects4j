@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java b/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
+diff --git a/test/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java b/test/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
 index 5e318e1..eb48e70 100644
---- a/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
-+++ b/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
+--- a/test/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
++++ b/test/com/google/javascript/jscomp/CollapseVariableDeclarationsTest.java
 @@ -42,12 +42,6 @@ public class CollapseVariableDeclarationsTest extends CompilerTestCase {
           "var a=1,b=2,c=3,d=4;");
    }

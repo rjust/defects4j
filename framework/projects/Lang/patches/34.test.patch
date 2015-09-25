@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/builder/ToStringBuilderTest.java b/org/apache/commons/lang3/builder/ToStringBuilderTest.java
+diff --git a/src/test/java/org/apache/commons/lang3/builder/ToStringBuilderTest.java b/src/test/java/org/apache/commons/lang3/builder/ToStringBuilderTest.java
 index f2085b2..228704a 100644
---- a/org/apache/commons/lang3/builder/ToStringBuilderTest.java
-+++ b/org/apache/commons/lang3/builder/ToStringBuilderTest.java
+--- a/src/test/java/org/apache/commons/lang3/builder/ToStringBuilderTest.java
++++ b/src/test/java/org/apache/commons/lang3/builder/ToStringBuilderTest.java
 @@ -5,9 +5,9 @@
   * The ASF licenses this file to You under the Apache License, Version 2.0
   * (the "License"); you may not use this file except in compliance with

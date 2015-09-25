@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 index ce94573..bf46057 100644
---- a/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-+++ b/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+--- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 @@ -1364,7 +1364,7 @@ public final class JsDocInfoParser {
      int lineno = stream.getLineno();
      int charno = stream.getCharno() + 1;

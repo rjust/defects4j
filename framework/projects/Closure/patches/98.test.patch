@@ -1,7 +1,7 @@
-diff --git a/com/google/javascript/jscomp/InlineVariablesTest.java b/com/google/javascript/jscomp/InlineVariablesTest.java
+diff --git a/test/com/google/javascript/jscomp/InlineVariablesTest.java b/test/com/google/javascript/jscomp/InlineVariablesTest.java
 index 7c2d91e..f474273 100644
---- a/com/google/javascript/jscomp/InlineVariablesTest.java
-+++ b/com/google/javascript/jscomp/InlineVariablesTest.java
+--- a/test/com/google/javascript/jscomp/InlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/InlineVariablesTest.java
 @@ -593,38 +593,6 @@ public class InlineVariablesTest extends CompilerTestCase {
           "var x; x = this.foo(); this.bar(); function f() { this.baz(x); }");
    }

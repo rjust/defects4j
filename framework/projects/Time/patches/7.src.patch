@@ -1,8 +1,8 @@
-diff --git a/org/joda/time/format/DateTimeFormatter.java b/org/joda/time/format/DateTimeFormatter.java
-index 913d036..553b035 100644
---- a/org/joda/time/format/DateTimeFormatter.java
-+++ b/org/joda/time/format/DateTimeFormatter.java
-@@ -705,12 +703,11 @@ public class DateTimeFormatter {
+diff --git a/src/main/java/org/joda/time/format/DateTimeFormatter.java b/src/main/java/org/joda/time/format/DateTimeFormatter.java
+index 913d036..519c130 100644
+--- a/src/main/java/org/joda/time/format/DateTimeFormatter.java
++++ b/src/main/java/org/joda/time/format/DateTimeFormatter.java
+@@ -705,12 +705,11 @@ public class DateTimeFormatter {
          
          long instantMillis = instant.getMillis();
          Chronology chrono = instant.getChronology();

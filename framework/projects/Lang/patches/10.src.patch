@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang3/time/FastDateParser.java b/org/apache/commons/lang3/time/FastDateParser.java
+diff --git a/src/main/java/org/apache/commons/lang3/time/FastDateParser.java b/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
 index 8df302f..a01159b 100644
---- a/org/apache/commons/lang3/time/FastDateParser.java
-+++ b/org/apache/commons/lang3/time/FastDateParser.java
+--- a/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
++++ b/src/main/java/org/apache/commons/lang3/time/FastDateParser.java
 @@ -301,8 +301,17 @@ public class FastDateParser implements DateParser, Serializable {
       * @return The <code>StringBuilder</code>
       */

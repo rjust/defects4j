@@ -1,7 +1,7 @@
-diff --git a/org/apache/commons/lang/StringEscapeUtils.java b/org/apache/commons/lang/StringEscapeUtils.java
+diff --git a/src/java/org/apache/commons/lang/StringEscapeUtils.java b/src/java/org/apache/commons/lang/StringEscapeUtils.java
 index d4f98ec..c30c663 100644
---- a/org/apache/commons/lang/StringEscapeUtils.java
-+++ b/org/apache/commons/lang/StringEscapeUtils.java
+--- a/src/java/org/apache/commons/lang/StringEscapeUtils.java
++++ b/src/java/org/apache/commons/lang/StringEscapeUtils.java
 @@ -83,7 +83,7 @@ public class StringEscapeUtils {
       * @return String with escaped values, <code>null</code> if null string input
       */
