@@ -7,6 +7,15 @@
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
 source test.include
+
+# Check whether only a subset of projects should be tested
+if [ $# -eq 0 ]; then
+    projects=( Chart Closure Lang Math Time )
+else
+    projects=( $* )
+    script_name=$(echo $script | sed 's/\.sh$//')
+    LOG="$TEST_DIR/${script_name}$(printf '_%s' $*).log"
+fi
 init
 
 ################################################################################
@@ -17,9 +26,12 @@ init
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
 
-work_dir=$TMP_DIR/test_trigger
-for pid in Chart Closure Lang Math Time; do
+test_dir="$TMP_DIR/test_trigger"
+mkdir -p $test_dir
+
+for pid in "${projects[@]}"; do
     num_bugs=$(num_lines $BASE_DIR/framework/projects/$pid/commit-db)
+    work_dir="$test_dir/$pid"
     for bid in $(seq 1 1 $num_bugs); do
         for v in "b" "f"; do
             vid=${bid}$v
@@ -44,6 +56,6 @@ for pid in Chart Closure Lang Math Time; do
             done
         done
     done
+    rm -rf $work_dir
 done
-rm -rf $work_dir
 HALT_ON_ERROR=1
