@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-function clean {
+# The name of the archive that contains all project repos
+ARCHIVE=defects4j-repos.zip
+
+clean() {
     rm -rf \
     closure-compiler.git \
     commons-lang.git \
@@ -11,18 +14,21 @@ function clean {
 }
 
 # The BSD version of stat does not support --version or -c
-stat --version &> /dev/null 
-if [[ $? ]]; then
+if stat --version &> /dev/null; then
     # GNU version
-    cmd="stat -c %Y defects4j-repos.zip"
+    cmd="stat -c %Y $ARCHIVE"
 else
     # BSD version
-    cmd="stat -f %m defects4j-repos.zip"
+    cmd="stat -f %m $ARCHIVE"
 fi
 
-old=$($cmd)
+if [ -e $ARCHIVE ]; then
+    old=$($cmd)
+else
+    old=0
+fi
 # Only download repos if the server has a newer file
-wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/defects4j-repos.zip
+wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/$ARCHIVE
 new=$($cmd)
 
 # Exit if no newer file is available
@@ -32,4 +38,4 @@ new=$($cmd)
 clean
 
 # Extract new repos
-unzip -u defects4j-repos.zip && mv defects4j/project_repos/* . && rm -r defects4j
+unzip -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
