@@ -107,6 +107,15 @@ our $TAB_COVERAGE = ($ENV{TAB_COVERAGE} or "coverage");
 
 =pod
 
+=item B<TAB_CODE_EVOLUTION>
+
+The name of the database table for the results of running code evolution analysis (I<code_evolution>)
+
+=cut
+our $TAB_CODE_EVOLUTION = ($ENV{TAB_CODE_EVOLUTION} or "code_evolution");
+
+=pod
+
 =item B<TAB_REVIEW>
 
 =back
@@ -142,7 +151,7 @@ our $PASS_ISO_V2   = "pass_iso_t2v2";
 our $TEST_SUITE = "test_suite_source";
 our $TEST_ID    = "test_id";
 
-# Additional columns of TAB_BUG_DETECTION
+# Additional columns of TAB_BUG_DETECTION and TAB_CODE_EVOLUTION
 our $TEST_CLASS = "test_classification";
 our $NUM_TRIGGER= "num_trigger";
 
@@ -157,6 +166,10 @@ our $LINES_COVERED    = "lines_covered";
 our $BRANCHES_TOTAL   = "branches_total";
 our $BRANCHES_COVERED = "branches_covered";
 
+# Additional columns of TAB_CODE_EVOLUTION
+our $NUM_COMMITS      = "num_commits";
+our $PASSED_COMMITS   = "passed_commits";
+
 # Table definitions
 my %tables = (
 # TAB_REV_PAIRS
@@ -169,6 +182,8 @@ $TAB_BUG_DETECTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $TEST_CLASS, $NUM_T
 $TAB_MUTATION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $MUT_GEN, $MUT_COV, $MUT_KILL],
 # Table TAB_COVERAGE
 $TAB_COVERAGE => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $LINES_TOTAL, $LINES_COVERED, $BRANCHES_TOTAL, $BRANCHES_COVERED],
+# Table TAB_CODE_EVOLUTION
+$TAB_CODE_EVOLUTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $NUM_COMMITS, $PASSED_COMMITS, $TEST_CLASS, $NUM_TRIGGER],
 );
 
 
@@ -179,6 +194,7 @@ our %PRIMARY_KEYS = (
     $TAB_BUG_DETECTION => 4,
     $TAB_MUTATION => 4,
     $TAB_COVERAGE => 4,
+    $TAB_CODE_EVOLUTION => 4,
 );
 
 our @EXPORT = qw(
@@ -189,6 +205,7 @@ $TAB_BUG_DETECTION
 $TAB_MUTATION
 $TAB_REVIEW
 $TAB_COVERAGE
+$TAB_CODE_EVOLUTION
 
 $PROJECT
 $ID
@@ -217,6 +234,8 @@ $LINES_TOTAL
 $LINES_COVERED
 $BRANCHES_TOTAL
 $BRANCHES_COVERED
+$NUM_COMMITS
+$PASSED_COMMITS
 
 %PRIMARY_KEYS
 );
