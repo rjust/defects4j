@@ -243,31 +243,31 @@ sub sanity_check {
 }
 =pod
 
-=item B<compile> C<compile()>
+=item B<compile> C<compile([log_file])>
 
 Compile the project version that is currently checked out
 
 =cut
 sub compile {
-    my $self = shift;
-    return $self->_ant_call("compile");
+    my ($self, $log_file) = @_;
+    return $self->_ant_call("compile", undef, $log_file);
 }
 
 =pod
 
-=item B<compile_tests> C<compile_tests()>
+=item B<compile_tests> C<compile_tests([log_file])>
 
 Compile tests of the project version that is currently checked out
 
 =cut
 sub compile_tests {
-    my $self = shift;
-    return $self->_ant_call("compile.tests");
+    my ($self, $log_file) = @_;
+    return $self->_ant_call("compile.tests", undef, $log_file);
 }
 
 =pod
 
-=item B<compile_ext_tests> C<compile_ext_tests(test_dir)>
+=item B<compile_ext_tests> C<compile_ext_tests(test_dir [, log_file])>
 
 Compile an external test suite whose sources are located in C<test_dir>
 against the project version that is currently checked out.
