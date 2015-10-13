@@ -139,10 +139,9 @@ my $project = Project::create_project($PID);
 
 # Check format of target version id
 if (defined $VID) {
-    my @ids = $project->get_version_ids();
-    $VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format: $VID! Expected: \\d+[bf]";
-    # Verify that the bug_id is valid if a version_id is provided (version_id = bug_id + [bf])
-    $1 ~~ @ids or die "Version id ($VID) does not exist in project: $PID";
+    # Verify that the provided version id is valid
+    Utils::check_vid($VID);
+    $project->contains_version_id($VID) or die "Version id ($VID) does not exist in project: $PID";
 }
 
 # Output directory for results

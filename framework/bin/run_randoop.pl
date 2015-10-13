@@ -129,10 +129,14 @@ pod2usage(1) unless defined $cmd_opts{p} and
                     defined $cmd_opts{b} and
                     defined $cmd_opts{o};
 my $PID = $cmd_opts{p};
+# Instantiate project
+my $project = Project::create_project($PID);
+
 my $VID = $cmd_opts{v};
-$VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format (\\d+[bf]): $VID!";
-# Remove suffix to obtain bug id
-my $BID = $1;
+# Verify that the provided version id is valid
+my $BID = Utils::check_vid($VID)->{bid};
+$project->contains_version_id($VID) or die "Version id ($VID) does not exist in project: $PID";
+
 my $TID = $cmd_opts{n};
 $TID =~ /^\d+$/ or die "Wrong test_id format (\\d+): $TID!";
 my $TIME = $cmd_opts{b};
@@ -142,9 +146,6 @@ my $OUT_DIR = $cmd_opts{o};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
-# Instantiate project and set working directory
-my $project = Project::create_project($PID);
-
 # List of loaded classes
 my $CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
 
@@ -152,6 +153,7 @@ my $CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 
+# Set working directory
 $project->{prog_root} = $TMP_DIR;
 
 =pod
