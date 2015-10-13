@@ -167,6 +167,23 @@ sub get_version_ids {
 
 =pod
 
+=item B<contains_version_id> C<contains_version_id(vid)>
+
+Given a valid version id C<vid>, this subroutine returns true if C<vid> exists
+in the C<commit-db> and false otherwise. This subroutine dies if C<vid> is
+invalid.
+
+=cut
+sub contains_version_id {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $result = Utils::check_vid($vid);
+    return defined $self->{_cache}->{$result->{bid}}->{$result->{type}};
+}
+
+
+=pod
+
 =item B<checkout_vid> C<checkout_vid(vid, work_dir)>
 
 Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of

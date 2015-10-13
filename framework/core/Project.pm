@@ -832,13 +832,26 @@ sub num_revision_pairs {
 
 =item B<get_version_ids> C<get_version_ids()>
 
-Delegate to the get_version_id method of the vcs backend -- see Vcs.pm
+Delegate to the get_version_id subroutine of the vcs backend -- see Vcs.pm
 
 =cut
 sub get_version_ids {
     my $self = shift;
     return $self->{_vcs}->get_version_ids();
 }
+
+=pod
+
+=item B<contains_version_id> C<contains_version_id(vid)>
+
+Delegate to the contains_version_id subroutine of the vcs backend -- see Vcs.pm
+
+=cut
+sub contains_version_id {
+    my ($self, $vid) = @_;
+    return $self->{_vcs}->contains_version_id($vid);
+}
+
 =pod
 
 =item B<checkout_vid> C<checkout_vid(vid [, work_dir])>
