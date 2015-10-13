@@ -48,7 +48,7 @@ The directory that contains the test suite archives.
 
 The output directory for the mutation results and log files.
 
-=item B<-f C<include__file_pattern>>
+=item B<-f C<include_file_pattern>>
 
 The pattern of the test class file names that should be included in the mutation analysis (optional).
 Per default all files (*.java) are included.
