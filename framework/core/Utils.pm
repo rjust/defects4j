@@ -240,8 +240,6 @@ This subroutine converts exit codes into boolean values, i.e., it returns
 B<1> if the command succeeded and B<0> otherwise. If the optional reference
 C<log_ref> is provided, the captured output is stored in that variable.
 
-=back
-
 =cut
 sub exec_cmd {
     @_ >= 2 or die $ARG_ERROR;
@@ -259,5 +257,51 @@ sub exec_cmd {
 
     return 1;
 }
+
+=pod
+
+=item B<get_all_test_suites> C<get_all_test_suites(suite_dir, pid [, vid])>
+
+Determines all Defects4J test suite archives that exist in F<suite_dir> and that
+match the given B<pid> and B<vid>. Note that B<vid> is optional.
+
+This subroutine returns a reference to a hash that holds all matching test suite
+archives: result -> vid -> suite_src -> test_id -> file_name
+
+=back
+
+=cut
+sub get_all_test_suites {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($suite_dir, $pid, $vid) = @_;
+    my %test_suites = ();
+    my $count = 0;
+    opendir(DIR, $suite_dir) or die "Cannot open directory: $suite_dir!";
+        my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach (@entries) {
+        next unless /^$pid-(\d+[bf])-([^\.]+)(\.(\d+))?.tar.bz2$/;
+        my $archive_vid = $1;
+        my $archive_suite_src = "$2";
+        my $archive_test_id = $4 // 1;
+
+        # Only hash test suites for target vid, if provided
+        next if defined $vid and $vid ne $archive_vid;
+
+        # Init hash if necessary
+        $test_suites{$archive_vid} = {}
+                unless defined $test_suites{$archive_vid};
+        $test_suites{$archive_vid}->{$archive_suite_src} = {}
+                unless defined $test_suites{$archive_vid}->{$archive_suite_src};
+
+        # Save archive name for current test id
+        $test_suites{$archive_vid}->{$archive_suite_src}->{$archive_test_id} = $_;
+
+        ++$count;
+    }
+    print(STDERR "Found $count test suite archive(s)") if $DEBUG;
+    return \%test_suites;
+}
+
 
 1;

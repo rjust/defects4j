@@ -183,34 +183,8 @@ Examples:
 
 =cut
 
-
-# hash all test suites matching the given project_id, using the following mapping:
-# version_id -> suite_src -> test_id -> "file_name"
-my %test_suites;
-my $count = 0;
-opendir(DIR, $SUITE_DIR) or die "Cannot open directory: $SUITE_DIR!";
-my @entries = readdir(DIR);
-closedir(DIR);
-foreach (@entries) {
-    next unless /^$PID-(\d+[bf])-([^\.]+)(\.(\d+))?.tar.bz2$/;
-    my $vid = $1;
-    my $suite_src = "$2";
-    my $test_id = $4 // 1;
-
-    # Only hash test suites for target version id, if provided
-    next if defined $VID and $vid ne $VID;
-
-    # Init hash if necessary
-    $test_suites{$vid} = {} unless defined $test_suites{$vid};
-    $test_suites{$vid}->{$suite_src} = {} unless defined $test_suites{$vid}->{$suite_src};
-
-    # Save archive name for current test id
-    $test_suites{$vid}->{$suite_src}->{$test_id}=$_;
-
-    ++$count;
-}
-
-$LOG->log_msg(" - Found $count test suite archive(s)");
+# Get all test suite archives that match the given project id and version id
+my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
 
 # Directory of class lists used for instrumentation step
 my $CLASS_DIR = "$SCRIPT_DIR/projects/$PID/modified_classes";
@@ -222,15 +196,15 @@ my $sth = $dbh_out->prepare("SELECT * FROM $TAB_COVERAGE WHERE $PROJECT=? AND $T
     or die $dbh_out->errstr;
 
 # Iterate over all version ids
-foreach my $vid (keys %test_suites) {
+foreach my $vid (keys %{$test_suites}) {
 
     # Iterate over all test suite sources (test data generation tools)
-    foreach my $suite_src (keys %{$test_suites{$vid}}) {
+    foreach my $suite_src (keys %{$test_suites->{$vid}}) {
         `mkdir -p $LOG_DIR/$suite_src`;
 
         # Iterate over all test suites for this source
-        foreach my $test_id (keys %{$test_suites{$vid}->{$suite_src}}) {
-            my $archive = $test_suites{$vid}->{$suite_src}->{$test_id};
+        foreach my $test_id (keys %{$test_suites->{$vid}->{$suite_src}}) {
+            my $archive = $test_suites->{$vid}->{$suite_src}->{$test_id};
             my $test_dir = "$TMP_DIR/$suite_src";
 
             # Skip existing entries
@@ -273,7 +247,7 @@ sub _run_coverage {
     my ($vid, $suite_src, $test_id, $test_dir) = @_;
 
     # Get archive name for current test suite
-    my $archive = $test_suites{$vid}->{$suite_src}->{$test_id};
+    my $archive = $test_suites->{$vid}->{$suite_src}->{$test_id};
 
     $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid!";
     my $bid   = $1;
