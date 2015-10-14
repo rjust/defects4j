@@ -26,13 +26,13 @@
 
 =head1 NAME
 
-run_evosuite.pl -- Run evosuite for a particular project and version_id. Tests are
-generated for all modified classes (i.e., all classes that were modified to fix
-the bug).
+run_evosuite.pl -- Run evosuite for a particular project and version_id. Tests
+can be generated for 1) all classes touched by the triggering test or 2) all
+classes that were modified to fix the bug. The latter is the default behavior.
 
 =head1 SYNOPSIS
 
-run_evosuite.pl -p project_id -v version_id -n test_id -o out_dir -c criterion [-b search_budget] [-a assertion_timeout] [-t tmp_dir] [-D]
+run_evosuite.pl -p project_id -v version_id -n test_id -o out_dir -c criterion [-b search_budget] [-a assertion_timeout] [-t tmp_dir] [-A] [-D]
 
 =head1 OPTIONS
 
@@ -74,6 +74,12 @@ The default is 300sec.
 
 The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
+
+=item B<-A>
+
+All relevant classes: Generate tests for all relevant classes (i.e., all classes
+touched by the triggering tests). By default tests are generated only for
+classes modified by the bug fix.
 
 =item B<-D>
 
@@ -135,7 +141,7 @@ use Log;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:v:o:n:t:c:b:a:D', \%cmd_opts) or pod2usage(1);
+getopts('p:v:o:n:t:c:b:a:AD', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and
                     defined $cmd_opts{v} and
@@ -167,8 +173,10 @@ $BUDGET = $BUDGET // $default;
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
-# List of modified classes
-my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+
+# List of target classes
+my $TARGET_CLASSES = "$SCRIPT_DIR/projects/$PID/$CLASSES/$BID.src";
 
 # Temporary directory for project checkout
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
@@ -202,7 +210,7 @@ my $LOG = Log::create_log("$TMP_DIR/run_evosuite.log");
 
 $LOG->log_time("Start test generation");
 
-open(LIST, "<$MOD_CLASSES") or die "Could not open list of classes $MOD_CLASSES: $!";
+open(LIST, "<$TARGET_CLASSES") or die "Could not open list of target classes $TARGET_CLASSES: $!";
 my @classes = <LIST>;
 close(LIST);
 # Iterate over all modified classes
