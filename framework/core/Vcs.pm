@@ -66,9 +66,6 @@ use Constants;
 use Utils;
 use File::Path qw(make_path);
 use Carp qw(confess);
-use PatchReader::Raw;
-use PatchReader::NarrowPatchRegexp;
-use PatchReader::DiffPrinter::raw;
 
 =pod
 
@@ -293,6 +290,8 @@ sub export_diff {
 Applies the patch provided in C<patch_file> to the working directory
 C<work_dir>.  The path argument is optional and used as prefix for the files
 to be patched. Note that C<path> is relative to the root of the working directory.
+
+=back
 
 =cut
 sub apply_patch {
