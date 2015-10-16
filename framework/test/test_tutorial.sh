@@ -25,8 +25,8 @@ defects4j checkout -p $pid -v $vid -w $work_dir || die "checkout program version
 # Verify that defects4j's config file exists 
 [ -e $work_dir/.defects4j.config ] || die "read config file"
 # Verify that defects4j's config file provides the correct data
-grep -q "vid=$vid" $work_dir/.defects4j.config || die "verify config file"
-grep -q "pid=$pid" $work_dir/.defects4j.config || die "verify config file"
+grep -q "pid=$pid" $work_dir/.defects4j.config || die "verify pid in config file"
+grep -q "vid=$vid" $work_dir/.defects4j.config || die "verify vid in config file"
 
 cd $work_dir
 
