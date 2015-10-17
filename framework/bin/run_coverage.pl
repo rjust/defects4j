@@ -30,7 +30,7 @@ run_coverage.pl -- Run code coverage analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D]
+run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-A] [-D]
 
 =head1 OPTIONS
 
@@ -62,6 +62,12 @@ suitable version ids are considered.
 
 The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
+
+=item B<-A>
+
+All relevant classes: Measure code coverage for all relevant classes (i.e., all
+classes touched by the triggering tests). By default code coverage is measured
+only for classes modified by the bug fix.
 
 =item B<-D>
 
@@ -103,7 +109,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:D', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:AD', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -187,7 +193,8 @@ Examples:
 my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
 
 # Directory of class lists used for instrumentation step
-my $CLASS_DIR = "$SCRIPT_DIR/projects/$PID/modified_classes";
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 
 # Get database handle for result table
 my $dbh_out = DB::get_db_handle($TAB_COVERAGE, $OUT_DIR);
@@ -249,9 +256,9 @@ sub _run_coverage {
     # Get archive name for current test suite
     my $archive = $test_suites->{$vid}->{$suite_src}->{$test_id};
 
-    $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid!";
-    my $bid   = $1;
-    my $type  = $2;
+    my $result = Utils::check_vid($vid);
+    my $bid   = $result->{bid};
+    my $type  = $result->{type};
 
     # Checkout program version
     my $root = "$TMP_DIR/${vid}";
@@ -266,7 +273,7 @@ sub _run_coverage {
 
     my $src_dir = $project->src_dir($vid);
     my $test_log = "$TMP_DIR/.coverage.log"; `>$test_log`;
-    my $cov_info = Coverage::coverage_ext($project, "$CLASS_DIR/$bid.src", $src_dir, $test_dir, $INCL, $test_log);
+    my $cov_info = Coverage::coverage_ext($project, "$TARGET_CLASSES_DIR/$bid.src", $src_dir, $test_dir, $INCL, $test_log);
     if (Utils::has_failing_tests($test_log)) {
         $LOG->log_msg(" - Broken test suite: $archive");
         printf ("Broken test suite: $archive\n");

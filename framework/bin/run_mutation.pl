@@ -30,7 +30,7 @@ run_mutation.pl -- Run mutation analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D]
+run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-A] [-D]
 
 =head1 OPTIONS
 
@@ -62,6 +62,12 @@ suitable version ids are considered.
 
 The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
+
+=item B<-A>
+
+All relevant classes: Perform mutation analysis for all relevant classes (i.e.,
+all classes touched by the triggering tests). By default mutation analysis is
+performed only for classes modified by the bug fix.
 
 =item B<-D>
 
@@ -103,7 +109,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:D', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:AD', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -187,7 +193,8 @@ Examples:
 my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
 
 # Directory of class lists used for mutation step
-my $CLASS_DIR = "$SCRIPT_DIR/projects/$PID/modified_classes";
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 
 # Get database handle for result table
 my $dbh_out = DB::get_db_handle($TAB_MUTATION, $OUT_DIR);
@@ -250,9 +257,9 @@ sub _run_mutation {
     # Get archive name for current test suite
     my $archive = $test_suites->{$vid}->{$suite_src}->{$test_id};
 
-    $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid!";
-    my $bid   = $1;
-    my $type  = $2;
+    my $result = Utils::check_vid($vid);
+    my $bid   = $result->{bid};
+    my $type  = $result->{type};
 
     # Checkout program version
     my $root = "$TMP_DIR/${vid}";
@@ -261,7 +268,7 @@ sub _run_mutation {
 
     # Create mutation definitions (mml file)
     my $mml_dir = "$TMP_DIR/.mml";
-    system("$UTIL_DIR/create_mml.pl -p $PID -c $CLASS_DIR -o $mml_dir -v $bid");
+    system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR -o $mml_dir -v $bid");
     my $mml_file = "$mml_dir/$bid.mml.bin";
     -e $mml_file or die "Mml file does not exist: $mml_file!";
 
