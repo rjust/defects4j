@@ -253,6 +253,6 @@ system("rm -rf $TMP_DIR") unless $DEBUG;
 
 =head1 SEE ALSO
 
-All valid project_ids are listed in F<Project.pm>
+All valid project_ids are listed in L<Project|Project/"Available Project IDs">
 
 =cut

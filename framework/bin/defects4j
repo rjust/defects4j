@@ -35,19 +35,20 @@ use lib abs_path("$Bin/../core");
 
 =head1 NAME
 
-defects4j -- Interface to the database of real bugs
+defects4j -- command-line interface to the database of real faults
 
 =head1 SYNOPSIS
 
-defects4j <command> [<args>]
+  defects4j <command> [<args>]
 
 =head1 DESCRIPTION
 
-This script provides the high-level interface to Defects4J.
+This script provides a high-level command-line interface to Defects4J.
 
 =cut
 
 # Hash of key-value pairs storing command names and descriptions
+# TODO: Use a POD parser to populate the hash and create the POD documentation?
 my %cmd_descr;
 
 =pod
@@ -56,79 +57,77 @@ my %cmd_descr;
 
 =over 4
 
-=item B<checkout>
+=item * L<B<checkout>|d4j::d4j-checkout/>
 
-Checkout a fixed or faulty project version.
+checkout a particular project version.
 
 =cut
-$cmd_descr{checkout}="Checkout a fixed or faulty program version";
+$cmd_descr{checkout}="checkout a particular project version";
 
 =pod
 
-=item B<compile>
+=item * L<B<compile>|d4j::d4j-compile/>
 
-Compile a fixed or faulty project version.
+compile a checked-out project version.
 
 =cut
-$cmd_descr{compile}="Compile a fixed or faulty program version";
+$cmd_descr{compile}="compile a checked-out project version";
 
 =pod
 
-=item B<test>
+=item * L<B<test>|d4j::d4j-test/>
 
-Test a fixed or faulty project version using the accompanying test suite.
+run test suite of a checked-out project version.
 
 =cut
-$cmd_descr{test}="Test a fixed or faulty program version";
+$cmd_descr{test}="run test suite of a checked-out project version";
 
 =pod
 
-=item B<monitor.test>
+=item * L<B<monitor.test>|d4j::d4j-monitor.test/>
 
-Run a single test class or test method and monitor the class loader.
+monitor class loader while running a single test.
 
 =cut
-$cmd_descr{"monitor.test"}="Run a single test class or method and monitor the class loader";
+$cmd_descr{"monitor.test"}="monitor class loader while running a single test";
 
 =pod
 
-=item B<mutation>
+=item * L<B<mutation>|d4j::d4j-mutation/>
 
-Perform mutation analysis on a fixed or faulty project version using the accompanying test suite.
+run mutation analysis for a checked-out project version.
 
 =cut
-$cmd_descr{"mutation"}="Perform mutation analysis on a fixed or faulty program version";
+$cmd_descr{"mutation"}="run mutation analysis for a checked-out project version";
 
 =pod
 
-=item B<coverage>
+=item * L<B<coverage>|d4j::d4j-coverage/>
 
-Perform code coverage analysis on a fixed or faulty project version using the accompanying test suite.
+run code coverage analysis for a checked-out project version.
 
 =cut
-$cmd_descr{"coverage"}="Perform code coverage analysis on a fixed or faulty program version";
+$cmd_descr{"coverage"}="run code coverage analysis for a checked-out project version";
 
 =pod
 
-=item B<info>
+=item * L<B<info>|d4j::d4j-info/>
 
-Print information for a specific project or bug.
+print information for a specific project or bug.
+
+=cut
+$cmd_descr{info}="print information for a specific project or bug";
+
+=pod
+
+=item * L<B<export>|d4j::d4j-export/>
+
+export a version-specific property.
 
 =back
 
 =cut
-$cmd_descr{info}="Print information for a specific project";
-
-=pod
-
-=item B<export>
-
-Export a version-specific property.
-
-=back
-
-=cut
-$cmd_descr{export}="Export a version-specific property";
+$cmd_descr{export}="export a version-specific property";
 
 #
 # Issue usage message and quit
