@@ -74,8 +74,9 @@ sub mutation_analysis {
         _exclude_mutants($project, $base_map)
     }
 
-    my $ret = $project->mutation_analysis($log_file, $single_test);
-    return undef if $ret != 0;
+    if (! $project->mutation_analysis($log_file, $single_test)) {
+        return undef;
+    }
 
     return _build_mut_map($project, $base_map);
 }
@@ -103,8 +104,9 @@ sub mutation_analysis_ext {
         _exclude_mutants($project, $base_map)
     }
 
-    my $ret = $project->mutation_analysis_ext($test_dir, $include, $log_file);
-    return undef if $ret != 0;
+    if (! $project->mutation_analysis_ext($test_dir, $include, $log_file)) {
+        return undef;
+    }
 
     return _build_mut_map($project, $base_map);
 }

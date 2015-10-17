@@ -142,8 +142,12 @@ test_bug_detection() {
         # Extract test suite information (pid, vid, etc.) from archive file name
         set_test_suite_info $file
 
-        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/bug_detection \
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM" ${db_dir}/bug_detection \
                 || die "read bug detection results (data row is missing)"
+
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM,[^-]" ${db_dir}/bug_detection \
+                || die "read bug detection results (data row is invalid)"
+
         # Check log files
         [ -f "$db_dir/bug_detection_log/$PID/run_bug_detection.pl.log" ] \
                 || die "read bug detection log file"
@@ -173,8 +177,12 @@ test_mutation() {
         # Extract test suite information (pid, vid, etc.) from archive file name
         set_test_suite_info $file
         
-        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/mutation \
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM" ${db_dir}/mutation \
                 || die "read mutation results (data row is missing)"
+
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM,[^-]" ${db_dir}/mutation \
+                || die "read mutation results (data row is invalid)"
+
         # Check log files
         [ -f "$db_dir/mutation_log/$PID/run_mutation.pl.log" ] \
                 || die "read mutation log file"
@@ -208,8 +216,12 @@ test_coverage() {
         # Extract test suite information (pid, vid, etc.) from archive file name
         set_test_suite_info $file
         
-        grep -q "$PID,$VID,$SUITE_SRC,$SUTIE_NUM" ${db_dir}/coverage \
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM" ${db_dir}/coverage \
                 || die "read coverage results (data row is missing)"
+
+        grep -q "$PID,$VID,$SUITE_SRC,$SUITE_NUM,[^-]" ${db_dir}/coverage \
+                || die "read coverage results (data row is invalid)"
+
         # Check log files
         [ -f "$db_dir/coverage_log/$PID/run_coverage.pl.log" ] \
                 || die "read coverage log file"
