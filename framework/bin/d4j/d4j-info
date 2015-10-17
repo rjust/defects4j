@@ -24,17 +24,31 @@
 
 =head1 NAME
 
-d4j-info -- Prints the information for a specific project or bug
+d4j-info -- print information for a specific project or bug
 
 
 =head1 SYNOPSIS
 
-d4j-info -p project_id [-v bug_id]
+  d4j-info -p project_id [-b bug_id]
 
 =head1 DESCRIPTION
 
 This script shows the configuration and basic information for a project and, if
 requested, the information for a specific bug.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-p C<project_id>>
+
+The id of the project for which the information shall be printed.
+
+=item B<-b C<bug_id>>
+
+The id of the bug for which the information shall be printed. Format: C<\d+>.
+
+=back
 
 =cut
 use warnings;
@@ -48,24 +62,24 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 -p project_id [-v bug_id]\n";
+    print "usage: $0 -p project_id [-b bug_id]\n";
     exit 1;
 }
 
 my %cmd_opts;
-getopts('p:v:', \%cmd_opts) or _usage();
+getopts('p:b:', \%cmd_opts) or _usage();
 
 _usage() unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
-my $VID = $cmd_opts{v};
+my $BID = $cmd_opts{b};
 
 my $project = Project::create_project($PID);
 # Check version id
-if (defined $VID) {
-    $VID =~ /^(\d+)$/ or die "Wrong version_id format: $VID! Expected: \\d+";
+if (defined $BID) {
+    $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
     # Make sure version id exists
-    $project->lookup("${VID}f");
+    $project->lookup("${BID}f");
 }
 
 
@@ -74,15 +88,20 @@ $project->print_info();
 my $project_dir = "$SCRIPT_DIR/projects/$PID";
 
 my $sep = "-" x 80 . "\n";
-if (defined $VID) {
-    open(TRIG, "<$project_dir/trigger_tests/$VID") or die "Cannot read trigger tests";
-    open(PATCH, "<$project_dir/patches/$VID.src.patch") or die "Cannot read bug fix";
-    open(CLASS, "<$project_dir/modified_classes/$VID.src") or die "Cannot read modified classes";
-    my @trigger = <TRIG>;  close(TRIG);
-    my @patch   = <PATCH>; close(PATCH);
-    my @classes = <CLASS>; close(CLASS);
+if (defined $BID) {
+    open(TRIG, "<$project_dir/trigger_tests/$BID") or die "Cannot read trigger tests";
+        my @trigger = <TRIG>;  close(TRIG);
+    close(TRIG);
 
-    print("\nSummary for Bug: $VID\n");
+    open(PATCH, "<$project_dir/patches/$BID.src.patch") or die "Cannot read bug fix";
+        my @patch   = <PATCH>; close(PATCH);
+    close(PATCH);
+
+    open(CLASS, "<$project_dir/modified_classes/$BID.src") or die "Cannot read modified classes";
+        my @classes = <CLASS>; close(CLASS);
+    close(CLASS);
+
+    print("\nSummary for Bug: $PID-$BID\n");
     print($sep);
     print("Root cause in triggering tests:\n");
     foreach my $i (0..$#trigger) {
@@ -99,12 +118,3 @@ if (defined $VID) {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut
-

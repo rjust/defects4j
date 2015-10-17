@@ -24,12 +24,16 @@
 
 =head1 NAME
 
-d4j-monitor-test -- Run a single test class or test method and monitor the class
-loader.
+d4j-monitor-test -- monitor class loader while running a single test class or test method.
 
 =head1 SYNOPSIS
 
-d4j-monitor-test -t single_test [-w work_dir]
+  d4j-monitor-test -t single_test [-w work_dir]
+
+=head1 DESCRIPTION
+
+This script runs a single test class or test method and monitors the class
+loader during execution.
 
 =head1 OPTIONS
 
@@ -37,8 +41,7 @@ d4j-monitor-test -t single_test [-w work_dir]
 
 =item B<-t C<single_test>>
 
-Run this single test (format: <test_class>[::<test_method>])and monitor the
-class loader.
+Run this single test and monitor the class loader. Format: <test_class>[::<test_method>].
 
 =item B<-w F<work_dir>>
 
@@ -46,11 +49,6 @@ The working directory of the checked-out project version (optional). Default is
 the current directory.
 
 =back
-
-=head1 DESCRIPTION
-
-This script runs a single test class or test method and monitors the class
-loader during execution.
 
 =cut
 
@@ -105,11 +103,3 @@ for my $class (@{$classes->{test}}) {
 close(OUT);
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut

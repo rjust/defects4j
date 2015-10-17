@@ -28,7 +28,12 @@ d4j-test -- Run test suite of a checked-out project version.
 
 =head1 SYNOPSIS
 
-d4j-test [-w work_dir] [-r | -t single_test]
+  d4j-test [-w work_dir] [-r | -t single_test]
+
+=head1 DESCRIPTION
+
+This script executes the developer-written test suite of a checked-out project version and
+reports failing test cases.
 
 =head1 OPTIONS
 
@@ -45,14 +50,10 @@ Only execute relevant tests (optional). By default all tests are executed.
 
 =item B<-t C<single_test>>
 
-Only run this single test method (format: <test_class>::<test_method>)
-(optional). By default all tests are executed.
+Only run this single test method (optional). By default all tests are executed.
+Format: <test_class>::<test_method>.
 
 =back
-
-=head1 DESCRIPTION
-
-This script runs all accompanying tests of a checked-out project version.
 
 =cut
 
@@ -116,11 +117,3 @@ if ($count != 0) {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut

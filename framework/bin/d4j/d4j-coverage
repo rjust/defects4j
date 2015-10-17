@@ -24,11 +24,16 @@
 
 =head1 NAME
 
-d4j-coverage -- Run coverage analysis on a checked-out project version.
+d4j-coverage -- run coverage analysis for a checked-out project version.
 
 =head1 SYNOPSIS
 
-d4j-coverage [-w work_dir] [-r | -t single_test]
+  d4j-coverage [-w work_dir] [-r | -t single_test]
+
+=head1 DESCRIPTION
+
+This script executes the developer-written test suite of a checked-out project version and
+measures statement and branch coverage.
 
 =head1 OPTIONS
 
@@ -49,10 +54,6 @@ Only run this single test method (format: <test_class>::<test_method>)
 (optional). By default all tests are executed.
 
 =back
-
-=head1 DESCRIPTION
-
-This script runs all accompanying tests of a checked-out project version.
 
 =cut
 
@@ -107,13 +108,4 @@ printf("%18s: %.1f%%\n", "Line coverage", $coverage->{lines_covered}/$coverage->
 printf("%18s: %.1f%%\n", "Condition coverage", $coverage->{branches_covered}/$coverage->{branches_total}*100);
 #printf("%17s: %.1f seconds\n", "Total run time", ($timeAnalysis));
 
-
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut

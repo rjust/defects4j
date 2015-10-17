@@ -24,11 +24,15 @@
 
 =head1 NAME
 
-d4j-export -- Export project-specific properties.
+d4j-export -- export project-specific properties.
 
 =head1 SYNOPSIS
 
-d4j-export -p property_name [-o output_file] [-w work_dir]
+  d4j-export -p property_name [-o output_file] [-w work_dir]
+
+=head1 DESCRIPTION
+
+This script exports the value(s) for a specific property.
 
 =head1 OPTIONS
 
@@ -49,10 +53,6 @@ The working directory of the checked-out project version (optional). Default is
 the current directory.
 
 =back
-
-=head1 DESCRIPTION
-
-This script exports the value(s) for a specific property.
 
 =cut
 
@@ -139,11 +139,3 @@ sub _get_props {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut
