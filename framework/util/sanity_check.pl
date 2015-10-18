@@ -26,30 +26,36 @@
 
 =head1 NAME
 
-sanity_check.pl -- Checks out each revision of the given project and runs
-the sanity_check on it. Dies if any case fails.
+sanity_check.pl -- sanity check of project version.
 
 =head1 SYNOPSIS
 
 sanity_check.pl -p project_id [-v version_id] [-t tmp_dir]
 
+=head1 DESCRIPTION
+
+Checks out each project version runs the sanity check on it. Dies if any run fails.
+
 =head1 OPTIONS
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
 The id of the project for which the sanity check is performed.
+See L<Project> module for available project IDs.
 
-=item B<-v C<version_id>>
+=item -v C<version_id>
 
 Only run sanity check for this version id (optional). Per default all
 suitable version ids are considered.
 
-=item B<-t F<tmp_dir>>
+=item -t F<tmp_dir>
 
 The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
+
+=back
 
 =cut
 use warnings;
@@ -112,11 +118,3 @@ foreach my $id (@ids) {
 }
 # Clean up
 system("rm -rf $TMP_DIR");
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut
