@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Lang.pm -- project submodule for Commons-lang.
+Project::Lang.pm -- L<Project> submodule for Commons-lang.
 
 =head1 DESCRIPTION
 

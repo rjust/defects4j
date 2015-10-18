@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Chart.pm -- project submodule for JFreeChart.
+Project::Chart.pm -- L<Project> submodule for JFreeChart.
 
 =head1 DESCRIPTION
 

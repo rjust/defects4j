@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Math.pm -- project submodule for Commons-math.
+Project::Math.pm -- L<Project> submodule for Commons-math.
 
 =head1 DESCRIPTION
 

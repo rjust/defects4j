@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Time.pm -- project submodule for Joda-Time.
+Project::Time.pm -- L<Project> submodule for Joda-Time.
 
 =head1 DESCRIPTION
 

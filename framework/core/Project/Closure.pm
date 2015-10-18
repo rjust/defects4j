@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Closure.pm -- project submodule for Closure compiler.
+Project::Closure.pm -- L<Project> submodule for Closure compiler.
 
 =head1 DESCRIPTION
 
