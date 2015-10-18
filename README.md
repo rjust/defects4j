@@ -84,8 +84,10 @@ Publications
 
 Documentation
 --------------------
-Detailed documentation for any script or module can be viewed with:
-`perldoc <file>`
+A detailed documentation for any script or module is available as
+[html documentation][htmldocs].
+
+[htmldocs]: http://homes.cs.washington.edu/~rjust/defects4j/html_doc/index.html
 
 Database abstraction
 -----------------------
