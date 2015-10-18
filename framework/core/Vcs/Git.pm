@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Vcs/Git.pm -- Concrete Vcs instance for Git.
+Vcs::Git.pm -- L<Vcs> submodule for Git.
 
 =head1 DESCRIPTION
 
-This module provides all specific configurations and methods for the Git Vcs.
+This module provides all specific configurations and subroutines for the Git Vcs.
 
 =cut
 package Vcs::Git;
@@ -63,12 +63,3 @@ sub _diff_cmd {
 
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Vcs.pm>
-
-=cut
-

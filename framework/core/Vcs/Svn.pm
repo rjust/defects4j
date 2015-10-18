@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Vcs/Svn.pm -- Concrete Vcs instance for Svn.
+Vcs::Svn.pm -- L<Vcs> submodule for Svn.
 
 =head1 DESCRIPTION
 
-This module provides all specific configurations and methods for the Svn Vcs.
+This module provides all specific configurations and subroutines for the Svn Vcs.
 
 =cut
 package Vcs::Svn;
@@ -81,12 +81,3 @@ sub _diff_cmd {
 
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Vcs.pm>
-
-=cut
-

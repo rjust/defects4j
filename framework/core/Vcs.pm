@@ -24,35 +24,72 @@
 
 =head1 NAME
 
-Vcs.pm -- Provides a simple abstraction for version control systems
+Vcs.pm -- a simple abstraction for version control systems.
 
 =head1 SYNOPSIS
 
-=head2 Example using Vcs::Svn:
+=head2 Example using Vcs::Svn
 
-use Vcs::Svn;
+  use Vcs::Svn;
+  my $vcs = Vcs::Svn->new($project, "repo_url", "commit_db_file", \&_co_hook);
 
-my $vcs = Vcs::Svn->new("project", "repo_url", "commit_db_file", \&_co_hook);
-
-$vcs->checkout_vid("1b", "/tmp/1b");
-
-sub _co_hook {
+  sub _co_hook {
     my ($vcs, $revision_id, $work_dir) = @_;
-
     # do some post processing
-}
+ }
+
+=head2 New Vcs Submodule
+
+The provided default implementations may be overriden to provide specific behavior.
+In most cases it is sufficient to override the following abstract subroutines to provide
+a vcs-specific command:
+
+  _checkout_cmd(revision_id, work_dir)
+
+Returns the command to checkout C<revision_id> to the working directory F<work_dir>.
+
+=cut
+sub _checkout_cmd { die $ABSTRACT_METHOD; }
+=pod
+
+  _apply_cmd(work_dir, patch_file)
+
+Returns the command to apply the patch in file F<patch_file> to the working directory
+F<work_dir>.
+
+=cut
+sub _apply_cmd { die $ABSTRACT_METHOD; }
+=pod
+
+  _diff_cmd(rev1, rev2, path)
+
+Returns the command to compute a diff between two revisions C<rev1> and C<rev2>.
+The optional path C<path> is relative to the working directory and used to diff between
+certain files or directories.
+
+=cut
+sub _diff_cmd { die $ABSTRACT_METHOD; }
+
+=pod
+
+  _get_parent_revisions()
+
+TODO
+
+=cut
+sub _get_parent_revisions { die $ABSTRACT_METHOD; }
 
 =head1 DESCRIPTION
 
 This module provides a simple abstraction for version control systems.
 
-=head2 Available subpackages:
+=head2 Available submodules
 
 =over 4
 
-=item B<Vcs::Git>
+=item * L<Vcs::Git>
 
-=item B<Vcs::Svn>
+=item * L<Vcs::Svn>
 
 =back
 
@@ -69,37 +106,33 @@ use Carp qw(confess);
 
 =pod
 
-A vcs object has to be instantiated with:
-
-- Project name
-
-- Repository url
-
-- File name of the commit database (commit-db), see below for details
-
-- Reference to post-checkout hook (optional) -- if provided, this method is called after each checkout.
-
-The commit database has to be a csv file with the structure C<version_id,rev_1,rev_2>.
-
-=head2 Commit-db example for Svn:
+A Vcs object has to be instantiated with:
 
 =over 4
 
-=item 1,1024,1025
+=item * Project name
 
-=item 2,1064,1065
+=item * Repository url
 
-=back
+=item * File name of the commit database (commit-db), see below for details
 
-=head2 Commit-db example for Git:
-
-=over 4
-
-=item 1,788193a54e0f1aaa428ccfdd3bb45e32c311c18b,c96ae569bbe0167cfa15caa7f784fdb2e1ecdc12
-
-=item 2,ab333482c629d33d5484b4af6eb27918382ccc28,f77c5101df42f501d96d0363084dcc9c17400fce
+=item * Reference to post-checkout hook (optional) -- if provided, this method is called after each checkout.
 
 =back
+
+=head2 commit-db
+
+The commit-db (csv) file has the structure: C<bug_id,revision_buggy,revision_fixed>.
+
+Example for Svn:
+
+  1,1024,1025
+  2,1064,1065
+
+Example for Git:
+
+  1,788193a54e0f1aaa428ccfdd3bb45e32c311c18b,c96ae569bbe0167cfa15caa7f784fdb2e1ecdc12
+  2,ab333482c629d33d5484b4af6eb27918382ccc28,f77c5101df42f501d96d0363084dcc9c17400fce
 
 =cut
 sub new {
@@ -119,14 +152,12 @@ sub new {
 
 =pod
 
-=head2 Provided object methods:
+=head2 Object subroutines
 
-=over 4
-
-=item B<lookup> C<lookup(vid)>
+  $vcs->lookup(vid)
 
 Queries the commit database (commit-db) and returns the C<revision_id> for
-the given version id C<vid>. The format of C<vid> is B<\d+[bf]>.
+the given version id C<vid>. Format of C<vid>: C<\d+[bf]>.
 
 =cut
 sub lookup {
@@ -140,7 +171,7 @@ sub lookup {
 
 =pod
 
-=item B<num_revision_pairs> C<num_revision_pairs()>
+  $vcs->num_revision_pairs()
 
 Returns the number of revision pairs in the C<commit-db>.
 
@@ -152,11 +183,12 @@ sub num_revision_pairs {
 
 =pod
 
-=item B<get_version_ids> C<get_version_ids()>
+  $project->get_bug_ids()
 
-Returns an array of all version ids in the C<commit-db>.
+Returns an array of all bug ids in the C<commit-db>.
 
 =cut
+# TODO: rename subroutine
 sub get_version_ids {
     my $self = shift;
     return sort {$a <=> $b} keys %{$self->{_cache}};
@@ -164,11 +196,12 @@ sub get_version_ids {
 
 =pod
 
-=item B<contains_version_id> C<contains_version_id(vid)>
+  $vcs->B<contains_version_id> C<contains_version_id(vid)
 
-Given a valid version id C<vid>, this subroutine returns true if C<vid> exists
-in the C<commit-db> and false otherwise. This subroutine dies if C<vid> is
-invalid.
+Given a valid version id (C<vid>), this subroutine returns true if C<vid> exists
+in the C<commit-db> and false otherwise.
+Format of C<vid>: C<\d+[bf]>
+This subroutine dies if C<vid> is invalid.
 
 =cut
 sub contains_version_id {
@@ -178,17 +211,16 @@ sub contains_version_id {
     return defined $self->{_cache}->{$result->{bid}}->{$result->{type}};
 }
 
-
 =pod
 
-=item B<checkout_vid> C<checkout_vid(vid, work_dir)>
+  $vcs->checkout_vid(vid, work_dir)
 
 Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
-the corresponding revision with C<revision_id> to C<work_dir>.
-The format of C<vid> is B<\d+[bf]>.
+the corresponding revision with C<revision_id> to F<work_dir>.
+Format of C<vid>: C<\d+[bf]>.
 
-B<This method always performs a clean checkout, i.e., the working directory is
-deleted before the checkout if it already exists>.
+B<Always performs a clean checkout, i.e., the working directory is deleted before the
+checkout, if it already exists>.
 
 =cut
 sub checkout_vid {
@@ -237,12 +269,12 @@ sub checkout_vid {
 
 =pod
 
-=item B<diff> C<diff(revision_id_1, revision_id_2 [, path])>
+  $vcs->diff(revision_id_1, revision_id_2 [, path])
 
 Returns the diff between C<revision_id_1> and C<revision_id_2> or C<undef> if
-the diff failed. The C<path> argument is optional and can be used to compute a diff
-between certain files or directories. Note that C<path> is relative to the root
-of the working directory.
+the diff failed. The F<path> argument is optional and can be used to compute a diff
+between certain files or directories. Note that C<path> is relative to the working
+directory.
 
 =cut
 sub diff {
@@ -262,11 +294,11 @@ sub diff {
 
 =pod
 
-=item B<export_diff> C<export_diff(revision_id_1, revision_id_2, out_file [, path])>
+  $vcs->export_diff(revision_id_1, revision_id_2, out_file [, path])
 
-Exports the diff between C<revision_id_1> and C<revision_id_2> to C<out_file>.
+Exports the diff between C<revision_id_1> and C<revision_id_2> to F<out_file>.
 The path argument is optional and can be used to compute a diff between certain
-files or directories. Note that C<path> is relative to the root of the working directory.
+files or directories. Note that F<path> is relative to the working directory.
 
 =cut
 sub export_diff {
@@ -285,15 +317,14 @@ sub export_diff {
 
 =pod
 
-=item B<apply_patch> C<apply_patch(work_dir, patch_file [, path])>
+  $vcs->apply_patch(work_dir, patch_file)
 
-Applies the patch provided in C<patch_file> to the working directory
-C<work_dir>.  The path argument is optional and used as prefix for the files
-to be patched. Note that C<path> is relative to the root of the working directory.
-
-=back
+Applies the patch provided in F<patch_file> to the working directory F<work_dir>.
 
 =cut
+# TODO: Make sure we can remove path
+# This shouldn't be necessary since the patch should always be appicable to the working
+# directory!
 sub apply_patch {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $work_dir, $patch_file, $path) = @_;
@@ -301,44 +332,8 @@ sub apply_patch {
     return Utils::exec_cmd($cmd, "Apply patch");
 }
 
-=pod
-
-=head2 Provide new Vcs implementation
-
-The provided default implementations may be overriden to provide specific behavior.
-In most cases it is sufficient to override the following abstract methods to provide a vcs-specific cmd:
-
-=over 4
-
-=item B<_checkout_cmd(revision_id, work_dir)>
-
-      Returns the cmd to checkout C<revision_id> to the working directory C<work_dir>
-
-=cut
-sub _checkout_cmd { die $ABSTRACT_METHOD; }
-=pod
-
-=item B<_apply_cmd(work_dir, patch_file [, path])>
-
-      Returns the cmd to apply the patch in file C<patch_file> to the working
-      directory C<work_dir>. The optional path C<path> is relative to the
-      working directory and used to apply patches to certain files or directories.
-
-=cut
-sub _apply_cmd { die $ABSTRACT_METHOD; }
-=pod
-
-=item B<_diff_cmd(rev1, rev2, path)>
-
-      Returns the cmd to compute a diff between two revisions C<rev1> and C<rev2>.
-      The optional path C<path> is relative to the repository root and used to
-      diff between certain files or directories.
-
-=back
-
-=cut
-sub _diff_cmd { die $ABSTRACT_METHOD; }
-sub _get_parent_revisions { die $ABSTRACT_METHOD; }
+##########################################################################################
+# Helper subroutines
 
 #
 # Read commit-db and build cache
