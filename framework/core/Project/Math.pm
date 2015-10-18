@@ -131,12 +131,3 @@ sub fix_tests {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
-
