@@ -35,7 +35,7 @@ use lib abs_path("$Bin/../core");
 
 =head1 NAME
 
-defects4j -- command-line interface to the database of real faults
+defects4j -- command-line interface to Defects4J.
 
 =head1 SYNOPSIS
 
@@ -147,8 +147,7 @@ my $cmd = shift(@ARGV);
 _d4j_usage() unless defined $cmd_descr{$cmd};
 
 # Add d4j-prefix to actual script name
-my $script = "$Bin/d4j/d4j-$cmd";
-$script = dirname(abs_path($0)) . "/d4j/d4j-$cmd";
+my $script = dirname(abs_path($0)) . "/d4j/d4j-$cmd";
 
 # Fake $0 for executed script to report "defects4j cmd" in usage messages.
 $0 = basename($0) . " $cmd";
