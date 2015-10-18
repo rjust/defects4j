@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project/Closure.pm -- Concrete project instance for Closure compiler.
+Project::Closure.pm -- project submodule for Closure compiler.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
-Closure-compiler project.
+This module provides all project-specific configurations and subroutines for the
+Closure compiler project.
 
 =cut
 package Project::Closure;
@@ -73,12 +73,3 @@ sub _post_checkout {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
-

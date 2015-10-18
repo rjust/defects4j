@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Project/Math.pm -- Concrete project instance for Commons-math.
+Project::Math.pm -- project submodule for Commons-math.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
+This module provides all project-specific configurations and subroutines for the
 Commons-math project.
 
 =cut

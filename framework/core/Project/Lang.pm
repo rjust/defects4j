@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Project/Lang.pm -- Concrete project instance for Commons-lang.
+Project::Lang.pm -- project submodule for Commons-lang.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
+This module provides all project-specific configurations and subroutines for the
 Commons-lang project.
 
 =cut
@@ -141,12 +141,3 @@ sub _build_dir_map {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
-

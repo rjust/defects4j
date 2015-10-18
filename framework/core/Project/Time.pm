@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Project/Time.pm -- Concrete project instance for Joda-Time.
+Project::Time.pm -- project submodule for Joda-Time.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
+This module provides all project-specific configurations and subroutines for the
 Joda-Time project.
 
 =cut
@@ -106,12 +106,3 @@ sub diff {
 
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
-

@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Project/Chart.pm -- Concrete project instance for JFreeChart.
+Project::Chart.pm -- project submodule for JFreeChart.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
+This module provides all project-specific configurations and subroutines for the
 JFreeChart project.
 
 =cut
@@ -76,12 +76,3 @@ sub _post_checkout {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
-
