@@ -39,19 +39,19 @@ measures statement and branch coverage.
 
 =over 4
 
-=item B<-w F<work_dir>>
+=item -w F<work_dir>
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.
 
-=item B<-r>
+=item -r
 
 Only execute relevant tests (optional). By default all tests are executed.
 
-=item B<-t C<single_test>>
+=item -t C<single_test>
 
-Only run this single test method (format: <test_class>::<test_method>)
-(optional). By default all tests are executed.
+Only run this single test method (optional). By default all tests are executed.
+Format: <test_class>::<test_method>.
 
 =back
 

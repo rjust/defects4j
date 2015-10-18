@@ -40,11 +40,11 @@ requested, the information for a specific bug.
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
 The id of the project for which the information shall be printed.
 
-=item B<-b C<bug_id>>
+=item -b C<bug_id>
 
 The id of the bug for which the information shall be printed. Format: C<\d+>.
 

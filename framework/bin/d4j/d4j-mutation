@@ -39,7 +39,7 @@ checked-out program version.
 
 =over 4
 
-=item B<-w F<work_dir>>
+=item -w F<work_dir>
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.

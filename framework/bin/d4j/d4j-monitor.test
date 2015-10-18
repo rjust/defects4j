@@ -39,11 +39,11 @@ loader during execution.
 
 =over 4
 
-=item B<-t C<single_test>>
+=item -t C<single_test>
 
 Run this single test and monitor the class loader. Format: <test_class>[::<test_method>].
 
-=item B<-w F<work_dir>>
+=item -w F<work_dir>
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.

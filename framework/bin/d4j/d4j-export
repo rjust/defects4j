@@ -38,16 +38,16 @@ This script exports the value(s) for a specific property.
 
 =over 4
 
-=item B<-p C<property_name>>
+=item -p C<property_name>
 
 Export the value(s) of this property.
 
-=item B<-o F<output_file>>
+=item -o F<output_file>
 
 Write output to this file (optional). By default the script prints the value(s)
 of the property to stdout. Note that all diagnostic messages are sent to stderr.
 
-=item B<-w F<work_dir>>
+=item -w F<work_dir>
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.

@@ -39,15 +39,16 @@ directory.
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
 The id of the project for which a particular version shall be checked out.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
-=item B<-v C<version_id>>
+=item -v C<version_id>
 
 The version id that shall be checked out. Format: C<\d+[bf]>.
 
-=item B<-w F<work_dir>>
+=item -w F<work_dir>
 
 The working directory to which the buggy or fixed project version shall be checked out.
 The working directory has to be either empty or a previously used working directory.
