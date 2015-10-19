@@ -26,71 +26,62 @@
 
 =head1 NAME
 
-run_randoop.pl -- Run Randoop for a particular project and version id. Tests are
-generated for all loaded classes (i.e., all classes that were loaded during the
-execution of the fault-triggering test).
+run_randoop.pl -- generate test suites using Randoop.
 
 =head1 SYNOPSIS
 
-run_randoop.pl -p project_id -v version_id -n test_id -o out_dir -b budget [-t tmp_dir] [-D]
+  run_randoop.pl -p project_id -v version_id -n test_id -o out_dir -b budget [-t tmp_dir] [-D]
 
 =head1 OPTIONS
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
-The id of the project for which test suites are generated.
+Generate tests for this project id.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
-=item B<-v C<version_id>>
+=item -v C<version_id>
 
-Generate tests for this version id. B<Format: \d+[bf]>.
+Generate tests for this version id.
+Format: C<\d+[bf]>.
 
-=item B<-n C<test_id>>
+=item -n C<test_id>
 
-The test_id of the generated test suite (i.e., which run of the same configuration)
+The id of the generated test suite (i.e., which run of the same configuration).
 
-=item B<-o F<out_dir>>
+=item -o F<out_dir>
 
-The root output directory for the generated tests. All tests and logs for a given
-project and version id are written to:
-F<"out_dir"/"project_id"/"vid">
+The root output directory for the generated test suite. The test suite and logs are
+written to:
+F<out_dir/project_id/version_id>.
 
-=item B<-b C<budget>>
+=item -b C<budget>
 
-The time in seconds to use for test generation.
+The time in seconds allowed for test generation.
 
-=item B<-t F<tmp_dir>>
+=item -t F<tmp_dir>
 
-The temporary root directory to be used to check out revisions (optional).
+The temporary root directory to be used to check out the program version (optional).
 The default is F</tmp>.
 
-=item B<-D>
+=item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
 
 =back
 
-=head2 Randoop Configuration File
-
-The filename of an optional Randoop configuration file can be provided with the
-environment variable RANDOOP_CONFIG_FILE. The default configuration file of Randoop
-is: F<framework/util/randoop.config>.
-
 =head1 DESCRIPTION
 
-This script performs the following three tasks:
+This script runs Randoop for a particular program version.  Tests are generated for all
+classes touched by the triggering tests.
 
-=over 4
+=head2 Randoop configuration
 
-=item 1) Checkout project version to F<tmp_dir>.
-
-=item 3) Compile project classes.
-
-=item 4) Run Randoop and generate tests for all loaded classes.
-
-=back
+The filename of an optional Randoop configuration file can be provided with the
+environment variable C<RANDOOP_CONFIG_FILE>. The default configuration file of Randoop
+is: F<framework/util/randoop.config>.
 
 =cut
 use strict;
@@ -160,11 +151,10 @@ $project->{prog_root} = $TMP_DIR;
 
 =head2 Logging
 
-By default, the script logs all errors and warnings to run_randoop.log in
+By default, the script logs all errors and warnings to F<run_randoop.log> in
 the temporary project root.
-
-Upon success, the log file of this script is appended to:
-F<"out_dir"/"project_id"/"vid"/logs/"project_id"."version_id".log>.
+Upon success, the log of this script is appended to:
+F<out_dir/logs/C<project_id>.C<version_id>.log>.
 
 =cut
 # Log file in output directory
@@ -216,6 +206,30 @@ if (-e "$TMP_DIR/randoop/RandoopTest.java") {
 if (system("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/randoop/ .") != 0) {
     $LOG->log_msg("Error: cannot compress test suites!");
 }
+
+=pod
+
+=head2 Test suites
+
+The source files of the generated test suite are compressed into an archive with the
+following name:
+F<C<project_id>-C<version_id>-randoop.C<test_id>.tar.bz2>
+
+Examples:
+
+=over 4
+
+=item * F<Lang-12b-randoop.1.tar.bz2>
+
+=item * F<Lang-12f-randoop.2.tar.bz2>
+
+=back
+
+The test suite archive is written to:
+F<out_dir/C<project_id>/randoop/C<test_id>>
+
+=cut
+
 # Move test suite to OUT_DIR/pid/suite_src/test_id
 #
 # e.g., .../Lang/randoop/1
@@ -231,11 +245,3 @@ system("cat $LOG->{file_name} >> $LOG_FILE");
 
 # Remove temporary directory
 system("rm -rf $TMP_DIR") unless $DEBUG;
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut
