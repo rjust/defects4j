@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Constants.pm -- Defines/exports all project-wide properties.
+Constants.pm -- defines/exports all framework-wide constants.
 
 =head1 DESCRIPTION
 
-This module provides all properties for files and directories.
+This module defines all properties for files and directories.
 Every property is initialized with a default value, which can be overriden by
 setting the corresponding environment variable.
 
@@ -52,76 +52,76 @@ our $DEBUG = 0;
 
 =pod
 
-=head3 Exported properties (I<default value>):
+=head2 Exported properties (I<default value>)
 
 =over 4
 
-=item B<SCRIPT_DIR>
+=item C<SCRIPT_DIR>
 
-The directory that contains all scripts (I<directory of this module>)
+The directory that contains all scripts and modules (I<parent of this module's directory>)
 
 =cut
 our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} or abs_path("$dir/../"));
 
 =pod
 
-=item B<CORE_DIR>
+=item C<CORE_DIR>
 
-The directory that contains all core modules (I<$SCRIPT_DIR/core>)
+The directory that contains all core modules (I<C<SCRIPT_DIR>/core>)
 
 =cut
 our $CORE_DIR = ($ENV{'CORE_DIR'} or abs_path("$SCRIPT_DIR/core"));
 
 =pod
 
-=item B<LIB_DIR>
+=item C<LIB_DIR>
 
-The directory that contains any extra perl modules or additional libraries we reference (I<$SCRIPT_DIR/lib>).
+The directory that contains additional libraries (I<C<SCRIPT_DIR>/lib>).
 
 =cut
 our $LIB_DIR = ($ENV{'LIB_DIR'} or abs_path("$SCRIPT_DIR/lib"));
 
 =pod
 
-=item B<UTIL_DIR>
+=item C<UTIL_DIR>
 
-The directory that contains util scripts (I<$SCRIPT_DIR/util>).
+The directory that contains util scripts (I<C<SCRIPT_DIR>/util>).
 
 =cut
 our $UTIL_DIR = ($ENV{'UTIL_DIR'} or abs_path("$SCRIPT_DIR/util"));
 
 =pod
 
-=item B<BASE_DIR>
+=item C<BASE_DIR>
 
-The base directory (I<$SCRIPT_DIR/..>)
+The base directory (I<C<SCRIPT_DIR>/..>)
 
 =cut
 our $BASE_DIR = ($ENV{'BASE_DIR'} or abs_path("$SCRIPT_DIR/../"));
 
 =pod
 
-=item B<REPO_DIR>
+=item C<REPO_DIR>
 
-The directory that contains project repositoriy clones (I<$BASE_DIR/project_repos>)
+The directory that contains project repositoriy clones (I<C<BASE_DIR>/project_repos>)
 
 =cut
 our $REPO_DIR = ($ENV{'REPO_DIR'} or "$BASE_DIR/project_repos");
 
 =pod
 
-=item B<MAJOR_ROOT>
+=item C<MAJOR_ROOT>
 
-The root directory of the Major framework (I<$BASE_DIR/major>)
+The root directory of the Major mutation framework (I<C<BASE_DIR>/major>)
 
 =cut
 our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} or "$BASE_DIR/major");
 
 =pod
 
-=item B<D4J_BUILD_FILE>
+=item C<D4J_BUILD_FILE>
 
-The top-level (ant) build file (I<$SCRIPT_DIR/projects/defects4j.build.xml>)
+The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
 =back
 

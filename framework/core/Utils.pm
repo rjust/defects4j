@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Utils.pm -- Provides helper functions.
+Utils.pm -- some useful helper subroutines.
 
 =head1 DESCRIPTION
 
-This module provides general helper functions such as parsing config or data files.
+This module provides general helper subroutines such as parsing config or data files.
 
 =cut
 package Utils;
@@ -46,17 +46,14 @@ my $dir = dirname(abs_path(__FILE__));
 
 =pod
 
-=head1 HELPER FUNCTIONS:
+=head1 Static subroutines
 
-=over 4
+  Utils::get_tmp_dir([tmp_root])
 
-=item B<get_tmp_dir> C<get_tmp_dir([tmp_root])>
+Returns F<C<tmp_root>/C<scriptname>_C<process_id>_C<timestamp>>
 
-Returns the path to a unique (local) temporary directory:
-B<"tmp_root"/"script_name"_"process_id"_"timestamp">
-
-The path is unique w.r.t. a local file system. The root directory to be used can
-be specified with C<tmp_root> (optional) -- the default is F</tmp>.
+This directory is unique in a local file system. The root directory to be used
+can be specified with C<tmp_root> (optional) -- the default is F</tmp>.
 
 =cut
 sub get_tmp_dir {
@@ -66,7 +63,7 @@ sub get_tmp_dir {
 
 =pod
 
-=item B<get_abs_path> C<get_abs_path(dir)>
+  Utils::get_abs_path(dir)
 
 Returns the absolute path to the directory F<dir>.
 
@@ -81,21 +78,21 @@ sub get_abs_path {
 
 =pod
 
+  Utils::get_failing_tests(test_result_file)
 
-=pod
+Determines all failing test classes and test methods in F<test_result_file>,
+which may contain arbitrary lines. A line indicating a test failure matches the
+following pattern: C</--- ([^:]+)(::([^:]+))?/>.
 
-=item B<get_failing_tests> C<get_failing_tests(test_result_file)>
+This subroutine returns a reference to a hash that contains two keys (C<classes>
+and C<methods>), which map to lists of failing tests:
 
-Returns a reference to a hash of references to lists with failing test classes
-and methods found in F<test_result_file>. The F<test_result_file> may contain
-arbitrary lines -- this method only considers lines that match the pattern:
-B</--- ([^:]+)(::([^:]+))?/>.
+=over 4
 
-The data structure of the returned hash reference looks like:
+  {classes} => [org.foo.Class1 org.bar.Class2]
+  {methods} => [org.foo.Class3::method1 org.foo.Class3::method2]
 
-{classes} => [org.foo.Class1 org.bar.Class2]
-
-{methods} => [org.foo.Class3::method1 org.foo.Class3::method2]
+=back
 
 =cut
 sub get_failing_tests {
@@ -124,7 +121,7 @@ sub get_failing_tests {
 
 =pod
 
-=item B<has_failing_tests> C<has_failing_tests(result_file)>
+  Utils::has_failing_tests(result_file)
 
 Returns 1 if the provided F<result_file> lists any failing test classes or
 failing test methods. Returns 0 otherwise.
@@ -145,11 +142,11 @@ sub has_failing_tests {
 
 =pod
 
-=item B<write_config_file> C<write_config_file(filename, config_hash)>
+  Utils::write_config_file(filename, config_hash)
 
-Writes all key-value pairs of C<config_hash> to a config file named
-C<filename>. Existing entries are overridden and missing entries are added
-to the config file -- all existing but unmodified entries are preserved.
+Writes all key-value pairs of C<config_hash> to a config file named F<filename>.
+Existing entries are overridden and missing entries are added to the config file
+-- all existing but unmodified entries are preserved.
 
 =cut
 sub write_config_file {
@@ -172,10 +169,11 @@ sub write_config_file {
 
 =pod
 
-=item B<read_config_file> C<read_config_file(filename)>
+  Utils::read_config_file(filename)
 
-Read all key-value pairs of the config file C<filename>. Format: key=value.
-Returns a hash containing all key-value pairs on success, undef otherwise.
+Read all key-value pairs of the config file named F<filename>. Format:
+C<key=value>.  Returns a hash containing all key-value pairs on success,
+C<undef> otherwise.
 
 =cut
 sub read_config_file {
@@ -203,7 +201,7 @@ sub read_config_file {
 
 =pod
 
-=item B<check_vid> C<check_vid(vid)>
+  Utils::check_vid(vid)
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
@@ -217,9 +215,9 @@ sub check_vid {
 
 =pod
 
-=item B<tag_prefix> C<tag_prefix(pid, vid)>
+  Utils::tag_prefix(pid, vid)
 
-Returns the Defects4J prefix for a git tag, given project and version id.
+Returns the Defects4J prefix for tagging a buggy or fixed program version.
 
 =cut
 sub tag_prefix {
@@ -231,13 +229,13 @@ sub tag_prefix {
 
 =pod
 
-=item B<exec_cmd> C<exec_cmd(cmd, description [, log_ref])>
+  Utils::exec_cmd(cmd, description [, log_ref])
 
 Runs a system command and indicates whether it succeeded or failed. This
-subroutine captures the output (B<stdout>) of the command and logs the output to
-B<stderr> only if the command fails or if C<Constants::DEBUG> is set to true.
-This subroutine converts exit codes into boolean values, i.e., it returns
-B<1> if the command succeeded and B<0> otherwise. If the optional reference
+subroutine captures the output (F<stdout>) of the command and only logs that
+output to F<stderr> if the command fails or if C<Constants::DEBUG> is set to
+true. This subroutine converts exit codes into boolean values, i.e., it returns
+C<1> if the command succeeded and C<0> otherwise. If the optional reference
 C<log_ref> is provided, the captured output is stored in that variable.
 
 =cut
@@ -260,13 +258,18 @@ sub exec_cmd {
 
 =pod
 
-=item B<get_all_test_suites> C<get_all_test_suites(suite_dir, pid [, vid])>
+  Utils::get_all_test_suites(suite_dir, pid [, vid])
 
 Determines all Defects4J test suite archives that exist in F<suite_dir> and that
-match the given B<pid> and B<vid>. Note that B<vid> is optional.
+match the given project id (C<pid>) and version id (C<vid>). Note that C<vid> is
+optional.
 
-This subroutine returns a reference to a hash that holds all matching test suite
-archives: result -> vid -> suite_src -> test_id -> file_name
+This subroutine returns a reference to a hierarchical hash that holds all
+matching test suite archives:
+
+=over 4
+
+  $result->{vid}->{suite_src}->{test_id}->{file_name}
 
 =back
 
@@ -302,6 +305,5 @@ sub get_all_test_suites {
     print(STDERR "Found $count test suite archive(s)") if $DEBUG;
     return \%test_suites;
 }
-
 
 1;

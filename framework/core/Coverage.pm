@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Coverage.pm -- Provides helper functions for coverage analysis.
+Coverage.pm -- helper subroutines for code coverage analysis.
 
 =head1 DESCRIPTION
 
-This module provides helper functions for coverage analysis using Cobertura.
+This module provides helper subroutines for code coverage analysis using Cobertura.
 
 =cut
 package Coverage;
@@ -55,22 +55,17 @@ my $CORBETURA_REPORT = "$SCRIPT_DIR/projects/lib/cobertura-report.sh";
 
 =pod
 
-=head2 Helper functions
+=head2 Static subroutines
 
-=over 4
+  Coverage::coverage(project_ref, modified_classes_file, src_dir, [single_test, [merge_with]])
 
-=item B<coverage> C<coverage(project_ref, modified_classes_file, src_dir, [single_test, [merge_with]])>
-
-Runs coverage for a provided project. C<modified_classes_file> specifies
-a file listing all the classes which should be instrumented.
-C<src_dir> provides the root of the source code. This is necessary for cobertura
-to generate reports.
+Measures code coverage for a provided L<Project> reference. F<modified_classes_file>
+specifies a file listing all the classes which should be instrumented.  F<src_dir>
+provides the root directory of the source code, which is necessary to generate reports.
 
 If C<single_test> is specified, only that test is run. This is meant to be used
 in conjunction with C<merge_with> (= path to a .ser file obtained by running
 coverage) to enable incremental analysis.
-
-=back
 
 =cut
 sub coverage {
@@ -117,16 +112,12 @@ sub coverage {
 
 =pod
 
-=over 4
+  Coverage::coverage_ext(project, classes_to_instrument_file, src_dir, test_dir, include_pattern, log_file)
 
-=item B<coverage_ext> C<coverage_ext(project, classes_to_instrument_file, src_dir, test_dir, include_pattern, log_file)>
-
-Determines code coverage for a generated test suite. C<classes_to_instrument_file> specifies
-a file listing all the classes which should be instrumented.
-C<src_dir> provides the root of the source code. This is necessary for cobertura
-to generate reports.
-
-=back
+Determines code coverage for a generated test suite.
+F<classes_to_instrument_file> specifies a file listing all the classes which
+should be instrumented.  C<src_dir> provides the root directory of the source
+code, which is necessary to generate reports.
 
 =cut
 sub coverage_ext {
@@ -150,15 +141,11 @@ sub coverage_ext {
 
 =pod
 
-=over 4
+  Coverage::insert_row(hashref, [out_dir])
 
-=item B<insert_row> C<insert_row(hashref, [out_dir])>
-
-Insert a row into the database table $TAB_COVERAGE.
-C<hashref> contains a hash pointing to those data.
-C<out_dir> is the optional alternative database directory to use.
-
-=back
+Insert a row into the database table L<TAB_COVERAGE|DB>. C<hashref> points to a
+hash holding all key-value pairs of the data row.  F<out_dir> is the optional
+alternative database directory to use.
 
 =cut
 sub insert_row {
@@ -184,16 +171,12 @@ sub insert_row {
 
 =pod
 
-=over 4
+  Coverage::copy_coverage_logs(project, vid, suite, test_id, log_dir)
 
-=item B<copy_coverage_logs> C<copy_coverage_logs(project, vid, suite, test_id, log_dir)>
-
-Copies the coverage log files to a permanent directory C<log_dir>.
-C<project> is the project refid, C<vid> is the version ID, C<suite> specifies
-the suite tag (e.g., manual, evosuite), and C<test_id> provides the ID of the
-trigger test.
-
-=back
+Copies the coverage log files to a permanent directory F<log_dir>.  C<project>
+is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
+the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
+the id of the test suite.
 
 =cut
 sub copy_coverage_logs {
@@ -235,11 +218,4 @@ sub _get_info_from_xml {
     };
 }
 
-=pod
-
-=head1 SEE ALSO
-
-All constants are defined in F<Constants.pm>. This module uses the database
-back-end F<DB.pm>.
-
-=cut
+1;

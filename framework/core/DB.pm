@@ -24,14 +24,13 @@
 
 =head1 NAME
 
-DB.pm -- Defines/exports all properties and helper functions for the database backend.
+DB.pm -- defines/exports all constants and subroutines related to database backends.
 
 =head1 DESCRIPTION
 
-This module provides all DB-related properties.
+This module defines all database-related properties.
 Every property is initialized with a default value, which can be overriden by
-setting the corresponding environment variable. This module also provides
-general helper functions.
+setting the corresponding environment variable.
 
 =cut
 package DB;
@@ -48,20 +47,20 @@ our @ISA = qw(Exporter);
 
 =pod
 
-=head3 Exported properties (I<default value>):
+=head2 Exported properties (I<default value>)
 
 =over 4
 
-=item B<DB_DIR>
+=item C<DB_DIR>
 
-The directory of the database storing all results (I<$BASE_DIR/result_db>)
+The directory of the database storing all results (I<L<BASE_DIR|Constants>/result_db>)
 
 =cut
 our $DB_DIR = ($ENV{DB_DIR} or "$BASE_DIR/result_db");
 
 =pod
 
-=item B<TAB_REV_PAIRS>
+=item C<TAB_REV_PAIRS>
 
 The name of the database table for the results of analyzing all revision pairs (I<rev_pairs>)
 
@@ -70,7 +69,7 @@ our $TAB_REV_PAIRS = ($ENV{TAB_REV_PAIRS} or "rev_pairs");
 
 =pod
 
-=item B<TAB_TRIGGER>
+=item C<TAB_TRIGGER>
 
 The name of the database table for the results of analyzing triggering tests (I<trigger>)
 
@@ -79,7 +78,7 @@ our $TAB_TRIGGER = ($ENV{TAB_TRIGGER} or "trigger");
 
 =pod
 
-=item B<TAB_BUG_DETECTION>
+=item C<TAB_BUG_DETECTION>
 
 The name of the database table for the results of running bug detection analysis (I<bug_detection>)
 
@@ -89,7 +88,7 @@ our $TAB_BUG_DETECTION = ($ENV{TAB_BUG_DETECTION} or "bug_detection");
 
 =pod
 
-=item B<TAB_MUTATION>
+=item C<TAB_MUTATION>
 
 The name of the database table for the results of running mutation analysis (I<mutation>)
 
@@ -98,7 +97,7 @@ our $TAB_MUTATION = ($ENV{TAB_MUTATION} or "mutation");
 
 =pod
 
-=item B<TAB_COVERAGE>
+=item C<TAB_COVERAGE>
 
 The name of the database table for the results of running coverage analysis (I<coverage>)
 
@@ -107,7 +106,7 @@ our $TAB_COVERAGE = ($ENV{TAB_COVERAGE} or "coverage");
 
 =pod
 
-=item B<TAB_CODE_EVOLUTION>
+=item C<TAB_CODE_EVOLUTION>
 
 The name of the database table for the results of running code evolution analysis (I<code_evolution>)
 
@@ -116,7 +115,7 @@ our $TAB_CODE_EVOLUTION = ($ENV{TAB_CODE_EVOLUTION} or "code_evolution");
 
 =pod
 
-=item B<TAB_REVIEW>
+=item C<TAB_REVIEW>
 
 =back
 
@@ -241,14 +240,12 @@ $PASSED_COMMITS
 );
 =pod
 
-=head3 Helper functions:
+=head2 Static subroutines:
 
-=over 4
+  get_db_handle(table [, db_dir])
 
-=item B<get_db_handle> C<get_db_handle(table [, db_dir])>
-
-Connect to database and return database handle -- this method will initialize
-the database and requested table if necessary.
+Connect to database and return database handle -- this subroutine will initialize
+the database and the requested C<table> if necessary.
 
 =cut
 sub get_db_handle {
@@ -280,15 +277,12 @@ sub get_db_handle {
 
 =pod
 
-=item B<get_tab_columns> C<get_tab_columns(tab_name)>
+  get_tab_columns(table)
 
-Returns a list of column names for the table C<tab_name> or C<undef> if the
-table does not exist.
-
-=back
+Returns a list of column names for C<table> or C<undef> if this table does not exist.
 
 =cut
 sub get_tab_columns {
-    my $tab_name = shift;
-    return @{$tables{$tab_name}};
+    my $table = shift;
+    return @{$tables{$table}};
 }

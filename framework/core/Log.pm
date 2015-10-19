@@ -24,25 +24,23 @@
 
 =head1 NAME
 
-Log.pm -- Provides a simple interface for log files.
+Log.pm -- a simple log file abstraction.
 
 =head1 SYNOPSIS
 
-use Log;
+  use Log;
+  my $log = Log::create_log($log_file);
 
-my $log = Log::create_log($log_file);
+  $log->log_time("Log start message with timestamp");
+  $log->log_msg("Log error or warning");
+  $log->log_file("Log message and additional file", $file_name);
+  $log->log_time("Log end message with timestamp");
 
-$log->log_time("Log start time");
-
-$log->log_msg("Log message");
-
-$log->log_file("Log message and additional file", $file_name);
-
-$log->log_time("Log end time");
+  $log->close();
 
 =head1 DESCRIPTION
 
-This module provides a simple logging interface.
+This module provides a simple logging abstraction.
 
 =cut
 package Log;
@@ -53,15 +51,11 @@ use POSIX qw(strftime);
 
 =pod
 
-=head2 General object methods:
+=head2 Create an instance of Log
 
-=over 4
+  Log::create_log(file_name)
 
-=item B<create_log> C<create_log(file_name)>
-
-Open log file and return reference to log object
-
-=back
+Open log file and return reference to log object.
 
 =cut
 sub create_log {
@@ -78,13 +72,11 @@ sub create_log {
 
 =pod
 
-=head2 General object methods:
+=head2 General subroutines:
 
-=over 4
+  $log->log_msg(message)
 
-=item B<log_msg> C<log_msg(message)>
-
-Log provided message
+Log provided message.
 
 =cut
 sub log_msg {
@@ -94,9 +86,11 @@ sub log_msg {
     print $fh "$msg\n";
 }
 
-=item B<log_time> C<log_time(message)>
+=pod
 
-Log current time with script name and provided message
+  $log->log_time(message)
+
+Log provided message with the current timestamp and the name of calling script.
 
 =cut
 sub log_time {
@@ -108,12 +102,9 @@ sub log_time {
 
 =pod
 
+  $log->log_file(message, file_name)
 
-=pod
-
-=item B<log_file> C<log_file(message, file_name)>
-
-Log provided message and content of file
+Log provided message and append content of file.
 
 =cut
 sub log_file {
@@ -130,11 +121,9 @@ sub log_file {
 
 =pod
 
-=item B<close> C<close()>
+  $log->close()
 
-Close log file
-
-=back
+Close log file.
 
 =cut
 sub close {

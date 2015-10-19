@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Mutation.pm -- Provides helper functions for mutation analysis.
+Mutation.pm -- helper subroutines for mutation analysis.
 
 =head1 DESCRIPTION
 
-This module provides helper functions for mutation analysis using the Major
+This module provides helper subroutines for mutation analysis using the Major
 mutation framework.
 
 =cut
@@ -52,15 +52,17 @@ my $SUMMARY_FILE = "summary.csv";
 
 =pod
 
-=head2 Helper functions
+=head2 Static subroutines
+
+  Mutation::mutation_analysis(project_ref, log_file [, base_map, single_test])
+
+Runs mutation analysis for the developer-written test suites of the provided
+L<Project> reference.  Returns a reference to a hash that provides kill details
+for all covered mutants:
 
 =over 4
 
-=item B<mutation_analysis> C<mutation_analysis(project_ref, log_file [, base_map, single_test])>
-
-Runs mutation analysis for provided project.
-Returns a reference to a hash that provides kill details for all covered mutants:
-{mut_id}->[TIME|EXC|FAIL|LIVE]
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
 
 =back
 
@@ -84,13 +86,15 @@ sub mutation_analysis {
 
 =pod
 
+  Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, base_map])
+
+Runs mutation analysis for external (e.g., generated) test suites on the
+provided L<Project> reference. Returns a reference to a hash that provides kill
+details for all covered mutants:
+
 =over 4
 
-=item B<mutation_analysis_ext> C<mutation_analysis_ext(project_ref, test_dir, include, log_file [, base_map])>
-
-Runs mutation analysis for external (e.g., generated) test suites.
-Returns a reference to a hash that provides kill details for all covered mutants:
-{mut_id}->[TIME|EXC|FAIL|LIVE]
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
 
 =back
 
@@ -114,13 +118,11 @@ sub mutation_analysis_ext {
 
 =pod
 
-=over 4
+  Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen [, mutation_map])
 
-=item B<insert_row> C<insert_row(output_dir, pid, vid, suite_src, tid, gen [, mutation_map])>
-
-Insert a row into the database table $TAB_MUTATION
-
-=back
+Insert a row into the database table L<TAB_MUTATION|DB>. C<hashref> points to a
+hash holding all key-value pairs of the data row.  F<out_dir> is the optional
+alternative database directory to use.
 
 =cut
 sub insert_row {
@@ -151,10 +153,16 @@ sub insert_row {
     $dbh->disconnect();
 }
 
+=pod
 
-#
-# Copy all log files from the mutation analysis to the output directory
-#
+  Mutation::copy_mutation_logs(project, vid, suite, test_id, log, log_dir)
+
+Copies the mutation log files to a permanent directory F<log_dir>.  C<project>
+is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
+the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
+the id of the test suite. TODO
+
+=cut
 sub copy_mutation_logs {
     @_ == 6 or die $ARG_ERROR;
     my ($project, $vid, $suite, $test_id, $log, $log_dir) = @_;
@@ -251,11 +259,4 @@ sub _build_data_hash {
     };
 }
 
-=pod
-
-=head1 SEE ALSO
-
-All constants are defined in F<Constants.pm>. This module uses the database
-back-end F<DB.pm>.
-
-=cut
+1;
