@@ -57,7 +57,7 @@ Getting started
     - `defects4j info -p Lang`
 
 4. Get information for a specific bug (commons lang, bug 1):
-    - `defects4j info -p Lang -v 1`
+    - `defects4j info -p Lang -b 1`
 
 5. Checkout a buggy source code version (commons lang, bug 1, buggy version):
     - `defects4j checkout -p Lang -v 1b -w /tmp/lang_1_buggy`
@@ -93,7 +93,7 @@ Database abstraction
 -----------------------
 Use `framework/bin/defects4j` to execute any of the following commands:
 
-| Command name   | Description                                                                                       |
+| Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
 | info           | View configuration of a specific project or summary of a specific bug                             |
 | checkout       | Checkout a buggy or a fixed project version                                                       |
@@ -109,7 +109,7 @@ Export properties
 Use `defects4j export -p <property_name> [-o output_file]` in the working
 directory to export a version-specific property:
 
-| Property name    | Description                                                                         |
+| Property         | Description                                                                         |
 |------------------|-------------------------------------------------------------------------------------|
 | classes.modified | Classes (source files) modified by the bug fix                                      |
 | cp.compile       | Classpath to compile and run the project                                            |
@@ -122,24 +122,17 @@ directory to export a version-specific property:
 
 Test execution framework
 --------------------------
-The test execution framework provides the following scripts:
-  - framework/bin/run_bug_detection.pl:         
-    Determines real fault detection rates of generated test suites and stores
-    the results in a csv-based database. Note that this script requires Perl DBI.    
-                                                                                 
-  - framework/bin/run_mutation.pl:                                               
-    Determines mutation scores of generated test suites and stores the results   
-    in a csv-based database. Note that this script requires Perl DBI.                
-                                                                                 
-  - framework/bin/run_coverage.pl:                                               
-    Determines code coverage ratios of generated test suites and stores the      
-    results in a csv-based database. Note that this script requires Perl DBI.        
-                                                                                 
-  - framework/bin/run_evosuite.pl: 
-    Generates test suites using EvoSuite.         
-                                                                                 
-  - framework/bin/run_randoop.pl: 
-    Generates test suites using Randoop.
+The test execution framework for generated test suites (`framework/bin`)
+provides the following scripts:
+
+| Script            | Description                                                     |
+|-------------------|-----------------------------------------------------------------|
+| run_bug_detection | ^Determine the real fault detection rate                        |
+| run_mutation      | ^Determine the mutation score                                   |
+| run_coverage      | ^Determine code coverage ratios (statement and branch coverage) |
+| run_evosuite      | Generate test suites using EvoSuite                             |
+| run_randoop       | Generate test suites using Randoop                              |
+^Note that this script requires Perl DBI.
 
 Directory structure
 ----------------------

@@ -12,7 +12,7 @@ init
 defects4j info -p Lang || die "print project info"
 
 # Get bug info
-defects4j info -p Lang -v 1 || die "print bug info"
+defects4j info -p Lang -b 1 || die "print bug info"
 
 pid=Lang
 bid=1
