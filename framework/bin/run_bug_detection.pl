@@ -26,44 +26,46 @@
 
 =head1 NAME
 
-run_bug_detection.pl -- Run bug detection analysis for generated test suites.
+run_bug_detection.pl -- bug detection analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-run_bug_detection.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D]
+  run_bug_detection.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D]
 
 =head1 OPTIONS
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
-The id of the project for which the generated test suites should be run.
+The id of the project for which the generated test suites are analyzed.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
-=item B<-d F<suite_dir>>
+=item -d F<suite_dir>
 
 The directory that contains the test suite archives.
+See L<Test suites|/"Test suites">.
 
-=item B<-o F<out_dir>>
+=item -o F<out_dir>
 
 The output directory for the results and log files.
 
-=item B<-f C<include_file_pattern>>
+=item -f C<include_file_pattern>
 
-The pattern of the test class file names that should be included (optional).
+The pattern of the file names of the test classes that should be included (optional).
 Per default all files (*.java) are included.
 
-=item B<-v C<version_id>>
+=item -v C<version_id>
 
-Only run test suites for this version id (optional). Per default all
-suitable version ids are considered.
+Only analyze test suites for this version id (optional). Per default all
+test suites for the given project id are analyzed.
 
-=item B<-t F<tmp_dir>>
+=item -t F<tmp_dir>
 
-The temporary root directory to be used to check out revisions (optional).
+The temporary root directory to be used to check out program versions (optional).
 The default is F</tmp>.
 
-=item B<-D>
+=item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -85,18 +87,17 @@ archive in F<suite_dir>):
          version, and a test suite generated for a fixed version is executed on
          the buggy version).
 
-=item 3) Determine and log the number of triggering tests.
+=item 3) Determine the number of triggering tests.
 
 =back
 
-The result for each individual step is stored in the database table
-F<"out_dir"/$TAB_BUG_DETECTION>. The corresponding log files are stored in
-F<"out_dir"/"${TAB_BUG_DETECTION}_log">.
+The results of the analysis are stored in the database table
+F<out_dir/L<TAB_BUG_DETECTION|DB>>. The corresponding log files are stored in
+F<out_dir/L<TAB_BUG_DETECTION|DB>_log>.
 
-For each step the database table contains a column, indicating the result of
-the step or '-' if the step was not applicable. B<Note that the workflow is
-interrupted as soon as one of the steps fails and the script continues with the
-next test suite>.
+For each step the database table contains a column, indicating the result of the step or
+'-' if the step was not applicable. B<Note that the workflow is interrupted as soon as one
+of the steps fails and the script continues with the next test suite>.
 
 =cut
 use warnings;
@@ -161,10 +162,9 @@ my @COLS = DB::get_tab_columns($TAB_BUG_DETECTION) or die "Cannot obtain table c
 
 By default, the script logs all errors and warnings to run_bug_detection.pl.log in
 the temporary project root.
-
-Upon success, the log file of this script and the detailed mutation results for
+Upon success, the log file of this script and the detailed bug detection results for
 each executed test suite are copied to:
-F<"out_dir"/${TAB_BUG_DETECTION}_log/"project_id">.
+F<out_dir/L<TAB_BUG_DETECTION|DB>_log/project_id>.
 
 =cut
 # Log directory and file
@@ -180,29 +180,28 @@ $LOG->log_time("Start executing test suites");
 
 =head2 Test Suites
 
-All test suites in C<suite_dir> have to be provided as an archive that conforms
-to the following naming convention:
+To be considered for the analysis, a test suite has to be provided as an archive in
+F<suite_dir>. Format of the archive file name:
 
-B<C<project_id>-C<version_id>-C<test_suite_src>[.C<test_id>].tar.bz2>
+C<project_id-version_id-test_suite_src(\.test_id)?\.tar\.bz2>
 
-Note that the C<test_id> is optional -- the default is 1.
+Note that C<test_id> is optional, the default is 1.
 
 Examples:
 
 =over 4
 
-=item Lang-11f-randoop.1.tar.bz2 (equal to Lang-11f-randoop.tar.bz2)
+=item * F<Lang-11f-randoop.1.tar.bz2 (equal to Lang-1-randoop.tar.bz2)>
 
-=item Lang-11b-randoop.2.tar.bz2
+=item * F<Lang-11b-randoop.2.tar.bz2>
 
-=item Lang-12b-evosuite-weakmutation.1.tar.bz2
+=item * F<Lang-12b-evosuite-weakmutation.1.tar.bz2>
 
-=item Lang-12f-evosuite-branch.1.tar.bz2
+=item * F<Lang-12f-evosuite-branch.1.tar.bz2>
 
 =back
 
 =cut
-
 
 # Get all test suite archives that match the given project id and version id
 my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
@@ -394,12 +393,3 @@ sub _insert_row {
 
     $dbh_out->do("INSERT INTO $TAB_BUG_DETECTION VALUES ($row)");
 }
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm> and all constants are defined
-in F<Constants.pm>.
-
-=cut
