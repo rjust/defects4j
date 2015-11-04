@@ -40,6 +40,9 @@ use Constants;
 
 our @ISA = qw(Vcs);
 
+{
+no warnings 'redefine';
+
 sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
@@ -60,6 +63,7 @@ sub _diff_cmd {
     my ($self, $rev1, $rev2, $path) = @_;
     $path = defined $path ? "/$path" : "";
     return "svn diff -r$rev1:$rev2 $self->{repo}$path";
+}
 }
 
 # This method needs to be overrided as svn patch returns 0 even with a

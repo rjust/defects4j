@@ -26,46 +26,48 @@
 
 =head1 NAME
 
-fix_test_suite.pl -- Remove failing tests from test suite until all tests pass
+fix_test_suite.pl -- remove failing tests from test suite until all tests pass.
 
 =head1 SYNOPSIS
 
-fix_test_suite.pl -p project_id -d suite_dir [-v version_id] [-f include_file_pattern] [-s test_suite_src] [-t tmp_dir] [-D]
+  fix_test_suite.pl -p project_id -d suite_dir [-f include_file_pattern] [-v version_id] [-s test_suite_src] [-t tmp_dir] [-D]
 
 =head1 OPTIONS
 
 =over 4
 
-=item B<-p C<project_id>>
+=item -p C<project_id>
 
-The id of the project for which test suites are fixed.
+The id of the project for which the generated test suites are analyzed.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
-=item B<-d F<suite_dir>>
+=item -d F<suite_dir>
 
-The directory that contains the test suites.
+The directory that contains the test suite archives.
+See L<Test suites|/"Test suites">.
 
-=item B<-v C<version_id>>
+=item -f C<include_file_pattern>
 
-Only fix test suites for this version id (optional). Per default all
-version ids are considered.
-
-=item B<-f C<include_file_pattern>>
-
-The pattern of the test class file names that should be included (optional).
+The pattern of the file names of the test classes that should be included (optional).
 Per default all files (*.java) are included.
 
-=item B<-s C<test_suite_src>>
+=item -v C<version_id>
 
-Only fix test suites originating from this source (optional).
+Only analyze test suites for this version id (optional). Per default all
+test suites for the given project id are analyzed.
+
+=item -s C<test_suite_src>
+
+Only analyze test suites originating from this source (optional).
 A test suite source is a specific tool or configuration (e.g., evosuite-branch).
 Per default all test suite sources for the given project id are considered.
 
-=item B<-t F<tmp_dir>>
+=item -t F<tmp_dir>
 
-The temporary directory to be used to check out revisions (optional).
+The temporary root directory to be used to check out program versions (optional).
 The default is F</tmp>.
 
-=item B<-D>
+=item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
@@ -74,34 +76,31 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 
 =head1 DESCRIPTION
 
-For each test suite for C<project_id> in C<suite_dir>:
+Runs the following worflow for each provided test suite (i.e., each test suite
+archive in F<suite_dir>):
 
 =over 4
 
-=item 1) Remove uncompilable test classes until the test suite compiles
+=item 1) Remove uncompilable test classes until the test suite compiles.
 
 =item 2) Run test suite and monitor failing tests -- remove failing test methods
          and repeat until:
 
 
-=over 8
+=over 4
 
-=item - The entire test suite passes 5 times in a row
+=item * The entire test suite passes 5 times in a row.
 
 =cut
 my $RUNS = 5;
 
 =pod
 
-=item - Each test class passes in isolation (B<Not yet implemented!>)
+=item * Each test method passes in isolation (B<TODO: not yet implemented!>).
 
 =back
 
 =back
-
-If C<test_suite_src> is provided, only test suites originating from this source are fixed.
-In addition to the test suite source, a specific C<version_id> can be provided
-to only fix test suites for that version.
 
 If a test suite was fixed, its original archive is backed up and replaced with
 the fixed version.
@@ -146,22 +145,24 @@ if (defined $VID) {
 
 =head2 Test Suites
 
-The test suites in C<suite_dir> have to be provided as an archive that conforms to the
-following naming convention:
+To be considered for the analysis, a test suite has to be provided as an archive in
+F<suite_dir>. Format of the archive file name:
 
-B<"project_id"-"version_id"-"test_suite_src"[."test_id"].tar.bz2>.
+C<project_id-version_id-test_suite_src(\.test_id)?\.tar\.bz2>
+
+Note that C<test_id> is optional, the default is 1.
 
 Examples:
 
 =over 4
 
-=item Lang-1f-randoop.1.tar.bz2 (is equal to Lang-1f-randoop.tar.bz2)
+=item * F<Lang-11f-randoop.1.tar.bz2 (equal to Lang-1-randoop.tar.bz2)>
 
-=item Lang-2b-evosuite-branch.1.tar.bz2
+=item * F<Lang-11b-randoop.2.tar.bz2>
 
-=item Lang-2b-evosuite-branch.2.tar.bz2
+=item * F<Lang-12b-evosuite-weakmutation.1.tar.bz2>
 
-=item Chart-3f-evosuite-weakmutation.1.tar.bz2
+=item * F<Lang-12f-evosuite-branch.1.tar.bz2>
 
 =back
 
@@ -332,11 +333,3 @@ sub _rm_classes {
     close(LOG);
     $fixed>0 or die "Unexpected compiler log: Could not identify uncompilable source files!";
 }
-
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut

@@ -44,6 +44,12 @@ checked-out program version.
 The working directory of the checked-out project version (optional). Default is
 the current directory.
 
+=item -A
+
+All relevant classes: Perform mutation analysis for all relevant classes (i.e., all
+classes touched by the triggering tests). By default only classes modified by
+the bug fix are analyzed.
+
 =back
 
 =cut
@@ -60,42 +66,46 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 [-w work_dir]\n";
+    print "usage: $0 [-w work_dir] [-A]\n";
     exit 1;
 }
 
 my %cmd_opts;
-getopts('w:', \%cmd_opts) or _usage();
+getopts('w:A', \%cmd_opts) or _usage();
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
 
+# Read config, and set bug id and type
 my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
 unless(defined $config) {
     print(STDERR "$WORK_DIR is not a valid working directory!\n");
     exit 1;
 }
+my $PID = $config->{$CONFIG_PID};
+my $VID = $config->{$CONFIG_VID};
+my $res = Utils::check_vid($VID);
+my $BID = $res->{bid};
+my $TYPE= $res->{type};
 
 # TODO remove triggering test if we compute mutation score for the buggy version?
-if ($config->{$CONFIG_VID} =~ /^(\d+)b$/) {
+if ($TYPE eq "b") {
     print(STDERR "Mutation analysis on buggy program version not (yet) supported!\n");
     exit 1;
 }
 
-
 # Instantiate project and set working directory
-my $project = Project::create_project($config->{$CONFIG_PID});
+my $project = Project::create_project($PID);
 $project->{prog_root} = $WORK_DIR;
 
+# Directory of class lists used for mutation step
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 
 # Create mutation definitions (mml file)
 my $mml_dir = "$WORK_DIR/mml";
-my $class_dir = "$SCRIPT_DIR/projects/$config->{$CONFIG_PID}/modified_classes";
 
-$config->{$CONFIG_VID} =~ /^(\d+)[bf]$/
-    or die "Unexpected version id format (\\d+[bf]): $config->{$CONFIG_VID}";
-my $vid = $1;
-system("$UTIL_DIR/create_mml.pl -p $config->{$CONFIG_PID} -c $class_dir -o $mml_dir -v $vid");
-my $mml_file = "$mml_dir/$vid.mml.bin";
+system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR -o $mml_dir -v $BID");
+my $mml_file = "$mml_dir/${BID}.mml.bin";
 -e $mml_file or die "Mml file does not exist: $mml_file!";
 
 # Mutate and compile sources
@@ -123,5 +133,3 @@ printf("%17s: %d\n", "Mutants covered", $mutCov);
 printf("%17s: %d\n", "Mutants killed", $mutKill);
 printf("%17s: %.1f%% (%.1f%%)\n", "Mutation score", $mutKill/$mutCov*100, $mutKill/$mutGen*100);
 printf("%17s: %.1f seconds\n", "Total run time", ($timePreproc+$timeAnalysis));
-
-1;

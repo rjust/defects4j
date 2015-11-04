@@ -40,6 +40,9 @@ use Constants;
 
 our @ISA = qw(Vcs);
 
+{
+no warnings 'redefine';
+
 sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
@@ -60,6 +63,6 @@ sub _diff_cmd {
     $path = defined $path ? "-- $path $path" : "";
     return "git --git-dir=$self->{repo} diff --binary ${rev1} ${rev2} $path";
 }
-
+}
 
 1;
