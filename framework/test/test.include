@@ -40,6 +40,8 @@ init() {
     > $LOG
     # Create tmp directory, if necessary
     mkdir -p $TMP_DIR || die "create temporary test directory"
+    # Clean tmp directory
+    rm -rf $TMP_DIR/*
 }
 
 # Print error message to log file
