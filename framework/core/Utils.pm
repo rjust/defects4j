@@ -53,11 +53,12 @@ my $dir = dirname(abs_path(__FILE__));
 Returns F<C<tmp_root>/C<scriptname>_C<process_id>_C<timestamp>>
 
 This directory is unique in a local file system. The root directory to be used
-can be specified with C<tmp_root> (optional) -- the default is F</tmp>.
+can be specified with C<tmp_root> (optional).
+The default is L<D4J_TMP_DIR|Constants>.
 
 =cut
 sub get_tmp_dir {
-    my $tmp_root = shift // "/tmp";
+    my $tmp_root = shift // $D4J_TMP_DIR;
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 

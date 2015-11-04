@@ -110,6 +110,16 @@ our $REPO_DIR = ($ENV{'REPO_DIR'} or "$BASE_DIR/project_repos");
 
 =pod
 
+=item C<D4J_TMP_DIR>
+
+The temporary root directory, used to checkout a program version (I</tmp>)
+
+=cut
+our $D4J_TMP_DIR = ($ENV{'D4J_TMP_DIR'} or "/tmp");
+
+
+=pod
+
 =item C<MAJOR_ROOT>
 
 The root directory of the Major mutation framework (I<C<BASE_DIR>/major>)
@@ -171,6 +181,7 @@ $UTIL_DIR
 $BASE_DIR
 $MAJOR_ROOT
 $REPO_DIR
+$D4J_TMP_DIR
 
 $D4J_BUILD_FILE
 
