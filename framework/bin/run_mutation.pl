@@ -73,8 +73,8 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 =item -A
 
 All relevant classes: Perform mutation analysis for all relevant classes (i.e., all
-classes touched by the triggering tests). By default code coverage is measured
-only for classes modified by the bug fix.
+classes touched by the triggering tests). By default only classes modified by
+the bug fix are analyzed.
 
 =back
 
