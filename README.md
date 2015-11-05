@@ -44,30 +44,35 @@ program version.
 
 Getting started
 ----------------
-1. Download the repositories for the projects by running:
-    - `cd project_repos`
+## Setting up Defects4J
+1. Clone Defects4J:
+    - `git clone https://github.com/rjust/defects4j`
+
+2. Download the repositories for the projects by running:
+    - `cd defects4j/project_repos`
     - `./get_repos.sh`
    These are not included in this repository for size purposes and to avoid
    redundancies.
 
-2. Add Defects4J's executables to your PATH:
+3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
 
-3. Check installation and get information for a specific project (commons lang):
+## Using Defects4J
+4. Check installation and get information for a specific project (commons lang):
     - `defects4j info -p Lang`
 
-4. Get information for a specific bug (commons lang, bug 1):
+5. Get information for a specific bug (commons lang, bug 1):
     - `defects4j info -p Lang -b 1`
 
-5. Checkout a buggy source code version (commons lang, bug 1, buggy version):
+6. Checkout a buggy source code version (commons lang, bug 1, buggy version):
     - `defects4j checkout -p Lang -v 1b -w /tmp/lang_1_buggy`
 
-6. Change to the working directory, compile sources and tests, and run tests:
+7. Change to the working directory, compile sources and tests, and run tests:
     - `cd /tmp/lang_1_buggy`
     - `defects4j compile`
     - `defects4j test`
 
-7. More examples of how to use the framework are available in `framework/test`
+8. More examples of how to use the framework are available in `framework/test`
 
 Publications
 ------------------
