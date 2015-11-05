@@ -35,7 +35,7 @@ for pid in "${projects[@]}"; do
     for bid in $(seq 1 1 $num_bugs); do
         for v in "b" "f"; do
             vid=${bid}$v
-            defects4j checkout -p $pid -v "$vid" -w "$work_dir"
+            defects4j checkout -p $pid -v "$vid" -w "$work_dir" || die "checkout: $pid-$vid"
             defects4j test -r -w "$work_dir" || die "run relevant tests: $pid-$vid"
             
             triggers=$(num_triggers "$work_dir/.failing_tests")
