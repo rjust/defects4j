@@ -44,7 +44,7 @@ program version.
 
 Getting started
 ----------------
-## Setting up Defects4J
+#### Setting up Defects4J
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
@@ -57,7 +57,7 @@ Getting started
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
 
-## Using Defects4J
+#### Using Defects4J
 4. Check installation and get information for a specific project (commons lang):
     - `defects4j info -p Lang`
 
