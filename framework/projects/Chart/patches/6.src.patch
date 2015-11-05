@@ -1,7 +1,7 @@
-Index: org/jfree/chart/util/ShapeList.java
+Index: source/org/jfree/chart/util/ShapeList.java
 ===================================================================
---- org/jfree/chart/util/ShapeList.java	(revision 1166)
-+++ org/jfree/chart/util/ShapeList.java	(revision 1164)
+--- source/org/jfree/chart/util/ShapeList.java	(revision 1166)
++++ source/org/jfree/chart/util/ShapeList.java	(revision 1164)
 @@ -96,27 +93,26 @@
      /**
       * Tests the list for equality with another object (typically also a list).

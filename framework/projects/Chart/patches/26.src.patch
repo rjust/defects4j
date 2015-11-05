@@ -1,7 +1,7 @@
-Index: org/jfree/chart/axis/Axis.java
+Index: source/org/jfree/chart/axis/Axis.java
 ===================================================================
---- org/jfree/chart/axis/Axis.java	(revision 103)
-+++ org/jfree/chart/axis/Axis.java	(revision 102)
+--- source/org/jfree/chart/axis/Axis.java	(revision 103)
++++ source/org/jfree/chart/axis/Axis.java	(revision 102)
 @@ -1188,13 +1187,11 @@
  
          }

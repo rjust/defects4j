@@ -50,10 +50,8 @@ sub _checkout_cmd {
 }
 
 sub _apply_cmd {
-    @_ >= 3 or die $ARG_ERROR;
-    my ($self, $work_dir, $patch_file, $path) = @_;
-    # Path to patch directory within the working directory
-    $path = $path // ".";
+    @_ == 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file) = @_;
     return "cd $work_dir && git apply $patch_file 2>&1";
 }
 

@@ -322,13 +322,10 @@ sub export_diff {
 Applies the patch provided in F<patch_file> to the working directory F<work_dir>.
 
 =cut
-# TODO: Make sure we can remove path
-# This shouldn't be necessary since the patch should always be appicable to the working
-# directory!
 sub apply_patch {
-    @_ >= 3 or die $ARG_ERROR;
-    my ($self, $work_dir, $patch_file, $path) = @_;
-    my $cmd = $self->_apply_cmd($work_dir, $patch_file, $path);
+    @_ == 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file) = @_;
+    my $cmd = $self->_apply_cmd($work_dir, $patch_file);
     return Utils::exec_cmd($cmd, "Apply patch");
 }
 

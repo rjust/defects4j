@@ -1,7 +1,7 @@
-Index: org/jfree/chart/util/ShapeUtilities.java
+Index: source/org/jfree/chart/util/ShapeUtilities.java
 ===================================================================
---- org/jfree/chart/util/ShapeUtilities.java	(revision 1025)
-+++ org/jfree/chart/util/ShapeUtilities.java	(revision 1024)
+--- source/org/jfree/chart/util/ShapeUtilities.java	(revision 1025)
++++ source/org/jfree/chart/util/ShapeUtilities.java	(revision 1024)
 @@ -272,7 +271,7 @@
              return false;
          }
@@ -11,10 +11,10 @@ Index: org/jfree/chart/util/ShapeUtilities.java
          double[] d1 = new double[6];
          double[] d2 = new double[6];
          boolean done = iterator1.isDone() && iterator2.isDone();
-Index: org/jfree/chart/util/SerialUtilities.java
+Index: source/org/jfree/chart/util/SerialUtilities.java
 ===================================================================
---- org/jfree/chart/util/SerialUtilities.java	(revision 1025)
-+++ org/jfree/chart/util/SerialUtilities.java	(revision 1024)
+--- source/org/jfree/chart/util/SerialUtilities.java	(revision 1025)
++++ source/org/jfree/chart/util/SerialUtilities.java	(revision 1024)
 @@ -315,18 +314,21 @@
                              gp.lineTo(args[0], args[1]);
                              break;

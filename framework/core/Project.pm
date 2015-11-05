@@ -383,8 +383,7 @@ sub checkout_vid {
     # Apply patch to obtain buggy version
     my $patch_dir = "$SCRIPT_DIR/projects/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
-    my $src_path = $self->src_dir($vid);
-    $self->apply_patch($work_dir, $src_patch, $src_path) or return 0;
+    $self->apply_patch($work_dir, $src_patch) or return 0;
 
     # Write program and version id of buggy program version to config file
     Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => $vid});
@@ -406,6 +405,8 @@ sub checkout_vid {
     my $rev2 = $self->lookup("${bid}b");
     # TODO: svn doesn't support diffing of binary files
     #       -> checkout and tag the pre-fix revision instead
+    $self->{_vcs}->export_diff($rev1, $rev2, "/tmp/svn.diff1");
+    $self->{_vcs}->export_diff($rev1, $rev2, "/tmp/svn.diff2", "source");
     $self->{_vcs}->export_diff($rev1, $rev2, $tmp_file);
     $self->{_vcs}->apply_patch($work_dir, $tmp_file);
 
@@ -962,13 +963,13 @@ sub export_diff {
 
 =pod
 
-  $project->apply_patch(work_dir, patch_file [, path])
+  $project->apply_patch(work_dir, patch_file)
 
 Delegate to the L<VCS> backend.
 
 =cut
 sub apply_patch {
-    my ($self, $work_dir, $patch_file, $path) = @_; shift;
+    my ($self, $work_dir, $patch_file) = @_; shift;
     return $self->{_vcs}->apply_patch(@_);
 }
 

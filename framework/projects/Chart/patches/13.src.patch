@@ -1,7 +1,7 @@
-Index: org/jfree/chart/block/BorderArrangement.java
+Index: source/org/jfree/chart/block/BorderArrangement.java
 ===================================================================
---- org/jfree/chart/block/BorderArrangement.java	(revision 822)
-+++ org/jfree/chart/block/BorderArrangement.java	(revision 817)
+--- source/org/jfree/chart/block/BorderArrangement.java	(revision 822)
++++ source/org/jfree/chart/block/BorderArrangement.java	(revision 817)
 @@ -114,102 +112,114 @@
              }
          }

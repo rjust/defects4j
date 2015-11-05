@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/junit/MultiplePiePlotTests.java
+Index: source/org/jfree/chart/plot/junit/MultiplePiePlotTests.java
 ===================================================================
---- org/jfree/chart/plot/junit/MultiplePiePlotTests.java	(revision 852)
-+++ org/jfree/chart/plot/junit/MultiplePiePlotTests.java	(revision 846)
+--- source/org/jfree/chart/plot/junit/MultiplePiePlotTests.java	(revision 852)
++++ source/org/jfree/chart/plot/junit/MultiplePiePlotTests.java	(revision 846)
 @@ -2,32 +2,32 @@
   * JFreeChart : a free chart library for the Java(tm) platform
   * ===========================================================

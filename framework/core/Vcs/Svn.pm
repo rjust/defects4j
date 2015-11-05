@@ -48,40 +48,19 @@ sub _checkout_cmd {
     my ($self, $revision_id, $work_dir) = @_;
     return "svn -r ${revision_id} co $self->{repo} $work_dir";
 }
-
+# TODO: Can we always use patch instead of a VCS-specific apply command?
 sub _apply_cmd {
-    @_ >= 3 or die $ARG_ERROR;
-    my ($self, $work_dir, $patch_file, $path) = @_;
-    # Path to working directory if provided
-    $work_dir = "$work_dir/$path" if defined $path;
-#    return "svn patch $patch_file $work_dir 2>&1";
-    return "cd $work_dir; patch -p0 < $patch_file 2>&1";
+    @_ == 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file) = @_;
+    return "cd $work_dir; patch -p0 -s < $patch_file 2>&1";
 }
 
 sub _diff_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
-    $path = defined $path ? "/$path" : "";
-    return "svn diff -r$rev1:$rev2 $self->{repo}$path";
+    my $filter = defined $path ? " | filterdiff -i\"$path*\"" : "";
+    return "svn diff -r$rev1:$rev2 $self->{repo} $filter";
 }
 }
-
-# This method needs to be overrided as svn patch returns 0 even with a
-# failure.
-#sub apply_patch {
-#    @_ >= 3 or die $ARG_ERROR;
-#    my ($self, $work_dir, $patch_file, $path) = @_;
-#    print "Applying patch ... ";
-#    my $cmd = $self->_apply_cmd($work_dir, $patch_file, $path);
-#    my $log = `$cmd`; my $ret = $?;
-#    unless ($ret != 0 || $log=~/rejected/m) {
-#        print "OK\n";
-#        return $ret;
-#    } else {
-#        print "FAIL\n$log";
-#        return 1; # TODO: fix this to be retval if non-zero
-#    }
-#}
-
 
 1;

@@ -1,7 +1,7 @@
-Index: org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java
+Index: source/org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java
 ===================================================================
---- org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java	(revision 231)
-+++ org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java	(revision 227)
+--- source/org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java	(revision 231)
++++ source/org/jfree/data/statistics/junit/DefaultBoxAndWhiskerCategoryDatasetTests.java	(revision 227)
 @@ -38,7 +38,6 @@
   * 17-Apr-2007 : Added a test for bug 1701822 (DG);
   * 28-Sep-2007 : Enhanced testClone() (DG);

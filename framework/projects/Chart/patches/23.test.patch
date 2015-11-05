@@ -1,7 +1,7 @@
-Index: org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java
+Index: source/org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java
 ===================================================================
---- org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java	(revision 210)
-+++ org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java	(revision 209)
+--- source/org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java	(revision 210)
++++ source/org/jfree/chart/renderer/category/junit/MinMaxCategoryRendererTests.java	(revision 209)
 @@ -2,7 +2,7 @@
   * JFreeChart : a free chart library for the Java(tm) platform
   * ===========================================================

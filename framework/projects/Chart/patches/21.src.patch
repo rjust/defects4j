@@ -1,7 +1,7 @@
-Index: org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java
+Index: source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java
 ===================================================================
---- org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 231)
-+++ org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 227)
+--- source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 231)
++++ source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java	(revision 227)
 @@ -120,14 +119,12 @@
       *
       * @param list  a collection of values from which the various medians will 

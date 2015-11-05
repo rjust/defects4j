@@ -1,7 +1,7 @@
-Index: org/jfree/data/general/DatasetUtilities.java
+Index: source/org/jfree/data/general/DatasetUtilities.java
 ===================================================================
---- org/jfree/data/general/DatasetUtilities.java	(revision 2242)
-+++ org/jfree/data/general/DatasetUtilities.java	(revision 2240)
+--- source/org/jfree/data/general/DatasetUtilities.java	(revision 2242)
++++ source/org/jfree/data/general/DatasetUtilities.java	(revision 2240)
 @@ -752,19 +752,12 @@
              for (int series = 0; series < seriesCount; series++) {
                  int itemCount = dataset.getItemCount(series);

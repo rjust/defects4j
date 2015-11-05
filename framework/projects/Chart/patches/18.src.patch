@@ -1,7 +1,7 @@
-Index: org/jfree/data/DefaultKeyedValues.java
+Index: source/org/jfree/data/DefaultKeyedValues.java
 ===================================================================
---- org/jfree/data/DefaultKeyedValues.java	(revision 621)
-+++ org/jfree/data/DefaultKeyedValues.java	(revision 620)
+--- source/org/jfree/data/DefaultKeyedValues.java	(revision 621)
++++ source/org/jfree/data/DefaultKeyedValues.java	(revision 620)
 @@ -315,25 +314,27 @@
      public void removeValue(int index) {
          this.keys.remove(index);
@@ -74,10 +74,10 @@ Index: org/jfree/data/DefaultKeyedValues.java
      }
  
      /**
-Index: org/jfree/data/DefaultKeyedValues2D.java
+Index: source/org/jfree/data/DefaultKeyedValues2D.java
 ===================================================================
---- org/jfree/data/DefaultKeyedValues2D.java	(revision 621)
-+++ org/jfree/data/DefaultKeyedValues2D.java	(revision 620)
+--- source/org/jfree/data/DefaultKeyedValues2D.java	(revision 621)
++++ source/org/jfree/data/DefaultKeyedValues2D.java	(revision 620)
 @@ -439,32 +438,18 @@
      }
  

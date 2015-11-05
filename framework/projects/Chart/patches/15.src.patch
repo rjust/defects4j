@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/PiePlot.java
+Index: source/org/jfree/chart/plot/PiePlot.java
 ===================================================================
---- org/jfree/chart/plot/PiePlot.java	(revision 749)
-+++ org/jfree/chart/plot/PiePlot.java	(revision 747)
+--- source/org/jfree/chart/plot/PiePlot.java	(revision 749)
++++ source/org/jfree/chart/plot/PiePlot.java	(revision 747)
 @@ -1375,9 +1373,6 @@
       * @return The percent.
       */

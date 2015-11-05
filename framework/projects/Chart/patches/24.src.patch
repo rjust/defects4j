@@ -1,7 +1,7 @@
-Index: org/jfree/chart/renderer/GrayPaintScale.java
+Index: source/org/jfree/chart/renderer/GrayPaintScale.java
 ===================================================================
---- org/jfree/chart/renderer/GrayPaintScale.java	(revision 190)
-+++ org/jfree/chart/renderer/GrayPaintScale.java	(revision 188)
+--- source/org/jfree/chart/renderer/GrayPaintScale.java	(revision 190)
++++ source/org/jfree/chart/renderer/GrayPaintScale.java	(revision 188)
 @@ -115,15 +107,14 @@
      /**
       * Returns a paint for the specified value.

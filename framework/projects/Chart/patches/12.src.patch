@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/MultiplePiePlot.java
+Index: source/org/jfree/chart/plot/MultiplePiePlot.java
 ===================================================================
---- org/jfree/chart/plot/MultiplePiePlot.java	(revision 852)
-+++ org/jfree/chart/plot/MultiplePiePlot.java	(revision 846)
+--- source/org/jfree/chart/plot/MultiplePiePlot.java	(revision 852)
++++ source/org/jfree/chart/plot/MultiplePiePlot.java	(revision 846)
 @@ -90,65 +88,65 @@
  import org.jfree.data.general.PieDataset;
  

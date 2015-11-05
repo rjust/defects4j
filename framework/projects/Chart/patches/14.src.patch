@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/CategoryPlot.java
+Index: source/org/jfree/chart/plot/CategoryPlot.java
 ===================================================================
---- org/jfree/chart/plot/CategoryPlot.java	(revision 811)
-+++ org/jfree/chart/plot/CategoryPlot.java	(revision 809)
+--- source/org/jfree/chart/plot/CategoryPlot.java	(revision 811)
++++ source/org/jfree/chart/plot/CategoryPlot.java	(revision 809)
 @@ -2163,9 +2161,6 @@
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));
@@ -36,10 +36,10 @@ Index: org/jfree/chart/plot/CategoryPlot.java
      }
  
      /**
-Index: org/jfree/chart/plot/XYPlot.java
+Index: source/org/jfree/chart/plot/XYPlot.java
 ===================================================================
---- org/jfree/chart/plot/XYPlot.java	(revision 811)
-+++ org/jfree/chart/plot/XYPlot.java	(revision 809)
+--- source/org/jfree/chart/plot/XYPlot.java	(revision 811)
++++ source/org/jfree/chart/plot/XYPlot.java	(revision 809)
 @@ -2290,9 +2288,6 @@
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));

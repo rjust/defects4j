@@ -1,7 +1,7 @@
-Index: org/jfree/data/time/TimeSeries.java
+Index: source/org/jfree/data/time/TimeSeries.java
 ===================================================================
---- org/jfree/data/time/TimeSeries.java	(revision 2227)
-+++ org/jfree/data/time/TimeSeries.java	(revision 2225)
+--- source/org/jfree/data/time/TimeSeries.java	(revision 2227)
++++ source/org/jfree/data/time/TimeSeries.java	(revision 2225)
 @@ -1054,8 +1054,7 @@
              throw new IllegalArgumentException("Requires start <= end.");
          }

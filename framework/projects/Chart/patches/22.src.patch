@@ -1,7 +1,7 @@
-Index: org/jfree/data/KeyedObjects2D.java
+Index: source/org/jfree/data/KeyedObjects2D.java
 ===================================================================
---- org/jfree/data/KeyedObjects2D.java	(revision 227)
-+++ org/jfree/data/KeyedObjects2D.java	(revision 225)
+--- source/org/jfree/data/KeyedObjects2D.java	(revision 227)
++++ source/org/jfree/data/KeyedObjects2D.java	(revision 225)
 @@ -201,52 +199,33 @@
      /**
       * Returns the object for the given row and column keys.

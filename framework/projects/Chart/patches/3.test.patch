@@ -1,7 +1,7 @@
-Index: org/jfree/data/time/junit/TimeSeriesTests.java
+Index: source/org/jfree/data/time/junit/TimeSeriesTests.java
 ===================================================================
---- org/jfree/data/time/junit/TimeSeriesTests.java	(revision 2227)
-+++ org/jfree/data/time/junit/TimeSeriesTests.java	(revision 2225)
+--- source/org/jfree/data/time/junit/TimeSeriesTests.java	(revision 2227)
++++ source/org/jfree/data/time/junit/TimeSeriesTests.java	(revision 2225)
 @@ -49,7 +49,6 @@
   * 13-Jan-2009 : Added testEquals3() and testRemoveAgedItems3() (DG);
   * 26-May-2009 : Added various tests for min/maxY values (DG);

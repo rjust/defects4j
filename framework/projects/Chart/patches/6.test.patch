@@ -1,7 +1,7 @@
-Index: org/jfree/chart/util/junit/SerialUtilitiesTests.java
+Index: source/org/jfree/chart/util/junit/SerialUtilitiesTests.java
 ===================================================================
---- org/jfree/chart/util/junit/SerialUtilitiesTests.java	(revision 1166)
-+++ org/jfree/chart/util/junit/SerialUtilitiesTests.java	(revision 1164)
+--- source/org/jfree/chart/util/junit/SerialUtilitiesTests.java	(revision 1166)
++++ source/org/jfree/chart/util/junit/SerialUtilitiesTests.java	(revision 1164)
 @@ -1,481 +0,0 @@
 -/* ===========================================================
 - * JFreeChart : a free chart library for the Java(tm) platform
@@ -484,10 +484,10 @@ Index: org/jfree/chart/util/junit/SerialUtilitiesTests.java
 -    }
 -
 -}
-Index: org/jfree/chart/util/junit/ShapeListTests.java
+Index: source/org/jfree/chart/util/junit/ShapeListTests.java
 ===================================================================
---- org/jfree/chart/util/junit/ShapeListTests.java	(revision 1166)
-+++ org/jfree/chart/util/junit/ShapeListTests.java	(revision 1164)
+--- source/org/jfree/chart/util/junit/ShapeListTests.java	(revision 1166)
++++ source/org/jfree/chart/util/junit/ShapeListTests.java	(revision 1164)
 @@ -1,155 +0,0 @@
 -/* ===========================================================
 - * JFreeChart : a free chart library for the Java(tm) platform
@@ -644,10 +644,10 @@ Index: org/jfree/chart/util/junit/ShapeListTests.java
 -    }
 -
 -}
-Index: org/jfree/chart/util/junit/UtilPackageTests.java
+Index: source/org/jfree/chart/util/junit/UtilPackageTests.java
 ===================================================================
---- org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1166)
-+++ org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1164)
+--- source/org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1166)
++++ source/org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1164)
 @@ -39,7 +39,6 @@
   *               StrokeListTests (DG);
   * 08-Apr-2008 : Added LogFormatTests (DG);

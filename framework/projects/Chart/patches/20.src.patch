@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/ValueMarker.java
+Index: source/org/jfree/chart/plot/ValueMarker.java
 ===================================================================
---- org/jfree/chart/plot/ValueMarker.java	(revision 283)
-+++ org/jfree/chart/plot/ValueMarker.java	(revision 281)
+--- source/org/jfree/chart/plot/ValueMarker.java	(revision 283)
++++ source/org/jfree/chart/plot/ValueMarker.java	(revision 281)
 @@ -88,11 +88,11 @@
       * @param stroke  the stroke (<code>null</code> not permitted).
       * @param outlinePaint  the outline paint (<code>null</code> permitted).

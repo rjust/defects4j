@@ -1,7 +1,7 @@
-Index: org/jfree/data/category/DefaultIntervalCategoryDataset.java
+Index: source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
 ===================================================================
---- org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 743)
-+++ org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 741)
+--- source/org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 743)
++++ source/org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 741)
 @@ -64,7 +62,7 @@
   * first dimension is the series, and the second dimension is the category.
   */

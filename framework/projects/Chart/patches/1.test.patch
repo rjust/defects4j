@@ -1,7 +1,7 @@
-Index: org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java
+Index: source/org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java
 ===================================================================
---- org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java	(revision 2266)
-+++ org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java	(revision 2264)
+--- source/org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java	(revision 2266)
++++ source/org/jfree/chart/renderer/category/junit/AbstractCategoryItemRendererTests.java	(revision 2264)
 @@ -2,7 +2,7 @@
   * JFreeChart : a free chart library for the Java(tm) platform
   * ===========================================================

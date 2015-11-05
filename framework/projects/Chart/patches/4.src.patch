@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/XYPlot.java
+Index: source/org/jfree/chart/plot/XYPlot.java
 ===================================================================
---- org/jfree/chart/plot/XYPlot.java	(revision 2183)
-+++ org/jfree/chart/plot/XYPlot.java	(revision 2182)
+--- source/org/jfree/chart/plot/XYPlot.java	(revision 2183)
++++ source/org/jfree/chart/plot/XYPlot.java	(revision 2182)
 @@ -4490,14 +4490,12 @@
                      }
                  }

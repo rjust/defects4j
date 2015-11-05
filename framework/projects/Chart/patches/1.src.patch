@@ -1,7 +1,7 @@
-Index: org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
+Index: source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
 ===================================================================
---- org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2266)
-+++ org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2264)
+--- source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2266)
++++ source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2264)
 @@ -1794,7 +1794,7 @@
          }
          int index = this.plot.getIndexOf(this);

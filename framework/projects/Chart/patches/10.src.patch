@@ -1,7 +1,7 @@
-Index: org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java
+Index: source/org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java
 ===================================================================
---- org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java	(revision 1065)
-+++ org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java	(revision 1064)
+--- source/org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java	(revision 1065)
++++ source/org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java	(revision 1064)
 @@ -2,51 +2,49 @@
   * JFreeChart : a free chart library for the Java(tm) platform
   * ===========================================================
@@ -89,10 +89,10 @@ Index: org/jfree/chart/imagemap/DynamicDriveToolTipTagFragmentGenerator.java
      }
  
  }
-Index: org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java
+Index: source/org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java
 ===================================================================
---- org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java	(revision 1065)
-+++ org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java	(revision 1064)
+--- source/org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java	(revision 1065)
++++ source/org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java	(revision 1064)
 @@ -45,16 +43,9 @@
   * Generates tooltips using the HTML title attribute for image map area tags.
   */
@@ -121,10 +121,10 @@ Index: org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java
      }
  
  }
-Index: org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java
+Index: source/org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java
 ===================================================================
---- org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java	(revision 1065)
-+++ org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java	(revision 1064)
+--- source/org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java	(revision 1065)
++++ source/org/jfree/chart/imagemap/OverLIBToolTipTagFragmentGenerator.java	(revision 1064)
 @@ -46,25 +44,17 @@
   * (http://www.bosrup.com/web/overlib/).
   */

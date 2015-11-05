@@ -1,7 +1,7 @@
-Index: org/jfree/chart/util/junit/ShapeUtilitiesTests.java
+Index: source/org/jfree/chart/util/junit/ShapeUtilitiesTests.java
 ===================================================================
---- org/jfree/chart/util/junit/ShapeUtilitiesTests.java	(revision 1025)
-+++ org/jfree/chart/util/junit/ShapeUtilitiesTests.java	(revision 1024)
+--- source/org/jfree/chart/util/junit/ShapeUtilitiesTests.java	(revision 1025)
++++ source/org/jfree/chart/util/junit/ShapeUtilitiesTests.java	(revision 1024)
 @@ -1,248 +0,0 @@
 -/* ===========================================================
 - * JFreeChart : a free chart library for the Java(tm) platform
@@ -251,10 +251,10 @@ Index: org/jfree/chart/util/junit/ShapeUtilitiesTests.java
 -    }
 -
 -}
-Index: org/jfree/chart/util/junit/UtilPackageTests.java
+Index: source/org/jfree/chart/util/junit/UtilPackageTests.java
 ===================================================================
---- org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1025)
-+++ org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1024)
+--- source/org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1025)
++++ source/org/jfree/chart/util/junit/UtilPackageTests.java	(revision 1024)
 @@ -6,22 +6,22 @@
   *
   * Project Info:  http://www.jfree.org/jfreechart/index.html

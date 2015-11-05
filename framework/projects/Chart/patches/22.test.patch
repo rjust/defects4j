@@ -1,7 +1,7 @@
-Index: org/jfree/data/junit/KeyedObjects2DTests.java
+Index: source/org/jfree/data/junit/KeyedObjects2DTests.java
 ===================================================================
---- org/jfree/data/junit/KeyedObjects2DTests.java	(revision 227)
-+++ org/jfree/data/junit/KeyedObjects2DTests.java	(revision 225)
+--- source/org/jfree/data/junit/KeyedObjects2DTests.java	(revision 227)
++++ source/org/jfree/data/junit/KeyedObjects2DTests.java	(revision 225)
 @@ -36,7 +36,6 @@
   * -------
   * 01-Mar-2004 : Version 1 (DG);

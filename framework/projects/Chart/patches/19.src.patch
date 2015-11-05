@@ -1,7 +1,7 @@
-Index: org/jfree/chart/plot/CategoryPlot.java
+Index: source/org/jfree/chart/plot/CategoryPlot.java
 ===================================================================
---- org/jfree/chart/plot/CategoryPlot.java	(revision 434)
-+++ org/jfree/chart/plot/CategoryPlot.java	(revision 430)
+--- source/org/jfree/chart/plot/CategoryPlot.java	(revision 434)
++++ source/org/jfree/chart/plot/CategoryPlot.java	(revision 430)
 @@ -685,19 +684,13 @@
       * Returns the index of the specified axis, or <code>-1</code> if the axis
       * is not assigned to the plot.
