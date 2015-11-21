@@ -28,7 +28,7 @@ d4j-monitor.test -- monitor class loader while running a single test class or te
 
 =head1 SYNOPSIS
 
-  d4j-monitor-test -t single_test [-w work_dir]
+  d4j-monitor.test -t single_test [-w work_dir]
 
 =head1 DESCRIPTION
 

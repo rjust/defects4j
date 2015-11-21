@@ -30,7 +30,7 @@ sanity_check.pl -- perform sanity check for a project or project version.
 
 =head1 SYNOPSIS
 
-  sanity_check.pl -p project_id [-b version_id] [-t tmp_dir]
+  sanity_check.pl -p project_id [-b bug_id] [-t tmp_dir]
 
 =head1 DESCRIPTION
 
