@@ -26,22 +26,41 @@
 
 =head1 NAME
 
-create_mml.pl -- Create mml files for all program revisions with reproducible bugs.
+create_mml.pl -- create a Major-compatible MML file, which defines program mutations.
 
 =head1 SYNOPSIS
 
-create_mml.pl -p project_id -c class_dir -o out_dir [-v version_id]
+  create_mml.pl -p project_id -c classes_dir -o out_dir [-b bug_id]
 
 =head1 DESCRIPTION
 
-Generates a mml file for every list of project-related classes in
-C<class_dir> -- a list of classes has to be provided in a file with the
-following naming convention:
-B<"version_id".src>.
-The generated mml files are named "version_id".mml and written to C<out_dir>.
+Generates an MML file for every bug id listed in F<classes_dir> -- for every bug id, a list
+of classes that should be mutated has to be provided in a file with the following name:
+F<C<bug_id>.src>.
+The generated MML files are named F<C<bug_id>.mml> and written to F<out_dir>.
 
-If the C<version_id> is provided in addition to the C<project_id>, then only
-this C<version_id> is considered for the project.
+=head1 OPTIONS
+
+=over 4
+
+=item -p C<project_id>
+
+The id of the project for which the MML file is generated.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
+
+=item -b C<bug_id>
+
+The bug id for which the MML file is generated (optional). Format: C<\d+>.
+
+=item -c F<classes_dir>
+
+The directory that contains the lists of classes that should be mutated.
+
+=item -o F<out_dir>
+
+The output directory to which the generated MML files are written.
+
+=back
 
 =cut
 use warnings;
@@ -51,33 +70,31 @@ use FindBin;
 use File::Basename;
 use Cwd qw(abs_path);
 use Getopt::Std;
+use Pod::Usage;
 
 use lib abs_path("$FindBin::Bin/../core");
 use Constants;
+use Utils;
 
 #
-# Issue usage message and quit
+# Process arguments and issue usage message if necessary.
 #
-sub _usage {
-    die "usage: $0 -p project_id -c class_dir -o out_dir [-v version_id]"
-}
-
 my %cmd_opts;
-getopts('p:c:o:v:', \%cmd_opts) or _usage();
+getopts('p:c:o:b:', \%cmd_opts) or pod2usage(1);
 
-_usage() unless defined $cmd_opts{p} and defined $cmd_opts{c} and defined $cmd_opts{o};
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{c} and defined $cmd_opts{o};
 
 my $PID = $cmd_opts{p};
-# Directory with class lists
-my $CLASS_DIR = abs_path($cmd_opts{c});
--e $CLASS_DIR or die "Directory with class lists does not exist: $CLASS_DIR";
-# Output directory for results
-my $OUT_DIR = abs_path($cmd_opts{o});
-# Optional version id
-my $VID = $cmd_opts{v} if defined $cmd_opts{v};
-if (defined $VID) {
-    $VID =~ /^(\d+)$/ or die "Wrong version id format (\\d+): $VID!";
+my $CLASS_DIR = Utils::get_abs_path($cmd_opts{c});
+my $OUT_DIR = Utils::get_abs_path($cmd_opts{o});
+my $BID = $cmd_opts{b};
+
+if (defined $BID) {
+    $BID =~ /^(\d+)$/ or die "Wrong bug id format (\\d+): $BID!";
 }
+-e $CLASS_DIR or die "Directory with lists of classes does not exist: $CLASS_DIR";
+
+my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
 
 # The mutation operators that should be enabled in the mml file
 my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
@@ -85,31 +102,27 @@ my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
 system("mkdir -p $OUT_DIR");
 
 my @ids;
-# Use specific version id
-if (defined $VID) {
-    @ids = ($VID);
+# Use specific bug id
+if (defined $BID) {
+    @ids = ($BID);
 } else {
-    @ids = _get_version_ids();
+    @ids = _get_bug_ids();
 }
 
-foreach my $vid (@ids) {
-    #TODO: Skip id if mml file already exists and the
-    # list of classes did not change
-
-    my @classes = _get_class_list($vid);
-    my $template = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template!";
-    my $file = "$OUT_DIR/$vid.mml";
+foreach my $bid (@ids) {
+    my @classes = _get_classes_list($bid);
+    my $file = "$OUT_DIR/$bid.mml";
 
     # Generate mml file by enabling operators for listed classes only
     open(FILE, ">$file") or die "Cannot write mml file ($file): $!";
     # Add operator definitions from template
-    print FILE $template;
+    print FILE $TEMPLATE;
     # Enable operators for all classes
     foreach my $class (@classes) {
         print FILE "\n// Enable operators for $class\n";
         foreach my $op (@ops) {
             # Skip disabled operators
-            next if $template =~ /-$op<"$class">/;
+            next if $TEMPLATE =~ /-$op<"$class">/;
             print FILE "$op<\"$class\">;\n";
         }
     }
@@ -119,19 +132,19 @@ foreach my $vid (@ids) {
 }
 
 #
-# Return list of all classes
+# Return list of all classes that should be mutated for a given bug id
 #
-sub _get_class_list {
-    my $id = shift;
-    my $list = `cat $CLASS_DIR/$id.src`;
-    $? == 0 or die "Cannot read class list for id: $id!";
+sub _get_classes_list {
+    my $bid = shift;
+    my $list = `cat $CLASS_DIR/$bid.src`;
+    $? == 0 or die "Cannot read classes list for bug id: $bid!";
     return split("\n", $list);
 }
 
 #
-# Get all version ids for which we have a list of classes
+# Get all bug ids for which we have a list of classes
 #
-sub _get_version_ids {
+sub _get_bug_ids {
     opendir(DIR, $CLASS_DIR);
     my @files = readdir(DIR);
     closedir(DIR);
@@ -142,10 +155,3 @@ sub _get_version_ids {
     }
     return @ids;
 }
-=pod
-
-=head1 SEE ALSO
-
-All valid project_ids are listed in F<Project.pm>
-
-=cut

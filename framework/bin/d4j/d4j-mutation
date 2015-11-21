@@ -104,7 +104,7 @@ my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 # Create mutation definitions (mml file)
 my $mml_dir = "$WORK_DIR/mml";
 
-system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR -o $mml_dir -v $BID");
+system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR -o $mml_dir -b $BID");
 my $mml_file = "$mml_dir/${BID}.mml.bin";
 -e $mml_file or die "Mml file does not exist: $mml_file!";
 

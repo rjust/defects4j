@@ -26,15 +26,15 @@
 
 =head1 NAME
 
-sanity_check.pl -- sanity check of project version.
+sanity_check.pl -- perform sanity check for a project or project version.
 
 =head1 SYNOPSIS
 
-sanity_check.pl -p project_id [-v version_id] [-t tmp_dir]
+  sanity_check.pl -p project_id [-b version_id] [-t tmp_dir]
 
 =head1 DESCRIPTION
 
-Checks out each project version runs the sanity check on it. Dies if any run fails.
+Checks out each project version, and runs the sanity check on it. Dies if any run fails.
 
 =head1 OPTIONS
 
@@ -42,13 +42,12 @@ Checks out each project version runs the sanity check on it. Dies if any run fai
 
 =item -p C<project_id>
 
-The id of the project for which the sanity check is performed.
-See L<Project> module for available project IDs.
+The id of the project for which the sanity check is run.
+See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
-=item -v C<version_id>
+=item -b C<bug_id>
 
-Only run sanity check for this version id (optional). Per default all
-suitable version ids are considered.
+Only run the sanity check for this bug id (optional). Format: C<\d+>.
 
 =item -t F<tmp_dir>
 
@@ -75,13 +74,12 @@ use Project;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:v:t:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:t:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
-my $VID = $cmd_opts{v};
-
+my $BID = $cmd_opts{b};
 
 # Set up project
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
@@ -90,18 +88,18 @@ my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 my @ids;
-if (defined $VID) {
-    $VID =~ /^(\d+)$/ or die "Wrong version_id format: $VID! Expected: \\d+";
-    @ids = ($VID);
+if (defined $BID) {
+    $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
+    @ids = ($BID);
 } else {
     @ids = $project->get_version_ids();
 
 }
 
-foreach my $id (@ids) {
-    printf ("%4d: $project->{prog_name}\n", $id);
+foreach my $bid (@ids) {
+    printf ("%4d: $project->{prog_name}\n", $bid);
     foreach my $v ("b", "f") {
-        my $vid = "${id}$v";
+        my $vid = "${bid}$v";
         $project->checkout_vid($vid) or die "Could not checkout ${vid}";
         $project->sanity_check() or die "Could not perform sanity check on ${vid}";
 
