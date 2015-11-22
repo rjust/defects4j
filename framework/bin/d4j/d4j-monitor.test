@@ -28,12 +28,14 @@ d4j-monitor.test -- monitor class loader while running a single test class or te
 
 =head1 SYNOPSIS
 
-  d4j-monitor.test -t single_test [-w work_dir]
+  d4j-monitor.test -t single_test [-w work_dir] [-s test_suite]
 
 =head1 DESCRIPTION
 
 This script runs a single test class or test method and monitors the class
-loader during execution.
+loader during execution. The script reports all source and test classes that were loaded
+during the execution of C<single_test>. It also writes all loaded source and test classes
+to F<loaded_classes.src> and F<loaded_classes.test>, respectively.
 
 =head1 OPTIONS
 
@@ -48,6 +50,31 @@ Run this single test and monitor the class loader. Format: <test_class>[::<test_
 The working directory of the checked-out project version (optional). Default is
 the current directory.
 
+=item -s F<test_suite>
+
+The archive file name of an external test suite (optional). The default test suite is the
+developer-written test suite of the checked-out project version.
+See L<Test suites|/"Test suites">.
+
+=back
+
+=head1 Test suites
+
+An external test suite has to be provided as an archive of test sources.
+Format of the archive file name:
+
+F<C<project_id>-C<version_id>-C<test_suite_src>.C<test_id>.tar.bz2>
+
+Examples:
+
+=over 4
+
+=item * F<Lang-11f-randoop.1.tar.bz2>
+
+=item * F<Lang-12b-evosuite-weakmutation.1.tar.bz2>
+
+=item * F<Lang-12f-evosuite-branch.1.tar.bz2>
+
 =back
 
 =cut
@@ -59,21 +86,15 @@ use Constants;
 use Utils;
 use Project;
 use Getopt::Std;
-
-#
-# Issue usage message and quit
-#
-sub _usage {
-    print "usage: $0 -t single_test [-w work_dir]\n";
-    exit 1;
-}
+use Pod::Usage;
 
 my %cmd_opts;
-getopts('t:w:', \%cmd_opts) or _usage();
+getopts('t:w:s:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
 my $TEST = $cmd_opts{t};
-defined $TEST or _usage();
+defined $TEST or pod2usage( { -verbose => 1, -input => __FILE__} );
+my $TEST_SUITE = $cmd_opts{s};
 
 my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
 unless(defined $config) {
@@ -85,20 +106,39 @@ unless(defined $config) {
 my $project = Project::create_project($config->{$CONFIG_PID});
 $project->{prog_root} = $WORK_DIR;
 
-# Obtain version and run test
+my $test_dir = undef;
+# Compile the test suite, according to the provided flags
+if (defined $TEST_SUITE) {
+    # Extract and compile external test suite
+    $test_dir = "$WORK_DIR/.test_suite";
+    Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
+    $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
+} else {
+    # Compile developer-written test suite
+    $project->compile_tests() or die "Cannot compile test suite!";
+}
+
+# Obtain version and monitor the test
 my $vid = $config->{$CONFIG_VID};
-my $classes = $project->monitor_test($TEST, $vid);
+my $classes = $project->monitor_test($TEST, $vid, $test_dir);
 defined $classes or die "Cannot run test!";
 
-open(OUT, ">$WORK_DIR/loaded_classes.src") or die "Cannot write loaded classes";
+my $loaded_src = "$WORK_DIR/loaded_classes.src";
+my $loaded_test = "$WORK_DIR/loaded_classes.test";
+
+open(OUT, ">$loaded_src") or die "Cannot write loaded classes";
+print("Loaded source classes:\n");
 for my $class (@{$classes->{src}}) {
     print(OUT $class, "\n");
+    print("  - $class \n");
 }
 close(OUT);
 
-open(OUT, ">$WORK_DIR/loaded_classes.test") or die "Cannot write loaded test classes";
+open(OUT, ">$loaded_test") or die "Cannot write loaded test classes";
+print("Loaded test classes:\n");
 for my $class (@{$classes->{test}}) {
     print(OUT $class, "\n");
+    print("  - $class \n");
 }
 close(OUT);
 
