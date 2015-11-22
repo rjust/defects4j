@@ -77,10 +77,10 @@ $cmd_descr{compile}="compile a checked-out project version";
 
 =item * L<B<test>|d4j::d4j-test/>
 
-run test suite of a checked-out project version.
+run tests on a checked-out project version.
 
 =cut
-$cmd_descr{test}="run test suite of a checked-out project version";
+$cmd_descr{test}="run tests on a checked-out project version";
 
 =pod
 
