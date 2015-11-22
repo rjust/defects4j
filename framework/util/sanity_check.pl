@@ -103,15 +103,67 @@ foreach my $bid (@ids) {
         $project->checkout_vid($vid) or die "Could not checkout ${vid}";
         $project->sanity_check() or die "Could not perform sanity check on ${vid}";
 
+        # Check whether source directory is properly exported
         my $src_dir = $project->src_dir($vid);
         my $exp_src_dir = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -pdir.src.classes`; chomp $exp_src_dir;
         -e "$TMP_DIR/$src_dir" or die "Provided source directory does not exist in ${vid}";
         $exp_src_dir eq $src_dir or die "Exported source directory does not match expected one ($exp_src_dir != $src_dir) in ${vid}";
 
+        # Check whether test directory is properly exported
         my $test_dir = $project->test_dir($vid);
         my $exp_test_dir = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -pdir.src.tests`; chomp $exp_test_dir;
         -e "$TMP_DIR/$test_dir" or die "Provided test directory does not exist in ${vid}";
         $exp_test_dir eq $test_dir or die "Exported test directory does not match expected one ($exp_test_dir != $test_dir) in ${vid}";
+
+        # Verify the following properties:
+        # - All tests pass on the fixed version
+        # - Only expected triggering test(s) fail on the buggy version
+        # - All expected triggering test(s) fail on the buggy version
+        $project->compile() or die "Could not compile sources: ${vid}";
+        $project->compile_tests() or die "Could not compile tests: ${vid}";
+
+        my $failing_tests = "$TMP_DIR/.failing_tests";
+        system(">$failing_tests");
+        $project->run_relevant_tests($failing_tests) or die "Could not run relevant tests: ${vid}";
+        my $trigger = Utils::get_failing_tests($failing_tests) or die "Cannot determine triggering tests!";
+        my $count = scalar(@{$trigger->{methods}}) + scalar(@{$trigger->{classes}});
+        my %actual_triggers = ();
+        if ($count != 0) {
+            print("Failing tests:\n");
+            foreach my $test ((@{$trigger->{classes}}, @{$trigger->{methods}})) {
+                $actual_triggers{$test} = 1;
+                print("  - $test\n");
+            }
+        }
+
+        # Check fixed version
+        if ("f" eq $v) {
+            $count == 0 or die "Unexptected failing tests on fixed version: $vid";
+        }
+        # Check buggy version
+        else {
+            my $error = 0;
+            # Get all expected triggering tests
+            $trigger = Utils::get_failing_tests("$SCRIPT_DIR/projects/$PID/trigger_tests/$bid") or die "Cannot determine expected triggering tests!";
+            # Verify that each expected triggering test indeed exists in actual triggers
+            foreach my $test ((@{$trigger->{classes}}, @{$trigger->{methods}})) {
+                if (!defined $actual_triggers{$test}) {
+                    print("Exptected triggering test is missing: $test");
+                    $error = 1;
+                }
+                delete $actual_triggers{$test};
+            }
+            # Verify that only expected triggering tests existed in actual triggers
+            if (! scalar(%actual_triggers) == 0) {
+                print("Unexpected triggering tests:\n");
+                foreach my $test (keys(%actual_triggers)) {
+                    print("  - $test\n");
+                }
+                $error = 1;
+            }
+
+            $error == 0 or die "Set of triggering tests is unexpected: $vid";
+        }
     }
 }
 # Clean up
