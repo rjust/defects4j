@@ -247,7 +247,7 @@ sub exec_cmd {
     my $log = `$cmd`; my $ret = $?;
     $$log_ref = $log if defined $log_ref;
     if ($ret!=0) {
-        print("FAIL\n$log");
+        print(STDERR "FAIL\n$log");
         return 0;
     }
     print(STDERR "OK\n");
@@ -305,6 +305,29 @@ sub get_all_test_suites {
     }
     print(STDERR "Found $count test suite archive(s)") if $DEBUG;
     return \%test_suites;
+}
+
+=pod
+
+  Utils::extract_test_suite(test_suite, test_dir)
+
+Extracts an archive of an external test suite (F<test_suite>) into a given test directory
+(F<test_dir>). The directory F<test_dir> is created if it doesn't exist.
+This subroutine returns 1 on success, 0 otherwise.
+
+=cut
+sub extract_test_suite {
+    @_ == 2 or die $ARG_ERROR;
+    my ($test_suite, $test_dir) = @_;
+    my %test_suites = ();
+    unless (-e $test_suite) {
+        print(STDERR "Test suite archive not found: $test_suite\n");
+        return 0;;
+    }
+    # Extract external test suite into test directory
+    exec_cmd("mkdir -p $test_dir && rm -rf $test_dir/* && tar -xjf $test_suite -C $test_dir",
+            "Extract test suite") or return 0;
+    return 1;
 }
 
 1;
