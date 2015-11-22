@@ -569,13 +569,13 @@ sub fix_tests {
 
 =head2 Analysis related subroutines
 
-  $project->monitor_test(single_test, vid)
+  $project->monitor_test(single_test, vid [, test_dir])
 
 Executes C<single_test>, monitors the class loader, and returns a reference to a
 hash of list references, which store the loaded source and test classes.
 Format of C<single_test>: <classname>::<methodname>.
 
-The returned reference is a reference to a hash that looks like:
+This subroutine returns a reference to a hash with the keys C<src> and C<test>:
 
 =over 4
 
@@ -589,12 +589,16 @@ If the test execution fails, the returned reference is C<undef>.
 A class is included in the result if it exists in the source or test directory
 of the checked-out program verion and if it was loaded during the test execution.
 
+The location of the test sources can be provided with the optional parameter F<test_dir>.
+The default is the test directory of the developer-written tests.
+
 =cut
 sub monitor_test {
-    @_ == 3 or die $ARG_ERROR;
-    my ($self, $single_test, $vid) = @_;
+    @_ >= 3 or die $ARG_ERROR;
+    my ($self, $single_test, $vid, $test_dir) = @_;
     Utils::check_vid($vid);
     $single_test =~ /^([^:]+)(::([^:]+))?$/ or die "Wrong format for single test!";
+    $test_dir = $test_dir // "$self->{prog_root}/" . $self->test_dir($vid);
 
     my $log_file = "$self->{prog_root}/classes.log";
 
@@ -607,8 +611,8 @@ sub monitor_test {
         return undef;
     }
 
-    my $src = $self->_get_classes($self->src_dir($vid));
-    my $test= $self->_get_classes($self->test_dir($vid));
+    my $src = $self->_get_classes("$self->{prog_root}/" . $self->src_dir($vid));
+    my $test= $self->_get_classes($test_dir);
 
     my @log = `cat $log_file`;
     foreach (@log) {
@@ -997,12 +1001,11 @@ sub _can_reuse_work_dir {
 }
 
 #
-# Get all classes for a given path in the working directory
+# Get all Java classes that exist in a given absolute path
 #
 sub _get_classes {
     my ($self, $path) = @_;
-    my $dir = $self->{prog_root};
-    my @list = `cd $dir/$path; find . -name "*.java"`;
+    my @list = `cd $path && find . -name "*.java"`;
 
     my $classes = {};
     foreach (@list) {

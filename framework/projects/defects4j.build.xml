@@ -107,7 +107,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Test has to be provided as property "test.entry" (class::method)
     and the output is redirected to "test.output"
 -->
-    <target name="monitor.test"  description="Run a single test class or method and monitor class loader">
+    <target name="monitor.test" depends="compile" description="Run a single test class or method and monitor class loader">
         <fail message="Property test.entry not set!" unless="test.entry" />
         <fail message="Property test.output not set!" unless="test.output" />
 
@@ -120,6 +120,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <classpath>
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${junit.jar}" />
+                <pathelement path="${build.home}/gen-tests" />
             </classpath>
         </java>
     </target>
