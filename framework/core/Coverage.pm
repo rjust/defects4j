@@ -46,7 +46,7 @@ my @COLS = DB::get_tab_columns($TAB_COVERAGE) or die "Cannot obtain table column
 
 # Default paths
 my $SER_FILE = "cobertura.ser";
-my $XML_FILE = "cobertura.xml";
+my $XML_FILE = "coverage.xml";
 
 # Corbetura scripts
 my $CORBETURA_MERGE  = "$SCRIPT_DIR/projects/lib/cobertura-merge.sh";
@@ -198,7 +198,7 @@ sub _get_info_from_xml {
     my ($xml, ) = @_;
     my ($lt, $lc, $bt, $bc);
 
-    -e $xml or die "no xml file";
+    -e $xml or die "Result xml file does not exist: $xml!";
 
     # Parse XML file
     open FH, $xml;

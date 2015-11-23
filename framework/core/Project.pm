@@ -386,7 +386,7 @@ sub checkout_vid {
     $self->apply_patch($work_dir, $src_patch) or return 0;
 
     # Write program and version id of buggy program version to config file
-    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}b");
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}b"});
 
     # Commit and tag the buggy program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_BUGGY;
