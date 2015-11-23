@@ -269,7 +269,7 @@ sub _run_mutation {
 
     # Create mutation definitions (mml file)
     my $mml_dir = "$TMP_DIR/.mml";
-    system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR -o $mml_dir -b $bid");
+    system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR/$bid.src -o $mml_dir -b $bid");
     my $mml_file = "$mml_dir/$bid.mml.bin";
     -e $mml_file or die "Mml file does not exist: $mml_file!";
 

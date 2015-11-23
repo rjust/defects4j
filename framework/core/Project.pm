@@ -707,20 +707,22 @@ sub mutate {
 
 =pod
 
-  $project->mutation_analysis([log_file])
+  $project->mutation_analysis(log_file, relevant_tests [, single_test])
 
 Performs mutation analysis for the developer-written tests of the checked-out program
 version.
-If F<log_file> is provided then the output of the mutation analysis process is redirected
-to this file.
+The output of the mutation analysis process is redirected to F<log_file>, and the boolean
+parameter C<relevant_tests> indicates whether only relevant test cases are executed. If
+C<single_test> is specified, only that test is run.
+
 B<Note that C<mutate> is not called implicitly>.
 
 =cut
 sub mutation_analysis {
-    @_ >= 1 or die $ARG_ERROR;
-    my ($self, $log_file, $single_test) = @_;
-    my $log = "";
-    $log = "-logfile $log_file" if defined $log_file;
+    @_ >= 3 or die $ARG_ERROR;
+    my ($self, $log_file, $relevant_tests, $single_test) = @_;
+    my $log = "-logfile $log_file";
+    my $relevant = $relevant_tests ? "true" : "false";
 
     my $single_test_opt = "";
     if (defined $single_test) {
@@ -733,36 +735,41 @@ sub mutation_analysis {
     return $self->_ant_call("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
-                            "-Dd4j.relevant.tests.only=true " .
+                            "-Dd4j.relevant.tests.only=$relevant " .
                             "$log $single_test_opt");
 }
 
 =pod
 
-  $project->mutation_analysis_ext(test_dir, test_include [, log_file])
+  $project->mutation_analysis_ext(test_dir, test_include, log_file [, single_test])
 
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
 C<test_include>. 
-If F<log_file> is provided then the output of the mutation analysis process is redirected
-to this file.
+The output of the mutation analysis process is redirected to F<log_file>. If
+C<single_test> is specified, only that test is run. 
+
 B<Note that C<mutate> is not called implicitly>.
 
 =cut
 sub mutation_analysis_ext {
-    @_ >= 3 or die $ARG_ERROR;
-    my ($self, $dir, $include, $log_file) = @_;
-    my $log = "";
-    $log = "-logfile $log_file" if defined $log_file;
+    @_ >= 4 or die $ARG_ERROR;
+    my ($self, $dir, $include, $log_file, $single_test) = @_;
+    my $log = "-logfile $log_file";
 
     my $basedir = $self->{prog_root};
+
+    my $single_test_opt = "";
+    if (defined $single_test) {
+        $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
+        $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
+    }
 
     return $self->_ant_call("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
-                            "$log");
+                            "$log $single_test_opt");
 }
-
 
 =pod
 
