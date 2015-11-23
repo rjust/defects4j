@@ -216,15 +216,14 @@ sub check_vid {
 
 =pod
 
-  Utils::tag_prefix(pid, vid)
+  Utils::tag_prefix(pid, bid)
 
 Returns the Defects4J prefix for tagging a buggy or fixed program version.
 
 =cut
 sub tag_prefix {
     @_ == 2 or die $ARG_ERROR;
-    my ($pid, $vid) = @_;
-    my $bid = check_vid($vid)->{bid};
+    my ($pid, $bid) = @_;
     return "D4J_" . $pid . "_" . $bid . "_";
 }
 

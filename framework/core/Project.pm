@@ -306,7 +306,7 @@ sub checkout_vid {
             #       the same pid and bid.
             if (_can_reuse_work_dir($pid, $vid, $old_pid, $old_vid)) {
                 my $version_type = Utils::check_vid($vid)->{type};
-                my $tag_name = Utils::tag_prefix($pid, $vid) .
+                my $tag_name = Utils::tag_prefix($pid, $bid) .
                         ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
                 my $cmd = "cd $work_dir" .
                           " && git checkout $tag_name 2>&1" .
@@ -333,7 +333,7 @@ sub checkout_vid {
     Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}f"});
 
     # Commit and tag the post-fix revision
-    my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX;
+    my $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_POST_FIX;
     $cmd = "cd $work_dir" .
            " && git init 2>&1" .
            " && echo \".svn\" > .gitignore" .
@@ -355,7 +355,7 @@ sub checkout_vid {
         # Anything to commit?
         if ($changes) {
             # Commit and tag the compilable post-fix revision
-            my $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_POST_FIX_COMP;
+            my $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_POST_FIX_COMP;
             $cmd = "cd $work_dir" .
                    " && git add -A 2>&1" .
                    " && git commit -a -m \"$tag_name\" 2>&1" .
@@ -372,7 +372,7 @@ sub checkout_vid {
     $self->_write_props($vid, $work_dir);
 
     # Commit and tag the fixed program version
-    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_FIXED;
+    $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;
     $cmd = "cd $work_dir" .
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
@@ -386,10 +386,10 @@ sub checkout_vid {
     $self->apply_patch($work_dir, $src_patch) or return 0;
 
     # Write program and version id of buggy program version to config file
-    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => $vid});
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}b");
 
     # Commit and tag the buggy program version
-    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_BUGGY;
+    $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_BUGGY;
     $cmd = "cd $work_dir" .
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
@@ -399,7 +399,7 @@ sub checkout_vid {
 
     # Checkout post-fix revision and apply unmodified diff to obtain the pre-fix revision
     my $tmp_file = "$work_dir/.defects4j.diff";
-    $cmd = "cd $work_dir && git checkout " . Utils::tag_prefix($pid, $vid) . "$TAG_POST_FIX 2>&1";
+    $cmd = "cd $work_dir && git checkout " . Utils::tag_prefix($pid, $bid) . "$TAG_POST_FIX 2>&1";
     `$cmd`; $?==0 or confess("Couldn't checkout $TAG_POST_FIX");
     my $rev1 = $self->lookup("${bid}f");
     my $rev2 = $self->lookup("${bid}b");
@@ -412,7 +412,7 @@ sub checkout_vid {
     system("rm $tmp_file");
 
     # Commit and tag the pre-fix revision
-    $tag_name = Utils::tag_prefix($pid, $vid) . $TAG_PRE_FIX;
+    $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_PRE_FIX;
     $cmd = "cd $work_dir" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
@@ -420,7 +420,7 @@ sub checkout_vid {
             or confess("Couldn't tag pre-fix revision!");
 
     # Checkout the requested program version
-    $tag_name = Utils::tag_prefix($pid, $vid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
+    $tag_name = Utils::tag_prefix($pid, $bid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
     $cmd = "cd $work_dir && git checkout $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Check out program version: $pid-$vid")
             or confess("Couldn't check out program version!");
@@ -492,7 +492,6 @@ sub run_relevant_tests {
 
     return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
 }
-
 
 =pod
 
@@ -634,18 +633,18 @@ sub monitor_test {
 
 =pod
 
-  $project->coverage_instrument(classes_file)
+  $project->coverage_instrument(instrument_classes)
 
-Instruments classes listed in F<classes_file> for use with cobertura.
+Instruments classes listed in F<instrument_classes> for use with cobertura.
 
 =cut
 sub coverage_instrument {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $modified_classes_file) = @_;
+    my ($self, $instrument_classes) = @_;
     my $work_dir = $self->{prog_root};
 
-    -e $modified_classes_file or die "modified classes file '$modified_classes_file' does not exist";
-    open FH, $modified_classes_file;
+    -e $instrument_classes or die "Instrument classes file '$instrument_classes' does not exist!";
+    open FH, $instrument_classes;
     my @classes = ();
     {
         $/ = "\n";
@@ -653,7 +652,7 @@ sub coverage_instrument {
     }
     close FH;
 
-    die "no modified classes" if scalar @classes == 0;
+    die "No classes to instrument found!" if scalar @classes == 0;
     my @classes_and_inners = ();
     for (@classes) {
         s/\./\//g;
@@ -668,31 +667,8 @@ sub coverage_instrument {
     my $config = {$PROP_INSTRUMENT => $list};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
-
     # Call ant to do the instrumentation
     return $self->_ant_call("coverage.instrument");
-}
-
-=pod
-
-  $project->coverage(out_file [, single_test])
-
-Executes the developer-written tests of the checked-out program version and measures code
-coverage with cobertura. If C<single_test> is provided, only this test method is executed.
-Format of C<single_test>: <classname>::<methodname>.
-
-=cut
-sub coverage {
-    @_ >= 2 or die $ARG_ERROR;
-    my ($self, $out_file, $single_test) = @_;
-
-    my $single_test_opt = "";
-    if (defined $single_test) {
-        $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
-        $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
-    }
-
-    return $self->_ant_call("coverage", "-DOUTFILE=$out_file $single_test_opt");
 }
 
 =pod
