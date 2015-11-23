@@ -207,7 +207,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <path refid="d4j.test.classpath"/>
             </classpath>
 
-            <test name="${test.entry.class}" if="test.entry.class" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
             <batchtest unless="test.entry.class" fork="no">
                 <fileset refid="major.tests"/>
             </batchtest>
