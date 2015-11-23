@@ -94,7 +94,7 @@ A detailed documentation for any script or module is available as
 
 [htmldocs]: http://homes.cs.washington.edu/~rjust/defects4j/html_doc/index.html
 
-Database abstraction
+Command-line interface
 -----------------------
 Use `framework/bin/defects4j` to execute any of the following commands:
 
@@ -103,14 +103,15 @@ Use `framework/bin/defects4j` to execute any of the following commands:
 | info           | View configuration of a specific project or summary of a specific bug                             |
 | checkout       | Checkout a buggy or a fixed project version                                                       |
 | compile        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| test           | Run developer-written tests on a buggy or a fixed project version                                 |
-| mutation       | Run mutation analysis for the developer-written tests on a faulty or a fixed project version      |
-| coverage       | Run code coverage analysis for the developer-written tests on a faulty or a fixed project version |
-| export         | Export properties such as classpaths, directories, or lists of tests                              |
+| test           | Run a single test or a test suite on a buggy or a fixed project version                           |
+| mutation       | Run mutation analysis on a buggy or a fixed project version                                       |
+| coverage       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| monitor.test   | Monitor the class loader during the execution of a single test or a test suite                    |
+| export         | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
-Export properties
---------------------
+Export version-specific properties
+----------------------------------
 Use `defects4j export -p <property_name> [-o output_file]` in the working
 directory to export a version-specific property:
 

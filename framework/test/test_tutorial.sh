@@ -38,3 +38,14 @@ defects4j test || die "test program version $pid-$vid"
 actual=$(num_triggers "$work_dir/failing_tests")
 expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
 [ $actual -eq $expected ] || die "verify number of triggering tests"
+
+vid=${bid}f
+# Checkout fixed version
+defects4j checkout -p $pid -v $vid -w . || die "checkout program version $pid-$vid"
+
+# Compile fixed version
+defects4j compile || die "compile program version $pid-$vid"
+
+# Run coverage and mutation analysis
+defects4j coverage -r || die "coverage analysis $pid-$vid"
+defects4j mutation -r || die "coverage analysis $pid-$vid"
