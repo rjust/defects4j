@@ -30,14 +30,13 @@ create_mml.pl -- create a Major-compatible MML file, which defines program mutat
 
 =head1 SYNOPSIS
 
-  create_mml.pl -p project_id -c classes_dir -o out_dir [-b bug_id]
+  create_mml.pl -p project_id -c classes_list -o out_dir -b bug_id
 
 =head1 DESCRIPTION
 
-Generates an MML file for every bug id listed in F<classes_dir> -- for every bug id, a list
-of classes that should be mutated has to be provided in a file with the following name:
-F<C<bug_id>.src>.
-The generated MML files are named F<C<bug_id>.mml> and written to F<out_dir>.
+Generates an MML file for the given C<bug_id>. The file F<classes_list> has to proivde the
+list of classes that should be mutated.
+The generated MML file is named F<C<bug_id>.mml> and written to F<out_dir>.
 
 =head1 OPTIONS
 
@@ -50,11 +49,11 @@ See L<Project|Project/"Available Project IDs"> module for available project IDs.
 
 =item -b C<bug_id>
 
-The bug id for which the MML file is generated (optional). Format: C<\d+>.
+The bug id for which the MML file is generated. Format: C<\d+>.
 
-=item -c F<classes_dir>
+=item -c F<classes_list>
 
-The directory that contains the lists of classes that should be mutated.
+The file contains all classes that should be mutated -- one class per line.
 
 =item -o F<out_dir>
 
@@ -82,17 +81,15 @@ use Utils;
 my %cmd_opts;
 getopts('p:c:o:b:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{c} and defined $cmd_opts{o};
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{c} and defined $cmd_opts{o} and defined $cmd_opts{b};
 
 my $PID = $cmd_opts{p};
-my $CLASS_DIR = Utils::get_abs_path($cmd_opts{c});
+my $CLASSES = Utils::get_abs_path($cmd_opts{c});
 my $OUT_DIR = Utils::get_abs_path($cmd_opts{o});
 my $BID = $cmd_opts{b};
 
-if (defined $BID) {
-    $BID =~ /^(\d+)$/ or die "Wrong bug id format (\\d+): $BID!";
-}
--e $CLASS_DIR or die "Directory with lists of classes does not exist: $CLASS_DIR";
+$BID =~ /^(\d+)$/ or die "Wrong bug id format (\\d+): $BID!";
+-e $CLASSES or die "File with classes to mutate does not exist: $CLASSES";
 
 my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
 
@@ -101,57 +98,26 @@ my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
 
 system("mkdir -p $OUT_DIR");
 
-my @ids;
-# Use specific bug id
-if (defined $BID) {
-    @ids = ($BID);
-} else {
-    @ids = _get_bug_ids();
-}
+open(IN, $CLASSES);
+my @classes = <IN>;
+close(IN);
 
-foreach my $bid (@ids) {
-    my @classes = _get_classes_list($bid);
-    my $file = "$OUT_DIR/$bid.mml";
+my $file = "$OUT_DIR/$BID.mml";
 
-    # Generate mml file by enabling operators for listed classes only
-    open(FILE, ">$file") or die "Cannot write mml file ($file): $!";
-    # Add operator definitions from template
-    print FILE $TEMPLATE;
-    # Enable operators for all classes
-    foreach my $class (@classes) {
-        print FILE "\n// Enable operators for $class\n";
-        foreach my $op (@ops) {
-            # Skip disabled operators
-            next if $TEMPLATE =~ /-$op<"$class">/;
-            print FILE "$op<\"$class\">;\n";
-        }
+# Generate mml file by enabling operators for listed classes only
+open(FILE, ">$file") or die "Cannot write mml file ($file): $!";
+# Add operator definitions from template
+print FILE $TEMPLATE;
+# Enable operators for all classes
+foreach my $class (@classes) {
+    chomp $class;
+    print FILE "\n// Enable operators for $class\n";
+    foreach my $op (@ops) {
+        # Skip disabled operators
+        next if $TEMPLATE =~ /-$op<"$class">/;
+        print FILE "$op<\"$class\">;\n";
     }
-    close(FILE);
-    my $log = `$MAJOR_ROOT/bin/mmlc $file 2>&1`;
-    $? == 0 or die "Cannot compile mml file: $file\n$log";
 }
-
-#
-# Return list of all classes that should be mutated for a given bug id
-#
-sub _get_classes_list {
-    my $bid = shift;
-    my $list = `cat $CLASS_DIR/$bid.src`;
-    $? == 0 or die "Cannot read classes list for bug id: $bid!";
-    return split("\n", $list);
-}
-
-#
-# Get all bug ids for which we have a list of classes
-#
-sub _get_bug_ids {
-    opendir(DIR, $CLASS_DIR);
-    my @files = readdir(DIR);
-    closedir(DIR);
-    my @ids = ();
-    foreach (@files) {
-        /(\d+)\.src/ or next;
-        push(@ids, $1);
-    }
-    return @ids;
-}
+close(FILE);
+my $log = `$MAJOR_ROOT/bin/mmlc $file 2>&1`;
+$? == 0 or die "Cannot compile mml file: $file\n$log";
