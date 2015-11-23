@@ -28,12 +28,13 @@ d4j-coverage -- run code coverage analysis for a checked-out project version.
 
 =head1 SYNOPSIS
 
-  d4j-coverage [-w work_dir] [-r | -t single_test]
+  d4j-coverage [-w work_dir] [-r | [-t single_test] [-s test_suite]] [-i instrument_classes]
 
 =head1 DESCRIPTION
 
-This script executes the developer-written test suite of a checked-out project version and
-measures statement and branch coverage.
+This script executes a test or a test suite on a checked-out project version and
+measures statement and branch coverage, using Cobertura. See Cobertura's documentation
+for their definition of branch coverage.
 
 =head1 OPTIONS
 
@@ -46,12 +47,44 @@ the current directory.
 
 =item -r
 
-Only execute relevant tests (optional). By default all tests are executed.
+Only execute relevant developer-written tests (optional). By default all developer-written
+tests of the checked-out project version are executed.
 
 =item -t C<single_test>
 
 Only run this single test method (optional). By default all tests are executed.
 Format: <test_class>::<test_method>.
+
+=item -s F<test_suite>
+
+The archive file name of an external test suite (optional). The default test suite is the
+developer-written test suite of the checked-out project version.
+See L<Test suites|/"Test suites">.
+
+=item -i F<instrument_classes>
+
+Measure code coverage for all classes listed in F<instrument_classes> (optional). By
+default, code coverage is measured only for the classes modified by the bug fix. The file
+F<instrument_classes> must contain fully-qualified class names -- one class per line.
+
+=back
+
+=head1 Test suites
+
+An external test suite has to be provided as an archive that contains the test sources.
+Format of the archive file name:
+
+F<C<project_id>-C<version_id>-C<test_suite_src>.C<test_id>.tar.bz2>
+
+Examples:
+
+=over 4
+
+=item * F<Lang-11f-randoop.1.tar.bz2>
+
+=item * F<Lang-12b-evosuite-weakmutation.1.tar.bz2>
+
+=item * F<Lang-12f-evosuite-branch.1.tar.bz2>
 
 =back
 
@@ -65,22 +98,19 @@ use Utils;
 use Project;
 use Coverage;
 use Getopt::Std;
-
-#
-# Issue usage message and quit
-#
-sub _usage {
-    print "usage: $0 [-w work_dir] [-r | -t single_test]\n";
-    exit 1;
-}
+use Pod::Usage;
 
 my %cmd_opts;
-getopts('w:rt:', \%cmd_opts) or _usage();
+getopts('t:w:rs:i:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
 
-my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
-my $REL_TESTS = defined $cmd_opts{r} ? 1 : 0;
+my $WORK_DIR    = Utils::get_abs_path($cmd_opts{w} // ".");
+my $REL_TESTS   = defined $cmd_opts{r} ? 1 : 0;
 my $SINGLE_TEST = $cmd_opts{t};
-_usage() if (defined $SINGLE_TEST && $REL_TESTS==1);
+my $TEST_SUITE  = $cmd_opts{s};
+my $INSTRUMENT  = $cmd_opts{i};
+if ((defined $SINGLE_TEST || defined $TEST_SUITE) && $REL_TESTS==1) {
+    pod2usage( { -verbose => 1, -input => __FILE__} );
+}
 
 my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
 unless(defined $config) {
@@ -96,16 +126,31 @@ my $project = Project::create_project($pid);
 $project->{prog_root} = $WORK_DIR;
 
 my $src_dir = $project->src_dir($vid);
-my $classes = "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
+# Classes to instrument for coverage analysis -- default is all modified classes
+my $classes = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
 
-my $coverage = Coverage::coverage($project, $classes, $src_dir) or die "Cannot determine code coverage!";
+my $test_log = "$WORK_DIR/failing_tests";
+system(">$test_log");
 
-printf("%18s: %d\n", "Lines total", $coverage->{lines_total});
-printf("%18s: %d\n", "Lines covered", $coverage->{lines_covered});
-printf("%18s: %d\n", "Conditions total", $coverage->{branches_total});
-printf("%18s: %d\n", "Conditions covered", $coverage->{branches_covered});
-printf("%18s: %.1f%%\n", "Line coverage", $coverage->{lines_covered}/$coverage->{lines_total}*100);
-printf("%18s: %.1f%%\n", "Condition coverage", $coverage->{branches_covered}/$coverage->{branches_total}*100);
+# Run the test suite, according to the provided flags
+my $cov_results;
+if (defined $TEST_SUITE) {
+    # Compile and run external test suite
+    my $test_dir = "$WORK_DIR/.test_suite";
+    Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
+    $cov_results = Coverage::coverage_ext($project, $classes, $src_dir, $test_dir, "*.java", $test_log);
+} else {
+    # Compile and run developer-written tests
+    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, $REL_TESTS);
+}
+defined $cov_results or die "Couldn't obtain coverage results!";
+
+printf("%18s: %d\n",     "Lines total",        $cov_results->{lines_total});
+printf("%18s: %d\n",     "Lines covered",      $cov_results->{lines_covered});
+printf("%18s: %d\n",     "Conditions total",   $cov_results->{branches_total});
+printf("%18s: %d\n",     "Conditions covered", $cov_results->{branches_covered});
+printf("%18s: %.1f%%\n", "Line coverage",      $cov_results->{lines_covered}/$cov_results->{lines_total}*100);
+printf("%18s: %.1f%%\n", "Condition coverage", $cov_results->{branches_covered}/$cov_results->{branches_total}*100);
 #printf("%17s: %.1f seconds\n", "Total run time", ($timeAnalysis));
 
 1;

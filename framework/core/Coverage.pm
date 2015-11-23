@@ -31,6 +31,7 @@ Coverage.pm -- helper subroutines for code coverage analysis.
 This module provides helper subroutines for code coverage analysis using Cobertura.
 
 =cut
+# TODO: Clean up this module and provide a ".ser" parser for Cobertura's coverage results.
 package Coverage;
 
 use warnings;
@@ -44,10 +45,8 @@ use DB;
 my @COLS = DB::get_tab_columns($TAB_COVERAGE) or die "Cannot obtain table columns!";
 
 # Default paths
-my $FAIL_FILE = "coverage_fails";
 my $SER_FILE = "cobertura.ser";
-my $XML_FILE = "coverage/coverage.xml";
-my $XML_DIR  = "coverage";
+my $XML_FILE = "cobertura.xml";
 
 # Corbetura scripts
 my $CORBETURA_MERGE  = "$SCRIPT_DIR/projects/lib/cobertura-merge.sh";
@@ -57,54 +56,59 @@ my $CORBETURA_REPORT = "$SCRIPT_DIR/projects/lib/cobertura-report.sh";
 
 =head2 Static subroutines
 
-  Coverage::coverage(project_ref, modified_classes_file, src_dir, [single_test, [merge_with]])
+  Coverage::coverage(project_ref, instrument_classes, src_dir, log_file, relevant_tests, [single_test, [merge_with]])
 
-Measures code coverage for a provided L<Project> reference. F<modified_classes_file>
-specifies a file listing all the classes which should be instrumented.  F<src_dir>
+Measures code coverage for a provided L<Project> reference. F<instrument_classes>
+is the name of a file that lists all the classes which should be instrumented.  F<src_dir>
 provides the root directory of the source code, which is necessary to generate reports.
 
+The test results are written to F<log_file>, and the boolean parameter C<relevant_tests>
+indicates whether only relevant test cases are executed.
+
 If C<single_test> is specified, only that test is run. This is meant to be used
-in conjunction with C<merge_with> (= path to a .ser file obtained by running
-coverage) to enable incremental analysis.
+in conjunction with C<merge_with>, which is the path to another .ser file obtained by
+running coverage. This enables incremental analyses.
 
 =cut
 sub coverage {
-	@_ >= 3 or die $ARG_ERROR;
-	my ($project, $modified_classes_file, $src_dir, $single_test, $merge_with) = @_;
+	@_ >= 5 or die $ARG_ERROR;
+	my ($project, $instrument_classes, $src_dir, $log_file, $relevant_tests, $single_test, $merge_with) = @_;
 
-    # Instrument all classes provided
-	$project->coverage_instrument($modified_classes_file) or return undef;
-
-    # Init file for failing test cases (for debugging purposes only -- the test
-    # suite is required to pass)
-	my $failure_file = "$project->{prog_root}/$FAIL_FILE";
-	system(">$failure_file");
-
-    # Execute test suite
-    $project->run_relevant_tests($failure_file) or return undef;
-    Utils::has_failing_tests($failure_file) and return undef;
-
-	my $root = $project->{prog_root};
+    my $root = $project->{prog_root};
 	my $datafile = "$root/datafile";
 	my $xmlfile  = "$root/$XML_FILE";
-	my $xmldir   = "$root/$XML_DIR";
-	my $my_ser   = "$root/$SER_FILE";
+	my $serfile  = "$root/$SER_FILE";
 
-    # Generate coverage report
+    # Remove stale data file
+    system("rm -f $serfile");
+
+    # Instrument all classes provided
+	$project->coverage_instrument($instrument_classes) or return undef;
+
+    # Execute test suite
+    if ($relevant_tests) {
+        $project->run_relevant_tests($log_file) or return undef;
+    } else {
+        $project->run_tests($log_file) or return undef;
+    }
+    Utils::has_failing_tests($log_file)
+            and print(STDERR "WARNING: Some tests failed (see $log_file)!\n");
+
+	# Generate coverage report
 	my $result_xml;
 	if (defined $merge_with) {
-		print "Merging & creating new report via shell script..\n";
+		print(STDERR "Merging & creating new report via shell script..\n");
 
 		# Remove stale data files
 		system("rm -f $datafile") if -e $datafile;
 		system("rm -f $xmlfile")  if -e $xmlfile ;
 
-		system("sh $CORBETURA_MERGE --datafile $datafile $merge_with $my_ser >/dev/null 2>&1") == 0 or die "could not merge results";
-		system("sh $CORBETURA_REPORT --format xml --datafile $datafile --destination $xmldir >/dev/null 2>&1") == 0 or die "could not create report";
+		system("sh $CORBETURA_MERGE --datafile $datafile $merge_with $serfile >/dev/null 2>&1") == 0 or die "could not merge results";
+		system("sh $CORBETURA_REPORT --format xml --datafile $datafile --destination $root >/dev/null 2>&1") == 0 or die "could not create report";
 
 	} else {
 		# Generate XML directly if merge is not needed.
-		$project->coverage_report($src_dir) or die "could not create report";
+		$project->coverage_report($src_dir) or die "Could not create coverage report";
 	}
 
 	return  _get_info_from_xml($xmlfile);
@@ -112,20 +116,20 @@ sub coverage {
 
 =pod
 
-  Coverage::coverage_ext(project, classes_to_instrument_file, src_dir, test_dir, include_pattern, log_file)
+  Coverage::coverage_ext(project, instrument_classes, src_dir, test_dir, include_pattern, log_file)
 
-Determines code coverage for a generated test suite.
-F<classes_to_instrument_file> specifies a file listing all the classes which
+Determines code coverage for an external test suite.
+F<instrument_classes> is the name of a file that lists all the classes which
 should be instrumented.  C<src_dir> provides the root directory of the source
 code, which is necessary to generate reports.
 
 =cut
 sub coverage_ext {
 	@_ == 6 or die $ARG_ERROR;
-	my ($project, $classes_file, $src_dir, $test_dir, $include, $log_file) = @_;
+	my ($project, $instrument_classes, $src_dir, $test_dir, $include, $log_file) = @_;
 
     # Instrument all classes provided
-	$project->coverage_instrument($classes_file) or return undef;
+	$project->coverage_instrument($instrument_classes) or return undef;
 
     # Execute test suite
 	$project->run_ext_tests($test_dir, $include, $log_file) or die "Could not run test suite";
@@ -137,7 +141,6 @@ sub coverage_ext {
 	my $xmlfile  = "$project->{prog_root}/$XML_FILE";
 	return _get_info_from_xml($xmlfile);
 }
-
 
 =pod
 
@@ -167,7 +170,6 @@ sub insert_row {
     my $row = join(",", @tmp);
     $dbh->do("INSERT INTO $TAB_COVERAGE VALUES ($row)");
 }
-
 
 =pod
 
