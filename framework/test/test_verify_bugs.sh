@@ -38,7 +38,7 @@ for pid in "${projects[@]}"; do
             defects4j checkout -p $pid -v "$vid" -w "$work_dir" || die "checkout: $pid-$vid"
             defects4j test -r -w "$work_dir" || die "run relevant tests: $pid-$vid"
             
-            triggers=$(num_triggers "$work_dir/.failing_tests")
+            triggers=$(num_triggers "$work_dir/failing_tests")
             # Expected number of failing tests for each fixed version is 0!
             if [ $v == "f" ]; then
                 [ $triggers -eq 0 ] \
@@ -52,7 +52,7 @@ for pid in "${projects[@]}"; do
             [ $triggers -eq $expected ] \
                     || die "verify number of triggering tests: $pid-$vid (expected: $expected, actual: $triggers)"
             for t in $(get_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid"); do
-                grep -q "$t" "$work_dir/.failing_tests" || die "verify name of triggering tests ($t not found)"
+                grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
             done
         done
     done
