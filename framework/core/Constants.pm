@@ -146,6 +146,12 @@ The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 =cut
 our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
 
+# Check whether Defects4J has been properly initialized
+-e "$REPO_DIR/README"
+        or die("Couldn't find project repositories! Did you run 'init.sh'?\n\n");
+-e "$TESTGEN_LIB_DIR"
+        or die("Couldn't find external libraries! Did you run 'init.sh'?\n\n");
+
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
 unshift(@INC, $SCRIPT_DIR);
