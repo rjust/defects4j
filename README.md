@@ -51,7 +51,8 @@ Getting started
 2. Initialize Defects4J (download the project repositories and external libraries):
     - `cd defects4j`
     - `./init.sh`
-   These are not included in this repository for size purposes and to avoid
+
+   Project repositories and external libraries are not included for size purposes and to avoid
    redundancies.
 
 3. Add Defects4J's executables to your PATH:
