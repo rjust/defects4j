@@ -91,8 +91,6 @@ sub coverage {
     } else {
         $project->run_tests($log_file) or return undef;
     }
-    Utils::has_failing_tests($log_file)
-            and print(STDERR "WARNING: Some tests failed (see $log_file)!\n");
 
 	# Generate coverage report
 	my $result_xml;
