@@ -51,7 +51,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <property name="d4j.dir.lib.testgen.rt" value="${d4j.home}/framework/lib/test_generation/runtime"/>
     <!-- All runtime libraries of test generation tools (necessary to run generated tests)-->
     <path id="d4j.lib.testgen.rt">
-        <fileset dir="${d4j.dir.lib.testgen.rt}" includes="*.jar" />
+        <fileset dir="${d4j.dir.lib.testgen.rt}" includes="*-rt.jar" />
     </path>
 
     <!-- Location of customized JUnit formatter-->
