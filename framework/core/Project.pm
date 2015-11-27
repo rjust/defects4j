@@ -802,14 +802,13 @@ sub run_evosuite {
     close(IN);
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -cp $SCRIPT_DIR/projects/lib/evosuite.jar org.evosuite.EvoSuite " .
+              " && java -cp $TESTGEN_LIB_DIR/evosuite.jar org.evosuite.EvoSuite " .
                 "-class $class " .
                 "-projectCP $cp " .
                 "-Dtest_dir=evosuite-$criterion " .
                 "-criterion $criterion " .
                 "-Dsearch_budget=$time " .
                 "-Dassertion_timeout=$timeout " .
-                "-Djunit_suffix=EvoSuite_$criterion " .
                 "-Dshow_progress=false " .
                 "$config 2>&1";
 
@@ -852,7 +851,7 @@ sub run_randoop {
     close(IN);
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -ea -classpath $SCRIPT_DIR/projects/lib/randoop.jar:$cp randoop.main.Main gentests " .
+              " && java -ea -classpath $TESTGEN_LIB_DIR/randoop.jar:$cp randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--timelimit=$timeout " .
