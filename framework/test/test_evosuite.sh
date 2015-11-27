@@ -37,12 +37,12 @@ check_target_classes() {
 for type in f b; do
     # Run EvoSuite for all modified classes and check whether all target classes are tested
     vid=${bid_mod}$type
-    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -b 10 -a 10 || die "run EvoSuite (modified classes) on $pid-$vid"
+    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -b 30 -a 10 || die "run EvoSuite (modified classes) on $pid-$vid"
     check_target_classes $vid $bid_mod "modified_classes"
 
     # Run EvoSuite for all loaded classes and check whether all target classes are tested
     vid=${bid_all}$type
-    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -A -b 10 -a 10 || die "run EvoSuite (loaded classes) on $pid-$vid"
+    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -A -b 30 -a 10 || die "run EvoSuite (loaded classes) on $pid-$vid"
     check_target_classes $vid $bid_all "loaded_classes"
 done
 
