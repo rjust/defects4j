@@ -43,8 +43,17 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Dependencies used by all projects -->
     <property name="junit.jar"  value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-    <property name="jcrasher.jar"  value="${d4j.home}/framework/projects/lib/jcrasher-2.1.3.jar"/>
     <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
+
+    <!-- Location of libraries of test generation tool-->
+    <property name="d4j.dir.lib.testgen.gen" value="${d4j.home}/framework/lib/test_generation/generation"/>
+    <!-- Location of runtime libraries of test generation tools-->
+    <property name="d4j.dir.lib.testgen.rt" value="${d4j.home}/framework/lib/test_generation/runtime"/>
+    <!-- All runtime libraries of test generation tools (necessary to run generated tests)-->
+    <path id="d4j.lib.testgen.rt">
+        <fileset dir="${d4j.dir.lib.testgen.rt}" includes="*.jar" />
+    </path>
+
     <!-- Location of customized JUnit formatter-->
     <property name="formatter.jar" value="${d4j.home}/framework/lib/formatter.jar"/>
     <!-- Directory of instrumented classes (e.g., for coverage analysis)-->
@@ -130,6 +139,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement path="${junit.jar}" />
                 <pathelement path="${build.home}/gen-tests" />
                 <path refid="d4j.test.classpath"/>
+                <!-- Add dependencies to runtime libraries of test generation tools -->
+                <path refid="d4j.lib.testgen.rt"/>
             </classpath>
         </java>
     </target>
@@ -171,6 +182,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <then>
                 <fileset id="major.tests" dir="${d4j.test.dir}">
                     <include name="**/${d4j.test.include}"/>
+                    <!-- Ignore helper classes that do not contain test cases -->
+                    <exclude name="**/*_scaffolding.java"/>
                 </fileset>
             </then>
             <else>
@@ -205,6 +218,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement location="${d4j.dir.classes.mutated}" />
                 <pathelement path="${build.home}/gen-tests" />
                 <path refid="d4j.test.classpath"/>
+                <!-- Add dependencies to runtime libraries of test generation tools -->
+                <path refid="d4j.lib.testgen.rt"/>
             </classpath>
 
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
@@ -235,8 +250,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                <classpath>
                     <path refid="d4j.test.classpath" />
                     <pathelement path="${classes.dir}" />
-                    <!-- Add dependencies to test generation tools -->
-                    <pathelement path="${jcrasher.jar}" />
+                    <!-- Add dependencies to runtime libraries of test generation tools -->
+                    <path refid="d4j.lib.testgen.rt"/>
                </classpath>
         </javac>
     </target>
@@ -253,7 +268,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <echo message="classes.dir: ${classes.dir}" />
         <echo message="build.home: ${build.home}" />
 
-        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="yes" forkmode="perBatch" showOutput="true">
             <classpath>
                 <!-- Make sure that instrumented classes appear at the beginning of the
                      classpath -->
@@ -261,11 +276,11 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement path="${build.home}/gen-tests" />
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${classes.dir}" />
-                <!-- Add dependencies to test generation tools -->
-                <pathelement path="${jcrasher.jar}" />
+                <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to code coverage tools -->
                 <pathelement path="${cobertura.jar}" />
-                <path refid="d4j.test.classpath"/>
+                <!-- Add dependencies to runtime libraries of test generation tools -->
+                <path refid="d4j.lib.testgen.rt"/>
             </classpath>
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
@@ -274,6 +289,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <batchtest unless="test.entry.class">
                     <fileset dir="${d4j.test.dir}">
                         <include name="**/${d4j.test.include}"/>
+                        <!-- Ignore helper classes that do not contain test cases -->
+                        <exclude name="**/*_scaffolding.java"/>
                     </fileset>
                 </batchtest>
         </junit>
