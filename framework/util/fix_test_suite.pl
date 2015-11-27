@@ -232,7 +232,7 @@ suite: foreach (@list) {
         # Compile generated tests
         my $comp_log = "$TMP_DIR/comp_tests.log";
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
-            $LOG->log_msg(" - Tests do not compile: $name");
+            $LOG->log_file(" - Tests do not compile: $name", $comp_log);
             _rm_classes($comp_log, $src, $name);
             # Indicate that test suite changed
             $fixed = 1;
@@ -290,8 +290,7 @@ suite: foreach (@list) {
             $counter = $RUNS;
             # Indicate that test suite changed
             $fixed = 1;
-            $LOG->log_msg(" - Removing test methods: $name");
-            $LOG->log_msg(join("\n", @{$list->{methods}}));
+            $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " test methods: $name", $tests);
             system("$UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
         }
     }
