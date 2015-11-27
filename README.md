@@ -48,9 +48,9 @@ Getting started
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
-2. Download the repositories for the projects by running:
-    - `cd defects4j/project_repos`
-    - `./get_repos.sh`
+2. Initialize Defects4J (download the project repositories and external libraries):
+    - `cd defects4j`
+    - `./init.sh`
    These are not included in this repository for size purposes and to avoid
    redundancies.
 
