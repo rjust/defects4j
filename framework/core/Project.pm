@@ -802,7 +802,7 @@ sub run_evosuite {
     close(IN);
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -cp $TESTGEN_LIB_DIR/evosuite.jar org.evosuite.EvoSuite " .
+              " && java -cp $TESTGEN_LIB_DIR/evosuite-current.jar org.evosuite.EvoSuite " .
                 "-class $class " .
                 "-projectCP $cp " .
                 "-Dtest_dir=evosuite-$criterion " .
@@ -851,7 +851,7 @@ sub run_randoop {
     close(IN);
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -ea -classpath $TESTGEN_LIB_DIR/randoop.jar:$cp randoop.main.Main gentests " .
+              " && java -ea -classpath $TESTGEN_LIB_DIR/randoop-current.jar:$cp randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--timelimit=$timeout " .
