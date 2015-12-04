@@ -1,9 +1,0 @@
-#!/bin/sh 
-
-BASE=`dirname $0`
-
-java \
-    -XX:ReservedCodeCacheSize=128M \
-    -XX:MaxPermSize=1G \
-    -Xbootclasspath/a:$BASE/../config/config.jar \
-    -jar $BASE/../lib/ant-launcher.jar $OPT $*
