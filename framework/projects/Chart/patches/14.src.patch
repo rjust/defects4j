@@ -1,8 +1,8 @@
-Index: source/org/jfree/chart/plot/CategoryPlot.java
-===================================================================
---- source/org/jfree/chart/plot/CategoryPlot.java	(revision 811)
-+++ source/org/jfree/chart/plot/CategoryPlot.java	(revision 809)
-@@ -2163,9 +2161,6 @@
+diff --git a/source/org/jfree/chart/plot/CategoryPlot.java b/source/org/jfree/chart/plot/CategoryPlot.java
+index 5d831f7..dc7d06b 100644
+--- a/source/org/jfree/chart/plot/CategoryPlot.java
++++ b/source/org/jfree/chart/plot/CategoryPlot.java
+@@ -2163,9 +2163,6 @@ public class CategoryPlot extends Plot implements ValueAxisPlot,
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));
          }
@@ -12,35 +12,21 @@ Index: source/org/jfree/chart/plot/CategoryPlot.java
          boolean removed = markers.remove(marker);
          if (removed && notify) {
              fireChangeEvent();
-@@ -2448,9 +2443,7 @@
+@@ -2448,9 +2445,6 @@ public class CategoryPlot extends Plot implements ValueAxisPlot,
              markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
                      index));
          }
 -        if (markers == null) {
 -            return false;
 -        }
-+
          boolean removed = markers.remove(marker);
          if (removed && notify) {
              fireChangeEvent();
-@@ -2504,10 +2497,12 @@
-      * @see #isRangeCrosshairLockedOnData()
-      */
-     public void setRangeCrosshairLockedOnData(boolean flag) {
-+
-         if (this.rangeCrosshairLockedOnData != flag) {
-             this.rangeCrosshairLockedOnData = flag;
-             fireChangeEvent();
-         }
-+
-     }
- 
-     /**
-Index: source/org/jfree/chart/plot/XYPlot.java
-===================================================================
---- source/org/jfree/chart/plot/XYPlot.java	(revision 811)
-+++ source/org/jfree/chart/plot/XYPlot.java	(revision 809)
-@@ -2290,9 +2288,6 @@
+diff --git a/source/org/jfree/chart/plot/XYPlot.java b/source/org/jfree/chart/plot/XYPlot.java
+index 243f94b..50cf416 100644
+--- a/source/org/jfree/chart/plot/XYPlot.java
++++ b/source/org/jfree/chart/plot/XYPlot.java
+@@ -2290,9 +2290,6 @@ public class XYPlot extends Plot implements ValueAxisPlot, Zoomable,
              markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
                      index));
          }
@@ -50,14 +36,13 @@ Index: source/org/jfree/chart/plot/XYPlot.java
          boolean removed = markers.remove(marker);
          if (removed && notify) {
              fireChangeEvent();
-@@ -2529,9 +2524,7 @@
+@@ -2529,9 +2526,6 @@ public class XYPlot extends Plot implements ValueAxisPlot, Zoomable,
              markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
                      index));
          }
 -        if (markers == null) {
 -            return false;
 -        }
-+
          boolean removed = markers.remove(marker);
          if (removed && notify) {
              fireChangeEvent();
