@@ -52,7 +52,10 @@ sub _checkout_cmd {
 sub _apply_cmd {
     @_ == 3 or confess($ARG_ERROR);
     my ($self, $work_dir, $patch_file) = @_;
-    return "cd $work_dir; patch -p0 -s < $patch_file 2>&1";
+    # TODO: We currently have two different types of patches for SVN projects.
+    return "cd $work_dir; if patch -p0 -s --dry-run < $patch_file 2>&1; " .
+            "then patch -p0 -s < $patch_file 2>&1; " .
+            "else patch -p1 -s < $patch_file 2>&1; fi";
 }
 
 sub _diff_cmd {
