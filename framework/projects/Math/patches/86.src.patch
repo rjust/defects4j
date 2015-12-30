@@ -1,29 +1,24 @@
 diff --git a/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java b/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
-index 67e372f..39faa9a 100644
+index 67e372f..acd9222 100644
 --- a/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
 +++ b/src/java/org/apache/commons/math/linear/CholeskyDecompositionImpl.java
-@@ -111,6 +111,11 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
+@@ -111,6 +111,9 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
  
              final double[] lI = lTData[i];
  
-+            // check diagonal element
 +            if (lTData[i][i] < absolutePositivityThreshold) {
 +                throw new NotPositiveDefiniteMatrixException();
 +            }
-+
              // check off-diagonal elements (and reset them to 0)
              for (int j = i + 1; j < order; ++j) {
                  final double[] lJ = lTData[j];
-@@ -129,12 +134,6 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
-         for (int i = 0; i < order; ++i) {
- 
+@@ -131,9 +134,6 @@ public class CholeskyDecompositionImpl implements CholeskyDecomposition {
              final double[] ltI = lTData[i];
--
--            // check diagonal element
+ 
+             // check diagonal element
 -            if (ltI[i] < absolutePositivityThreshold) {
 -                throw new NotPositiveDefiniteMatrixException();
 -            }
--
+ 
              ltI[i] = Math.sqrt(ltI[i]);
              final double inverse = 1.0 / ltI[i];
- 
