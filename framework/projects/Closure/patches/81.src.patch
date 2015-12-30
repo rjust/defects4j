@@ -1,15 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-index 07761aa..4ef6e6f 100644
+index 07761aa..4a733cd 100644
 --- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
 +++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-@@ -509,18 +509,11 @@ public class IRFactory {
-       return node;
-     }
- 
--    @Override
--    Node processFunctionNode(FunctionNode functionNode) {
-+   @Override
-+  Node processFunctionNode(FunctionNode functionNode) {
+@@ -514,13 +514,6 @@ public class IRFactory {
        Name name = functionNode.getFunctionName();
        Boolean isUnnamedFunction = false;
        if (name == null) {
