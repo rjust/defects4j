@@ -1,16 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
-index 4b30d57..5b5a5b4 100644
+index 4b30d57..4c24e2f 100644
 --- a/src/com/google/javascript/jscomp/TypeInference.java
 +++ b/src/com/google/javascript/jscomp/TypeInference.java
-@@ -1182,22 +1182,13 @@ class TypeInference
-    */
-   private boolean inferTemplatedTypesForCall(
-       Node n, FunctionType fnType) {
--    final ImmutableList<TemplateType> keys = fnType.getTemplateTypeMap()
--        .getTemplateKeys();
--    if (keys.isEmpty()) {
-+    if (fnType.getTemplateTypeMap().getTemplateKeys().isEmpty()) {
-       return false;
+@@ -1189,15 +1189,9 @@ class TypeInference
      }
  
      // Try to infer the template types
@@ -23,8 +15,9 @@ index 4b30d57..5b5a5b4 100644
 -            return keys.contains(key);
 -          }}
 -        );
-+    Map<TemplateType, JSType> inferred = inferTemplateTypesFromParameters(
-+        fnType, n);
++    Map<TemplateType, JSType> inferred = 
++        inferTemplateTypesFromParameters(fnType, n);
++
  
      // Replace all template types. If we couldn't find a replacement, we
      // replace it with UNKNOWN.
