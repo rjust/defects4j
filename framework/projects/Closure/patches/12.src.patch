@@ -1,32 +1,17 @@
 diff --git a/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java b/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java
-index 8361ac9..0e58fdb 100644
+index 8361ac9..add5c66 100644
 --- a/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java
 +++ b/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java
-@@ -146,26 +146,10 @@ class MaybeReachingVariableUse extends
-   @Override
-   ReachingUses flowThrough(Node n, ReachingUses input) {
-     ReachingUses output = new ReachingUses(input);
--
--    // If there's an ON_EX edge, this cfgNode may or may not get executed.
--    // We can express this concisely by just pretending this happens in
--    // a conditional.
--    boolean conditional = hasExceptionHandler(n);
--    computeMayUse(n, n, output, conditional);
--
-+    computeMayUse(n, n, output, false);
-     return output;
+@@ -157,12 +157,6 @@ class MaybeReachingVariableUse extends
    }
  
--  private boolean hasExceptionHandler(Node cfgNode) {
+   private boolean hasExceptionHandler(Node cfgNode) {
 -    List<DiGraphEdge<Node, Branch>> branchEdges = getCfg().getOutEdges(cfgNode);
 -    for (DiGraphEdge<Node, Branch> edge : branchEdges) {
 -      if (edge.getValue() == Branch.ON_EX) {
 -        return true;
 -      }
 -    }
--    return false;
--  }
--
-   private void computeMayUse(
-       Node n, Node cfgNode, ReachingUses output, boolean conditional) {
-     switch (n.getType()) {
+     return false;
+   }
+ 
