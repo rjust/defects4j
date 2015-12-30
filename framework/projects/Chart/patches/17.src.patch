@@ -1,8 +1,8 @@
-Index: source/org/jfree/data/time/TimeSeries.java
-===================================================================
---- source/org/jfree/data/time/TimeSeries.java	(revision 622)
-+++ source/org/jfree/data/time/TimeSeries.java	(revision 621)
-@@ -854,8 +853,7 @@
+diff --git a/source/org/jfree/data/time/TimeSeries.java b/source/org/jfree/data/time/TimeSeries.java
+index 907fc20..ffd1dff 100644
+--- a/source/org/jfree/data/time/TimeSeries.java
++++ b/source/org/jfree/data/time/TimeSeries.java
+@@ -854,8 +854,7 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
       *         subclasses may differ.
       */
      public Object clone() throws CloneNotSupportedException {
