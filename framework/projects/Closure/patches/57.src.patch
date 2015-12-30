@@ -1,18 +1,13 @@
 diff --git a/src/com/google/javascript/jscomp/ClosureCodingConvention.java b/src/com/google/javascript/jscomp/ClosureCodingConvention.java
-index b5a3c1b..f998778 100644
+index b5a3c1b..c507c92 100644
 --- a/src/com/google/javascript/jscomp/ClosureCodingConvention.java
 +++ b/src/com/google/javascript/jscomp/ClosureCodingConvention.java
-@@ -192,11 +192,8 @@ public class ClosureCodingConvention extends DefaultCodingConvention {
-       Node callee = node.getFirstChild();
-       if (callee != null && callee.getType() == Token.GETPROP) {
+@@ -194,7 +194,7 @@ public class ClosureCodingConvention extends DefaultCodingConvention {
          String qualifiedName = callee.getQualifiedName();
--        if (functionName.equals(qualifiedName)) {
--          Node target = callee.getNext();
+         if (functionName.equals(qualifiedName)) {
+           Node target = callee.getNext();
 -          if (target != null && target.getType() == Token.STRING) {
--            className = target.getString();
--          }
-+        if ((functionName).equals(qualifiedName)) {
-+          className = callee.getNext().getString();
++          if (target != null) {
+             className = target.getString();
+           }
          }
-       }
-     }
