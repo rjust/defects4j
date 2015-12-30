@@ -21,7 +21,6 @@ com.google.javascript.jscomp.CheckRegExpTest
 com.google.javascript.jscomp.CheckRequiresForConstructorsTest
 com.google.javascript.jscomp.CheckSideEffectsTest
 com.google.javascript.jscomp.CheckUnreachableCodeTest
-com.google.javascript.jscomp.CleanupPassesTest
 com.google.javascript.jscomp.ClosureCodeRemovalTest
 com.google.javascript.jscomp.ClosureCodingConventionTest
 com.google.javascript.jscomp.ClosureOptimizePrimitivesTest
@@ -35,7 +34,6 @@ com.google.javascript.jscomp.CollapseVariableDeclarationsTest
 com.google.javascript.jscomp.CombinedCompilerPassTest
 com.google.javascript.jscomp.CommandLineRunnerTest
 com.google.javascript.jscomp.CompilerTest
-com.google.javascript.jscomp.ConcreteTypeTest
 com.google.javascript.jscomp.ConstCheckTest
 com.google.javascript.jscomp.ControlFlowAnalysisTest
 com.google.javascript.jscomp.ControlStructureCheckTest
@@ -172,19 +170,3 @@ com.google.javascript.jscomp.VariableReferenceCheckTest
 com.google.javascript.jscomp.VariableVisibilityAnalysisTest
 com.google.javascript.jscomp.jsonml.JsonMLConversionTest
 com.google.javascript.jscomp.jsonml.SecureCompilerTest
-com.google.javascript.jscomp.parsing.IRFactoryTest
-com.google.javascript.jscomp.parsing.JsDocInfoParserTest
-com.google.javascript.jscomp.parsing.ParserTest
-com.google.javascript.rhino.JSDocInfoTest
-com.google.javascript.rhino.NodeTest
-com.google.javascript.rhino.jstype.EnumElementTypeTest
-com.google.javascript.rhino.jstype.FunctionParamBuilderTest
-com.google.javascript.rhino.jstype.FunctionTypeTest
-com.google.javascript.rhino.jstype.JSTypeRegistryTest
-com.google.javascript.rhino.jstype.JSTypeTest
-com.google.javascript.rhino.jstype.NamedTypeTest
-com.google.javascript.rhino.jstype.ParameterizedTypeTest
-com.google.javascript.rhino.jstype.PrototypeObjectTypeTest
-com.google.javascript.rhino.jstype.RecordTypeTest
-com.google.javascript.rhino.jstype.UnionTypeBuilderTest
-com.google.javascript.rhino.jstype.UnionTypeTest
