@@ -1,8 +1,8 @@
-Index: source/org/jfree/chart/util/ShapeUtilities.java
-===================================================================
---- source/org/jfree/chart/util/ShapeUtilities.java	(revision 1025)
-+++ source/org/jfree/chart/util/ShapeUtilities.java	(revision 1024)
-@@ -272,7 +271,7 @@
+diff --git a/source/org/jfree/chart/util/ShapeUtilities.java b/source/org/jfree/chart/util/ShapeUtilities.java
+index f49ecb5..31aa6c6 100644
+--- a/source/org/jfree/chart/util/ShapeUtilities.java
++++ b/source/org/jfree/chart/util/ShapeUtilities.java
+@@ -272,7 +272,7 @@ public class ShapeUtilities {
              return false;
          }
          PathIterator iterator1 = p1.getPathIterator(null);
@@ -11,33 +11,3 @@ Index: source/org/jfree/chart/util/ShapeUtilities.java
          double[] d1 = new double[6];
          double[] d2 = new double[6];
          boolean done = iterator1.isDone() && iterator2.isDone();
-Index: source/org/jfree/chart/util/SerialUtilities.java
-===================================================================
---- source/org/jfree/chart/util/SerialUtilities.java	(revision 1025)
-+++ source/org/jfree/chart/util/SerialUtilities.java	(revision 1024)
-@@ -315,18 +314,21 @@
-                             gp.lineTo(args[0], args[1]);
-                             break;
-                         case PathIterator.SEG_CUBICTO :
--                            gp.curveTo(args[0], args[1], args[2],
--                                    args[3], args[4], args[5]);
-+                            gp.curveTo(
-+                                args[0], args[1], args[2],
-+                                args[3], args[4], args[5]
-+                            );
-                             break;
-                         case PathIterator.SEG_QUADTO :
-                             gp.quadTo(args[0], args[1], args[2], args[3]);
-                             break;
-                         case PathIterator.SEG_CLOSE :
--                            gp.closePath();
-+                            //result = gp;
-                             break;
-                         default :
-                             throw new RuntimeException(
--                                    "JFreeChart - No path exists");
-+                                "JFreeChart - No path exists"
-+                            );
-                     }
-                     gp.setWindingRule(stream.readInt());
-                     hasNext = stream.readBoolean();
