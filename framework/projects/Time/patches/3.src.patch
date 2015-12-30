@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/joda/time/MutableDateTime.java b/src/main/java/org/joda/time/MutableDateTime.java
-index 9aa8602..4cc0554 100644
+index 9aa8602..310f55d 100644
 --- a/src/main/java/org/joda/time/MutableDateTime.java
 +++ b/src/main/java/org/joda/time/MutableDateTime.java
 @@ -636,9 +636,7 @@ public class MutableDateTime
@@ -7,9 +7,8 @@ index 9aa8602..4cc0554 100644
              throw new IllegalArgumentException("Field must not be null");
          }
 -        if (amount != 0) {
--            setMillis(type.getField(getChronology()).add(getMillis(), amount));
+             setMillis(type.getField(getChronology()).add(getMillis(), amount));
 -        }
-+        setMillis(type.getField(getChronology()).add(getMillis(), amount));
      }
  
      //-----------------------------------------------------------------------
@@ -18,9 +17,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addYears(final int years) {
 -        if (years != 0) {
--            setMillis(getChronology().years().add(getMillis(), years));
+             setMillis(getChronology().years().add(getMillis(), years));
 -        }
-+        setMillis(getChronology().years().add(getMillis(), years));
      }
  
      //-----------------------------------------------------------------------
@@ -29,9 +27,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addWeekyears(final int weekyears) {
 -        if (weekyears != 0) {
--            setMillis(getChronology().weekyears().add(getMillis(), weekyears));
+             setMillis(getChronology().weekyears().add(getMillis(), weekyears));
 -        }
-+        setMillis(getChronology().weekyears().add(getMillis(), weekyears));
      }
  
      //-----------------------------------------------------------------------
@@ -40,9 +37,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addMonths(final int months) {
 -        if (months != 0) {
--            setMillis(getChronology().months().add(getMillis(), months));
+             setMillis(getChronology().months().add(getMillis(), months));
 -        }
-+        setMillis(getChronology().months().add(getMillis(), months));
      }
  
      //-----------------------------------------------------------------------
@@ -51,9 +47,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addWeeks(final int weeks) {
 -        if (weeks != 0) {
--            setMillis(getChronology().weeks().add(getMillis(), weeks));
+             setMillis(getChronology().weeks().add(getMillis(), weeks));
 -        }
-+        setMillis(getChronology().weeks().add(getMillis(), weeks));
      }
  
      //-----------------------------------------------------------------------
@@ -62,9 +57,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addDays(final int days) {
 -        if (days != 0) {
--            setMillis(getChronology().days().add(getMillis(), days));
+             setMillis(getChronology().days().add(getMillis(), days));
 -        }
-+        setMillis(getChronology().days().add(getMillis(), days));
      }
  
      //-----------------------------------------------------------------------
@@ -73,9 +67,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addHours(final int hours) {
 -        if (hours != 0) {
--            setMillis(getChronology().hours().add(getMillis(), hours));
+             setMillis(getChronology().hours().add(getMillis(), hours));
 -        }
-+        setMillis(getChronology().hours().add(getMillis(), hours));
      }
      
      //-----------------------------------------------------------------------
@@ -84,9 +77,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addMinutes(final int minutes) {
 -        if (minutes != 0) {
--            setMillis(getChronology().minutes().add(getMillis(), minutes));
+             setMillis(getChronology().minutes().add(getMillis(), minutes));
 -        }
-+        setMillis(getChronology().minutes().add(getMillis(), minutes));
      }
  
      //-----------------------------------------------------------------------
@@ -95,9 +87,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addSeconds(final int seconds) {
 -        if (seconds != 0) {
--            setMillis(getChronology().seconds().add(getMillis(), seconds));
+             setMillis(getChronology().seconds().add(getMillis(), seconds));
 -        }
-+        setMillis(getChronology().seconds().add(getMillis(), seconds));
      }
  
      //-----------------------------------------------------------------------
@@ -106,9 +97,8 @@ index 9aa8602..4cc0554 100644
       */
      public void addMillis(final int millis) {
 -        if (millis != 0) {
--            setMillis(getChronology().millis().add(getMillis(), millis));
+             setMillis(getChronology().millis().add(getMillis(), millis));
 -        }
-+        setMillis(getChronology().millis().add(getMillis(), millis));
      }
  
      //-----------------------------------------------------------------------
