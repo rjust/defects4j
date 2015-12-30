@@ -1,16 +1,8 @@
 diff --git a/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java b/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
-index 8f315e3..2d878b1 100644
+index 8f315e3..544124f 100644
 --- a/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
 +++ b/src/main/java/org/apache/commons/math/ode/AbstractIntegrator.java
-@@ -40,6 +40,7 @@ import org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
- import org.apache.commons.math.ode.sampling.StepHandler;
- import org.apache.commons.math.util.FastMath;
- import org.apache.commons.math.util.Incrementor;
-+import org.apache.commons.math.util.MathUtils;
- import org.apache.commons.math.util.Precision;
- 
- /**
-@@ -277,6 +278,7 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+@@ -277,6 +277,7 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
  
              double previousT = interpolator.getGlobalPreviousTime();
              final double currentT = interpolator.getGlobalCurrentTime();
@@ -18,7 +10,7 @@ index 8f315e3..2d878b1 100644
  
              // initialize the events states if needed
              if (! statesInitialized) {
-@@ -330,9 +332,6 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+@@ -330,9 +331,6 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
                  if (isLastStep) {
                      // the event asked to stop integration
                      System.arraycopy(eventY, 0, y, 0, y.length);
@@ -28,7 +20,7 @@ index 8f315e3..2d878b1 100644
                      return eventT;
                  }
  
-@@ -342,9 +341,6 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
+@@ -342,9 +340,6 @@ public abstract class AbstractIntegrator implements FirstOrderIntegrator {
                      System.arraycopy(eventY, 0, y, 0, y.length);
                      computeDerivatives(eventT, y, yDot);
                      resetOccurred = true;
