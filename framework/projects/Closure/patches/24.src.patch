@@ -1,42 +1,33 @@
 diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
-index c248002..7a943f8 100644
+index c248002..30d29d0 100644
 --- a/src/com/google/javascript/jscomp/ScopedAliases.java
 +++ b/src/com/google/javascript/jscomp/ScopedAliases.java
-@@ -275,24 +275,19 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -275,8 +275,8 @@ class ScopedAliases implements HotSwapCompilerPass {
          Node n = v.getNode();
          int type = n.getType();
          Node parent = n.getParent();
 -        if (parent.isVar() &&
 -            n.hasChildren() && n.getFirstChild().isQualifiedName()) {
--          String name = n.getString();
--          Var aliasVar = scope.getVar(name);
--          aliases.put(name, aliasVar);
--
--          String qualifiedName =
--              aliasVar.getInitialValue().getQualifiedName();
--          transformation.addAlias(name, qualifiedName);
--        } else if (v.isBleedingFunction()) {
--          // Bleeding functions already get a BAD_PARAMETERS error, so just
--          // do nothing.
--        } else if (parent.getType() == Token.LP) {
--          // Parameters of the scope function also get a BAD_PARAMETERS
--          // error.
--        } else {
--          // TODO(robbyw): Support using locals for private variables.
--          report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
 +        if (parent.isVar()) {
 +          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
-+            String name = n.getString();
-+            Var aliasVar = scope.getVar(name);
-+            aliases.put(name, aliasVar);
-+
-+            String qualifiedName =
-+                aliasVar.getInitialValue().getQualifiedName();
-+            transformation.addAlias(name, qualifiedName);
-+          } else {
-+            // TODO(robbyw): Support using locals for private variables.
-+            report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
-+          }
+           String name = n.getString();
+           Var aliasVar = scope.getVar(name);
+           aliases.put(name, aliasVar);
+@@ -284,16 +284,15 @@ class ScopedAliases implements HotSwapCompilerPass {
+           String qualifiedName =
+               aliasVar.getInitialValue().getQualifiedName();
+           transformation.addAlias(name, qualifiedName);
+-        } else if (v.isBleedingFunction()) {
+           // Bleeding functions already get a BAD_PARAMETERS error, so just
+           // do nothing.
+-        } else if (parent.getType() == Token.LP) {
+           // Parameters of the scope function also get a BAD_PARAMETERS
+           // error.
+         } else {
+           // TODO(robbyw): Support using locals for private variables.
+           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
          }
++        }
        }
      }
+ 
