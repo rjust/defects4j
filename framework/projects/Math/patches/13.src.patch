@@ -1,31 +1,5 @@
-diff --git a/src/main/java/org/apache/commons/math3/optimization/Weight.java b/src/main/java/org/apache/commons/math3/optimization/Weight.java
-index 28c1619..8e7538f 100644
---- a/src/main/java/org/apache/commons/math3/optimization/Weight.java
-+++ b/src/main/java/org/apache/commons/math3/optimization/Weight.java
-@@ -18,7 +18,7 @@
- package org.apache.commons.math3.optimization;
- 
- import org.apache.commons.math3.linear.RealMatrix;
--import org.apache.commons.math3.linear.DiagonalMatrix;
-+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
- import org.apache.commons.math3.linear.NonSquareMatrixException;
- 
- /**
-@@ -41,7 +41,11 @@ public class Weight implements OptimizationData {
-      * @param weight List of the values of the diagonal.
-      */
-     public Weight(double[] weight) {
--        weightMatrix = new DiagonalMatrix(weight);
-+        final int dim = weight.length;
-+        weightMatrix = new Array2DRowRealMatrix(dim, dim);
-+        for (int i = 0; i < dim; i++) {
-+            weightMatrix.setEntry(i, i, weight[i]);
-+        }
-     }
- 
-     /**
 diff --git a/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
-index 982e559..22de45b 100644
+index 982e559..99d86e9 100644
 --- a/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
 +++ b/src/main/java/org/apache/commons/math3/optimization/general/AbstractLeastSquaresOptimizer.java
 @@ -559,16 +559,7 @@ public abstract class AbstractLeastSquaresOptimizer
@@ -40,10 +14,8 @@ index 982e559..22de45b 100644
 -            }
 -            return sqrtM;
 -        } else {
--            final EigenDecomposition dec = new EigenDecomposition(m);
--            return dec.getSquareRoot();
+             final EigenDecomposition dec = new EigenDecomposition(m);
+             return dec.getSquareRoot();
 -        }
-+        final EigenDecomposition dec = new EigenDecomposition(m);
-+        return dec.getSquareRoot();
      }
  }
