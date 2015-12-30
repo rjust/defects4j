@@ -1,80 +1,11 @@
-Index: source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
-===================================================================
---- source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java	(revision 210)
-+++ source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java	(revision 209)
-@@ -83,11 +82,12 @@
- 
- import org.jfree.chart.axis.CategoryAxis;
- import org.jfree.chart.axis.ValueAxis;
-+import org.jfree.chart.entity.CategoryItemEntity;
- import org.jfree.chart.entity.EntityCollection;
- import org.jfree.chart.event.RendererChangeEvent;
-+import org.jfree.chart.labels.CategoryToolTipGenerator;
- import org.jfree.chart.plot.CategoryPlot;
- import org.jfree.chart.plot.PlotOrientation;
--import org.jfree.chart.util.PaintUtilities;
- import org.jfree.chart.util.SerialUtilities;
- import org.jfree.data.category.CategoryDataset;
- 
-@@ -216,17 +216,12 @@
- 
-     /**
-      * Sets the stroke of the line between the minimum value and the maximum 
--     * value and sends a {@link RendererChangeEvent} to all registered 
--     * listeners.
-+     * value.
+diff --git a/source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java b/source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
+index d2b24c6..bbd5ddb 100644
+--- a/source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
++++ b/source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
+@@ -432,25 +432,6 @@ public class MinMaxCategoryRenderer extends AbstractCategoryItemRenderer {
       *
--     * @param stroke the new stroke (<code>null</code> not permitted).
-+     * @param groupStroke The new stroke
+      * @since 1.0.7
       */
--    public void setGroupStroke(Stroke stroke) {
--        if (stroke == null) {
--            throw new IllegalArgumentException("Null 'stroke' argument.");
--        }
--        this.groupStroke = stroke;
--        notifyListeners(new RendererChangeEvent(this));        
-+    public void setGroupStroke(Stroke groupStroke) {
-+        this.groupStroke = groupStroke;
-     }
- 
-     /**
-@@ -414,43 +409,24 @@
-                 }
-             }
- 
--            // add an item entity, if this information is being collected
--            EntityCollection entities = state.getEntityCollection();
--            if (entities != null && shape != null) {
--                addItemEntity(entities, dataset, row, column, shape);
-+            // collect entity and tool tip information...
-+            if (state.getInfo() != null) {
-+                EntityCollection entities = state.getEntityCollection();
-+                if (entities != null && shape != null) {
-+                    String tip = null;
-+                    CategoryToolTipGenerator tipster = getToolTipGenerator(row,
-+                            column);
-+                    if (tipster != null) {
-+                        tip = tipster.generateToolTip(dataset, row, column);
-+                    }
-+                    CategoryItemEntity entity = new CategoryItemEntity(
-+                            shape, tip, null, dataset, dataset.getRowKey(row), 
-+                            dataset.getColumnKey(column));
-+                    entities.add(entity);
-+                }
-             }
-         }
-     }
--    
--    /**
--     * Tests this instance for equality with an arbitrary object.  The icon fields
--     * are NOT included in the test, so this implementation is a little weak.
--     * 
--     * @param obj  the object (<code>null</code> permitted).
--     * 
--     * @return A boolean.
--     *
--     * @since 1.0.7
--     */
 -    public boolean equals(Object obj) {
 -        if (obj == this) {
 -            return true;
@@ -97,12 +28,3 @@ Index: source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java
  
      /**
       * Returns an icon.
-@@ -503,7 +479,7 @@
-      * @return The icon.
-      */
-     private Icon getIcon(Shape shape, final boolean fill, 
--            final boolean outline) {
-+                         final boolean outline) {
-         final int width = shape.getBounds().width;
-         final int height = shape.getBounds().height;
-         final GeneralPath path = new GeneralPath(shape);
