@@ -1,8 +1,8 @@
 diff --git a/src/main/java/org/joda/time/Partial.java b/src/main/java/org/joda/time/Partial.java
-index 3b84fdc..8e8e603 100644
+index 3b84fdc..b9ec964 100644
 --- a/src/main/java/org/joda/time/Partial.java
 +++ b/src/main/java/org/joda/time/Partial.java
-@@ -215,14 +215,13 @@ public final class Partial
+@@ -215,7 +215,7 @@ public final class Partial
              DurationField loopUnitField = loopType.getDurationType().getField(iChronology);
              if (i > 0) {
                  int compare = lastUnitField.compareTo(loopUnitField);
@@ -11,25 +11,7 @@ index 3b84fdc..8e8e603 100644
                      throw new IllegalArgumentException("Types array must be in order largest-smallest: " +
                              types[i - 1].getName() + " < " + loopType.getName());
                  } else if (compare == 0) {
-                     if (types[i - 1].getRangeDurationType() == null) {
-                         if (loopType.getRangeDurationType() == null) {
--                            throw new IllegalArgumentException("Types array must not contain duplicate: " +
--                                            types[i - 1].getName() + " and " + loopType.getName());
-+                            throw new IllegalArgumentException("Types array must not contain duplicate: " + loopType.getName());
-                         }
-                     } else {
-                         if (loopType.getRangeDurationType() == null) {
-@@ -236,8 +235,7 @@ public final class Partial
-                                     types[i - 1].getName() + " < " + loopType.getName());
-                         }
-                         if (lastRangeField.compareTo(loopRangeField) == 0) {
--                            throw new IllegalArgumentException("Types array must not contain duplicate: " +
--                                            types[i - 1].getName() + " and " + loopType.getName());
-+                            throw new IllegalArgumentException("Types array must not contain duplicate: " + loopType.getName());
-                         }
-                     }
-                 }
-@@ -446,9 +444,6 @@ public final class Partial
+@@ -446,9 +446,6 @@ public final class Partial
                          if (compare > 0) {
                              break;
                          } else if (compare == 0) {
