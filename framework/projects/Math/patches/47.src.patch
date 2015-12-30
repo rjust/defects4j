@@ -1,17 +1,16 @@
 diff --git a/src/main/java/org/apache/commons/math/complex/Complex.java b/src/main/java/org/apache/commons/math/complex/Complex.java
-index 137765c..404a40b 100644
+index 137765c..bebfead 100644
 --- a/src/main/java/org/apache/commons/math/complex/Complex.java
 +++ b/src/main/java/org/apache/commons/math/complex/Complex.java
-@@ -78,8 +78,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
-     private final transient boolean isNaN;
+@@ -79,7 +79,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
      /** Record whether this complex number is infinite. */
      private final transient boolean isInfinite;
--    /** Record whether this complex number is zero. */
+     /** Record whether this complex number is zero. */
 -    private final transient boolean isZero;
  
      /**
       * Create a complex number given only the real part.
-@@ -103,7 +101,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+@@ -103,7 +102,6 @@ public class Complex implements FieldElement<Complex>, Serializable  {
          isNaN = Double.isNaN(real) || Double.isNaN(imaginary);
          isInfinite = !isNaN &&
              (Double.isInfinite(real) || Double.isInfinite(imaginary));
@@ -19,29 +18,18 @@ index 137765c..404a40b 100644
      }
  
      /**
-@@ -255,17 +252,16 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+@@ -255,8 +253,8 @@ public class Complex implements FieldElement<Complex>, Serializable  {
              return NaN;
          }
  
 -        if (divisor.isZero) {
 -            return isZero ? NaN : INF;
-+        final double c = divisor.getReal();
-+        final double d = divisor.getImaginary();
-+        if (c == 0.0 && d == 0.0) {
++        if (divisor.getReal() == 0.0 && divisor.getImaginary() == 0.0) {
 +            return NaN;
          }
  
          if (divisor.isInfinite() && !isInfinite()) {
-             return ZERO;
-         }
- 
--        final double c = divisor.getReal();
--        final double d = divisor.getImaginary();
--
-         if (FastMath.abs(c) < FastMath.abs(d)) {
-             double q = c / d;
-             double denominator = c * q + d;
-@@ -292,7 +288,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+@@ -292,7 +290,7 @@ public class Complex implements FieldElement<Complex>, Serializable  {
              return NaN;
          }
          if (divisor == 0d) {
