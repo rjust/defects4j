@@ -1,7 +1,7 @@
 --- com.google.javascript.jscomp.CompilerRunnerTest::testIssue115
 junit.framework.AssertionFailedError: 
 Expected: function f(){arguments=Array.prototype.slice.call(arguments,0);return arguments[0]}
-Result: function f(){var a=Array.prototype.slice.call(a,0);return a[0]}
+Result: function f(){var arguments=Array.prototype.slice.call(arguments,0);return arguments[0]}
 Node tree inequality:
 Tree1:
 BLOCK [synthetic: 1]
@@ -37,7 +37,7 @@ BLOCK [synthetic: 1]
             LP 1
             BLOCK 1
                 VAR 1
-                    NAME a 1 : ?
+                    NAME arguments 1 : ?
                         CALL 1 : ?
                             GETPROP 1 : ?
                                 GETPROP 1 : ?
@@ -46,11 +46,11 @@ BLOCK [synthetic: 1]
                                         STRING prototype 1 : string
                                     STRING slice 1 : string
                                 STRING call 1 : string
-                            NAME a 1 : undefined
+                            NAME arguments 1 : undefined
                             NUMBER 0.0 1 : number
                 RETURN 1
                     GETELEM 1 : ?
-                        NAME a 1 : ?
+                        NAME arguments 1 : ?
                         NUMBER 0.0 1 : number
 
 	at junit.framework.Assert.fail(Assert.java:57)
@@ -70,12 +70,14 @@ BLOCK [synthetic: 1]
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2267)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
