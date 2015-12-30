@@ -1,13 +1,10 @@
 diff --git a/src/com/google/javascript/jscomp/LightweightMessageFormatter.java b/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
-index 420dbc0..f529b7d 100644
+index 420dbc0..5a4f884 100644
 --- a/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
 +++ b/src/com/google/javascript/jscomp/LightweightMessageFormatter.java
-@@ -92,10 +92,8 @@ public class LightweightMessageFormatter extends AbstractMessageFormatter {
-       int charno = error.getCharno();
- 
-       // padding equal to the excerpt and arrow at the end
--      // charno == sourceExpert.length() means something is missing
--      // at the end of the line
+@@ -95,7 +95,7 @@ public class LightweightMessageFormatter extends AbstractMessageFormatter {
+       // charno == sourceExpert.length() means something is missing
+       // at the end of the line
        if (excerpt.equals(LINE)
 -          && 0 <= charno && charno <= sourceExcerpt.length()) {
 +          && 0 <= charno && charno < sourceExcerpt.length()) {
