@@ -1009,8 +1009,7 @@ sub _ant_call {
     -f $file or die "Build file does not exist: $file";
 
     # Set up environment before running ant
-    my $cmd = "export TZ='America/Los_Angeles'" .
-              " && cd $self->{prog_root}" .
+    my $cmd = " cd $self->{prog_root}" .
               " && ant -f $D4J_BUILD_FILE -Dd4j.home=$BASE_DIR -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1";
     my $log;
     my $ret = Utils::exec_cmd($cmd, "Running ant ($target)", \$log);

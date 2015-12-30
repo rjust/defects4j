@@ -243,7 +243,7 @@ sub exec_cmd {
     @_ >= 2 or die $ARG_ERROR;
     my ($cmd, $descr, $log_ref) = @_;
     print(STDERR substr($descr . '.'x75, 0, 75), " ");
-    my $log = `$cmd`; my $ret = $?;
+    my $log = `export TZ='America/Los_Angeles'; $cmd`; my $ret = $?;
     $$log_ref = $log if defined $log_ref;
     if ($ret!=0) {
         print(STDERR "FAIL\n$log");
