@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-index 28aee43..16ef72f 100644
+index 28aee43..d1b36ea 100644
 --- a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
 +++ b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
 @@ -163,7 +163,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
@@ -41,27 +41,25 @@ index 28aee43..16ef72f 100644
  
                  // compute the scaled actual reduction
                  double actRed = -1.0;
-@@ -414,19 +410,11 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
+@@ -414,20 +410,14 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
                  }
  
                  // tests for convergence.
 -                if (checker != null) {
--                    // we use the vectorial convergence checker
+                     // we use the vectorial convergence checker
 -                    if (checker.converged(getIterations(), previous, current)) {
 -                        return current;                        
 -                    }
 -                } else {
--                    // we use the Levenberg-Marquardt specific convergence parameters
--                    if (((Math.abs(actRed) <= costRelativeTolerance) &&
--                         (preRed <= costRelativeTolerance) &&
--                         (ratio <= 2.0)) ||
-+                if (((Math.abs(actRed) <= costRelativeTolerance) &&
-+                        (preRed <= costRelativeTolerance) &&
-+                        (ratio <= 2.0)) ||
+                     // we use the Levenberg-Marquardt specific convergence parameters
+                     if (((Math.abs(actRed) <= costRelativeTolerance) &&
+                          (preRed <= costRelativeTolerance) &&
+                          (ratio <= 2.0)) ||
                          (delta <= parRelativeTolerance * xNorm)) {
 -                        return current;
--                    }
-+                    return new VectorialPointValuePair(point, objective);
-                 }
++                        return new VectorialPointValuePair(point, objective);
+                     }
+-                }
  
                  // tests for termination and stringent tolerances
+                 // (2.2204e-16 is the machine epsilon for IEEE754)
