@@ -1,8 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-index c6b70c5..714e9a5 100644
+index c6b70c5..1a95aa2 100644
 --- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
 +++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-@@ -565,15 +565,6 @@ class IRFactory {
+@@ -565,15 +565,8 @@ class IRFactory {
  
      @Override
      Node processForInLoop(ForInLoop loopNode) {
@@ -11,8 +11,8 @@ index c6b70c5..714e9a5 100644
 -            "unsupported language extension: for each",
 -            sourceName,
 -            loopNode.getLineno(), "", 0);
--
--        // Return the bare minimum to put the AST in a valid state.
+ 
+         // Return the bare minimum to put the AST in a valid state.
 -        return newNode(Token.EXPR_RESULT, Node.newNumber(0));
 -      }
        return newNode(
