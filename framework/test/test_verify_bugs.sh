@@ -36,6 +36,7 @@ for pid in "${projects[@]}"; do
         for v in "b" "f"; do
             vid=${bid}$v
             defects4j checkout -p $pid -v "$vid" -w "$work_dir" || die "checkout: $pid-$vid"
+            defects4j compile -w "$work_dir" || die "compile: $pid-$vid"
             defects4j test -r -w "$work_dir" || die "run relevant tests: $pid-$vid"
             
             triggers=$(num_triggers "$work_dir/failing_tests")
