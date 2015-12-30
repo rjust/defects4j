@@ -1,34 +1,23 @@
 diff --git a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
-index 3394fa6..2c83683 100644
+index 3394fa6..99c9fce 100644
 --- a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
 +++ b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
-@@ -181,8 +181,7 @@ final class FunctionTypeBuilder {
+@@ -181,7 +181,7 @@ final class FunctionTypeBuilder {
        // create interfaces JSType, ObjectType, FunctionType etc and have
        // separate implementation instead of the class hierarchy, so that
        // union types can also be object types, etc.
 -      if (!type.restrictByNotNullOrUndefined().isSubtype(
--              typeRegistry.getNativeType(OBJECT_TYPE))) {
-+      if (!type.isSubtype(typeRegistry.getNativeType(OBJECT_TYPE))) {
++      if (!type.isSubtype(
+               typeRegistry.getNativeType(OBJECT_TYPE))) {
          reportWarning(THIS_TYPE_NON_OBJECT, type.toString());
          return false;
-       }
 diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
-index de1d1c2..cf2d3e8 100644
+index de1d1c2..3f0d245 100644
 --- a/src/com/google/javascript/rhino/jstype/FunctionType.java
 +++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
-@@ -867,19 +867,8 @@ public class FunctionType extends PrototypeObjectType {
- 
-     // Warning about typeOfThis if it doesn't resolve to an ObjectType
-     // is handled further upstream.
--    //
-     // TODO(nicksantos): Handle this correctly if we have a UnionType.
--    //
--    // TODO(nicksantos): In ES3, the runtime coerces "null" to the global
--    // activation object. In ES5, it leaves it as null. Just punt on this
--    // issue for now by coercing out null. This is complicated by the
--    // fact that when most people write @this {Foo}, they really don't
--    // mean "nullable Foo". For certain tags (like @extends) we de-nullify
--    // the name for them.
+@@ -877,9 +877,6 @@ public class FunctionType extends PrototypeObjectType {
+     // mean "nullable Foo". For certain tags (like @extends) we de-nullify
+     // the name for them.
      JSType maybeTypeOfThis = safeResolve(typeOfThis, t, scope);
 -    if (maybeTypeOfThis != null) {
 -      maybeTypeOfThis = maybeTypeOfThis.restrictByNotNullOrUndefined();
