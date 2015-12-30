@@ -34,14 +34,10 @@ init() {
     trap "exit 1" TERM
     export SCRIPT_PID=$$
     trap "print_result" EXIT
-    # Make sure that the project repos are available
-    cd $REPOS_DIR && ./get_repos.sh
     # Truncate log file
     > $LOG
     # Create tmp directory, if necessary
     mkdir -p $TMP_DIR || die "create temporary test directory"
-    # Clean tmp directory
-    rm -rf $TMP_DIR/*
 }
 
 # Print error message to log file

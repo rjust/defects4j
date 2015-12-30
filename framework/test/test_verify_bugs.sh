@@ -32,6 +32,8 @@ mkdir -p $test_dir
 for pid in "${projects[@]}"; do
     num_bugs=$(num_lines $BASE_DIR/framework/projects/$pid/commit-db)
     work_dir="$test_dir/$pid"
+    # Clean working directory
+    rm -rf $work_dir
     for bid in $(seq 1 1 $num_bugs); do
         for v in "b" "f"; do
             vid=${bid}$v
