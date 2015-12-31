@@ -1,36 +1,24 @@
 diff --git a/src/main/java/org/apache/commons/math3/random/BitsStreamGenerator.java b/src/main/java/org/apache/commons/math3/random/BitsStreamGenerator.java
-index fab295b..a621d7b 100644
+index fab295b..4d166c2 100644
 --- a/src/main/java/org/apache/commons/math3/random/BitsStreamGenerator.java
 +++ b/src/main/java/org/apache/commons/math3/random/BitsStreamGenerator.java
-@@ -16,26 +16,21 @@
+@@ -16,7 +16,6 @@
   */
  package org.apache.commons.math3.random;
  
 -import java.io.Serializable;
--
+ 
  import org.apache.commons.math3.exception.NotStrictlyPositiveException;
  import org.apache.commons.math3.util.FastMath;
- 
- /** Base class for random number generators that generates bits streams.
-- *
-+
-  * @version $Id$
+@@ -27,10 +26,8 @@ import org.apache.commons.math3.util.FastMath;
   * @since 2.0
-+
   */
--public abstract class BitsStreamGenerator
+ public abstract class BitsStreamGenerator
 -    implements RandomGenerator,
 -               Serializable {
--    /** Serializable version identifier */
++    implements RandomGenerator {
+     /** Serializable version identifier */
 -    private static final long serialVersionUID = 20130104L;
-+public abstract class BitsStreamGenerator implements RandomGenerator {
-+
      /** Next gaussian. */
      private double nextGaussian;
  
--    /**
--     * Creates a new random number generator.
-+    /** Creates a new random number generator.
-      */
-     public BitsStreamGenerator() {
-         nextGaussian = Double.NaN;
