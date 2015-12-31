@@ -1,19 +1,17 @@
 diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
-index 45d88ba..a4a41a8 100644
+index 45d88ba..71f76d8 100644
 --- a/src/com/google/javascript/jscomp/Compiler.java
 +++ b/src/com/google/javascript/jscomp/Compiler.java
-@@ -1427,9 +1427,7 @@ public class Compiler extends AbstractCompiler {
-               cb.getLineIndex(), cb.getColumnIndex());
-         }
+@@ -1429,7 +1429,7 @@ public class Compiler extends AbstractCompiler {
  
--        // if LanguageMode is ECMASCRIPT5_STRICT, only print 'use strict'
--        // for the first input file
+         // if LanguageMode is ECMASCRIPT5_STRICT, only print 'use strict'
+         // for the first input file
 -        String code = toSource(root, sourceMap, inputSeqNum == 0);
 +        String code = toSource(root, sourceMap);
          if (!code.isEmpty()) {
            cb.append(code);
  
-@@ -1458,19 +1456,19 @@ public class Compiler extends AbstractCompiler {
+@@ -1458,19 +1458,19 @@ public class Compiler extends AbstractCompiler {
    @Override
    String toSource(Node n) {
      initCompilerOptionsIfTesting();

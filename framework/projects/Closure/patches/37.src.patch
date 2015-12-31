@@ -12,17 +12,17 @@ index 435b4a8..8201b41 100644
  
      popScope();
 diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-index 26cbc19..c6b70c5 100644
+index 26cbc19..4da4085 100644
 --- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
 +++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-@@ -664,13 +664,6 @@ class IRFactory {
+@@ -664,13 +664,9 @@ class IRFactory {
        node.addChildToBack(lp);
  
        Node bodyNode = transform(functionNode.getBody());
 -      if (!bodyNode.isBlock()) {
--        // When in ideMode Rhino tries to parse some constructs the compiler
--        // doesn't support, repair it here. see Rhino's
--        // Parser#parseFunctionBodyExpr.
+         // When in ideMode Rhino tries to parse some constructs the compiler
+         // doesn't support, repair it here. see Rhino's
+         // Parser#parseFunctionBodyExpr.
 -        Preconditions.checkState(config.isIdeMode);
 -        bodyNode = IR.block();
 -      }

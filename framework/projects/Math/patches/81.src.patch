@@ -1,23 +1,16 @@
 diff --git a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
-index 3fc328d..26fa7bd 100644
+index 3fc328d..2d0d72f 100644
 --- a/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
 +++ b/src/main/java/org/apache/commons/math/linear/EigenDecompositionImpl.java
-@@ -595,12 +595,8 @@ public class EigenDecompositionImpl implements EigenDecomposition {
-         }
- 
-         final double dCurrent = main[m - 1];
--        final double lower = dCurrent - eCurrent;
--        work[lowerStart + m - 1] = lower;
--        lowerSpectra = Math.min(lowerSpectra, lower);
--        final double upper = dCurrent + eCurrent;
--        work[upperStart + m - 1] = upper;
+@@ -600,7 +600,6 @@ public class EigenDecompositionImpl implements EigenDecomposition {
+         lowerSpectra = Math.min(lowerSpectra, lower);
+         final double upper = dCurrent + eCurrent;
+         work[upperStart + m - 1] = upper;
 -        upperSpectra = Math.max(upperSpectra, upper);
-+        work[lowerStart + m - 1] = dCurrent - eCurrent;
-+        work[upperStart + m - 1] = dCurrent + eCurrent;
          minPivot = MathUtils.SAFE_MIN * Math.max(1.0, eMax * eMax);
  
      }
-@@ -903,8 +899,8 @@ public class EigenDecompositionImpl implements EigenDecomposition {
+@@ -903,8 +902,8 @@ public class EigenDecompositionImpl implements EigenDecomposition {
                      diagMax    = work[4 * i0];
                      offDiagMin = work[4 * i0 + 2];
                      double previousEMin = work[4 * i0 + 3];
@@ -28,7 +21,7 @@ index 3fc328d..26fa7bd 100644
                              (work[i + 2] <= TOLERANCE_2 * sigma)) {
                              // insert a split
                              work[i + 2]  = -sigma;
-@@ -1541,7 +1537,7 @@ public class EigenDecompositionImpl implements EigenDecomposition {
+@@ -1541,7 +1540,7 @@ public class EigenDecompositionImpl implements EigenDecomposition {
                  double a2 = (work[np - 8] / b2) * (1 + work[np - 4] / b1);
  
                  // approximate contribution to norm squared from i < nn-2.

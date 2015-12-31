@@ -32,7 +32,6 @@ com.google.javascript.jscomp.CollapsePropertiesTest
 com.google.javascript.jscomp.CollapseVariableDeclarationsTest
 com.google.javascript.jscomp.CombinedCompilerPassTest
 com.google.javascript.jscomp.CommandLineRunnerTest
-com.google.javascript.jscomp.CompilerOptionsTest
 com.google.javascript.jscomp.CompilerTest
 com.google.javascript.jscomp.ConstCheckTest
 com.google.javascript.jscomp.ControlFlowAnalysisTest
@@ -146,7 +145,6 @@ com.google.javascript.jscomp.ShadowVariablesTest
 com.google.javascript.jscomp.SideEffectsAnalysisTest
 com.google.javascript.jscomp.SimpleDefinitionFinderTest
 com.google.javascript.jscomp.SimpleFunctionAliasAnalysisTest
-com.google.javascript.jscomp.SourceInformationAnnotatorTest
 com.google.javascript.jscomp.SourceMapTest
 com.google.javascript.jscomp.SpecializeModuleTest$SpecializeModuleSpecializationStateTest
 com.google.javascript.jscomp.SpecializeModuleTest

@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java b/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
-index 55ee7d1..e0a991e 100644
+index 55ee7d1..a2cc169 100644
 --- a/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
 +++ b/src/main/java/org/apache/commons/lang3/text/ExtendedMessageFormat.java
 @@ -70,7 +70,6 @@ import org.apache.commons.lang3.Validate;
@@ -10,15 +10,10 @@ index 55ee7d1..e0a991e 100644
  
      private static final String DUMMY_PATTERN = "";
      private static final String ESCAPED_QUOTE = "''";
-@@ -256,49 +255,6 @@ public class ExtendedMessageFormat extends MessageFormat {
-     }
- 
-     /**
--     * Check if this extended message format is equal to another object.
--     *
--     * @param obj the object to compare to
--     * @return true if this object equals the other, otherwise false
--     */
+@@ -261,42 +260,12 @@ public class ExtendedMessageFormat extends MessageFormat {
+      * @param obj the object to compare to
+      * @return true if this object equals the other, otherwise false
+      */
 -    @Override
 -    public boolean equals(Object obj) {
 -        if (obj == this) {
@@ -42,12 +37,12 @@ index 55ee7d1..e0a991e 100644
 -        }
 -        return true;
 -    }
--
--    /**
--     * Return the hashcode.
--     *
--     * @return the hashcode
--     */
+ 
+     /**
+      * Return the hashcode.
+      *
+      * @return the hashcode
+      */
 -    @Override
 -    public int hashCode() {
 -        int result = super.hashCode();
@@ -55,8 +50,6 @@ index 55ee7d1..e0a991e 100644
 -        result = HASH_SEED * result + ObjectUtils.hashCode(toPattern);
 -        return result;
 -    }
--
--    /**
+ 
+     /**
       * Get a custom format from a format description.
-      * 
-      * @param desc String

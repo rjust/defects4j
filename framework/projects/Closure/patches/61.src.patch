@@ -1,19 +1,17 @@
 diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
-index f9ce42e..3634939 100644
+index f9ce42e..1844b18 100644
 --- a/src/com/google/javascript/jscomp/NodeUtil.java
 +++ b/src/com/google/javascript/jscomp/NodeUtil.java
-@@ -954,14 +954,6 @@ public final class NodeUtil {
-         return false;
+@@ -955,12 +955,6 @@ public final class NodeUtil {
        }
  
--      // Functions in the "Math" namespace have no side effects.
+       // Functions in the "Math" namespace have no side effects.
 -      if (nameNode.getFirstChild().getType() == Token.NAME) {
 -        String namespaceName = nameNode.getFirstChild().getString();
 -        if (namespaceName.equals("Math")) {
 -          return false;
 -        }
 -      }
--
+ 
        if (compiler != null && !compiler.hasRegExpGlobalReferences()) {
          if (nameNode.getFirstChild().getType() == Token.REGEXP
-             && REGEXP_METHODS.contains(nameNode.getLastChild().getString())) {

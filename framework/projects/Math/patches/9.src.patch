@@ -1,15 +1,14 @@
 diff --git a/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Line.java b/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Line.java
-index 7c9a28f..0c39411 100644
+index 7c9a28f..674c4aa 100644
 --- a/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Line.java
 +++ b/src/main/java/org/apache/commons/math3/geometry/euclidean/threed/Line.java
-@@ -84,9 +84,7 @@ public class Line implements Embedding<Euclidean3D, Euclidean1D> {
+@@ -84,8 +84,7 @@ public class Line implements Embedding<Euclidean3D, Euclidean1D> {
       * @return a new instance, with reversed direction
       */
      public Line revert() {
 -        final Line reverted = new Line(this);
 -        reverted.direction = reverted.direction.negate();
--        return reverted;
-+        return new Line(zero, zero.subtract(direction));
++        final Line reverted = new Line(zero, zero.subtract(direction));
+         return reverted;
      }
  
-     /** Get the normalized direction vector.

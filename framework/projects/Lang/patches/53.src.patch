@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/lang/time/DateUtils.java b/src/java/org/apache/commons/lang/time/DateUtils.java
-index e5138b5..9ca1bc5 100644
+index e5138b5..0dd0ded 100644
 --- a/src/java/org/apache/commons/lang/time/DateUtils.java
 +++ b/src/java/org/apache/commons/lang/time/DateUtils.java
 @@ -640,18 +640,18 @@ public class DateUtils {
@@ -7,10 +7,8 @@ index e5138b5..9ca1bc5 100644
          if (!round || millisecs < 500) {
              time = time - millisecs;
 -        }
--        if (field == Calendar.SECOND) {
--            done = true;
-+            if (field == Calendar.SECOND) {
-+                done = true;
+         if (field == Calendar.SECOND) {
+             done = true;
 +            }
          }
  
@@ -19,10 +17,8 @@ index e5138b5..9ca1bc5 100644
          if (!done && (!round || seconds < 30)) {
              time = time - (seconds * 1000L);
 -        }
--        if (field == Calendar.MINUTE) {
--            done = true;
-+            if (field == Calendar.MINUTE) {
-+                done = true;
+         if (field == Calendar.MINUTE) {
+             done = true;
 +            }
          }
  

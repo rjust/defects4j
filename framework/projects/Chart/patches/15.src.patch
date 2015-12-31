@@ -1,8 +1,8 @@
-Index: source/org/jfree/chart/plot/PiePlot.java
-===================================================================
---- source/org/jfree/chart/plot/PiePlot.java	(revision 749)
-+++ source/org/jfree/chart/plot/PiePlot.java	(revision 747)
-@@ -1375,9 +1373,6 @@
+diff --git a/source/org/jfree/chart/plot/PiePlot.java b/source/org/jfree/chart/plot/PiePlot.java
+index 7c3cd04..f575e72 100644
+--- a/source/org/jfree/chart/plot/PiePlot.java
++++ b/source/org/jfree/chart/plot/PiePlot.java
+@@ -1375,9 +1375,6 @@ public class PiePlot extends Plot implements Cloneable, Serializable {
       * @return The percent.
       */
      public double getMaximumExplodePercent() {
@@ -12,16 +12,14 @@ Index: source/org/jfree/chart/plot/PiePlot.java
          double result = 0.0;
          Iterator iterator = this.dataset.getKeys().iterator();
          while (iterator.hasNext()) {
-@@ -2051,10 +2046,8 @@
+@@ -2051,10 +2048,8 @@ public class PiePlot extends Plot implements Cloneable, Serializable {
       
          PiePlotState state = new PiePlotState(info);
          state.setPassesRequired(2);
 -        if (this.dataset != null) {
--            state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
--                    plot.getDataset()));
+             state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
+                     plot.getDataset()));
 -        }
-+        state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
-+                plot.getDataset()));
          state.setLatestAngle(plot.getStartAngle());
          return state;
          

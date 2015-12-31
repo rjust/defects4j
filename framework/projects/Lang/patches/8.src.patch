@@ -1,42 +1,28 @@
 diff --git a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
-index c952309..15be67b 100644
+index c952309..5c0edda 100644
 --- a/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
 +++ b/src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java
-@@ -1093,8 +1093,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
-      * <p>Inner class to output a time zone name.</p>
-      */
+@@ -1095,6 +1095,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
      private static class TimeZoneNameRule implements Rule {
--        private final Locale mLocale;
--        private final int mStyle;
-+        private final TimeZone mTimeZone;
+         private final Locale mLocale;
+         private final int mStyle;
++        private final TimeZone zone;
          private final String mStandard;
          private final String mDaylight;
  
-@@ -1106,9 +1105,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
-          * @param style the style
-          */
+@@ -1108,6 +1109,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
          TimeZoneNameRule(TimeZone timeZone, Locale locale, int style) {
--            mLocale = locale;
--            mStyle = style;
--            
-+            mTimeZone = timeZone;
-+
+             mLocale = locale;
+             mStyle = style;
++            zone = timeZone;
+             
              mStandard = getTimeZoneDisplay(timeZone, false, style, locale);
              mDaylight = getTimeZoneDisplay(timeZone, true, style, locale);
-         }
-@@ -1129,12 +1127,10 @@ public class FastDatePrinter implements DatePrinter, Serializable {
+@@ -1129,7 +1131,6 @@ public class FastDatePrinter implements DatePrinter, Serializable {
           */
          @Override
          public void appendTo(StringBuffer buffer, Calendar calendar) {
 -            TimeZone zone = calendar.getTimeZone();
--            if (zone.useDaylightTime()
--                    && calendar.get(Calendar.DST_OFFSET) != 0) {
--                buffer.append(getTimeZoneDisplay(zone, true, mStyle, mLocale));
-+            if (mTimeZone.useDaylightTime() && calendar.get(Calendar.DST_OFFSET) != 0) {
-+                buffer.append(mDaylight);
-             } else {
--                buffer.append(getTimeZoneDisplay(zone, false, mStyle, mLocale));
-+                buffer.append(mStandard);
-             }
-         }
-     }
+             if (zone.useDaylightTime()
+                     && calendar.get(Calendar.DST_OFFSET) != 0) {
+                 buffer.append(getTimeZoneDisplay(zone, true, mStyle, mLocale));

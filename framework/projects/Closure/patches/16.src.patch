@@ -1,26 +1,20 @@
 diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
-index e2f0538..349c326 100644
+index e2f0538..26fb230 100644
 --- a/src/com/google/javascript/jscomp/ScopedAliases.java
 +++ b/src/com/google/javascript/jscomp/ScopedAliases.java
-@@ -166,24 +166,18 @@ class ScopedAliases implements HotSwapCompilerPass {
-   }
+@@ -167,23 +167,17 @@ class ScopedAliases implements HotSwapCompilerPass {
  
    private class AliasedTypeNode implements AliasUsage {
--    private final Node typeReference;
+     private final Node typeReference;
 -    private final Node aliasDefinition;
--    private final String aliasName;
-+    private final Node aliasReference;
+     private final String aliasName;
  
 -    AliasedTypeNode(Node typeReference, Node aliasDefinition,
--        String aliasName) {
--      this.typeReference = typeReference;
++    AliasedTypeNode(Node typeReference,
+         String aliasName) {
+       this.typeReference = typeReference;
 -      this.aliasDefinition = aliasDefinition;
--      this.aliasName = aliasName;
-+    private final String correctedType;
-+
-+    AliasedTypeNode(Node aliasReference, String correctedType) {
-+      this.aliasReference = aliasReference;
-+      this.correctedType = correctedType;
+       this.aliasName = aliasName;
      }
  
      @Override
@@ -30,17 +24,16 @@ index e2f0538..349c326 100644
 -          Preconditions.checkNotNull(aliasDefinition.getQualifiedName());
 -      Preconditions.checkState(typeName.startsWith(aliasName));
 -      typeReference.setString(typeName.replaceFirst(aliasName, aliasExpanded));
-+      aliasReference.setString(correctedType);
++      typeReference.setString(aliasName);
      }
    }
  
-@@ -471,7 +465,8 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -471,7 +465,7 @@ class ScopedAliases implements HotSwapCompilerPass {
          Var aliasVar = aliases.get(baseName);
          if (aliasVar != null) {
            Node aliasedNode = aliasVar.getInitialValue();
 -          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode, baseName));
-+          aliasUsages.add(new AliasedTypeNode(typeNode,
-+              aliasedNode.getQualifiedName() + name.substring(endIndex)));
++          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode.getQualifiedName() + name.substring(endIndex)));
          }
        }
  

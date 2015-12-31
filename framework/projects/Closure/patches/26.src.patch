@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/ProcessCommonJSModules.java b/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
-index fa01cd9..28faca3 100644
+index fa01cd9..1744a58 100644
 --- a/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
 +++ b/src/com/google/javascript/jscomp/ProcessCommonJSModules.java
 @@ -125,7 +125,6 @@ public class ProcessCommonJSModules implements CompilerPass {
@@ -10,18 +10,17 @@ index fa01cd9..28faca3 100644
  
      @Override
      public void visit(NodeTraversal t, Node n, Node parent) {
-@@ -205,10 +204,6 @@ public class ProcessCommonJSModules implements CompilerPass {
+@@ -205,9 +204,6 @@ public class ProcessCommonJSModules implements CompilerPass {
       */
      private void emitOptionalModuleExportsOverride(Node script,
          String moduleName) {
 -      if (!modulesWithExports.contains(moduleName)) {
 -        return;
 -      }
--
+ 
        Node moduleExportsProp = IR.getprop(IR.name(moduleName),
            IR.string("module$exports"));
-       script.addChildToBack(IR.ifNode(
-@@ -229,7 +224,6 @@ public class ProcessCommonJSModules implements CompilerPass {
+@@ -229,7 +225,6 @@ public class ProcessCommonJSModules implements CompilerPass {
        Node exports = prop.getChildAtIndex(1);
        exports.putProp(Node.ORIGINALNAME_PROP, "exports");
        exports.setString("module$exports");

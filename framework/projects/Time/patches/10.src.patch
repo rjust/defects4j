@@ -1,17 +1,16 @@
 diff --git a/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java b/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
-index 839d3b8..cdf3e49 100644
+index 839d3b8..91b2c5c 100644
 --- a/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
 +++ b/src/main/java/org/joda/time/base/BaseSingleFieldPeriod.java
-@@ -48,8 +48,6 @@ public abstract class BaseSingleFieldPeriod
- 
+@@ -49,7 +49,6 @@ public abstract class BaseSingleFieldPeriod
      /** Serialization version. */
      private static final long serialVersionUID = 9386874258972L;
--    /** The start of 1972. */
+     /** The start of 1972. */
 -    private static final long START_1972 = 2L * 365L * 86400L * 1000L;
  
      /** The period in the units of this period. */
      private volatile int iPeriod;
-@@ -102,7 +100,7 @@ public abstract class BaseSingleFieldPeriod
+@@ -102,7 +101,7 @@ public abstract class BaseSingleFieldPeriod
              throw new IllegalArgumentException("ReadablePartial objects must be contiguous");
          }
          Chronology chrono = DateTimeUtils.getChronology(start.getChronology()).withUTC();
