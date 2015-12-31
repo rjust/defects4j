@@ -1,14 +1,12 @@
 diff --git a/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java b/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
-index 29b0872..2471fce 100644
+index 29b0872..6c8e9c6 100644
 --- a/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
 +++ b/src/main/java/org/joda/time/format/PeriodFormatterBuilder.java
-@@ -1094,8 +1094,8 @@ public class PeriodFormatterBuilder {
-             int sum = Math.max(FormatUtils.calculateDigitCount(valueLong), iMinPrintedDigits);
+@@ -1095,7 +1095,7 @@ public class PeriodFormatterBuilder {
              if (iFieldType >= SECONDS_MILLIS) {
                  // valueLong contains the seconds and millis fields
--                // the minimum output is 0.000, which is 4 or 5 digits with a negative
+                 // the minimum output is 0.000, which is 4 or 5 digits with a negative
 -                sum = (valueLong < 0 ? Math.max(sum, 5) : Math.max(sum, 4));
-+                // the minimum output is 0.000, which is 4 digits
 +                sum = Math.max(sum, 4);
                  // plus one for the decimal point
                  sum++;
