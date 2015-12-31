@@ -1,17 +1,8 @@
 diff --git a/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java b/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
-index 984d56d..59091da 100644
+index 984d56d..c87b010 100644
 --- a/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
 +++ b/src/java/org/apache/commons/math/stat/inference/ChiSquareTestImpl.java
-@@ -63,6 +63,8 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
-      */
-     public double chiSquare(double[] expected, long[] observed)
-         throws IllegalArgumentException {
-+        double sumSq = 0.0d;
-+        double dev = 0.0d;
-         if ((expected.length < 2) || (expected.length != observed.length)) {
-             throw new IllegalArgumentException(
-                     "observed, expected array lengths incorrect");
-@@ -71,38 +73,14 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
+@@ -71,28 +71,11 @@ public class ChiSquareTestImpl implements UnknownDistributionChiSquareTest {
              throw new IllegalArgumentException(
                  "observed counts must be non-negative and expected counts must be postive");
          }
@@ -27,28 +18,16 @@ index 984d56d..59091da 100644
 -            ratio = sumObserved / sumExpected;
 -            rescale = true;
 -        }
--        double sumSq = 0.0d;
--        double dev = 0.0d;
+         double sumSq = 0.0d;
+         double dev = 0.0d;
          for (int i = 0; i < observed.length; i++) {
 -            if (rescale) {
 -                dev = ((double) observed[i] - ratio * expected[i]);
 -                sumSq += dev * dev / (ratio * expected[i]);
 -            } else {
--                dev = ((double) observed[i] - expected[i]);
--                sumSq += dev * dev / expected[i];
+                 dev = ((double) observed[i] - expected[i]);
+                 sumSq += dev * dev / expected[i];
 -            }
-+            dev = ((double) observed[i] - expected[i]);
-+            sumSq += dev * dev / expected[i];
          }
          return sumSq;
      }
- 
-     /**
--     * {@inheritDoc}
--     * <p><strong>Note: </strong>This implementation rescales the 
--     * <code>expected</code> array if necessary to ensure that the sum of the
--     * expected and observed counts are equal.</p>
--     * 
-      * @param observed array of observed frequency counts
-      * @param expected array of exptected frequency counts
-      * @return p-value
