@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/LiveVariablesAnalysis.java b/src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
-index e107faa..772d251 100644
+index e107faa..7999db4 100644
 --- a/src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
 +++ b/src/com/google/javascript/jscomp/LiveVariablesAnalysis.java
 @@ -203,12 +203,8 @@ class LiveVariablesAnalysis extends
@@ -7,13 +7,11 @@ index e107faa..772d251 100644
              lhs = lhs.getLastChild();
            }
 -          if (NodeUtil.isName(lhs)) {
--            addToSetIfLocal(lhs, kill);
--            addToSetIfLocal(lhs, gen);
+             addToSetIfLocal(lhs, kill);
+             addToSetIfLocal(lhs, gen);
 -          } else {
 -            computeGenKill(lhs, gen, kill, conditional);
 -          }
-+          addToSetIfLocal(lhs, kill);
-+          addToSetIfLocal(lhs, gen);
            computeGenKill(rhs, gen, kill, conditional);
          }
          return;
