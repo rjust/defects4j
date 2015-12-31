@@ -1,33 +1,22 @@
 diff --git a/src/main/java/org/apache/commons/lang3/builder/HashCodeBuilder.java b/src/main/java/org/apache/commons/lang3/builder/HashCodeBuilder.java
-index 9f7e890..547676c 100644
+index 9f7e890..4ae351d 100644
 --- a/src/main/java/org/apache/commons/lang3/builder/HashCodeBuilder.java
 +++ b/src/main/java/org/apache/commons/lang3/builder/HashCodeBuilder.java
-@@ -101,7 +101,14 @@ public class HashCodeBuilder {
+@@ -101,7 +101,12 @@ public class HashCodeBuilder {
       * 
       * @since 2.3
       */
 -    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<Set<IDKey>>();
-+    private static final ThreadLocal<Set<IDKey>> registry = new ThreadLocal<Set<IDKey>>() {
++    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<Set<IDKey>>() {
 +        @Override
 +        protected Set<IDKey> initialValue() {
-+            // The HashSet implementation is not synchronized,
-+            // which is just what we need here.
 +            return new HashSet<IDKey>();
 +        }
 +    };
  
      /*
       * N.B. we cannot store the actual objects in a HashSet, as that would use the very hashCode()
-@@ -129,7 +136,7 @@ public class HashCodeBuilder {
-      * @since 2.3
-      */
-     static Set<IDKey> getRegistry() {
--        return REGISTRY.get();
-+        return registry.get();
-     }
- 
-     /**
-@@ -144,8 +151,7 @@ public class HashCodeBuilder {
+@@ -144,8 +149,7 @@ public class HashCodeBuilder {
       * @since 2.3
       */
      static boolean isRegistered(Object value) {
@@ -37,7 +26,7 @@ index 9f7e890..547676c 100644
      }
  
      /**
-@@ -515,11 +521,6 @@ public class HashCodeBuilder {
+@@ -515,11 +519,6 @@ public class HashCodeBuilder {
       *            The object to register.
       */
      static void register(Object value) {
@@ -49,7 +38,7 @@ index 9f7e890..547676c 100644
          getRegistry().add(new IDKey(value));
      }
  
-@@ -536,15 +537,7 @@ public class HashCodeBuilder {
+@@ -536,15 +535,7 @@ public class HashCodeBuilder {
       * @since 2.3
       */
      static void unregister(Object value) {
