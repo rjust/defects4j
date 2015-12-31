@@ -44,18 +44,17 @@ index bd12b54..e010781 100644
                  // Break conjugation: reset search direction.
                  searchDirection = steepestDescent.clone();
 diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
-index fed67b1..c7216f9 100644
+index fed67b1..0303041 100644
 --- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
 +++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java
-@@ -385,8 +385,6 @@ public class CMAESOptimizer
+@@ -385,7 +385,6 @@ public class CMAESOptimizer
  
          generationLoop:
          for (iterations = 1; iterations <= maxIterations; iterations++) {
 -            incrementIterationCount();
--
+ 
              // Generate and evaluate lambda offspring
              final RealMatrix arz = randn1(dimension, lambda);
-             final RealMatrix arx = zeros(dimension, lambda);
 diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
 index afe8d2f..9572820 100644
 --- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java
@@ -81,7 +80,7 @@ index afe8d2f..9572820 100644
              }
              if (stop) {
 diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
-index 0dd644e..3d16aa8 100644
+index 0dd644e..9ea2324 100644
 --- a/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
 +++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java
 @@ -155,7 +155,7 @@ public class SimplexOptimizer extends MultivariateOptimizer {
@@ -93,13 +92,12 @@ index 0dd644e..3d16aa8 100644
                  boolean converged = true;
                  for (int i = 0; i < simplex.getSize(); i++) {
                      PointValuePair prev = previous[i];
-@@ -171,8 +171,7 @@ public class SimplexOptimizer extends MultivariateOptimizer {
-             // We still need to search.
+@@ -172,7 +172,7 @@ public class SimplexOptimizer extends MultivariateOptimizer {
              previous = simplex.getPoints();
              simplex.iterate(evalFunc, comparator);
--
+ 
 -            incrementIterationCount();
-+            ++iteration;
++			++iteration;
          }
      }
  
