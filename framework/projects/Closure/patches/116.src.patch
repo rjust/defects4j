@@ -1,8 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/FunctionInjector.java b/src/com/google/javascript/jscomp/FunctionInjector.java
-index accf4c5..5b38600 100644
+index accf4c5..c3fc14b 100644
 --- a/src/com/google/javascript/jscomp/FunctionInjector.java
 +++ b/src/com/google/javascript/jscomp/FunctionInjector.java
-@@ -694,16 +694,6 @@ class FunctionInjector {
+@@ -694,15 +694,6 @@ class FunctionInjector {
  
      Node block = fnNode.getLastChild();
  
@@ -15,18 +15,16 @@ index accf4c5..5b38600 100644
 -            stmt.getFirstChild(), compiler);
 -      }
 -    }
--
+ 
      // CALL NODE: [ NAME, ARG1, ARG2, ... ]
      Node cArg = callNode.getFirstChild().getNext();
- 
-@@ -729,10 +719,6 @@ class FunctionInjector {
+@@ -729,9 +720,6 @@ class FunctionInjector {
        // For each named parameter check if a mutable argument use more than one.
        if (fnParam != null) {
          if (cArg != null) {
 -          if (hasSideEffects && NodeUtil.canBeSideEffected(cArg)) {
 -            return CanInlineResult.NO;
 -          }
--
+ 
            // Check for arguments that are evaluated more than once.
            // Note: Unlike block inlining, there it is not possible that a
-           // parameter reference will be in a loop.
