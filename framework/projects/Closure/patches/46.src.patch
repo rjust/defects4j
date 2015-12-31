@@ -1,8 +1,8 @@
 diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
-index b418dbd..a8ed1d1 100755
+index b418dbd..7289803 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordType.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordType.java
-@@ -137,9 +137,33 @@ class RecordType extends PrototypeObjectType {
+@@ -137,6 +137,22 @@ class RecordType extends PrototypeObjectType {
          propertyNode);
    }
  
@@ -11,29 +11,17 @@ index b418dbd..a8ed1d1 100755
 +    if (!that.isRecordType()) {
 +      return super.getLeastSupertype(that);
 +    }
-+
-+    RecordType thatRecord = that.toMaybeRecordType();
 +    RecordTypeBuilder builder = new RecordTypeBuilder(registry);
-+
-+    // The least supertype consist of those properties of the record
-+    // type that both record types hold in common both by name and
-+    // type of the properties themselves.
 +    for (String property : properties.keySet()) {
-+      if (thatRecord.hasProperty(property) &&
-+          thatRecord.getPropertyType(property).isEquivalentTo(
++      if (that.toMaybeRecordType().hasProperty(property) &&
++          that.toMaybeRecordType().getPropertyType(property).isEquivalentTo(
 +              getPropertyType(property))) {
 +        builder.addProperty(property, getPropertyType(property),
 +            getPropertyNode(property));
 +      }
 +    }
-+
 +    return builder.build();
 +  }
-+
    JSType getGreatestSubtypeHelper(JSType that) {
      if (that.isRecordType()) {
--      RecordType thatRecord = that.toMaybeRecordType();
-+      RecordType thatRecord = (RecordType) that;
-       RecordTypeBuilder builder = new RecordTypeBuilder(registry);
- 
-       // The greatest subtype consists of those *unique* properties of both
+       RecordType thatRecord = that.toMaybeRecordType();
