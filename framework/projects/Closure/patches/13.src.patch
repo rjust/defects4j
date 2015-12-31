@@ -1,17 +1,14 @@
 diff --git a/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java b/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
-index eeeb6a9..1370401 100644
+index eeeb6a9..b51c088 100644
 --- a/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
 +++ b/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java
-@@ -121,11 +121,8 @@ class PeepholeOptimizationsPass
- 
-     int visits = 0;
+@@ -123,8 +123,8 @@ class PeepholeOptimizationsPass
      do {
--      Node c = node.getFirstChild();
--      while(c != null) {
+       Node c = node.getFirstChild();
+       while(c != null) {
 -        Node next = c.getNext();
-+      for (Node c = node.getFirstChild(); c != null; c = c.getNext()) {
          traverse(c);
--        c = next;
++        Node next = c.getNext();
+         c = next;
        }
  
-       visit(node);
