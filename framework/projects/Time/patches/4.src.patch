@@ -1,15 +1,12 @@
 diff --git a/src/main/java/org/joda/time/Partial.java b/src/main/java/org/joda/time/Partial.java
-index 8e8e603..c0512db 100644
+index 8e8e603..0d4edf4 100644
 --- a/src/main/java/org/joda/time/Partial.java
 +++ b/src/main/java/org/joda/time/Partial.java
-@@ -459,9 +459,8 @@ public final class Partial
-             newValues[i] = value;
-             System.arraycopy(iTypes, i, newTypes, i + 1, newTypes.length - i - 1);
+@@ -461,7 +461,7 @@ public final class Partial
              System.arraycopy(iValues, i, newValues, i + 1, newValues.length - i - 1);
--            // use public constructor to ensure full validation
--            // this isn't overly efficient, but is safe
+             // use public constructor to ensure full validation
+             // this isn't overly efficient, but is safe
 -            Partial newPartial = new Partial(newTypes, newValues, iChronology);
-+            
 +            Partial newPartial = new Partial(iChronology, newTypes, newValues);
              iChronology.validate(newPartial, newValues);
              return newPartial;
