@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
-index 74728ee..bc24897 100644
+index 74728ee..7e218d8 100644
 --- a/src/com/google/javascript/jscomp/TypeInference.java
 +++ b/src/com/google/javascript/jscomp/TypeInference.java
 @@ -1033,9 +1033,9 @@ class TypeInference
@@ -7,14 +7,13 @@ index 74728ee..bc24897 100644
  
    private FlowScope traverseNew(Node n, FlowScope scope) {
 -    scope = traverseChildren(n, scope);
--
+ 
      Node constructor = n.getFirstChild();
 +    scope = traverse(constructor, scope);
-+
      JSType constructorType = constructor.getJSType();
      JSType type = null;
      if (constructorType != null) {
-@@ -1052,11 +1052,14 @@ class TypeInference
+@@ -1052,11 +1052,13 @@ class TypeInference
          }
          if (ct != null && ct.isConstructor()) {
            type = ct.getInstanceType();
@@ -23,7 +22,6 @@ index 74728ee..bc24897 100644
        }
      }
      n.setJSType(type);
-+
 +    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
 +      scope = traverse(arg, scope);
 +    }
