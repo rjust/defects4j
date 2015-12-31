@@ -1,43 +1,34 @@
 diff --git a/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java b/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
-index 4d010ea..3cbf1e1 100644
+index 4d010ea..4cb581d 100644
 --- a/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
 +++ b/src/main/java/org/apache/commons/lang3/text/translate/CharSequenceTranslator.java
-@@ -79,20 +79,27 @@ public abstract class CharSequenceTranslator {
-         if (input == null) {
+@@ -80,20 +80,26 @@ public abstract class CharSequenceTranslator {
              return;
          }
--        int pos = 0;
+         int pos = 0;
 -        int len = input.length();
--        while (pos < len) {
--            int consumed = translate(input, pos, out);
-+        int sz = Character.codePointCount(input, 0, input.length());
-+        for (int i = 0; i < sz; i++) {
-+
-+            // consumed is the number of codepoints consumed
-+            int consumed = translate(input, i, out);
-+
++        int len = Character.codePointCount(input, 0, input.length());
+         while (pos < len) {
+             int consumed = translate(input, pos, out);
              if (consumed == 0) {
--                char[] c = Character.toChars(Character.codePointAt(input, pos));
--                out.write(c);
+                 char[] c = Character.toChars(Character.codePointAt(input, pos));
+                 out.write(c);
 -                pos+= c.length;
 -                continue;
--            }
-+                out.write(Character.toChars(Character.codePointAt(input, i)));
-+            } else {
+             }
++            else {
  //          // contract with translators is that they have to understand codepoints 
  //          // and they just took care of a surrogate pair
--            for (int pt = 0; pt < consumed; pt++) {
--                pos += Character.charCount(Character.codePointAt(input, pos));
-+                for (int j = 0; j < consumed; j++) {
-+                    if (i < sz - 2) {
-+                        i += Character.charCount(Character.codePointAt(input, i));
+             for (int pt = 0; pt < consumed; pt++) {
++                    if (pos < len - 2) {
+                 pos += Character.charCount(Character.codePointAt(input, pos));
 +                    } else {
-+                        // If the String ends with a high surrogate, just add the 1 and don't worry about such things
-+                        i++;
++                        pos++;
 +                    }
 +                }
-+                // for loop will increment 1 anyway, so remove 1 to account for that
-+                i--;
++                pos--;
              }
++            pos++;
          }
      }
+ 
