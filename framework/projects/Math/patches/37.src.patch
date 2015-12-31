@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/math/complex/Complex.java b/src/main/java/org/apache/commons/math/complex/Complex.java
-index ed76a29..98357be 100644
+index ed76a29..8d28c5f 100644
 --- a/src/main/java/org/apache/commons/math/complex/Complex.java
 +++ b/src/main/java/org/apache/commons/math/complex/Complex.java
 @@ -1015,15 +1015,9 @@ public class Complex implements FieldElement<Complex>, Serializable  {
@@ -19,7 +19,7 @@ index ed76a29..98357be 100644
  
          double real2 = 2.0 * real;
          double imaginary2 = 2.0 * imaginary;
-@@ -1066,15 +1060,10 @@ public class Complex implements FieldElement<Complex>, Serializable  {
+@@ -1066,15 +1060,9 @@ public class Complex implements FieldElement<Complex>, Serializable  {
       * @since 1.2
       */
      public Complex tanh() {
@@ -33,7 +33,6 @@ index ed76a29..98357be 100644
 -        if (real < -20.0) {
 -            return createComplex(-1.0, 0.0);
 -        }
-+
          double real2 = 2.0 * real;
          double imaginary2 = 2.0 * imaginary;
          double d = FastMath.cosh(real2) + FastMath.cos(imaginary2);
