@@ -1,22 +1,13 @@
 diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
-index aa3299a..789bc25 100644
+index aa3299a..b8225ad 100644
 --- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
 +++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/Weight.java
-@@ -18,7 +18,7 @@ package org.apache.commons.math3.optim.nonlinear.vector;
- 
- import org.apache.commons.math3.optim.OptimizationData;
- import org.apache.commons.math3.linear.RealMatrix;
--import org.apache.commons.math3.linear.DiagonalMatrix;
-+import org.apache.commons.math3.linear.MatrixUtils;
- import org.apache.commons.math3.linear.NonSquareMatrixException;
- 
- /**
 @@ -40,7 +40,10 @@ public class Weight implements OptimizationData {
       */
      public Weight(double[] weight) {
          final int dim = weight.length;
 -        weightMatrix = new DiagonalMatrix(weight);
-+        weightMatrix = MatrixUtils.createRealMatrix(dim, dim);
++        weightMatrix = org.apache.commons.math3.linear.MatrixUtils.createRealMatrix(dim, dim);
 +        for (int i = 0; i < dim; i++) {
 +            weightMatrix.setEntry(i, i, weight[i]);
 +        }
@@ -24,7 +15,7 @@ index aa3299a..789bc25 100644
  
      /**
 diff --git a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
-index ef52943..5055849 100644
+index ef52943..d12ebea 100644
 --- a/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
 +++ b/src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java
 @@ -264,16 +264,7 @@ public abstract class AbstractLeastSquaresOptimizer
@@ -39,10 +30,8 @@ index ef52943..5055849 100644
 -            }
 -            return sqrtM;
 -        } else {
--            final EigenDecomposition dec = new EigenDecomposition(m);
--            return dec.getSquareRoot();
+             final EigenDecomposition dec = new EigenDecomposition(m);
+             return dec.getSquareRoot();
 -        }
-+        final EigenDecomposition dec = new EigenDecomposition(m);
-+        return dec.getSquareRoot();
      }
  }

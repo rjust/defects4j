@@ -1,15 +1,14 @@
 diff --git a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
-index 20196bf..97500f0 100644
+index 20196bf..a8e92fc 100644
 --- a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
 +++ b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
-@@ -99,10 +99,6 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
+@@ -99,9 +99,6 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
            return true;
          }
  
 -        if (n.isDelProp()) {
 -          return true;
 -        }
--
+ 
          for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
            if (!ControlFlowGraph.isEnteringNewCfgNode(c) && apply(c)) {
-             return true;

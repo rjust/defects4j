@@ -1,33 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index 09aba12..c436ea9 100644
+index 09aba12..3fb4813 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-@@ -1196,22 +1196,14 @@ final class TypedScopeCreator implements ScopeCreator {
-      * Check if the given node is a property of a name in the global scope.
-      */
-     private boolean isQnameRootedInGlobalScope(Node n) {
--      Scope scope = getQnameRootScope(n);
--      return scope != null && scope.isGlobal();
--    }
--
--    /**
--     * Return the scope for the name of the given node.
--     */
--    private Scope getQnameRootScope(Node n) {
-       Node root = NodeUtil.getRootOfQualifiedName(n);
-       if (root.isName()) {
-         Var var = scope.getVar(root.getString());
-         if (var != null) {
--          return var.getScope();
-+          return var.isGlobal();
-         }
-       }
--      return null;
-+      return false;
-     }
- 
-     /**
-@@ -1518,14 +1510,11 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -1518,14 +1518,11 @@ final class TypedScopeCreator implements ScopeCreator {
              || FunctionTypeBuilder.isFunctionTypeDeclaration(info));
        }
  
@@ -46,13 +21,3 @@ index 09aba12..c436ea9 100644
        }
  
        if (!inferred) {
-@@ -1546,7 +1535,8 @@ final class TypedScopeCreator implements ScopeCreator {
-         // If the property is already declared, the error will be
-         // caught when we try to declare it in the current scope.
-         defineSlot(n, parent, valueType, inferred);
--      } else if (rhsValue != null && rhsValue.isTrue()) {
-+      } else if (rhsValue != null &&
-+          rhsValue.isTrue()) {
-         // We declare these for delegate proxy method properties.
-         FunctionType ownerType =
-             JSType.toMaybeFunctionType(getObjectSlot(ownerName));

@@ -1,32 +1,17 @@
 diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-index c115e10..e642d75 100644
+index c115e10..e30c350 100644
 --- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 +++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-@@ -1901,18 +1901,6 @@ public final class JsDocInfoParser {
-   }
- 
-   /**
--   * ContextTypeExpression := BasicTypeExpression | '?'
--   * For expressions on the right hand side of a this: or new:
--   */
--  private Node parseContextTypeExpression(JsDocToken token) {
+@@ -1905,11 +1905,7 @@ public final class JsDocInfoParser {
+    * For expressions on the right hand side of a this: or new:
+    */
+   private Node parseContextTypeExpression(JsDocToken token) {
 -    if (token == JsDocToken.QMARK) {
 -      return newNode(Token.QMARK);
 -    } else {
 -      return parseBasicTypeExpression(token);
 -    }
--  }
--
--  /**
-    * BasicTypeExpression := '*' | 'null' | 'undefined' | TypeName
-    *     | FunctionType | UnionType | RecordType | ArrayType
-    */
-@@ -2015,7 +2003,7 @@ public final class JsDocInfoParser {
-             skipEOLs();
-             Node contextType = wrapNode(
-                 isThis ? Token.THIS : Token.NEW,
--                parseContextTypeExpression(next()));
-+                parseTypeName(next()));
-             if (contextType == null) {
-               return null;
-             }
++          return parseTypeName(token);
+   }
+ 
+   /**

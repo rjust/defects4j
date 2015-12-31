@@ -1,13 +1,8 @@
-Index: source/org/jfree/chart/plot/ValueMarker.java
-===================================================================
---- source/org/jfree/chart/plot/ValueMarker.java	(revision 283)
-+++ source/org/jfree/chart/plot/ValueMarker.java	(revision 281)
-@@ -88,11 +88,11 @@
-      * @param stroke  the stroke (<code>null</code> not permitted).
-      * @param outlinePaint  the outline paint (<code>null</code> permitted).
-      * @param outlineStroke  the outline stroke (<code>null</code> permitted).
--     * @param alpha  the alpha transparency (in the range 0.0f to 1.0f).
-+     * @param alpha  the alpha transparency.
+diff --git a/source/org/jfree/chart/plot/ValueMarker.java b/source/org/jfree/chart/plot/ValueMarker.java
+index 58d5289..075683d 100644
+--- a/source/org/jfree/chart/plot/ValueMarker.java
++++ b/source/org/jfree/chart/plot/ValueMarker.java
+@@ -92,7 +92,7 @@ public class ValueMarker extends Marker {
       */
      public ValueMarker(double value, Paint paint, Stroke stroke, 
                         Paint outlinePaint, Stroke outlineStroke, float alpha) {

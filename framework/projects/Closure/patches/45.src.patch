@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/RemoveUnusedVars.java b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
-index c93a073..b403db2 100644
+index c93a073..be72a58 100644
 --- a/src/com/google/javascript/jscomp/RemoveUnusedVars.java
 +++ b/src/com/google/javascript/jscomp/RemoveUnusedVars.java
 @@ -729,7 +729,6 @@ class RemoveUnusedVars
@@ -24,23 +24,12 @@ index c93a073..b403db2 100644
              changes = markReferencedVar(var) || changes;
              maybeUnreferenced.remove(current);
              current--;
-@@ -896,18 +892,14 @@ class RemoveUnusedVars
-     // way.
-     final boolean mayHaveSecondarySideEffects;
- 
--    // If true, the value may have escaped and any modification is a use.
--    final boolean maybeAliased;
--
-     Assign(Node assignNode, Node nameNode, boolean isPropertyAssign) {
-       Preconditions.checkState(NodeUtil.isAssignmentOp(assignNode));
-       this.assignNode = assignNode;
+@@ -905,7 +901,7 @@ class RemoveUnusedVars
        this.nameNode = nameNode;
        this.isPropertyAssign = isPropertyAssign;
  
 -      this.maybeAliased = NodeUtil.isExpressionResultUsed(assignNode);
++      this.maybeAliased = !assignNode.getParent().isExprResult();
        this.mayHaveSecondarySideEffects =
--          maybeAliased ||
-+          !assignNode.getParent().isExprResult() ||
+           maybeAliased ||
            NodeUtil.mayHaveSideEffects(assignNode.getFirstChild()) ||
-           NodeUtil.mayHaveSideEffects(assignNode.getLastChild());
-     }

@@ -1,8 +1,8 @@
-Index: source/org/jfree/data/time/Week.java
-===================================================================
---- source/org/jfree/data/time/Week.java	(revision 1085)
-+++ source/org/jfree/data/time/Week.java	(revision 1084)
-@@ -172,7 +171,7 @@
+diff --git a/source/org/jfree/data/time/Week.java b/source/org/jfree/data/time/Week.java
+index 8228589..3cc4138 100644
+--- a/source/org/jfree/data/time/Week.java
++++ b/source/org/jfree/data/time/Week.java
+@@ -172,7 +172,7 @@ public class Week extends RegularTimePeriod implements Serializable {
       */
      public Week(Date time, TimeZone zone) {
          // defer argument checking...

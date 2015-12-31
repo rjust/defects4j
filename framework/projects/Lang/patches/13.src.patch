@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/lang3/SerializationUtils.java b/src/main/java/org/apache/commons/lang3/SerializationUtils.java
-index 7c89b61..5926a9b 100644
+index 7c89b61..1ee636c 100644
 --- a/src/main/java/org/apache/commons/lang3/SerializationUtils.java
 +++ b/src/main/java/org/apache/commons/lang3/SerializationUtils.java
 @@ -236,8 +236,6 @@ public class SerializationUtils {
@@ -32,7 +32,7 @@ index 7c89b61..5926a9b 100644
                  return Class.forName(name, false, classLoader);
              } catch (ClassNotFoundException ex) {
 -                try {
--                    return Class.forName(name, false, Thread.currentThread().getContextClassLoader());
+                     return Class.forName(name, false, Thread.currentThread().getContextClassLoader());
 -                } catch (ClassNotFoundException cnfe) {
 -                    Class<?> cls = primitiveTypes.get(name);
 -                    if (cls != null)
@@ -40,7 +40,6 @@ index 7c89b61..5926a9b 100644
 -                    else
 -                        throw cnfe;
 -                }
-+                return Class.forName(name, false, Thread.currentThread().getContextClassLoader());
              }
          }
  

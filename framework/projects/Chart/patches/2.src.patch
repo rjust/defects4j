@@ -1,8 +1,8 @@
-Index: source/org/jfree/data/general/DatasetUtilities.java
-===================================================================
---- source/org/jfree/data/general/DatasetUtilities.java	(revision 2242)
-+++ source/org/jfree/data/general/DatasetUtilities.java	(revision 2240)
-@@ -752,19 +752,12 @@
+diff --git a/source/org/jfree/data/general/DatasetUtilities.java b/source/org/jfree/data/general/DatasetUtilities.java
+index 548d684..927cbad 100644
+--- a/source/org/jfree/data/general/DatasetUtilities.java
++++ b/source/org/jfree/data/general/DatasetUtilities.java
+@@ -752,19 +752,12 @@ public final class DatasetUtilities {
              for (int series = 0; series < seriesCount; series++) {
                  int itemCount = dataset.getItemCount(series);
                  for (int item = 0; item < itemCount; item++) {
@@ -22,7 +22,7 @@ Index: source/org/jfree/data/general/DatasetUtilities.java
                          maximum = Math.max(maximum, uvalue);
                      }
                  }
-@@ -1246,19 +1239,12 @@
+@@ -1246,19 +1239,12 @@ public final class DatasetUtilities {
              for (int series = 0; series < seriesCount; series++) {
                  int itemCount = dataset.getItemCount(series);
                  for (int item = 0; item < itemCount; item++) {

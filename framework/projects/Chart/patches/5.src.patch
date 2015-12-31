@@ -1,8 +1,8 @@
-Index: source/org/jfree/data/xy/XYSeries.java
-===================================================================
---- source/org/jfree/data/xy/XYSeries.java	(revision 1696)
-+++ source/org/jfree/data/xy/XYSeries.java	(revision 1695)
-@@ -541,15 +537,9 @@
+diff --git a/source/org/jfree/data/xy/XYSeries.java b/source/org/jfree/data/xy/XYSeries.java
+index b26e11e..0b37e6e 100644
+--- a/source/org/jfree/data/xy/XYSeries.java
++++ b/source/org/jfree/data/xy/XYSeries.java
+@@ -541,15 +541,11 @@ public class XYSeries extends Series implements Cloneable, Serializable {
          if (x == null) {
              throw new IllegalArgumentException("Null 'x' argument.");
          }
@@ -10,8 +10,8 @@ Index: source/org/jfree/data/xy/XYSeries.java
 -            add(x, y);
 -            return null;
 -        }
--
--        // if we get to here, we know that duplicate X values are not permitted
+ 
+         // if we get to here, we know that duplicate X values are not permitted
          XYDataItem overwritten = null;
          int index = indexOf(x);
 -        if (index >= 0) {

@@ -1,16 +1,15 @@
 diff --git a/src/main/java/org/joda/time/chrono/GJChronology.java b/src/main/java/org/joda/time/chrono/GJChronology.java
-index 0a19aa6..6131f14 100644
+index 0a19aa6..29e559d 100644
 --- a/src/main/java/org/joda/time/chrono/GJChronology.java
 +++ b/src/main/java/org/joda/time/chrono/GJChronology.java
-@@ -360,22 +360,9 @@ public final class GJChronology extends AssembledChronology {
-         }
+@@ -361,21 +361,9 @@ public final class GJChronology extends AssembledChronology {
  
          // Assume date is Gregorian.
--        long instant;
+         long instant;
 -        try {
--            instant = iGregorianChronology.getDateTimeMillis
--                (year, monthOfYear, dayOfMonth,
--                 hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
+             instant = iGregorianChronology.getDateTimeMillis
+                 (year, monthOfYear, dayOfMonth,
+                  hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
 -        } catch (IllegalFieldValueException ex) {
 -            if (monthOfYear != 2 || dayOfMonth != 29) {
 -                throw ex;
@@ -22,9 +21,6 @@ index 0a19aa6..6131f14 100644
 -                throw ex;
 -            }
 -        }
-+        long instant = iGregorianChronology.getDateTimeMillis
-+            (year, monthOfYear, dayOfMonth,
-+             hourOfDay, minuteOfHour, secondOfMinute, millisOfSecond);
          if (instant < iCutoverMillis) {
              // Maybe it's Julian.
              instant = iJulianChronology.getDateTimeMillis
