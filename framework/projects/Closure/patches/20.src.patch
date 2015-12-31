@@ -1,18 +1,10 @@
 diff --git a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-index 86521bd..813a2ee 100644
+index 86521bd..bfa1707 100644
 --- a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 +++ b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-@@ -210,15 +210,9 @@ class PeepholeSubstituteAlternateSyntax
-     Node callTarget = n.getFirstChild();
-     if (callTarget != null && callTarget.isName() &&
-           callTarget.getString().equals("String")) {
--      // Fold String(a) to '' + (a) on immutable literals,
--      // which allows further optimizations
--      //
--      // We can't do this in the general case, because String(a) has
--      // slightly different semantics than '' + (a). See
--      // http://code.google.com/p/closure-compiler/issues/detail?id=759
-+      // Fold String(a) to ''+(a) - which allows further optimizations
+@@ -217,8 +217,7 @@ class PeepholeSubstituteAlternateSyntax
+       // slightly different semantics than '' + (a). See
+       // http://code.google.com/p/closure-compiler/issues/detail?id=759
        Node value = callTarget.getNext();
 -      if (value != null && value.getNext() == null &&
 -          NodeUtil.isImmutableValue(value)) {

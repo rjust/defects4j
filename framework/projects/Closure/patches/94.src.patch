@@ -1,14 +1,12 @@
 diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
-index 8c5d125..cec8b2d 100644
+index 8c5d125..a31b17a 100644
 --- a/src/com/google/javascript/jscomp/NodeUtil.java
 +++ b/src/com/google/javascript/jscomp/NodeUtil.java
-@@ -325,34 +325,13 @@ public final class NodeUtil {
-       case Token.FALSE:
+@@ -326,33 +326,14 @@ public final class NodeUtil {
          return true;
  
--      // Binary operators are only valid if both children are valid.
+       // Binary operators are only valid if both children are valid.
 -      case Token.ADD:
-+      // Single operators are valid if the child is valid.
        case Token.BITAND:
        case Token.BITNOT:
        case Token.BITOR:
@@ -30,8 +28,8 @@ index 8c5d125..cec8b2d 100644
 -      case Token.URSH:
 -        return isValidDefineValue(val.getFirstChild(), defines)
 -            && isValidDefineValue(val.getLastChild(), defines);
--
--      // Uniary operators are valid if the child is valid.
+ 
+       // Uniary operators are valid if the child is valid.
        case Token.NOT:
        case Token.NEG:
 -      case Token.POS:

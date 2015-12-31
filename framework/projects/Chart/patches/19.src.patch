@@ -1,19 +1,8 @@
-Index: source/org/jfree/chart/plot/CategoryPlot.java
-===================================================================
---- source/org/jfree/chart/plot/CategoryPlot.java	(revision 434)
-+++ source/org/jfree/chart/plot/CategoryPlot.java	(revision 430)
-@@ -685,19 +684,13 @@
-      * Returns the index of the specified axis, or <code>-1</code> if the axis
-      * is not assigned to the plot.
-      * 
--     * @param axis  the axis (<code>null</code> not permitted).
-+     * @param axis  the axis.
-      * 
-      * @return The axis index.
-      * 
--     * @see #getDomainAxis(int)
--     * @see #getRangeAxisIndex(ValueAxis)
--     * 
+diff --git a/source/org/jfree/chart/plot/CategoryPlot.java b/source/org/jfree/chart/plot/CategoryPlot.java
+index ec31907..cf3f52f 100644
+--- a/source/org/jfree/chart/plot/CategoryPlot.java
++++ b/source/org/jfree/chart/plot/CategoryPlot.java
+@@ -695,9 +695,6 @@ public class CategoryPlot extends Plot implements ValueAxisPlot,
       * @since 1.0.3
       */
      public int getDomainAxisIndex(CategoryAxis axis) {
@@ -23,23 +12,7 @@ Index: source/org/jfree/chart/plot/CategoryPlot.java
          return this.domainAxes.indexOf(axis);
      }
      
-@@ -958,24 +951,19 @@
-         notifyListeners(new PlotChangeEvent(this));
-     }
-     
--
-     /**
-      * Returns the index of the specified axis, or <code>-1</code> if the axis
-      * is not assigned to the plot.
-      *
--     * @param axis  the axis (<code>null</code> not permitted).
-+     * @param axis  the axis.
-      *
-      * @return The axis index.
-      * 
--     * @see #getRangeAxis(int)
-      * @see #getDomainAxisIndex(CategoryAxis)
-      * 
+@@ -973,9 +970,6 @@ public class CategoryPlot extends Plot implements ValueAxisPlot,
       * @since 1.0.7
       */
      public int getRangeAxisIndex(ValueAxis axis) {

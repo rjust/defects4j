@@ -1,8 +1,8 @@
 diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
-index 855cad0..004821a 100644
+index 855cad0..5d89e34 100644
 --- a/src/main/java/org/joda/time/DateTimeZone.java
 +++ b/src/main/java/org/joda/time/DateTimeZone.java
-@@ -561,32 +561,31 @@ public abstract class DateTimeZone implements Serializable {
+@@ -561,11 +561,6 @@ public abstract class DateTimeZone implements Serializable {
              // Backwards compatibility with TimeZone.
              map = new HashMap<String, String>();
              map.put("GMT", "UTC");
@@ -12,17 +12,13 @@ index 855cad0..004821a 100644
 -            map.put("ECT", "CET");
 -            map.put("EET", "EET");
              map.put("MIT", "Pacific/Apia");
--            map.put("HST", "Pacific/Honolulu");  // JDK 1.1 compatible
-+            map.put("HST", "Pacific/Honolulu");
+             map.put("HST", "Pacific/Honolulu");  // JDK 1.1 compatible
              map.put("AST", "America/Anchorage");
-             map.put("PST", "America/Los_Angeles");
--            map.put("MST", "America/Denver");  // JDK 1.1 compatible
-+            map.put("MST", "America/Denver");
+@@ -574,19 +569,23 @@ public abstract class DateTimeZone implements Serializable {
              map.put("PNT", "America/Phoenix");
              map.put("CST", "America/Chicago");
--            map.put("EST", "America/New_York");  // JDK 1.1 compatible
+             map.put("EST", "America/New_York");  // JDK 1.1 compatible
 -            map.put("IET", "America/Indiana/Indianapolis");
-+            map.put("EST", "America/New_York");
 +            map.put("IET", "America/Indianapolis");
              map.put("PRT", "America/Puerto_Rico");
              map.put("CNT", "America/St_Johns");

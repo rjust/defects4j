@@ -1,30 +1,26 @@
 diff --git a/src/com/google/javascript/jscomp/CollapseProperties.java b/src/com/google/javascript/jscomp/CollapseProperties.java
-index ddccf0d..4e7ea97 100644
+index ddccf0d..16d533d 100644
 --- a/src/com/google/javascript/jscomp/CollapseProperties.java
 +++ b/src/com/google/javascript/jscomp/CollapseProperties.java
-@@ -481,10 +481,6 @@ class CollapseProperties implements CompilerPass {
+@@ -481,9 +481,6 @@ class CollapseProperties implements CompilerPass {
      Node greatGramps = gramps.getParent();
      Node greatGreatGramps = greatGramps.getParent();
  
 -    if (rvalue != null && rvalue.getType() == Token.FUNCTION) {
 -      checkForHosedThisReferences(rvalue, refName.docInfo, refName);
 -    }
--
+ 
      // Create the new alias node.
      Node nameNode = NodeUtil.newName(
-         compiler.getCodingConvention(), alias, gramps.getFirstChild(),
 diff --git a/src/com/google/javascript/jscomp/GlobalNamespace.java b/src/com/google/javascript/jscomp/GlobalNamespace.java
-index 8268339..d030dc2 100644
+index 8268339..311e343 100644
 --- a/src/com/google/javascript/jscomp/GlobalNamespace.java
 +++ b/src/com/google/javascript/jscomp/GlobalNamespace.java
-@@ -916,8 +916,9 @@ class GlobalNamespace {
-         return false;
+@@ -917,7 +917,7 @@ class GlobalNamespace {
        }
  
--      // If this is aliased, then its properties can't be collapsed either.
+       // If this is aliased, then its properties can't be collapsed either.
 -      if (aliasingGets > 0) {
-+      // If this is aliased, and its not a function, then its properties
-+      // can't be collapsed either.
 +      if (type != Type.FUNCTION && aliasingGets > 0) {
          return false;
        }

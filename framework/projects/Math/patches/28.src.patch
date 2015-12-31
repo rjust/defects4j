@@ -1,62 +1,36 @@
 diff --git a/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java b/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
-index dec310b..c2fa14d 100644
+index dec310b..a84438d 100644
 --- a/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
 +++ b/src/main/java/org/apache/commons/math3/optimization/linear/SimplexSolver.java
-@@ -116,14 +116,12 @@ public class SimplexSolver extends AbstractLinearOptimizer {
+@@ -116,7 +116,6 @@ public class SimplexSolver extends AbstractLinearOptimizer {
              // there's a degeneracy as indicated by a tie in the minimum ratio test
  
              // 1. check if there's an artificial variable that can be forced out of the basis
 -            if (tableau.getNumArtificialVariables() > 0) {
--                for (Integer row : minRatioPositions) {
--                    for (int i = 0; i < tableau.getNumArtificialVariables(); i++) {
--                        int column = i + tableau.getArtificialVariableOffset();
--                        final double entry = tableau.getEntry(row, column);
--                        if (Precision.equals(entry, 1d, maxUlps) && row.equals(tableau.getBasicRow(column))) {
--                            return row;
--                        }
-+            for (Integer row : minRatioPositions) {
-+                for (int i = 0; i < tableau.getNumArtificialVariables(); i++) {
-+                    int column = i + tableau.getArtificialVariableOffset();
-+                    final double entry = tableau.getEntry(row, column);
-+                    if (Precision.equals(entry, 1d, maxUlps) && row.equals(tableau.getBasicRow(column))) {
-+                        return row;
-                     }
-                 }
-             }
-@@ -133,26 +131,20 @@ public class SimplexSolver extends AbstractLinearOptimizer {
-             //
-             // see http://www.stanford.edu/class/msande310/blandrule.pdf
-             // see http://en.wikipedia.org/wiki/Bland%27s_rule (not equivalent to the above paper)
--            //
--            // Additional heuristic: if we did not get a solution after half of maxIterations
--            //                       revert to the simple case of just returning the top-most row
--            // This heuristic is based on empirical data gathered while investigating MATH-828.
--            if (getIterations() < getMaxIterations() / 2) {
--                Integer minRow = null;
--                int minIndex = tableau.getWidth();
--                for (Integer row : minRatioPositions) {
--                    int i = tableau.getNumObjectiveFunctions();
--                    for (; i < tableau.getWidth() - 1 && minRow != row; i++) {
--                        if (row == tableau.getBasicRow(i)) {
--                            if (i < minIndex) {
--                                minIndex = i;
--                                minRow = row;
--                            }
-+            Integer minRow = null;
-+            int minIndex = tableau.getWidth();
-+            for (Integer row : minRatioPositions) {
-+                for (int i = tableau.getNumObjectiveFunctions(); i < tableau.getWidth() - 1 && minRow != row; i++) {
-+                    if (row == tableau.getBasicRow(i)) {
-+                        if (i < minIndex) {
-+                            minIndex = i;
-+                            minRow = row;
+                 for (Integer row : minRatioPositions) {
+                     for (int i = 0; i < tableau.getNumArtificialVariables(); i++) {
+                         int column = i + tableau.getArtificialVariableOffset();
+@@ -126,7 +125,6 @@ public class SimplexSolver extends AbstractLinearOptimizer {
                          }
                      }
                  }
--                return minRow;
-             }
-+
-+            return minRow;
+-            }
+ 
+             // 2. apply Bland's rule to prevent cycling:
+             //    take the row for which the corresponding basic variable has the smallest index
+@@ -137,7 +135,6 @@ public class SimplexSolver extends AbstractLinearOptimizer {
+             // Additional heuristic: if we did not get a solution after half of maxIterations
+             //                       revert to the simple case of just returning the top-most row
+             // This heuristic is based on empirical data gathered while investigating MATH-828.
+-            if (getIterations() < getMaxIterations() / 2) {
+                 Integer minRow = null;
+                 int minIndex = tableau.getWidth();
+                 for (Integer row : minRatioPositions) {
+@@ -152,7 +149,6 @@ public class SimplexSolver extends AbstractLinearOptimizer {
+                     }
+                 }
+                 return minRow;
+-            }
          }
          return minRatioPositions.get(0);
      }

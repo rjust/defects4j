@@ -1,28 +1,15 @@
 diff --git a/src/java/org/apache/commons/math/fraction/Fraction.java b/src/java/org/apache/commons/math/fraction/Fraction.java
-index d6d2f18..fa396fb 100644
+index d6d2f18..0706f8c 100644
 --- a/src/java/org/apache/commons/math/fraction/Fraction.java
 +++ b/src/java/org/apache/commons/math/fraction/Fraction.java
-@@ -256,9 +256,20 @@ public class Fraction extends Number implements Comparable<Fraction> {
+@@ -256,8 +256,8 @@ public class Fraction extends Number implements Comparable<Fraction> {
       *         than <tt>object</tt>, 0 if they are equal.
       */
      public int compareTo(Fraction object) {
 -        long nOd = ((long) numerator) * object.denominator;
 -        long dOn = ((long) denominator) * object.numerator;
--        return (nOd < dOn) ? -1 : ((nOd > dOn) ? +1 : 0);
-+        int ret = 0;
-+        
-+        if (this != object) { 
-+            double first = doubleValue();
-+            double second = object.doubleValue();
-+            
-+            if (first < second) {
-+                ret = -1;
-+            } else if (first > second) {
-+                ret = 1;
-+            }
-+        }
-+        
-+        return ret;
++        double nOd = doubleValue();
++        double dOn = object.doubleValue();
+         return (nOd < dOn) ? -1 : ((nOd > dOn) ? +1 : 0);
      }
      
-     /**

@@ -1,14 +1,11 @@
 diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
-index 9049aae..5262f2d 100644
+index 9049aae..dd78f90 100644
 --- a/src/com/google/javascript/jscomp/NodeUtil.java
 +++ b/src/com/google/javascript/jscomp/NodeUtil.java
-@@ -2459,10 +2459,7 @@ public final class NodeUtil {
-             || isToStringMethodCall(value)
-             || locals.apply(value);
-       case Token.NEW:
--        // TODO(nicksantos): This needs to be changed so that it
--        // returns true iff we're sure the value was never aliased from inside
--        // the constructor (similar to callHasLocalResult)
+@@ -2462,7 +2462,7 @@ public final class NodeUtil {
+         // TODO(nicksantos): This needs to be changed so that it
+         // returns true iff we're sure the value was never aliased from inside
+         // the constructor (similar to callHasLocalResult)
 -        return false;
 +        return true;
        case Token.FUNCTION:

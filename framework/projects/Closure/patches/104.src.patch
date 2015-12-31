@@ -1,16 +1,8 @@
 diff --git a/src/com/google/javascript/rhino/jstype/UnionType.java b/src/com/google/javascript/rhino/jstype/UnionType.java
-index 6f0d798..c200b64 100644
+index 6f0d798..a9c9a0a 100644
 --- a/src/com/google/javascript/rhino/jstype/UnionType.java
 +++ b/src/com/google/javascript/rhino/jstype/UnionType.java
-@@ -43,6 +43,7 @@ import static com.google.javascript.rhino.jstype.TernaryValue.UNKNOWN;
- 
- import com.google.common.collect.ImmutableSet;
- import com.google.javascript.rhino.ErrorReporter;
-+import com.google.javascript.rhino.jstype.JSType.TypePair;
- 
- import java.util.Set;
- import java.util.SortedSet;
-@@ -288,7 +289,7 @@ public class UnionType extends JSType {
+@@ -288,7 +288,7 @@ public class UnionType extends JSType {
        builder.addAlternate(that);
      }
      JSType result = builder.build();

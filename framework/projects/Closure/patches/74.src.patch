@@ -1,48 +1,22 @@
 diff --git a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
-index 9d2f97a..4295d9c 100644
+index 9d2f97a..a61bb6c 100644
 --- a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
 +++ b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
-@@ -904,9 +904,8 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+@@ -904,8 +904,8 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
            && right.getString().equals("undefined"))
            || (Token.VOID == right.getType()
                && NodeUtil.isLiteralValue(right.getFirstChild(), false)));
 -    int lhType = getNormalizedNodeType(left);
 -    int rhType = getNormalizedNodeType(right);
--    switch (lhType) {
-+
-+    switch (left.getType()) {
++    int lhType = left.getType();
++    int rhType = right.getType();
+     switch (lhType) {
        case Token.VOID:
          if (!NodeUtil.isLiteralValue(left.getFirstChild(), false)) {
-           return n;
-@@ -924,6 +923,7 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
-           result = compareToUndefined(left, op);
-           break;
-         }
-+        int rhType = right.getType();
-         if (rhType != Token.TRUE &&
-             rhType != Token.FALSE &&
-             rhType != Token.NULL) {
-@@ -932,12 +932,12 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
-         switch (op) {
-           case Token.SHEQ:
-           case Token.EQ:
--            result = lhType == rhType;
-+            result = left.getType() == right.getType();
-             break;
- 
-           case Token.SHNE:
-           case Token.NE:
--            result = lhType != rhType;
-+            result = left.getType() != right.getType();
-             break;
- 
-           case Token.GE:
-@@ -1069,23 +1069,6 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
-   }
- 
+@@ -1071,19 +1071,6 @@ class PeepholeFoldConstants extends AbstractPeepholeOptimization {
    /**
--   * @return Translate NOT expressions into TRUE or FALSE when possible.
--   */
+    * @return Translate NOT expressions into TRUE or FALSE when possible.
+    */
 -  private int getNormalizedNodeType(Node n) {
 -    int type = n.getType();
 -    if (type == Token.NOT) {
@@ -56,8 +30,6 @@ index 9d2f97a..4295d9c 100644
 -    }
 -    return type;
 -  }
--
--  /**
+ 
+   /**
     * The result of the comparison as a Boolean or null if the
-    * result could not be determined.
-    */
