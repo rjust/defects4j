@@ -1,31 +1,20 @@
 diff --git a/src/java/org/apache/commons/math/stat/Frequency.java b/src/java/org/apache/commons/math/stat/Frequency.java
-index 237c2f6..a5b8d7b 100644
+index 237c2f6..75914d7 100644
 --- a/src/java/org/apache/commons/math/stat/Frequency.java
 +++ b/src/java/org/apache/commons/math/stat/Frequency.java
-@@ -101,26 +101,9 @@ public class Frequency implements Serializable {
-      * </p>
-      * 
-      * @param v the value to add.
--     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries
--     * @throws ClassCastException if <code>v</code> is not Comparable
--     * @deprecated use {@link #addValue(Comparable)} instead
-+     * @throws IllegalArgumentException if <code>v</code> is not comparable.
+@@ -107,8 +107,6 @@ public class Frequency implements Serializable {
       */
--    @Deprecated
+     @Deprecated
      public void addValue(Object v) {
 -        addValue((Comparable<?>) v);
 -    }
--    
--    /**
--     * Adds 1 to the frequency count for v.
--     * <p>
--     * If other objects have already been added to this Frequency, v must
--     * be comparable to those that have already been added.
--     * </p>
--     * 
--     * @param v the value to add.
--     * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries
--     */
+     
+     /**
+      * Adds 1 to the frequency count for v.
+@@ -120,7 +118,6 @@ public class Frequency implements Serializable {
+      * @param v the value to add.
+      * @throws IllegalArgumentException if <code>v</code> is not comparable with previous entries
+      */
 -    public void addValue(Comparable<?>v){
          Object obj = v;
          if (v instanceof Integer) {
