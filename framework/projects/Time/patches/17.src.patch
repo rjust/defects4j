@@ -1,23 +1,23 @@
 diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
-index 7219899..0de0ae6 100644
+index 7219899..74a3802 100644
 --- a/src/main/java/org/joda/time/DateTimeZone.java
 +++ b/src/main/java/org/joda/time/DateTimeZone.java
-@@ -1161,37 +1161,14 @@ public abstract class DateTimeZone implements Serializable {
-      * @return the adjusted instant millis
-      */
-     public long adjustOffset(long instant, boolean earlierOrLater) {
--        // a bit messy, but will work in all non-pathological cases
--        
--        // evaluate 3 hours before and after to work out if anything is happening
+@@ -1164,32 +1164,19 @@ public abstract class DateTimeZone implements Serializable {
+         // a bit messy, but will work in all non-pathological cases
+         
+         // evaluate 3 hours before and after to work out if anything is happening
 -        long instantBefore = instant - 3 * DateTimeConstants.MILLIS_PER_HOUR;
 -        long instantAfter = instant + 3 * DateTimeConstants.MILLIS_PER_HOUR;
 -        long offsetBefore = getOffset(instantBefore);
 -        long offsetAfter = getOffset(instantAfter);
 -        if (offsetBefore <= offsetAfter) {
--            return instant;  // not an overlap (less than is a gap, equal is normal case)
--        }
--        
--        // work out range of instants that have duplicate local times
++        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
++        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
++        if (instantBefore == instantAfter) {
+             return instant;  // not an overlap (less than is a gap, equal is normal case)
+         }
+         
+         // work out range of instants that have duplicate local times
 -        long diff = offsetBefore - offsetAfter;
 -        long transition = nextTransition(instantBefore);
 -        long overlapStart = transition - diff;
@@ -25,24 +25,18 @@ index 7219899..0de0ae6 100644
 -        if (instant < overlapStart || instant >= overlapEnd) {
 -          return instant;  // not an overlap
 -        }
--        
--        // calculate result
++        long local = convertUTCToLocal(instant);
++        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+         
+         // calculate result
 -        long afterStart = instant - overlapStart;
 -        if (afterStart >= diff) {
--          // currently in later offset
+           // currently in later offset
 -          return earlierOrLater ? instant : instant - diff;
 -        } else {
--          // currently in earlier offset
+           // currently in earlier offset
 -          return earlierOrLater ? instant + diff : instant;
-+        long before = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
-+        long after = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
-+        if (before == after) {
-+            return instant;
-         }
-+        long local = convertUTCToLocal(instant);
-+        return convertLocalToUTC(local, false, earlierOrLater ? after : before);
+-        }
      }
--//    System.out.println(new DateTime(transitionStart, DateTimeZone.UTC) + " " + new DateTime(transitionStart, this));
+ //    System.out.println(new DateTime(transitionStart, DateTimeZone.UTC) + " " + new DateTime(transitionStart, this));
  
-     //-----------------------------------------------------------------------
-     /**
