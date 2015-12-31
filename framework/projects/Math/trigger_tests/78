@@ -1,8 +1,8 @@
 --- org.apache.commons.math.ode.events.EventStateTest::closeEvents
-junit.framework.AssertionFailedError
-	at junit.framework.Assert.fail(Assert.java:55)
-	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.Assert.assertTrue(Assert.java:31)
+org.apache.commons.math.MathRuntimeException$4: function values at endpoints do not have different signs.  Endpoints: [89.999, 153.1], Values: [-0.066, -1,142.11]
+	at org.apache.commons.math.MathRuntimeException.createIllegalArgumentException(MathRuntimeException.java:305)
+	at org.apache.commons.math.analysis.solvers.BrentSolver.solve(BrentSolver.java:178)
+	at org.apache.commons.math.ode.events.EventState.evaluateStep(EventState.java:218)
 	at org.apache.commons.math.ode.events.EventStateTest.closeEvents(EventStateTest.java:66)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
@@ -21,13 +21,13 @@ junit.framework.AssertionFailedError
 	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
 	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:109)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:38)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2267)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
