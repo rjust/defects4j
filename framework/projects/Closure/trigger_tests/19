@@ -2,7 +2,7 @@
 java.lang.IllegalArgumentException: Node cannot be refined. 
 THIS 1 [source_file: [testcode]] : Object
 
-	at com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter.declareNameInScope(ChainableReverseAbstractInterpreter.java:173)
+	at com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter.declareNameInScope(ChainableReverseAbstractInterpreter.java:175)
 	at com.google.javascript.jscomp.type.ClosureReverseAbstractInterpreter.restrictParameter(ClosureReverseAbstractInterpreter.java:239)
 	at com.google.javascript.jscomp.type.ClosureReverseAbstractInterpreter.getPreciserScopeKnowingConditionOutcome(ClosureReverseAbstractInterpreter.java:220)
 	at com.google.javascript.jscomp.TypeInference.branchedFlowThrough(TypeInference.java:235)
@@ -22,12 +22,14 @@ THIS 1 [source_file: [testcode]] : Object
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2267)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
