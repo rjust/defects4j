@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/lang/time/FastDateFormat.java b/src/java/org/apache/commons/lang/time/FastDateFormat.java
-index 756290f..bd43159 100644
+index 756290f..89d8073 100644
 --- a/src/java/org/apache/commons/lang/time/FastDateFormat.java
 +++ b/src/java/org/apache/commons/lang/time/FastDateFormat.java
 @@ -137,11 +137,11 @@ public class FastDateFormat extends Format {
@@ -16,13 +16,10 @@ index 756290f..bd43159 100644
  
      //-----------------------------------------------------------------------
      /**
-@@ -1016,13 +1016,6 @@ public class FastDateFormat extends Format {
-     public String toString() {
-         return "FastDateFormat[" + mPattern + "]";
-     }
--
--    // Serializing
--    //-----------------------------------------------------------------------
+@@ -1019,10 +1019,6 @@ public class FastDateFormat extends Format {
+ 
+     // Serializing
+     //-----------------------------------------------------------------------
 -    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 -        in.defaultReadObject();
 -        init();
