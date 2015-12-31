@@ -1,17 +1,8 @@
-Index: source/org/jfree/data/time/TimeSeries.java
-===================================================================
---- source/org/jfree/data/time/TimeSeries.java	(revision 1083)
-+++ source/org/jfree/data/time/TimeSeries.java	(revision 1082)
-@@ -674,7 +672,7 @@
-      */
-     public TimeSeriesDataItem addOrUpdate(RegularTimePeriod period,
-                                           double value) {
--        return addOrUpdate(period, new Double(value));
-+        return this.addOrUpdate(period, new Double(value));
-     }
- 
-     /**
-@@ -941,7 +937,7 @@
+diff --git a/source/org/jfree/data/time/TimeSeries.java b/source/org/jfree/data/time/TimeSeries.java
+index d16d447..4067e3e 100644
+--- a/source/org/jfree/data/time/TimeSeries.java
++++ b/source/org/jfree/data/time/TimeSeries.java
+@@ -941,7 +941,7 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
              endIndex = -(endIndex + 1); // this is first item AFTER end period
              endIndex = endIndex - 1;    // so this is last item BEFORE end
          }
@@ -20,23 +11,3 @@ Index: source/org/jfree/data/time/TimeSeries.java
              emptyRange = true;
          }
          if (emptyRange) {
-@@ -970,13 +966,15 @@
-             return false;
-         }
-         TimeSeries s = (TimeSeries) object;
--        if (!ObjectUtilities.equal(getDomainDescription(),
--                s.getDomainDescription())) {
-+        if (!ObjectUtilities.equal(
-+            getDomainDescription(), s.getDomainDescription()
-+        )) {
-             return false;
-         }
- 
--        if (!ObjectUtilities.equal(getRangeDescription(),
--                s.getRangeDescription())) {
-+        if (!ObjectUtilities.equal(
-+            getRangeDescription(), s.getRangeDescription()
-+        )) {
-             return false;
-         }
- 
