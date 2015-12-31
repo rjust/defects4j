@@ -1,17 +1,16 @@
 diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
-index dfcd3eb..477d444 100644
+index dfcd3eb..08fb954 100644
 --- a/src/com/google/javascript/jscomp/NodeUtil.java
 +++ b/src/com/google/javascript/jscomp/NodeUtil.java
-@@ -1258,8 +1258,6 @@ public final class NodeUtil {
-       case Token.INSTANCEOF:
+@@ -1259,7 +1259,6 @@ public final class NodeUtil {
        // Inversion
        case Token.NOT:
--      // delete operator returns a boolean.
+       // delete operator returns a boolean.
 -      case Token.DELPROP:
          return true;
        default:
          return false;
-@@ -2908,7 +2906,6 @@ public final class NodeUtil {
+@@ -2908,7 +2907,6 @@ public final class NodeUtil {
        case Token.OBJECTLIT:
          // Literals objects with non-literal children are allowed.
          return true;
