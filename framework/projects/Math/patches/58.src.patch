@@ -1,15 +1,13 @@
 diff --git a/src/main/java/org/apache/commons/math/optimization/fitting/GaussianFitter.java b/src/main/java/org/apache/commons/math/optimization/fitting/GaussianFitter.java
-index e1b54f4..8c107de 100644
+index e1b54f4..ae7ac39 100644
 --- a/src/main/java/org/apache/commons/math/optimization/fitting/GaussianFitter.java
 +++ b/src/main/java/org/apache/commons/math/optimization/fitting/GaussianFitter.java
-@@ -117,8 +117,8 @@ public class GaussianFitter extends CurveFitter {
-      * observed points (in the same order as above).
+@@ -118,7 +118,7 @@ public class GaussianFitter extends CurveFitter {
       */
      public double[] fit() {
--        final double[] guess = (new ParameterGuesser(getObservations())).guess();
+         final double[] guess = (new ParameterGuesser(getObservations())).guess();
 -        return fit(guess);
-+        return fit(new Gaussian.Parametric(),
-+                   (new ParameterGuesser(getObservations())).guess());
++        return fit(new Gaussian.Parametric(), guess);
      }
  
      /**
