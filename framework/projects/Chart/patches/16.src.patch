@@ -1,17 +1,8 @@
-Index: source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
-===================================================================
---- source/org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 743)
-+++ source/org/jfree/data/category/DefaultIntervalCategoryDataset.java	(revision 741)
-@@ -64,7 +62,7 @@
-  * first dimension is the series, and the second dimension is the category.
-  */
- public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
--        implements IntervalCategoryDataset {
-+                                            implements IntervalCategoryDataset {
- 
-     /** The series keys. */
-     private Comparable[] seriesKeys;
-@@ -204,8 +196,8 @@
+diff --git a/source/org/jfree/data/category/DefaultIntervalCategoryDataset.java b/source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
+index bde3922..2efdfcb 100644
+--- a/source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
++++ b/source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
+@@ -204,8 +204,8 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
  
              }
              else {
@@ -22,7 +13,7 @@ Index: source/org/jfree/data/category/DefaultIntervalCategoryDataset.java
              }
          }
  
-@@ -335,7 +327,7 @@
+@@ -335,7 +335,7 @@ public class DefaultIntervalCategoryDataset extends AbstractSeriesDataset
          if (categoryKeys == null) {
              throw new IllegalArgumentException("Null 'categoryKeys' argument.");
          }
