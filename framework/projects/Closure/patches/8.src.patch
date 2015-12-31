@@ -1,24 +1,19 @@
 diff --git a/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java b/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
-index e0466ea..47c2c4f 100644
+index e0466ea..f2d36f5 100644
 --- a/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
 +++ b/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java
-@@ -199,17 +199,11 @@ class CollapseVariableDeclarations implements CompilerPass {
-       }
- 
+@@ -201,14 +201,10 @@ class CollapseVariableDeclarations implements CompilerPass {
        Var var = s.getVar(lhs.getString());
--      return var != null
--          && var.getScope() == s
+       return var != null
+           && var.getScope() == s
 -          && !isNamedParameter(var)
--          && !blacklistedVars.contains(var);
-+      return var != null &&
-+          var.getScope() == s && !blacklistedVars.contains(var);
+           && !blacklistedVars.contains(var);
      }
    }
  
 -  private boolean isNamedParameter(Var v) {
 -    return v.getParentNode().isParamList();
 -  }
--
+ 
    private void applyCollapses() {
      for (Collapse collapse : collapses) {
- 
