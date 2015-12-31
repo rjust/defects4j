@@ -1,14 +1,13 @@
-Index: source/org/jfree/data/time/TimeSeries.java
-===================================================================
---- source/org/jfree/data/time/TimeSeries.java	(revision 2227)
-+++ source/org/jfree/data/time/TimeSeries.java	(revision 2225)
-@@ -1054,8 +1054,7 @@
+diff --git a/source/org/jfree/data/time/TimeSeries.java b/source/org/jfree/data/time/TimeSeries.java
+index 72bb2ea..795d791 100644
+--- a/source/org/jfree/data/time/TimeSeries.java
++++ b/source/org/jfree/data/time/TimeSeries.java
+@@ -1054,8 +1054,6 @@ public class TimeSeries extends Series implements Cloneable, Serializable {
              throw new IllegalArgumentException("Requires start <= end.");
          }
          TimeSeries copy = (TimeSeries) super.clone();
 -        copy.minY = Double.NaN;
 -        copy.maxY = Double.NaN;
-+
          copy.data = new java.util.ArrayList();
          if (this.data.size() > 0) {
              for (int index = start; index <= end; index++) {
