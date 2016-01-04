@@ -48,12 +48,9 @@ Getting started
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
-2. Initialize Defects4J (download the project repositories and external libraries):
+2. Initialize Defects4J (download the project repositories and external libraries, which are not included in the git repository for size purposes and to avoid redundancies):
     - `cd defects4j`
     - `./init.sh`
-
-   Project repositories and external libraries are not included for size purposes and to avoid
-   redundancies.
 
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
