@@ -34,8 +34,9 @@ respectively (`<id>` is an integer).
 Requirements
 ----------------
  - Java 1.7
- - Apache Ant >=1.8
  - Perl >= 5.0.10
+ - Git >= 1.9
+ - SVN >= 1.8
 
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
