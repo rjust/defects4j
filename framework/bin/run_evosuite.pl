@@ -226,12 +226,6 @@ foreach my $class (@classes) {
 }
 # Copy log file for this version id and test criterion to output directory
 system("mv $log $LOG_DIR") == 0 or die "Cannot copy log file!";
-# Compress generated tests and copy archive to output directory
-my $archive = "$PID-$VID-evosuite-$CRITERION.$TID.tar.bz2";
-if (system("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/evosuite-$CRITERION/ .") != 0) {
-    $LOG->log_msg("Error: cannot compress test suites!");
-    next;
-}
 
 =pod
 
@@ -256,12 +250,18 @@ F<out_dir/C<project_id>/evosuite-C<criterion>/C<test_id>>
 
 =cut
 
-# Move test suite to OUT_DIR/pid/suite_src/test_id
-#
-# e.g., .../Lang/evosuite-branch/1
-#
-my $dir = "$OUT_DIR/$PID/evosuite-$CRITERION/$TID";
-system("mkdir -p $dir && mv $TMP_DIR/$archive $dir") == 0 or die "Cannot copy test suite archive to output directory!";
+# Compress generated tests
+my $archive = "$PID-$VID-evosuite-$CRITERION.$TID.tar.bz2";
+if (system("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/evosuite-$CRITERION/ .") != 0) {
+    $LOG->log_msg("Error: cannot archive and ompress test suite!");
+} else {
+    # Move test suite to OUT_DIR/pid/suite_src/test_id
+    #
+    # e.g., .../Lang/evosuite-branch/1
+    #
+    my $dir = "$OUT_DIR/$PID/evosuite-$CRITERION/$TID";
+    system("mkdir -p $dir && mv $TMP_DIR/$archive $dir") == 0 or die "Cannot move test suite archive to output directory!";
+}
 
 $LOG->log_time("End test generation");
 

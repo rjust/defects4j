@@ -120,6 +120,7 @@ directory to export a version-specific property:
 | cp.compile       | Classpath to compile and run the project                                            |
 | cp.test          | Classpath to compile and run the developer-written tests                            |
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
+| dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
 | tests.all        | List of all developer-written tests                                                 |
 | tests.relevant   | List of relevant tests (i.e., tests that touch at least one of the modified classes |
