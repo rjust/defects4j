@@ -197,14 +197,14 @@ system("mv $log $LOG_DIR") == 0 or die "Cannot copy log file!";
 # Compress generated tests and copy archive to output directory
 my $archive = "$PID-$VID-randoop.$TID.tar.bz2";
 
-if (-e "$TMP_DIR/randoop/RandoopTest.java") {
-    system("rm $TMP_DIR/randoop/RandoopTest.java");
+if (-e "$TMP_DIR/randoop/RegressionTest.java") {
+    system("rm $TMP_DIR/randoop/RegressionTest.java");
 } else {
-    $LOG->log_msg("Error: expected test suite RandoopTest.java does not exist!");
+    $LOG->log_msg("Error: expected test suite RegressionTest.java does not exist!");
 }
 
 if (system("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/randoop/ .") != 0) {
-    $LOG->log_msg("Error: cannot compress test suites!");
+    $LOG->log_msg("Error: cannot archive and compress test suites!");
 }
 
 =pod

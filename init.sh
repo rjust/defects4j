@@ -53,8 +53,8 @@ cd $DIR_LIB_RT  && wget -N $EVOSUITE_URL/$EVOSUITE_RT_JAR \
 #
 # Download Randoop
 #
-RANDOOP_VERSION="2.0.1"
-RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v.${RANDOOP_VERSION}"
+RANDOOP_VERSION="2.1.0"
+RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-${RANDOOP_VERSION}.jar"
 cd $DIR_LIB_GEN && wget -N $RANDOOP_URL/$RANDOOP_JAR \
                 && ln -sf $RANDOOP_JAR randoop-current.jar
