@@ -49,12 +49,9 @@ Getting started
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
-2. Initialize Defects4J (download the project repositories and external libraries):
+2. Initialize Defects4J (download the project repositories and external libraries, which are not included in the git repository for size purposes and to avoid redundancies):
     - `cd defects4j`
     - `./init.sh`
-
-   Project repositories and external libraries are not included for size purposes and to avoid
-   redundancies.
 
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
@@ -123,6 +120,7 @@ directory to export a version-specific property:
 | cp.compile       | Classpath to compile and run the project                                            |
 | cp.test          | Classpath to compile and run the developer-written tests                            |
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
+| dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
 | tests.all        | List of all developer-written tests                                                 |
 | tests.relevant   | List of relevant tests (i.e., tests that touch at least one of the modified classes |

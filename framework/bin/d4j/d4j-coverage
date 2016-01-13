@@ -147,6 +147,15 @@ if (defined $TEST_SUITE) {
 }
 defined $cov_results or die "Couldn't obtain coverage results!";
 
+open(CSV, ">$WORK_DIR/summary.csv") or die "Cannot write output csv file $!";
+print(CSV "LinesTotal,LinesCovered,ConditionsTotal,ConditionsCovered\n");
+printf(CSV "%d,%d,%d,%d\n",
+        $cov_results->{lines_total},
+        $cov_results->{lines_covered},
+        $cov_results->{branches_total},
+        $cov_results->{branches_covered});
+close(CSV);
+
 printf("%18s: %d\n",     "Lines total",        $cov_results->{lines_total});
 printf("%18s: %d\n",     "Lines covered",      $cov_results->{lines_covered});
 printf("%18s: %d\n",     "Conditions total",   $cov_results->{branches_total});
