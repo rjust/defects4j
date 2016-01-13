@@ -31,12 +31,15 @@ cd $DIR_REPOS && ./get_repos.sh
 #
 # Download Major
 #
-MAJOR_VERSION="1.1.6"
+MAJOR_VERSION="1.1.7"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd $BASE && wget -N $MAJOR_URL/$MAJOR_ZIP \
          && unzip $MAJOR_ZIP \
          && rm $MAJOR_ZIP
+# Increase memory for Closure
+sed -i -e 's/ReservedCodeCacheSize=128M/ReservedCodeCacheSize=256M/' $BASE/major/bin/ant
+sed -i -e 's/MaxPermSize=256M/MaxPermSize=1G/' $BASE/major/bin/ant
 
 #
 # Download EvoSuite
