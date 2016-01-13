@@ -13,7 +13,7 @@ evo_dir=$TMP_DIR/evosuite
 # Generate tests for Lang-2 (modified classes) and Lang-3 (all relevant classes)
 pid=Lang
 bid_mod=2
-bid_all=3
+bid_all=62
 # Test suite source and number
 suite_src=evosuite-branch
 suite_num=1
