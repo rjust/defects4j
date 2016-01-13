@@ -221,8 +221,9 @@ suite: foreach (@list) {
 
     $project->checkout_vid($vid);
 
-    # Copy generated tests
-    system("mkdir $TMP_DIR/$src && cd $TMP_DIR/$src && cp $SUITE_DIR/$name . && tar -xjf $name");
+    # Extract generated tests into temp directory
+    Utils::extract_test_suite("$SUITE_DIR/$name", "$TMP_DIR/$src")
+        or die "Cannot extract test suite!";
 
     # Counter for successful runs of fixed test suite
     my $counter = $RUNS;

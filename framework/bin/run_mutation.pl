@@ -225,9 +225,8 @@ foreach my $vid (keys %{$test_suites}) {
             $LOG->log_msg(" - Executing test suite: $archive");
             printf ("Executing test suite: $archive\n");
 
-
-            # Copy generated tests into temp directory
-            system("mkdir -p $test_dir && cd $test_dir && rm -rf * && cp $SUITE_DIR/$archive . && tar -xjf $archive") == 0
+            # Extract generated tests into temp directory
+            Utils::extract_test_suite("$SUITE_DIR/$archive", $test_dir)
                 or die "Cannot extract test suite!";
 
             #
