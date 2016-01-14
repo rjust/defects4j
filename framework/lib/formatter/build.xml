@@ -35,8 +35,10 @@
     <target name="compile" depends="init" description="Compile the sources">
         <javac srcdir="${dir.src.classes}"
               destdir="${dir.target.classes}"
-    includeantruntime="false"
-                debug="true">
+    includeantruntime="true"
+                debug="true"
+               source="1.7"
+               target="1.7">
             <classpath refid="compile.classpath" />
         </javac>
     </target>
@@ -45,7 +47,9 @@
         <javac srcdir="${dir.src.tests}"
               destdir="${dir.target.tests}"
     includeantruntime="false"
-                debug="true">
+                debug="true"
+               source="1.7"
+               target="1.7">
             <classpath refid="test.classpath" />
         </javac>
     </target>
