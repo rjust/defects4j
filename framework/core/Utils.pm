@@ -85,13 +85,14 @@ Determines all failing test classes and test methods in F<test_result_file>,
 which may contain arbitrary lines. A line indicating a test failure matches the
 following pattern: C</--- ([^:]+)(::([^:]+))?/>.
 
-This subroutine returns a reference to a hash that contains two keys (C<classes>
-and C<methods>), which map to lists of failing tests:
+This subroutine returns a reference to a hash that contains three keys (C<classes>,
+C<methods>, and C<asserts>), which map to lists of failing tests:
 
 =over 4
 
   {classes} => [org.foo.Class1 org.bar.Class2]
   {methods} => [org.foo.Class3::method1 org.foo.Class3::method2]
+  {asserts} => {org.foo.Class3::method1} => 4711
 
 =back
 
@@ -102,21 +103,46 @@ sub get_failing_tests {
 
     my $list = {
         classes => [],
-        methods => []
+        methods => [],
+        asserts => {}
     };
     open FILE, $file_name or die "Cannot open test result file ($file_name): $!";
-    while (<FILE>) {
+    my @lines = <FILE>;
+    close FILE;
+    for (my $i=0; $i <= $#lines; ++$i) {
+        local $_ = $lines[$i];
         chomp;
         /--- ([^:]+)(::([^:]+))?/ or next;
         my $class = $1;
         my $method= $3;
         if (defined $method) {
             push(@{$list->{methods}}, "${class}::$method");
+            # Read first line of stack trace to determine the failure reason.
+            my $reason = $lines[$i+1];
+            if (defined $reason and $reason =~ /junit.framework.AssertionFailedError/) {
+                $class =~ /(.*\.)?([^.]+)/ or die "Couldn't determine class name: $class!";
+                my $classname = $2;
+                ++$i;
+                while ($lines[$i] !~ /---/) {
+                    if ($lines[$i] =~ /junit\./) {
+                        # Skip junit entries in the stack trace
+                        ++$i;
+                    } elsif ($lines[$i] =~ /$classname\.java:(\d+)/) {
+                        # We found the right entry in the stack trace
+                        my $line = $1;
+                        $list->{asserts}->{"${class}::$method"} = $line;
+                        last;
+                    } else {
+                        # The stack trace isn't what we expected -- give up and continue
+                        # with the next triggering test
+                        last;
+                    }
+                }
+            }
         } else {
             push(@{$list->{classes}}, $class);
         }
     }
-    close FILE;
     return $list;
 }
 

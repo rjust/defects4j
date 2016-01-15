@@ -26,21 +26,24 @@
 
 =head1 NAME
 
-rm_broken_tests.pl -- Fix broken test methods from a set of test classes
+rm_broken_tests.pl -- remove broken test methods from a set of test classes.
 
 =head1 SYNOPSIS
 
-rm_broken_tests.pl log_file src_dir
+    rm_broken_tests.pl log_file src_dir [except]
 
 =head1 DESCRIPTION
 
-Parses the file F<log_file> and fixes failing test methods by replacing each
-broken test method with a dummy test method in the source file of the corresponding test
-class. The source file of the test class is backed up prior to the first
-modification.
+Parses the file F<log_file> and fixes failing test methods by replacing each broken test
+method with a dummy test method in the source file of the corresponding test class. The
+source file of the test class is backed up prior to the first modification. If except is
+provided, then this test is mainted even if it appears in the log file.
 
 =cut
-
+#
+# TODO: This file needs a thorough overhaul and its command-line interface is not
+#       Defects4J standard!
+#
 use IO::File;
 use File::Copy;
 use Text::Balanced qw (extract_bracketed);
@@ -88,6 +91,14 @@ for (@list) {
 
 my %buffers;
 
+# Cache the entire log file for stack trace analysis
+open FILE, $log_file or die "Cannot open log file ($log_file): $!";
+my @log_lines = <FILE>;
+close FILE;
+
+# TODO: Remove this hack once the command-line interface has been updated.
+my $RM_ASSERTS = (defined $ENV{D4J_RM_ASSERTS} && $ENV{D4J_RM_ASSERTS} == 1) ? 1 : 0;
+
 # This variable is used to keep track of whether this program uses
 # junit 4 styles. This is important, since the @Test annotation
 # must not be added on empty method additions for superclass
@@ -95,15 +106,54 @@ my %buffers;
 # This hash will map a filename to 1 in case it is junit 4.
 my %is_buffer_junit4 = ();
 
+my @method_list=();
 for (@list){
     chomp;
     /--- ([^:]+)(::([^:]+))?/;
-    _exclude_test_class($1) unless defined $3;
+    my $class  = $1;
+    my $method = $3;
+    _exclude_test_class($class) unless defined $method;
+
     if ($except) {
-        next if "$1::$3" eq $except;    # skip the excepted test.
+        next if "$class::$method" eq $except;    # skip the excepted test.
     }
-    _remove_test_method($1, $3) if defined $3;
+
+    my $file = $class;
+    $file =~ s/\./\//g;
+    $file = "$base_dir/$file.java";
+
+    # Skip non-existing files
+    if (! -e $file) {
+        print STDERR "$0: $file does not exist -> SKIP ($method)\n" if $verbose;
+        next;
+    }
+
+    # Backup file if necessary
+    if (! -e "$file.bak") {
+        copy("$file","$file.bak") or die "Cannot backup file ($file): $!";
+    }
+
+    # Buffer file for modifications
+    _buffer_file($file);
+
+    if (defined $method) {
+        # Check wether removing failing assertions is enabled and successful
+        unless ($RM_ASSERTS && _remove_assertion($class, $method)) {
+            push(@method_list, $_);
+        }
+    }
 }
+
+# Remove the remaining test methods -- the ones for which we couldn't remove the failing
+# assertion.
+for (@method_list) {
+    /--- ([^:]+)(::([^:]+))?/;
+    my $class  = $1;
+    my $method = $3;
+    _remove_test_method($class, $method);
+}
+
+# Write file buffers
 _write_buffers();
 
 0;
@@ -114,34 +164,53 @@ sub _exclude_test_class {
     # this might cause compilation issues
 }
 
-sub _remove_test_method {
+# TODO: Use Utils::get_failing_tests to obtain information about failing assertions
+sub _remove_assertion {
     my ($class, $method) = @_;
     my $file = $class;
     $file =~ s/\./\//g;
     $file = "$base_dir/$file.java";
 
-    # Skip non-existing files
-    if (! -e $file) {
-        print STDERR "$0: $file does not exist -> SKIP ($method)\n" if $verbose;
-        return;
+    for (my $i=0; $i <= $#log_lines; ++$i) {
+        local $_ = $log_lines[$i];
+        chomp;
+        /--- $class::$method/ or next;
+        # Read first line of stack trace to determine the failure reason.
+        my $reason = $log_lines[$i+1];
+        if (defined $reason and $reason =~ /junit.framework.AssertionFailedError/) {
+            $class =~ /(.*\.)?([^.]+)/ or die "Couldn't determine class name: $class!";
+            my $classname = $2;
+            ++$i;
+            while ($log_lines[$i] !~ /---/) {
+                if ($log_lines[$i] =~ /junit\./) {
+                    # Skip junit entries in the stack trace
+                    ++$i;
+                } elsif ($log_lines[$i] =~ /$classname\.java:(\d+)/) {
+                    # We found the right entry in the stack trace
+                    my $line = $1;
+                    # Check whether this line looks like an assertion, if so remove it.
+                    if ($buffers{$file}->[$line-1] =~ /assert.*\(.*\)/) {
+                        $buffers{$file}->[$line-1] = "// Defects4J: flaky assertion --> " . $buffers{$file}->[$line-1];
+                        return 1;
+                    }
+                    last;
+                } else {
+                    # The stack trace isn't what we expected -- give up and continue
+                    # with the next triggering test
+                    last;
+                }
+            }
+        }
     }
 
-    # Backup file if necessary
-    if (! -e "$file.bak") {
-        copy("$file","$file.bak") or die "Cannot backup file ($file): $!";
-    }
+    return 0;
+}
 
-    if (!defined($buffers{$file})) {
-        # Read the entire file
-        my $in = IO::File->new("<$file") or die "Cannot open source file: $file!";
-        my @data = <$in>;
-        $in->close();
-        $buffers{$file}=\@data;
-
-        # Check for junit 4
-        $is_buffer_junit4{$file} = 0;
-        $is_buffer_junit4{$file} = 1 if grep {/import org\.junit\.Test/} @data;
-    }
+sub _remove_test_method {
+    my ($class, $method) = @_;
+    my $file = $class;
+    $file =~ s/\./\//g;
+    $file = "$base_dir/$file.java";
 
     my @lines=@{$buffers{$file}};
     # Line buffer for the fixed source file
@@ -152,7 +221,7 @@ sub _remove_test_method {
             # Found the test to exclude
             my $space = $1;
             # Dummy test
-            my $dummy = "${space}public void $method() {}\n";
+            my $dummy = "${space}public void $method() {}\n// Defects4J: flaky method\n";
             # Check whether JUnit4 annotation is present
             if ($lines[$i-1] =~ /\@Test/) {
                 $dummy = "${space}\@Test\n$dummy";
@@ -220,6 +289,22 @@ sub _remove_test_method {
         }
     }
 }
+
+sub _buffer_file {
+    my $file = shift;
+    if (!defined($buffers{$file})) {
+        # Read the entire file
+        my $in = IO::File->new("<$file") or die "Cannot open source file: $file!";
+        my @data = <$in>;
+        $in->close();
+        $buffers{$file}=\@data;
+
+        # Check for junit 4
+        $is_buffer_junit4{$file} = 0;
+        $is_buffer_junit4{$file} = 1 if grep {/import org\.junit\.Test/} @data;
+    }
+}
+
 
 sub _write_buffers {
     sleep(1);

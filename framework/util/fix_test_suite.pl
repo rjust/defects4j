@@ -30,7 +30,7 @@ fix_test_suite.pl -- remove failing tests from test suite until all tests pass.
 
 =head1 SYNOPSIS
 
-  fix_test_suite.pl -p project_id -d suite_dir [-f include_file_pattern] [-v version_id] [-s test_suite_src] [-t tmp_dir] [-D]
+  fix_test_suite.pl -p project_id -d suite_dir [-f include_file_pattern] [-v version_id] [-s test_suite_src] [-t tmp_dir] [-A] [-D]
 
 =head1 OPTIONS
 
@@ -66,6 +66,11 @@ Per default all test suite sources for the given project id are considered.
 
 The temporary root directory to be used to check out program versions (optional).
 The default is F</tmp>.
+
+=item -A
+
+Assertions: Try to remove failing assertions first, before removing the entire
+test method (optional). By default failing test methods are entirely removed.
 
 =item -D
 
@@ -125,7 +130,7 @@ use Log;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:s:t:f:D', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:s:t:f:AD', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d};
 
@@ -134,12 +139,13 @@ my $PID = $cmd_opts{p};
 my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $TEST_SRC = $cmd_opts{s} if defined $cmd_opts{s};
 my $INCL = $cmd_opts{f} // "*.java";
+my $RM_ASSERTS = defined $cmd_opts{A} ? 1 : 0;
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
 # Check format of target version id
 if (defined $VID) {
-    $VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format: $VID! Expected: \\d+[bf]";
+    Utils::check_vid($VID);
 }
 =pod
 
@@ -292,7 +298,7 @@ suite: foreach (@list) {
             # Indicate that test suite changed
             $fixed = 1;
             $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " test methods: $name", $tests);
-            system("$UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
+            system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
         }
     }
 
