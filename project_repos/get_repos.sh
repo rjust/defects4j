@@ -28,7 +28,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/$ARCHIVE
+wget -nv -N http://homes.cs.washington.edu/~rjust/defects4j/download/$ARCHIVE
 new=$($cmd)
 
 # Exit if no newer file is available
@@ -38,4 +38,4 @@ new=$($cmd)
 clean
 
 # Extract new repos
-unzip -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
+unzip -u $ARCHIVE > /dev/null && mv defects4j/project_repos/* . && rm -r defects4j
