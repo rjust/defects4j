@@ -46,9 +46,8 @@ echo "$launcher" > "$BASE/major/bin/ant"
 #
 # Download EvoSuite
 #
-EVOSUITE_VERSION="1.0.2"
-#EVOSUITE_URL="http://www.evosuite.org/files"
-EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
+EVOSUITE_VERSION="0.2.0"
+EVOSUITE_URL="http://www.evosuite.org/files"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $EVOSUITE_JAR ] \
