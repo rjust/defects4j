@@ -139,7 +139,7 @@ $DEBUG = 1 if defined $cmd_opts{D};
 
 # Check format of target version id
 if (defined $VID) {
-    $VID =~ /^(\d+)[bf]$/ or die "Wrong version_id format: $VID! Expected: \\d+[bf]";
+    Utils::check_vid($VID);
 }
 =pod
 
