@@ -36,12 +36,8 @@ MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd $BASE && wget -N $MAJOR_URL/$MAJOR_ZIP \
          && unzip -o $MAJOR_ZIP \
-         && rm $MAJOR_ZIP
-# Increase memory for Closure; set headless mode.
-launcher=$(sed -e 's/ReservedCodeCacheSize=128M/ReservedCodeCacheSize=256M/' $BASE/major/bin/ant \
-         | sed -e 's/MaxPermSize=256M/MaxPermSize=1G \\\
-    -Djava.awt.headless=true/')
-echo "$launcher" > "$BASE/major/bin/ant"
+         && rm $MAJOR_ZIP \
+         && cp major/bin/.ant major/bin/ant
 
 #
 # Download EvoSuite
