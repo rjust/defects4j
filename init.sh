@@ -26,46 +26,51 @@ mkdir -p $DIR_LIB_RT
 #
 # Download project repositories if necessary
 #
+echo "Setting up project repositories ... "
 cd $DIR_REPOS && ./get_repos.sh
 
 #
 # Download Major
 #
+echo
+echo "Setting up Major ... "
 MAJOR_VERSION="1.1.7"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
-cd $BASE && wget -N $MAJOR_URL/$MAJOR_ZIP \
-         && unzip -o $MAJOR_ZIP \
-         && rm $MAJOR_ZIP
-# Increase memory for Closure; set headless mode.
-launcher=$(sed -e 's/ReservedCodeCacheSize=128M/ReservedCodeCacheSize=256M/' $BASE/major/bin/ant \
-         | sed -e 's/MaxPermSize=256M/MaxPermSize=1G \\\
-    -Djava.awt.headless=true/')
-echo "$launcher" > "$BASE/major/bin/ant"
+cd $BASE && wget -nv -N $MAJOR_URL/$MAJOR_ZIP \
+         && unzip -o $MAJOR_ZIP > /dev/null \
+         && rm $MAJOR_ZIP \
+         && cp major/bin/.ant major/bin/ant
 
 #
 # Download EvoSuite
 #
+echo
+echo "Setting up EvoSuite ... "
 EVOSUITE_VERSION="0.2.0"
 EVOSUITE_URL="http://www.evosuite.org/files"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $EVOSUITE_JAR ] \
-                && wget $EVOSUITE_URL/$EVOSUITE_JAR \
-                && ln -sf $EVOSUITE_JAR evosuite-current.jar 
+                && wget -nv $EVOSUITE_URL/$EVOSUITE_JAR
 cd $DIR_LIB_RT  && [ ! -f $EVOSUITE_RT_JAR ] \
-                && wget $EVOSUITE_URL/$EVOSUITE_RT_JAR \
-                && ln -sf $EVOSUITE_RT_JAR evosuite-rt.jar 
+                && wget -nv $EVOSUITE_URL/$EVOSUITE_RT_JAR
+# Set symlinks for the supported version of EvoSuite
+ln -sf $DIR_LIB_GEN/$EVOSUITE_JAR $DIR_LIB_GEN/evosuite-current.jar
+ln -sf $DIR_LIB_RT/$EVOSUITE_RT_JAR $DIR_LIB_RT/evosuite-rt.jar
 
 #
 # Download Randoop
 #
+echo
+echo "Setting up Randoop ... "
 RANDOOP_VERSION="2.1.0"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-${RANDOOP_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \
-                && wget $RANDOOP_URL/$RANDOOP_JAR \
-                && ln -sf $RANDOOP_JAR randoop-current.jar
+                && wget -nv $RANDOOP_URL/$RANDOOP_JAR
+# Set symlink for the supported version of Randoop
+ln -sf $DIR_LIB_GEN/$RANDOOP_JAR $DIR_LIB_GEN/randoop-current.jar
 
 echo
 echo "Defects4J successfully initialized."
