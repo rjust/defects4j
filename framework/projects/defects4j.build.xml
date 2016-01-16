@@ -63,6 +63,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <property name="d4j.dir.classes.mutated" value="${d4j.workdir}/.classes_mutated"/>
     <!-- Directory of coverage reports-->
     <property name="d4j.dir.coverage.report" value="${d4j.workdir}" />
+    <!-- Data file that holds coverage information-->
+    <property name="d4j.file.cobertura.ser" value="cobertura.ser" />
 
     <!-- Additional properties such as tests to exclude.
          This property file is automatically generated. -->
@@ -314,15 +316,18 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <path id="cobertura.classpath.include" />
 
-    <target name="coverage.instrument" depends="check.classes.uptodate,compile" unless="classes.instrumented.uptodate">
+    <target name="coverage.instrument" depends="compile,check.classes.uptodate,reset.cobertura.ser" unless="classes.instrumented.uptodate">
         <pathconvert refid="cobertura.classpath" property="cobertura.classpath.property" />
 
         <delete dir="${d4j.dir.classes.instrumented}"/>
-        <cobertura-instrument failOnError="true" toDir="${d4j.dir.classes.instrumented}">
+        <delete file="${d4j.workdir}/${d4j.file.cobertura.ser}"/>
+        <cobertura-instrument failOnError="true" toDir="${d4j.dir.classes.instrumented}" datafile="${d4j.workdir}/${d4j.file.cobertura.ser}">
             <fileset dir="${classes.dir}" includes="${d4j.classes.instrument}" />
             <auxClasspath path="${cobertura.aux.classpath}" />
         </cobertura-instrument>
+        <!-- Backup instrumented classes and empty data file -->
         <copy file="${d4j.workdir}/${d4j.properties}" todir="${d4j.dir.classes.instrumented}" overwrite="true"/>
+        <copy file="${d4j.workdir}/${d4j.file.cobertura.ser}" todir="${d4j.dir.classes.instrumented}" overwrite="true"/>
     </target>
 
     <target name="coverage.report">
@@ -364,4 +369,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <filesmatch file1="${d4j.workdir}/${d4j.properties}" file2="${d4j.dir.classes.instrumented}/${d4j.properties}"/>
         </condition>
     </target>
+
+<!--
+    Reset Cobertura's data file if the instrumented classes can be re-used
+-->
+    <target name="reset.cobertura.ser" if="classes.instrumented.uptodate">
+        <copy file="${d4j.dir.classes.instrumented}/${d4j.file.cobertura.ser}"
+              todir="${d4j.workdir}" overwrite="true" />
+    </target>
+
 </project>
