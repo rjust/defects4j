@@ -29,12 +29,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 #############################################################################-->
 <project name="Defects4J" basedir="${basedir}">
     <!-- Ensure basedir is properly set -->
-    <fail message="Directory ${basedir} is not a Defects4J working directory!">
+    <property name="d4j.workdir" value="${basedir}" />
+    <property name="d4j.properties" value="defects4j.build.properties" />
+    <fail message="Directory ${d4j.workdir} is not a Defects4J working directory!">
         <condition>
-            <not> <available file="${basedir}/defects4j.build.properties" /> </not>
+            <not> <available file="${d4j.workdir}/${d4j.properties}" /> </not>
         </condition>
     </fail>
-    <property name="d4j.workdir" value="${basedir}" />
     <!-- Check whether d4j.home is set -->
     <fail message="Property d4j.home not set!" unless="d4j.home" />
 
@@ -65,7 +66,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Additional properties such as tests to exclude.
          This property file is automatically generated. -->
-    <property file="${d4j.workdir}/defects4j.build.properties"/>
+    <property file="${d4j.workdir}/${d4j.properties}"/>
 
     <!-- Include build file that defines all export targets -->
     <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
@@ -148,7 +149,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 <!--
     Mutate all classes
 -->
-    <target name="mutate">
+    <target name="mutate" depends="check.classes.uptodate" unless="classes.mutated.uptodate">
         <property name="dir.classes.tmp" value=".classes.tmp"/>
         <!-- Backup original class files (might not yet exist) -->
         <move file="${classes.dir}" tofile="${dir.classes.tmp}" quiet="true" failonerror="false"/>
@@ -169,6 +170,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <antcall target="compile"/>
         <!-- Move mutated classes to dedicated directory -->
         <move file="${classes.dir}" tofile="${d4j.dir.classes.mutated}"/>
+        <copy file="${d4j.workdir}/${d4j.properties}" todir="${d4j.dir.classes.mutated}" overwrite="true"/>
         <!-- Restore original class files -->
         <move file="${dir.classes.tmp}" tofile="${classes.dir}" quiet="true" failonerror="false"/>
     </target>
@@ -312,7 +314,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <path id="cobertura.classpath.include" />
 
-    <target name="coverage.instrument" depends="compile">
+    <target name="coverage.instrument" depends="check.classes.uptodate,compile" unless="classes.instrumented.uptodate">
         <pathconvert refid="cobertura.classpath" property="cobertura.classpath.property" />
 
         <delete dir="${d4j.dir.classes.instrumented}"/>
@@ -320,6 +322,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <fileset dir="${classes.dir}" includes="${d4j.classes.instrument}" />
             <auxClasspath path="${cobertura.aux.classpath}" />
         </cobertura-instrument>
+        <copy file="${d4j.workdir}/${d4j.properties}" todir="${d4j.dir.classes.instrumented}" overwrite="true"/>
     </target>
 
     <target name="coverage.report">
@@ -347,5 +350,18 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             </filterchain>
         </loadfile>
         <fileset id="all.manual.tests" dir="${test.home}" includes="${rel.files}"/>
+    </target>
+
+<!--
+    Check whether instrumented classes are up to date for mutation analysis and
+    code coverage analysis
+-->
+    <target name="check.classes.uptodate">
+        <condition property="classes.mutated.uptodate" value="true">
+            <filesmatch file1="${d4j.workdir}/${d4j.properties}" file2="${d4j.dir.classes.mutated}/${d4j.properties}"/>
+        </condition>
+        <condition property="classes.instrumented.uptodate" value="true">
+            <filesmatch file1="${d4j.workdir}/${d4j.properties}" file2="${d4j.dir.classes.instrumented}/${d4j.properties}"/>
+        </condition>
     </target>
 </project>
