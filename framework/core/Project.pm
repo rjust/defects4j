@@ -668,7 +668,7 @@ sub coverage_instrument {
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Call ant to do the instrumentation
-    return $self->_ant_call("coverage.instrument");
+    return $self->_ant_call_comp("coverage.instrument");
 }
 
 =pod
@@ -681,7 +681,7 @@ TODO
 sub coverage_report {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $source_dir) = @_;
-    return $self->_ant_call("coverage.report", "-Dcoverage.src.dir=$source_dir");
+    return $self->_ant_call_comp("coverage.report", "-Dcoverage.src.dir=$source_dir");
 }
 
 =pod
@@ -1040,6 +1040,7 @@ sub _ant_call_comp {
 sub _call_major {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
     $ant_cmd = "PATH=$MAJOR_ROOT/bin:\$PATH && $MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
     return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
