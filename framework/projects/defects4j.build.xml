@@ -180,7 +180,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 <!--
     Run mutation analysis
 -->
-    <target name="mutation.test" depends="update.all.tests" description="Perform mutation analysis">
+    <target name="mutation.test" depends="compile.tests,update.all.tests" description="Perform mutation analysis">
         <!-- Test a generated test suite -->
         <if><isset property="d4j.test.include"/>
             <then>

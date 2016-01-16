@@ -273,10 +273,12 @@ sub exec_cmd {
     $$log_ref = $log if defined $log_ref;
     if ($ret!=0) {
         print(STDERR "FAIL\n$log");
+        print(STDERR "Executed command: $cmd\n");
         return 0;
     }
     print(STDERR "OK\n");
     # Upon success, only print log messages if debugging is enabled
+    print(STDERR "Executed command: $cmd\n") if $DEBUG;
     print(STDERR $log) if $DEBUG;
 
     return 1;
