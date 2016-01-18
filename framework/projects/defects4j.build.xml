@@ -253,6 +253,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                deprecation="false"
                optimize="false">
                <classpath>
+                    <pathelement path="${junit.jar}" />
                     <path refid="d4j.test.classpath" />
                     <pathelement path="${classes.dir}" />
                     <!-- Add dependencies to runtime libraries of test generation tools -->
@@ -280,6 +281,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement location="${d4j.dir.classes.instrumented}" />
                 <pathelement path="${build.home}/gen-tests" />
                 <pathelement path="${formatter.jar}" />
+                <pathelement path="${junit.jar}" />
                 <pathelement path="${classes.dir}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to code coverage tools -->
