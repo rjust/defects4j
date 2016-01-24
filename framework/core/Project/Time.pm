@@ -82,7 +82,7 @@ sub rev_lookup {
     my ($self, $revision) = @_;
     my @answer = grep {$self->lookup($_ . "f") eq $revision ||
                        $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
-    die unless scalar(@answer) > 0;
+    return -1 unless scalar(@answer) > 0;
     return $answer[0];
 }
 
