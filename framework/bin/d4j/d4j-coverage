@@ -161,7 +161,7 @@ printf("%18s: %d\n",     "Lines covered",      $cov_results->{lines_covered});
 printf("%18s: %d\n",     "Conditions total",   $cov_results->{branches_total});
 printf("%18s: %d\n",     "Conditions covered", $cov_results->{branches_covered});
 printf("%18s: %.1f%%\n", "Line coverage",      $cov_results->{lines_covered}/$cov_results->{lines_total}*100);
-printf("%18s: %.1f%%\n", "Condition coverage", $cov_results->{branches_covered}/$cov_results->{branches_total}*100);
+printf("%18s: %.1f%%\n", "Condition coverage", ($cov_results->{branches_total} == 0 ? 0 : $cov_results->{branches_covered}/$cov_results->{branches_total}*100));
 #printf("%17s: %.1f seconds\n", "Total run time", ($timeAnalysis));
 
 # Issue a warning if any test failed as this might give misleading results
