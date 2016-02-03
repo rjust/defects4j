@@ -851,7 +851,7 @@ sub run_randoop {
     close(IN);
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -ea -classpath $TESTGEN_LIB_DIR/randoop-current.jar:$cp randoop.main.Main gentests " .
+              " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--timelimit=$timeout " .
