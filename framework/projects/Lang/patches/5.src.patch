@@ -1,23 +1,11 @@
 diff --git a/src/main/java/org/apache/commons/lang3/LocaleUtils.java b/src/main/java/org/apache/commons/lang3/LocaleUtils.java
-index a7a6051..7568f2c 100644
+index a7a6051..bc779d0 100644
 --- a/src/main/java/org/apache/commons/lang3/LocaleUtils.java
 +++ b/src/main/java/org/apache/commons/lang3/LocaleUtils.java
-@@ -85,66 +85,41 @@ public class LocaleUtils {
-      * @return a Locale, null if null input
-      * @throws IllegalArgumentException if the string is an invalid format
-      */
--    public static Locale toLocale(final String str) {
-+    public static Locale toLocale(String str) {
-         if (str == null) {
-             return null;
-         }
--        final int len = str.length();
--        if (len < 2) {
-+        int len = str.length();
-+        if (len != 2 && len != 5 && len < 7) {
+@@ -94,26 +94,6 @@ public class LocaleUtils {
              throw new IllegalArgumentException("Invalid locale format: " + str);
          }
--        final char ch0 = str.charAt(0);
+         final char ch0 = str.charAt(0);
 -        if (ch0 == '_') {
 -            if (len < 3) {
 -                throw new IllegalArgumentException("Invalid locale format: " + str);
@@ -37,53 +25,15 @@ index a7a6051..7568f2c 100644
 -                throw new IllegalArgumentException("Invalid locale format: " + str);
 -            }
 -            return new Locale("", str.substring(1, 3), str.substring(4));
-+        char ch0 = str.charAt(0);
-+        char ch1 = str.charAt(1);
-+        if (ch0 < 'a' || ch0 > 'z' || ch1 < 'a' || ch1 > 'z') {
-+            throw new IllegalArgumentException("Invalid locale format: " + str);
-+        }
-+        if (len == 2) {
-+            return new Locale(str, "");
-         } else {
--            final char ch1 = str.charAt(1);
--            if (!Character.isLowerCase(ch0) || !Character.isLowerCase(ch1)) {
--                throw new IllegalArgumentException("Invalid locale format: " + str);
--            }
--            if (len == 2) {
--                return new Locale(str);
--            }
--            if (len < 5) {
--                throw new IllegalArgumentException("Invalid locale format: " + str);
--            }
-             if (str.charAt(2) != '_') {
+-        } else {
+             final char ch1 = str.charAt(1);
+             if (!Character.isLowerCase(ch0) || !Character.isLowerCase(ch1)) {
+                 throw new IllegalArgumentException("Invalid locale format: " + str);
+@@ -145,7 +125,6 @@ public class LocaleUtils {
                  throw new IllegalArgumentException("Invalid locale format: " + str);
              }
--            final char ch3 = str.charAt(3);
-+            char ch3 = str.charAt(3);
-             if (ch3 == '_') {
-                 return new Locale(str.substring(0, 2), "", str.substring(4));
-             }
--            final char ch4 = str.charAt(4);
--            if (!Character.isUpperCase(ch3) || !Character.isUpperCase(ch4)) {
-+            char ch4 = str.charAt(4);
-+            if (ch3 < 'A' || ch3 > 'Z' || ch4 < 'A' || ch4 > 'Z') {
-                 throw new IllegalArgumentException("Invalid locale format: " + str);
-             }
-             if (len == 5) {
-                 return new Locale(str.substring(0, 2), str.substring(3, 5));
-+            } else {
-+                if (str.charAt(5) != '_') {
-+                    throw new IllegalArgumentException("Invalid locale format: " + str);
-+                }
-+                return new Locale(str.substring(0, 2), str.substring(3, 5), str.substring(6));
-             }
--            if (len < 7) {
--                throw new IllegalArgumentException("Invalid locale format: " + str);
--            }
--            if (str.charAt(5) != '_') {
--                throw new IllegalArgumentException("Invalid locale format: " + str);
--            }
--            return new Locale(str.substring(0, 2), str.substring(3, 5), str.substring(6));
-         }
+             return new Locale(str.substring(0, 2), str.substring(3, 5), str.substring(6));
+-        }
      }
  
+     //-----------------------------------------------------------------------
