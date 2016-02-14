@@ -1,7 +1,7 @@
 --- com.google.javascript.jscomp.DeadAssignmentsEliminationTest::testInExpression2
 junit.framework.AssertionFailedError: 
-Expected: function FUNC(param1,param2){var a;a=1;a?2:a}
-Result: function FUNC(param1,param2){var a;a=1;a?a=2:a}
+Expected: function FUNC(param1,param2){var a;a=1;if(2||(a=3)||a);}
+Result: function FUNC(param1,param2){var a;a=1;if((a=2)||(a=3)||a);}
 Node tree inequality:
 Tree1:
 BLOCK [synthetic: 1]
@@ -18,11 +18,15 @@ BLOCK [synthetic: 1]
                     ASSIGN 1 [sourcename: expected0]
                         NAME a 1 [sourcename: expected0]
                         NUMBER 1.0 1 [sourcename: expected0]
-                EXPR_RESULT 1 [sourcename: expected0]
-                    HOOK 1 [sourcename: expected0]
-                        NAME a 1 [sourcename: expected0]
-                        NUMBER 2.0 1 [sourcename: expected0]
-                        NAME a 1 [sourcename: expected0]
+                IF 1 [sourcename: expected0]
+                    OR 1 [sourcename: expected0]
+                        NUMBER 2.0 1 [sourcename: expected0] [parenthesized: true]
+                        OR 1 [sourcename: expected0]
+                            ASSIGN 1 [sourcename: expected0] [parenthesized: true]
+                                NAME a 1 [sourcename: expected0]
+                                NUMBER 3.0 1 [sourcename: expected0]
+                            NAME a 1 [sourcename: expected0] [parenthesized: true]
+                    BLOCK 1 [sourcename: expected0]
 
 
 Tree2:
@@ -40,19 +44,23 @@ BLOCK [synthetic: 1]
                     ASSIGN 1 [sourcename: testcode]
                         NAME a 1 [sourcename: testcode]
                         NUMBER 1.0 1 [sourcename: testcode]
-                EXPR_RESULT 1 [sourcename: testcode]
-                    HOOK 1 [sourcename: testcode]
-                        NAME a 1 [sourcename: testcode]
-                        ASSIGN 1 [sourcename: testcode]
+                IF 1 [sourcename: testcode]
+                    OR 1 [sourcename: testcode]
+                        ASSIGN 1 [sourcename: testcode] [parenthesized: true]
                             NAME a 1 [sourcename: testcode]
                             NUMBER 2.0 1 [sourcename: testcode]
-                        NAME a 1 [sourcename: testcode]
+                        OR 1 [sourcename: testcode]
+                            ASSIGN 1 [sourcename: testcode] [parenthesized: true]
+                                NAME a 1 [sourcename: testcode]
+                                NUMBER 3.0 1 [sourcename: testcode]
+                            NAME a 1 [sourcename: testcode] [parenthesized: true]
+                    BLOCK 1 [sourcename: testcode]
 
 
-Subtree1: NUMBER 2.0 1 [sourcename: expected0]
+Subtree1: NUMBER 2.0 1 [sourcename: expected0] [parenthesized: true]
 
 
-Subtree2: ASSIGN 1 [sourcename: testcode]
+Subtree2: ASSIGN 1 [sourcename: testcode] [parenthesized: true]
     NAME a 1 [sourcename: testcode]
     NUMBER 2.0 1 [sourcename: testcode]
 
@@ -66,7 +74,7 @@ Subtree2: ASSIGN 1 [sourcename: testcode]
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:304)
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:292)
 	at com.google.javascript.jscomp.DeadAssignmentsEliminationTest.inFunction(DeadAssignmentsEliminationTest.java:345)
-	at com.google.javascript.jscomp.DeadAssignmentsEliminationTest.testInExpression2(DeadAssignmentsEliminationTest.java:469)
+	at com.google.javascript.jscomp.DeadAssignmentsEliminationTest.testInExpression2(DeadAssignmentsEliminationTest.java:459)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -77,12 +85,14 @@ Subtree2: ASSIGN 1 [sourcename: testcode]
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -201,12 +211,14 @@ Subtree2: TRUE 2 [sourcename: testcode]
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -321,12 +333,14 @@ Subtree2: TRUE 2 [sourcename: testcode]
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -439,12 +453,14 @@ Subtree2: TRUE 2 [sourcename: testcode]
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1964)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2364)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

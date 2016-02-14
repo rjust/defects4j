@@ -1,29 +1,23 @@
 diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-index cfdccbe..f1f5735 100644
+index cfdccbe..f6a6400 100644
 --- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 +++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-@@ -1352,19 +1352,10 @@ public final class JsDocInfoParser {
- 
-     boolean ignoreStar = false;
- 
--    // Track the start of the line to count whitespace that
--    // the tokenizer skipped. Because this case is rare, it's easier
--    // to do this here than in the tokenizer.
+@@ -1355,14 +1355,12 @@ public final class JsDocInfoParser {
+     // Track the start of the line to count whitespace that
+     // the tokenizer skipped. Because this case is rare, it's easier
+     // to do this here than in the tokenizer.
 -    int lineStartChar = -1;
--
+ 
      do {
        switch (token) {
          case STAR:
--          if (ignoreStar) {
--            // Mark the position after the star as the new start of the line.
+           if (ignoreStar) {
+             // Mark the position after the star as the new start of the line.
 -            lineStartChar = stream.getCharno() + 1;
--          } else {
--            // The star is part of the comment.
-+          if (!ignoreStar) {
+           } else {
+             // The star is part of the comment.
              if (builder.length() > 0) {
-               builder.append(' ');
-             }
-@@ -1381,34 +1372,16 @@ public final class JsDocInfoParser {
+@@ -1381,7 +1379,6 @@ public final class JsDocInfoParser {
            }
  
            ignoreStar = true;
@@ -31,10 +25,10 @@ index cfdccbe..f1f5735 100644
            token = next();
            continue;
  
--        default:
--          ignoreStar = false;
--          state = State.SEARCHING_ANNOTATION;
--
+@@ -1389,19 +1386,7 @@ public final class JsDocInfoParser {
+           ignoreStar = false;
+           state = State.SEARCHING_ANNOTATION;
+ 
 -          boolean isEOC = token == JsDocToken.EOC;
 -          if (!isEOC) {
 -            if (lineStartChar != -1 && option == WhitespaceOption.PRESERVE) {
@@ -44,41 +38,20 @@ index cfdccbe..f1f5735 100644
 -              }
 -              lineStartChar = -1;
 -            } else if (builder.length() > 0) {
--              // All tokens must be separated by a space.
+               // All tokens must be separated by a space.
 -              builder.append(' ');
 -            }
 -          }
--
--          if (token == JsDocToken.EOC ||
--              token == JsDocToken.EOF ||
--              // When we're capturing a license block, annotations
--              // in the block are ok.
--              (token == JsDocToken.ANNOTATION &&
--               option != WhitespaceOption.PRESERVE)) {
-+        case ANNOTATION:
-+        case EOC:
-+        case EOF:
-+          // When we're capturing a license block, annotations
-+          // in the block are ok.
-+          if (!(option == WhitespaceOption.PRESERVE &&
-+                token == JsDocToken.ANNOTATION)) {
-             String multilineText = builder.toString();
  
-             if (option != WhitespaceOption.PRESERVE) {
-@@ -1426,6 +1399,16 @@ public final class JsDocInfoParser {
+           if (token == JsDocToken.EOC ||
+               token == JsDocToken.EOF ||
+@@ -1426,6 +1411,9 @@ public final class JsDocInfoParser {
              return new ExtractionInfo(multilineText, token);
            }
  
-+          // FALL THROUGH
-+
-+        default:
-+          ignoreStar = false;
-+          state = State.SEARCHING_ANNOTATION;
-+
 +          if (builder.length() > 0) {
 +            builder.append(' ');
 +          }
-+
            builder.append(toString(token));
  
            line = stream.getRemainingJSDocLine();
