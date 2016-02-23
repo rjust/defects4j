@@ -33,6 +33,11 @@ BIN(!=)->{<,>,TRUE,LHS,RHS};
 BIN(&&)->{==,LHS,RHS,FALSE};
 BIN(||)->{!=,LHS,RHS,TRUE};
 
+// Delete all types of statements (STD operator)
+DEL(CALL);
+DEL(INC/DEC);
+DEL(ASSIGN);
+
 -LVR<"org.apache.commons.math3.util.FastMathLiteralArrays">;
 -ORU<"org.apache.commons.math3.util.FastMathLiteralArrays">;
 -LVR<"org.apache.commons.math.optimization.direct.BOBYQAOptimizer@bobyqb">;
