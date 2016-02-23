@@ -1,46 +1,19 @@
-diff --git a/src/main/java/org/joda/time/MutablePeriod.java b/src/main/java/org/joda/time/MutablePeriod.java
-index 78db791..4e40d55 100644
---- a/src/main/java/org/joda/time/MutablePeriod.java
-+++ b/src/main/java/org/joda/time/MutablePeriod.java
-@@ -177,7 +177,7 @@ public class MutablePeriod
-      * @param duration  the duration, in milliseconds
-      */
-     public MutablePeriod(long duration) {
--        super(duration);
-+        super(duration, null, null);
-     }
- 
-     /**
-diff --git a/src/main/java/org/joda/time/Period.java b/src/main/java/org/joda/time/Period.java
-index 7ec8072..1e0a6d8 100644
---- a/src/main/java/org/joda/time/Period.java
-+++ b/src/main/java/org/joda/time/Period.java
-@@ -379,7 +379,7 @@ public final class Period
-      * @param duration  the duration, in milliseconds
-      */
-     public Period(long duration) {
--        super(duration);
-+        super(duration, null, null);
-     }
- 
-     /**
 diff --git a/src/main/java/org/joda/time/base/BasePeriod.java b/src/main/java/org/joda/time/base/BasePeriod.java
-index a5dcb74..a4fe9af 100644
+index a5dcb74..679b734 100644
 --- a/src/main/java/org/joda/time/base/BasePeriod.java
 +++ b/src/main/java/org/joda/time/base/BasePeriod.java
-@@ -218,15 +218,7 @@ public abstract class BasePeriod
-      *
+@@ -219,13 +219,8 @@ public abstract class BasePeriod
       * @param duration  the duration, in milliseconds
       */
--    protected BasePeriod(long duration) {
+     protected BasePeriod(long duration) {
 -        super();
++        this(duration, null, null);
          // bug [3264409]
 -        iType = PeriodType.time();
 -        int[] values = ISOChronology.getInstanceUTC().get(this, duration);
 -        iType = PeriodType.standard();
 -        iValues = new int[8];
 -        System.arraycopy(values, 0, iValues, 4, 4);
--    }
+     }
  
      /**
-      * Creates a period from the given millisecond duration, which is only really
