@@ -35,6 +35,12 @@ of the checked-out project version.
     <property name="classes.dir" value="${d4j.workdir}/build" />
     <path id="compile.classpath" refid="build.classpath" />
 
+    <!-- Clean up working directory, i.e., delete classes and test classes. -->
+    <target name="clean">
+        <delete dir="$test.home" />
+        <delete dir="$classes.dir" />
+    </target>
+
     <!-- target used for compiling sources. This was replicated to avoid deleting the compilation directory -->
     <target name="compile" depends="initialise"
             description="Compile the JFreeChart source code.">
