@@ -38,4 +38,4 @@ new=$($cmd)
 clean
 
 # Extract new repos
-unzip -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
+unzip -q -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
