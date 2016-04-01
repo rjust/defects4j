@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
-index b41456e..e25d34c 100644
+index b41456e..5091493 100644
 --- a/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
 +++ b/src/main/java/org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java
 @@ -255,8 +255,6 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
@@ -70,14 +70,12 @@ index b41456e..e25d34c 100644
  
                  // compute the scaled actual reduction
                  double actRed = -1.0;
-@@ -426,16 +417,10 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
-                         double xK = diag[k] * point[k];
+@@ -427,15 +418,9 @@ public class LevenbergMarquardtOptimizer extends AbstractLeastSquaresOptimizer {
                          xNorm    += xK * xK;
                      }
--                    xNorm = Math.sqrt(xNorm);
+                     xNorm = Math.sqrt(xNorm);
 -                    current = new VectorialPointValuePair(point, objective);
  
-+                    xNorm = Math.sqrt(xNorm);
                      // tests for convergence.
 -                    if (checker != null) {
                      // we use the vectorial convergence checker
