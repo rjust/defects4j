@@ -64,7 +64,7 @@ ln -sf $DIR_LIB_RT/$EVOSUITE_RT_JAR $DIR_LIB_RT/evosuite-rt.jar
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="2.1.2"
+RANDOOP_VERSION="2.1.3"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-${RANDOOP_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \

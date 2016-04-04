@@ -1,8 +1,4 @@
 org.apache.commons.math.analysis.interpolation.SmoothingPolynomialBicubicSplineInterpolatorTest
-org.apache.commons.math.linear.EigenDecompositionImplTest
-org.apache.commons.math.linear.EigenSolverTest
-org.apache.commons.math.linear.SingularValueDecompositionImplTest
-org.apache.commons.math.linear.SingularValueSolverTest
 org.apache.commons.math.optimization.MultiStartDifferentiableMultivariateVectorialOptimizerTest
 org.apache.commons.math.optimization.fitting.CurveFitterTest
 org.apache.commons.math.optimization.fitting.GaussianFitterTest

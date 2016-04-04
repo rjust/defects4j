@@ -1,16 +1,3 @@
-diff --git a/src/java/org/apache/commons/math/special/Beta.java b/src/java/org/apache/commons/math/special/Beta.java
-index 904e156..4239c25 100644
---- a/src/java/org/apache/commons/math/special/Beta.java
-+++ b/src/java/org/apache/commons/math/special/Beta.java
-@@ -33,7 +33,7 @@ public class Beta implements Serializable {
-     private static final long serialVersionUID = -3833485397404128220L;
- 
-     /** Maximum allowed numerical error. */
--    private static final double DEFAULT_EPSILON = 10e-15;
-+    private static final double DEFAULT_EPSILON = 10e-9;
- 
-     /**
-      * Default constructor.  Prohibit instantiation.
 diff --git a/src/java/org/apache/commons/math/special/Gamma.java b/src/java/org/apache/commons/math/special/Gamma.java
 index ba2c4db..8c565cb 100644
 --- a/src/java/org/apache/commons/math/special/Gamma.java

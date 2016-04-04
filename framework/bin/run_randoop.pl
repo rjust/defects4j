@@ -138,7 +138,10 @@ my $OUT_DIR = $cmd_opts{o};
 $DEBUG = 1 if defined $cmd_opts{D};
 
 # List of loaded classes
-my $CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
+my $LOADED_CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
+
+# List of modified classes
+my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
 
 # Temporary directory for project checkout
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
@@ -171,16 +174,10 @@ my $LOG = Log::create_log("$TMP_DIR/run_randoop.log");
 
 $LOG->log_time("Start test generation");
 
-open(LIST, "<$CLASSES") or die "Could not open list of classes $CLASSES: $!";
-my @classes = <LIST>;
-close(LIST);
-
 # Build class list arguments
-my $target_classes="";
-foreach my $class (@classes) {
-    chomp $class;
-    $target_classes="$target_classes --testclass=$class";
-}
+my $test_classes="--classlist=$LOADED_CLASSES";
+my $target_classes="--include-if-class-exercised=$MOD_CLASSES";
+
 # Iterate over all modified classes
 my $log = "$TMP_DIR/$PID.$VID.$TID.log";
 $LOG->log_msg("Generate tests for: $PID-$VID-$TID");
@@ -190,7 +187,10 @@ my $config = "$UTIL_DIR/randoop.config";
 $config = $ENV{RANDOOP_CONFIG_FILE} // $config;
 
 # Use test_id and bug_id as random seed -- randoop is by default NOT random!
-$project->run_randoop($target_classes, $TIME, ($TID*1000 + $BID), $config, $log) or die "Failed to generate tests!";
+
+# TODO: Enable target class filtering once Randoop is fixed.
+# $project->run_randoop("$test_classes $target_classes", $TIME, ($TID*1000 + $BID), $config, $log) or die "Failed to generate tests!";
+$project->run_randoop("$test_classes", $TIME, ($TID*1000 + $BID), $config, $log) or die "Failed to generate tests!";
 
 # Copy log file for this version id and test criterion to output directory
 system("mv $log $LOG_DIR") == 0 or die "Cannot copy log file!";
