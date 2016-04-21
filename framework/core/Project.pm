@@ -90,6 +90,8 @@ name of the corresponding project.
 
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
 
+=item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)
+
 =back
 
 Every project has to provide an Apache Ant F<build.xml> build file.
