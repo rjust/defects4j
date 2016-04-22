@@ -25,6 +25,9 @@ old=$($cmd)
 wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/defects4j-repos.zip
 new=$($cmd)
 
+# Install Mockito (separate from core defects4j)
+./get_mockito.sh
+
 # Exit if no newer file is available
 [ "$old" == "$new" ] && exit 0
 
