@@ -3,6 +3,8 @@
     <!-- script.dir property has to be provided by caller! -->
     <fail message="Property script.dir not set!" unless="script.dir" />
 
+    <!-- Force build in Java 1.7 for older versions of the project -->
+    <property name="build.compiler" value="javac1.7"/>
     <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
 
     <!-- Include project build file, which provides general targets -->
@@ -65,12 +67,12 @@
 
     <!-- Build using Ant if build.xml exists, used in older commits -->
     <target name="ant.compile" if="use.ant">
-        <ant antfile="${basedir}/build.xml" target="compile" />
+        <ant antfile="${basedir}/build.xml" target="compile" inheritAll="true"/>
     </target>
 
     <!-- Build tests using Ant if build.xml exists, used in older commits -->
     <target name="ant.compile.tests" if="use.ant">
-        <ant antfile="${basedir}/build.xml" target="compile.test" />
+        <ant antfile="${basedir}/build.xml" target="compile.test" inheritAll="true"/>
     </target>
 
 
