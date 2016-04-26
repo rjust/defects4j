@@ -249,3 +249,24 @@ index 28437e8..0000000
 -    }
 -
 -}
+diff --git a/src/org/mockito/internal/configuration/injection/Injecter.java b/src/org/mockito/internal/configuration/injection/Injecter.java
+new file mode 100644
+index 0000000..1dd5dca
+--- /dev/null
++++ b/src/org/mockito/internal/configuration/injection/Injecter.java
+@@ -0,0 +1,14 @@
++package org.mockito.internal.configuration.injection;^M
++^M
++/**^M
++ * Created by IntelliJ IDEA.^M
++ * User: brice^M
++ * Date: 23 oct. 2010^M
++ * Time: 18:01:48^M
++ * To change this template use File | Settings | File Templates.^M
++ */^M
++public interface Injecter {^M
++^M
++    boolean thenInject();^M
++^M
++}
+\ No newline at end of file
