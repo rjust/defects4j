@@ -1,44 +1,38 @@
-diff --git a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
-index a89ace9..c468327 100644
---- a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
-+++ b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
-@@ -1,7 +1,6 @@
- package org.mockitousage.constructor;
- 
--import java.util.List;
+diff --git a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java b/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
+deleted file mode 100644
+index 52c06bd..0000000
+--- a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
++++ /dev/null
+@@ -1,32 +0,0 @@
+-package org.mockitousage.bugs;
 -
-+import org.junit.Ignore;
- import org.junit.Test;
- import org.mockito.exceptions.base.MockitoException;
- import org.mockito.mock.SerializableMode;
-@@ -99,30 +98,4 @@ public class CreatingMocksWithConstructorTest extends TestBase {
-             assertEquals("Mocks instantiated with constructor cannot be combined with " + SerializableMode.ACROSS_CLASSLOADERS + " serialization mode.", e.getMessage());
-         }
-     }
+-import org.junit.Test;
 -
--    static abstract class AbstractThing {
--    	abstract String name();
--    	String fullName() {
--    		return "abstract " + name();
--    	}
--    }
--    
+-import static org.fest.assertions.Assertions.assertThat;
+-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+-import static org.mockito.Mockito.mock;
+-
+-/**
+- * In GH issue 99 : https://github.com/mockito/mockito/issues/99
+- */
+-public class DeepStubsWronglyReportsSerializationProblemsTest {
+-
 -    @Test
--    public void abstractMethodReturnsDefault() {
--    	AbstractThing thing = spy(AbstractThing.class);
--    	assertEquals("abstract null", thing.fullName());
+-    public void should_not_raise_a_mockito_exception_about_serialization_when_accessing_deep_stub() {
+-        NotSerializableShouldBeMocked the_deep_stub = mock(ToBeDeepStubbed.class, RETURNS_DEEP_STUBS).getSomething();
+-        assertThat(the_deep_stub).isNotNull();
 -    }
--    
--    @Test
--    public void abstractMethodStubbed() {
--    	AbstractThing thing = spy(AbstractThing.class);
--    	when(thing.name()).thenReturn("me");
--    	assertEquals("abstract me", thing.fullName());
+-
+-    public static class ToBeDeepStubbed {
+-        public ToBeDeepStubbed() { }
+-
+-        public NotSerializableShouldBeMocked getSomething() {
+-            return null;
+-        }
 -    }
-- 
--    @Test
--    public void testCallsRealInterfaceMethod() {
--    	List<String> list = mock(List.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
--    	assertNull(list.get(1));
+-
+-    public static class NotSerializableShouldBeMocked {
+-        NotSerializableShouldBeMocked(String mandatory_param) { }
 -    }
- }
+-
+-}

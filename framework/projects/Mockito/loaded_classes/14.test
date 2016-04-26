@@ -1,10 +1,8 @@
-org.mockitoutil.Assertor
 org.mockitousage.configuration.SmartMock
 org.mockitoutil.TestBase
-org.mockito.configuration.MockitoConfiguration
+org.mockitoutil.Assertor
 org.mockito.StateMaster
-org.mockitousage.annotation.CaptorAnnotationBasicTest
-org.mockitousage.annotation.CaptorAnnotationTest
-org.mockito.internal.configuration.ConfigurationAccess
+org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest
+org.mockito.configuration.MockitoConfiguration
 org.mockitousage.IMethods
-org.mockito.internal.util.reflection.GenericMasterTest
+org.mockito.internal.configuration.ConfigurationAccess

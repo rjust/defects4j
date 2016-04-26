@@ -1,104 +1,52 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-index 3bb7636..f9ec9a8 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-@@ -4,6 +4,10 @@
+diff --git a/org/mockito/internal/creation/DelegatingMethod.java b/org/mockito/internal/creation/DelegatingMethod.java
+index 034694f..87d4d3f 100644
+--- a/org/mockito/internal/creation/DelegatingMethod.java
++++ b/org/mockito/internal/creation/DelegatingMethod.java
+@@ -4,11 +4,11 @@
   */
- package org.mockito.internal.stubbing.defaultanswers;
+ package org.mockito.internal.creation;
  
-+import static org.mockito.Mockito.withSettings;
+-import org.mockito.internal.invocation.MockitoMethod;
+-
+ import java.lang.reflect.Method;
+ import java.lang.reflect.Modifier;
+ 
++import org.mockito.internal.invocation.MockitoMethod;
 +
-+import java.io.IOException;
-+import java.io.Serializable;
- import org.mockito.MockSettings;
- import org.mockito.Mockito;
- import org.mockito.internal.InternalMockHandler;
-@@ -14,14 +18,8 @@ import org.mockito.internal.stubbing.StubbedInvocationMatcher;
- import org.mockito.internal.util.MockUtil;
- import org.mockito.internal.util.reflection.GenericMetadataSupport;
- import org.mockito.invocation.InvocationOnMock;
--import org.mockito.mock.MockCreationSettings;
- import org.mockito.stubbing.Answer;
+ public class DelegatingMethod implements MockitoMethod {
  
--import java.io.IOException;
--import java.io.Serializable;
+     private final Method method;
+@@ -45,26 +45,14 @@ public class DelegatingMethod implements MockitoMethod {
+     public boolean isAbstract() {
+         return (method.getModifiers() & Modifier.ABSTRACT) != 0;
+     }
 -
--import static org.mockito.Mockito.withSettings;
--
- /**
-  * Returning deep stub implementation.
-  *
-@@ -41,7 +39,7 @@ import static org.mockito.Mockito.withSettings;
-  * @see org.mockito.Answers#RETURNS_DEEP_STUBS
-  */
- public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+-    /**
+-     * @return True if the input object is a DelegatingMethod which has an internal Method which is equal to the internal Method of this DelegatingMethod,
+-     * or if the input object is a Method which is equal to the internal Method of this DelegatingMethod.
+-     */
++    
+     @Override
+-    public boolean equals(Object o) {
+-        if (this == o) {
+-            return true;
+-        }
+-        if (o instanceof DelegatingMethod) {
+-            DelegatingMethod that = (DelegatingMethod) o;
+-            return method.equals(that.method);
+-        } else {
+-            return method.equals(o);
+-        }
++    public int hashCode() {
++        return 1;
+     }
 -
 +    
-     private static final long serialVersionUID = -7105341425736035847L;
- 
-     public Object answer(InvocationOnMock invocation) throws Throwable {
-@@ -57,21 +55,18 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+     @Override
+-    public int hashCode() {
+-        return method.hashCode();
++    public boolean equals(Object obj) {
++        return method.equals(obj);
      }
- 
-     private Object deepStub(InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata) throws Throwable {
--        InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
--        InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
-+    	InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
-+    	InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
- 
-         // matches invocation for verification
-         for (StubbedInvocationMatcher stubbedInvocationMatcher : container.getStubbedInvocations()) {
--            if (container.getInvocationForStubbing().matches(stubbedInvocationMatcher.getInvocation())) {
--                return stubbedInvocationMatcher.answer(invocation);
--            }
--        }
-+    		if(container.getInvocationForStubbing().matches(stubbedInvocationMatcher.getInvocation())) {
-+    			return stubbedInvocationMatcher.answer(invocation);
-+    		}
-+		}
- 
-         // record deep stub answer
--        return recordDeepStubAnswer(
--                newDeepStubMock(returnTypeGenericMetadata, invocation.getMock()),
--                container
--        );
-+        return recordDeepStubAnswer(newDeepStubMock(returnTypeGenericMetadata), container);
-     }
- 
-     /**
-@@ -82,30 +77,25 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
-      * {@link ReturnsDeepStubs} answer in which we will store the returned type generic metadata.
-      *
-      * @param returnTypeGenericMetadata The metadata to use to create the new mock.
--     * @param parentMock The parent of the current deep stub mock.
-      * @return The mock
-      */
--    private Object newDeepStubMock(GenericMetadataSupport returnTypeGenericMetadata, Object parentMock) {
--        MockCreationSettings parentMockSettings = new MockUtil().getMockSettings(parentMock);
-+    private Object newDeepStubMock(GenericMetadataSupport returnTypeGenericMetadata) {
-         return mockitoCore().mock(
-                 returnTypeGenericMetadata.rawType(),
--                withSettingsUsing(returnTypeGenericMetadata, parentMockSettings)
-+                withSettingsUsing(returnTypeGenericMetadata)
-         );
-     }
- 
--    private MockSettings withSettingsUsing(GenericMetadataSupport returnTypeGenericMetadata, MockCreationSettings parentMockSettings) {
-+    private MockSettings withSettingsUsing(GenericMetadataSupport returnTypeGenericMetadata) {
-         MockSettings mockSettings = returnTypeGenericMetadata.hasRawExtraInterfaces() ?
-                 withSettings().extraInterfaces(returnTypeGenericMetadata.rawExtraInterfaces())
-                 : withSettings();
- 
--        return propagateSerializationSettings(mockSettings, parentMockSettings)
-+        return mockSettings
-+		        .serializable()
-                 .defaultAnswer(returnsDeepStubsAnswerUsing(returnTypeGenericMetadata));
-     }
- 
--    private MockSettings propagateSerializationSettings(MockSettings mockSettings, MockCreationSettings parentMockSettings) {
--        return mockSettings.serializable(parentMockSettings.getSerializableMode());
--    }
--
-     private ReturnsDeepStubs returnsDeepStubsAnswerUsing(final GenericMetadataSupport returnTypeGenericMetadata) {
-         return new ReturnsDeepStubsSerializationFallback(returnTypeGenericMetadata);
-     }
+ }
+\ No newline at end of file

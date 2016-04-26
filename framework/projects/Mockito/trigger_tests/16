@@ -1,17 +1,17 @@
---- org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest::shouldAllowVerifyingWhenOtherMockCallIsInTheSameLine
-junit.framework.AssertionFailedError: 
-Wanted but not invoked:
-mock.otherMethod();
--> at org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest.shouldAllowVerifyingWhenOtherMockCallIsInTheSameLine(VerifyingWithAnExtraCallToADifferentMockTest.java:29)
-Actually, there were zero interactions with this mock.
+--- org.mockitousage.bugs.StubbingMocksThatAreConfiguredToReturnMocksTest::shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKS
+org.mockito.exceptions.misusing.MissingMethodInvocationException: 
+when() requires an argument which has to be a method call on a mock.
+For example:
+    when(mock.getArticles()).thenReturn(articles);
 
-	at org.mockito.exceptions.Reporter.wantedButNotInvoked(Reporter.java:257)
-	at org.mockito.internal.verification.checkers.MissingInvocationChecker.check(MissingInvocationChecker.java:41)
-	at org.mockito.internal.verification.Times.verify(Times.java:35)
-	at org.mockito.internal.MockHandler.handle(MockHandler.java:74)
-	at org.mockito.internal.creation.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:47)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$606ce351.otherMethod(<generated>)
-	at org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest.shouldAllowVerifyingWhenOtherMockCallIsInTheSameLine(VerifyingWithAnExtraCallToADifferentMockTest.java:29)
+Also, this error might show up because you stub final/private/equals() or hashCode() method.
+Those methods *cannot* be stubbed/verified.
+
+	at org.mockito.exceptions.Reporter.missingMethodInvocation(Reporter.java:77)
+	at org.mockito.internal.MockitoCore.stub(MockitoCore.java:42)
+	at org.mockito.internal.MockitoCore.when(MockitoCore.java:55)
+	at org.mockito.Mockito.when(Mockito.java:994)
+	at org.mockitousage.bugs.StubbingMocksThatAreConfiguredToReturnMocksTest.shouldAllowStubbingMocksConfiguredWithRETURNS_MOCKS(StubbingMocksThatAreConfiguredToReturnMocksTest.java:19)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

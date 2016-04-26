@@ -1,6 +1,8 @@
-org.mockito.StateMaster
 org.mockito.configuration.MockitoConfiguration
+org.mockito.StateMaster
+org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest
 org.mockito.internal.configuration.ConfigurationAccess
-org.mockito.internal.creation.DelegatingMethodTest
-org.mockitoutil.TestBase
+org.mockitousage.IMethods
 org.mockitoutil.Assertor
+org.mockitousage.configuration.SmartMock
+org.mockitoutil.TestBase

@@ -1,6 +1,2 @@
-org.mockitoutil.TestBase
-org.mockitoutil.Assertor
-org.mockitousage.constructor.CreatingMocksWithConstructorTest
-org.mockito.internal.configuration.ConfigurationAccess
+org.mockitousage.bugs.DeepStubsWronglyReportsSerializationProblemsTest
 org.mockito.configuration.MockitoConfiguration
-org.mockito.StateMaster

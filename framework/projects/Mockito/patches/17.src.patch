@@ -1,272 +1,85 @@
-diff --git a/org/mockito/internal/configuration/DefaultInjectionEngine.java b/org/mockito/internal/configuration/DefaultInjectionEngine.java
-index 9d7088f..5d2b63c 100644
---- a/org/mockito/internal/configuration/DefaultInjectionEngine.java
-+++ b/org/mockito/internal/configuration/DefaultInjectionEngine.java
-@@ -21,7 +21,7 @@ import java.util.Set;
-  * See {@link org.mockito.MockitoAnnotations}
-  */
- public class DefaultInjectionEngine {
--
-+	
-     private final MockCandidateFilter mockCandidateFilter = new TypeBasedCandidateFilter(new NameBasedCandidateFilter(new FinalMockCandidateFilter()));
+diff --git a/org/mockito/internal/creation/MockSettingsImpl.java b/org/mockito/internal/creation/MockSettingsImpl.java
+index 5285d90..3452c62 100644
+--- a/org/mockito/internal/creation/MockSettingsImpl.java
++++ b/org/mockito/internal/creation/MockSettingsImpl.java
+@@ -9,6 +9,9 @@ import org.mockito.exceptions.Reporter;
+ import org.mockito.internal.util.MockName;
+ import org.mockito.stubbing.Answer;
  
-     // for each tested
-@@ -30,7 +30,7 @@ public class DefaultInjectionEngine {
-     //   - if more than *one* find mock candidate on name
-     //   - if one mock candidate then set mock
-     //   - else don't fail, user will then provide dependencies
--    public void injectMocksOnFields(Set<Field> testClassFields, Set<Object> mocks, Object testClass) {
-+	public void injectMocksOnFields(Set<Field> testClassFields, Set<Object> mocks, Object testClass) {
-         for (Field field : testClassFields) {
-             Object fieldInstance = null;
-             try {
-@@ -54,4 +54,4 @@ public class DefaultInjectionEngine {
-         }
++import java.util.Arrays;
++import java.io.Serializable;
++
+ public class MockSettingsImpl implements MockSettings {
+ 
+     private static final long serialVersionUID = 4475297236197939568L;
+@@ -17,11 +20,9 @@ public class MockSettingsImpl implements MockSettings {
+     private Object spiedInstance;
+     private Answer<Object> defaultAnswer;
+     private MockName mockName;
+-    private boolean serializable;
+ 
+     public MockSettings serializable() {
+-        this.serializable = true;
+-        return this;
++        return this.extraInterfaces(Serializable.class);
      }
  
--}
-+}
-\ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-index 673de91..ec92492 100644
---- a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-@@ -1,7 +1,6 @@
- package org.mockito.internal.configuration.injection;
- 
- import org.mockito.exceptions.base.MockitoException;
--import org.mockito.internal.util.reflection.BeanPropertySetter;
- import org.mockito.internal.util.reflection.FieldSetter;
- 
- import java.lang.reflect.Field;
-@@ -11,21 +10,19 @@ import java.util.Collection;
-  * This node returns an actual injecter which will be either :
-  *
-  * <ul>
-- * <li>an {@link OngoingInjecter} that do nothing if a candidate couldn't be found</li>
-- * <li>an {@link OngoingInjecter} that will try to inject the candidate trying first the property setter then if not possible try the field access</li>
-+ * <li>an {@link Injecter} that do nothing if a candidate couldn't be found</li>
-+ * <li>an {@link Injecter} that do will inject the final candidate to the field</li>
-  * </ul>
-  */
- public class FinalMockCandidateFilter implements MockCandidateFilter {
--    public OngoingInjecter filterCandidate(final Collection<Object> mocks, final Field field, final Object fieldInstance) {
-+    public Injecter filterCandidate(final Collection<Object> mocks, final Field field, final Object fieldInstance) {
-         if(mocks.size() == 1) {
-             final Object matchingMock = mocks.iterator().next();
- 
--            return new OngoingInjecter() {
-+            return new Injecter() {
-                 public boolean thenInject() {
-                     try {
--                        if (!new BeanPropertySetter(fieldInstance, field).set(matchingMock)) {
--                            new FieldSetter(fieldInstance, field).set(matchingMock);
--                        }
-+                        new FieldSetter(fieldInstance, field).set(matchingMock);
-                     } catch (Exception e) {
-                         throw new MockitoException("Problems injecting dependency in " + field.getName(), e);
-                     }
-@@ -34,11 +31,11 @@ public class FinalMockCandidateFilter implements MockCandidateFilter {
-             };
-         }
- 
--        return new OngoingInjecter() {
-+        return new Injecter() {
-             public boolean thenInject() {
-                 return false;
-             }
-         };
- 
-     }
--}
-+}
-\ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/MockCandidateFilter.java b/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-index 5a9d71f..809d03f 100644
---- a/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-@@ -5,7 +5,7 @@ import java.util.Collection;
- 
- public interface MockCandidateFilter {
- 
--    OngoingInjecter filterCandidate(
-+    Injecter filterCandidate(
-             Collection<Object> mocks,
-             Field fieldToBeInjected,
-             Object fieldInstance
-diff --git a/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-index 4b36bf3..dacdeab 100644
---- a/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-@@ -15,7 +15,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
-         this.next = next;
+     public MockSettings extraInterfaces(Class<?>... extraInterfaces) {
+@@ -73,7 +74,9 @@ public class MockSettingsImpl implements MockSettings {
      }
  
--    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-+    public Injecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-         List<Object> mockNameMatches = new ArrayList<Object>();
-         if(mocks.size() > 1) {
-             for (Object mock : mocks) {
-diff --git a/org/mockito/internal/configuration/injection/OngoingInjecter.java b/org/mockito/internal/configuration/injection/OngoingInjecter.java
+     public boolean isSerializable() {
+-        return serializable;
++        return
++                extraInterfaces != null
++                && Arrays.asList(extraInterfaces).contains(Serializable.class);
+     }
+ 
+     public void initiateMockName(Class classToMock) {
+diff --git a/org/mockito/internal/util/ArrayUtils.java b/org/mockito/internal/util/ArrayUtils.java
 deleted file mode 100644
-index 844317d..0000000
---- a/org/mockito/internal/configuration/injection/OngoingInjecter.java
+index 92f2a8d..0000000
+--- a/org/mockito/internal/util/ArrayUtils.java
 +++ /dev/null
-@@ -1,19 +0,0 @@
--package org.mockito.internal.configuration.injection;
+@@ -1,11 +0,0 @@
+-package org.mockito.internal.util;
 -
--/**
-- * Allow the ongoing injection of a mock candidate.
-- */
--public interface OngoingInjecter {
--
--    /**
--     * Inject the mock.
--     *
--     * <p>
--     * Please check the actual implementation.
--     * </p>
--     *
--     * @return <code>true</code> if injected, <code>false</code> otherwise.
--     */
--    boolean thenInject();
--
+-public class ArrayUtils {
+-    public Class<?>[] concat(Class<?>[] interfaces, Class<?> clazz) {
+-        int length = interfaces.length;
+-        Class[] out = new Class[length +1];
+-        System.arraycopy(interfaces, 0, out, 0, length);
+-        out[length] = clazz;
+-        return out;
+-    }
 -}
 \ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-index bbb6ce7..c402482 100644
---- a/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-@@ -13,7 +13,7 @@ public class TypeBasedCandidateFilter implements MockCandidateFilter {
-         this.next = next;
-     }
+diff --git a/org/mockito/internal/util/MockUtil.java b/org/mockito/internal/util/MockUtil.java
+index b8ed8b4..756f764 100644
+--- a/org/mockito/internal/util/MockUtil.java
++++ b/org/mockito/internal/util/MockUtil.java
+@@ -16,8 +16,6 @@ import org.mockito.internal.creation.MockSettingsImpl;
+ import org.mockito.internal.creation.jmock.ClassImposterizer;
+ import org.mockito.internal.util.reflection.LenientCopyTool;
  
--    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-+    public Injecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-         List<Object> mockTypeMatches = new ArrayList<Object>();
-         for (Object mock : mocks) {
-             if (field.getType().isAssignableFrom(mock.getClass())) {
-diff --git a/org/mockito/internal/util/reflection/BeanPropertySetter.java b/org/mockito/internal/util/reflection/BeanPropertySetter.java
-deleted file mode 100644
-index 28437e8..0000000
---- a/org/mockito/internal/util/reflection/BeanPropertySetter.java
-+++ /dev/null
-@@ -1,97 +0,0 @@
--package org.mockito.internal.util.reflection;
+-import java.io.Serializable;
 -
--import java.beans.BeanInfo;
--import java.beans.IntrospectionException;
--import java.beans.Introspector;
--import java.beans.PropertyDescriptor;
--import java.lang.reflect.Field;
--import java.lang.reflect.InvocationTargetException;
--import java.lang.reflect.Method;
+ @SuppressWarnings("unchecked")
+ public class MockUtil {
+     
+@@ -41,14 +39,7 @@ public class MockUtil {
+         MockHandler<T> mockHandler = new MockHandler<T>(settings);
+         MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
+         Class<?>[] interfaces = settings.getExtraInterfaces();
 -
--/**
-- * This utility class will call the setter of the property to inject a new value.
-- */
--public class BeanPropertySetter {
--
--    private final Object target;
--    private boolean reportNoSetterFound;
--    private final Field field;
--
--    /**
--     * New BeanPropertySetter
--     * @param target The target on which the setter must be invoked
--     * @param propertyField The field that should be accessed with the setter
--     * @param reportNoSetterFound Allow the set method to raise an Exception if the setter cannot be found
--     */
--    public BeanPropertySetter(final Object target, final Field propertyField, boolean reportNoSetterFound) {
--        this.field = propertyField;
--        this.target = target;
--        this.reportNoSetterFound = reportNoSetterFound;
--    }
--
--    /**
--     * New BeanPropertySetter that don't report failure
--     * @param target The target on which the setter must be invoked
--     * @param propertyField The propertyField that must be accessed through a setter
--     */
--    public BeanPropertySetter(final Object target, final Field propertyField) {
--        this(target, propertyField, false);
--    }
--
--    /**
--     * Set the value to the property represented by this {@link BeanPropertySetter}
--     * @param value the new value to pass to the property setter
--     * @return <code>true</code> if the value has been injected, <code>false</code> otherwise
--     * @throws RuntimeException Can be thrown if the setter threw an exception, if the setter is not accessible
--     *          or, if <code>reportNoSetterFound</code> and setter could not be found.
--     */
--    public boolean set(final Object value) {
--
--        AccessibilityChanger changer = new AccessibilityChanger();
--        Method writeMethod = null;
--        try {
--            BeanInfo targetInfo = Introspector.getBeanInfo(target.getClass());
--            PropertyDescriptor[] propertyDescriptors = targetInfo.getPropertyDescriptors();
--
--            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
--                if(propertyNameMatchFieldName(propertyDescriptor)
--                        && propertyTypeMatchFieldType(propertyDescriptor)) {
--                    writeMethod = propertyDescriptor.getWriteMethod();
--                    if(writeMethod != null) {
--                        changer.enableAccess(writeMethod);
--                        writeMethod.invoke(target, value);
--                        return true;
--                    }
--                }
--            }
--        } catch (InvocationTargetException e) {
--            throw new RuntimeException("Problems setting value:[" + value + "] on object: [" + target + "] the setter of property [" + field.getName() + "] threw an exception", e.getTargetException());
--        } catch (IllegalAccessException e) {
--            throw new RuntimeException("Problems setting value:[" + value + "] on object: [" + target + "] the setter of property [" + field.getName() + "] is not accessible", e);
--        } catch (IntrospectionException e) {
--            throw new RuntimeException("Problems setting value: [" + value + "] on object: [" + target + "] for property : [" + field.getName() + "], cannot introspect " + target.getClass(), e);
--        } finally {
--            if(writeMethod != null) {
--                changer.safelyDisableAccess(writeMethod);
--            }
+-        Class<?>[] ancillaryTypes;
+-        if (settings.isSerializable()) {
+-            ancillaryTypes = interfaces == null ? new Class<?>[] {Serializable.class} : new ArrayUtils().concat(interfaces, Serializable.class);
+-        } else {
+-            ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
 -        }
 -
--        reportNoSetterFound();
--        return false;
--    }
--
--    private void reportNoSetterFound() {
--        if(reportNoSetterFound) {
--            throw new RuntimeException("Problems setting value on object: [" + target + "] for property : [" + field.getName() + "], setter not found");
--        }
--    }
--
--    private boolean propertyTypeMatchFieldType(PropertyDescriptor pd) {
--        return field.getType().equals(pd.getPropertyType());
--    }
--
--    private boolean propertyNameMatchFieldName(PropertyDescriptor pd) {
--        return field.getName().equals(pd.getName());
--    }
--
--}
-diff --git a/src/org/mockito/internal/configuration/injection/Injecter.java b/src/org/mockito/internal/configuration/injection/Injecter.java
-new file mode 100644
-index 0000000..1dd5dca
---- /dev/null
-+++ b/src/org/mockito/internal/configuration/injection/Injecter.java
-@@ -0,0 +1,14 @@
-+package org.mockito.internal.configuration.injection;
-+
-+/**
-+ * Created by IntelliJ IDEA.
-+ * User: brice
-+ * Date: 23 oct. 2010
-+ * Time: 18:01:48
-+ * To change this template use File | Settings | File Templates.
-+ */
-+public interface Injecter {
-+
-+    boolean thenInject();
-+
-+}
-\ No newline at end of file
++        Class<?>[] ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
+         Object spiedInstance = settings.getSpiedInstance();
+         
+         T mock = ClassImposterizer.INSTANCE.imposterise(filter, classToMock, ancillaryTypes);

@@ -1,1 +1,6 @@
-org.mockito.internal.util.reflection.GenericMetadataSupportTest
+org.mockitoutil.TestBase
+org.mockitoutil.Assertor
+org.mockitousage.constructor.CreatingMocksWithConstructorTest
+org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.configuration.MockitoConfiguration
+org.mockito.StateMaster

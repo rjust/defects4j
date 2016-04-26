@@ -1,29 +1,44 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
-index f15833c..9b9b7f0 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
-@@ -21,10 +21,7 @@ import org.junit.Test;
+diff --git a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+index a89ace9..c468327 100644
+--- a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
++++ b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+@@ -1,7 +1,6 @@
+ package org.mockitousage.constructor;
  
- @SuppressWarnings("unused")
- public class GenericMetadataSupportTest {
--  
--    interface GenericsSelfReference<T extends GenericsSelfReference<T>> {
--        T self();
--    }
-+
-     interface UpperBoundedTypeWithClass<E extends Number & Comparable<E>> {
-         E get();
-     }
-@@ -47,12 +44,6 @@ public class GenericMetadataSupportTest {
- 
-     static class StringList extends ArrayList<String> { }
- 
--    @Test
--    public void typeVariable_of_self_type() {
--        GenericMetadataSupport genericMetadata = inferFrom(GenericsSelfReference.class).resolveGenericReturnType(firstNamedMethod("self", GenericsSelfReference.class));
+-import java.util.List;
 -
--        assertThat(genericMetadata.rawType()).isEqualTo(GenericsSelfReference.class);
++import org.junit.Ignore;
+ import org.junit.Test;
+ import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.mock.SerializableMode;
+@@ -99,30 +98,4 @@ public class CreatingMocksWithConstructorTest extends TestBase {
+             assertEquals("Mocks instantiated with constructor cannot be combined with " + SerializableMode.ACROSS_CLASSLOADERS + " serialization mode.", e.getMessage());
+         }
+     }
+-
+-    static abstract class AbstractThing {
+-    	abstract String name();
+-    	String fullName() {
+-    		return "abstract " + name();
+-    	}
 -    }
- 
-     @Test
-     public void can_get_raw_type_from_Class() throws Exception {
+-    
+-    @Test
+-    public void abstractMethodReturnsDefault() {
+-    	AbstractThing thing = spy(AbstractThing.class);
+-    	assertEquals("abstract null", thing.fullName());
+-    }
+-    
+-    @Test
+-    public void abstractMethodStubbed() {
+-    	AbstractThing thing = spy(AbstractThing.class);
+-    	when(thing.name()).thenReturn("me");
+-    	assertEquals("abstract me", thing.fullName());
+-    }
+- 
+-    @Test
+-    public void testCallsRealInterfaceMethod() {
+-    	List<String> list = mock(List.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
+-    	assertNull(list.get(1));
+-    }
+ }

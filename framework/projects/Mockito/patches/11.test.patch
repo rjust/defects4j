@@ -1,38 +1,61 @@
-diff --git a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java b/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
+diff --git a/org/mockito/internal/creation/DelegatingMethodTest.java b/org/mockito/internal/creation/DelegatingMethodTest.java
 deleted file mode 100644
-index 52c06bd..0000000
---- a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
+index 1c09a89..0000000
+--- a/org/mockito/internal/creation/DelegatingMethodTest.java
 +++ /dev/null
-@@ -1,32 +0,0 @@
--package org.mockitousage.bugs;
+@@ -1,54 +0,0 @@
+-package org.mockito.internal.creation;
 -
+-import org.junit.Before;
 -import org.junit.Test;
+-import org.mockitoutil.TestBase;
 -
--import static org.fest.assertions.Assertions.assertThat;
--import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
--import static org.mockito.Mockito.mock;
+-import java.lang.reflect.Method;
 -
--/**
-- * In GH issue 99 : https://github.com/mockito/mockito/issues/99
-- */
--public class DeepStubsWronglyReportsSerializationProblemsTest {
+-public class DelegatingMethodTest extends TestBase {
+-
+-    private Method someMethod, otherMethod;
+-    private DelegatingMethod delegatingMethod;
+-
+-    @Before
+-    public void setup() throws Exception {
+-        someMethod = Something.class.getMethod("someMethod", Object.class);
+-        otherMethod = Something.class.getMethod("otherMethod", Object.class);
+-        delegatingMethod = new DelegatingMethod(someMethod);
+-    }
 -
 -    @Test
--    public void should_not_raise_a_mockito_exception_about_serialization_when_accessing_deep_stub() {
--        NotSerializableShouldBeMocked the_deep_stub = mock(ToBeDeepStubbed.class, RETURNS_DEEP_STUBS).getSomething();
--        assertThat(the_deep_stub).isNotNull();
+-    public void equals_should_return_false_when_not_equal() throws Exception {
+-        DelegatingMethod notEqual = new DelegatingMethod(otherMethod);
+-        assertFalse(delegatingMethod.equals(notEqual));
 -    }
 -
--    public static class ToBeDeepStubbed {
--        public ToBeDeepStubbed() { }
--
--        public NotSerializableShouldBeMocked getSomething() {
--            return null;
--        }
+-    @Test
+-    public void equals_should_return_true_when_equal() throws Exception {
+-        DelegatingMethod equal = new DelegatingMethod(someMethod);
+-        assertTrue(delegatingMethod.equals(equal));
 -    }
 -
--    public static class NotSerializableShouldBeMocked {
--        NotSerializableShouldBeMocked(String mandatory_param) { }
+-    @Test
+-    public void equals_should_return_true_when_self() throws Exception {
+-        assertTrue(delegatingMethod.equals(delegatingMethod));
 -    }
 -
+-    @Test
+-    public void equals_should_return_false_when_not_equal_to_method() throws Exception {
+-        assertFalse(delegatingMethod.equals(otherMethod));
+-    }
+-
+-    @Test
+-    public void equals_should_return_true_when_equal_to_method() throws Exception {
+-        assertTrue(delegatingMethod.equals(someMethod));
+-    }
+-
+-    private interface Something {
+-
+-        public Object someMethod(Object param);
+-
+-        public Object otherMethod(Object param);
+-    }
 -}
+\ No newline at end of file

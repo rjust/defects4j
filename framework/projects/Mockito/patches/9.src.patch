@@ -1,13 +1,34 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-index 8046052..152e942 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-@@ -76,7 +76,7 @@ public abstract class GenericMetadataSupport {
+diff --git a/org/mockito/internal/stubbing/answers/CallsRealMethods.java b/org/mockito/internal/stubbing/answers/CallsRealMethods.java
+index 8fb0cae..14e12dd 100644
+--- a/org/mockito/internal/stubbing/answers/CallsRealMethods.java
++++ b/org/mockito/internal/stubbing/answers/CallsRealMethods.java
+@@ -4,12 +4,10 @@
+  */
+ package org.mockito.internal.stubbing.answers;
  
-             if (actualTypeArgument instanceof WildcardType) {
-                 contextualActualTypeParameters.put(typeParameter, boundsOf((WildcardType) actualTypeArgument));
--            } else if (typeParameter != actualTypeArgument) {
-+            } else {
-                 contextualActualTypeParameters.put(typeParameter, actualTypeArgument);
-             }
-             // logger.log("For '" + parameterizedType + "' found type variable : { '" + typeParameter + "(" + System.identityHashCode(typeParameter) + ")" + "' : '" + actualTypeArgument + "(" + System.identityHashCode(typeParameter) + ")" + "' }");
+-import java.io.Serializable;
+-import java.lang.reflect.Modifier;
+-
+-import org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;
+-import org.mockito.invocation.InvocationOnMock;
+-import org.mockito.stubbing.Answer;
++import java.io.Serializable;
++
++import org.mockito.invocation.InvocationOnMock;
++import org.mockito.stubbing.Answer;
+ 
+ /**
+  * Optional Answer that adds partial mocking support
+@@ -34,10 +32,7 @@ import org.mockito.stubbing.Answer;
+ public class CallsRealMethods implements Answer<Object>, Serializable {
+     private static final long serialVersionUID = 9057165148930624087L;
+ 
+-    public Object answer(InvocationOnMock invocation) throws Throwable {
+-    	if (Modifier.isAbstract(invocation.getMethod().getModifiers())) {
+-    		return new GloballyConfiguredAnswer().answer(invocation);
+-    	}
++    public Object answer(InvocationOnMock invocation) throws Throwable {
+         return invocation.callRealMethod();
+     }
+ }
+\ No newline at end of file

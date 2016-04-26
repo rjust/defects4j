@@ -1,9 +1,10 @@
---- org.mockitousage.bugs.InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest::shouldInjectUsingPropertySetterIfAvailable
-junit.framework.AssertionFailedError
-	at org.junit.Assert.fail(Assert.java:86)
-	at org.junit.Assert.assertTrue(Assert.java:41)
-	at org.junit.Assert.assertTrue(Assert.java:52)
-	at org.mockitousage.bugs.InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.shouldInjectUsingPropertySetterIfAvailable(InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java:25)
+--- org.mockitousage.basicapi.MocksSerializationTest::shouldBeSerializeAndHaveExtraInterfaces
+java.io.NotSerializableException: org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$3a0bdfbc
+	at java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1183)
+	at java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:347)
+	at org.mockitoutil.TestBase.serializeMock(TestBase.java:160)
+	at org.mockitoutil.TestBase.serializeAndBack(TestBase.java:146)
+	at org.mockitousage.basicapi.MocksSerializationTest.shouldBeSerializeAndHaveExtraInterfaces(MocksSerializationTest.java:306)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -12,6 +13,8 @@ junit.framework.AssertionFailedError
 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)
 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
@@ -21,8 +24,6 @@ junit.framework.AssertionFailedError
 	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
 	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
-	at org.mockito.internal.runners.JUnit45AndHigherRunnerImpl.run(JUnit45AndHigherRunnerImpl.java:37)
-	at org.mockito.runners.MockitoJUnitRunner.run(MockitoJUnitRunner.java:62)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnit4TestMethodAdapter.run(JUnit4TestMethodAdapter.java:109)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
