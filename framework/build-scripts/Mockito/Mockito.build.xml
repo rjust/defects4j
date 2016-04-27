@@ -43,12 +43,17 @@
     </condition>
 
 
-    <!--<path id="compile.classpath" refid="build.classpath" />-->
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+        <fileset dir="${script.dir}/build-scripts/Mockito/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
     <path id="test.classpath">
         <pathelement path="${junit.jar}"/>
-        <pathelement path="${classes.dir}" />
+        <pathelement path="${classes.dir}"/>
         <pathelement path="${test.home}"/>
-        <pathelement path="${formatter_cp}" />
+        <pathelement path="${formatter_cp}"/>
         <pathelement path="${test.src.home}"/>
         <fileset dir="${script.dir}/build-scripts/Mockito/lib/">
             <include name="**/*.jar" />
