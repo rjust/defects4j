@@ -58,6 +58,9 @@
         <fileset dir="${script.dir}/build-scripts/Mockito/lib/">
             <include name="**/*.jar" />
         </fileset>
+        <fileset dir="${basedir}/compileLib/">
+            <include name="**/*.jar" />
+        </fileset>
     </path>
     <!-- Classpath to run mutation analysis -->
     <path id="major.classpath">
@@ -92,20 +95,22 @@
         </exec>
         <!-- Copy the correct version of libraries for testing -->
         <exec executable="/bin/bash">
-            <arg value="${script.dir}/build-scripts/Mockito/chooseDepedencyVersion"/>
+            <arg value="${script.dir}/build-scripts/Mockito/chooseDepedencyVersion.sh"/>
             <arg value="${basedir}"/>
             <arg value="${script.dir}"/>
         </exec>
     </target>
 
     <!-- target used for compiling sources.-->
-    <target name="compile" description="Compile the Mockito source code."> 
+    <target name="compile" description="Compile the Mockito source code.">
+        <mkdir dir="${basedir}/compileLib"/>
         <antcall target="gradle.build"/>
         <antcall target="ant.compile"/> 
     </target>
 
     <!-- target used for compiling test cases.-->
     <target name="compile.tests" description="Compile the Mockito tests.">
+        <mkdir dir="${basedir}/compileLib"/>
         <antcall target="gradle.build"/>
         <antcall target="ant.compile.tests"/>
     </target>
