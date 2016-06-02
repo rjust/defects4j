@@ -13,7 +13,7 @@ Defects4J contains bugs from the following open-source projects:
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
-| Mockito    | Mockito              |  17            |
+| Mockito    | Mockito              |  38            |
 | Time       | Joda-Time            |  27            |
 
 The bugs
