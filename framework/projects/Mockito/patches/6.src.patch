@@ -1,0 +1,205 @@
+diff --git a/org/mockito/Matchers.java b/org/mockito/Matchers.java
+index d6893af..971452e 100644
+--- a/org/mockito/Matchers.java
++++ b/org/mockito/Matchers.java
+@@ -5,7 +5,6 @@
+ package org.mockito;
+ 
+ import org.hamcrest.Matcher;
+-import org.hamcrest.core.IsNull;
+ import org.mockito.internal.matchers.*;
+ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
+ import org.mockito.internal.progress.HandyReturnValues;
+@@ -119,7 +118,7 @@ public class Matchers {
+      * @return <code>false</code>.
+      */
+     public static boolean anyBoolean() {
+-        return reportMatcher(new InstanceOf(Boolean.class)).returnFalse();
++        return reportMatcher(Any.ANY).returnFalse();
+     }
+ 
+     /**
+@@ -134,7 +133,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static byte anyByte() {
+-        return reportMatcher(new InstanceOf(Byte.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -149,7 +148,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static char anyChar() {
+-        return reportMatcher(new InstanceOf(Character.class)).returnChar();
++        return reportMatcher(Any.ANY).returnChar();
+     }
+ 
+     /**
+@@ -164,7 +163,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static int anyInt() {
+-        return reportMatcher(new InstanceOf(Integer.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -179,7 +178,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static long anyLong() {
+-        return reportMatcher(new InstanceOf(Long.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -194,7 +193,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static float anyFloat() {
+-        return reportMatcher(new InstanceOf(Float.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -209,7 +208,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static double anyDouble() {
+-        return reportMatcher(new InstanceOf(Double.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -224,7 +223,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static short anyShort() {
+-        return reportMatcher(new InstanceOf(Short.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -241,7 +240,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T anyObject() {
+-        return (T) reportMatcher(new InstanceOf(Object.class)).returnNull();
++        return (T) reportMatcher(Any.ANY).returnNull();
+     }
+ 
+     /**
+@@ -289,7 +288,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T any(Class<T> clazz) {
+-        return (T) reportMatcher(new InstanceOf(clazz)).returnFor(clazz);
++        return (T) reportMatcher(Any.ANY).returnFor(clazz);
+     }
+     
+     /**
+@@ -306,7 +305,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T any() {
+-        return (T) reportMatcher(Any.ANY).returnNull();
++        return (T) anyObject();
+     }
+ 
+     /**
+@@ -321,7 +320,7 @@ public class Matchers {
+      * @return empty String ("")
+      */
+     public static String anyString() {
+-        return reportMatcher(new InstanceOf(String.class)).returnString();
++        return reportMatcher(Any.ANY).returnString();
+     }
+     
+     /**
+@@ -336,7 +335,7 @@ public class Matchers {
+      * @return empty List.
+      */
+     public static List anyList() {
+-        return reportMatcher(new InstanceOf(List.class)).returnList();
++        return reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -355,7 +354,7 @@ public class Matchers {
+      * @return empty List.
+      */
+     public static <T> List<T> anyListOf(Class<T> clazz) {
+-        return anyList();
++        return (List) reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -370,7 +369,7 @@ public class Matchers {
+      * @return empty Set
+      */
+     public static Set anySet() {
+-        return reportMatcher(new InstanceOf(Set.class)).returnSet();
++        return reportMatcher(Any.ANY).returnSet();
+     }
+     
+     /**
+@@ -389,7 +388,7 @@ public class Matchers {
+      * @return empty Set
+      */
+     public static <T> Set<T> anySetOf(Class<T> clazz) {
+-        return anySet();
++        return (Set) reportMatcher(Any.ANY).returnSet();
+     }
+ 
+     /**
+@@ -404,7 +403,7 @@ public class Matchers {
+      * @return empty Map.
+      */
+     public static Map anyMap() {
+-        return reportMatcher(new InstanceOf(Map.class)).returnMap();
++        return reportMatcher(Any.ANY).returnMap();
+     }
+ 
+     /**
+@@ -424,7 +423,7 @@ public class Matchers {
+      * @return empty Map.
+      */
+     public static <K, V>  Map<K, V> anyMapOf(Class<K> keyClazz, Class<V> valueClazz) {
+-        return anyMap();
++        return reportMatcher(Any.ANY).returnMap();
+     }
+     
+     /**
+@@ -439,7 +438,7 @@ public class Matchers {
+      * @return empty Collection.
+      */
+     public static Collection anyCollection() {
+-        return reportMatcher(new InstanceOf(Collection.class)).returnList();
++        return reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -458,7 +457,7 @@ public class Matchers {
+      * @return empty Collection.
+      */
+     public static <T> Collection<T> anyCollectionOf(Class<T> clazz) {
+-        return anyCollection();
++        return (Collection) reportMatcher(Any.ANY).returnList();
+     }    
+ 
+     /**
+diff --git a/org/mockito/internal/matchers/Any.java b/org/mockito/internal/matchers/Any.java
+index 28a98f0..1876b38 100644
+--- a/org/mockito/internal/matchers/Any.java
++++ b/org/mockito/internal/matchers/Any.java
+@@ -14,7 +14,7 @@ import org.mockito.ArgumentMatcher;
+ public class Any extends ArgumentMatcher implements Serializable {
+ 
+     private static final long serialVersionUID = -4062420125651019029L;
+-    public static final Any ANY = new Any();
++    public static final Any ANY = new Any();    
+     
+     private Any() {}
+     

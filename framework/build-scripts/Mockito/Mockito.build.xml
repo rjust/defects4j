@@ -1,0 +1,153 @@
+<project name="Mockito" basedir="${basedir}">
+
+    <!-- script.dir property has to be provided by caller! -->
+    <fail message="Property script.dir not set!" unless="script.dir" />
+
+    <!-- Force build in Java 1.7 for older versions of the project -->
+    <property name="build.compiler" value="javac1.7"/>
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
+
+    <!-- Include project build file, which provides general targets -->
+    <import file="../project.build.xml"/>
+ 
+    <!-- Provide directory of the test sources and target directory for classes -->
+    <property name="bug-db.test.dir" value="${test.home}"/>
+    <property name="build.home" value="${basedir}" />
+    <property name="source.home" value="${basedir}/src" />
+ 
+    <!-- Check for an existing build.xml, should only exist in older commits --> 
+    <available file="${basedir}/build.xml" property="ant.exists"/>
+
+    <!-- Check the "how to build" file to see if we should use ant or gradlew -->
+    <condition property="use.gradle">
+        <resourcecontains resource="HOWTO.BUILD.TXT" substring="> gradlew build"/>
+    </condition>    
+
+    <!-- There is a period where ant build exists, but we want to use gradle anyways -->
+    <condition property="use.ant">
+        <and>
+            <istrue value="${ant.exists}"/>
+            <isfalse value="${use.gradle}"/>
+        </and>
+    </condition>
+
+    <!-- Location of compiled classes changes in older builds -->
+    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/test">
+        <istrue value="${use.ant}"/>
+    </condition>
+    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/main">
+        <istrue value="${use.ant}"/>
+    </condition>
+    <condition property="test.src.home" value="${basedir}/test" else="${basedir}/src/test">
+        <istrue value="${use.ant}"/>
+    </condition>
+
+
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+        <fileset dir="${script.dir}/build-scripts/Mockito/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+    <path id="test.classpath">
+        <pathelement path="${junit.jar}"/>
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.home}"/>
+        <pathelement path="${formatter_cp}"/>
+        <pathelement path="${test.src.home}"/>
+        <fileset dir="${script.dir}/build-scripts/Mockito/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${basedir}/compileLib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+    <!-- Classpath to run mutation analysis -->
+    <path id="major.classpath">
+        <path refid="test.classpath"/>
+    </path>
+
+    <!-- Clean up working directory, i.e., delete classes and test classes. -->
+   <target name="clean">
+        <delete dir="$test.home" />
+        <delete dir="$classes.dir" />
+    </target>
+
+    <!-- Build using Ant if build.xml exists, used in older commits -->
+    <target name="ant.compile" if="use.ant">
+        <ant antfile="${basedir}/build.xml" target="compile" inheritAll="true"/>
+    </target>
+
+    <!-- Build tests using Ant if build.xml exists, used in older commits -->
+    <target name="ant.compile.tests" if="use.ant">
+        <ant antfile="${basedir}/build.xml" target="compile.test" inheritAll="true"/>
+    </target>
+
+
+    <!-- Newer commits use Gradle -->
+    <target name="gradle.build" unless="use.ant">
+        <!-- Delete a test that is causing trouble -->
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" />
+        <!-- Call the Gradle build script -->
+        <exec executable="/bin/bash">
+            <arg value="gradlew"/>
+            <arg value="build"/>
+        </exec>
+        <!-- Copy the correct version of libraries for testing -->
+        <exec executable="/bin/bash">
+            <arg value="${script.dir}/build-scripts/Mockito/chooseDepedencyVersion.sh"/>
+            <arg value="${basedir}"/>
+            <arg value="${script.dir}"/>
+        </exec>
+    </target>
+
+    <!-- target used for compiling sources.-->
+    <target name="compile" description="Compile the Mockito source code.">
+        <mkdir dir="${basedir}/compileLib"/>
+        <antcall target="gradle.build"/>
+        <antcall target="ant.compile"/> 
+    </target>
+
+    <!-- target used for compiling test cases.-->
+    <target name="compile.tests" description="Compile the Mockito tests.">
+        <mkdir dir="${basedir}/compileLib"/>
+        <antcall target="gradle.build"/>
+        <antcall target="ant.compile.tests"/>
+    </target>
+
+
+<!--
+    Run tests
+-->
+    <target name="test"  depends="compile.tests" description="Run unit tests">
+        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath refid="test.classpath"/>
+
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class">
+                    <fileset dir="${test.home}" excludes="${exclude.list}">
+                        <include name="**/*Test.class"/>
+                        <exclude name="**/Abstract*.class"/>
+			<exclude name="**/GitHubTicketFetcherTest*"/>
+                    </fileset>
+                </batchtest>
+        </junit>
+    </target>
+
+<!--
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+-->
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
+            failonerror="true">
+
+            <arg value="${test.entry}"/>
+            <jvmarg value="-verbose:class"/>
+            <classpath refid="test.classpath"/>
+        </java>
+    </target>
+</project>
