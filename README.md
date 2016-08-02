@@ -83,15 +83,15 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
-[issta14]: http://homes.cs.washington.edu/~rjust/publ/defects4j_issta_2014.pdf
-[fse14]: http://homes.cs.washington.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 
 Documentation
 --------------------
 A detailed documentation for any script or module is available as
 [html documentation][htmldocs].
 
-[htmldocs]: http://homes.cs.washington.edu/~rjust/defects4j/html_doc/index.html
+[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
 
 Command-line interface
 -----------------------
