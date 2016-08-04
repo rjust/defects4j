@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project/Mockito.pm -- Concrete project instance for mockito.
+Project::Mockito.pm -- L<Project> submodule for mockito.
 
 =head1 DESCRIPTION
 
@@ -45,41 +45,16 @@ my $PID  = "Mockito";
 
 sub new {
     my $class = shift;
-    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "mockito";
+    my $src  = "src/main/java";
+    my $test = "src/test/java";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$work_dir/$PID/commit-db",
+                             "$SCRIPT_DIR/projects/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
 }
-
-#
-# Determine the project layout for the checked-out version.
-#
-
-sub determine_layout {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
-    my $work_dir = $self->{prog_root};
-    print "This is my $work_dir\n";
-    return (-e "$work_dir/src/main/java") ?
-        {src=>"src/main/java", test=>"src/test/java"} :
-        {src=>"src/",      test=>"test/"};
-}
-
-
-#sub determine_layout {
-#    @_ == 2 or die $ARG_ERROR;
-#    my ($self, $revision_id) = @_;
-#    my $dir = $self->{prog_root};
-
-    # Add additional layouts if necessary
-#    my $result = _layout1($dir) // _layout2($dir);
-#    die "Unknown layout for revision: ${revision_id}" unless defined $result;
-#    return $result;
-#}
 
 sub _post_checkout {
     my ($vcs, $revision, $work_dir) = @_;
@@ -90,7 +65,7 @@ sub _post_checkout {
     # fixing compilation errors, etc.
 
     # Apply patches to broken tests.    
-    my $compile_errors = "$SCRIPT_DIR/build-scripts/$PID/compile-errors/";
+    my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
     my @entries = readdir(DIR);
     closedir(DIR);
@@ -104,36 +79,59 @@ sub _post_checkout {
     }
 }
 
-#
-# Distinguish between project layouts and determine src and test directories.
-# Each _layout subroutine returns undef if it doesn't match the layout of the
-# checked-out version. Otherwise, it returns a hash that provides the src and
-# test directory, relative to the working directory.
-#
+sub src_dir {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
 
-# Existing build.xml and default.properties
-sub _layout1 {
-    my $dir = shift;
-    return (-e "$dir/src/main/java") ?
-        {src=>"src/main/java", test=>"src/test/java"} :
-        undef;
+    # Init dir_map if necessary
+    $self->_build_dir_map();
+
+    # Get revision hash
+    my $revision_id = $self->lookup($vid);
+
+    # Get src directory from lookup table
+    my $src = $self->{_dir_map}->{$revision_id}->{src};
+    return $src if defined $src;
+
+    # Get default src dir if not listed in _dir_map
+    return $self->SUPER::src_dir($vid);
 }
 
-# Another project layout goes here
-sub _layout2 {
-    my $dir = shift;
-    
-    return (-e "$dir/test") ?
-        {src=>"src/", test=>"test/"} :
-        undef;
+sub test_dir {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    Utils::check_vid($vid);
+
+    # Init dir_map if necessary
+    $self->_build_dir_map();
+
+    # Get revision hash
+    my $revision_id = $self->lookup($vid);
+
+    # Get test directory from lookup table
+    my $test = $self->{_dir_map}->{$revision_id}->{test};
+    return $test if defined $test;
+
+    # Get default test dir if not listed in _dir_map
+    return $self->SUPER::test_dir($vid);
+}
+
+sub _build_dir_map {
+    my $self = shift;
+
+    return if defined $self->{_dir_map};
+
+    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
+    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
+    my $cache = {};
+    while (<IN>) {
+        chomp;
+        /([^,]+),([^,]+),(.+)/ or next;
+        $cache->{$1} = {src=>$2, test=>$3};
+    }
+    close IN;
+    $self->{_dir_map}=$cache;
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
