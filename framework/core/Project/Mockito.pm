@@ -63,20 +63,6 @@ sub _post_checkout {
     #
     # Post-checkout tasks include, for instance, providing proper build files,
     # fixing compilation errors, etc.
-
-    # Apply patches to broken tests.    
-    my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
-    opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
-    my @entries = readdir(DIR);
-    closedir(DIR);
-
-    foreach my $file (@entries) {
-        if ($file =~ /-([a-z\d]+).diff/) {
-            if ($revision eq $1) {
-                $vcs->apply_patch($work_dir, "$compile_errors/$file","test") == 0 or die "could not apply $file: $!";
-            }
-        }
-    }
 }
 
 sub src_dir {

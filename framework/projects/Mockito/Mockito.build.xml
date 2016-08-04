@@ -27,7 +27,7 @@
     <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/main">
         <istrue value="${use.ant}"/>
     </condition>
-    <condition property="test.src.home" value="${basedir}/test" else="${basedir}/src/test">
+    <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">
         <istrue value="${use.ant}"/>
     </condition>
 
@@ -46,8 +46,6 @@
         <pathelement path="${junit.jar}"/>
         <pathelement path="${classes.dir}"/>
         <pathelement path="${test.home}"/>
-        <pathelement path="${formatter_cp}"/>
-        <pathelement path="${test.src.home}"/>
         <fileset dir="${d4j.home}/framework/projects/${d4j.project.id}/lib/">
             <include name="**/*.jar" />
         </fileset>
