@@ -1,0 +1,16 @@
+diff a/test/org/mockitousage/matchers/MoreMatchersTest.java b/test/org/mockito/internal/util/reflection/FieldsTest.java b/test/org/mockito/internal/util/reflection/FieldsTest.java
+--- test/org/mockitousage/matchers/MoreMatchersTest.java
++++ test/org/mockitousage/matchers/MoreMatchersTest.java
+@@ -69,9 +69,9 @@
+ 
+     @Test
+     public void shouldHelpOutWithUnnecessaryCastingOfNullityChecks() {
+-        when(mock.objectArgMethod(isNull(LinkedList.class))).thenReturn("string");
+-        when(mock.objectArgMethod(notNull(LinkedList.class))).thenReturn("string");
+-        when(mock.objectArgMethod(isNotNull(LinkedList.class))).thenReturn("string");
++        //when(mock.objectArgMethod(isNull(LinkedList.class))).thenReturn("string");
++        //when(mock.objectArgMethod(notNull(LinkedList.class))).thenReturn("string");
++        //when(mock.objectArgMethod(isNotNull(LinkedList.class))).thenReturn("string");
+
+         assertEquals("string", mock.objectArgMethod(null));
+         assertEquals("string", mock.objectArgMethod("foo"));

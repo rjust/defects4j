@@ -1,0 +1,33 @@
+diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+index 11304af..0c7f512 100644
+--- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+@@ -34,7 +34,7 @@ import org.mockito.stubbing.Answer;
+  *  Returns appropriate primitive for primitive-returning methods
+  * </li>
+  * <li>
+- *  Returns consistent values for primitive wrapper classes (e.g. int-returning method returns 0 <b>and</b> Integer-returning method returns 0, too)
++ *  Returns consistent values for primitive wrapper classes (e.g. int-returning method retuns 0 <b>and</b> Integer-returning method returns 0, too)
+  * </li>
+  * <li>
+  *  Returns empty collection for collection-returning methods (works for most commonly used collection types)
+@@ -82,10 +82,8 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
+     Object returnValueFor(Class<?> type) {
+         if (Primitives.isPrimitiveOrWrapper(type)) {
+             return Primitives.defaultValueForPrimitiveOrWrapper(type);
+-            //new instances are used instead of Collections.emptyList(), etc.
+-            //to avoid UnsupportedOperationException if code under test modifies returned collection
+-        } else if (type == Iterable.class) {
+-            return new ArrayList<Object>(0);
++        //new instances are used instead of Collections.emptyList(), etc.
++        //to avoid UnsupportedOperationException if code under test modifies returned collection
+         } else if (type == Collection.class) {
+             return new LinkedList<Object>();
+         } else if (type == Set.class) {
+@@ -119,4 +117,4 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
+         return null;
+     }
+ 
+-}
++}
+\ No newline at end of file

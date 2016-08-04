@@ -1,0 +1,57 @@
+diff --git a/org/mockito/Matchers.java b/org/mockito/Matchers.java
+index 7a89556..16f1b5b 100644
+--- a/org/mockito/Matchers.java
++++ b/org/mockito/Matchers.java
+@@ -359,7 +359,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T isA(Class<T> clazz) {
+-        return reportMatcher(new InstanceOf(clazz)).<T>returnFor(clazz);
++        return reportMatcher(new InstanceOf(clazz)).<T>returnNull();
+     }
+ 
+     /**
+@@ -476,7 +476,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T eq(T value) {
+-        return (T) reportMatcher(new Equals(value)).<T>returnFor((Class) value.getClass());
++        return reportMatcher(new Equals(value)).<T>returnNull();
+     }  
+ 
+     /**
+@@ -513,7 +513,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T same(T value) {
+-        return (T) reportMatcher(new Same(value)).<T>returnFor((Class) value.getClass());
++        return reportMatcher(new Same(value)).<T>returnNull();
+     }
+ 
+     /**
+diff --git a/org/mockito/internal/progress/HandyReturnValues.java b/org/mockito/internal/progress/HandyReturnValues.java
+index 453a344..a0dcfd9 100644
+--- a/org/mockito/internal/progress/HandyReturnValues.java
++++ b/org/mockito/internal/progress/HandyReturnValues.java
+@@ -40,7 +40,7 @@ public class HandyReturnValues {
+         if (isPrimitiveWrapper(clazz)) {
+             return primitiveWrapperOf(clazz);
+         } 
+-        return primitiveValueOrNullFor(clazz);
++        return primitiveValueFor(clazz);
+     }
+ 
+     public Map returnMap() {
+diff --git a/org/mockito/internal/util/Primitives.java b/org/mockito/internal/util/Primitives.java
+index 2299915..f1d1b3b 100644
+--- a/org/mockito/internal/util/Primitives.java
++++ b/org/mockito/internal/util/Primitives.java
+@@ -22,7 +22,7 @@ public class Primitives {
+         return (Class<T>) primitiveTypes.get(clazz);
+     }
+     
+-    public static <T> T primitiveValueOrNullFor(Class<T> primitiveType) {
++    public static <T> T primitiveValueFor(Class<T> primitiveType) {
+         return (T) primitiveValues.get(primitiveType);
+     }
+     

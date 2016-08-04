@@ -1,0 +1,8 @@
+org.mockito.internal.configuration.injection.FinalMockCandidateFilter
+org.mockito.internal.configuration.injection.TypeBasedCandidateFilter
+org.mockito.internal.configuration.injection.MockCandidateFilter
+org.mockito.internal.configuration.injection.OngoingInjecter
+org.mockito.internal.util.reflection.BeanPropertySetter
+org.mockito.internal.configuration.injection.NameBasedCandidateFilter
+src.org.mockito.internal.configuration.injection.Injecter
+org.mockito.internal.configuration.DefaultInjectionEngine

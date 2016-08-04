@@ -1,0 +1,133 @@
+diff --git a/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java b/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
+index d5f77b6..a20a725 100644
+--- a/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
++++ b/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
+@@ -1,16 +1,17 @@
+ package org.mockito.internal.creation.bytebuddy;
+ 
+-import static org.mockito.internal.util.StringJoiner.join;
+-import java.lang.reflect.Constructor;
+ import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.internal.InternalMockHandler;
+ import org.mockito.internal.configuration.GlobalConfiguration;
+-import org.mockito.internal.creation.instance.*;
+ import org.mockito.invocation.MockHandler;
+ import org.mockito.mock.MockCreationSettings;
+ import org.mockito.mock.SerializableMode;
+ import org.mockito.plugins.MockMaker;
+ 
++import java.lang.reflect.Constructor;
++
++import static org.mockito.internal.util.StringJoiner.join;
++
+ public class ByteBuddyMockMaker implements MockMaker {
+ 
+     private final ClassInstantiator classInstantiator;
+@@ -25,50 +26,35 @@ public class ByteBuddyMockMaker implements MockMaker {
+         if (settings.getSerializableMode() == SerializableMode.ACROSS_CLASSLOADERS) {
+             throw new MockitoException("Serialization across classloaders not yet supported with ByteBuddyMockMaker");
+         }
+-        Class<? extends T> mockedProxyType = cachingMockBytecodeGenerator.get(
++        Class<? extends T> mockedType = cachingMockBytecodeGenerator.get(
+                 settings.getTypeToMock(),
+                 settings.getExtraInterfaces()
+         );
+-        Instantiator instantiator = new InstantiatorProvider().getInstantiator(settings);
+-        T mockInstance = null;
+-        try {
+-            mockInstance = instantiator.newInstance(mockedProxyType);
+-            MockMethodInterceptor.MockAccess mockAccess = (MockMethodInterceptor.MockAccess) mockInstance;
+-            mockAccess.setMockitoInterceptor(new MockMethodInterceptor(asInternalMockHandler(handler), settings));
++        T mock = classInstantiator.instantiate(mockedType);
++        MockMethodInterceptor.MockAccess mockAccess = (MockMethodInterceptor.MockAccess) mock;
++        mockAccess.setMockitoInterceptor(new MockMethodInterceptor(asInternalMockHandler(handler), settings));
+ 
+-            return ensureMockIsAssignableToMockedType(settings, mockInstance);
++        return ensureMockIsAssignableToMockedType(settings, mock);
++    }
++
++    private <T> T ensureMockIsAssignableToMockedType(MockCreationSettings<T> settings, T mock) {
++        // force explicit cast to mocked type here, instead of
++        // relying on the JVM to implicitly cast on the client call site
++        Class<T> typeToMock = settings.getTypeToMock();
++        try {
++            return typeToMock.cast(mock);
+         } catch (ClassCastException cce) {
+             throw new MockitoException(join(
+                     "ClassCastException occurred while creating the mockito mock :",
+-                    "  class to mock : " + describeClass(mockedProxyType),
+-                    "  created class : " + describeClass(settings.getTypeToMock()),
+-                    "  proxy instance class : " + describeClass(mockInstance),
+-                    "  instance creation by : " + instantiator.getClass().getSimpleName(),
++                    "  class to mock : '" + typeToMock.getCanonicalName() + "', loaded by classloader : '" + typeToMock.getClassLoader() + "'",
++                    "  imposterizing class : '" + mock.getClass().getCanonicalName() + "', loaded by classloader : '" + mock.getClass().getClassLoader() + "'",
+                     "",
+                     "You might experience classloading issues, please ask the mockito mailing-list.",
+                     ""
+             ),cce);
+-        } catch (org.mockito.internal.creation.instance.InstantiationException e) {
+-            throw new MockitoException("Unable to create mock instance of type '" + mockedProxyType.getSuperclass().getSimpleName() + "'", e);
+         }
+     }
+ 
+-    private <T> T ensureMockIsAssignableToMockedType(MockCreationSettings<T> settings, T mock) {
+-        // Force explicit cast to mocked type here, instead of
+-        // relying on the JVM to implicitly cast on the client call site.
+-        // This allows us to catch the ClassCastException earlier
+-        Class<T> typeToMock = settings.getTypeToMock();
+-        return typeToMock.cast(mock);
+-    }
+-
+-    private static String describeClass(Class type) {
+-        return type == null ? "null" : "'" + type.getCanonicalName() + "', loaded by classloader : '" + type.getClassLoader() + "'";
+-    }
+-
+-    private static String describeClass(Object instance) {
+-        return instance == null ? "null" : describeClass(instance.getClass());
+-    }
+-
+     public MockHandler getHandler(Object mock) {
+         if (!(mock instanceof MockMethodInterceptor.MockAccess)) {
+             return null;
+diff --git a/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java b/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
+index 06aa3a7..0da40c8 100644
+--- a/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
++++ b/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
+@@ -1,12 +1,5 @@
+ package org.mockito.internal.creation.bytebuddy;
+ 
+-import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.any;
+-import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isDeclaredBy;
+-import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isEquals;
+-import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isHashCode;
+-import java.util.Random;
+-import java.util.Set;
+-import org.mockito.internal.creation.util.SearchingClassLoader;
+ import net.bytebuddy.ByteBuddy;
+ import net.bytebuddy.ClassFileVersion;
+ import net.bytebuddy.dynamic.ClassLoadingStrategy;
+@@ -19,6 +12,15 @@ import net.bytebuddy.instrumentation.attribute.TypeAttributeAppender;
+ import net.bytebuddy.modifier.FieldManifestation;
+ import net.bytebuddy.modifier.Ownership;
+ import net.bytebuddy.modifier.Visibility;
++import org.mockito.internal.creation.util.SearchingClassLoader;
++
++import java.util.Random;
++import java.util.Set;
++
++import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.any;
++import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isDeclaredBy;
++import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isEquals;
++import static net.bytebuddy.instrumentation.method.matcher.MethodMatchers.isHashCode;
+ 
+ class MockBytecodeGenerator {
+     private final ByteBuddy byteBuddy;
+@@ -35,7 +37,7 @@ class MockBytecodeGenerator {
+     }
+ 
+     public <T> Class<? extends T> generateMockClass(Class<T> mockedType, Set<Class> interfaces) {
+-        DynamicType.Builder<T> builder = byteBuddy.subclass(mockedType, ConstructorStrategy.Default.IMITATE_SUPER_TYPE)
++        DynamicType.Builder<T> builder = byteBuddy.subclass(mockedType, ConstructorStrategy.Default.NO_CONSTRUCTORS)
+                 .name(nameFor(mockedType))
+                 .implement(interfaces.toArray(new Class<?>[interfaces.size()]))
+                 .method(any()).intercept(MethodDelegation
