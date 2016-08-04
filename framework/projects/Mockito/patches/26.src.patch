@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 index 5cd368d..27eace7 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 @@ -82,7 +82,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
      
      Object returnValueFor(Class<?> type) {
@@ -26,10 +26,10 @@ index 5cd368d..27eace7 100644
 +    }
  }
 \ No newline at end of file
-diff --git a/org/mockito/internal/util/Primitives.java b/org/mockito/internal/util/Primitives.java
+diff --git a/src/org/mockito/internal/util/Primitives.java b/src/org/mockito/internal/util/Primitives.java
 index 5a91f3a..caba6d5 100644
---- a/org/mockito/internal/util/Primitives.java
-+++ b/org/mockito/internal/util/Primitives.java
+--- a/src/org/mockito/internal/util/Primitives.java
++++ b/src/org/mockito/internal/util/Primitives.java
 @@ -1,7 +1,7 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors

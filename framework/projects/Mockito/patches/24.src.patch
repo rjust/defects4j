@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 index d19fcda..87905b6 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 @@ -44,7 +44,7 @@ import java.util.TreeSet;
   *  Returns description of mock for toString() method
   * </li>

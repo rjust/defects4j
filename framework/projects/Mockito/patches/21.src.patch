@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/instance/ConstructorInstantiator.java b/org/mockito/internal/creation/instance/ConstructorInstantiator.java
+diff --git a/src/org/mockito/internal/creation/instance/ConstructorInstantiator.java b/src/org/mockito/internal/creation/instance/ConstructorInstantiator.java
 index 9f0201a..f8c0d12 100644
---- a/org/mockito/internal/creation/instance/ConstructorInstantiator.java
-+++ b/org/mockito/internal/creation/instance/ConstructorInstantiator.java
+--- a/src/org/mockito/internal/creation/instance/ConstructorInstantiator.java
++++ b/src/org/mockito/internal/creation/instance/ConstructorInstantiator.java
 @@ -14,43 +14,20 @@ public class ConstructorInstantiator implements Instantiator {
          if (outerClassInstance == null) {
              return noArgConstructor(cls);

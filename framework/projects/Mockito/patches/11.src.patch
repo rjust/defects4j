@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/DelegatingMethod.java b/org/mockito/internal/creation/DelegatingMethod.java
+diff --git a/src/org/mockito/internal/creation/DelegatingMethod.java b/src/org/mockito/internal/creation/DelegatingMethod.java
 index 034694f..87d4d3f 100644
---- a/org/mockito/internal/creation/DelegatingMethod.java
-+++ b/org/mockito/internal/creation/DelegatingMethod.java
+--- a/src/org/mockito/internal/creation/DelegatingMethod.java
++++ b/src/org/mockito/internal/creation/DelegatingMethod.java
 @@ -4,11 +4,11 @@
   */
  package org.mockito.internal.creation;

@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/IMethods.java b/org/mockitousage/IMethods.java
+diff --git a/test/org/mockitousage/IMethods.java b/test/org/mockitousage/IMethods.java
 index 8c9a1b3..557e7c5 100644
---- a/org/mockitousage/IMethods.java
-+++ b/org/mockitousage/IMethods.java
+--- a/test/org/mockitousage/IMethods.java
++++ b/test/org/mockitousage/IMethods.java
 @@ -219,6 +219,4 @@ public interface IMethods {
      int toIntPrimitive(Integer i);
  
@@ -10,10 +10,10 @@ index 8c9a1b3..557e7c5 100644
 -    String forObject(Object object);
  }
 \ No newline at end of file
-diff --git a/org/mockitousage/MethodsImpl.java b/org/mockitousage/MethodsImpl.java
+diff --git a/test/org/mockitousage/MethodsImpl.java b/test/org/mockitousage/MethodsImpl.java
 index 347dfa6..539f612 100644
---- a/org/mockitousage/MethodsImpl.java
-+++ b/org/mockitousage/MethodsImpl.java
+--- a/test/org/mockitousage/MethodsImpl.java
++++ b/test/org/mockitousage/MethodsImpl.java
 @@ -418,8 +418,4 @@ public class MethodsImpl implements IMethods {
      public Integer toIntWrapper(int i) {
          return null;
@@ -23,10 +23,10 @@ index 347dfa6..539f612 100644
 -        return null;
 -    }
  }
-diff --git a/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java b/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+diff --git a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
 index c807f24..8559554 100644
---- a/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
-+++ b/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+--- a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
++++ b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
 @@ -24,7 +24,7 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
      }
  
@@ -83,10 +83,10 @@ index c807f24..8559554 100644
      }
  }
 \ No newline at end of file
-diff --git a/org/mockitousage/matchers/MatchersTest.java b/org/mockitousage/matchers/MatchersTest.java
+diff --git a/test/org/mockitousage/matchers/MatchersTest.java b/test/org/mockitousage/matchers/MatchersTest.java
 index 971a84c..9835bbd 100644
---- a/org/mockitousage/matchers/MatchersTest.java
-+++ b/org/mockitousage/matchers/MatchersTest.java
+--- a/test/org/mockitousage/matchers/MatchersTest.java
++++ b/test/org/mockitousage/matchers/MatchersTest.java
 @@ -225,25 +225,15 @@ public class MatchersTest extends TestBase {
      
      @Test
@@ -117,10 +117,10 @@ index 971a84c..9835bbd 100644
          when(mock.oneArg(anyBoolean())).thenReturn("0");
          when(mock.oneArg(anyByte())).thenReturn("1");
          when(mock.oneArg(anyChar())).thenReturn("2");
-diff --git a/org/mockitousage/matchers/NewMatchersTest.java b/org/mockitousage/matchers/NewMatchersTest.java
+diff --git a/test/org/mockitousage/matchers/NewMatchersTest.java b/test/org/mockitousage/matchers/NewMatchersTest.java
 index e9e8f16..77874f3 100644
---- a/org/mockitousage/matchers/NewMatchersTest.java
-+++ b/org/mockitousage/matchers/NewMatchersTest.java
+--- a/test/org/mockitousage/matchers/NewMatchersTest.java
++++ b/test/org/mockitousage/matchers/NewMatchersTest.java
 @@ -29,41 +29,41 @@ public class NewMatchersTest extends TestBase {
  
      @Test

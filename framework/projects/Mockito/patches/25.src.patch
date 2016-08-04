@@ -1,7 +1,7 @@
-diff --git a/org/mockito/exceptions/Reporter.java b/org/mockito/exceptions/Reporter.java
+diff --git a/src/org/mockito/exceptions/Reporter.java b/src/org/mockito/exceptions/Reporter.java
 index 4e6045c..63d759e 100644
---- a/org/mockito/exceptions/Reporter.java
-+++ b/org/mockito/exceptions/Reporter.java
+--- a/src/org/mockito/exceptions/Reporter.java
++++ b/src/org/mockito/exceptions/Reporter.java
 @@ -748,10 +748,6 @@ public class Reporter {
          ));
      }
@@ -13,10 +13,10 @@ index 4e6045c..63d759e 100644
      public void serializableWontWorkForObjectsThatDontImplementSerializable(Class classToMock) {
          throw new MockitoException(join(
                  "You are using the setting 'withSettings().serializable()' however the type you are trying to mock '" + classToMock.getSimpleName() + "'",
-diff --git a/org/mockito/internal/creation/MockSettingsImpl.java b/org/mockito/internal/creation/MockSettingsImpl.java
+diff --git a/src/org/mockito/internal/creation/MockSettingsImpl.java b/src/org/mockito/internal/creation/MockSettingsImpl.java
 index a65b265..fa17d28 100644
---- a/org/mockito/internal/creation/MockSettingsImpl.java
-+++ b/org/mockito/internal/creation/MockSettingsImpl.java
+--- a/src/org/mockito/internal/creation/MockSettingsImpl.java
++++ b/src/org/mockito/internal/creation/MockSettingsImpl.java
 @@ -73,9 +73,6 @@ public class MockSettingsImpl<T> extends CreationSettings<T> implements MockSett
  
      public MockSettings defaultAnswer(Answer defaultAnswer) {
@@ -27,10 +27,10 @@ index a65b265..fa17d28 100644
          return this;
      }
  
-diff --git a/org/mockito/internal/creation/settings/CreationSettings.java b/org/mockito/internal/creation/settings/CreationSettings.java
+diff --git a/src/org/mockito/internal/creation/settings/CreationSettings.java b/src/org/mockito/internal/creation/settings/CreationSettings.java
 index 94d8dc6..a68a594 100644
---- a/org/mockito/internal/creation/settings/CreationSettings.java
-+++ b/org/mockito/internal/creation/settings/CreationSettings.java
+--- a/src/org/mockito/internal/creation/settings/CreationSettings.java
++++ b/src/org/mockito/internal/creation/settings/CreationSettings.java
 @@ -19,7 +19,6 @@ import java.util.Set;
   * by Szczepan Faber, created at: 4/9/12
   */
@@ -47,10 +47,10 @@ index 94d8dc6..a68a594 100644
      public CreationSettings(CreationSettings copy) {
          this.typeToMock = copy.typeToMock;
          this.extraInterfaces = copy.extraInterfaces;
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 index 918c42a..aa613b0 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 @@ -1,62 +1,45 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -185,10 +185,10 @@ index 918c42a..aa613b0 100644
 -        return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
 -    }
  }
-diff --git a/org/mockito/internal/util/ConsoleMockitoLogger.java b/org/mockito/internal/util/ConsoleMockitoLogger.java
+diff --git a/src/org/mockito/internal/util/ConsoleMockitoLogger.java b/src/org/mockito/internal/util/ConsoleMockitoLogger.java
 index 80cac5c..5ca5da4 100644
---- a/org/mockito/internal/util/ConsoleMockitoLogger.java
-+++ b/org/mockito/internal/util/ConsoleMockitoLogger.java
+--- a/src/org/mockito/internal/util/ConsoleMockitoLogger.java
++++ b/src/org/mockito/internal/util/ConsoleMockitoLogger.java
 @@ -1,7 +1,7 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -209,10 +209,10 @@ index 80cac5c..5ca5da4 100644
 +        System.out.print(what);
      }
  }
-diff --git a/org/mockito/internal/util/reflection/GenericMaster.java b/org/mockito/internal/util/reflection/GenericMaster.java
+diff --git a/src/org/mockito/internal/util/reflection/GenericMaster.java b/src/org/mockito/internal/util/reflection/GenericMaster.java
 index 29e384a..e463e59 100644
---- a/org/mockito/internal/util/reflection/GenericMaster.java
-+++ b/org/mockito/internal/util/reflection/GenericMaster.java
+--- a/src/org/mockito/internal/util/reflection/GenericMaster.java
++++ b/src/org/mockito/internal/util/reflection/GenericMaster.java
 @@ -1,34 +1,34 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -282,10 +282,10 @@ index 29e384a..e463e59 100644
 +    }
 +
 +}
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+diff --git a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 deleted file mode 100644
 index 418fbe4..0000000
---- a/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+--- a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 +++ /dev/null
 @@ -1,613 +0,0 @@
 -/*

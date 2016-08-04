@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/configuration/SpyAnnotationEngine.java b/org/mockito/internal/configuration/SpyAnnotationEngine.java
+diff --git a/src/org/mockito/internal/configuration/SpyAnnotationEngine.java b/src/org/mockito/internal/configuration/SpyAnnotationEngine.java
 index dc2ef6a..3a48f53 100644
---- a/org/mockito/internal/configuration/SpyAnnotationEngine.java
-+++ b/org/mockito/internal/configuration/SpyAnnotationEngine.java
+--- a/src/org/mockito/internal/configuration/SpyAnnotationEngine.java
++++ b/src/org/mockito/internal/configuration/SpyAnnotationEngine.java
 @@ -16,8 +16,6 @@ import org.mockito.exceptions.Reporter;
  import org.mockito.exceptions.base.MockitoException;
  import org.mockito.internal.util.MockUtil;

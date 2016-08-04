@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+diff --git a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 index f15833c..9b9b7f0 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+--- a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 @@ -21,10 +21,7 @@ import org.junit.Test;
  
  @SuppressWarnings("unused")

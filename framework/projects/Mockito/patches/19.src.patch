@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java b/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
+diff --git a/src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java b/src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
 index c17f961..67126af 100644
---- a/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
-+++ b/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
+--- a/src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
++++ b/src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java
 @@ -111,7 +111,7 @@ public class PropertyAndSetterInjection extends MockInjectionStrategy {
      private boolean injectMockCandidatesOnFields(Set<Object> mocks, Object instance, boolean injectionOccurred, List<Field> orderedInstanceFields) {
          for (Iterator<Field> it = orderedInstanceFields.iterator(); it.hasNext(); ) {
@@ -11,10 +11,10 @@ index c17f961..67126af 100644
              if (injected != null) {
                  injectionOccurred |= true;
                  mocks.remove(injected);
-diff --git a/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java b/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
 index aebf6f7..7bd7073 100644
---- a/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java
 @@ -10,7 +10,6 @@ import org.mockito.internal.util.reflection.FieldSetter;
  
  import java.lang.reflect.Field;
@@ -32,10 +32,10 @@ index aebf6f7..7bd7073 100644
          if(mocks.size() == 1) {
              final Object matchingMock = mocks.iterator().next();
  
-diff --git a/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java b/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
 index 81a168b..7a2c087 100644
---- a/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java
 @@ -6,14 +6,13 @@ package org.mockito.internal.configuration.injection.filter;
  
  import java.lang.reflect.Field;
@@ -52,10 +52,10 @@ index 81a168b..7a2c087 100644
      );
  
  }
-diff --git a/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
 index abc5d67..7023e66 100644
---- a/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
 @@ -12,50 +12,23 @@ import java.util.Collection;
  import java.util.List;
  
@@ -124,10 +124,10 @@ index abc5d67..7023e66 100644
 +        return next.filterCandidate(mocks, field, fieldInstance);
 +    }
  }
-diff --git a/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
 index ce7a349..dd79991 100644
---- a/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
 @@ -17,7 +17,7 @@ public class TypeBasedCandidateFilter implements MockCandidateFilter {
          this.next = next;
      }

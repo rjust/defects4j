@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/NPEWithCertainMatchersTest.java b/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+diff --git a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java b/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
 deleted file mode 100644
 index 4552123..0000000
---- a/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+--- a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
 +++ /dev/null
 @@ -1,54 +0,0 @@
 -/*
@@ -59,11 +59,11 @@ index 4552123..0000000
 -    }
 -}
 \ No newline at end of file
-diff --git a/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java b/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java
+diff --git a/test/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java b/test/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java
 new file mode 100644
 index 0000000..daa660e
 --- /dev/null
-+++ b/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java
++++ b/test/org/mockitousage/bugs/NPEWithIsAClassMatcherTest.java
 @@ -0,0 +1,48 @@
 +/*
 + * Copyright (c) 2007 Mockito contributors

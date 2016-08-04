@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java b/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
+diff --git a/src/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java b/src/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
 index d5f77b6..a20a725 100644
---- a/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
-+++ b/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
+--- a/src/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
++++ b/src/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java
 @@ -1,16 +1,17 @@
  package org.mockito.internal.creation.bytebuddy;
  
@@ -89,10 +89,10 @@ index d5f77b6..a20a725 100644
      public MockHandler getHandler(Object mock) {
          if (!(mock instanceof MockMethodInterceptor.MockAccess)) {
              return null;
-diff --git a/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java b/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
+diff --git a/src/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java b/src/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
 index 06aa3a7..0da40c8 100644
---- a/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
-+++ b/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
+--- a/src/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
++++ b/src/org/mockito/internal/creation/bytebuddy/MockBytecodeGenerator.java
 @@ -1,12 +1,5 @@
  package org.mockito.internal.creation.bytebuddy;
  

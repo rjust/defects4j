@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java b/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
+diff --git a/src/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java b/src/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
 index 9d4f834..671fbc5 100644
---- a/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
-+++ b/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
+--- a/src/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
++++ b/src/org/mockito/internal/verification/argumentmatching/ArgumentMatchingTool.java
 @@ -45,6 +45,6 @@ public class ArgumentMatchingTool {
      }
  

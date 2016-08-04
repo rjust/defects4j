@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/MockSettingsImplTest.java b/org/mockito/internal/creation/MockSettingsImplTest.java
+diff --git a/test/org/mockito/internal/creation/MockSettingsImplTest.java b/test/org/mockito/internal/creation/MockSettingsImplTest.java
 index 4eb8306..8460efe 100644
---- a/org/mockito/internal/creation/MockSettingsImplTest.java
-+++ b/org/mockito/internal/creation/MockSettingsImplTest.java
+--- a/test/org/mockito/internal/creation/MockSettingsImplTest.java
++++ b/test/org/mockito/internal/creation/MockSettingsImplTest.java
 @@ -4,13 +4,15 @@
   */
  package org.mockito.internal.creation;
@@ -31,10 +31,10 @@ index 4eb8306..8460efe 100644
      }
  
      @Test
-diff --git a/org/mockito/internal/util/ArrayUtilsTest.java b/org/mockito/internal/util/ArrayUtilsTest.java
+diff --git a/test/org/mockito/internal/util/ArrayUtilsTest.java b/test/org/mockito/internal/util/ArrayUtilsTest.java
 deleted file mode 100644
 index 1f4940c..0000000
---- a/org/mockito/internal/util/ArrayUtilsTest.java
+--- a/test/org/mockito/internal/util/ArrayUtilsTest.java
 +++ /dev/null
 @@ -1,32 +0,0 @@
 -package org.mockito.internal.util;
@@ -70,10 +70,10 @@ index 1f4940c..0000000
 -    }
 -}
 \ No newline at end of file
-diff --git a/org/mockitousage/basicapi/MocksSerializationTest.java b/org/mockitousage/basicapi/MocksSerializationTest.java
+diff --git a/test/org/mockitousage/basicapi/MocksSerializationTest.java b/test/org/mockitousage/basicapi/MocksSerializationTest.java
 index 3ff86b0..fc6c875 100644
---- a/org/mockitousage/basicapi/MocksSerializationTest.java
-+++ b/org/mockitousage/basicapi/MocksSerializationTest.java
+--- a/test/org/mockitousage/basicapi/MocksSerializationTest.java
++++ b/test/org/mockitousage/basicapi/MocksSerializationTest.java
 @@ -295,15 +295,4 @@ public class MocksSerializationTest extends TestBase implements Serializable {
          // then
          assertEquals("foo", mock.toString());

@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java b/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
+diff --git a/test/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java b/test/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
 index 51ff20d..c2091e0 100644
---- a/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
-+++ b/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
+--- a/test/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
++++ b/test/org/mockito/internal/verification/argumentmatching/ArgumentMatchingToolTest.java
 @@ -77,15 +77,6 @@ public class ArgumentMatchingToolTest extends TestBase {
      }
      
@@ -18,10 +18,10 @@ index 51ff20d..c2091e0 100644
      public void shouldUseMatchersSafely() {
          //given
          List<Matcher> matchers = (List) Arrays.asList(new BaseMatcher() {
-diff --git a/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java b/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java
+diff --git a/test/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java b/test/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java
 deleted file mode 100644
 index 60539ae..0000000
---- a/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java
+--- a/test/org/mockitousage/bugs/ActualInvocationHasNullArgumentNPEBugTest.java
 +++ /dev/null
 @@ -1,35 +0,0 @@
 -/*

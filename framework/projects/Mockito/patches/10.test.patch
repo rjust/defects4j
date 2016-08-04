@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java b/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
+diff --git a/test/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java b/test/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
 deleted file mode 100644
 index 52c06bd..0000000
---- a/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
+--- a/test/org/mockitousage/bugs/DeepStubsWronglyReportsSerializationProblemsTest.java
 +++ /dev/null
 @@ -1,32 +0,0 @@
 -package org.mockitousage.bugs;

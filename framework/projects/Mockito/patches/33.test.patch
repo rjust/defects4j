@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java b/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java
+diff --git a/test/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java b/test/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java
 deleted file mode 100644
 index 0f1cf83..0000000
---- a/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java
+--- a/test/org/mockitousage/bugs/InheritedGenericsPolimorphicCallTest.java
 +++ /dev/null
 @@ -1,74 +0,0 @@
 -/*

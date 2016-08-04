@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/MockitoCoreTest.java b/org/mockito/internal/MockitoCoreTest.java
+diff --git a/test/org/mockito/internal/MockitoCoreTest.java b/test/org/mockito/internal/MockitoCoreTest.java
 deleted file mode 100644
 index 3b1a2a2..0000000
---- a/org/mockito/internal/MockitoCoreTest.java
+--- a/test/org/mockito/internal/MockitoCoreTest.java
 +++ /dev/null
 @@ -1,31 +0,0 @@
 -package org.mockito.internal;
@@ -35,10 +35,10 @@ index 3b1a2a2..0000000
 -        assertNull(mockingProgress.pullOngoingStubbing());
 -    }
 -}
-diff --git a/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java b/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java
+diff --git a/test/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java b/test/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java
 deleted file mode 100644
 index 517806c..0000000
---- a/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java
+--- a/test/org/mockitousage/bugs/StubbingMocksThatAreConfiguredToReturnMocksTest.java
 +++ /dev/null
 @@ -1,27 +0,0 @@
 -/*

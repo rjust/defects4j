@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/invocation/InvocationTest.java b/org/mockito/internal/invocation/InvocationTest.java
+diff --git a/test/org/mockito/internal/invocation/InvocationTest.java b/test/org/mockito/internal/invocation/InvocationTest.java
 index a6a4473..8c1da2f 100644
---- a/org/mockito/internal/invocation/InvocationTest.java
-+++ b/org/mockito/internal/invocation/InvocationTest.java
+--- a/test/org/mockito/internal/invocation/InvocationTest.java
++++ b/test/org/mockito/internal/invocation/InvocationTest.java
 @@ -12,7 +12,6 @@ import java.util.Map;
  
  import org.junit.Before;
@@ -29,10 +29,10 @@ index a6a4473..8c1da2f 100644
 -    }
  }
 \ No newline at end of file
-diff --git a/org/mockitousage/spies/SpyingOnInterfacesTest.java b/org/mockitousage/spies/SpyingOnInterfacesTest.java
+diff --git a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
 index 9f349bd..ae02c79 100644
---- a/org/mockitousage/spies/SpyingOnInterfacesTest.java
-+++ b/org/mockitousage/spies/SpyingOnInterfacesTest.java
+--- a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
++++ b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
 @@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
  
  import java.util.List;

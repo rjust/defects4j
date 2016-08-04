@@ -1,7 +1,7 @@
-diff --git a/org/mockito/Mockito.java b/org/mockito/Mockito.java
+diff --git a/src/org/mockito/Mockito.java b/src/org/mockito/Mockito.java
 index 980587d..5eb16aa 100644
---- a/org/mockito/Mockito.java
-+++ b/org/mockito/Mockito.java
+--- a/src/org/mockito/Mockito.java
++++ b/src/org/mockito/Mockito.java
 @@ -824,7 +824,7 @@ public class Mockito extends Matchers {
       * @return mock object
       */
@@ -20,10 +20,10 @@ index 980587d..5eb16aa 100644
      }
  
      /**
-diff --git a/org/mockito/internal/MockitoCore.java b/org/mockito/internal/MockitoCore.java
+diff --git a/src/org/mockito/internal/MockitoCore.java b/src/org/mockito/internal/MockitoCore.java
 index 61acce8..575ce7b 100755
---- a/org/mockito/internal/MockitoCore.java
-+++ b/org/mockito/internal/MockitoCore.java
+--- a/src/org/mockito/internal/MockitoCore.java
++++ b/src/org/mockito/internal/MockitoCore.java
 @@ -29,11 +29,9 @@ public class MockitoCore {
      private final MockUtil mockUtil = new MockUtil();
      private final MockingProgress mockingProgress = new ThreadSafeMockingProgress();
@@ -38,10 +38,10 @@ index 61acce8..575ce7b 100755
          return mockUtil.createMock(classToMock, (MockSettingsImpl) mockSettings);
      }
      
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
 index 02d28ee..28f5a53 100755
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
 @@ -33,6 +33,6 @@ public class ReturnsMocks implements Answer<Object>, Serializable {
              return null;
          }

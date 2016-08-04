@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/matchers/EqualityTest.java b/org/mockito/internal/matchers/EqualityTest.java
+diff --git a/test/org/mockito/internal/matchers/EqualityTest.java b/test/org/mockito/internal/matchers/EqualityTest.java
 index 3656651..ce5b8c9 100644
---- a/org/mockito/internal/matchers/EqualityTest.java
-+++ b/org/mockito/internal/matchers/EqualityTest.java
+--- a/test/org/mockito/internal/matchers/EqualityTest.java
++++ b/test/org/mockito/internal/matchers/EqualityTest.java
 @@ -20,18 +20,9 @@ public class EqualityTest extends TestBase {
          assertTrue(areEqual(new Object[10], new Object[10]));
          assertTrue(areEqual(new int[] {1}, new Integer[] {1}));

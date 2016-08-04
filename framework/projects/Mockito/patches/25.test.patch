@@ -1,7 +1,7 @@
-diff --git a/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java b/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
+diff --git a/test/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java b/test/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
 index 812ebe9..7fc7ff9 100644
---- a/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
-+++ b/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
+--- a/test/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
++++ b/test/org/concurrentmockito/ThreadsRunAllTestsHalfManualTest.java
 @@ -25,7 +25,6 @@ import org.mockito.internal.matchers.MatchersToStringTest;
  import org.mockito.internal.progress.MockingProgressImplTest;
  import org.mockito.internal.progress.TimesTest;
@@ -20,10 +20,10 @@ index 812ebe9..7fc7ff9 100644
                  );
                  
                  if (!result.wasSuccessful()) {
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java
 deleted file mode 100644
 index f1ef899..0000000
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsGenericDeepStubsTest.java
 +++ /dev/null
 @@ -1,109 +0,0 @@
 -/*
@@ -135,10 +135,10 @@ index f1ef899..0000000
 -                mock.twoTypeParams(new StringBuilder()).append(2).append(3);
 -    }
 -}
-diff --git a/org/mockito/internal/util/reflection/GenericMasterTest.java b/org/mockito/internal/util/reflection/GenericMasterTest.java
+diff --git a/test/org/mockito/internal/util/reflection/GenericMasterTest.java b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
 index 528b91f..b35e340 100644
---- a/org/mockito/internal/util/reflection/GenericMasterTest.java
-+++ b/org/mockito/internal/util/reflection/GenericMasterTest.java
+--- a/test/org/mockito/internal/util/reflection/GenericMasterTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
 @@ -1,16 +1,18 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -209,10 +209,10 @@ index 528b91f..b35e340 100644
      }
 -
  }
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+diff --git a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 deleted file mode 100644
 index 874874c..0000000
---- a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+--- a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 +++ /dev/null
 @@ -1,194 +0,0 @@
 -/*

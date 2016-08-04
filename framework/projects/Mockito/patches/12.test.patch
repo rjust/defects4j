@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMasterTest.java b/org/mockito/internal/util/reflection/GenericMasterTest.java
+diff --git a/test/org/mockito/internal/util/reflection/GenericMasterTest.java b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
 index 46e0172..8b4079e 100644
---- a/org/mockito/internal/util/reflection/GenericMasterTest.java
-+++ b/org/mockito/internal/util/reflection/GenericMasterTest.java
+--- a/test/org/mockito/internal/util/reflection/GenericMasterTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
 @@ -3,7 +3,6 @@ package org.mockito.internal.util.reflection;
  import static org.junit.Assert.*;
  

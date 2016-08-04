@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/invocation/InvocationMatcher.java b/org/mockito/internal/invocation/InvocationMatcher.java
+diff --git a/src/org/mockito/internal/invocation/InvocationMatcher.java b/src/org/mockito/internal/invocation/InvocationMatcher.java
 index 3b3795b..d45e4c6 100644
---- a/org/mockito/internal/invocation/InvocationMatcher.java
-+++ b/org/mockito/internal/invocation/InvocationMatcher.java
+--- a/src/org/mockito/internal/invocation/InvocationMatcher.java
++++ b/src/org/mockito/internal/invocation/InvocationMatcher.java
 @@ -8,11 +8,13 @@ package org.mockito.internal.invocation;
  import java.io.Serializable;
  import java.lang.reflect.Array;

@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java b/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
+diff --git a/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java b/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
 index 38c2718..24659a7 100644
---- a/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
-+++ b/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
+--- a/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
++++ b/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
 @@ -4,11 +4,8 @@
   */
  package org.mockito.internal.stubbing.answers;
@@ -51,10 +51,10 @@ index 38c2718..24659a7 100644
 -    }
  }
 \ No newline at end of file
-diff --git a/org/mockitousage/spies/SpyingOnInterfacesTest.java b/org/mockitousage/spies/SpyingOnInterfacesTest.java
+diff --git a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
 deleted file mode 100644
 index ae02c79..0000000
---- a/org/mockitousage/spies/SpyingOnInterfacesTest.java
+--- a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
 +++ /dev/null
 @@ -1,51 +0,0 @@
 -/*

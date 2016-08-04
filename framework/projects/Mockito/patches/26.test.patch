@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/progress/HandyReturnValuesTest.java b/org/mockito/internal/progress/HandyReturnValuesTest.java
+diff --git a/test/org/mockito/internal/progress/HandyReturnValuesTest.java b/test/org/mockito/internal/progress/HandyReturnValuesTest.java
 index c281952..776205c 100644
---- a/org/mockito/internal/progress/HandyReturnValuesTest.java
-+++ b/org/mockito/internal/progress/HandyReturnValuesTest.java
+--- a/test/org/mockito/internal/progress/HandyReturnValuesTest.java
++++ b/test/org/mockito/internal/progress/HandyReturnValuesTest.java
 @@ -1,22 +1,19 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -75,10 +75,10 @@ index c281952..776205c 100644
          assertNull(h.returnFor(new Object()));
          assertNull(h.returnFor((Object) null));
          
-diff --git a/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java b/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java b/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
 index 593398e..e305ec2 100755
---- a/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
 @@ -1,17 +1,14 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -103,10 +103,10 @@ index 593398e..e305ec2 100755
 -}
 +}
 \ No newline at end of file
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 index 3689938..0303924 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 @@ -18,7 +18,7 @@ public class ReturnsEmptyValuesTest extends TestBase {
  
      ReturnsEmptyValues values = new ReturnsEmptyValues();
@@ -142,10 +142,10 @@ index 3689938..0303924 100644
          //given
          Date d = mock(Date.class);
          d.compareTo(new Date());
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
 index 9e93502..d774047 100755
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
 @@ -1,7 +1,7 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -223,10 +223,10 @@ index 9e93502..d774047 100755
 -}
 +}
 \ No newline at end of file
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
 index c20fa66..071e938 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
 @@ -1,7 +1,7 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors

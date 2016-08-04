@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/answers/CallsRealMethods.java b/org/mockito/internal/stubbing/answers/CallsRealMethods.java
+diff --git a/src/org/mockito/internal/stubbing/answers/CallsRealMethods.java b/src/org/mockito/internal/stubbing/answers/CallsRealMethods.java
 index 8fb0cae..14e12dd 100644
---- a/org/mockito/internal/stubbing/answers/CallsRealMethods.java
-+++ b/org/mockito/internal/stubbing/answers/CallsRealMethods.java
+--- a/src/org/mockito/internal/stubbing/answers/CallsRealMethods.java
++++ b/src/org/mockito/internal/stubbing/answers/CallsRealMethods.java
 @@ -4,12 +4,10 @@
   */
  package org.mockito.internal.stubbing.answers;

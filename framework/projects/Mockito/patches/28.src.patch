@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/configuration/DefaultInjectionEngine.java b/org/mockito/internal/configuration/DefaultInjectionEngine.java
+diff --git a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
 index 846fbf7..49127c4 100644
---- a/org/mockito/internal/configuration/DefaultInjectionEngine.java
-+++ b/org/mockito/internal/configuration/DefaultInjectionEngine.java
+--- a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
++++ b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
 @@ -15,7 +15,6 @@ import org.mockito.internal.util.reflection.FieldInitializer;
  import java.lang.reflect.Field;
  import java.util.Arrays;
@@ -102,10 +102,10 @@ index 846fbf7..49127c4 100644
      }
  
  }
-diff --git a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 index 29d2240..673de91 100644
---- a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 @@ -21,7 +21,7 @@ public class FinalMockCandidateFilter implements MockCandidateFilter {
              final Object matchingMock = mocks.iterator().next();
  
@@ -133,10 +133,10 @@ index 29d2240..673de91 100644
              }
          };
  
-diff --git a/org/mockito/internal/configuration/injection/OngoingInjecter.java b/org/mockito/internal/configuration/injection/OngoingInjecter.java
+diff --git a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java b/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
 index a26e0eb..cfffe25 100644
---- a/org/mockito/internal/configuration/injection/OngoingInjecter.java
-+++ b/org/mockito/internal/configuration/injection/OngoingInjecter.java
+--- a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
++++ b/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
 @@ -12,8 +12,8 @@ public interface OngoingInjecter {
       * Please check the actual implementation.
       * </p>

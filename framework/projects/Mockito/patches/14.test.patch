@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java b/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
+diff --git a/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java b/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
 deleted file mode 100644
 index 4e89eab..0000000
---- a/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
+--- a/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
 +++ /dev/null
 @@ -1,31 +0,0 @@
 -/*

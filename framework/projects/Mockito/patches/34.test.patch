@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/invocation/InvocationMatcherTest.java b/org/mockito/internal/invocation/InvocationMatcherTest.java
+diff --git a/test/org/mockito/internal/invocation/InvocationMatcherTest.java b/test/org/mockito/internal/invocation/InvocationMatcherTest.java
 index af83e9b..075c1cf 100644
---- a/org/mockito/internal/invocation/InvocationMatcherTest.java
-+++ b/org/mockito/internal/invocation/InvocationMatcherTest.java
+--- a/test/org/mockito/internal/invocation/InvocationMatcherTest.java
++++ b/test/org/mockito/internal/invocation/InvocationMatcherTest.java
 @@ -8,11 +8,12 @@ import org.hamcrest.Matcher;
  import org.junit.Before;
  import org.junit.Test;
@@ -49,10 +49,10 @@ index af83e9b..075c1cf 100644
 -    }
  }
 \ No newline at end of file
-diff --git a/org/mockitousage/IMethods.java b/org/mockitousage/IMethods.java
+diff --git a/test/org/mockitousage/IMethods.java b/test/org/mockitousage/IMethods.java
 index 2739947..fbaf4d7 100644
---- a/org/mockitousage/IMethods.java
-+++ b/org/mockitousage/IMethods.java
+--- a/test/org/mockitousage/IMethods.java
++++ b/test/org/mockitousage/IMethods.java
 @@ -164,9 +164,9 @@ public interface IMethods {
  
      Object varargsObject(int i, Object... object);
@@ -65,10 +65,10 @@ index 2739947..fbaf4d7 100644
  
      void mixedVarargs(Object i, String ... string);
  
-diff --git a/org/mockitousage/MethodsImpl.java b/org/mockitousage/MethodsImpl.java
+diff --git a/test/org/mockitousage/MethodsImpl.java b/test/org/mockitousage/MethodsImpl.java
 index 80c3f6d..577d263 100644
---- a/org/mockitousage/MethodsImpl.java
-+++ b/org/mockitousage/MethodsImpl.java
+--- a/test/org/mockitousage/MethodsImpl.java
++++ b/test/org/mockitousage/MethodsImpl.java
 @@ -306,12 +306,12 @@ public class MethodsImpl implements IMethods {
          return null;
      }
@@ -86,10 +86,10 @@ index 80c3f6d..577d263 100644
      }
  
      public void mixedVarargs(Object i, String... string) {
-diff --git a/org/mockitousage/basicapi/UsingVarargsTest.java b/org/mockitousage/basicapi/UsingVarargsTest.java
+diff --git a/test/org/mockitousage/basicapi/UsingVarargsTest.java b/test/org/mockitousage/basicapi/UsingVarargsTest.java
 index eec4819..7562e7a 100644
---- a/org/mockitousage/basicapi/UsingVarargsTest.java
-+++ b/org/mockitousage/basicapi/UsingVarargsTest.java
+--- a/test/org/mockitousage/basicapi/UsingVarargsTest.java
++++ b/test/org/mockitousage/basicapi/UsingVarargsTest.java
 @@ -10,12 +10,9 @@ import java.util.ArrayList;
  
  import org.junit.Before;

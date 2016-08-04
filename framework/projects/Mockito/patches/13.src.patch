@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/MockHandler.java b/org/mockito/internal/MockHandler.java
+diff --git a/src/org/mockito/internal/MockHandler.java b/src/org/mockito/internal/MockHandler.java
 index 8962ceb..ff059f1 100644
---- a/org/mockito/internal/MockHandler.java
-+++ b/org/mockito/internal/MockHandler.java
+--- a/src/org/mockito/internal/MockHandler.java
++++ b/src/org/mockito/internal/MockHandler.java
 @@ -73,15 +73,11 @@ public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInte
          //if verificationMode is not null then someone is doing verify()        
          if (verificationMode != null) {

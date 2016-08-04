@@ -1,7 +1,7 @@
-diff --git a/org/mockito/Matchers.java b/org/mockito/Matchers.java
+diff --git a/src/org/mockito/Matchers.java b/src/org/mockito/Matchers.java
 index d6893af..971452e 100644
---- a/org/mockito/Matchers.java
-+++ b/org/mockito/Matchers.java
+--- a/src/org/mockito/Matchers.java
++++ b/src/org/mockito/Matchers.java
 @@ -5,7 +5,6 @@
  package org.mockito;
  
@@ -190,10 +190,10 @@ index d6893af..971452e 100644
      }    
  
      /**
-diff --git a/org/mockito/internal/matchers/Any.java b/org/mockito/internal/matchers/Any.java
+diff --git a/src/org/mockito/internal/matchers/Any.java b/src/org/mockito/internal/matchers/Any.java
 index 28a98f0..1876b38 100644
---- a/org/mockito/internal/matchers/Any.java
-+++ b/org/mockito/internal/matchers/Any.java
+--- a/src/org/mockito/internal/matchers/Any.java
++++ b/src/org/mockito/internal/matchers/Any.java
 @@ -14,7 +14,7 @@ import org.mockito.ArgumentMatcher;
  public class Any extends ArgumentMatcher implements Serializable {
  

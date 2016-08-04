@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java b/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
+diff --git a/test/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java b/test/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
 index c6eb915..bd49f3a 100644
---- a/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
-+++ b/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
+--- a/test/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
++++ b/test/org/mockitousage/annotation/MockInjectionUsingSetterOrPropertyTest.java
 @@ -4,9 +4,6 @@
   */
  package org.mockitousage.annotation;

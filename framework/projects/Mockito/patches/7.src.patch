@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+diff --git a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 index 80bd908..8046052 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+--- a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
++++ b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 @@ -84,8 +84,8 @@ public abstract class GenericMetadataSupport {
      }
  

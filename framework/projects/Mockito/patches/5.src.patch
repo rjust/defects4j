@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/verification/VerificationOverTimeImpl.java b/org/mockito/internal/verification/VerificationOverTimeImpl.java
+diff --git a/src/org/mockito/internal/verification/VerificationOverTimeImpl.java b/src/org/mockito/internal/verification/VerificationOverTimeImpl.java
 index 4ea2463..685780a 100644
---- a/org/mockito/internal/verification/VerificationOverTimeImpl.java
-+++ b/org/mockito/internal/verification/VerificationOverTimeImpl.java
+--- a/src/org/mockito/internal/verification/VerificationOverTimeImpl.java
++++ b/src/org/mockito/internal/verification/VerificationOverTimeImpl.java
 @@ -5,6 +5,7 @@
  package org.mockito.internal.verification;
  

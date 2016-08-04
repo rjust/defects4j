@@ -1,7 +1,7 @@
-diff --git a/org/mockitointegration/NoJUnitDependenciesTest.java b/org/mockitointegration/NoJUnitDependenciesTest.java
+diff --git a/test/org/mockitointegration/NoJUnitDependenciesTest.java b/test/org/mockitointegration/NoJUnitDependenciesTest.java
 deleted file mode 100644
 index a1071b5..0000000
---- a/org/mockitointegration/NoJUnitDependenciesTest.java
+--- a/test/org/mockitointegration/NoJUnitDependenciesTest.java
 +++ /dev/null
 @@ -1,39 +0,0 @@
 -package org.mockitointegration;
@@ -43,10 +43,10 @@ index a1071b5..0000000
 -        }
 -    }
 -}
-diff --git a/org/mockitoutil/ClassLoaders.java b/org/mockitoutil/ClassLoaders.java
+diff --git a/test/org/mockitoutil/ClassLoaders.java b/test/org/mockitoutil/ClassLoaders.java
 index 75c8350..931969f 100644
---- a/org/mockitoutil/ClassLoaders.java
-+++ b/org/mockitoutil/ClassLoaders.java
+--- a/test/org/mockitoutil/ClassLoaders.java
++++ b/test/org/mockitoutil/ClassLoaders.java
 @@ -1,23 +1,14 @@
  package org.mockitoutil;
  
@@ -314,10 +314,10 @@ index 75c8350..931969f 100644
 -
 -    }
  }
-diff --git a/org/mockitoutil/ClassLoadersTest.java b/org/mockitoutil/ClassLoadersTest.java
+diff --git a/test/org/mockitoutil/ClassLoadersTest.java b/test/org/mockitoutil/ClassLoadersTest.java
 index 1f6b090..fe4c04f 100644
---- a/org/mockitoutil/ClassLoadersTest.java
-+++ b/org/mockitoutil/ClassLoadersTest.java
+--- a/test/org/mockitoutil/ClassLoadersTest.java
++++ b/test/org/mockitoutil/ClassLoadersTest.java
 @@ -5,10 +5,8 @@ import org.mockito.Mockito;
  
  import static org.fest.assertions.Assertions.assertThat;

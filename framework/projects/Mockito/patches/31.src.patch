@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
 index 4942d7c..1392592 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
 @@ -4,10 +4,6 @@
   */
  package org.mockito.internal.stubbing.defaultanswers;

@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/MockSettingsImpl.java b/org/mockito/internal/creation/MockSettingsImpl.java
+diff --git a/src/org/mockito/internal/creation/MockSettingsImpl.java b/src/org/mockito/internal/creation/MockSettingsImpl.java
 index 5285d90..3452c62 100644
---- a/org/mockito/internal/creation/MockSettingsImpl.java
-+++ b/org/mockito/internal/creation/MockSettingsImpl.java
+--- a/src/org/mockito/internal/creation/MockSettingsImpl.java
++++ b/src/org/mockito/internal/creation/MockSettingsImpl.java
 @@ -9,6 +9,9 @@ import org.mockito.exceptions.Reporter;
  import org.mockito.internal.util.MockName;
  import org.mockito.stubbing.Answer;
@@ -36,10 +36,10 @@ index 5285d90..3452c62 100644
      }
  
      public void initiateMockName(Class classToMock) {
-diff --git a/org/mockito/internal/util/ArrayUtils.java b/org/mockito/internal/util/ArrayUtils.java
+diff --git a/src/org/mockito/internal/util/ArrayUtils.java b/src/org/mockito/internal/util/ArrayUtils.java
 deleted file mode 100644
 index 92f2a8d..0000000
---- a/org/mockito/internal/util/ArrayUtils.java
+--- a/src/org/mockito/internal/util/ArrayUtils.java
 +++ /dev/null
 @@ -1,11 +0,0 @@
 -package org.mockito.internal.util;
@@ -54,10 +54,10 @@ index 92f2a8d..0000000
 -    }
 -}
 \ No newline at end of file
-diff --git a/org/mockito/internal/util/MockUtil.java b/org/mockito/internal/util/MockUtil.java
+diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
 index b8ed8b4..756f764 100644
---- a/org/mockito/internal/util/MockUtil.java
-+++ b/org/mockito/internal/util/MockUtil.java
+--- a/src/org/mockito/internal/util/MockUtil.java
++++ b/src/org/mockito/internal/util/MockUtil.java
 @@ -16,8 +16,6 @@ import org.mockito.internal.creation.MockSettingsImpl;
  import org.mockito.internal.creation.jmock.ClassImposterizer;
  import org.mockito.internal.util.reflection.LenientCopyTool;

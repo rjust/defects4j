@@ -1,7 +1,7 @@
-diff --git a/org/mockito/exceptions/Reporter.java b/org/mockito/exceptions/Reporter.java
+diff --git a/src/org/mockito/exceptions/Reporter.java b/src/org/mockito/exceptions/Reporter.java
 index d57e33d..7ae7588 100644
---- a/org/mockito/exceptions/Reporter.java
-+++ b/org/mockito/exceptions/Reporter.java
+--- a/src/org/mockito/exceptions/Reporter.java
++++ b/src/org/mockito/exceptions/Reporter.java
 @@ -22,7 +22,6 @@ import org.mockito.invocation.Invocation;
  import org.mockito.invocation.InvocationOnMock;
  import org.mockito.invocation.Location;

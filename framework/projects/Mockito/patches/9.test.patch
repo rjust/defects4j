@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+diff --git a/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java b/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
 index a89ace9..c468327 100644
---- a/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
-+++ b/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+--- a/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
++++ b/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
 @@ -1,7 +1,6 @@
  package org.mockitousage.constructor;
  

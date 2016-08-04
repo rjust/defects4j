@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 index 11304af..0c7f512 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
 @@ -34,7 +34,7 @@ import org.mockito.stubbing.Answer;
   *  Returns appropriate primitive for primitive-returning methods
   * </li>

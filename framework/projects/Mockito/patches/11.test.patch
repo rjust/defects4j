@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/DelegatingMethodTest.java b/org/mockito/internal/creation/DelegatingMethodTest.java
+diff --git a/test/org/mockito/internal/creation/DelegatingMethodTest.java b/test/org/mockito/internal/creation/DelegatingMethodTest.java
 deleted file mode 100644
 index 1c09a89..0000000
---- a/org/mockito/internal/creation/DelegatingMethodTest.java
+--- a/test/org/mockito/internal/creation/DelegatingMethodTest.java
 +++ /dev/null
 @@ -1,54 +0,0 @@
 -package org.mockito.internal.creation;

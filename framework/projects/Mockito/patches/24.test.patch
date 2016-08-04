@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 index 1d3d9ce..13d90df 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 @@ -64,17 +64,4 @@ public class ReturnsEmptyValuesTest extends TestBase {
          assertTrue(result != (Object) 0);
      }
@@ -20,10 +20,10 @@ index 1d3d9ce..13d90df 100644
 -    }
 -
  }
-diff --git a/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java b/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
+diff --git a/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java b/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
 index 9c84456..c1f28fb 100644
---- a/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
-+++ b/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
+--- a/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
++++ b/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
 @@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
  public class ShouldMocksCompareToBeConsistentWithEqualsTest extends TestBase {
  

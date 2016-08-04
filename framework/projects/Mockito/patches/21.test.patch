@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java b/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
+diff --git a/test/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java b/test/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
 index 4a4a95b..b85393b 100644
---- a/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
-+++ b/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
+--- a/test/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
++++ b/test/org/mockito/internal/creation/instance/ConstructorInstantiatorTest.java
 @@ -7,7 +7,6 @@ public class ConstructorInstantiatorTest extends TestBase {
  
      static class SomeClass {}

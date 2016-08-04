@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/MockUtil.java b/org/mockito/internal/util/MockUtil.java
+diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
 index d7c530c..0a097a8 100644
---- a/org/mockito/internal/util/MockUtil.java
-+++ b/org/mockito/internal/util/MockUtil.java
+--- a/src/org/mockito/internal/util/MockUtil.java
++++ b/src/org/mockito/internal/util/MockUtil.java
 @@ -18,6 +18,9 @@ import org.mockito.internal.util.reflection.LenientCopyTool;
  
  import java.io.Serializable;

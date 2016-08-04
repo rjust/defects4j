@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/invocation/InvocationMatcher.java b/org/mockito/internal/invocation/InvocationMatcher.java
+diff --git a/src/org/mockito/internal/invocation/InvocationMatcher.java b/src/org/mockito/internal/invocation/InvocationMatcher.java
 index ffad2b1..132f68e 100644
---- a/org/mockito/internal/invocation/InvocationMatcher.java
-+++ b/org/mockito/internal/invocation/InvocationMatcher.java
+--- a/src/org/mockito/internal/invocation/InvocationMatcher.java
++++ b/src/org/mockito/internal/invocation/InvocationMatcher.java
 @@ -89,25 +89,8 @@ public class InvocationMatcher implements PrintableInvocation, PrintingFriendlyI
          return !overloadedButSameArgs;
      }

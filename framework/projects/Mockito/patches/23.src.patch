@@ -1,9 +1,9 @@
-diff --git a/org/mockito/internal/MockitoCore.java b/org/mockito/internal/MockitoCore.java
+diff --git a/src/org/mockito/internal/MockitoCore.java b/src/org/mockito/internal/MockitoCore.java
 old mode 100644
 new mode 100755
 index 3ac4e7b..49107b8
---- a/org/mockito/internal/MockitoCore.java
-+++ b/org/mockito/internal/MockitoCore.java
+--- a/src/org/mockito/internal/MockitoCore.java
++++ b/src/org/mockito/internal/MockitoCore.java
 @@ -1,12 +1,9 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
@@ -53,10 +53,10 @@ index 3ac4e7b..49107b8
  
      public <T> T mock(Class<T> typeToMock, MockSettings settings) {
          if (!MockSettingsImpl.class.isInstance(settings)) {
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 index b18dd3b..b08af1b 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 @@ -4,10 +4,6 @@
   */
  package org.mockito.internal.stubbing.defaultanswers;
@@ -146,10 +146,10 @@ index b18dd3b..b08af1b 100644
  
      protected GenericMetadataSupport actualParameterizedType(Object mock) {
          CreationSettings mockSettings = (CreationSettings) new MockUtil().getMockHandler(mock).getMockSettings();
-diff --git a/org/mockito/internal/util/MockUtil.java b/org/mockito/internal/util/MockUtil.java
+diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
 index 809804c..0f2fac0 100644
---- a/org/mockito/internal/util/MockUtil.java
-+++ b/org/mockito/internal/util/MockUtil.java
+--- a/src/org/mockito/internal/util/MockUtil.java
++++ b/src/org/mockito/internal/util/MockUtil.java
 @@ -4,8 +4,6 @@
   */
  package org.mockito.internal.util;
@@ -168,10 +168,10 @@ index 809804c..0f2fac0 100644
  @SuppressWarnings("unchecked")
  public class MockUtil {
  
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+diff --git a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 index cf176a4..6cea091 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupport.java
+--- a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
++++ b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 @@ -9,7 +9,6 @@ import org.mockito.Incubating;
  import org.mockito.exceptions.base.MockitoException;
  import org.mockito.internal.util.Checks;

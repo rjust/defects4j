@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 index 16d7616..1d3d9ce 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
 @@ -5,26 +5,14 @@
  
  package org.mockito.internal.stubbing.defaultanswers;

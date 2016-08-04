@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/invocation/MockitoMethod.java b/org/mockito/internal/invocation/MockitoMethod.java
+diff --git a/src/org/mockito/internal/invocation/MockitoMethod.java b/src/org/mockito/internal/invocation/MockitoMethod.java
 index 7a8d584..21d2b02 100644
---- a/org/mockito/internal/invocation/MockitoMethod.java
-+++ b/org/mockito/internal/invocation/MockitoMethod.java
+--- a/src/org/mockito/internal/invocation/MockitoMethod.java
++++ b/src/org/mockito/internal/invocation/MockitoMethod.java
 @@ -12,6 +12,4 @@ public interface MockitoMethod {
  
    boolean isVarArgs();
@@ -9,10 +9,10 @@ index 7a8d584..21d2b02 100644
 -  Class<?> getDeclaringClass();
 -
  }
-diff --git a/org/mockito/internal/invocation/SerializableMockitoMethod.java b/org/mockito/internal/invocation/SerializableMockitoMethod.java
+diff --git a/src/org/mockito/internal/invocation/SerializableMockitoMethod.java b/src/org/mockito/internal/invocation/SerializableMockitoMethod.java
 index a1bb057..980ac9e 100644
---- a/org/mockito/internal/invocation/SerializableMockitoMethod.java
-+++ b/org/mockito/internal/invocation/SerializableMockitoMethod.java
+--- a/src/org/mockito/internal/invocation/SerializableMockitoMethod.java
++++ b/src/org/mockito/internal/invocation/SerializableMockitoMethod.java
 @@ -41,11 +41,7 @@ public class SerializableMockitoMethod implements MockitoMethod, Serializable {
      }
  
@@ -26,10 +26,10 @@ index a1bb057..980ac9e 100644
      }
  
      @Override
-diff --git a/org/mockito/internal/stubbing/answers/AnswersValidator.java b/org/mockito/internal/stubbing/answers/AnswersValidator.java
+diff --git a/src/org/mockito/internal/stubbing/answers/AnswersValidator.java b/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
 index afaf14a..263317ff 100644
---- a/org/mockito/internal/stubbing/answers/AnswersValidator.java
-+++ b/org/mockito/internal/stubbing/answers/AnswersValidator.java
+--- a/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
++++ b/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
 @@ -24,16 +24,6 @@ public class AnswersValidator {
          if (answer instanceof DoesNothing) {
              validateDoNothing((DoesNothing) answer, invocation);

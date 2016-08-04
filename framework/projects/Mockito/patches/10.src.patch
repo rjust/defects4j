@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 index 3bb7636..f9ec9a8 100644
---- a/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-+++ b/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 @@ -4,6 +4,10 @@
   */
  package org.mockito.internal.stubbing.defaultanswers;

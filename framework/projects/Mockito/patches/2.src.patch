@@ -1,7 +1,7 @@
-diff --git a/org/mockito/exceptions/Reporter.java b/org/mockito/exceptions/Reporter.java
+diff --git a/src/org/mockito/exceptions/Reporter.java b/src/org/mockito/exceptions/Reporter.java
 index 6e0b3bd..e0b1105 100644
---- a/org/mockito/exceptions/Reporter.java
-+++ b/org/mockito/exceptions/Reporter.java
+--- a/src/org/mockito/exceptions/Reporter.java
++++ b/src/org/mockito/exceptions/Reporter.java
 @@ -816,15 +816,6 @@ public class Reporter {
          throw new MockitoException("Mocks instantiated with constructor cannot be combined with " + mode + " serialization mode.");
      }
@@ -18,10 +18,10 @@ index 6e0b3bd..e0b1105 100644
      private MockName safelyGetMockName(Object mock) {
          return new MockUtil().getMockName(mock);
      }
-diff --git a/org/mockito/internal/util/Timer.java b/org/mockito/internal/util/Timer.java
+diff --git a/src/org/mockito/internal/util/Timer.java b/src/org/mockito/internal/util/Timer.java
 index 907e545..b71e4fd 100644
---- a/org/mockito/internal/util/Timer.java
-+++ b/org/mockito/internal/util/Timer.java
+--- a/src/org/mockito/internal/util/Timer.java
++++ b/src/org/mockito/internal/util/Timer.java
 @@ -1,14 +1,11 @@
  package org.mockito.internal.util;
  

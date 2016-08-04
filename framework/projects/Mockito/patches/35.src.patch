@@ -1,7 +1,7 @@
-diff --git a/org/mockito/Matchers.java b/org/mockito/Matchers.java
+diff --git a/src/org/mockito/Matchers.java b/src/org/mockito/Matchers.java
 index 7a89556..16f1b5b 100644
---- a/org/mockito/Matchers.java
-+++ b/org/mockito/Matchers.java
+--- a/src/org/mockito/Matchers.java
++++ b/src/org/mockito/Matchers.java
 @@ -359,7 +359,7 @@ public class Matchers {
       * @return <code>null</code>.
       */
@@ -29,10 +29,10 @@ index 7a89556..16f1b5b 100644
      }
  
      /**
-diff --git a/org/mockito/internal/progress/HandyReturnValues.java b/org/mockito/internal/progress/HandyReturnValues.java
+diff --git a/src/org/mockito/internal/progress/HandyReturnValues.java b/src/org/mockito/internal/progress/HandyReturnValues.java
 index 453a344..a0dcfd9 100644
---- a/org/mockito/internal/progress/HandyReturnValues.java
-+++ b/org/mockito/internal/progress/HandyReturnValues.java
+--- a/src/org/mockito/internal/progress/HandyReturnValues.java
++++ b/src/org/mockito/internal/progress/HandyReturnValues.java
 @@ -40,7 +40,7 @@ public class HandyReturnValues {
          if (isPrimitiveWrapper(clazz)) {
              return primitiveWrapperOf(clazz);
@@ -42,10 +42,10 @@ index 453a344..a0dcfd9 100644
      }
  
      public Map returnMap() {
-diff --git a/org/mockito/internal/util/Primitives.java b/org/mockito/internal/util/Primitives.java
+diff --git a/src/org/mockito/internal/util/Primitives.java b/src/org/mockito/internal/util/Primitives.java
 index 2299915..f1d1b3b 100644
---- a/org/mockito/internal/util/Primitives.java
-+++ b/org/mockito/internal/util/Primitives.java
+--- a/src/org/mockito/internal/util/Primitives.java
++++ b/src/org/mockito/internal/util/Primitives.java
 @@ -22,7 +22,7 @@ public class Primitives {
          return (Class<T>) primitiveTypes.get(clazz);
      }

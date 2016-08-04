@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/NPEWithCertainMatchersTest.java b/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+diff --git a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java b/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
 index fcb84a9..0330538 100644
---- a/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
-+++ b/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+--- a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
++++ b/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
 @@ -4,16 +4,16 @@
   */
  package org.mockitousage.bugs;

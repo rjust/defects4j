@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/reflection/BeanPropertySetterTest.java b/org/mockito/internal/util/reflection/BeanPropertySetterTest.java
+diff --git a/test/org/mockito/internal/util/reflection/BeanPropertySetterTest.java b/test/org/mockito/internal/util/reflection/BeanPropertySetterTest.java
 deleted file mode 100644
 index 2240728..0000000
---- a/org/mockito/internal/util/reflection/BeanPropertySetterTest.java
+--- a/test/org/mockito/internal/util/reflection/BeanPropertySetterTest.java
 +++ /dev/null
 @@ -1,121 +0,0 @@
 -package org.mockito.internal.util.reflection;
@@ -125,10 +125,10 @@ index 2240728..0000000
 -    }
 -
 -}
-diff --git a/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java b/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java
+diff --git a/test/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java b/test/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java
 deleted file mode 100644
 index a2025dd..0000000
---- a/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java
+--- a/test/org/mockitousage/bugs/InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest.java
 +++ /dev/null
 @@ -1,44 +0,0 @@
 -package org.mockitousage.bugs;

@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/matchers/Equality.java b/org/mockito/internal/matchers/Equality.java
+diff --git a/src/org/mockito/internal/matchers/Equality.java b/src/org/mockito/internal/matchers/Equality.java
 index 0791441..43e11fc 100644
---- a/org/mockito/internal/matchers/Equality.java
-+++ b/org/mockito/internal/matchers/Equality.java
+--- a/src/org/mockito/internal/matchers/Equality.java
++++ b/src/org/mockito/internal/matchers/Equality.java
 @@ -10,9 +10,7 @@ import java.lang.reflect.Array;
  public class Equality {
  

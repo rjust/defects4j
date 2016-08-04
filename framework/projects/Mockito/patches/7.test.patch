@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+diff --git a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 index a45d549..f15833c 100644
---- a/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
-+++ b/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+--- a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
 @@ -7,7 +7,6 @@ package org.mockito.internal.util.reflection;
  import static org.fest.assertions.Assertions.assertThat;
  import static org.junit.Assert.fail;
@@ -29,10 +29,10 @@ index a45d549..f15833c 100644
      @Test
      public void can_get_raw_type_from_ParameterizedType() throws Exception {
          assertThat(inferFrom(ListOfAnyNumbers.class.getGenericInterfaces()[0]).rawType()).isEqualTo(List.class);
-diff --git a/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java b/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
+diff --git a/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java b/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
 deleted file mode 100644
 index d7f28f9..0000000
---- a/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
+--- a/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
 +++ /dev/null
 @@ -1,28 +0,0 @@
 -package org.mockitousage.bugs.deepstubs;

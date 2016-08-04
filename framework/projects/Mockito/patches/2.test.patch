@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/util/TimerTest.java b/org/mockito/internal/util/TimerTest.java
+diff --git a/test/org/mockito/internal/util/TimerTest.java b/test/org/mockito/internal/util/TimerTest.java
 index e115668..5e5f0f7 100644
---- a/org/mockito/internal/util/TimerTest.java
-+++ b/org/mockito/internal/util/TimerTest.java
+--- a/test/org/mockito/internal/util/TimerTest.java
++++ b/test/org/mockito/internal/util/TimerTest.java
 @@ -1,8 +1,6 @@
  package org.mockito.internal.util;
  
@@ -52,10 +52,10 @@ index e115668..5e5f0f7 100644
 -        Thread.sleep(1);
 -    }
  }
-diff --git a/org/mockito/verification/NegativeDurationTest.java b/org/mockito/verification/NegativeDurationTest.java
+diff --git a/test/org/mockito/verification/NegativeDurationTest.java b/test/org/mockito/verification/NegativeDurationTest.java
 deleted file mode 100644
 index fbb2480..0000000
---- a/org/mockito/verification/NegativeDurationTest.java
+--- a/test/org/mockito/verification/NegativeDurationTest.java
 +++ /dev/null
 @@ -1,29 +0,0 @@
 -package org.mockito.verification;

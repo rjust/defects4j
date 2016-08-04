@@ -1,7 +1,7 @@
-diff --git a/org/mockito/exceptions/ReporterTest.java b/org/mockito/exceptions/ReporterTest.java
+diff --git a/test/org/mockito/exceptions/ReporterTest.java b/test/org/mockito/exceptions/ReporterTest.java
 index 3253ad8..e006852 100644
---- a/org/mockito/exceptions/ReporterTest.java
-+++ b/org/mockito/exceptions/ReporterTest.java
+--- a/test/org/mockito/exceptions/ReporterTest.java
++++ b/test/org/mockito/exceptions/ReporterTest.java
 @@ -6,81 +6,21 @@
  package org.mockito.exceptions;
  
@@ -91,10 +91,10 @@ index 3253ad8..e006852 100644
 -    }
 -
  }
-diff --git a/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java b/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java
+diff --git a/test/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java b/test/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java
 deleted file mode 100644
 index e832567..0000000
---- a/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java
+--- a/test/org/mockitousage/bugs/ClassCastExOnVerifyZeroInteractionsTest.java
 +++ /dev/null
 @@ -1,26 +0,0 @@
 -package org.mockitousage.bugs;

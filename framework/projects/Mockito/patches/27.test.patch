@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/bugs/ListenersLostOnResetMockTest.java b/org/mockitousage/bugs/ListenersLostOnResetMockTest.java
+diff --git a/test/org/mockitousage/bugs/ListenersLostOnResetMockTest.java b/test/org/mockitousage/bugs/ListenersLostOnResetMockTest.java
 deleted file mode 100644
 index 95dec24..0000000
---- a/org/mockitousage/bugs/ListenersLostOnResetMockTest.java
+--- a/test/org/mockitousage/bugs/ListenersLostOnResetMockTest.java
 +++ /dev/null
 @@ -1,25 +0,0 @@
 -package org.mockitousage.bugs;

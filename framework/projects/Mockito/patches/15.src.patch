@@ -1,7 +1,7 @@
-diff --git a/org/mockito/internal/configuration/DefaultInjectionEngine.java b/org/mockito/internal/configuration/DefaultInjectionEngine.java
+diff --git a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
 index 9d7088f..5d2b63c 100644
---- a/org/mockito/internal/configuration/DefaultInjectionEngine.java
-+++ b/org/mockito/internal/configuration/DefaultInjectionEngine.java
+--- a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
++++ b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
 @@ -21,7 +21,7 @@ import java.util.Set;
   * See {@link org.mockito.MockitoAnnotations}
   */
@@ -27,10 +27,10 @@ index 9d7088f..5d2b63c 100644
 -}
 +}
 \ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 index 673de91..ec92492 100644
---- a/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 @@ -1,7 +1,6 @@
  package org.mockito.internal.configuration.injection;
  
@@ -81,10 +81,10 @@ index 673de91..ec92492 100644
 -}
 +}
 \ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/MockCandidateFilter.java b/org/mockito/internal/configuration/injection/MockCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
 index 5a9d71f..809d03f 100644
---- a/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/MockCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
 @@ -5,7 +5,7 @@ import java.util.Collection;
  
  public interface MockCandidateFilter {
@@ -94,10 +94,10 @@ index 5a9d71f..809d03f 100644
              Collection<Object> mocks,
              Field fieldToBeInjected,
              Object fieldInstance
-diff --git a/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
 index 4b36bf3..dacdeab 100644
---- a/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
 @@ -15,7 +15,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
          this.next = next;
      }
@@ -107,10 +107,10 @@ index 4b36bf3..dacdeab 100644
          List<Object> mockNameMatches = new ArrayList<Object>();
          if(mocks.size() > 1) {
              for (Object mock : mocks) {
-diff --git a/org/mockito/internal/configuration/injection/OngoingInjecter.java b/org/mockito/internal/configuration/injection/OngoingInjecter.java
+diff --git a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java b/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
 deleted file mode 100644
 index 844317d..0000000
---- a/org/mockito/internal/configuration/injection/OngoingInjecter.java
+--- a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
 +++ /dev/null
 @@ -1,19 +0,0 @@
 -package org.mockito.internal.configuration.injection;
@@ -133,10 +133,10 @@ index 844317d..0000000
 -
 -}
 \ No newline at end of file
-diff --git a/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java b/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
+diff --git a/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
 index bbb6ce7..c402482 100644
---- a/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-+++ b/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
+--- a/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
++++ b/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
 @@ -13,7 +13,7 @@ public class TypeBasedCandidateFilter implements MockCandidateFilter {
          this.next = next;
      }
@@ -146,10 +146,10 @@ index bbb6ce7..c402482 100644
          List<Object> mockTypeMatches = new ArrayList<Object>();
          for (Object mock : mocks) {
              if (field.getType().isAssignableFrom(mock.getClass())) {
-diff --git a/org/mockito/internal/util/reflection/BeanPropertySetter.java b/org/mockito/internal/util/reflection/BeanPropertySetter.java
+diff --git a/src/org/mockito/internal/util/reflection/BeanPropertySetter.java b/src/org/mockito/internal/util/reflection/BeanPropertySetter.java
 deleted file mode 100644
 index 28437e8..0000000
---- a/org/mockito/internal/util/reflection/BeanPropertySetter.java
+--- a/src/org/mockito/internal/util/reflection/BeanPropertySetter.java
 +++ /dev/null
 @@ -1,97 +0,0 @@
 -package org.mockito.internal.util.reflection;

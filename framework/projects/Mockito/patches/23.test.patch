@@ -1,7 +1,7 @@
-diff --git a/org/mockitousage/stubbing/DeepStubsSerializableTest.java b/org/mockitousage/stubbing/DeepStubsSerializableTest.java
+diff --git a/test/org/mockitousage/stubbing/DeepStubsSerializableTest.java b/test/org/mockitousage/stubbing/DeepStubsSerializableTest.java
 deleted file mode 100644
 index 033eeea..0000000
---- a/org/mockitousage/stubbing/DeepStubsSerializableTest.java
+--- a/test/org/mockitousage/stubbing/DeepStubsSerializableTest.java
 +++ /dev/null
 @@ -1,50 +0,0 @@
 -package org.mockitousage.stubbing;
