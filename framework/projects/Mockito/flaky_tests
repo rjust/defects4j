@@ -1,0 +1,3 @@
+# These tests fail non-deterministically on a number of the Mockito defects
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeout
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeoutAndFail

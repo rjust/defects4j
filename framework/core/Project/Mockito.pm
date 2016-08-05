@@ -65,6 +65,26 @@ sub _post_checkout {
     # fixing compilation errors, etc.
 }
 
+#
+# Remove falky tests in addition to the broken ones
+#
+sub fix_tests {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    # Call fix_tests in super class to fix all broken methods
+    $self->SUPER::fix_tests($vid);
+
+    # Remove randomly failing tests
+    my $work_dir = $self->{prog_root};
+    my $dir = $self->test_dir($vid);
+
+    my $file = "$SCRIPT_DIR/projects/$PID/flaky_tests";
+    if (-e $file) {
+        # Remove broken test methods
+        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
+    }
+}
+
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
