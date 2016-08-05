@@ -1,34 +1,5 @@
-diff --git a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
-index 9d7088f..5d2b63c 100644
---- a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
-+++ b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
-@@ -21,7 +21,7 @@ import java.util.Set;
-  * See {@link org.mockito.MockitoAnnotations}
-  */
- public class DefaultInjectionEngine {
--
-+	
-     private final MockCandidateFilter mockCandidateFilter = new TypeBasedCandidateFilter(new NameBasedCandidateFilter(new FinalMockCandidateFilter()));
- 
-     // for each tested
-@@ -30,7 +30,7 @@ public class DefaultInjectionEngine {
-     //   - if more than *one* find mock candidate on name
-     //   - if one mock candidate then set mock
-     //   - else don't fail, user will then provide dependencies
--    public void injectMocksOnFields(Set<Field> testClassFields, Set<Object> mocks, Object testClass) {
-+	public void injectMocksOnFields(Set<Field> testClassFields, Set<Object> mocks, Object testClass) {
-         for (Field field : testClassFields) {
-             Object fieldInstance = null;
-             try {
-@@ -54,4 +54,4 @@ public class DefaultInjectionEngine {
-         }
-     }
- 
--}
-+}
-\ No newline at end of file
 diff --git a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
-index 673de91..ec92492 100644
+index 673de91..637c450 100644
 --- a/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 +++ b/src/org/mockito/internal/configuration/injection/FinalMockCandidateFilter.java
 @@ -1,7 +1,6 @@
@@ -39,113 +10,16 @@ index 673de91..ec92492 100644
  import org.mockito.internal.util.reflection.FieldSetter;
  
  import java.lang.reflect.Field;
-@@ -11,21 +10,19 @@ import java.util.Collection;
-  * This node returns an actual injecter which will be either :
-  *
-  * <ul>
-- * <li>an {@link OngoingInjecter} that do nothing if a candidate couldn't be found</li>
-- * <li>an {@link OngoingInjecter} that will try to inject the candidate trying first the property setter then if not possible try the field access</li>
-+ * <li>an {@link Injecter} that do nothing if a candidate couldn't be found</li>
-+ * <li>an {@link Injecter} that do will inject the final candidate to the field</li>
-  * </ul>
-  */
- public class FinalMockCandidateFilter implements MockCandidateFilter {
--    public OngoingInjecter filterCandidate(final Collection<Object> mocks, final Field field, final Object fieldInstance) {
-+    public Injecter filterCandidate(final Collection<Object> mocks, final Field field, final Object fieldInstance) {
-         if(mocks.size() == 1) {
-             final Object matchingMock = mocks.iterator().next();
- 
--            return new OngoingInjecter() {
-+            return new Injecter() {
+@@ -23,9 +22,7 @@ public class FinalMockCandidateFilter implements MockCandidateFilter {
+             return new OngoingInjecter() {
                  public boolean thenInject() {
                      try {
 -                        if (!new BeanPropertySetter(fieldInstance, field).set(matchingMock)) {
--                            new FieldSetter(fieldInstance, field).set(matchingMock);
+                             new FieldSetter(fieldInstance, field).set(matchingMock);
 -                        }
-+                        new FieldSetter(fieldInstance, field).set(matchingMock);
                      } catch (Exception e) {
                          throw new MockitoException("Problems injecting dependency in " + field.getName(), e);
                      }
-@@ -34,11 +31,11 @@ public class FinalMockCandidateFilter implements MockCandidateFilter {
-             };
-         }
- 
--        return new OngoingInjecter() {
-+        return new Injecter() {
-             public boolean thenInject() {
-                 return false;
-             }
-         };
- 
-     }
--}
-+}
-\ No newline at end of file
-diff --git a/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java b/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-index 5a9d71f..809d03f 100644
---- a/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-+++ b/src/org/mockito/internal/configuration/injection/MockCandidateFilter.java
-@@ -5,7 +5,7 @@ import java.util.Collection;
- 
- public interface MockCandidateFilter {
- 
--    OngoingInjecter filterCandidate(
-+    Injecter filterCandidate(
-             Collection<Object> mocks,
-             Field fieldToBeInjected,
-             Object fieldInstance
-diff --git a/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-index 4b36bf3..dacdeab 100644
---- a/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-+++ b/src/org/mockito/internal/configuration/injection/NameBasedCandidateFilter.java
-@@ -15,7 +15,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
-         this.next = next;
-     }
- 
--    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-+    public Injecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-         List<Object> mockNameMatches = new ArrayList<Object>();
-         if(mocks.size() > 1) {
-             for (Object mock : mocks) {
-diff --git a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java b/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
-deleted file mode 100644
-index 844317d..0000000
---- a/src/org/mockito/internal/configuration/injection/OngoingInjecter.java
-+++ /dev/null
-@@ -1,19 +0,0 @@
--package org.mockito.internal.configuration.injection;
--
--/**
-- * Allow the ongoing injection of a mock candidate.
-- */
--public interface OngoingInjecter {
--
--    /**
--     * Inject the mock.
--     *
--     * <p>
--     * Please check the actual implementation.
--     * </p>
--     *
--     * @return <code>true</code> if injected, <code>false</code> otherwise.
--     */
--    boolean thenInject();
--
--}
-\ No newline at end of file
-diff --git a/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-index bbb6ce7..c402482 100644
---- a/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-+++ b/src/org/mockito/internal/configuration/injection/TypeBasedCandidateFilter.java
-@@ -13,7 +13,7 @@ public class TypeBasedCandidateFilter implements MockCandidateFilter {
-         this.next = next;
-     }
- 
--    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-+    public Injecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-         List<Object> mockTypeMatches = new ArrayList<Object>();
-         for (Object mock : mocks) {
-             if (field.getType().isAssignableFrom(mock.getClass())) {
 diff --git a/src/org/mockito/internal/util/reflection/BeanPropertySetter.java b/src/org/mockito/internal/util/reflection/BeanPropertySetter.java
 deleted file mode 100644
 index 28437e8..0000000
@@ -249,24 +123,3 @@ index 28437e8..0000000
 -    }
 -
 -}
-diff --git a/src/org/mockito/internal/configuration/injection/Injecter.java b/src/org/mockito/internal/configuration/injection/Injecter.java
-new file mode 100644
-index 0000000..1dd5dca
---- /dev/null
-+++ b/src/org/mockito/internal/configuration/injection/Injecter.java
-@@ -0,0 +1,14 @@
-+package org.mockito.internal.configuration.injection;
-+
-+/**
-+ * Created by IntelliJ IDEA.
-+ * User: brice
-+ * Date: 23 oct. 2010
-+ * Time: 18:01:48
-+ * To change this template use File | Settings | File Templates.
-+ */
-+public interface Injecter {
-+
-+    boolean thenInject();
-+
-+}
-\ No newline at end of file

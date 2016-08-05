@@ -1,18 +1,8 @@
 diff --git a/src/org/mockito/internal/creation/MockSettingsImpl.java b/src/org/mockito/internal/creation/MockSettingsImpl.java
-index 5285d90..3452c62 100644
+index 5285d90..bf2cf3b 100644
 --- a/src/org/mockito/internal/creation/MockSettingsImpl.java
 +++ b/src/org/mockito/internal/creation/MockSettingsImpl.java
-@@ -9,6 +9,9 @@ import org.mockito.exceptions.Reporter;
- import org.mockito.internal.util.MockName;
- import org.mockito.stubbing.Answer;
- 
-+import java.util.Arrays;
-+import java.io.Serializable;
-+
- public class MockSettingsImpl implements MockSettings {
- 
-     private static final long serialVersionUID = 4475297236197939568L;
-@@ -17,11 +20,9 @@ public class MockSettingsImpl implements MockSettings {
+@@ -17,11 +17,9 @@ public class MockSettingsImpl implements MockSettings {
      private Object spiedInstance;
      private Answer<Object> defaultAnswer;
      private MockName mockName;
@@ -21,65 +11,40 @@ index 5285d90..3452c62 100644
      public MockSettings serializable() {
 -        this.serializable = true;
 -        return this;
-+        return this.extraInterfaces(Serializable.class);
++        return this.extraInterfaces(java.io.Serializable.class);
      }
  
      public MockSettings extraInterfaces(Class<?>... extraInterfaces) {
-@@ -73,7 +74,9 @@ public class MockSettingsImpl implements MockSettings {
+@@ -73,7 +71,7 @@ public class MockSettingsImpl implements MockSettings {
      }
  
      public boolean isSerializable() {
 -        return serializable;
-+        return
-+                extraInterfaces != null
-+                && Arrays.asList(extraInterfaces).contains(Serializable.class);
++        return extraInterfaces != null && java.util.Arrays.asList(extraInterfaces).contains(java.io.Serializable.class);
      }
  
      public void initiateMockName(Class classToMock) {
-diff --git a/src/org/mockito/internal/util/ArrayUtils.java b/src/org/mockito/internal/util/ArrayUtils.java
-deleted file mode 100644
-index 92f2a8d..0000000
---- a/src/org/mockito/internal/util/ArrayUtils.java
-+++ /dev/null
-@@ -1,11 +0,0 @@
--package org.mockito.internal.util;
--
--public class ArrayUtils {
--    public Class<?>[] concat(Class<?>[] interfaces, Class<?> clazz) {
--        int length = interfaces.length;
--        Class[] out = new Class[length +1];
--        System.arraycopy(interfaces, 0, out, 0, length);
--        out[length] = clazz;
--        return out;
--    }
--}
-\ No newline at end of file
 diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
-index b8ed8b4..756f764 100644
+index b8ed8b4..d2d042f 100644
 --- a/src/org/mockito/internal/util/MockUtil.java
 +++ b/src/org/mockito/internal/util/MockUtil.java
-@@ -16,8 +16,6 @@ import org.mockito.internal.creation.MockSettingsImpl;
+@@ -16,7 +16,6 @@ import org.mockito.internal.creation.MockSettingsImpl;
  import org.mockito.internal.creation.jmock.ClassImposterizer;
  import org.mockito.internal.util.reflection.LenientCopyTool;
  
 -import java.io.Serializable;
--
+ 
  @SuppressWarnings("unchecked")
  public class MockUtil {
-     
-@@ -41,14 +39,7 @@ public class MockUtil {
-         MockHandler<T> mockHandler = new MockHandler<T>(settings);
-         MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
+@@ -43,11 +42,7 @@ public class MockUtil {
          Class<?>[] interfaces = settings.getExtraInterfaces();
--
--        Class<?>[] ancillaryTypes;
+ 
+         Class<?>[] ancillaryTypes;
 -        if (settings.isSerializable()) {
 -            ancillaryTypes = interfaces == null ? new Class<?>[] {Serializable.class} : new ArrayUtils().concat(interfaces, Serializable.class);
 -        } else {
--            ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
+             ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
 -        }
--
-+        Class<?>[] ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
+ 
          Object spiedInstance = settings.getSpiedInstance();
          
-         T mock = ClassImposterizer.INSTANCE.imposterise(filter, classToMock, ancillaryTypes);

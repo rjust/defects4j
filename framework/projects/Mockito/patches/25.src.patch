@@ -1,18 +1,17 @@
 diff --git a/src/org/mockito/exceptions/Reporter.java b/src/org/mockito/exceptions/Reporter.java
-index 4e6045c..63d759e 100644
+index 4e6045c..dce3f1b 100644
 --- a/src/org/mockito/exceptions/Reporter.java
 +++ b/src/org/mockito/exceptions/Reporter.java
-@@ -748,10 +748,6 @@ public class Reporter {
+@@ -748,9 +748,6 @@ public class Reporter {
          ));
      }
  
 -    public void defaultAnswerDoesNotAcceptNullParameter() {
 -        throw new MockitoException("defaultAnswer() does not accept null parameter");
 -    }
--
+ 
      public void serializableWontWorkForObjectsThatDontImplementSerializable(Class classToMock) {
          throw new MockitoException(join(
-                 "You are using the setting 'withSettings().serializable()' however the type you are trying to mock '" + classToMock.getSimpleName() + "'",
 diff --git a/src/org/mockito/internal/creation/MockSettingsImpl.java b/src/org/mockito/internal/creation/MockSettingsImpl.java
 index a65b265..fa17d28 100644
 --- a/src/org/mockito/internal/creation/MockSettingsImpl.java
@@ -27,63 +26,38 @@ index a65b265..fa17d28 100644
          return this;
      }
  
-diff --git a/src/org/mockito/internal/creation/settings/CreationSettings.java b/src/org/mockito/internal/creation/settings/CreationSettings.java
-index 94d8dc6..a68a594 100644
---- a/src/org/mockito/internal/creation/settings/CreationSettings.java
-+++ b/src/org/mockito/internal/creation/settings/CreationSettings.java
-@@ -19,7 +19,6 @@ import java.util.Set;
-  * by Szczepan Faber, created at: 4/9/12
-  */
- public class CreationSettings<T> implements MockCreationSettings<T>, Serializable {
--    private static final long serialVersionUID = -6789800638070123629L;
- 
-     protected Class<T> typeToMock;
-     protected Set<Class> extraInterfaces = new LinkedHashSet<Class>();
-@@ -33,7 +32,6 @@ public class CreationSettings<T> implements MockCreationSettings<T>, Serializabl
- 
-     public CreationSettings() {}
- 
--    @SuppressWarnings("unchecked")
-     public CreationSettings(CreationSettings copy) {
-         this.typeToMock = copy.typeToMock;
-         this.extraInterfaces = copy.extraInterfaces;
 diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-index 918c42a..aa613b0 100644
+index 918c42a..12f8111 100644
 --- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 +++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-@@ -1,62 +1,45 @@
+@@ -1,121 +1,80 @@
 -/*
 - * Copyright (c) 2007 Mockito contributors
 - * This program is made available under the terms of the MIT License.
 - */
-+/*
-+ * Copyright (c) 2007 Mockito contributors
-+ * This program is made available under the terms of the MIT License.
-+ */
- package org.mockito.internal.stubbing.defaultanswers;
- 
+-package org.mockito.internal.stubbing.defaultanswers;
+-
 -import org.mockito.MockSettings;
-+import org.mockito.Mockito;
- import org.mockito.internal.InternalMockHandler;
+-import org.mockito.internal.InternalMockHandler;
 -import org.mockito.internal.creation.settings.CreationSettings;
- import org.mockito.internal.stubbing.InvocationContainerImpl;
- import org.mockito.internal.stubbing.StubbedInvocationMatcher;
- import org.mockito.internal.util.MockCreationValidator;
- import org.mockito.internal.util.MockUtil;
+-import org.mockito.internal.stubbing.InvocationContainerImpl;
+-import org.mockito.internal.stubbing.StubbedInvocationMatcher;
+-import org.mockito.internal.util.MockCreationValidator;
+-import org.mockito.internal.util.MockUtil;
 -import org.mockito.internal.util.reflection.GenericMetadataSupport;
- import org.mockito.invocation.InvocationOnMock;
- import org.mockito.stubbing.Answer;
- 
- import java.io.Serializable;
- 
+-import org.mockito.invocation.InvocationOnMock;
+-import org.mockito.stubbing.Answer;
+-
+-import java.io.Serializable;
+-
 -import static org.mockito.Mockito.mock;
 -import static org.mockito.Mockito.withSettings;
 -
- /**
-  * Returning deep stub implementation.
-  *
-  * Will return previously created mock if the invocation matches.
-  *
+-/**
+- * Returning deep stub implementation.
+- *
+- * Will return previously created mock if the invocation matches.
+- *
 - * <p>Supports nested generic information, with this answer you can write code like this :
 - *
 - * <pre class="code"><code class="java">
@@ -95,43 +69,38 @@ index 918c42a..aa613b0 100644
 - * </p>
 - *
 - * @see org.mockito.Mockito#RETURNS_DEEP_STUBS
-+ * @see Mockito#RETURNS_DEEP_STUBS
-  * @see org.mockito.Answers#RETURNS_DEEP_STUBS
-  */
- public class ReturnsDeepStubs implements Answer<Object>, Serializable {
-     
+- * @see org.mockito.Answers#RETURNS_DEEP_STUBS
+- */
+-public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+-    
 -    private static final long serialVersionUID = -7105341425736035847L;
 -
 -    private ReturnsEmptyValues delegate = new ReturnsEmptyValues();
-+    private static final long serialVersionUID = -6926328908792880098L;
-+    
-+    private Answer<Object> delegate = new ReturnsEmptyValues();
- 
-     public Object answer(InvocationOnMock invocation) throws Throwable {
+-
+-    public Object answer(InvocationOnMock invocation) throws Throwable {
 -        GenericMetadataSupport returnTypeGenericMetadata =
 -                actualParameterizedType(invocation.getMock()).resolveGenericReturnType(invocation.getMethod());
-+        Class<?> clz = invocation.getMethod().getReturnType();
- 
+-
 -        Class<?> rawType = returnTypeGenericMetadata.rawType();
 -        if (!new MockCreationValidator().isTypeMockable(rawType)) {
 -            return delegate.returnValueFor(rawType);
-+        if (!new MockCreationValidator().isTypeMockable(clz)) {
-+            return delegate.answer(invocation);
-         }
- 
+-        }
+-
 -        return getMock(invocation, returnTypeGenericMetadata);
-+        return getMock(invocation);
-     }
- 
+-    }
+-
 -    private Object getMock(InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata) throws Throwable {
-+    private Object getMock(InvocationOnMock invocation) throws Throwable {
-     	InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
-     	InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
- 
-@@ -68,42 +51,12 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
- 		}
- 
-         // deep stub
+-    	InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
+-    	InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
+-
+-        // matches invocation for verification
+-        for (StubbedInvocationMatcher stubbedInvocationMatcher : container.getStubbedInvocations()) {
+-    		if(container.getInvocationForStubbing().matches(stubbedInvocationMatcher.getInvocation())) {
+-    			return stubbedInvocationMatcher.answer(invocation);
+-    		}
+-		}
+-
+-        // deep stub
 -        return recordDeepStubMock(createNewDeepStubMock(returnTypeGenericMetadata), container);
 -    }
 -
@@ -146,9 +115,8 @@ index 918c42a..aa613b0 100644
 -                returnTypeGenericMetadata.rawType(),
 -                withSettingsUsing(returnTypeGenericMetadata)
 -        );
-+        return recordDeepStubMock(invocation, container);
-     }
- 
+-    }
+-
 -    private MockSettings withSettingsUsing(GenericMetadataSupport returnTypeGenericMetadata) {
 -        MockSettings mockSettings =
 -                returnTypeGenericMetadata.rawExtraInterfaces().length > 0 ?
@@ -169,118 +137,100 @@ index 918c42a..aa613b0 100644
 -    }
 -
 -    private Object recordDeepStubMock(final Object mock, InvocationContainerImpl container) throws Throwable {
-+    private Object recordDeepStubMock(InvocationOnMock invocation, InvocationContainerImpl container) {
-+        Class<?> clz = invocation.getMethod().getReturnType();
-+        final Object mock = Mockito.mock(clz, this);
- 
-         container.addAnswer(new Answer<Object>() {
-             public Object answer(InvocationOnMock invocation) throws Throwable {
-@@ -113,9 +66,4 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
- 
-         return mock;
-     }
+-
+-        container.addAnswer(new Answer<Object>() {
+-            public Object answer(InvocationOnMock invocation) throws Throwable {
+-                return mock;
+-            }
+-        }, false);
+-
+-        return mock;
+-    }
 -
 -    protected GenericMetadataSupport actualParameterizedType(Object mock) {
 -        CreationSettings mockSettings = (CreationSettings) new MockUtil().getMockHandler(mock).getMockSettings();
 -        return GenericMetadataSupport.inferFrom(mockSettings.getTypeToMock());
 -    }
- }
-diff --git a/src/org/mockito/internal/util/ConsoleMockitoLogger.java b/src/org/mockito/internal/util/ConsoleMockitoLogger.java
-index 80cac5c..5ca5da4 100644
---- a/src/org/mockito/internal/util/ConsoleMockitoLogger.java
-+++ b/src/org/mockito/internal/util/ConsoleMockitoLogger.java
-@@ -1,7 +1,7 @@
--/*
-- * Copyright (c) 2007 Mockito contributors
-- * This program is made available under the terms of the MIT License.
-- */
-+/*
-+ * Copyright (c) 2007 Mockito contributors
-+ * This program is made available under the terms of the MIT License.
-+ */
- package org.mockito.internal.util;
- 
- public class ConsoleMockitoLogger implements MockitoLogger {
-@@ -10,6 +10,6 @@ public class ConsoleMockitoLogger implements MockitoLogger {
-      * @see org.mockito.internal.util.Logger#print(java.lang.Object)
-      */
-     public void log(Object what) {
--        System.out.println(what);
-+        System.out.print(what);
-     }
- }
-diff --git a/src/org/mockito/internal/util/reflection/GenericMaster.java b/src/org/mockito/internal/util/reflection/GenericMaster.java
-index 29e384a..e463e59 100644
---- a/src/org/mockito/internal/util/reflection/GenericMaster.java
-+++ b/src/org/mockito/internal/util/reflection/GenericMaster.java
-@@ -1,34 +1,34 @@
--/*
-- * Copyright (c) 2007 Mockito contributors
-- * This program is made available under the terms of the MIT License.
-- */
--package org.mockito.internal.util.reflection;
--
--import java.lang.reflect.Field;
--import java.lang.reflect.ParameterizedType;
--import java.lang.reflect.Type;
--
--@SuppressWarnings("unchecked")
--public class GenericMaster {
--
--    /**
--     * Finds the generic type (parametrized type) of the field. If the field is not generic it returns Object.class. 
--     * 
--     * @param field
--     */
--    public Class getGenericType(Field field) {        
--        Type generic = field.getGenericType();
--        if (generic != null && generic instanceof ParameterizedType) {
--            Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
--            if (actual instanceof Class) {
--                return (Class) actual;
--            } else if (actual instanceof ParameterizedType) {
--                //in case of nested generics we don't go deep
--                return (Class) ((ParameterizedType) actual).getRawType();
--            }
--        }
--        
--        return Object.class;
--    }
--
 -}
 +/*
 + * Copyright (c) 2007 Mockito contributors
 + * This program is made available under the terms of the MIT License.
 + */
-+package org.mockito.internal.util.reflection;
++package org.mockito.internal.stubbing.defaultanswers;
 +
-+import java.lang.reflect.Field;
-+import java.lang.reflect.ParameterizedType;
-+import java.lang.reflect.Type;
++import org.mockito.Mockito;
++import org.mockito.internal.InternalMockHandler;
++import org.mockito.internal.stubbing.InvocationContainerImpl;
++import org.mockito.internal.stubbing.StubbedInvocationMatcher;
++import org.mockito.internal.util.MockCreationValidator;
++import org.mockito.internal.util.MockUtil;
++import org.mockito.invocation.InvocationOnMock;
++import org.mockito.stubbing.Answer;
 +
-+@SuppressWarnings("unchecked")
-+public class GenericMaster {
++import java.io.Serializable;
 +
-+    /**
-+     * Finds the generic type (parametrized type) of the field. If the field is not generic it returns Object.class. 
-+     * 
-+     * @param field
-+     */
-+    public Class getGenericType(Field field) {        
-+        Type generic = field.getGenericType();
-+        if (generic != null && generic instanceof ParameterizedType) {
-+            Type actual = ((ParameterizedType) generic).getActualTypeArguments()[0];
-+            if (actual instanceof Class) {
-+                return (Class) actual;
-+            } else if (actual instanceof ParameterizedType) {
-+                //in case of nested generics we don't go deep
-+                return (Class) ((ParameterizedType) actual).getRawType();
-+            }
++
++/**
++ * Returning deep stub implementation.
++ *
++ * Will return previously created mock if the invocation matches.
++ *
++ * <p>Supports nested generic information, with this answer you can write code like this :
++ *
++ * <pre class="code"><code class="java">
++ *     interface GenericsNest&lt;K extends Comparable&lt;K&gt; & Cloneable&gt; extends Map&lt;K, Set&lt;Number&gt;&gt; {}
++ *
++ *     GenericsNest&lt;?&gt; mock = mock(GenericsNest.class, new ReturnsGenericDeepStubs());
++ *     Number number = mock.entrySet().iterator().next().getValue().iterator().next();
++ * </code></pre>
++ * </p>
++ *
++ * @see org.mockito.Mockito#RETURNS_DEEP_STUBS
++ * @see org.mockito.Answers#RETURNS_DEEP_STUBS
++ */
++public class ReturnsDeepStubs implements Answer<Object>, Serializable {
++    
++    private static final long serialVersionUID = -6926328908792880098L;
++    
++    private Answer<Object> delegate = new ReturnsEmptyValues();
++
++    public Object answer(InvocationOnMock invocation) throws Throwable {
++        Class<?> clz = invocation.getMethod().getReturnType();
++
++        if (!new MockCreationValidator().isTypeMockable(clz)) {
++            return delegate.answer(invocation);
 +        }
-+        
-+        return Object.class;
++
++        return getMock(invocation);
 +    }
 +
++    private Object getMock(InvocationOnMock invocation) throws Throwable {
++    	InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
++    	InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
++
++        // matches invocation for verification
++        for (StubbedInvocationMatcher stubbedInvocationMatcher : container.getStubbedInvocations()) {
++    		if(container.getInvocationForStubbing().matches(stubbedInvocationMatcher.getInvocation())) {
++    			return stubbedInvocationMatcher.answer(invocation);
++    		}
++		}
++
++        // deep stub
++        return recordDeepStubMock(invocation, container);
++    }
++
++    private Object recordDeepStubMock(InvocationOnMock invocation, InvocationContainerImpl container) {
++        Class<?> clz = invocation.getMethod().getReturnType();
++        final Object mock = Mockito.mock(clz, this);
++
++        container.addAnswer(new Answer<Object>() {
++            public Object answer(InvocationOnMock invocation) throws Throwable {
++                return mock;
++            }
++        }, false);
++
++        return mock;
++    }
 +}
 diff --git a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
 deleted file mode 100644

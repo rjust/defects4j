@@ -21,10 +21,10 @@ index 980587d..5eb16aa 100644
  
      /**
 diff --git a/src/org/mockito/internal/MockitoCore.java b/src/org/mockito/internal/MockitoCore.java
-index 61acce8..575ce7b 100755
+index 61acce8..ddf87f1 100755
 --- a/src/org/mockito/internal/MockitoCore.java
 +++ b/src/org/mockito/internal/MockitoCore.java
-@@ -29,11 +29,9 @@ public class MockitoCore {
+@@ -29,14 +29,12 @@ public class MockitoCore {
      private final MockUtil mockUtil = new MockUtil();
      private final MockingProgress mockingProgress = new ThreadSafeMockingProgress();
      
@@ -32,14 +32,17 @@ index 61acce8..575ce7b 100755
 +    public <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
          mockingProgress.validateState();
 -        if (shouldResetOngoingStubbing) {
--            mockingProgress.resetOngoingStubbing();
+             mockingProgress.resetOngoingStubbing();
 -        }
-+        mockingProgress.resetOngoingStubbing();
          return mockUtil.createMock(classToMock, (MockSettingsImpl) mockSettings);
      }
-     
+-    
++    public <T> T mock(Class<T> classToMock, MockSettings mockSettings, boolean shouldResetOngoingStubbing) { return mock(classToMock, mockSettings); }
+     public IOngoingStubbing stub() {
+         IOngoingStubbing stubbing = mockingProgress.pullOngoingStubbing();
+         if (stubbing == null) {
 diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
-index 02d28ee..28f5a53 100755
+index 02d28ee..2b04a1d 100755
 --- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
 +++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsMocks.java
 @@ -33,6 +33,6 @@ public class ReturnsMocks implements Answer<Object>, Serializable {
@@ -47,7 +50,7 @@ index 02d28ee..28f5a53 100755
          }
          
 -        return mockitoCore.mock(clazz, new MockSettingsImpl().defaultAnswer(this), false);
-+        return mockitoCore.mock((Class) clazz, new MockSettingsImpl().defaultAnswer(this));
++        return mockitoCore.mock(clazz, new MockSettingsImpl().defaultAnswer(this));
      }
  }
 \ No newline at end of file
