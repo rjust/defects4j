@@ -1,16 +1,8 @@
 diff --git a/src/org/mockito/Matchers.java b/src/org/mockito/Matchers.java
-index d6893af..971452e 100644
+index d6893af..04f40e5 100644
 --- a/src/org/mockito/Matchers.java
 +++ b/src/org/mockito/Matchers.java
-@@ -5,7 +5,6 @@
- package org.mockito;
- 
- import org.hamcrest.Matcher;
--import org.hamcrest.core.IsNull;
- import org.mockito.internal.matchers.*;
- import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
- import org.mockito.internal.progress.HandyReturnValues;
-@@ -119,7 +118,7 @@ public class Matchers {
+@@ -119,7 +119,7 @@ public class Matchers {
       * @return <code>false</code>.
       */
      public static boolean anyBoolean() {
@@ -19,7 +11,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -134,7 +133,7 @@ public class Matchers {
+@@ -134,7 +134,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static byte anyByte() {
@@ -28,7 +20,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -149,7 +148,7 @@ public class Matchers {
+@@ -149,7 +149,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static char anyChar() {
@@ -37,7 +29,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -164,7 +163,7 @@ public class Matchers {
+@@ -164,7 +164,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static int anyInt() {
@@ -46,7 +38,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -179,7 +178,7 @@ public class Matchers {
+@@ -179,7 +179,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static long anyLong() {
@@ -55,7 +47,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -194,7 +193,7 @@ public class Matchers {
+@@ -194,7 +194,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static float anyFloat() {
@@ -64,7 +56,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -209,7 +208,7 @@ public class Matchers {
+@@ -209,7 +209,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static double anyDouble() {
@@ -73,7 +65,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -224,7 +223,7 @@ public class Matchers {
+@@ -224,7 +224,7 @@ public class Matchers {
       * @return <code>0</code>.
       */
      public static short anyShort() {
@@ -82,7 +74,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -241,7 +240,7 @@ public class Matchers {
+@@ -241,7 +241,7 @@ public class Matchers {
       * @return <code>null</code>.
       */
      public static <T> T anyObject() {
@@ -91,7 +83,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -289,7 +288,7 @@ public class Matchers {
+@@ -289,7 +289,7 @@ public class Matchers {
       * @return <code>null</code>.
       */
      public static <T> T any(Class<T> clazz) {
@@ -100,7 +92,7 @@ index d6893af..971452e 100644
      }
      
      /**
-@@ -306,7 +305,7 @@ public class Matchers {
+@@ -306,7 +306,7 @@ public class Matchers {
       * @return <code>null</code>.
       */
      public static <T> T any() {
@@ -109,7 +101,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -321,7 +320,7 @@ public class Matchers {
+@@ -321,7 +321,7 @@ public class Matchers {
       * @return empty String ("")
       */
      public static String anyString() {
@@ -118,7 +110,7 @@ index d6893af..971452e 100644
      }
      
      /**
-@@ -336,7 +335,7 @@ public class Matchers {
+@@ -336,7 +336,7 @@ public class Matchers {
       * @return empty List.
       */
      public static List anyList() {
@@ -127,7 +119,7 @@ index d6893af..971452e 100644
      }    
      
      /**
-@@ -355,7 +354,7 @@ public class Matchers {
+@@ -355,7 +355,7 @@ public class Matchers {
       * @return empty List.
       */
      public static <T> List<T> anyListOf(Class<T> clazz) {
@@ -136,7 +128,7 @@ index d6893af..971452e 100644
      }    
      
      /**
-@@ -370,7 +369,7 @@ public class Matchers {
+@@ -370,7 +370,7 @@ public class Matchers {
       * @return empty Set
       */
      public static Set anySet() {
@@ -145,7 +137,7 @@ index d6893af..971452e 100644
      }
      
      /**
-@@ -389,7 +388,7 @@ public class Matchers {
+@@ -389,7 +389,7 @@ public class Matchers {
       * @return empty Set
       */
      public static <T> Set<T> anySetOf(Class<T> clazz) {
@@ -154,7 +146,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -404,7 +403,7 @@ public class Matchers {
+@@ -404,7 +404,7 @@ public class Matchers {
       * @return empty Map.
       */
      public static Map anyMap() {
@@ -163,7 +155,7 @@ index d6893af..971452e 100644
      }
  
      /**
-@@ -424,7 +423,7 @@ public class Matchers {
+@@ -424,7 +424,7 @@ public class Matchers {
       * @return empty Map.
       */
      public static <K, V>  Map<K, V> anyMapOf(Class<K> keyClazz, Class<V> valueClazz) {
@@ -172,7 +164,7 @@ index d6893af..971452e 100644
      }
      
      /**
-@@ -439,7 +438,7 @@ public class Matchers {
+@@ -439,7 +439,7 @@ public class Matchers {
       * @return empty Collection.
       */
      public static Collection anyCollection() {
@@ -181,7 +173,7 @@ index d6893af..971452e 100644
      }    
      
      /**
-@@ -458,7 +457,7 @@ public class Matchers {
+@@ -458,7 +458,7 @@ public class Matchers {
       * @return empty Collection.
       */
      public static <T> Collection<T> anyCollectionOf(Class<T> clazz) {
@@ -190,16 +182,3 @@ index d6893af..971452e 100644
      }    
  
      /**
-diff --git a/src/org/mockito/internal/matchers/Any.java b/src/org/mockito/internal/matchers/Any.java
-index 28a98f0..1876b38 100644
---- a/src/org/mockito/internal/matchers/Any.java
-+++ b/src/org/mockito/internal/matchers/Any.java
-@@ -14,7 +14,7 @@ import org.mockito.ArgumentMatcher;
- public class Any extends ArgumentMatcher implements Serializable {
- 
-     private static final long serialVersionUID = -4062420125651019029L;
--    public static final Any ANY = new Any();
-+    public static final Any ANY = new Any();    
-     
-     private Any() {}
-     

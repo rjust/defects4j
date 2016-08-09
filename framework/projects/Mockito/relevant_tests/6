@@ -30,8 +30,6 @@ org.mockito.internal.invocation.InvocationMarkerTest
 org.mockito.internal.invocation.InvocationMatcherTest
 org.mockito.internal.invocation.InvocationsFinderTest
 org.mockito.internal.junit.JUnitRuleTest
-org.mockito.internal.matchers.LocalizedMatcherTest
-org.mockito.internal.matchers.MatchersToStringTest
 org.mockito.internal.progress.MockingProgressImplTest
 org.mockito.internal.progress.ThreadSafeMockingProgressTest
 org.mockito.internal.stubbing.InvocationContainerImplStubbingTest
