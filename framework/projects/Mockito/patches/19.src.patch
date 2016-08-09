@@ -53,45 +53,31 @@ index 81a168b..7a2c087 100644
  
  }
 diff --git a/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
-index abc5d67..7023e66 100644
+index abc5d67..b95f31a 100644
 --- a/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
 +++ b/src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java
-@@ -12,50 +12,23 @@ import java.util.Collection;
- import java.util.List;
+@@ -20,7 +20,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
+ 	}
  
- public class NameBasedCandidateFilter implements MockCandidateFilter {
--	private final MockCandidateFilter next;
--	private final MockUtil mockUtil = new MockUtil();
-+    private final MockCandidateFilter next;
-+    private final MockUtil mockUtil = new MockUtil();
- 
--	public NameBasedCandidateFilter(MockCandidateFilter next) {
--		this.next = next;
--	}
-+    public NameBasedCandidateFilter(MockCandidateFilter next) {
-+        this.next = next;
-+    }
- 
--	public OngoingInjecter filterCandidate(Collection<Object> mocks,
+ 	public OngoingInjecter filterCandidate(Collection<Object> mocks,
 -			Field field, List<Field> fields, Object fieldInstance) {
--		List<Object> mockNameMatches = new ArrayList<Object>();
--		if (mocks.size() > 1) {
--			for (Object mock : mocks) {
--				if (field.getName().equals(mockUtil.getMockName(mock).toString())) {
--					mockNameMatches.add(mock);
--				}
--			}
++			Field field, Object fieldInstance) {
+ 		List<Object> mockNameMatches = new ArrayList<Object>();
+ 		if (mocks.size() > 1) {
+ 			for (Object mock : mocks) {
+@@ -28,7 +28,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
+ 					mockNameMatches.add(mock);
+ 				}
+ 			}
 -			return next.filterCandidate(mockNameMatches, field, fields,
--					fieldInstance);
--			/*
--			 * In this case we have to check whether we have conflicting naming
--			 * fields. E.g. 2 fields of the same type, but we have to make sure
--			 * we match on the correct name.
--			 * 
--			 * Therefore we have to go through all other fields and make sure
--			 * whenever we find a field that does match its name with the mock
--			 * name, we should take that field instead.
--			 */
++			return next.filterCandidate(mockNameMatches, field,
+ 					fieldInstance);
+ 			/*
+ 			 * In this case we have to check whether we have conflicting naming
+@@ -39,23 +39,7 @@ public class NameBasedCandidateFilter implements MockCandidateFilter {
+ 			 * whenever we find a field that does match its name with the mock
+ 			 * name, we should take that field instead.
+ 			 */
 -		} else if (mocks.size() == 1) {
 -			String mockName = mockUtil.getMockName(mocks.iterator().next())
 -					.toString();
@@ -108,21 +94,10 @@ index abc5d67..7023e66 100644
 -					};
 -				}
 -			}
--		}
+ 		}
 -		return next.filterCandidate(mocks, field, fields, fieldInstance);
--	}
-+    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
-+        List<Object> mockNameMatches = new ArrayList<Object>();
-+        if(mocks.size() > 1) {
-+            for (Object mock : mocks) {
-+                if (field.getName().equals(mockUtil.getMockName(mock).toString())) {
-+                    mockNameMatches.add(mock);
-+                }
-+            }
-+            return next.filterCandidate(mockNameMatches, field, fieldInstance);
-+        }
-+        return next.filterCandidate(mocks, field, fieldInstance);
-+    }
++		return next.filterCandidate(mocks, field, fieldInstance);
+ 	}
  }
 diff --git a/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java b/src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java
 index ce7a349..dd79991 100644
