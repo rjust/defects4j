@@ -1,5 +1,5 @@
 diff --git a/src/org/mockito/internal/MockHandler.java b/src/org/mockito/internal/MockHandler.java
-index b6c1b78..ad2eac1 100644
+index b6c1b78..bc18218 100644
 --- a/src/org/mockito/internal/MockHandler.java
 +++ b/src/org/mockito/internal/MockHandler.java
 @@ -17,7 +17,6 @@ import org.mockito.internal.stubbing.InvocationContainerImpl;
@@ -10,22 +10,15 @@ index b6c1b78..ad2eac1 100644
  import org.mockito.internal.verification.VerificationDataImpl;
  import org.mockito.stubbing.Answer;
  import org.mockito.stubbing.VoidMethodStubbable;
-@@ -70,15 +69,10 @@ public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInte
- 
-         mockingProgress.validateState();
- 
--        //if verificationMode is not null then someone is doing verify()        
+@@ -74,11 +73,9 @@ public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInte
          if (verificationMode != null) {
--            //We need to check if verification was started on the correct mock 
--            // - see VerifyingWithAnExtraCallToADifferentMockTest
+             //We need to check if verification was started on the correct mock 
+             // - see VerifyingWithAnExtraCallToADifferentMockTest
 -            if (verificationMode instanceof MockAwareVerificationMode && ((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
--                VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl.getInvocations(), invocationMatcher);            
--                verificationMode.verify(data);
--                return null;
+                 VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl.getInvocations(), invocationMatcher);            
+                 verificationMode.verify(data);
+                 return null;
 -            }
-+            VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl.getInvocations(), invocationMatcher);            
-+            verificationMode.verify(data);
-+            return null;
          }
          
          invocationContainerImpl.setInvocationForPotentialStubbing(invocationMatcher);
@@ -50,34 +43,3 @@ index ae0d72b..fc99ea9 100755
          return mock;
      }
      
-diff --git a/src/org/mockito/internal/verification/MockAwareVerificationMode.java b/src/org/mockito/internal/verification/MockAwareVerificationMode.java
-deleted file mode 100644
-index a437ff0..0000000
---- a/src/org/mockito/internal/verification/MockAwareVerificationMode.java
-+++ /dev/null
-@@ -1,24 +0,0 @@
--package org.mockito.internal.verification;
--
--import org.mockito.internal.verification.api.VerificationData;
--import org.mockito.verification.VerificationMode;
--
--public class MockAwareVerificationMode implements VerificationMode {
--
--    private final Object mock;
--    private final VerificationMode mode;
--
--    public MockAwareVerificationMode(Object mock, VerificationMode mode) {
--        this.mock = mock;
--        this.mode = mode;
--    }
--
--    @Override
--    public void verify(VerificationData data) {
--        mode.verify(data);
--    }
--
--    public Object getMock() {
--        return mock;
--    }
--}
-\ No newline at end of file
