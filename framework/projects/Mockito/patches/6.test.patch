@@ -1,0 +1,186 @@
+diff --git a/test/org/mockitousage/IMethods.java b/test/org/mockitousage/IMethods.java
+index 8c9a1b3..557e7c5 100644
+--- a/test/org/mockitousage/IMethods.java
++++ b/test/org/mockitousage/IMethods.java
+@@ -219,6 +219,4 @@ public interface IMethods {
+     int toIntPrimitive(Integer i);
+ 
+     Integer toIntWrapper(int i);
+-
+-    String forObject(Object object);
+ }
+\ No newline at end of file
+diff --git a/test/org/mockitousage/MethodsImpl.java b/test/org/mockitousage/MethodsImpl.java
+index 347dfa6..539f612 100644
+--- a/test/org/mockitousage/MethodsImpl.java
++++ b/test/org/mockitousage/MethodsImpl.java
+@@ -418,8 +418,4 @@ public class MethodsImpl implements IMethods {
+     public Integer toIntWrapper(int i) {
+         return null;
+     }
+-
+-    public String forObject(Object object) {
+-        return null;
+-    }
+ }
+diff --git a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+index c807f24..8559554 100644
+--- a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
++++ b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+@@ -24,7 +24,7 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+     }
+ 
+     @Test
+-    public void shouldNotAcceptNullInAnyXMatchers() {
++    public void shouldAnyXMatchersAcceptNull() {
+         when(mock.oneArg(anyObject())).thenReturn("0");
+         when(mock.oneArg(anyString())).thenReturn("1");
+         when(mock.forList(anyList())).thenReturn("2");
+@@ -32,16 +32,16 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+         when(mock.forCollection(anyCollection())).thenReturn("4");
+         when(mock.forSet(anySet())).thenReturn("5");
+         
+-        assertEquals(null, mock.oneArg((Object) null));
+-        assertEquals(null, mock.oneArg((String) null));
+-        assertEquals(null, mock.forList(null));
+-        assertEquals(null, mock.forMap(null));
+-        assertEquals(null, mock.forCollection(null));
+-        assertEquals(null, mock.forSet(null));
++        assertEquals("0", mock.oneArg((Object) null));
++        assertEquals("1", mock.oneArg((String) null));
++        assertEquals("2", mock.forList(null));
++        assertEquals("3", mock.forMap(null));
++        assertEquals("4", mock.forCollection(null));
++        assertEquals("5", mock.forSet(null));
+     }
+     
+     @Test
+-    public void shouldNotAcceptNullInAllAnyPrimitiveWrapperMatchers() {
++    public void shouldAcceptNullsInAllPrimitiveWrapperAnyMatchers() {
+         when(mock.forInteger(anyInt())).thenReturn("0");
+         when(mock.forCharacter(anyChar())).thenReturn("1");
+         when(mock.forShort(anyShort())).thenReturn("2");
+@@ -51,13 +51,13 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+         when(mock.forFloat(anyFloat())).thenReturn("6");
+         when(mock.forDouble(anyDouble())).thenReturn("7");
+         
+-        assertEquals(null, mock.forInteger(null));
+-        assertEquals(null, mock.forCharacter(null));
+-        assertEquals(null, mock.forShort(null));
+-        assertEquals(null, mock.forByte(null));
+-        assertEquals(null, mock.forBoolean(null));
+-        assertEquals(null, mock.forLong(null));
+-        assertEquals(null, mock.forFloat(null));
+-        assertEquals(null, mock.forDouble(null));
++        assertEquals("0", mock.forInteger(null));
++        assertEquals("1", mock.forCharacter(null));
++        assertEquals("2", mock.forShort(null));
++        assertEquals("3", mock.forByte(null));
++        assertEquals("4", mock.forBoolean(null));
++        assertEquals("5", mock.forLong(null));
++        assertEquals("6", mock.forFloat(null));
++        assertEquals("7", mock.forDouble(null));
+     }
+ }
+\ No newline at end of file
+diff --git a/test/org/mockitousage/matchers/MatchersTest.java b/test/org/mockitousage/matchers/MatchersTest.java
+index 971a84c..9835bbd 100644
+--- a/test/org/mockitousage/matchers/MatchersTest.java
++++ b/test/org/mockitousage/matchers/MatchersTest.java
+@@ -225,25 +225,15 @@ public class MatchersTest extends TestBase {
+     
+     @Test
+     public void anyStringMatcher() {
+-        when(mock.oneArg(anyString())).thenReturn("matched");
++        when(mock.oneArg(anyString())).thenReturn("1");
+         
+-        assertEquals("matched", mock.oneArg(""));
+-        assertEquals("matched", mock.oneArg("any string"));
+-        assertEquals(null, mock.oneArg((String) null));
++        assertEquals("1", mock.oneArg(""));
++        assertEquals("1", mock.oneArg("any string"));
++        assertEquals(null, mock.oneArg((Object) null));
+     }
+ 
+     @Test
+     public void anyMatcher() {
+-        when(mock.forObject(any())).thenReturn("matched");
+-
+-        assertEquals("matched", mock.forObject(123));
+-        assertEquals("matched", mock.forObject("any string"));
+-        assertEquals("matched", mock.forObject("any string"));
+-        assertEquals("matched", mock.forObject((Object) null));
+-    }
+-
+-    @Test
+-    public void anyXMatcher() {
+         when(mock.oneArg(anyBoolean())).thenReturn("0");
+         when(mock.oneArg(anyByte())).thenReturn("1");
+         when(mock.oneArg(anyChar())).thenReturn("2");
+diff --git a/test/org/mockitousage/matchers/NewMatchersTest.java b/test/org/mockitousage/matchers/NewMatchersTest.java
+index e9e8f16..77874f3 100644
+--- a/test/org/mockitousage/matchers/NewMatchersTest.java
++++ b/test/org/mockitousage/matchers/NewMatchersTest.java
+@@ -29,41 +29,41 @@ public class NewMatchersTest extends TestBase {
+ 
+     @Test
+     public void shouldAllowAnyList() {
+-        when(mock.forList(anyList())).thenReturn("matched");
++        when(mock.forList(anyList())).thenReturn("x");
+         
+-        assertEquals("matched", mock.forList(Arrays.asList("x", "y")));
+-        assertEquals(null, mock.forList(null));
+-
+-        verify(mock, times(1)).forList(anyList());
++        assertEquals("x", mock.forList(null));
++        assertEquals("x", mock.forList(Arrays.asList("x", "y")));
++        
++        verify(mock, times(2)).forList(anyList());
+     }
+     
+     @Test
+     public void shouldAllowAnyCollection() {
+-        when(mock.forCollection(anyCollection())).thenReturn("matched");
++        when(mock.forCollection(anyCollection())).thenReturn("x");
+         
+-        assertEquals("matched", mock.forCollection(Arrays.asList("x", "y")));
+-        assertEquals(null, mock.forCollection(null));
+-
+-        verify(mock, times(1)).forCollection(anyCollection());
++        assertEquals("x", mock.forCollection(null));
++        assertEquals("x", mock.forCollection(Arrays.asList("x", "y")));
++        
++        verify(mock, times(2)).forCollection(anyCollection());
+     }
+     
+     @Test
+     public void shouldAllowAnyMap() {
+-        when(mock.forMap(anyMap())).thenReturn("matched");
++        when(mock.forMap(anyMap())).thenReturn("x");
+         
+-        assertEquals("matched", mock.forMap(new HashMap<String, String>()));
+-        assertEquals(null, mock.forMap(null));
+-
+-        verify(mock, times(1)).forMap(anyMap());
++        assertEquals("x", mock.forMap(null));
++        assertEquals("x", mock.forMap(new HashMap<String, String>()));
++        
++        verify(mock, times(2)).forMap(anyMap());
+     }
+     
+     @Test
+     public void shouldAllowAnySet() {
+-        when(mock.forSet(anySet())).thenReturn("matched");
++        when(mock.forSet(anySet())).thenReturn("x");
+         
+-        assertEquals("matched", mock.forSet(new HashSet<String>()));
+-        assertEquals(null, mock.forSet(null));
+-
+-        verify(mock, times(1)).forSet(anySet());
++        assertEquals("x", mock.forSet(null));
++        assertEquals("x", mock.forSet(new HashSet<String>()));
++        
++        verify(mock, times(2)).forSet(anySet());
+     }
+ }
+\ No newline at end of file

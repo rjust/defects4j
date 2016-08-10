@@ -414,6 +414,7 @@ sub checkout_vid {
     # Commit and tag the pre-fix revision
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_PRE_FIX;
     $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Tag pre-fix revision")

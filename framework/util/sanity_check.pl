@@ -93,7 +93,6 @@ if (defined $BID) {
     @ids = ($BID);
 } else {
     @ids = $project->get_version_ids();
-
 }
 
 foreach my $bid (@ids) {

@@ -1,0 +1,6 @@
+org.mockitousage.annotation.DeprecatedAnnotationEngineApiTest
+org.mockitousage.annotation.MockInjectionTest
+org.mockitousage.annotation.SpyInjectionTest
+org.mockitousage.bugs.InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest
+org.mockitousage.junitrunner.JUnit44RunnerTest
+org.mockitousage.junitrunner.JUnit45RunnerTest

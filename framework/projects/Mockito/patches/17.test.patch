@@ -1,0 +1,93 @@
+diff --git a/test/org/mockito/internal/creation/MockSettingsImplTest.java b/test/org/mockito/internal/creation/MockSettingsImplTest.java
+index 4eb8306..8460efe 100644
+--- a/test/org/mockito/internal/creation/MockSettingsImplTest.java
++++ b/test/org/mockito/internal/creation/MockSettingsImplTest.java
+@@ -4,13 +4,15 @@
+  */
+ package org.mockito.internal.creation;
+ 
+-import org.junit.Test;
+-import org.mockito.exceptions.base.MockitoException;
+-import org.mockitoutil.TestBase;
+-
+ import java.util.LinkedList;
+ import java.util.List;
+ import java.util.Set;
++import java.io.Serializable;
++
++import org.junit.Test;
++import org.mockito.exceptions.base.MockitoException;
++import org.mockitoutil.TestBase;
++import org.fest.assertions.Assertions;
+ 
+ public class MockSettingsImplTest extends TestBase {
+ 
+@@ -57,7 +59,7 @@ public class MockSettingsImplTest extends TestBase {
+         mockSettingsImpl.serializable();
+ 
+         //then
+-        assertTrue(mockSettingsImpl.isSerializable());
++        Assertions.assertThat(mockSettingsImpl.getExtraInterfaces()).contains(Serializable.class);
+     }
+ 
+     @Test
+diff --git a/test/org/mockito/internal/util/ArrayUtilsTest.java b/test/org/mockito/internal/util/ArrayUtilsTest.java
+deleted file mode 100644
+index 1f4940c..0000000
+--- a/test/org/mockito/internal/util/ArrayUtilsTest.java
++++ /dev/null
+@@ -1,32 +0,0 @@
+-package org.mockito.internal.util;
+-
+-import org.fest.assertions.Assertions;
+-import org.junit.Test;
+-import org.mockitoutil.TestBase;
+-
+-import java.io.Serializable;
+-import java.util.List;
+-import java.util.Map;
+-
+-public class ArrayUtilsTest extends TestBase {
+-
+-    ArrayUtils utils = new ArrayUtils();
+-
+-    @Test
+-    public void shouldConcatenateItemToAnEmptyArray() throws Exception {
+-        //when
+-        Class<?>[] items = utils.concat(new Class[0], List.class);
+-
+-        //then
+-        Assertions.assertThat(items).containsOnly(List.class);
+-    }
+-
+-    @Test
+-    public void shouldConcatenateItemToFullArray() throws Exception {
+-        //when
+-        Class<?>[] items = utils.concat(new Class[] {Serializable.class, Map.class}, List.class);
+-
+-        //then
+-        Assertions.assertThat(items).containsOnly(Serializable.class, Map.class, List.class);
+-    }
+-}
+\ No newline at end of file
+diff --git a/test/org/mockitousage/basicapi/MocksSerializationTest.java b/test/org/mockitousage/basicapi/MocksSerializationTest.java
+index 3ff86b0..fc6c875 100644
+--- a/test/org/mockitousage/basicapi/MocksSerializationTest.java
++++ b/test/org/mockitousage/basicapi/MocksSerializationTest.java
+@@ -295,15 +295,4 @@ public class MocksSerializationTest extends TestBase implements Serializable {
+         // then
+         assertEquals("foo", mock.toString());
+     }
+-
+-    @Test
+-    public void shouldBeSerializeAndHaveExtraInterfaces() throws Exception {
+-        //when
+-        IMethods mock = mock(IMethods.class, withSettings().serializable().extraInterfaces(List.class));
+-        IMethods mockTwo = mock(IMethods.class, withSettings().extraInterfaces(List.class).serializable());
+-
+-        //then
+-        serializeAndBack((List) mock);
+-        serializeAndBack((List) mockTwo);
+-    }
+ }
+\ No newline at end of file

@@ -1,0 +1,42 @@
+diff --git a/test/org/mockito/internal/util/reflection/GenericMasterTest.java b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
+index 46e0172..8b4079e 100644
+--- a/test/org/mockito/internal/util/reflection/GenericMasterTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMasterTest.java
+@@ -3,7 +3,6 @@ package org.mockito.internal.util.reflection;
+ import static org.junit.Assert.*;
+ 
+ import java.lang.reflect.Field;
+-import java.util.Collection;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+@@ -18,25 +17,17 @@ public class GenericMasterTest {
+     Set<Integer> two;
+     Map<Double, String> map;
+     String nonGeneric;
+-    List<Set<String>> nested;
+-    List<Set<Collection<String>>> multiNested;
+     
+     @Test
+     public void shouldFindGenericClass() throws Exception {
+-        assertEquals(String.class, m.getGenericType(field("one")));
+-        assertEquals(Integer.class, m.getGenericType(field("two")));
+-        assertEquals(Double.class, m.getGenericType(field("map")));
++        assertEquals(m.getGenericType(field("one")), String.class);
++        assertEquals(m.getGenericType(field("two")), Integer.class);
++        assertEquals(m.getGenericType(field("map")), Double.class);
+     }
+     
+     @Test
+     public void shouldGetObjectForNonGeneric() throws Exception {
+-        assertEquals(Object.class, m.getGenericType(field("nonGeneric")));
+-    }
+-    
+-    @Test
+-    public void shouldDealWithNestedGenerics() throws Exception {
+-        assertEquals(Set.class, m.getGenericType(field("nested")));
+-        assertEquals(Set.class, m.getGenericType(field("multiNested")));
++        assertEquals(m.getGenericType(field("nonGeneric")), Object.class);
+     }
+ 
+     private Field field(String fieldName) throws SecurityException, NoSuchFieldException {

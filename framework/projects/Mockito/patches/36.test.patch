@@ -1,0 +1,54 @@
+diff --git a/test/org/mockito/internal/invocation/InvocationTest.java b/test/org/mockito/internal/invocation/InvocationTest.java
+index a6a4473..8c1da2f 100644
+--- a/test/org/mockito/internal/invocation/InvocationTest.java
++++ b/test/org/mockito/internal/invocation/InvocationTest.java
+@@ -12,7 +12,6 @@ import java.util.Map;
+ 
+ import org.junit.Before;
+ import org.junit.Test;
+-import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.internal.invocation.realmethod.RealMethod;
+ import org.mockito.internal.matchers.ArrayEquals;
+ import org.mockito.internal.matchers.Equals;
+@@ -164,17 +163,4 @@ public class InvocationTest extends TestBase {
+         //then
+         assertEquals("woof", invocation.callRealMethod());
+     }
+-    
+-    @Test
+-    public void shouldScreamWhenCallingRealMethodOnInterface() throws Throwable {
+-        //given
+-        Invocation invocationOnInterface = new InvocationBuilder().toInvocation();
+-
+-        try {
+-            //when
+-            invocationOnInterface.callRealMethod();
+-            //then
+-            fail();
+-        } catch(MockitoException e) {}
+-    }
+ }
+\ No newline at end of file
+diff --git a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
+index 9f349bd..ae02c79 100644
+--- a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
++++ b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
+@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
+ 
+ import java.util.List;
+ 
++import org.junit.Ignore;
+ import org.junit.Test;
+ import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.invocation.InvocationOnMock;
+@@ -28,8 +29,9 @@ public class SpyingOnInterfacesTest extends TestBase {
+         } catch (MockitoException e) {}
+     }
+     
++    @Ignore("not yet implemented")
+     @Test
+-    public void shouldFailInRuntimeWhenCallingRealMethodOnInterface() throws Exception {
++    public void shouldFailFastWhenCallingRealMethodOnInterface2() throws Exception {
+         //given
+         List list = mock(List.class);
+         when(list.get(0)).thenAnswer(

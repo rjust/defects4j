@@ -1,0 +1,13 @@
+diff --git a/src/org/mockito/internal/matchers/Same.java b/src/org/mockito/internal/matchers/Same.java
+index b8267b9..6c172fe 100644
+--- a/src/org/mockito/internal/matchers/Same.java
++++ b/src/org/mockito/internal/matchers/Same.java
+@@ -26,7 +26,7 @@ public class Same extends ArgumentMatcher<Object> implements Serializable {
+     public void describeTo(Description description) {
+         description.appendText("same(");
+         appendQuoting(description);
+-        description.appendText(wanted == null ? "null" : wanted.toString());
++        description.appendText(wanted.toString());
+         appendQuoting(description);
+         description.appendText(")");
+     }

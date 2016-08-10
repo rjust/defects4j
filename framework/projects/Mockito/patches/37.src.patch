@@ -1,0 +1,21 @@
+diff --git a/src/org/mockito/internal/stubbing/answers/AnswersValidator.java b/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
+index afaf14a..5d80578 100644
+--- a/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
++++ b/src/org/mockito/internal/stubbing/answers/AnswersValidator.java
+@@ -25,16 +25,8 @@ public class AnswersValidator {
+             validateDoNothing((DoesNothing) answer, invocation);
+         }
+         
+-        if (answer instanceof CallsRealMethods) {
+-            validateMockingConcreteClass((CallsRealMethods) answer, invocation);
+-        }
+     }
+ 
+-    private void validateMockingConcreteClass(CallsRealMethods answer, Invocation invocation) {
+-        if (invocation.getMethod().getDeclaringClass().isInterface()) {
+-            reporter.cannotCallRealMethodOnInterface();
+-        }
+-    }
+ 
+     private void validateDoNothing(DoesNothing answer, Invocation invocation) {
+         if (!invocation.isVoid()) {

@@ -20,10 +20,12 @@ import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
 public class Formatter implements JUnitResultFormatter {
 
 	private PrintStream ps;
+	private PrintStream allTests;
 
 	{
 		try {
 			this.ps = new PrintStream(new FileOutputStream(System.getProperty("OUTFILE", "failing-tests.txt"), true), true);
+			this.allTests = new PrintStream(new FileOutputStream(System.getProperty("ALLTESTS", "all_tests"), true), true);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -131,6 +133,6 @@ public class Formatter implements JUnitResultFormatter {
 
 	@Override
 	public void startTest(Test test) {
+	    allTests.println(test.toString());
 	}
-	
 }
