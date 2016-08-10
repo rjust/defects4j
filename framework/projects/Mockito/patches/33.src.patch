@@ -1,13 +1,10 @@
 diff --git a/src/org/mockito/internal/invocation/InvocationMatcher.java b/src/org/mockito/internal/invocation/InvocationMatcher.java
-index ffad2b1..726c80f 100644
+index ffad2b1..203413f 100644
 --- a/src/org/mockito/internal/invocation/InvocationMatcher.java
 +++ b/src/org/mockito/internal/invocation/InvocationMatcher.java
-@@ -92,22 +92,9 @@ public class InvocationMatcher implements PrintableInvocation, PrintingFriendlyI
-     public boolean hasSameMethod(Invocation candidate) {        
-         //not using method.equals() for 1 good reason:
-         //sometimes java generates forwarding methods when generics are in play see JavaGenericsForwardingMethodsTest
--        Method m1 = invocation.getMethod();
--        Method m2 = candidate.getMethod();
+@@ -95,19 +95,8 @@ public class InvocationMatcher implements PrintableInvocation, PrintingFriendlyI
+         Method m1 = invocation.getMethod();
+         Method m2 = candidate.getMethod();
          
 -        if (m1.getName() != null && m1.getName().equals(m2.getName())) {
          	/* Avoid unnecessary cloning */
@@ -22,7 +19,7 @@ index ffad2b1..726c80f 100644
 -        	}
 -        }
 -        return false;
-+        return invocation.getMethod().equals(candidate.getMethod());
++        return m1.equals(m2);
      }
      
      public Location getLocation() {
