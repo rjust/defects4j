@@ -1,83 +1,12 @@
-diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-index 5cd368d..27eace7 100644
---- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-+++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java
-@@ -82,7 +82,7 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
-     
-     Object returnValueFor(Class<?> type) {
-         if (type.isPrimitive()) {
--            return Primitives.primitiveValueOrNullFor(type);
-+            return primitiveOf(type);
-         } else if (Primitives.isPrimitiveWrapper(type)) {
-             return Primitives.primitiveWrapperOf(type);
-         //new instances are used instead of Collections.emptyList(), etc.
-@@ -120,4 +120,13 @@ public class ReturnsEmptyValues implements Answer<Object>, Serializable {
-         return null;
-     }
- 
-+    private Object primitiveOf(Class<?> type) {
-+        if (type == Boolean.TYPE) {
-+            return false;
-+        } else if (type == Character.TYPE) {
-+            return (char) 0;
-+        } else {
-+            return 0;
-+        } 
-+    }
- }
-\ No newline at end of file
 diff --git a/src/org/mockito/internal/util/Primitives.java b/src/org/mockito/internal/util/Primitives.java
-index 5a91f3a..caba6d5 100644
+index 5a91f3a..b44b825 100644
 --- a/src/org/mockito/internal/util/Primitives.java
 +++ b/src/org/mockito/internal/util/Primitives.java
-@@ -1,7 +1,7 @@
--/*
-- * Copyright (c) 2007 Mockito contributors
-- * This program is made available under the terms of the MIT License.
-- */
-+/*
-+ * Copyright (c) 2007 Mockito contributors
-+ * This program is made available under the terms of the MIT License.
-+ */
- package org.mockito.internal.util;
- 
- import java.util.HashMap;
-@@ -45,24 +45,24 @@ public class Primitives {
-     }
- 
-     static {
--        wrapperReturnValues.put(Boolean.class, false);
--        wrapperReturnValues.put(Character.class, '\u0000');
--        wrapperReturnValues.put(Byte.class, (byte) 0);
--        wrapperReturnValues.put(Short.class, (short) 0);
--        wrapperReturnValues.put(Integer.class, 0);
--        wrapperReturnValues.put(Long.class, 0L);
--        wrapperReturnValues.put(Float.class, 0F);
--        wrapperReturnValues.put(Double.class, 0D);
-+        wrapperReturnValues.put(Boolean.class, Boolean.FALSE);
-+        wrapperReturnValues.put(Character.class, new Character((char) 0));
-+        wrapperReturnValues.put(Byte.class, new Byte((byte) 0));
-+        wrapperReturnValues.put(Short.class, new Short((short) 0));
-+        wrapperReturnValues.put(Integer.class, new Integer(0));
-+        wrapperReturnValues.put(Long.class, new Long(0));
-+        wrapperReturnValues.put(Float.class, new Float(0));
-+        wrapperReturnValues.put(Double.class, new Double(0));
-     }
- 
-     static {
-         primitiveValues.put(boolean.class, false);
--        primitiveValues.put(char.class, '\u0000');
--        primitiveValues.put(byte.class, (byte) 0);
--        primitiveValues.put(short.class, (short) 0);
-+        primitiveValues.put(char.class, 0);
-+        primitiveValues.put(byte.class, 0);
-+        primitiveValues.put(short.class, 0);
+@@ -63,6 +63,6 @@ public class Primitives {
          primitiveValues.put(int.class, 0);
--        primitiveValues.put(long.class, 0L);
--        primitiveValues.put(float.class, 0F);
+         primitiveValues.put(long.class, 0L);
+         primitiveValues.put(float.class, 0F);
 -        primitiveValues.put(double.class, 0D);
-+        primitiveValues.put(long.class, 0);
-+        primitiveValues.put(float.class, 0);
 +        primitiveValues.put(double.class, 0);
      }
  }

@@ -1,84 +1,7 @@
-diff --git a/src/org/mockito/internal/MockitoCore.java b/src/org/mockito/internal/MockitoCore.java
-old mode 100644
-new mode 100755
-index 3ac4e7b..49107b8
---- a/src/org/mockito/internal/MockitoCore.java
-+++ b/src/org/mockito/internal/MockitoCore.java
-@@ -1,12 +1,9 @@
--/*
-- * Copyright (c) 2007 Mockito contributors
-- * This program is made available under the terms of the MIT License.
-- */
-+/*
-+ * Copyright (c) 2007 Mockito contributors
-+ * This program is made available under the terms of the MIT License.
-+ */
- package org.mockito.internal;
- 
--import java.util.Arrays;
--import java.util.List;
--
- import org.mockito.InOrder;
- import org.mockito.MockSettings;
- import org.mockito.MockingDetails;
-@@ -30,23 +27,22 @@ import org.mockito.internal.verification.api.VerificationDataInOrder;
- import org.mockito.internal.verification.api.VerificationDataInOrderImpl;
- import org.mockito.invocation.Invocation;
- import org.mockito.mock.MockCreationSettings;
--import org.mockito.stubbing.Answer;
--import org.mockito.stubbing.DeprecatedOngoingStubbing;
--import org.mockito.stubbing.OngoingStubbing;
--import org.mockito.stubbing.Stubber;
--import org.mockito.stubbing.VoidMethodStubbable;
-+import org.mockito.stubbing.*;
- import org.mockito.verification.VerificationMode;
- 
-+import java.util.Arrays;
-+import java.util.List;
-+
- @SuppressWarnings("unchecked")
- public class MockitoCore {
- 
-     private final Reporter reporter = new Reporter();
-     private final MockUtil mockUtil = new MockUtil();
-     private final MockingProgress mockingProgress = new ThreadSafeMockingProgress();
--
--    public boolean isTypeMockable(Class<?> typeToMock) {
--        return mockUtil.isTypeMockable(typeToMock);
--    }
-+
-+    public boolean isTypeMockable(Class<?> typeToMock) {
-+        return mockUtil.isTypeMockable(typeToMock);
-+    }
- 
-     public <T> T mock(Class<T> typeToMock, MockSettings settings) {
-         if (!MockSettingsImpl.class.isInstance(settings)) {
 diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-index b18dd3b..b08af1b 100644
+index b18dd3b..c4384f7 100644
 --- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
 +++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java
-@@ -4,10 +4,6 @@
-  */
- package org.mockito.internal.stubbing.defaultanswers;
- 
--import static org.mockito.Mockito.*;
--
--import java.io.Serializable;
--
- import org.mockito.MockSettings;
- import org.mockito.internal.InternalMockHandler;
- import org.mockito.internal.MockitoCore;
-@@ -19,6 +15,10 @@ import org.mockito.internal.util.reflection.GenericMetadataSupport;
- import org.mockito.invocation.InvocationOnMock;
- import org.mockito.stubbing.Answer;
- 
-+import java.io.Serializable;
-+
-+import static org.mockito.Mockito.withSettings;
-+
- /**
-  * Returning deep stub implementation.
-  *
 @@ -41,16 +41,14 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
      
      private static final long serialVersionUID = -7105341425736035847L;
@@ -98,7 +21,7 @@ index b18dd3b..b08af1b 100644
          if (!mockitoCore.isTypeMockable(rawType)) {
              return delegate.returnValueFor(rawType);
          }
-@@ -58,18 +56,6 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+@@ -58,17 +56,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
          return getMock(invocation, returnTypeGenericMetadata);
      }
  
@@ -107,17 +30,16 @@ index b18dd3b..b08af1b 100644
 -            mockitoCore = new MockitoCore();
 -        }
 -    }
--
+ 
 -    private synchronized void instantiateDelegateIfNeeded() {
 -        if (delegate == null) {
 -            delegate = new ReturnsEmptyValues();
 -        }
 -    }
--
+ 
      private Object getMock(InvocationOnMock invocation, GenericMetadataSupport returnTypeGenericMetadata) throws Throwable {
      	InternalMockHandler<Object> handler = new MockUtil().getMockHandler(invocation.getMock());
-     	InvocationContainerImpl container = (InvocationContainerImpl) handler.getInvocationContainer();
-@@ -109,7 +95,6 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+@@ -109,7 +97,6 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
                  : withSettings();
  
          return mockSettings
@@ -125,7 +47,7 @@ index b18dd3b..b08af1b 100644
                  .defaultAnswer(returnsDeepStubsAnswerUsing(returnTypeGenericMetadata));
      }
  
-@@ -124,7 +109,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
+@@ -124,7 +111,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
  
      private Object recordDeepStubMock(final Object mock, InvocationContainerImpl container) throws Throwable {
  
@@ -134,67 +56,13 @@ index b18dd3b..b08af1b 100644
              public Object answer(InvocationOnMock invocation) throws Throwable {
                  return mock;
              }
-@@ -132,11 +117,6 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
- 
+@@ -133,9 +120,7 @@ public class ReturnsDeepStubs implements Answer<Object>, Serializable {
          return mock;
      }
--	
+ 	
 -	abstract class SerializableAnswer implements Answer<Object>, Serializable {
--		
+ 		
 -	}
--	
+ 	
  
      protected GenericMetadataSupport actualParameterizedType(Object mock) {
-         CreationSettings mockSettings = (CreationSettings) new MockUtil().getMockHandler(mock).getMockSettings();
-diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
-index 809804c..0f2fac0 100644
---- a/src/org/mockito/internal/util/MockUtil.java
-+++ b/src/org/mockito/internal/util/MockUtil.java
-@@ -4,8 +4,6 @@
-  */
- package org.mockito.internal.util;
- 
--import java.lang.reflect.Modifier;
--
- import org.mockito.exceptions.misusing.NotAMockException;
- import org.mockito.internal.InternalMockHandler;
- import org.mockito.internal.configuration.ClassPathLoader;
-@@ -17,6 +15,8 @@ import org.mockito.mock.MockCreationSettings;
- import org.mockito.mock.MockName;
- import org.mockito.plugins.MockMaker;
- 
-+import java.lang.reflect.Modifier;
-+
- @SuppressWarnings("unchecked")
- public class MockUtil {
- 
-diff --git a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-index cf176a4..6cea091 100644
---- a/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-+++ b/src/org/mockito/internal/util/reflection/GenericMetadataSupport.java
-@@ -9,7 +9,6 @@ import org.mockito.Incubating;
- import org.mockito.exceptions.base.MockitoException;
- import org.mockito.internal.util.Checks;
- 
--import java.io.Serializable;
- import java.lang.reflect.*;
- import java.util.*;
- 
-@@ -56,7 +55,7 @@ import java.util.*;
-  * @see org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs
-  */
- @Incubating
--public abstract class GenericMetadataSupport implements Serializable {
-+public abstract class GenericMetadataSupport {
- 
-     // public static MockitoLogger logger = new ConsoleMockitoLogger();
- 
-@@ -551,7 +550,7 @@ public abstract class GenericMetadataSupport implements Serializable {
-      *
-      * @see <a href="http://docs.oracle.com/javase/specs/jls/se5.0/html/typesValues.html#4.4">http://docs.oracle.com/javase/specs/jls/se5.0/html/typesValues.html#4.4</a>
-      */
--    public static class WildCardBoundedType implements BoundedType, Serializable {
-+    public static class WildCardBoundedType implements BoundedType {
-         private WildcardType wildcard;
- 
- 
