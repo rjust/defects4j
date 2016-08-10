@@ -1,5 +1,5 @@
 diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
-index 4942d7c..b6d6d95 100644
+index 4942d7c..10d3b0f 100644
 --- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
 +++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
 @@ -6,7 +6,6 @@ package org.mockito.internal.stubbing.defaultanswers;
@@ -10,22 +10,13 @@ index 4942d7c..b6d6d95 100644
  
  import org.mockito.Mockito;
  import org.mockito.cglib.proxy.MethodInterceptor;
-@@ -50,17 +49,13 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
- 
-         public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-             if (new ObjectMethodsGuru().isToString(method)) {
--                return "SmartNull returned by unstubbed " + formatMethodCall()  + " method on mock";
-+                return "SmartNull returned by unstubbed " + invocation.getMethod().getName() + "() method on mock";
-             }
- 
-             new Reporter().smartNullPointerException(location);
-             return null;
+@@ -58,8 +57,7 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
          }
  
--		private String formatMethodCall() {
+ 		private String formatMethodCall() {
 -			String args = Arrays.toString(invocation.getArguments());
 -			return invocation.getMethod().getName() + "(" + args.substring(1, args.length() - 1) +	")";
--		}
++			return invocation.getMethod().getName() + "()";
+ 		}
      }
  
-     private final Answer<Object> delegate = new ReturnsMoreEmptyValues();
