@@ -20,7 +20,6 @@ org.mockito.internal.configuration.plugins.PluginFinderTest
 org.mockito.internal.creation.DelegatingMethodTest
 org.mockito.internal.creation.MockSettingsImplTest
 org.mockito.internal.creation.bytebuddy.ByteBuddyMockMakerTest
-org.mockito.internal.creation.bytebuddy.CachingMockBytecodeGeneratorTest
 org.mockito.internal.creation.cglib.ClassImposterizerTest
 org.mockito.internal.creation.cglib.MethodInterceptorFilterTest
 org.mockito.internal.creation.cglib.SerializableMockitoMethodProxyTest

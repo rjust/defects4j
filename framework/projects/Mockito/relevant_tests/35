@@ -1,5 +1,4 @@
 org.concurrentmockito.ThreadVerifiesContinuoslyInteractingMockTest
-org.concurrentmockito.ThreadsRunAllTestsHalfManualTest
 org.concurrentmockito.ThreadsShareAMockTest
 org.concurrentmockito.ThreadsShareGenerouslyStubbedMockTest
 org.concurrentmockito.VerificationInOrderFromMultipleThreadsTest
@@ -18,13 +17,9 @@ org.mockito.internal.invocation.InvocationMarkerTest
 org.mockito.internal.invocation.InvocationMatcherTest
 org.mockito.internal.invocation.InvocationTest
 org.mockito.internal.invocation.InvocationsFinderTest
-org.mockito.internal.progress.HandyReturnValuesTest
 org.mockito.internal.runners.CollectingDebugDataTest
 org.mockito.internal.stubbing.MockitoStubberTest
 org.mockito.internal.stubbing.answers.AnswersValidatorTest
-org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValuesTest
-org.mockito.internal.stubbing.defaultanswers.ReturnsMocksTest
-org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNullsTest
 org.mockito.internal.util.MockUtilTest
 org.mockito.internal.util.reflection.LenientCopyToolTest
 org.mockito.internal.verification.RegisteredInvocationsTest
