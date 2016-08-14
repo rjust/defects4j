@@ -10,7 +10,7 @@ source test.include
 
 # Check whether only a subset of projects should be tested
 if [ $# -eq 0 ]; then
-    projects=( Chart Closure Lang Math Time )
+    projects=( Chart Closure Lang Math Mockito Time )
 else
     projects=( $* )
     script_name=$(echo $script | sed 's/\.sh$//')
