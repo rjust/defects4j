@@ -168,6 +168,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         TODO: Improve compiler adapter to explicitly override the output directory.
         -->
         <property name="build.compiler" value="major.ant.MajorCompiler"/>
+        <property name="d4j.mutation" value="true"/>
         <!-- Call original compile target -->
         <antcall target="compile"/>
         <!-- Move mutated classes to dedicated directory -->
