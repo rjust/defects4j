@@ -89,13 +89,6 @@
             <arg value="gradlew"/>
             <arg value="testClasses"/>
         </exec>
-
-        <!-- Copy the correct version of libraries for testing -->
-        <exec executable="/bin/bash" failonerror="true">
-            <arg value="${d4j.home}/framework/projects/${d4j.project.id}/chooseDepedencyVersion.sh"/>
-            <arg value="${basedir}"/>
-            <arg value="${d4j.home}"/>
-        </exec>
     </target>
 
     <!-- Mutate classes if mutation is enabled -->
@@ -138,11 +131,18 @@
         <antcall target="ant.compile"/>
         <antcall target="gradle.compile.mutants"/>
         <antcall target="ant.compile.mutants"/>
+
+        <!-- Copy the correct version of libraries for testing -->
+        <mkdir dir="${basedir}/compileLib"/>
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="${d4j.home}/framework/projects/${d4j.project.id}/chooseDepedencyVersion.sh"/>
+            <arg value="${basedir}"/>
+            <arg value="${d4j.home}"/>
+        </exec>
     </target>
 
     <!-- target used for compiling test cases.-->
     <target name="compile.tests" description="Compile the Mockito tests.">
-        <mkdir dir="${basedir}/compileLib"/>
         <antcall target="gradle.compile.tests"/>
         <antcall target="ant.compile.tests"/>
     </target>
