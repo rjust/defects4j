@@ -89,7 +89,7 @@ sub coverage {
     if ($relevant_tests) {
         $project->run_relevant_tests($log_file) or return undef;
     } else {
-        $project->run_tests($log_file) or return undef;
+        $project->run_tests($log_file, $single_test) or return undef;
     }
 
 	# Generate coverage report

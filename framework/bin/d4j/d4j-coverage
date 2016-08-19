@@ -140,10 +140,14 @@ if (defined $TEST_SUITE) {
     Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
     $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
     $cov_results = Coverage::coverage_ext($project, $classes, $src_dir, $test_dir, "*.java", $test_log);
+} elsif ($REL_TESTS) {
+    # Compile and run only relevant developer-written tests
+    $project->compile_tests() or die "Cannot compile test suite!";
+    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, $REL_TESTS);
 } else {
     # Compile and run developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, $REL_TESTS);
+    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, undef, $SINGLE_TEST);
 }
 defined $cov_results or die "Couldn't obtain coverage results!";
 
