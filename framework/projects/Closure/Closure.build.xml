@@ -52,7 +52,7 @@ of the checked-out project version.
     <property name="build.home" value="${build.dir}" />
 
     <!-- property needs to be set for coverage to work -->
-    <property name="cobertura.aux.classpath" value="${d4j.workdir}/lib/guava.jar" />
+    <property name="cobertura.aux.classpath" value="${d4j.workdir}/lib/guava.jar:${d4j.workdir}/lib/guava-r06.jar:${d4j.workdir}/lib/google_common_deploy.jar:${d4j.workdir}/lib/json.jar" />
 
     <target name="compile.tests" depends="compile-tests" />
 
