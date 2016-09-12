@@ -63,6 +63,13 @@ sub _post_checkout {
     #
     # Post-checkout tasks include, for instance, providing proper build files,
     # fixing compilation errors, etc.
+
+    # Fix Mockito's test runners
+    my $id = $vcs->lookup_revision_id($revision);
+    my $mockito_junit_runner_patch_file = "$SCRIPT_DIR/projects/$PID/mockito_test_runners.patch";
+    if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
+        $vcs->apply_patch($work_dir, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
+    }
 }
 
 #

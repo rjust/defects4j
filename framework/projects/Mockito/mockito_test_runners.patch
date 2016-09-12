@@ -1,0 +1,105 @@
+diff --git a/src/org/mockito/internal/runners/JUnit44RunnerImpl.java b/src/org/mockito/internal/runners/JUnit44RunnerImpl.java
+index 3f435c0..8a40d04 100644
+--- a/src/org/mockito/internal/runners/JUnit44RunnerImpl.java
++++ b/src/org/mockito/internal/runners/JUnit44RunnerImpl.java
+@@ -15,7 +15,7 @@ import org.mockito.internal.runners.util.FrameworkUsageValidator;
+ @SuppressWarnings("deprecation")
+ public class JUnit44RunnerImpl implements RunnerImpl {
+ 
+-    Runner runner;
++    JUnit4ClassRunner runner;
+ 
+     public JUnit44RunnerImpl(Class<?> klass) throws InitializationError {
+         this.runner = new JUnit4ClassRunner(klass) {
+@@ -38,4 +38,8 @@ public class JUnit44RunnerImpl implements RunnerImpl {
+     public Description getDescription() {
+         return runner.getDescription();
+     }
+-}
+\ No newline at end of file
++    public void filter(org.junit.runner.manipulation.Filter filter) throws org.junit.runner.manipulation.NoTestsRemainException {
++        // filter is required because without it UnrootedTests show up in Eclipse
++        runner.filter(filter);
++    }
++}
+diff --git a/src/org/mockito/internal/runners/JUnit45AndHigherRunnerImpl.java b/src/org/mockito/internal/runners/JUnit45AndHigherRunnerImpl.java
+index c7bf194..33ca220 100644
+--- a/src/org/mockito/internal/runners/JUnit45AndHigherRunnerImpl.java
++++ b/src/org/mockito/internal/runners/JUnit45AndHigherRunnerImpl.java
+@@ -16,7 +16,7 @@ import org.mockito.internal.runners.util.FrameworkUsageValidator;
+ 
+ public class JUnit45AndHigherRunnerImpl implements RunnerImpl {
+ 
+-    private Runner runner;
++    private BlockJUnit4ClassRunner runner;
+ 
+     public JUnit45AndHigherRunnerImpl(Class<?> klass) throws InitializationError {
+         runner = new BlockJUnit4ClassRunner(klass) {
+@@ -39,4 +39,9 @@ public class JUnit45AndHigherRunnerImpl implements RunnerImpl {
+     public Description getDescription() {
+         return runner.getDescription();
+     }
+-}
+\ No newline at end of file
++    @Override
++    public void filter(org.junit.runner.manipulation.Filter filter) throws org.junit.runner.manipulation.NoTestsRemainException {
++        // filter is required because without it UnrootedTests show up in Eclipse
++        runner.filter(filter);
++    }
++}
+diff --git a/src/org/mockito/internal/runners/RunnerImpl.java b/src/org/mockito/internal/runners/RunnerImpl.java
+index 7294ce1..cdd88cb 100644
+--- a/src/org/mockito/internal/runners/RunnerImpl.java
++++ b/src/org/mockito/internal/runners/RunnerImpl.java
+@@ -11,10 +11,10 @@ import org.junit.runner.notification.RunNotifier;
+  * I'm using this surrogate interface to hide internal Runner implementations.
+  * Surrogate cannot be used with &#064;RunWith therefore it is less likely clients will use interal runners.
+  */
+-public interface RunnerImpl {
++public interface RunnerImpl extends org.junit.runner.manipulation.Filterable {
+ 
+     void run(RunNotifier notifier);
+ 
+     Description getDescription();
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/src/org/mockito/runners/MockitoJUnitRunner.java b/src/org/mockito/runners/MockitoJUnitRunner.java
+index 3cf90f0..142fa31 100644
+--- a/src/org/mockito/runners/MockitoJUnitRunner.java
++++ b/src/org/mockito/runners/MockitoJUnitRunner.java
+@@ -46,7 +46,7 @@ import java.lang.reflect.InvocationTargetException;
+  * }
+  * </pre>
+  */
+-public class MockitoJUnitRunner extends Runner {
++public class MockitoJUnitRunner extends Runner implements org.junit.runner.manipulation.Filterable {
+ 
+     private final RunnerImpl runner;
+ 
+@@ -63,4 +63,8 @@ public class MockitoJUnitRunner extends Runner {
+     public Description getDescription() {
+         return runner.getDescription();
+     }
+-}
+\ No newline at end of file
++    public void filter(org.junit.runner.manipulation.Filter filter) throws org.junit.runner.manipulation.NoTestsRemainException {
++        // filter is required because without it UnrootedTests show up in Eclipse
++        runner.filter(filter);
++    }
++}
+diff --git a/test/org/mockito/runners/ConsoleSpammingMockitoJUnitRunnerTest.java b/test/org/mockito/runners/ConsoleSpammingMockitoJUnitRunnerTest.java
+index 0ace37b..3ff5678 100644
+--- a/test/org/mockito/runners/ConsoleSpammingMockitoJUnitRunnerTest.java
++++ b/test/org/mockito/runners/ConsoleSpammingMockitoJUnitRunnerTest.java
+@@ -198,6 +198,7 @@ public class ConsoleSpammingMockitoJUnitRunnerTest extends TestBase {
+         }
+ 
+         public void run(RunNotifier notifier) {}
++        public void filter(org.junit.runner.manipulation.Filter filter) throws org.junit.runner.manipulation.NoTestsRemainException {}
+ 
+     }
+-}
+\ No newline at end of file
++}
