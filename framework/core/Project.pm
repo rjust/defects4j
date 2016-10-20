@@ -723,7 +723,7 @@ sub mutation_analysis {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $log_file, $relevant_tests, $single_test) = @_;
     my $log = "-logfile $log_file";
-    my $relevant = $relevant_tests ? "true" : "false";
+    my $relevant = $relevant_tests ? "-Dd4j.relevant.tests.only=true" : "";
 
     my $single_test_opt = "";
     if (defined $single_test) {
@@ -736,8 +736,7 @@ sub mutation_analysis {
     return $self->_ant_call("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
-                            "-Dd4j.relevant.tests.only=$relevant " .
-                            "$log $single_test_opt");
+                            "$relevant $log $single_test_opt");
 }
 
 =pod
