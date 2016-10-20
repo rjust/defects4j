@@ -171,6 +171,22 @@ sub lookup {
 
 =pod
 
+  $vcs->lookup_revision_id(revision)
+
+Returns the C<revision_id> for the given revision number or hash.
+
+=cut
+sub lookup_revision_id {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision) = @_;
+    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
+                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
+    return -1 unless scalar(@answer) > 0;
+    return $answer[0];
+}
+
+=pod
+
   $vcs->num_revision_pairs()
 
 Returns the number of revision pairs in the C<commit-db>.

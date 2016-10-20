@@ -889,6 +889,18 @@ sub lookup {
 
 =pod
 
+  $project->lookup_revision_id(revision)
+
+Delegate to the L<VCS> backend.
+
+=cut
+sub lookup_revision_id {
+    my ($self, $revision) = @_;
+    return $self->{_vcs}->lookup_revision_id($revision);
+}
+
+=pod
+
   $project->num_revision_pairs()
 
 Delegate to the L<VCS> backend.
