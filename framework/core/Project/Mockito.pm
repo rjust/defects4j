@@ -151,6 +151,11 @@ sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file) =  @_;
 
+    # By default gradle uses $HOME/.gradle, which causes problems when multiple
+    # instances of gradle run at the same time.
+    #
+    # TODO: Extract all exported environment variables into a user-visible
+    # config file.
     $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
     return $self->SUPER::_ant_call($target, $option_str, $log_file);
 }
