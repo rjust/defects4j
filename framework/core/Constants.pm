@@ -52,6 +52,23 @@ our $DEBUG = 0;
 
 =pod
 
+=head2 Exported environment variables
+
+=over 4
+
+=item C<TZ>
+
+Defects4J sets the timezone to America/Los_Angeles to ensure that all defects
+are reproducible and that test suites are generated and executed using the same
+timezone setting.
+
+=cut
+# TODO: Extract all exported environment variables into a user-visible
+# config file.
+$ENV{'TZ'} = "America/Los_Angeles";
+
+=pod
+
 =head2 Exported properties (I<default value>)
 
 =over 4

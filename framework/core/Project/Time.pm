@@ -71,24 +71,16 @@ sub _post_checkout {
     }
 
     # Check for a broken-build-revision
-    my $id = $self->rev_lookup($revision_id); # TODO: very ugly.
+    my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
     my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $work_dir/build.xml");
     }
 }
 
-sub rev_lookup {
-    my ($self, $revision) = @_;
-    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
-                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
-    return -1 unless scalar(@answer) > 0;
-    return $answer[0];
-}
-
 sub export_diff {
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
-    if ($self->rev_lookup($rev2) >= 22) {
+    if ($self->lookup_revision_id($rev2) >= 22) {
         # path is an optional argument
         $path = "JodaTime/" . ($path//"");
     }
@@ -97,7 +89,7 @@ sub export_diff {
 
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_;
-    if ($self->rev_lookup($rev2) >= 22) {
+    if ($self->lookup_revision_id($rev2) >= 22) {
         # path is an optional argument
         $path = "JodaTime/" . ($path//"");
     }

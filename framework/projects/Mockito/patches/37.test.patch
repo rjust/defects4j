@@ -1,0 +1,111 @@
+diff --git a/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java b/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
+index 38c2718..24659a7 100644
+--- a/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
++++ b/test/org/mockito/internal/stubbing/answers/AnswersValidatorTest.java
+@@ -4,11 +4,8 @@
+  */
+ package org.mockito.internal.stubbing.answers;
+ 
+-import static org.mockito.Mockito.*;
+-
+ import java.io.IOException;
+ import java.nio.charset.CharacterCodingException;
+-import java.util.ArrayList;
+ 
+ import org.junit.Test;
+ import org.mockito.exceptions.base.MockitoException;
+@@ -16,7 +13,6 @@ import org.mockito.internal.invocation.Invocation;
+ import org.mockito.internal.invocation.InvocationBuilder;
+ import org.mockitoutil.TestBase;
+ 
+-@SuppressWarnings("unchecked")
+ public class AnswersValidatorTest extends TestBase {
+ 
+     private AnswersValidator validator = new AnswersValidator();
+@@ -87,27 +83,4 @@ public class AnswersValidatorTest extends TestBase {
+     public void shouldFailOnNullWithPrimitive() throws Throwable {
+         validator.validate(new Returns(null), new InvocationBuilder().method("booleanReturningMethod").toInvocation());
+     }
+-    
+-    @Test
+-    public void shouldFailWhenCallingRealMethodOnIterface() throws Throwable {
+-        //given
+-        Invocation inovcationOnIterface = new InvocationBuilder().method("simpleMethod").toInvocation();
+-        try {
+-            //when
+-            validator.validate(new CallsRealMethods(), inovcationOnIterface);
+-            //then
+-            fail();
+-        } catch (MockitoException e) {}
+-    }
+-            
+-    @Test
+-    public void shouldBeOKWhenCallingRealMethodOnConcreteClass() throws Throwable {
+-        //given
+-        ArrayList mock = mock(ArrayList.class);
+-        mock.clear();
+-        Invocation invocationOnClass = getLastInvocation();
+-        //when
+-        validator.validate(new CallsRealMethods(), invocationOnClass);
+-        //then no exception is thrown
+-    }
+ }
+\ No newline at end of file
+diff --git a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java b/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
+deleted file mode 100644
+index ae02c79..0000000
+--- a/test/org/mockitousage/spies/SpyingOnInterfacesTest.java
++++ /dev/null
+@@ -1,51 +0,0 @@
+-/*
+- * Copyright (c) 2007 Mockito contributors
+- * This program is made available under the terms of the MIT License.
+- */
+-package org.mockitousage.spies;
+-
+-import static org.mockito.Mockito.*;
+-
+-import java.util.List;
+-
+-import org.junit.Ignore;
+-import org.junit.Test;
+-import org.mockito.exceptions.base.MockitoException;
+-import org.mockito.invocation.InvocationOnMock;
+-import org.mockito.stubbing.Answer;
+-import org.mockitoutil.TestBase;
+-
+-@SuppressWarnings({"unchecked", "serial"})
+-public class SpyingOnInterfacesTest extends TestBase {
+-
+-    @Test
+-    public void shouldFailFastWhenCallingRealMethodOnInterface() throws Exception {
+-        List list = mock(List.class);
+-        try {
+-            //when
+-            when(list.get(0)).thenCallRealMethod();
+-            //then
+-            fail();
+-        } catch (MockitoException e) {}
+-    }
+-    
+-    @Ignore("not yet implemented")
+-    @Test
+-    public void shouldFailFastWhenCallingRealMethodOnInterface2() throws Exception {
+-        //given
+-        List list = mock(List.class);
+-        when(list.get(0)).thenAnswer(
+-            new Answer() {
+-                public Object answer(InvocationOnMock invocation) throws Throwable {
+-                    return invocation.callRealMethod();
+-                }
+-            }
+-        );
+-        try {
+-            //when
+-            list.get(0);            
+-            //then
+-            fail();
+-        } catch (MockitoException e) {}
+-    }
+-}
+\ No newline at end of file

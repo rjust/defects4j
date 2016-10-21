@@ -1,0 +1,139 @@
+diff --git a/test/org/mockito/internal/invocation/InvocationMatcherTest.java b/test/org/mockito/internal/invocation/InvocationMatcherTest.java
+index af83e9b..075c1cf 100644
+--- a/test/org/mockito/internal/invocation/InvocationMatcherTest.java
++++ b/test/org/mockito/internal/invocation/InvocationMatcherTest.java
+@@ -8,11 +8,12 @@ import org.hamcrest.Matcher;
+ import org.junit.Before;
+ import org.junit.Test;
+ import org.mockito.Mock;
+-import org.mockito.internal.matchers.*;
++import org.mockito.internal.matchers.AnyVararg;
++import org.mockito.internal.matchers.CapturingMatcher;
++import org.mockito.internal.matchers.Equals;
++import org.mockito.internal.matchers.NotNull;
+ import org.mockito.internal.reporting.PrintingFriendlyInvocation;
+ import org.mockitousage.IMethods;
+-
+-import static org.mockito.Matchers.anyVararg;
+ import static org.mockitoutil.ExtraMatchers.hasExactlyInOrder;
+ import org.mockitoutil.TestBase;
+ 
+@@ -33,6 +34,11 @@ public class InvocationMatcherTest extends TestBase {
+         simpleMethod = new InvocationBuilder().mock(mock).simpleMethod().toInvocationMatcher();
+     }
+ 
++    public void shouldBuildEqualsMatchersWhenNullPassed() throws Exception {
++        InvocationMatcher m = new InvocationMatcher(new InvocationBuilder().args("foo").toInvocation(), null);
++        assertThat(m.getMatchers(), hasExactlyInOrder(new Equals("foo")));
++    }
++    
+     @Test
+     public void shouldBeACitizenOfHashes() throws Exception {
+         Invocation invocation = new InvocationBuilder().toInvocation();
+@@ -138,17 +144,4 @@ public class InvocationMatcherTest extends TestBase {
+         //then
+         assertTrue(match);
+     }
+-
+-    @Test
+-    public void shouldMatchCaptureArgumentsWhenArgsCountDoesNOTMatch() throws Exception {
+-        //given
+-        mock.varargs();
+-        Invocation invocation = getLastInvocation();
+-
+-        //when
+-        InvocationMatcher invocationMatcher = new InvocationMatcher(invocation, (List) asList(new LocalizedMatcher(AnyVararg.ANY_VARARG)));
+-
+-        //then
+-        invocationMatcher.captureArgumentsFrom(invocation);
+-    }
+ }
+\ No newline at end of file
+diff --git a/test/org/mockitousage/IMethods.java b/test/org/mockitousage/IMethods.java
+index 2739947..fbaf4d7 100644
+--- a/test/org/mockitousage/IMethods.java
++++ b/test/org/mockitousage/IMethods.java
+@@ -164,9 +164,9 @@ public interface IMethods {
+ 
+     Object varargsObject(int i, Object... object);
+     
+-    int varargs(Object ... object);
++    void varargs(Object ... object);
+     
+-    int varargs(String ... string);
++    void varargs(String ... string);
+ 
+     void mixedVarargs(Object i, String ... string);
+ 
+diff --git a/test/org/mockitousage/MethodsImpl.java b/test/org/mockitousage/MethodsImpl.java
+index 80c3f6d..577d263 100644
+--- a/test/org/mockitousage/MethodsImpl.java
++++ b/test/org/mockitousage/MethodsImpl.java
+@@ -306,12 +306,12 @@ public class MethodsImpl implements IMethods {
+         return null;
+     }
+ 
+-    public int varargs(Object... object) {
+-        return -1;
++    public void varargs(Object... object) {
++      
+     }
+ 
+-    public int varargs(String... string) {
+-        return -1;
++    public void varargs(String... string) {
++      
+     }
+ 
+     public void mixedVarargs(Object i, String... string) {
+diff --git a/test/org/mockitousage/basicapi/UsingVarargsTest.java b/test/org/mockitousage/basicapi/UsingVarargsTest.java
+index eec4819..7562e7a 100644
+--- a/test/org/mockitousage/basicapi/UsingVarargsTest.java
++++ b/test/org/mockitousage/basicapi/UsingVarargsTest.java
+@@ -10,12 +10,9 @@ import java.util.ArrayList;
+ 
+ import org.junit.Before;
+ import org.junit.Test;
+-import org.mockito.Matchers;
+-import org.mockito.Mock;
+ import org.mockito.Mockito;
+ import org.mockito.exceptions.verification.NoInteractionsWanted;
+ import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
+-import org.mockitousage.IMethods;
+ import org.mockitoutil.TestBase;
+ 
+ public class UsingVarargsTest extends TestBase {
+@@ -25,11 +22,15 @@ public class UsingVarargsTest extends TestBase {
+         String withStringVarargsReturningString(int value, String... s);
+         void withObjectVarargs(int value, Object... o);
+         boolean withBooleanVarargs(int value, boolean... b);
+-        int foo(Object ... objects);
+     }
+     
+-    @Mock IVarArgs mock;
++    IVarArgs mock;
+ 
++    @Before
++    public void setup() {
++        mock = Mockito.mock(IVarArgs.class);
++    }
++    
+     @SuppressWarnings("deprecation")
+     @Test
+     public void shouldStubStringVarargs() {
+@@ -164,14 +165,4 @@ public class UsingVarargsTest extends TestBase {
+         String result = mixedVarargs.doSomething("one", "two", null);
+         assertEquals("hello", result);
+     }
+-    
+-    @Test
+-    //See bug #157
+-    public void shouldMatchEasilyEmptyVararg() throws Exception {
+-        //when
+-        when(mock.foo(anyVararg())).thenReturn(-1);
+-
+-        //then
+-        assertEquals(-1, mock.foo());
+-    } 
+ }
+\ No newline at end of file

@@ -1,0 +1,25 @@
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+index ade8f69..6dcda3c 100644
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+@@ -56,20 +56,4 @@ public class ReturnsSmartNullsTest extends TestBase {
+ 
+     	assertEquals("SmartNull returned by unstubbed withArgs(oompa, lumpa) method on mock", smartNull + "");
+     }
+-
+-    @Test
+-	public void shouldPrintTheParametersOnSmartNullPointerExceptionMessage() throws Throwable {
+-    	Answer<Object> answer = new ReturnsSmartNulls();
+-
+-        Foo smartNull = (Foo) answer.answer(invocationOf(Foo.class, "withArgs", "oompa", "lumpa"));
+-
+-        try {
+-            smartNull.get();
+-            fail();
+-        } catch (SmartNullPointerException ex) {
+-        	String message = ex.getMessage();
+-        	assertTrue("Exception message should include oompa and lumpa, but was: " + message,
+-        			message.contains("oompa, lumpa"));
+-        }
+-	}
+ }

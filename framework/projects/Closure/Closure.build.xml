@@ -51,9 +51,6 @@ of the checked-out project version.
     <property name="test.home" value="${testClasses.dir}" />
     <property name="build.home" value="${build.dir}" />
 
-    <!-- property needs to be set for coverage to work -->
-    <property name="cobertura.aux.classpath" value="${d4j.workdir}/lib/guava.jar" />
-
     <target name="compile.tests" depends="compile-tests" />
 
     <!-- We need to compile rhino.testing package before we can

@@ -1,0 +1,31 @@
+diff --git a/src/org/mockito/Matchers.java b/src/org/mockito/Matchers.java
+index 7a89556..16f1b5b 100644
+--- a/src/org/mockito/Matchers.java
++++ b/src/org/mockito/Matchers.java
+@@ -359,7 +359,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T isA(Class<T> clazz) {
+-        return reportMatcher(new InstanceOf(clazz)).<T>returnFor(clazz);
++        return reportMatcher(new InstanceOf(clazz)).<T>returnNull();
+     }
+ 
+     /**
+@@ -476,7 +476,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T eq(T value) {
+-        return (T) reportMatcher(new Equals(value)).<T>returnFor((Class) value.getClass());
++        return reportMatcher(new Equals(value)).<T>returnNull();
+     }  
+ 
+     /**
+@@ -513,7 +513,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T same(T value) {
+-        return (T) reportMatcher(new Same(value)).<T>returnFor((Class) value.getClass());
++        return reportMatcher(new Same(value)).<T>returnNull();
+     }
+ 
+     /**

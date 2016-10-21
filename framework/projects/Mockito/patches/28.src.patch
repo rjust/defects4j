@@ -1,0 +1,14 @@
+diff --git a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
+index 846fbf7..213ebf3 100644
+--- a/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
++++ b/src/org/mockito/internal/configuration/DefaultInjectionEngine.java
+@@ -90,8 +90,7 @@ public class DefaultInjectionEngine {
+ 
+     private void injectMockCandidate(Class<?> awaitingInjectionClazz, Set<Object> mocks, Object fieldInstance) {
+         for(Field field : orderedInstanceFieldsFrom(awaitingInjectionClazz)) {
+-            Object injected = mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
+-            mocks.remove(injected);
++            mockCandidateFilter.filterCandidate(mocks, field, fieldInstance).thenInject();
+         }
+     }
+ 

@@ -72,6 +72,15 @@ sub _diff_cmd { die $ABSTRACT_METHOD; }
 
 =pod
 
+  _rev_date_cmd(rev)
+
+Returns the date of the revision C<rev> or undef if the revision doesn't exist.
+
+=cut
+sub _rev_date_cmd { die $ABSTRACT_METHOD; }
+
+=pod
+
   _get_parent_revisions()
 
 TODO
@@ -167,6 +176,22 @@ sub lookup {
     $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid";
     defined $self->{_cache}->{$1}->{$2} or die "Version id does not exist: $vid!";
     return $self->{_cache}->{$1}->{$2};
+}
+
+=pod
+
+  $vcs->lookup_revision_id(revision)
+
+Returns the C<revision_id> for the given revision number or hash.
+
+=cut
+sub lookup_revision_id {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision) = @_;
+    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
+                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
+    return -1 unless scalar(@answer) > 0;
+    return $answer[0];
 }
 
 =pod
@@ -327,6 +352,26 @@ sub apply_patch {
     my ($self, $work_dir, $patch_file) = @_;
     my $cmd = $self->_apply_cmd($work_dir, $patch_file);
     return Utils::exec_cmd($cmd, "Apply patch");
+}
+
+=pod
+
+  $vcs->rev_date(rev)
+
+Returns the date for the revision C<rev>.
+
+=cut
+sub rev_date {
+    @_ == 2 or confess($ARG_ERROR);
+    my ($self, $revision_id) = @_;
+    my $cmd = $self->_rev_date_cmd($revision_id);
+    my $date;
+    if (Utils::exec_cmd($cmd, "Determine revision date", \$date)) {
+        chomp $date;
+        return $date;
+    } else {
+        return undef;
+    }
 }
 
 ##########################################################################################

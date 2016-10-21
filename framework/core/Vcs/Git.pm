@@ -61,6 +61,12 @@ sub _diff_cmd {
     $path = defined $path ? "-- $path $path" : "";
     return "git --git-dir=$self->{repo} diff --binary ${rev1} ${rev2} $path";
 }
+
+sub _rev_date_cmd {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision_id) = @_;
+    return "git --git-dir=$self->{repo} show -s --format=%ci ${revision_id}";
+}
 }
 
 1;

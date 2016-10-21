@@ -1,0 +1,44 @@
+diff --git a/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java b/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+index a89ace9..c468327 100644
+--- a/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
++++ b/test/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java
+@@ -1,7 +1,6 @@
+ package org.mockitousage.constructor;
+ 
+-import java.util.List;
+-
++import org.junit.Ignore;
+ import org.junit.Test;
+ import org.mockito.exceptions.base.MockitoException;
+ import org.mockito.mock.SerializableMode;
+@@ -99,30 +98,4 @@ public class CreatingMocksWithConstructorTest extends TestBase {
+             assertEquals("Mocks instantiated with constructor cannot be combined with " + SerializableMode.ACROSS_CLASSLOADERS + " serialization mode.", e.getMessage());
+         }
+     }
+-
+-    static abstract class AbstractThing {
+-    	abstract String name();
+-    	String fullName() {
+-    		return "abstract " + name();
+-    	}
+-    }
+-    
+-    @Test
+-    public void abstractMethodReturnsDefault() {
+-    	AbstractThing thing = spy(AbstractThing.class);
+-    	assertEquals("abstract null", thing.fullName());
+-    }
+-    
+-    @Test
+-    public void abstractMethodStubbed() {
+-    	AbstractThing thing = spy(AbstractThing.class);
+-    	when(thing.name()).thenReturn("me");
+-    	assertEquals("abstract me", thing.fullName());
+-    }
+- 
+-    @Test
+-    public void testCallsRealInterfaceMethod() {
+-    	List<String> list = mock(List.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
+-    	assertNull(list.get(1));
+-    }
+ }
