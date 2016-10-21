@@ -147,4 +147,12 @@ sub _build_dir_map {
     $self->{_dir_map}=$cache;
 }
 
+sub _ant_call {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($self, $target, $option_str, $log_file) =  @_;
+
+    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
+    return $self->SUPER::_ant_call($target, $option_str, $log_file);
+}
+
 1;
