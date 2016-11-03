@@ -201,6 +201,11 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <fail message="Property major.exclude not set!" unless="major.exclude" />
         <fail message="Property major.kill.log not set!" unless="major.kill.log" />
 
+        <!-- Sort test classes by run time, unless a single test method is run -->
+        <condition property="major.sort" value="original" else="sort_classes">
+            <isset property="test.entry.method"/>
+        </condition>
+
         <echo message="Running mutation analysis ..."/>
         <junit
             printsummary="false"
@@ -209,7 +214,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             mutationAnalysis="true"
             timeoutFactor="16"
-            sort="sort_classes"
+            sort="${major.sort}"
             haltonfailure="true"
             killDetailsFile="${major.kill.log}"
             excludeFile="${major.exclude}"
