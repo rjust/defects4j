@@ -587,7 +587,7 @@ This subroutine returns a reference to a hash with the keys C<src> and C<test>:
 If the test execution fails, the returned reference is C<undef>.
 
 A class is included in the result if it exists in the source or test directory
-of the checked-out program verion and if it was loaded during the test execution.
+of the checked-out program version and if it was loaded during the test execution.
 
 The location of the test sources can be provided with the optional parameter F<test_dir>.
 The default is the test directory of the developer-written tests.
