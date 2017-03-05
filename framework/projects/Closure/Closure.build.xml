@@ -46,6 +46,7 @@ of the checked-out project version.
     <path id="compile.classpath">
         <path refid="srcclasspath.path" />
         <path refid="classpath.path" />
+        <pathelement path="${d4j.workdir}/lib/ant.jar" />
     </path>
     <!-- Values necessary for mutation scripting to work -->
     <property name="test.home" value="${testClasses.dir}" />
