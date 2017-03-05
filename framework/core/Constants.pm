@@ -180,6 +180,8 @@ our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j
 unshift(@INC, $CORE_DIR);
 unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
+# Prepend Major's executables to the PATH
+$ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
 # set name of mml file that provides definitions of used mutation operators
 $ENV{MML}="$MAJOR_ROOT/mml/all_mutants.mml.bin" unless defined $ENV{'MML'};
 
