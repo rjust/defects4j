@@ -34,7 +34,7 @@ cd $DIR_REPOS && ./get_repos.sh
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="1.1.8"
+MAJOR_VERSION="1.3.0"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd $BASE && wget -nv -N $MAJOR_URL/$MAJOR_ZIP \
@@ -64,9 +64,9 @@ ln -sf $DIR_LIB_RT/$EVOSUITE_RT_JAR $DIR_LIB_RT/evosuite-rt.jar
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="2.1.3"
+RANDOOP_VERSION="3.0.6"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
-RANDOOP_JAR="randoop-${RANDOOP_VERSION}.jar"
+RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \
                 && wget -nv $RANDOOP_URL/$RANDOOP_JAR
 # Set symlink for the supported version of Randoop
