@@ -99,11 +99,11 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Run developer-written tests
 -->
     <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">
-        <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
-            <classpath>
+        <!--<junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
+            <classpath>-->
                 <!-- Make sure that instrumented classes appear at the beginning of the
                      classpath -->
-                <pathelement location="${d4j.dir.classes.instrumented}" />
+                <!--<pathelement location="${d4j.dir.classes.instrumented}" />
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${cobertura.jar}" />
                 <path refid="d4j.test.classpath"/>
@@ -115,7 +115,15 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <batchtest unless="test.entry.class">
                 <fileset refid="all.manual.tests" />
             </batchtest>
-        </junit>
+        </junit>-->
+        <!-- FIXME currently it only works with "-t" option -->
+        <pathconvert property="cp.test" refid="d4j.test.classpath" />
+        <exec executable="java" failonerror="false" failifexecutionfails="true" output="${OUTFILE}">
+          <arg value="-cp" />
+          <arg value="${d4j.dir.classes.instrumented}:${formatter.jar}:${cobertura.jar}:${cp.test}" />
+          <arg value="edu.washington.cs.mut.testrunner.SingleTestRunner" />
+          <arg value="${test.entry.class}::${test.entry.method}" />
+        </exec>
         <!-- fail build in case we are running all classes, but there are none in the fileset -->
         <if> <not> <isset property="test.entry.class" /> </not> <then>
             <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
