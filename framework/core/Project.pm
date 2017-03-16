@@ -440,7 +440,7 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 sub compile {
     my ($self, $log_file) = @_;
-    return $self->_ant_call("compile", undef, $log_file);
+    return $self->_ant_call_comp("compile", undef, $log_file);
 }
 
 =pod
@@ -453,7 +453,7 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 sub compile_tests {
     my ($self, $log_file) = @_;
-    return $self->_ant_call("compile.tests", undef, $log_file);
+    return $self->_ant_call_comp("compile.tests", undef, $log_file);
 }
 
 =pod
@@ -476,7 +476,7 @@ sub run_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
+    return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
 }
 
 =pod
@@ -491,7 +491,7 @@ sub run_relevant_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $out_file) = @_;
 
-    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
+    return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
 }
 
 =pod
@@ -607,7 +607,7 @@ sub monitor_test {
         test => []
     };
 
-    if (! $self->_ant_call("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file")) {
+    if (! $self->_ant_call_comp("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file")) {
         return undef;
     }
 
@@ -669,7 +669,7 @@ sub coverage_instrument {
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Call ant to do the instrumentation
-    return $self->_ant_call("coverage.instrument");
+    return $self->_ant_call_comp("coverage.instrument");
 }
 
 =pod
@@ -682,7 +682,7 @@ TODO
 sub coverage_report {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $source_dir) = @_;
-    return $self->_ant_call("coverage.report", "-Dcoverage.src.dir=$source_dir");
+    return $self->_ant_call_comp("coverage.report", "-Dcoverage.src.dir=$source_dir");
 }
 
 =pod
@@ -695,7 +695,7 @@ Returns the number of generated mutants on success, -1 otherwise.
 =cut
 sub mutate {
     my $self = shift;
-    if (! $self->_ant_call("mutate")) {
+    if (! $self->_call_major("mutate")) {
         return -1;
     }
 
@@ -733,7 +733,7 @@ sub mutation_analysis {
 
     my $basedir = $self->{prog_root};
 
-    return $self->_ant_call("mutation.test",
+    return $self->_call_major("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$relevant $log $single_test_opt");
@@ -764,7 +764,7 @@ sub mutation_analysis_ext {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("mutation.test",
+    return $self->_call_major("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
@@ -1014,15 +1014,16 @@ sub _get_classes {
 #
 sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
-    my ($self, $target, $option_str, $log_file) =  @_;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "" unless defined $option_str;
+    $ant_cmd = "ant" unless defined $ant_cmd;
     my $file = $self->{_build_file};
     # TODO: Check also whether target is provided by the build file
     -f $file or die "Build file does not exist: $file";
 
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
-              " && ant" .
+              " && $ant_cmd" .
                 " -f $D4J_BUILD_FILE" .
                 " -Dd4j.home=$BASE_DIR" .
                 " -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1";
@@ -1035,6 +1036,25 @@ sub _ant_call {
         close(OUT);
     }
     return $ret;
+}
+
+#
+# Ensure backward compatibility with Java 7
+# TODO: Remove after providing full Java 8 support
+#
+sub _ant_call_comp {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = "-Dbuild.compiler=javac1.7 " . ($option_str // "");
+    $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+}
+sub _call_major {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
+    $ant_cmd = "PATH=$MAJOR_ROOT/bin:\$PATH && $MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
 
 #
