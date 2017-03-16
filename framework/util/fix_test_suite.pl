@@ -108,7 +108,8 @@ my $RUNS = 5;
 =back
 
 If a test suite was fixed, its original archive is backed up and replaced with
-the fixed version.
+the fixed version. The results of the fix are stored in the database table
+F<suite_dir/L<TAB_FIX|DB>>.
 
 =cut
 use warnings;
@@ -125,6 +126,7 @@ use Constants;
 use Project;
 use Utils;
 use Log;
+use DB;
 
 #
 # Process arguments and issue usage message if necessary.
@@ -211,6 +213,15 @@ my $LOG = Log::create_log("$SUITE_DIR/fix_test_suite.log");
 # Line separator
 my $sep = "-"x80;
 
+# Get database handle for result table
+my $dbh_out = DB::get_db_handle($TAB_FIX, $SUITE_DIR);
+
+my $sth = $dbh_out->prepare("SELECT * FROM $TAB_FIX WHERE $PROJECT=? AND $TEST_SUITE=? AND $ID=? AND $TEST_ID=?")
+    or die $dbh_out->errstr;
+
+# Cache column names for table fix
+my @COLS = DB::get_tab_columns($TAB_FIX) or die "Cannot obtain table columns!";
+
 # Log current time
 $LOG->log_time("Start fixing tests");
 $LOG->log_msg("- Found " . scalar(@list) . " test archive(s)");
@@ -220,8 +231,22 @@ suite: foreach (@list) {
     my $pid  = $_->{pid};
     my $vid  = $_->{vid};
     my $src  = $_->{src};
+    my $tid  = $_->{tid};
     my $project = Project::create_project($pid);
     $project->{prog_root} = $TMP_DIR;
+
+    # Skip existing entries
+    $sth->execute($pid, $src, $vid, $tid);
+    if ($sth->rows !=0) {
+        $LOG->log_msg(" - Skipping $name since results already exist in database!");
+        next;
+    }
+
+    my $num_failing_tests = 0;
+    my $rm_classes_info = {
+      $NUM_UNCOMPILABLE_TESTS => 0,
+      $NUM_UNCOMPILABLE_TEST_CLASSES => 0,
+    };
 
     printf ("$sep\n$name\n$sep\n");
 
@@ -240,7 +265,10 @@ suite: foreach (@list) {
         my $comp_log = "$TMP_DIR/comp_tests.log";
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
             $LOG->log_file(" - Tests do not compile: $name", $comp_log);
-            _rm_classes($comp_log, $src, $name);
+            my $rm_info = _rm_classes($comp_log, $src, $name);
+            # Update counters
+            $rm_classes_info->{$NUM_UNCOMPILABLE_TESTS} += $rm_info->{$NUM_UNCOMPILABLE_TESTS};
+            $rm_classes_info->{$NUM_UNCOMPILABLE_TEST_CLASSES} += $rm_info->{$NUM_UNCOMPILABLE_TEST_CLASSES};
             # Indicate that test suite changed
             $fixed = 1;
             next;
@@ -253,6 +281,7 @@ suite: foreach (@list) {
         `>$tests`;
         if (! $project->run_ext_tests("$TMP_DIR/$src", "$INCL", $tests)) {
             $LOG->log_file(" - Tests not executable: $name", $tests);
+            _insert_row($pid, $vid, $src, $tid);
             next suite;
         }
 
@@ -285,6 +314,7 @@ suite: foreach (@list) {
 #                $fixed = 1;
 #                next;
 #            }
+            _insert_row($pid, $vid, $src, $tid);
             next suite;
         }
 
@@ -299,6 +329,8 @@ suite: foreach (@list) {
             $fixed = 1;
             $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " test methods: $name", $tests);
             system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
+            # Update counter
+            $num_failing_tests += scalar(@{$list->{methods}});
         }
     }
 
@@ -309,7 +341,10 @@ suite: foreach (@list) {
         system("mv $SUITE_DIR/$name $SUITE_DIR/$name.bak") unless -e "$SUITE_DIR/$name.bak";
         system("cd $TMP_DIR/$src && tar -cjf $SUITE_DIR/$name *");
     }
+
+    _insert_row($pid, $vid, $src, $tid, $rm_classes_info->{$NUM_UNCOMPILABLE_TESTS}, $rm_classes_info->{$NUM_UNCOMPILABLE_TEST_CLASSES}, $num_failing_tests);
 }
+$dbh_out->disconnect();
 # Log current time
 $LOG->log_time("End fixing tests");
 $LOG->close();
@@ -326,6 +361,7 @@ sub _rm_classes {
     my ($comp_log, $src, $name) = @_;
     open(LOG, "<$comp_log") or die "Cannot read compiler log!";
     $LOG->log_msg(" - Removing uncompilable test cases from: $name");
+    my $num_uncompilable_test_classes = 0;
     my @uncompilable_tests = ();
     while (<LOG>) {
         my $removed = 0;
@@ -371,6 +407,8 @@ sub _rm_classes {
           # get rid of all test cases of this class that have been
           # selected to be removed
           @uncompilable_tests = grep ! /^--- $class::/, @uncompilable_tests;
+          # Update counter
+          ++$num_uncompilable_test_classes;
         } else {
           # e.g., '--- org.foo.BarTest::test09'
           my $test_canonical_name = "--- $class::$test_name";
@@ -393,4 +431,40 @@ sub _rm_classes {
       $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test case(s):", $uncompilable_tests_file_path);
       system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src") == 0 or die "Cannot remove broken test method(s)";
     }
+
+    # Set all values and return hash reference
+    return {
+      $NUM_UNCOMPILABLE_TESTS => scalar(@uncompilable_tests),
+      $NUM_UNCOMPILABLE_TEST_CLASSES => $num_uncompilable_test_classes,
+    };
+}
+
+#
+# Insert row into database table.
+#
+sub _insert_row {
+    @_ >= 4 or die $ARG_ERROR;
+    my ($pid, $vid, $suite, $test_id, $num_uncompilable_tests, $num_uncompilable_test_classes, $num_failing_tests) = @_;
+
+    # Build data hash
+    my $data = {
+         $PROJECT => $pid,
+         $ID => $vid,
+         $TEST_SUITE => $suite,
+         $TEST_ID => $test_id,
+         $NUM_UNCOMPILABLE_TESTS => $num_uncompilable_tests,
+         $NUM_UNCOMPILABLE_TEST_CLASSES => $num_uncompilable_test_classes,
+         $NUM_FAILING_TESTS => $num_failing_tests,
+    };
+
+    # Build row based on data hash
+    my @tmp;
+    foreach (@COLS) {
+        push (@tmp, $dbh_out->quote((defined $data->{$_} ? $data->{$_} : "-")));
+    }
+
+    # Concat values and write to database table
+    my $row = join(",", @tmp);
+
+    $dbh_out->do("INSERT INTO $TAB_FIX VALUES ($row)");
 }
