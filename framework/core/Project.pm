@@ -1053,7 +1053,8 @@ sub _call_major {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
-    $ant_cmd = "PATH=$MAJOR_ROOT/bin:\$PATH && $MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
+    $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
+    $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
     return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
 
