@@ -176,9 +176,11 @@ $project->compile() or die "Cannot compile!";
 
 # Open temporary log file
 my $LOG = Log::create_log("$TMP_DIR/$PID.$VID.$TID.log");
-$LOG->log_time("Start test generation: $PID-$VID-$TID");
+$LOG->log_time("Start test generation"
 $LOG->log_msg("Parameters:");
 $LOG->log_msg(" -g $TOOL");
+$LOG->log_msg(" -p $PID");
+$LOG->log_msg(" -v $VID");
 $LOG->log_msg(" -n $TID");
 $LOG->log_msg(" -b $TIME");
 
@@ -200,18 +202,18 @@ $ENV{D4J_CLASS_BUDGET}        = "$TIME";
 $ENV{D4J_SEED}                = ($TID*1000 + $BID);
 
 # Invoke the test generator
-Utils::exec_cmd("$TESTGEN_LIB_DIR/bin/$TOOL.sh", "Generating tests ($TOOL)") or die "Failed to generate tests!";
-# Print reference to the tool paper
-system("cat $TESTGEN_LIB_DIR/bin/$TOOL.credit");
+Utils::exec_cmd("$TESTGEN_LIB_DIR/bin/$TOOL.sh", "Generating tests ($TOOL)")
+        or die "Failed to generate tests!";
 
 # Compress generated tests and copy archive to output directory
 my $archive = "$PID-$VID-$TOOL.$TID.tar.bz2";
+Utils::exec_cmd("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .", "Creating test suite archive")
+        or die("Cannot archive and compress test suite!");
 
-if (system("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .") != 0) {
-    $LOG->log_msg("Error: cannot archive and compress test suites!");
-} else {
-    $LOG->log_msg("Created test suite archive: $archive");
-}
+$LOG->log_msg("Created test suite archive: $archive");
+
+# Acknowledge the tool author(s)
+system("cat $TESTGEN_LIB_DIR/bin/$TOOL.credit");
 
 =pod
 
