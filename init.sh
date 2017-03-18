@@ -47,7 +47,7 @@ cd $BASE && wget -nv -N $MAJOR_URL/$MAJOR_ZIP \
 #
 echo
 echo "Setting up EvoSuite ... "
-EVOSUITE_VERSION="1.0.2"
+EVOSUITE_VERSION="1.0.3"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
@@ -71,6 +71,32 @@ cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \
                 && wget -nv $RANDOOP_URL/$RANDOOP_JAR
 # Set symlink for the supported version of Randoop
 ln -sf $DIR_LIB_GEN/$RANDOOP_JAR $DIR_LIB_GEN/randoop-current.jar
+
+#
+# Download T3
+#
+echo
+echo "Setting up T3 ... "
+T3_URL="http://www.staff.science.uu.nl/~prase101/research/projects/T2/T3/T3_dist.zip"
+T3_JAR="T3.jar"
+cd $DIR_LIB_GEN && [ ! -f $T3_JAR ] \
+                && wget -nv $T3_URL \
+                && unzip -j T3_dist.zip $T3_JAR -d .
+# Set symlink for the supported version of Randoop
+ln -sf $DIR_LIB_GEN/$T3_JAR $DIR_LIB_GEN/t3-current.jar
+
+#
+# Download JTExpert and GRT
+#
+echo
+echo "Setting up JTExpert and GRT ... "
+JTE_GRT_URL="https://people.cs.umass.edu/~rjust/jte_grt.zip"
+cd $DIR_LIB_GEN && [ ! -f grt.jar ] \
+                && wget -nv $JTE_GRT_URL \
+                && unzip jte_grt.zip
+# Set symlink for the supported version of Randoop
+ln -sf $DIR_LIB_GEN/grt.jar $DIR_LIB_GEN/grt-current.jar
+ln -sf $DIR_LIB_GEN/JTExpert/JTExpert-1.4.jar $DIR_LIB_GEN/jtexpert-current.jar
 
 echo
 echo "Defects4J successfully initialized."
