@@ -30,13 +30,15 @@ check_env() {
 # source file of the provided class name.
 get_rel_src_path() {
     local class="$1"
-    echo "$D4J_SRC_DIR/$(echo $class | tr '.' '/').java"
+    src_dir=$($D4J_HOME/framework/bin/defects4j export \
+            -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
+    echo "$src_dir/$(echo $class | tr '.' '/').java"
 }
 
 # Get the absolute path to the source file of the provided class name.
 get_abs_src_path() {
     local class="$1"
-    echo "$D4J_WORK_DIR/$(getRelSrcPath $class)"
+    echo "$D4J_DIR_WORKDIR/$(get_rel_src_path $class)"
 }
 
 # Get the project classpath -- that is, the classpath to compile and run the
