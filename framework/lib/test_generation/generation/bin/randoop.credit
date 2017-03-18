@@ -1,0 +1,15 @@
+################################################################################
+Please reference the following paper when using the generated test suites:
+
+@inproceedings{PachecoLEB2007,
+   author = {Carlos Pacheco and Shuvendu K. Lahiri and Michael D. Ernst
+    and Thomas Ball},
+   title = {Feedback-directed random test generation},
+   booktitle = {ICSE'07, Proceedings of the 29th International Conference
+    on Software Engineering},
+   pages = {75--84},
+   address = {Minneapolis, MN, USA},
+   month = {May~23--25,},
+   year = {2007}
+}
+################################################################################
