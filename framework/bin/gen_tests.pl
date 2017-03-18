@@ -176,7 +176,7 @@ $project->compile() or die "Cannot compile!";
 
 # Open temporary log file
 my $LOG = Log::create_log("$TMP_DIR/$PID.$VID.$TID.log");
-$LOG->log_time("Start test generation"
+$LOG->log_time("Start test generation");
 $LOG->log_msg("Parameters:");
 $LOG->log_msg(" -g $TOOL");
 $LOG->log_msg(" -p $PID");
