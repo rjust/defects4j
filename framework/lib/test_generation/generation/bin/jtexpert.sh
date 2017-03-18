@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Template wrapper script for a test generation tool
+# Wrapper script for JTExpert
 #
 # Exported environment variables:
 # D4J_HOME:                The root directory of the used Defects4J installation.
