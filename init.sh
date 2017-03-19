@@ -68,9 +68,12 @@ RANDOOP_VERSION="3.1.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 RANDOOP_AGENT_JAR="exercised-class-${RANDOOP_VERSION}.jar"
+# TODO: Remove the temporary download of javassist once it is included in the
+# Randoop release.
 cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \
                 && wget -nv $RANDOOP_URL/$RANDOOP_JAR \
-                && wget -nv $RANDOOP_URL/$RANDOOP_AGENT_JAR
+                && wget -nv $RANDOOP_URL/$RANDOOP_AGENT_JAR \
+                && wget -nv https://people.cs.umass.edu/~rjust/javassist.jar
 # Set symlink for the supported version of Randoop
 ln -sf $DIR_LIB_GEN/$RANDOOP_JAR $DIR_LIB_GEN/randoop-current.jar
 ln -sf $DIR_LIB_GEN/$RANDOOP_AGENT_JAR $DIR_LIB_GEN/randoop-agent-current.jar
@@ -85,7 +88,7 @@ T3_JAR="T3.jar"
 cd $DIR_LIB_GEN && [ ! -f $T3_JAR ] \
                 && wget -nv $T3_URL \
                 && unzip -j T3_dist.zip $T3_JAR -d .
-# Set symlink for the supported version of Randoop
+# Set symlink for the supported version of T3
 ln -sf $DIR_LIB_GEN/$T3_JAR $DIR_LIB_GEN/t3-current.jar
 
 #
@@ -93,11 +96,12 @@ ln -sf $DIR_LIB_GEN/$T3_JAR $DIR_LIB_GEN/t3-current.jar
 #
 echo
 echo "Setting up JTExpert and GRT ... "
+# TODO: Download JTExpert and GRT from official release websites, once they exist.
 JTE_GRT_URL="https://people.cs.umass.edu/~rjust/jte_grt.zip"
 cd $DIR_LIB_GEN && [ ! -f grt.jar ] \
                 && wget -nv $JTE_GRT_URL \
                 && unzip jte_grt.zip
-# Set symlink for the supported version of Randoop
+# Set symlink for the supported version of GRT and JTExpert
 ln -sf $DIR_LIB_GEN/grt.jar $DIR_LIB_GEN/grt-current.jar
 ln -sf $DIR_LIB_GEN/JTExpert/JTExpert-1.4.jar $DIR_LIB_GEN/jtexpert-current.jar
 

@@ -23,10 +23,8 @@ source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
 num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
 budget=$(echo "$num_classes * $D4J_CLASS_BUDGET" | bc)
 
-#TODO: Only retain target classes:
-#--include-if-class-exercised=$D4J_FILE_TARGET_CLASSES
-
-cmd="java -ea -classpath $(get_project_cp):$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
+cmd="java -ea -javaagent:$D4J_DIR_TESTGEN_LIB/randoop-agent-current.jar \
+-classpath $(get_project_cp):$D4J_DIR_TESTGEN_LIB/randoop-current.jar:$D4J_DIR_TESTGEN_LIB/javassist.jar \
 randoop.main.Main gentests \
 --classlist=$D4J_FILE_ALL_CLASSES \
 --junit-output-dir=$D4J_DIR_OUTPUT \
@@ -38,7 +36,8 @@ randoop.main.Main gentests \
 --null-ratio=0.1 \
 --no-error-revealing-tests=true \
 --ignore-flaky-tests=true \
---only-test-public-members=false"
+--only-test-public-members=false \
+--include-if-class-exercised=$D4J_FILE_TARGET_CLASSES"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then
