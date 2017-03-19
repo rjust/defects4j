@@ -64,13 +64,16 @@ ln -sf $DIR_LIB_RT/$EVOSUITE_RT_JAR $DIR_LIB_RT/evosuite-rt.jar
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="3.1.0"
+RANDOOP_VERSION="3.1.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
+RANDOOP_AGENT_JAR="exercised-class-${RANDOOP_VERSION}.jar"
 cd $DIR_LIB_GEN && [ ! -f $RANDOOP_JAR ] \
-                && wget -nv $RANDOOP_URL/$RANDOOP_JAR
+                && wget -nv $RANDOOP_URL/$RANDOOP_JAR \
+                && wget -nv $RANDOOP_URL/$RANDOOP_AGENT_JAR
 # Set symlink for the supported version of Randoop
 ln -sf $DIR_LIB_GEN/$RANDOOP_JAR $DIR_LIB_GEN/randoop-current.jar
+ln -sf $DIR_LIB_GEN/$RANDOOP_AGENT_JAR $DIR_LIB_GEN/randoop-agent-current.jar
 
 #
 # Download T3
