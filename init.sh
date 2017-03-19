@@ -90,6 +90,7 @@ cd $DIR_LIB_GEN && [ ! -f $T3_JAR ] \
                 && unzip -j T3_dist.zip $T3_JAR -d .
 # Set symlink for the supported version of T3
 ln -sf $DIR_LIB_GEN/$T3_JAR $DIR_LIB_GEN/t3-current.jar
+ln -sf $DIR_LIB_GEN/$T3_JAR $DIR_LIB_RT/t3-rt.jar
 
 #
 # Download JTExpert and GRT
