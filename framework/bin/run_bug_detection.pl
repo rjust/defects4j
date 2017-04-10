@@ -191,7 +191,7 @@ Examples:
 
 =over 4
 
-=item * F<Lang-11f-randoop.1.tar.bz2 (equal to Lang-1-randoop.tar.bz2)>
+=item * F<Lang-11f-randoop.1.tar.bz2 (equal to Lang-11f-randoop.tar.bz2)>
 
 =item * F<Lang-11b-randoop.2.tar.bz2>
 
