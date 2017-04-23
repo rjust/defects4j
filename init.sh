@@ -37,9 +37,9 @@ MAJOR_VERSION="1.3.1"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
-         && unzip -o "$MAJOR_ZIP" > /dev/null \
-         && rm "$MAJOR_ZIP" \
-         && cp major/bin/.ant major/bin/ant
+           && unzip -o "$MAJOR_ZIP" > /dev/null \
+           && rm "$MAJOR_ZIP" \
+           && cp major/bin/.ant major/bin/ant
 
 #
 # Download EvoSuite
@@ -51,12 +51,12 @@ EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$EVOSUITE_JAR" ] \
-                && wget -nv "$EVOSUITE_URL/$EVOSUITE_JAR"
+                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_JAR"
 cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
-                && wget -nv "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
+                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
-ln -sf "$DIR_LIB_GEN/$EVOSUITE_JAR $DIR_LIB_GEN/evosuite-current.jar"
-ln -sf "$DIR_LIB_RT/$EVOSUITE_RT_JAR $DIR_LIB_RT/evosuite-rt.jar"
+ln -sf "$DIR_LIB_GEN/$EVOSUITE_JAR" "$DIR_LIB_GEN/evosuite-current.jar"
+ln -sf "$DIR_LIB_RT/$EVOSUITE_RT_JAR" "$DIR_LIB_RT/evosuite-rt.jar"
 
 #
 # Download Randoop
