@@ -73,7 +73,7 @@
     <!-- Compile the sources using Gradle, used in newer commits -->
     <target name="gradle.compile" if="use.gradle" unless="d4j.mutation">
         <!-- Delete a test that is causing trouble -->
-        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" />
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
 
         <!-- Call the Gradle build script -->
         <exec executable="/bin/bash" failonerror="true">
@@ -84,6 +84,9 @@
 
     <!-- Compile the tests using Gradle, used in newer commits -->
     <target name="gradle.compile.tests" if="use.gradle">
+        <!-- Delete a test that is causing trouble -->
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
+
         <!-- Call the Gradle build script -->
         <exec executable="/bin/bash" failonerror="true">
             <arg value="gradlew"/>
