@@ -62,16 +62,14 @@
 
     <target name="compile"  depends="build-lib" description="Compile the source code.">
         <exec dir="${basedir}" executable="/bin/bash">			
-            <arg value="mvn"/>
-            <arg value="compile"/>
+            <arg line="mvn -pl 'guava,guava-testlib,guava-tests,.' compile -U"/>
         </exec>  
     </target>
   
     <target name="compile.tests" depends="build-lib" description="Compile the tests.">
        <exec dir="${basedir}" executable="/bin/bash">
-            <arg value="mvn"/>
-            <arg value="test-compile"/>
-        </exec>
+            <arg line="mvn -pl 'guava,guava-testlib,guava-tests,.' test-compile -U"/>
+       </exec>
     </target>
 
     <target name="test"  depends="compile.tests" description="Run unit tests">
