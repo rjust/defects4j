@@ -1,0 +1,110 @@
+<project name="Guava" basedir="${basedir}">
+
+    <fail message="Property script.dir not set!" unless="script.dir" />
+    <import file="../project.build.xml"/>
+
+    <condition property="use.java8">
+        <resourcecontains resource="${basedir}/pom.xml" substring="id>jdk8"/>
+    </condition>
+
+    <condition property="build.compiler" value="javac1.8" else="javac1.7">
+        <istrue value="${use.java8}"/>
+    </condition>
+
+    <available file="${basedir}/guava-tests" type="dir" property="old.version"/>
+    <available file="${basedir}/guava" type="dir" property="special.version"/>
+    <property name="build.home" value="${basedir}" />
+	
+    <property name="${ant.home}" value="/usr/apache-ant-1.10.1"/>
+    <property name="maven.repo.local" value="${user.home}/.m2/repository/" />
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
+
+    <property name="test.home"	value="${basedir}/guava-tests/test"/>
+    <property name="source.home" value="${basedir}/guava/src" /> 
+    <property name="test.target" value="${basedir}/guava-tests/target/test-classes"/>
+    <property name="classes.dir" value="${basedir}/guava/target/classes"/>
+    <property name="testlib.target" value="${basedir}/guava-testlib/target/classes"/>
+	
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+        <fileset dir="${script.dir}/build-scripts/Guava/use-lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="test.classpath">
+        <pathelement path="${junit.jar}" />
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.target}"/>		
+        <pathelement path="${formatter_cp}"/>
+        <pathelement path="${test.home}"/>
+        <pathelement path="${testlib.target}"/>
+        <fileset dir="${script.dir}/build-scripts/Guava/use-lib/">
+            <include name="**/*.jar" />
+        </fileset>
+	<fileset dir="${basedir}/compileLib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="major.classpath">
+        <path refid="test.classpath" />
+    </path>
+
+    <target name="build-lib" >
+        <mkdir dir="${basedir}/compileLib"/>
+        <exec executable="/bin/bash">			
+            <arg value="${script.dir}/build-scripts/Guava/D-ver.sh"/>
+            <arg value="${basedir}"/>
+            <arg value="${script.dir}"/>
+        </exec>
+    </target>
+
+    <target name="compile"  depends="build-lib" description="Compile the source code.">
+        <exec dir="${basedir}" executable="/bin/bash">			
+            <arg value="mvn"/>
+            <arg value="compile"/>
+        </exec>  
+    </target>
+  
+    <target name="compile.tests" depends="build-lib" description="Compile the tests.">
+       <exec dir="${basedir}" executable="/bin/bash">
+            <arg value="mvn"/>
+            <arg value="test-compile"/>
+        </exec>
+    </target>
+
+    <target name="test"  depends="compile.tests" description="Run unit tests">
+        <junit printsummary="no" haltonfailure="no" haltonerror="no" fork="yes" showOutput="true" >
+            <classpath refid="test.classpath"/>	
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class" >
+                    <fileset dir="${test.target}" excludes="${exclude.list}">
+                        <include name="**/*Test.class"/>						
+                        <exclude name="**/*Abstract*.class"/>
+                    </fileset>		
+                </batchtest>
+        </junit>
+    </target>
+
+<!--
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+-->
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
+            failonerror="true">
+
+            <arg value="${test.entry}"/>
+            <jvmarg value="-verbose:class"/>
+            <classpath refid="test.classpath"/>
+            <classpath>
+                <pathelement path="${formatter_cp}" />
+                <pathelement path="${junit.jar}" />
+            </classpath>
+        </java>
+    </target>
+</project>

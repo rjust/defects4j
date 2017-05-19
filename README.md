@@ -11,6 +11,7 @@ Defects4J contains bugs from the following open-source projects:
 |------------|----------------------|----------------|
 | Chart      | JFreechart           |  26            |
 | Closure    | Closure compiler     | 133            |
+| Guava      | Guava library        |  11            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
 | Mockito    | Mockito              |  38            |

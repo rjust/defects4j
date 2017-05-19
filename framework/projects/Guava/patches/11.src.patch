@@ -1,0 +1,13 @@
+diff --git a/google/common/cache/LocalCache.java b/google/common/cache/LocalCache.java
+index 75971dd..4a11078 100644
+--- a/google/common/cache/LocalCache.java
++++ b/google/common/cache/LocalCache.java
+@@ -2016,7 +2016,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+      * The weight of the live elements in this segment's region.
+      */
+     @GuardedBy("Segment.this")
+-    long totalWeight;
++    int totalWeight;
+ 
+     /**
+      * Number of updates that alter the size of the table. This is used during bulk-read methods to
