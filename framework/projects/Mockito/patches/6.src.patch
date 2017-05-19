@@ -1,0 +1,184 @@
+diff --git a/src/org/mockito/Matchers.java b/src/org/mockito/Matchers.java
+index d6893af..04f40e5 100644
+--- a/src/org/mockito/Matchers.java
++++ b/src/org/mockito/Matchers.java
+@@ -119,7 +119,7 @@ public class Matchers {
+      * @return <code>false</code>.
+      */
+     public static boolean anyBoolean() {
+-        return reportMatcher(new InstanceOf(Boolean.class)).returnFalse();
++        return reportMatcher(Any.ANY).returnFalse();
+     }
+ 
+     /**
+@@ -134,7 +134,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static byte anyByte() {
+-        return reportMatcher(new InstanceOf(Byte.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -149,7 +149,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static char anyChar() {
+-        return reportMatcher(new InstanceOf(Character.class)).returnChar();
++        return reportMatcher(Any.ANY).returnChar();
+     }
+ 
+     /**
+@@ -164,7 +164,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static int anyInt() {
+-        return reportMatcher(new InstanceOf(Integer.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -179,7 +179,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static long anyLong() {
+-        return reportMatcher(new InstanceOf(Long.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -194,7 +194,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static float anyFloat() {
+-        return reportMatcher(new InstanceOf(Float.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -209,7 +209,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static double anyDouble() {
+-        return reportMatcher(new InstanceOf(Double.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -224,7 +224,7 @@ public class Matchers {
+      * @return <code>0</code>.
+      */
+     public static short anyShort() {
+-        return reportMatcher(new InstanceOf(Short.class)).returnZero();
++        return reportMatcher(Any.ANY).returnZero();
+     }
+ 
+     /**
+@@ -241,7 +241,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T anyObject() {
+-        return (T) reportMatcher(new InstanceOf(Object.class)).returnNull();
++        return (T) reportMatcher(Any.ANY).returnNull();
+     }
+ 
+     /**
+@@ -289,7 +289,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T any(Class<T> clazz) {
+-        return (T) reportMatcher(new InstanceOf(clazz)).returnFor(clazz);
++        return (T) reportMatcher(Any.ANY).returnFor(clazz);
+     }
+     
+     /**
+@@ -306,7 +306,7 @@ public class Matchers {
+      * @return <code>null</code>.
+      */
+     public static <T> T any() {
+-        return (T) reportMatcher(Any.ANY).returnNull();
++        return (T) anyObject();
+     }
+ 
+     /**
+@@ -321,7 +321,7 @@ public class Matchers {
+      * @return empty String ("")
+      */
+     public static String anyString() {
+-        return reportMatcher(new InstanceOf(String.class)).returnString();
++        return reportMatcher(Any.ANY).returnString();
+     }
+     
+     /**
+@@ -336,7 +336,7 @@ public class Matchers {
+      * @return empty List.
+      */
+     public static List anyList() {
+-        return reportMatcher(new InstanceOf(List.class)).returnList();
++        return reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -355,7 +355,7 @@ public class Matchers {
+      * @return empty List.
+      */
+     public static <T> List<T> anyListOf(Class<T> clazz) {
+-        return anyList();
++        return (List) reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -370,7 +370,7 @@ public class Matchers {
+      * @return empty Set
+      */
+     public static Set anySet() {
+-        return reportMatcher(new InstanceOf(Set.class)).returnSet();
++        return reportMatcher(Any.ANY).returnSet();
+     }
+     
+     /**
+@@ -389,7 +389,7 @@ public class Matchers {
+      * @return empty Set
+      */
+     public static <T> Set<T> anySetOf(Class<T> clazz) {
+-        return anySet();
++        return (Set) reportMatcher(Any.ANY).returnSet();
+     }
+ 
+     /**
+@@ -404,7 +404,7 @@ public class Matchers {
+      * @return empty Map.
+      */
+     public static Map anyMap() {
+-        return reportMatcher(new InstanceOf(Map.class)).returnMap();
++        return reportMatcher(Any.ANY).returnMap();
+     }
+ 
+     /**
+@@ -424,7 +424,7 @@ public class Matchers {
+      * @return empty Map.
+      */
+     public static <K, V>  Map<K, V> anyMapOf(Class<K> keyClazz, Class<V> valueClazz) {
+-        return anyMap();
++        return reportMatcher(Any.ANY).returnMap();
+     }
+     
+     /**
+@@ -439,7 +439,7 @@ public class Matchers {
+      * @return empty Collection.
+      */
+     public static Collection anyCollection() {
+-        return reportMatcher(new InstanceOf(Collection.class)).returnList();
++        return reportMatcher(Any.ANY).returnList();
+     }    
+     
+     /**
+@@ -458,7 +458,7 @@ public class Matchers {
+      * @return empty Collection.
+      */
+     public static <T> Collection<T> anyCollectionOf(Class<T> clazz) {
+-        return anyCollection();
++        return (Collection) reportMatcher(Any.ANY).returnList();
+     }    
+ 
+     /**

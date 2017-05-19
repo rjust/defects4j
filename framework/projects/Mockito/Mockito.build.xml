@@ -1,0 +1,161 @@
+<project name="Mockito" basedir="${basedir}">
+
+    <!-- Force build in Java 1.7 for older versions of the project -->
+    <property name="build.compiler" value="javac1.7"/>
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
+
+    <!-- Check for an existing build.xml, should only exist in older commits -->
+    <available file="${basedir}/build.xml" property="ant.exists"/>
+
+    <!-- Check the "how to build" file to see if we should use ant or gradlew -->
+    <condition property="use.gradle">
+        <resourcecontains resource="HOWTO.BUILD.TXT" substring="> gradlew build"/>
+    </condition>
+
+    <!-- There is a period where ant build exists, but we want to use gradle anyways -->
+    <condition property="use.ant">
+        <and>
+            <istrue value="${ant.exists}"/>
+            <isfalse value="${use.gradle}"/>
+        </and>
+    </condition>
+
+    <!-- Location of compiled classes changes in older builds -->
+    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/test">
+        <istrue value="${use.ant}"/>
+    </condition>
+    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/main">
+        <istrue value="${use.ant}"/>
+    </condition>
+    <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">
+        <istrue value="${use.ant}"/>
+    </condition>
+
+    <condition property="build.home" value="${basedir}/target" else="${basedir}/build">
+        <istrue value="${use.ant}"/>
+    </condition>
+
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+        <fileset dir="${d4j.home}/framework/projects/${d4j.project.id}/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="d4j.test.classpath">
+        <pathelement path="${junit.jar}"/>
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.home}"/>
+        <fileset dir="${d4j.home}/framework/projects/${d4j.project.id}/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="${basedir}/compileLib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Clean up working directory, i.e., delete classes and test classes. -->
+   <target name="clean">
+        <delete dir="$test.home" />
+        <delete dir="$classes.dir" />
+    </target>
+
+    <!-- Build using Ant if build.xml exists, used in older commits -->
+    <target name="ant.compile" if="use.ant" unless="d4j.mutation">
+        <ant antfile="${basedir}/build.xml" target="compile" inheritAll="true"/>
+    </target>
+
+    <!-- Build tests using Ant if build.xml exists, used in older commits -->
+    <target name="ant.compile.tests" if="use.ant">
+        <ant antfile="${basedir}/build.xml" target="compile.test" inheritAll="true"/>
+    </target>
+
+    <!-- Compile the sources using Gradle, used in newer commits -->
+    <target name="gradle.compile" if="use.gradle" unless="d4j.mutation">
+        <!-- Delete a test that is causing trouble -->
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" />
+
+        <!-- Call the Gradle build script -->
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="gradlew"/>
+            <arg value="classes"/>
+        </exec>
+    </target>
+
+    <!-- Compile the tests using Gradle, used in newer commits -->
+    <target name="gradle.compile.tests" if="use.gradle">
+        <!-- Call the Gradle build script -->
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="gradlew"/>
+            <arg value="testClasses"/>
+        </exec>
+    </target>
+
+    <!-- Mutate classes if mutation is enabled -->
+    <target name="gradle.compile.mutants" if="d4j.mutation" unless="use.ant">
+        <!-- Backup build file and set mutation compiler -->
+        <copy file="${basedir}/build.gradle" tofile="${basedir}/build.gradle.bak"/>
+
+        <trycatch>
+        <try>
+            <exec executable="${d4j.home}/framework/projects/${d4j.project.id}/setMutationCompiler.sh" failonerror="true">
+                <arg value="${basedir}"/>
+                <arg value="${d4j.home}"/>
+            </exec>
+             <!-- Call the Gradle build script -->
+            <exec executable="/bin/bash" failonerror="true">
+                <arg value="gradlew"/>
+                <arg value="classes"/>
+                <arg value="-xtestClasses"/>
+                <arg value="-xtest"/>
+                <arg value="-xjar"/>
+            </exec>
+        </try>
+        <finally>
+            <!-- Restore the default compiler -->
+            <move file="${basedir}/build.gradle.bak" tofile="${basedir}/build.gradle"/>
+        </finally>
+        </trycatch>
+    </target>
+
+    <!-- Mutate classes if mutation is enabled -->
+    <target name="ant.compile.mutants" if="d4j.mutation" unless="use.gradle">
+        <ant antfile="${basedir}/build.xml" target="compile" inheritAll="true">
+            <property name="build.compiler" value="major.ant.MajorCompiler"/>
+        </ant>
+    </target>
+
+    <!-- target used for compiling sources.-->
+    <target name="compile" description="Compile the Mockito source code.">
+        <antcall target="gradle.compile"/>
+        <antcall target="ant.compile"/>
+        <antcall target="gradle.compile.mutants"/>
+        <antcall target="ant.compile.mutants"/>
+
+        <!-- Copy the correct version of libraries for testing -->
+        <mkdir dir="${basedir}/compileLib"/>
+        <exec executable="/bin/bash" failonerror="true">
+            <arg value="${d4j.home}/framework/projects/${d4j.project.id}/chooseDepedencyVersion.sh"/>
+            <arg value="${basedir}"/>
+            <arg value="${d4j.home}"/>
+        </exec>
+    </target>
+
+    <!-- target used for compiling test cases.-->
+    <target name="compile.tests" description="Compile the Mockito tests.">
+        <antcall target="gradle.compile.tests"/>
+        <antcall target="ant.compile.tests"/>
+    </target>
+
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
+        <include name="**/*Test.class"/>
+        <exclude name="**/Abstract*.class"/>
+        <exclude name="**/GitHubTicketFetcherTest*"/>
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+
+</project>

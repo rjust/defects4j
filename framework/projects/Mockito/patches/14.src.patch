@@ -1,0 +1,45 @@
+diff --git a/src/org/mockito/internal/MockHandler.java b/src/org/mockito/internal/MockHandler.java
+index b6c1b78..bc18218 100644
+--- a/src/org/mockito/internal/MockHandler.java
++++ b/src/org/mockito/internal/MockHandler.java
+@@ -17,7 +17,6 @@ import org.mockito.internal.stubbing.InvocationContainerImpl;
+ import org.mockito.internal.stubbing.OngoingStubbingImpl;
+ import org.mockito.internal.stubbing.StubbedInvocationMatcher;
+ import org.mockito.internal.stubbing.VoidMethodStubbableImpl;
+-import org.mockito.internal.verification.MockAwareVerificationMode;
+ import org.mockito.internal.verification.VerificationDataImpl;
+ import org.mockito.stubbing.Answer;
+ import org.mockito.stubbing.VoidMethodStubbable;
+@@ -74,11 +73,9 @@ public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInte
+         if (verificationMode != null) {
+             //We need to check if verification was started on the correct mock 
+             // - see VerifyingWithAnExtraCallToADifferentMockTest
+-            if (verificationMode instanceof MockAwareVerificationMode && ((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {
+                 VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl.getInvocations(), invocationMatcher);            
+                 verificationMode.verify(data);
+                 return null;
+-            }
+         }
+         
+         invocationContainerImpl.setInvocationForPotentialStubbing(invocationMatcher);
+diff --git a/src/org/mockito/internal/MockitoCore.java b/src/org/mockito/internal/MockitoCore.java
+index ae0d72b..fc99ea9 100755
+--- a/src/org/mockito/internal/MockitoCore.java
++++ b/src/org/mockito/internal/MockitoCore.java
+@@ -20,7 +20,6 @@ import org.mockito.internal.progress.ThreadSafeMockingProgress;
+ import org.mockito.internal.stubbing.OngoingStubbingImpl;
+ import org.mockito.internal.stubbing.StubberImpl;
+ import org.mockito.internal.util.MockUtil;
+-import org.mockito.internal.verification.MockAwareVerificationMode;
+ import org.mockito.internal.verification.VerificationDataImpl;
+ import org.mockito.internal.verification.VerificationModeFactory;
+ import org.mockito.internal.verification.api.InOrderContext;
+@@ -71,7 +70,7 @@ public class MockitoCore {
+         } else if (!mockUtil.isMock(mock)) {
+             reporter.notAMockPassedToVerify();
+         }
+-        mockingProgress.verificationStarted(new MockAwareVerificationMode(mock, mode));
++        mockingProgress.verificationStarted(mode);
+         return mock;
+     }
+     

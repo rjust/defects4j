@@ -1,0 +1,7 @@
+org.concurrentmockito.ThreadsRunAllTestsHalfManualTest
+org.mockito.internal.stubbing.defaultanswers.ReturnsGenericDeepStubsTest
+org.mockito.internal.util.reflection.GenericMetadataSupportTest
+org.mockitousage.bugs.DeepStubsWronglyReportsSerializationProblemsTest
+org.mockitousage.bugs.deepstubs.DeepStubFailingWhenGenricNestedAsRawTypeTest
+org.mockitousage.serialization.DeepStubsSerializableTest
+org.mockitousage.stubbing.DeepStubbingTest

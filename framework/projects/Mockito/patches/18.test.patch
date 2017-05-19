@@ -1,0 +1,47 @@
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+index 16d7616..1d3d9ce 100644
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+@@ -5,26 +5,14 @@
+ 
+ package org.mockito.internal.stubbing.defaultanswers;
+ 
+-import static org.mockito.Mockito.mock;
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.Date;
+-import java.util.HashMap;
+-import java.util.HashSet;
+-import java.util.LinkedHashMap;
+-import java.util.LinkedHashSet;
+-import java.util.LinkedList;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.SortedMap;
+-import java.util.SortedSet;
+-import java.util.TreeMap;
+-import java.util.TreeSet;
+ import org.junit.Test;
+ import org.mockito.invocation.Invocation;
+ import org.mockitoutil.TestBase;
+ 
++import java.util.*;
++
++import static org.mockito.Mockito.mock;
++
+ @SuppressWarnings("unchecked")
+ public class ReturnsEmptyValuesTest extends TestBase {
+ 
+@@ -52,11 +40,6 @@ public class ReturnsEmptyValuesTest extends TestBase {
+         assertNull(values.returnValueFor(String.class));
+     }
+ 
+-    @Test
+-    public void should_return_empty_iterable() throws Exception {
+-        assertFalse(((Iterable) values.returnValueFor(Iterable.class)).iterator().hasNext());
+-    }
+-
+     @Test public void should_return_primitive() {
+         assertEquals(false, values.returnValueFor(Boolean.TYPE));
+         assertEquals((char) 0, values.returnValueFor(Character.TYPE));

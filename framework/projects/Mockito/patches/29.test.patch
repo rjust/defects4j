@@ -1,0 +1,45 @@
+diff --git a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java b/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+index fcb84a9..0330538 100644
+--- a/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
++++ b/test/org/mockitousage/bugs/NPEWithCertainMatchersTest.java
+@@ -4,16 +4,16 @@
+  */
+ package org.mockitousage.bugs;
+ 
++import static org.mockito.Matchers.*;
++import static org.mockito.Mockito.never;
++import static org.mockito.Mockito.verify;
++
+ import org.junit.After;
+ import org.junit.Test;
+ import org.mockito.Mock;
+ import org.mockitousage.IMethods;
+ import org.mockitoutil.TestBase;
+ 
+-import static org.mockito.Matchers.*;
+-import static org.mockito.Mockito.never;
+-import static org.mockito.Mockito.verify;
+-
+ public class NPEWithCertainMatchersTest extends TestBase {
+ 
+     @Mock IMethods mock;
+@@ -50,18 +50,4 @@ public class NPEWithCertainMatchersTest extends TestBase {
+ 
+         verify(mock, never()).intArgumentMethod(same(new Integer(100)));
+     }
+-
+-    @Test(expected = AssertionError.class)
+-    public void shouldNotThrowNPEWhenNullPassedToEq() {
+-        mock.objectArgMethod("not null");
+-
+-        verify(mock).objectArgMethod(eq(null));
+-    }
+-
+-    @Test(expected = AssertionError.class)
+-    public void shouldNotThrowNPEWhenNullPassedToSame() {
+-        mock.objectArgMethod("not null");
+-
+-        verify(mock).objectArgMethod(same(null));
+-    }
+ }
+\ No newline at end of file

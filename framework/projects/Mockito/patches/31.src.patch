@@ -1,0 +1,22 @@
+diff --git a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+index 4942d7c..10d3b0f 100644
+--- a/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
++++ b/src/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java
+@@ -6,7 +6,6 @@ package org.mockito.internal.stubbing.defaultanswers;
+ 
+ import java.io.Serializable;
+ import java.lang.reflect.Method;
+-import java.util.Arrays;
+ 
+ import org.mockito.Mockito;
+ import org.mockito.cglib.proxy.MethodInterceptor;
+@@ -58,8 +57,7 @@ public class ReturnsSmartNulls implements Answer<Object>, Serializable {
+         }
+ 
+ 		private String formatMethodCall() {
+-			String args = Arrays.toString(invocation.getArguments());
+-			return invocation.getMethod().getName() + "(" + args.substring(1, args.length() - 1) +	")";
++			return invocation.getMethod().getName() + "()";
+ 		}
+     }
+ 

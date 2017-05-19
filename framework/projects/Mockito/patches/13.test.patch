@@ -1,0 +1,23 @@
+diff --git a/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java b/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
+index bb51f21..4e89eab 100644
+--- a/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
++++ b/test/org/mockitousage/bugs/VerifyingWithAnExtraCallToADifferentMockTest.java
+@@ -8,7 +8,6 @@ import static org.mockito.Mockito.*;
+ 
+ import org.junit.Test;
+ import org.mockito.Mock;
+-import org.mockito.exceptions.verification.NeverWantedButInvoked;
+ import org.mockitousage.IMethods;
+ import org.mockitoutil.TestBase;
+ 
+@@ -28,9 +27,5 @@ public class VerifyingWithAnExtraCallToADifferentMockTest extends TestBase {
+         
+         //then
+         verify(mockTwo).simpleMethod(mock.otherMethod());
+-        try {
+-            verify(mockTwo, never()).simpleMethod(mock.otherMethod());
+-            fail();
+-        } catch (NeverWantedButInvoked e) {}
+     }
+ }
+\ No newline at end of file

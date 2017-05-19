@@ -1,0 +1,20 @@
+diff --git a/src/org/mockito/internal/MockHandler.java b/src/org/mockito/internal/MockHandler.java
+index 8962ceb..6f2e4bc 100644
+--- a/src/org/mockito/internal/MockHandler.java
++++ b/src/org/mockito/internal/MockHandler.java
+@@ -74,14 +74,12 @@ public class MockHandler<T> implements MockitoInvocationHandler, MockHandlerInte
+         if (verificationMode != null) {
+             //We need to check if verification was started on the correct mock 
+             // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)
+-            if (((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {                
++            if (verificationMode instanceof MockAwareVerificationMode && ((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {                
+                 VerificationDataImpl data = new VerificationDataImpl(invocationContainerImpl, invocationMatcher);            
+                 verificationMode.verify(data);
+                 return null;
+-            } else {
+                 // this means there is an invocation on a different mock. Re-adding verification mode 
+                 // - see VerifyingWithAnExtraCallToADifferentMockTest (bug 138)
+-                mockingProgress.verificationStarted(verificationMode);
+             }
+         }
+         

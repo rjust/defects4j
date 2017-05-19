@@ -1,0 +1,11 @@
+org.mockitousage.annotation.DeprecatedAnnotationEngineApiTest
+org.mockitousage.annotation.DeprecatedMockAnnotationTest
+org.mockitousage.annotation.MockInjectionTest
+org.mockitousage.annotation.SpyInjectionTest
+org.mockitousage.bugs.InjectMocksShouldTryPropertySettersFirstBeforeFieldAccessTest
+org.mockitousage.bugs.InjectionByTypeShouldFirstLookForExactTypeThenAncestorTest
+org.mockitousage.bugs.ParentTestMockInjectionTest$BaseTest
+org.mockitousage.bugs.ParentTestMockInjectionTest$ImplicitTest
+org.mockitousage.bugs.ParentTestMockInjectionTest
+org.mockitousage.junitrunner.JUnit44RunnerTest
+org.mockitousage.junitrunner.JUnit45RunnerTest

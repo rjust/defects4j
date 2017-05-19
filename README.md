@@ -1,11 +1,11 @@
-Defects4J -- version 1.0.1
+Defects4J -- version 1.1.0
 ----------------
 Defects4J is a collection of reproducible bugs collected with the goal of
 advancing software testing research.
 
 The projects
 ---------------
-Defects4J contains bugs from the following open-source projects:
+Defects4J contains 395 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
@@ -13,6 +13,7 @@ Defects4J contains bugs from the following open-source projects:
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
+| Mockito    | Mockito              |  38            |
 | Time       | Joda-Time            |  27            |
 
 The bugs
@@ -41,7 +42,12 @@ Requirements
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
 Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version.
+program version. The next major release of Defects4J will be compatible with
+Java 8.
+
+Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
+If you are using the bugs outside of the Defects4J framework, export the `TZ`
+environment variable accordingly.
 
 Getting started
 ----------------
@@ -83,15 +89,15 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
-[issta14]: http://homes.cs.washington.edu/~rjust/publ/defects4j_issta_2014.pdf
-[fse14]: http://homes.cs.washington.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 
 Documentation
 --------------------
 A detailed documentation for any script or module is available as
 [html documentation][htmldocs].
 
-[htmldocs]: http://homes.cs.washington.edu/~rjust/defects4j/html_doc/index.html
+[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
 
 Command-line interface
 -----------------------

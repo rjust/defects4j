@@ -1,0 +1,9 @@
+# These tests fail non-deterministically on a number of the Mockito defects; the tests
+# make timing assumptions which may be violated if the executing machine experiences a
+# high load.
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeout
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeoutAndFail
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOnlyWithTimeout
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOnlyWithTimeoutAndFail
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldVerifyWithTimeout
+--- org.concurrentmockito.ThreadsRunAllTestsHalfManualTest::shouldRunInMultipleThreads

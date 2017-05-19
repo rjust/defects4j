@@ -1,0 +1,67 @@
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+index 1d3d9ce..13d90df 100644
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+@@ -64,17 +64,4 @@ public class ReturnsEmptyValuesTest extends TestBase {
+         assertTrue(result != (Object) 0);
+     }
+ 
+-    @Test public void should_return_zero_if_mock_is_compared_to_itself() {
+-        //given
+-        Date d = mock(Date.class);
+-        d.compareTo(d);
+-        Invocation compareTo = this.getLastInvocation();
+-
+-        //when
+-        Object result = values.answer(compareTo);
+-
+-        //then
+-        assertEquals(0, result);
+-    }
+-
+ }
+diff --git a/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java b/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
+index 9c84456..c1f28fb 100644
+--- a/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
++++ b/test/org/mockitousage/bugs/ShouldMocksCompareToBeConsistentWithEqualsTest.java
+@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
+ public class ShouldMocksCompareToBeConsistentWithEqualsTest extends TestBase {
+ 
+     @Test
+-    public void should_compare_to_be_consistent_with_equals() {
++    public void shouldCompareToBeConsistentWithEquals() {
+         //given
+         Date today    = mock(Date.class);
+         Date tomorrow = mock(Date.class);
+@@ -35,21 +35,7 @@ public class ShouldMocksCompareToBeConsistentWithEqualsTest extends TestBase {
+     }
+ 
+     @Test
+-    public void should_compare_to_be_consistent_with_equals_when_comparing_the_same_reference() {
+-        //given
+-        Date today    = mock(Date.class);
+-
+-        //when
+-        Set<Date> set = new TreeSet<Date>();
+-        set.add(today);
+-        set.add(today);
+-
+-        //then
+-        assertEquals(1, set.size());
+-    }
+-
+-    @Test
+-    public void should_allow_stubbing_and_verifying_compare_to() {
++    public void shouldAllowStubbingAndVerifyingCompareTo() {
+         //given
+         Date mock    = mock(Date.class);
+         when(mock.compareTo(any(Date.class))).thenReturn(10);
+@@ -63,7 +49,7 @@ public class ShouldMocksCompareToBeConsistentWithEqualsTest extends TestBase {
+     }
+ 
+     @Test
+-    public void should_reset_not_remove_default_stubbing() {
++    public void shouldResetNotRemoveDefaultStubbing() {
+         //given
+         Date mock    = mock(Date.class);
+         reset(mock);

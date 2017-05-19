@@ -1,0 +1,32 @@
+diff --git a/src/org/mockito/exceptions/Reporter.java b/src/org/mockito/exceptions/Reporter.java
+index d57e33d..9581a54 100644
+--- a/src/org/mockito/exceptions/Reporter.java
++++ b/src/org/mockito/exceptions/Reporter.java
+@@ -421,7 +421,7 @@ public class Reporter {
+         throw new NoInteractionsWanted(join(
+                 "No interactions wanted here:",
+                 new LocationImpl(),
+-                "But found this interaction on mock '" + safelyGetMockName(undesired.getMock()) + "':",
++                "But found this interaction on mock '" + undesired.getMock() + "':",
+                 undesired.getLocation(),
+                 scenario
+         ));
+@@ -431,7 +431,7 @@ public class Reporter {
+         throw new VerificationInOrderFailure(join(
+                 "No interactions wanted here:",
+                 new LocationImpl(),
+-                "But found this interaction on mock '" + safelyGetMockName(undesired.getMock()) + "':",
++                "But found this interaction on mock '" + undesired.getMock() + "':",
+                 undesired.getLocation()
+         ));
+     }
+@@ -674,9 +674,6 @@ public class Reporter {
+     }
+ 
+     private String exceptionCauseMessageIfAvailable(Exception details) {
+-        if (details.getCause() == null) {
+-            return details.getMessage();
+-        }
+         return details.getCause().getMessage();
+     }
+ 

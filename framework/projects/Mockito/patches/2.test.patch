@@ -1,0 +1,89 @@
+diff --git a/test/org/mockito/internal/util/TimerTest.java b/test/org/mockito/internal/util/TimerTest.java
+index e115668..5e5f0f7 100644
+--- a/test/org/mockito/internal/util/TimerTest.java
++++ b/test/org/mockito/internal/util/TimerTest.java
+@@ -1,8 +1,6 @@
+ package org.mockito.internal.util;
+ 
+-import org.junit.Assert;
+ import org.junit.Test;
+-import org.mockito.exceptions.misusing.FriendlyReminderException;
+ import org.mockitoutil.TestBase;
+ 
+ import static org.hamcrest.CoreMatchers.is;
+@@ -17,35 +15,22 @@ public class TimerTest extends TestBase {
+ 
+         //when
+         timer.start();
++        boolean stillCounting = timer.isCounting();
+ 
+         //then
+-        assertThat(timer.isCounting(), is(true));
++        assertThat(stillCounting, is(true));
+     }
+ 
+     @Test
+-    public void should_return_false_when_time_run_out() throws Exception {
++    public void should_return_false_if_task_is_outside_the_acceptable_time_bounds() {
+         //given
+-        Timer timer = new Timer(0);
++        Timer timer = new Timer(-1);
+         timer.start();
+ 
+         //when
+-        oneMillisecondPasses();
++        boolean stillCounting = timer.isCounting();
+ 
+         //then
+         assertThat(timer.isCounting(), is(false));
+     }
+-
+-    @Test
+-    public void should_throw_friendly_reminder_exception_when_duration_is_negative() {
+-        try {
+-            new Timer(-1);
+-            Assert.fail("It is forbidden to create timer with negative value of timer's duration.");
+-        } catch (FriendlyReminderException e) {
+-            Assert.assertTrue(true);
+-        }
+-    }
+-
+-    private void oneMillisecondPasses() throws InterruptedException {
+-        Thread.sleep(1);
+-    }
+ }
+diff --git a/test/org/mockito/verification/NegativeDurationTest.java b/test/org/mockito/verification/NegativeDurationTest.java
+deleted file mode 100644
+index fbb2480..0000000
+--- a/test/org/mockito/verification/NegativeDurationTest.java
++++ /dev/null
+@@ -1,29 +0,0 @@
+-package org.mockito.verification;
+-
+-import org.junit.Assert;
+-import org.junit.Test;
+-import org.mockito.Mockito;
+-import org.mockito.exceptions.misusing.FriendlyReminderException;
+-
+-public class NegativeDurationTest {
+-
+-    @Test
+-    public void should_throw_exception_when_duration_is_negative_for_timeout_method() {
+-        try {
+-            Mockito.timeout(-1);
+-            Assert.fail("It is forbidden to invoke Mockito.timeout() with negative value.");
+-        } catch (FriendlyReminderException e) {
+-            Assert.assertTrue(true);
+-        }
+-    }
+-
+-    @Test
+-    public void should_throw_exception_when_duration_is_negative_for_after_method() {
+-        try {
+-            Mockito.after(-1);
+-            Assert.fail("It is forbidden to invoke Mockito.after() with negative value.");
+-        } catch (FriendlyReminderException e) {
+-            Assert.assertTrue(true);
+-        }
+-    }
+-}
