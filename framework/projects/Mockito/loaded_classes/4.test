@@ -1,0 +1,9 @@
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase
+org.mockito.internal.invocation.InvocationBuilder
+org.mockitousage.IMethods
+org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.exceptions.ReporterTest
+org.mockito.configuration.MockitoConfiguration
+org.mockito.StateMaster
+org.mockitousage.bugs.ClassCastExOnVerifyZeroInteractionsTest

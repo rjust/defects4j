@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -46,13 +46,11 @@ of the checked-out project version.
     <path id="compile.classpath">
         <path refid="srcclasspath.path" />
         <path refid="classpath.path" />
+        <fileset dir="${d4j.workdir}/lib" includes="ant.jar" />
     </path>
     <!-- Values necessary for mutation scripting to work -->
     <property name="test.home" value="${testClasses.dir}" />
     <property name="build.home" value="${build.dir}" />
-
-    <!-- property needs to be set for coverage to work -->
-    <property name="cobertura.aux.classpath" value="${d4j.workdir}/lib/guava.jar" />
 
     <target name="compile.tests" depends="compile-tests" />
 

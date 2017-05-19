@@ -1,0 +1,14 @@
+org.mockito.internal.verification.argumentmatching.ArgumentMatchingToolTest
+org.mockito.internal.verification.checkers.MissingInvocationCheckerTest
+org.mockitousage.basicapi.UsingVarargsTest
+org.mockitousage.bugs.ActualInvocationHasNullArgumentNPEBugTest
+org.mockitousage.matchers.CustomMatcherDoesYieldCCETest
+org.mockitousage.matchers.CustomMatchersTest
+org.mockitousage.matchers.HamcrestMatchersTest
+org.mockitousage.matchers.MatchersTest
+org.mockitousage.matchers.ReflectionMatchersTest
+org.mockitousage.stacktrace.ClickableStackTracesTest
+org.mockitousage.verification.BasicVerificationTest
+org.mockitousage.verification.DescriptiveMessagesWhenVerificationFailsTest
+org.mockitousage.verification.PrintingVerboseTypesWithArgumentsTest
+org.mockitousage.verification.VerificationUsingMatchersTest

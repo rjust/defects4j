@@ -1,0 +1,39 @@
+diff --git a/src/org/mockito/internal/invocation/InvocationMatcher.java b/src/org/mockito/internal/invocation/InvocationMatcher.java
+index 3b3795b..a3a7c08 100644
+--- a/src/org/mockito/internal/invocation/InvocationMatcher.java
++++ b/src/org/mockito/internal/invocation/InvocationMatcher.java
+@@ -124,12 +124,10 @@ public class InvocationMatcher implements DescribedInvocation, CapturesArgumensF
+                     ((CapturesArguments) m).captureFrom(invocation.getArgumentAt(position, Object.class));
+                 }
+             }
+-            for (Matcher m : uniqueMatcherSet(indexOfVararg)) {
++            for (int position = indexOfVararg; position < matchers.size(); position++) {
++                Matcher m = matchers.get(position);
+                 if (m instanceof CapturesArguments) {
+-                    Object rawArgument = invocation.getRawArguments()[indexOfVararg];
+-                    for (int i = 0; i < Array.getLength(rawArgument); i++) {
+-                        ((CapturesArguments) m).captureFrom(Array.get(rawArgument, i));
+-                    }
++                    ((CapturesArguments) m).captureFrom(invocation.getRawArguments()[position - indexOfVararg]);
+                 }
+             }
+         } else {
+@@ -142,18 +140,6 @@ public class InvocationMatcher implements DescribedInvocation, CapturesArgumensF
+         }
+     }
+ 
+-    private Set<Matcher> uniqueMatcherSet(int indexOfVararg) {
+-        HashSet<Matcher> set = new HashSet<Matcher>();
+-        for (int position = indexOfVararg; position < matchers.size(); position++) {
+-            Matcher matcher = matchers.get(position);
+-            if(matcher instanceof MatcherDecorator) {
+-                set.add(((MatcherDecorator) matcher).getActualMatcher());
+-            } else {
+-                set.add(matcher);
+-            }
+-        }
+-        return set;
+-    }
+ 
+     public static List<InvocationMatcher> createFrom(List<Invocation> invocations) {
+         LinkedList<InvocationMatcher> out = new LinkedList<InvocationMatcher>();

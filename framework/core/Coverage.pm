@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ sub coverage {
     if ($relevant_tests) {
         $project->run_relevant_tests($log_file) or return undef;
     } else {
-        $project->run_tests($log_file) or return undef;
+        $project->run_tests($log_file, $single_test) or return undef;
     }
 
 	# Generate coverage report

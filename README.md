@@ -1,11 +1,11 @@
-Defects4J -- version 1.0.1
+Defects4J -- version 1.1.0
 ----------------
 Defects4J is a collection of reproducible bugs collected with the goal of
 advancing software testing research.
 
 The projects
 ---------------
-Defects4J contains bugs from the following open-source projects:
+Defects4J contains 395 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
@@ -13,6 +13,7 @@ Defects4J contains bugs from the following open-source projects:
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
+| Mockito    | Mockito              |  38            |
 | Time       | Joda-Time            |  27            |
 
 The bugs
@@ -41,7 +42,12 @@ Requirements
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
 Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version.
+program version. The next major release of Defects4J will be compatible with
+Java 8.
+
+Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
+If you are using the bugs outside of the Defects4J framework, export the `TZ`
+environment variable accordingly.
 
 Getting started
 ----------------

@@ -1,0 +1,29 @@
+diff --git a/src/org/mockito/internal/util/Timer.java b/src/org/mockito/internal/util/Timer.java
+index 907e545..4a51e5c 100644
+--- a/src/org/mockito/internal/util/Timer.java
++++ b/src/org/mockito/internal/util/Timer.java
+@@ -1,6 +1,5 @@
+ package org.mockito.internal.util;
+ 
+-import org.mockito.exceptions.Reporter;
+ 
+ public class Timer {
+ 
+@@ -8,7 +7,6 @@ public class Timer {
+     private long startTime = -1;
+ 
+     public Timer(long durationMillis) {
+-        validateInput(durationMillis);
+         this.durationMillis = durationMillis;
+     }
+ 
+@@ -27,9 +25,4 @@ public class Timer {
+         startTime = System.currentTimeMillis();
+     }
+ 
+-    private void validateInput(long durationMillis) {
+-        if (durationMillis < 0) {
+-            new Reporter().cannotCreateTimerWithNegativeDurationTime(durationMillis);
+-        }
+-    }
+ }

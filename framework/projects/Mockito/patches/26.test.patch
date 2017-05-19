@@ -1,0 +1,300 @@
+diff --git a/test/org/mockito/internal/progress/HandyReturnValuesTest.java b/test/org/mockito/internal/progress/HandyReturnValuesTest.java
+index c281952..776205c 100644
+--- a/test/org/mockito/internal/progress/HandyReturnValuesTest.java
++++ b/test/org/mockito/internal/progress/HandyReturnValuesTest.java
+@@ -1,22 +1,19 @@
+-/*
+- * Copyright (c) 2007 Mockito contributors
+- * This program is made available under the terms of the MIT License.
+- */
++/*
++ * Copyright (c) 2007 Mockito contributors
++ * This program is made available under the terms of the MIT License.
++ */
+ package org.mockito.internal.progress;
+ 
+ import org.junit.Test;
++import org.mockitoutil.TestBase;
+ 
+-import static org.fest.assertions.Assertions.assertThat;
+-import static org.junit.Assert.assertNotNull;
+-import static org.junit.Assert.assertNull;
+ 
+-
+-public class HandyReturnValuesTest {
++public class HandyReturnValuesTest extends TestBase {
+ 
+     private HandyReturnValues h = new HandyReturnValues();
+ 
+     @Test
+-    public void should_not_return_null_for_primitives_wrappers() throws Exception {
++    public void shouldNotReturnNullForPrimitivesWprappers() throws Exception {
+         assertNotNull(h.returnFor(Boolean.class));
+         assertNotNull(h.returnFor(Character.class));
+         assertNotNull(h.returnFor(Byte.class));
+@@ -24,11 +21,11 @@ public class HandyReturnValuesTest {
+         assertNotNull(h.returnFor(Integer.class));
+         assertNotNull(h.returnFor(Long.class));
+         assertNotNull(h.returnFor(Float.class));
+-        assertNotNull(h.returnFor(Double.class));
++        assertNotNull(h.returnFor(Double.class));        
+     }
+ 
+     @Test
+-    public void should_not_return_null_for_primitives() throws Exception {
++    public void shouldNotReturnNullForPrimitives() throws Exception {
+         assertNotNull(h.returnFor(boolean.class));
+         assertNotNull(h.returnFor(char.class));
+         assertNotNull(h.returnFor(byte.class));
+@@ -39,26 +36,15 @@ public class HandyReturnValuesTest {
+         assertNotNull(h.returnFor(double.class));
+     }
+ 
+-    @Test public void should_default_values_for_primitive() {
+-        assertThat(h.returnFor(boolean.class)).isFalse();
+-        assertThat(h.returnFor(char.class)).isEqualTo('\u0000');
+-        assertThat(h.returnFor(byte.class)).isEqualTo((byte) 0);
+-        assertThat(h.returnFor(short.class)).isEqualTo((short) 0);
+-        assertThat(h.returnFor(int.class)).isEqualTo(0);
+-        assertThat(h.returnFor(long.class)).isEqualTo(0L);
+-        assertThat(h.returnFor(float.class)).isEqualTo(0.0F);
+-        assertThat(h.returnFor(double.class)).isEqualTo(0.0D);
+-    }
+-
+     @Test
+-    public void should_return_null_for_everything_else() throws Exception {
++    public void shouldReturnNullForEverythingElse() throws Exception {
+         assertNull(h.returnFor(Object.class));
+         assertNull(h.returnFor(String.class));
+         assertNull(h.returnFor(null));
+     }
+ 
+     @Test
+-    public void should_return_handy_value_for_instances() throws Exception {
++    public void shouldReturnHandyValueForInstances() throws Exception {
+         assertNull(h.returnFor(new Object()));
+         assertNull(h.returnFor((Object) null));
+         
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java b/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
+index 593398e..e305ec2 100755
+--- a/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/HasPrimitiveMethods.java
+@@ -1,17 +1,14 @@
+-/*
+- * Copyright (c) 2007 Mockito contributors
+- * This program is made available under the terms of the MIT License.
+- */
++/*
++ * Copyright (c) 2007 Mockito contributors
++ * This program is made available under the terms of the MIT License.
++ */
+ package org.mockito.internal.stubbing.defaultanswers;
+ 
+-@SuppressWarnings("unused")
+ interface HasPrimitiveMethods {
+     boolean booleanMethod();
+     char charMethod();
+-    byte byteMethod();
+-    short shortMethod();
+     int intMethod();
+     long longMethod();
+     float floatMethod();
+     double doubleMethod();
+-}
++}
+\ No newline at end of file
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+index 3689938..0303924 100644
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValuesTest.java
+@@ -18,7 +18,7 @@ public class ReturnsEmptyValuesTest extends TestBase {
+ 
+     ReturnsEmptyValues values = new ReturnsEmptyValues();
+ 
+-    @Test public void should_return_empty_collections_or_null_for_non_collections() {
++    @Test public void shouldReturnEmptyCollectionsOrNullForNonCollections() {
+         assertTrue(((Collection) values.returnValueFor(Collection.class)).isEmpty());
+ 
+         assertTrue(((Set) values.returnValueFor(Set.class)).isEmpty());
+@@ -40,18 +40,18 @@ public class ReturnsEmptyValuesTest extends TestBase {
+         assertNull(values.returnValueFor(String.class));
+     }
+ 
+-    @Test public void should_return_primitive() {
++    @Test public void shouldReturnPrimitive() {
+         assertEquals(false, values.returnValueFor(Boolean.TYPE));
+         assertEquals((char) 0, values.returnValueFor(Character.TYPE));
+-        assertEquals((byte) 0, values.returnValueFor(Byte.TYPE));
+-        assertEquals((short) 0, values.returnValueFor(Short.TYPE));
++        assertEquals(0, values.returnValueFor(Byte.TYPE));
++        assertEquals(0, values.returnValueFor(Short.TYPE));
+         assertEquals(0, values.returnValueFor(Integer.TYPE));
+-        assertEquals(0L, values.returnValueFor(Long.TYPE));
+-        assertEquals(0F, values.returnValueFor(Float.TYPE));
+-        assertEquals(0D, values.returnValueFor(Double.TYPE));
++        assertEquals(0, values.returnValueFor(Long.TYPE));
++        assertEquals(0, values.returnValueFor(Float.TYPE));
++        assertEquals(0, values.returnValueFor(Double.TYPE));
+     }
+ 
+-    @Test public void should_return_non_zero_for_compareTo_method() {
++    @Test public void shouldReturnNonZeroForCompareToMethod() {
+         //given
+         Date d = mock(Date.class);
+         d.compareTo(new Date());
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
+index 9e93502..d774047 100755
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsMocksTest.java
+@@ -1,7 +1,7 @@
+-/*
+- * Copyright (c) 2007 Mockito contributors
+- * This program is made available under the terms of the MIT License.
+- */
++/*
++ * Copyright (c) 2007 Mockito contributors
++ * This program is made available under the terms of the MIT License.
++ */
+ package org.mockito.internal.stubbing.defaultanswers;
+ 
+ import org.junit.Test;
+@@ -22,43 +22,40 @@ public class ReturnsMocksTest extends TestBase {
+ 
+     @Test
+     //TODO split into separate
+-    public void should_return_mock_value_for_interface() throws Exception {
++    public void shouldReturnMockValueForInterface() throws Exception {
+         Object interfaceMock = values.returnValueFor(FooInterface.class);
+         assertTrue(new MockUtil().isMock(interfaceMock));
+     }
+ 
+-    @Test
+-    public void should_return_mock_value_for_class() throws Exception {
++    public void shouldReturnMockValueForClass() throws Exception {
+         Object classMock = values.returnValueFor(BarClass.class);
+         assertTrue(new MockUtil().isMock(classMock));
+     }
+ 
+     @Test
+-    public void should_return_null_for_final_class() throws Exception {
++    public void shouldReturnNullForFinalClass() throws Exception {
+         assertNull(values.returnValueFor(Baz.class));
+     }
+ 
+     @Test
+-    public void should_return_the_usual_default_values_for_primitives() throws Throwable {
++    public void shouldReturnTheUsualDefaultValuesForPrimitives()
++            throws Throwable {
+         ReturnsMocks answer = new ReturnsMocks();
+         assertEquals(false, answer.answer(invocationOf(HasPrimitiveMethods.class, "booleanMethod")));
+         assertEquals((char) 0, answer.answer(invocationOf(HasPrimitiveMethods.class, "charMethod")));
+-        assertEquals((byte) 0, answer.answer(invocationOf(HasPrimitiveMethods.class, "byteMethod")));
+-        assertEquals((short) 0, answer.answer(invocationOf(HasPrimitiveMethods.class, "shortMethod")));
+         assertEquals(0, answer.answer(invocationOf(HasPrimitiveMethods.class, "intMethod")));
+-        assertEquals(0L, answer.answer(invocationOf(HasPrimitiveMethods.class, "longMethod")));
+-        assertEquals(0f, answer.answer(invocationOf(HasPrimitiveMethods.class, "floatMethod")));
+-        assertEquals(0d, answer.answer(invocationOf(HasPrimitiveMethods.class, "doubleMethod")));
++        assertEquals(0, answer.answer(invocationOf(HasPrimitiveMethods.class, "longMethod")));
++        assertEquals(0, answer.answer(invocationOf(HasPrimitiveMethods.class, "floatMethod")));
++        assertEquals(0, answer.answer(invocationOf(HasPrimitiveMethods.class, "doubleMethod")));
+     }
+-
+-    @SuppressWarnings("unused")
++    
+     interface StringMethods {
+         String stringMethod();
+         String[] stringArrayMethod();
+     }
+     
+     @Test
+-    public void should_return_empty_array() throws Throwable {
++    public void shouldReturnEmptyArray() throws Throwable {
+         String[] ret = (String[]) values.answer(invocationOf(StringMethods.class, "stringArrayMethod"));
+         
+         assertTrue(ret.getClass().isArray());
+@@ -66,7 +63,7 @@ public class ReturnsMocksTest extends TestBase {
+     }
+     
+     @Test
+-    public void should_return_empty_string() throws Throwable {
++    public void shouldReturnEmptyString() throws Throwable {
+         assertEquals("", values.answer(invocationOf(StringMethods.class, "stringMethod")));
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+index c20fa66..071e938 100644
+--- a/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
++++ b/test/org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNullsTest.java
+@@ -1,7 +1,7 @@
+-/*
+- * Copyright (c) 2007 Mockito contributors
+- * This program is made available under the terms of the MIT License.
+- */
++/*
++ * Copyright (c) 2007 Mockito contributors
++ * This program is made available under the terms of the MIT License.
++ */
+ package org.mockito.internal.stubbing.defaultanswers;
+ 
+ import org.junit.Test;
+@@ -12,26 +12,23 @@ import org.mockitoutil.TestBase;
+ public class ReturnsSmartNullsTest extends TestBase {
+ 
+     @Test
+-    public void should_return_the_usual_default_values_for_primitives() throws Throwable {
++    public void shouldReturnTheUsualDefaultValuesForPrimitives() throws Throwable {
+         Answer<Object> answer = new ReturnsSmartNulls();
+         assertEquals(false  ,   answer.answer(invocationOf(HasPrimitiveMethods.class, "booleanMethod")));
+         assertEquals((char) 0,  answer.answer(invocationOf(HasPrimitiveMethods.class, "charMethod")));
+-        assertEquals((byte) 0,  answer.answer(invocationOf(HasPrimitiveMethods.class, "byteMethod")));
+-        assertEquals((short) 0, answer.answer(invocationOf(HasPrimitiveMethods.class, "shortMethod")));
+         assertEquals(0,         answer.answer(invocationOf(HasPrimitiveMethods.class, "intMethod")));
+-        assertEquals(0L,        answer.answer(invocationOf(HasPrimitiveMethods.class, "longMethod")));
+-        assertEquals(0f,        answer.answer(invocationOf(HasPrimitiveMethods.class, "floatMethod")));
+-        assertEquals(0d,        answer.answer(invocationOf(HasPrimitiveMethods.class, "doubleMethod")));
++        assertEquals(0,         answer.answer(invocationOf(HasPrimitiveMethods.class, "longMethod")));
++        assertEquals(0,         answer.answer(invocationOf(HasPrimitiveMethods.class, "floatMethod")));
++        assertEquals(0,         answer.answer(invocationOf(HasPrimitiveMethods.class, "doubleMethod")));
+     }
+ 
+-    @SuppressWarnings("unused")
+     interface Foo {
+         Foo get();
+         Foo withArgs(String oneArg, String otherArg);
+     }
+ 
+     @Test
+-    public void should_return_an_object_that_fails_on_any_method_invocation_for_non_primitives() throws Throwable {
++    public void shouldReturnAnObjectThatFailsOnAnyMethodInvocationForNonPrimitives() throws Throwable {
+         Answer<Object> answer = new ReturnsSmartNulls();
+ 
+         Foo smartNull = (Foo) answer.answer(invocationOf(Foo.class, "get"));
+@@ -43,7 +40,7 @@ public class ReturnsSmartNullsTest extends TestBase {
+     }
+ 
+     @Test
+-    public void should_return_an_object_that_allows_object_methods() throws Throwable {
++    public void shouldReturnAnObjectThatAllowsObjectMethods() throws Throwable {
+         Answer<Object> answer = new ReturnsSmartNulls();
+ 
+         Foo smartNull = (Foo) answer.answer(invocationOf(Foo.class, "get"));
+@@ -53,7 +50,7 @@ public class ReturnsSmartNullsTest extends TestBase {
+     }
+ 
+     @Test
+-    public void should_print_the_parameters_when_calling_a_method_with_args() throws Throwable {
++    public void shouldPrintTheParametersWhenCallingAMethodWithArgs() throws Throwable {
+     	Answer<Object> answer = new ReturnsSmartNulls();
+ 
+     	Foo smartNull = (Foo) answer.answer(invocationOf(Foo.class, "withArgs", "oompa", "lumpa"));
+@@ -64,7 +61,7 @@ public class ReturnsSmartNullsTest extends TestBase {
+     }
+ 
+     @Test
+-	public void should_print_the_parameters_on_SmartNullPointerException_message() throws Throwable {
++	public void shouldPrintTheParametersOnSmartNullPointerExceptionMessage() throws Throwable {
+     	Answer<Object> answer = new ReturnsSmartNulls();
+ 
+         Foo smartNull = (Foo) answer.answer(invocationOf(Foo.class, "withArgs", "oompa", "lumpa"));

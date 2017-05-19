@@ -1,0 +1,65 @@
+diff --git a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+index a45d549..f15833c 100644
+--- a/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
++++ b/test/org/mockito/internal/util/reflection/GenericMetadataSupportTest.java
+@@ -7,7 +7,6 @@ package org.mockito.internal.util.reflection;
+ import static org.fest.assertions.Assertions.assertThat;
+ import static org.junit.Assert.fail;
+ import static org.mockito.internal.util.reflection.GenericMetadataSupport.inferFrom;
+-
+ import java.io.Serializable;
+ import java.lang.reflect.Method;
+ import java.lang.reflect.Type;
+@@ -18,9 +17,9 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+-
+ import org.junit.Test;
+ 
++@SuppressWarnings("unused")
+ public class GenericMetadataSupportTest {
+   
+     interface GenericsSelfReference<T extends GenericsSelfReference<T>> {
+@@ -63,6 +62,7 @@ public class GenericMetadataSupportTest {
+         assertThat(inferFrom(StringList.class).rawType()).isEqualTo(StringList.class);
+     }
+ 
++
+     @Test
+     public void can_get_raw_type_from_ParameterizedType() throws Exception {
+         assertThat(inferFrom(ListOfAnyNumbers.class.getGenericInterfaces()[0]).rawType()).isEqualTo(List.class);
+diff --git a/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java b/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
+deleted file mode 100644
+index d7f28f9..0000000
+--- a/test/org/mockitousage/bugs/deepstubs/DeepStubFailingWhenGenricNestedAsRawTypeTest.java
++++ /dev/null
+@@ -1,28 +0,0 @@
+-package org.mockitousage.bugs.deepstubs;
+-
+-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+-import static org.mockito.Mockito.mock;
+-import static org.mockito.Mockito.when;
+-
+-import org.junit.Test;
+-
+-public class DeepStubFailingWhenGenricNestedAsRawTypeTest {
+-
+-  interface MyClass1<MC2 extends MyClass2> {
+-    MC2 getNested();
+-  }
+-
+-  interface MyClass2<MC3 extends MyClass3> {
+-    MC3 getNested();
+-  }
+-
+-  interface MyClass3 {
+-    String returnSomething();
+-  }
+-
+-  @Test
+-  public void discoverDeepMockingOfGenerics() {
+-    MyClass1 myMock1 = mock(MyClass1.class, RETURNS_DEEP_STUBS);
+-    when(myMock1.getNested().getNested().returnSomething()).thenReturn("Hello World.");
+-  }
+-}

@@ -1,0 +1,50 @@
+diff --git a/src/org/mockito/internal/creation/MockSettingsImpl.java b/src/org/mockito/internal/creation/MockSettingsImpl.java
+index 5285d90..bf2cf3b 100644
+--- a/src/org/mockito/internal/creation/MockSettingsImpl.java
++++ b/src/org/mockito/internal/creation/MockSettingsImpl.java
+@@ -17,11 +17,9 @@ public class MockSettingsImpl implements MockSettings {
+     private Object spiedInstance;
+     private Answer<Object> defaultAnswer;
+     private MockName mockName;
+-    private boolean serializable;
+ 
+     public MockSettings serializable() {
+-        this.serializable = true;
+-        return this;
++        return this.extraInterfaces(java.io.Serializable.class);
+     }
+ 
+     public MockSettings extraInterfaces(Class<?>... extraInterfaces) {
+@@ -73,7 +71,7 @@ public class MockSettingsImpl implements MockSettings {
+     }
+ 
+     public boolean isSerializable() {
+-        return serializable;
++        return extraInterfaces != null && java.util.Arrays.asList(extraInterfaces).contains(java.io.Serializable.class);
+     }
+ 
+     public void initiateMockName(Class classToMock) {
+diff --git a/src/org/mockito/internal/util/MockUtil.java b/src/org/mockito/internal/util/MockUtil.java
+index b8ed8b4..d2d042f 100644
+--- a/src/org/mockito/internal/util/MockUtil.java
++++ b/src/org/mockito/internal/util/MockUtil.java
+@@ -16,7 +16,6 @@ import org.mockito.internal.creation.MockSettingsImpl;
+ import org.mockito.internal.creation.jmock.ClassImposterizer;
+ import org.mockito.internal.util.reflection.LenientCopyTool;
+ 
+-import java.io.Serializable;
+ 
+ @SuppressWarnings("unchecked")
+ public class MockUtil {
+@@ -43,11 +42,7 @@ public class MockUtil {
+         Class<?>[] interfaces = settings.getExtraInterfaces();
+ 
+         Class<?>[] ancillaryTypes;
+-        if (settings.isSerializable()) {
+-            ancillaryTypes = interfaces == null ? new Class<?>[] {Serializable.class} : new ArrayUtils().concat(interfaces, Serializable.class);
+-        } else {
+             ancillaryTypes = interfaces == null ? new Class<?>[0] : interfaces;
+-        }
+ 
+         Object spiedInstance = settings.getSpiedInstance();
+         

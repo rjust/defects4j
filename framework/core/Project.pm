@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -414,6 +414,7 @@ sub checkout_vid {
     # Commit and tag the pre-fix revision
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_PRE_FIX;
     $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
            " && git tag $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Tag pre-fix revision")
@@ -586,7 +587,7 @@ This subroutine returns a reference to a hash with the keys C<src> and C<test>:
 If the test execution fails, the returned reference is C<undef>.
 
 A class is included in the result if it exists in the source or test directory
-of the checked-out program verion and if it was loaded during the test execution.
+of the checked-out program version and if it was loaded during the test execution.
 
 The location of the test sources can be provided with the optional parameter F<test_dir>.
 The default is the test directory of the developer-written tests.
@@ -722,7 +723,7 @@ sub mutation_analysis {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $log_file, $relevant_tests, $single_test) = @_;
     my $log = "-logfile $log_file";
-    my $relevant = $relevant_tests ? "true" : "false";
+    my $relevant = $relevant_tests ? "-Dd4j.relevant.tests.only=true" : "";
 
     my $single_test_opt = "";
     if (defined $single_test) {
@@ -735,8 +736,7 @@ sub mutation_analysis {
     return $self->_ant_call("mutation.test",
                             "-Dmajor.exclude=$basedir/exclude.txt " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
-                            "-Dd4j.relevant.tests.only=$relevant " .
-                            "$log $single_test_opt");
+                            "$relevant $log $single_test_opt");
 }
 
 =pod
@@ -884,6 +884,18 @@ Delegate to the L<VCS> backend.
 sub lookup {
     my ($self, $vid) = @_;
     return $self->{_vcs}->lookup($vid);
+}
+
+=pod
+
+  $project->lookup_revision_id(revision)
+
+Delegate to the L<VCS> backend.
+
+=cut
+sub lookup_revision_id {
+    my ($self, $revision) = @_;
+    return $self->{_vcs}->lookup_revision_id($revision);
 }
 
 =pod
