@@ -3,22 +3,8 @@
     <fail message="Property script.dir not set!" unless="script.dir" />
     <import file="../project.build.xml"/>
 
-    <condition property="use.java8">
-        <resourcecontains resource="${basedir}/pom.xml" substring="id>jdk8"/>
-    </condition>
-
-    <condition property="build.compiler" value="javac1.8" else="javac1.7">
-        <istrue value="${use.java8}"/>
-    </condition>
-
-    <available file="${basedir}/guava-tests" type="dir" property="old.version"/>
-    <available file="${basedir}/guava" type="dir" property="special.version"/>
     <property name="build.home" value="${basedir}" />
-	
-    <property name="${ant.home}" value="/usr/apache-ant-1.10.1"/>
-    <property name="maven.repo.local" value="${user.home}/.m2/repository/" />
     <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
-
     <property name="test.home"	value="${basedir}/guava-tests/test"/>
     <property name="source.home" value="${basedir}/guava/src" /> 
     <property name="test.target" value="${basedir}/guava-tests/target/test-classes"/>
@@ -66,7 +52,7 @@
         </exec>  
     </target>
   
-    <target name="compile.tests" depends="build-lib" description="Compile the tests.">
+    <target name="compile.tests" depends="build-lib,compile" description="Compile the tests.">
        <exec dir="${basedir}" executable="/bin/bash">
             <arg line="mvn -pl 'guava,guava-testlib,guava-tests,.' test-compile -U"/>
        </exec>
