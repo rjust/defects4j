@@ -172,6 +172,17 @@ The directory structure is as follows:
            |
            |--- test:          Scripts to test the framework.
 
+Additional resources
+--------------------
+#### Fault localization (FL)
+  - [Scripts and annotations for evaluating FL techniques][FL-eval]
+
+#### Automated program repair (APR)
+  - [Scripts and annotations for evaluating APR techniques][APR-eval]
+
+[fl-eval]: https://bitbucket.org/rjust/fault-localization-data
+[APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
+
 License
 ---------
 MIT License, see `license.txt` for more information.
