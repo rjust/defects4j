@@ -29,12 +29,3 @@ do
 		break;
 	fi
 done
-
-cat pom.xml | while read line
-do 
-	if [ "$line" ==	"<groupId>org.truth0</groupId>" ];then
-		cp $2/build-scripts/Guava/multi-v-lib/truth-0.11.jar $1/compileLib/
-		break;
-	fi
-done
-
