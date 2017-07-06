@@ -94,6 +94,8 @@ name of the corresponding project.
 
 =item B<Guava> Guava Library (uses Vcs::Git as Vcs backend)
 
+=item B<JacksonCore> Jackson core (uses Vcs::Git as Vcs backend)
+
 =back
 
 Every project has to provide an Apache Ant F<build.xml> build file.
