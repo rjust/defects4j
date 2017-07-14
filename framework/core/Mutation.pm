@@ -118,7 +118,7 @@ sub mutation_analysis_ext {
 
 =pod
 
-  Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen [, mutation_map])
+  Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen, num_excluded [, mutation_map])
 
 Insert a row into the database table L<TAB_MUTATION|DB>. C<hashref> points to a
 hash holding all key-value pairs of the data row.  F<out_dir> is the optional
@@ -127,10 +127,10 @@ alternative database directory to use.
 =cut
 sub insert_row {
     @_ >= 5 or die $ARG_ERROR;
-    my ($out_dir, $pid, $vid, $suite, $test_id, $gen, $mut_map) = @_;
+    my ($out_dir, $pid, $vid, $suite, $test_id, $gen, $num_excluded, $mut_map) = @_;
 
     # Build data hash
-    my $data = _build_data_hash($pid, $vid, $suite, $test_id, $gen, $mut_map);
+    my $data = _build_data_hash($pid, $vid, $suite, $test_id, $gen, $num_excluded, $mut_map);
 
     # Get proper output db handle: check whether a different output directory is provided
     my $dbh;
@@ -234,7 +234,7 @@ sub _exclude_mutants {
 #
 sub _build_data_hash {
     @_ >= 5 or die $ARG_ERROR;
-    my ($pid, $vid, $suite, $test_id, $gen, $mut_map) = @_;
+    my ($pid, $vid, $suite, $test_id, $gen, $num_excluded, $mut_map) = @_;
 
     my $cov;
     my $kill;
@@ -254,6 +254,7 @@ sub _build_data_hash {
         $TEST_SUITE => $suite,
         $TEST_ID => $test_id,
         $MUT_GEN => $gen,
+        $MUT_EXCL => $num_excluded,
         $MUT_COV => $cov,
         $MUT_KILL => $kill,
     };

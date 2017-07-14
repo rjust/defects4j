@@ -272,8 +272,15 @@ sub _run_mutation {
     $project->{prog_root} = "$root";
     $project->checkout_vid($vid) or die "Checkout failed";
 
+    my $num_excluded_mutants = 0;
     if (defined $EXCL) {
       system("cp $EXCL $root/") == 0 or die "Cannot copy exclude file";
+
+      # count number of mutants excluded
+      open(EXCL_FILE, "$EXCL");
+      my @str = <EXCL_FILE>;
+      close(EXCL_FILE);
+      $num_excluded_mutants = scalar(@str);
     }
 
     # Create mutation definitions (mml file)
@@ -296,7 +303,7 @@ sub _run_mutation {
     my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", $mut_log);
     if (defined $mut_map) {
         # Add results to database table
-        Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, $gen_mutants, $mut_map);
+        Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, $gen_mutants, $num_excluded_mutants, $mut_map);
     } else {
         # Add incomplete results to database table to indicate a broken test suite
         Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, "-");
