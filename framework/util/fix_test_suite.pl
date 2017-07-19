@@ -318,24 +318,79 @@ $LOG->close();
 system("rm -rf $TMP_DIR") unless $DEBUG;
 
 #
-# Remove uncompilable source files based on the compiler's log
+# Remove uncompilable test cases based on the compiler's log (if there
+# is any issue non-related to any test case, the correspondent source
+# file is removed)
 #
 sub _rm_classes {
     my ($comp_log, $src, $name) = @_;
     open(LOG, "<$comp_log") or die "Cannot read compiler log!";
-    $LOG->log_msg(" - Removing uncompilable classes: $name");
-    my $fixed=0;
+    $LOG->log_msg(" - Removing uncompilable test cases from: $name");
+    my @uncompilable_tests = ();
     while (<LOG>) {
+        my $removed = 0;
+
         # Find file names in javac's log: [javac] "path"/"file_name".java:"line_number": error: "error_text"
-        next unless /javac.*($TMP_DIR\/$src\/(.*\.java)):.*error/;
+        next unless /javac.*($TMP_DIR\/$src\/(.*\.java)):(\d+):.*error/;
         my $file = $1;
         my $class = $2;
+        my $line_number = $3;
+
         # Skip already removed files
         next unless -e $file;
-        $LOG->log_msg($class);
-        system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
-        ++$fixed;
+
+        $class =~ s/\.java$//;
+        $class =~ s/\//\./g;
+
+        # To which test method does the uncompilable line belong?
+        open(JAVA_FILE, $file) or die "Cannot open '$file' file!";
+        my $test_name = "";
+        my $line_index = 0;
+        while (<JAVA_FILE>) {
+            ++$line_index;
+            next unless /public\s*void\s*(test.*)\s*\(\s*\).*/;
+            my $t_name = $1;
+
+            if ($line_index > $line_number) {
+              $LOG->log_msg($t_name);
+              last;
+            }
+
+            $test_name = $t_name;
+            $removed = 1;
+        }
+        close(JAVA_FILE);
+
+        if (! $removed) {
+          # in case of compilation issues due to, for example, wrong
+          # or non-existing imported classes, or problems with any
+          # super class, the source file is removed
+          $LOG->log_msg($class);
+          system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
+
+          # get rid of all test cases of this class that have been
+          # selected to be removed
+          @uncompilable_tests = grep ! /^--- $class::/, @uncompilable_tests;
+        } else {
+          # e.g., '--- org.foo.BarTest::test09'
+          my $test_canonical_name = "--- $class::$test_name";
+          # Skip already selected (to be removed) test cases
+          if (! grep{/^$test_canonical_name$/} @uncompilable_tests) {
+            push(@uncompilable_tests, $test_canonical_name);
+          }
+        }
     }
     close(LOG);
-    $fixed>0 or die "Unexpected compiler log: Could not identify uncompilable source files!";
+
+    if (scalar(@uncompilable_tests) > 0) {
+      # Write to a file the name of all uncompilable test cases (one per
+      # line) and call 'rm_broken_tests.pl' to remove all of them
+      my $uncompilable_tests_file_path = "$TMP_DIR/uncompilable-test-cases.txt";
+      open my $uncompilable_tests_file, ">$uncompilable_tests_file_path" or die $!;
+      print $uncompilable_tests_file join("\n", @uncompilable_tests);
+      close($uncompilable_tests_file);
+
+      $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test case(s):", $uncompilable_tests_file_path);
+      system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src") == 0 or die "Cannot remove broken test method(s)";
+    }
 }

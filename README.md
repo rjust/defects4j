@@ -108,7 +108,7 @@ Use `framework/bin/defects4j` to execute any of the following commands:
 | info           | View configuration of a specific project or summary of a specific bug                             |
 | checkout       | Checkout a buggy or a fixed project version                                                       |
 | compile        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| test           | Run a single test or a test suite on a buggy or a fixed project version                           |
+| test           | Run a single test method or a test suite on a buggy or a fixed project version                    |
 | mutation       | Run mutation analysis on a buggy or a fixed project version                                       |
 | coverage       | Run code coverage analysis on a buggy or a fixed project version                                  |
 | monitor.test   | Monitor the class loader during the execution of a single test or a test suite                    |
@@ -128,9 +128,9 @@ directory to export a version-specific property:
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
 | dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
-| tests.all        | List of all developer-written tests                                                 |
-| tests.relevant   | List of relevant tests (i.e., tests that touch at least one of the modified classes |
-| tests.trigger    | List of tests that trigger (expose) the bug                                         |
+| tests.all        | List of all developer-written test classes                                          |
+| tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes |
+| tests.trigger    | List of test methods that trigger (expose) the bug                                  |
 
 Test execution framework
 --------------------------
@@ -171,6 +171,17 @@ The directory structure is as follows:
            |--- projects:      Project-specific resource files.
            |
            |--- test:          Scripts to test the framework.
+
+Additional resources
+--------------------
+#### Fault localization (FL)
+  - [Scripts and annotations for evaluating FL techniques][FL-eval]
+
+#### Automated program repair (APR)
+  - [Scripts and annotations for evaluating APR techniques][APR-eval]
+
+[fl-eval]: https://bitbucket.org/rjust/fault-localization-data
+[APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 
 License
 ---------
