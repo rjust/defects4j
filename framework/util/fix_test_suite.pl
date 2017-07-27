@@ -243,10 +243,8 @@ suite: foreach (@list) {
     }
 
     my $num_failing_tests = 0;
-    my $rm_classes_info = {
-      $NUM_UNCOMPILABLE_TESTS => 0,
-      $NUM_UNCOMPILABLE_TEST_CLASSES => 0,
-    };
+    my $num_uncompilable_tests = 0;
+    my $num_uncompilable_test_classes = 0;
 
     printf ("$sep\n$name\n$sep\n");
 
@@ -265,10 +263,10 @@ suite: foreach (@list) {
         my $comp_log = "$TMP_DIR/comp_tests.log";
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
             $LOG->log_file(" - Tests do not compile: $name", $comp_log);
-            my $rm_info = _rm_classes($comp_log, $src, $name);
+            my ($n_uncompilable_tests, $n_uncompilable_test_classes) = _rm_classes($comp_log, $src, $name);
             # Update counters
-            $rm_classes_info->{$NUM_UNCOMPILABLE_TESTS} += $rm_info->{$NUM_UNCOMPILABLE_TESTS};
-            $rm_classes_info->{$NUM_UNCOMPILABLE_TEST_CLASSES} += $rm_info->{$NUM_UNCOMPILABLE_TEST_CLASSES};
+            $num_uncompilable_tests += $n_uncompilable_tests;
+            $num_uncompilable_test_classes += $n_uncompilable_test_classes;
             # Indicate that test suite changed
             $fixed = 1;
             next;
@@ -342,7 +340,7 @@ suite: foreach (@list) {
         system("cd $TMP_DIR/$src && tar -cjf $SUITE_DIR/$name *");
     }
 
-    _insert_row($pid, $vid, $src, $tid, $rm_classes_info->{$NUM_UNCOMPILABLE_TESTS}, $rm_classes_info->{$NUM_UNCOMPILABLE_TEST_CLASSES}, $num_failing_tests);
+    _insert_row($pid, $vid, $src, $tid, $num_uncompilable_tests, $num_uncompilable_test_classes, $num_failing_tests);
 }
 $dbh_out->disconnect();
 # Log current time
@@ -432,11 +430,7 @@ sub _rm_classes {
       system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src") == 0 or die "Cannot remove broken test method(s)";
     }
 
-    # Set all values and return hash reference
-    return {
-      $NUM_UNCOMPILABLE_TESTS => scalar(@uncompilable_tests),
-      $NUM_UNCOMPILABLE_TEST_CLASSES => $num_uncompilable_test_classes,
-    };
+    return (scalar(@uncompilable_tests), $num_uncompilable_test_classes);
 }
 
 #
