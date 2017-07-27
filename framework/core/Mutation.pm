@@ -54,7 +54,7 @@ my $SUMMARY_FILE = "summary.csv";
 
 =head2 Static subroutines
 
-  Mutation::mutation_analysis(project_ref, log_file [, base_map, single_test])
+  Mutation::mutation_analysis(project_ref, exclude_file, log_file [, base_map, single_test])
 
 Runs mutation analysis for the developer-written test suites of the provided
 L<Project> reference.  Returns a reference to a hash that provides kill details
@@ -68,15 +68,15 @@ for all covered mutants:
 
 =cut
 sub mutation_analysis {
-    @_ >= 2 or die $ARG_ERROR;
-    my ($project, $log_file, $base_map, $single_test) = @_;
+    @_ >= 3 or die $ARG_ERROR;
+    my ($project, $exclude_file, $log_file, $base_map, $single_test) = @_;
 
     # If base_map is defined, exclude all already killed mutants from analysis
     if (defined $base_map) {
-        _exclude_mutants($project, $base_map)
+        _exclude_mutants($project, $exclude_file, $base_map)
     }
 
-    if (! $project->mutation_analysis($log_file, $single_test)) {
+    if (! $project->mutation_analysis($exclude_file, $log_file, $single_test)) {
         return undef;
     }
 
@@ -86,7 +86,7 @@ sub mutation_analysis {
 
 =pod
 
-  Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, base_map])
+  Mutation::mutation_analysis_ext(project_ref, test_dir, include, exclude_file, log_file [, base_map])
 
 Runs mutation analysis for external (e.g., generated) test suites on the
 provided L<Project> reference. Returns a reference to a hash that provides kill
@@ -100,15 +100,15 @@ details for all covered mutants:
 
 =cut
 sub mutation_analysis_ext {
-    @_ >= 4 or die $ARG_ERROR;
-    my ($project, $test_dir, $include, $log_file, $base_map) = @_;
+    @_ >= 5 or die $ARG_ERROR;
+    my ($project, $test_dir, $include, $exclude_file, $log_file, $base_map) = @_;
 
     # If base_map is defined, exclude all already killed mutants from analysis
     if (defined $base_map) {
-        _exclude_mutants($project, $base_map)
+        _exclude_mutants($project, $exclude_file, $base_map)
     }
 
-    if (! $project->mutation_analysis_ext($test_dir, $include, $log_file)) {
+    if (! $project->mutation_analysis_ext($test_dir, $include, $exclude_file, $log_file)) {
         return undef;
     }
 
@@ -216,10 +216,14 @@ sub _build_mut_map {
 # Write already killed mutants to exclude file
 #
 sub _exclude_mutants {
-    @_ == 2 or die $ARG_ERROR;
-    my ($project, $mut_map) = @_;
+    @_ == 3 or die $ARG_ERROR;
+    my ($project, $exclude_file, $mut_map) = @_;
 
-    open(OUT, ">$project->{prog_root}/$EXCL_FILE") or die "Cannot open exclude file!";
+    if (not defined $exclude_file) {
+        $exclude_file = $EXCL_FILE;
+    }
+
+    open(OUT, ">$project->{prog_root}/$exclude_file") or die "Cannot open exclude file!";
     foreach my $mut_id (keys %{$mut_map}) {
         next if ($mut_map->{$mut_id} eq "LIVE");
         print OUT "$mut_id\n";

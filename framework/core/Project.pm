@@ -708,7 +708,7 @@ sub mutate {
 
 =pod
 
-  $project->mutation_analysis(log_file, relevant_tests [, single_test])
+  $project->mutation_analysis(exclude_file, log_file, relevant_tests [, single_test])
 
 Performs mutation analysis for the developer-written tests of the checked-out program
 version.
@@ -720,8 +720,8 @@ B<Note that C<mutate> is not called implicitly>.
 
 =cut
 sub mutation_analysis {
-    @_ >= 3 or die $ARG_ERROR;
-    my ($self, $log_file, $relevant_tests, $single_test) = @_;
+    @_ >= 4 or die $ARG_ERROR;
+    my ($self, $exclude_file, $log_file, $relevant_tests, $single_test) = @_;
     my $log = "-logfile $log_file";
     my $relevant = $relevant_tests ? "-Dd4j.relevant.tests.only=true" : "";
 
@@ -734,14 +734,14 @@ sub mutation_analysis {
     my $basedir = $self->{prog_root};
 
     return $self->_ant_call("mutation.test",
-                            "-Dmajor.exclude=$basedir/exclude.txt " .
+                            "-Dmajor.exclude=$exclude_file " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$relevant $log $single_test_opt");
 }
 
 =pod
 
-  $project->mutation_analysis_ext(test_dir, test_include, log_file [, single_test])
+  $project->mutation_analysis_ext(test_dir, test_include, exclude_file, log_file [, single_test])
 
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
 C<test_include>. 
@@ -752,8 +752,8 @@ B<Note that C<mutate> is not called implicitly>.
 
 =cut
 sub mutation_analysis_ext {
-    @_ >= 4 or die $ARG_ERROR;
-    my ($self, $dir, $include, $log_file, $single_test) = @_;
+    @_ >= 5 or die $ARG_ERROR;
+    my ($self, $dir, $include, $exclude_file, $log_file, $single_test) = @_;
     my $log = "-logfile $log_file";
 
     my $basedir = $self->{prog_root};
@@ -766,7 +766,7 @@ sub mutation_analysis_ext {
 
     return $self->_ant_call("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
-                            "-Dmajor.exclude=$basedir/exclude.txt " .
+                            "-Dmajor.exclude=$exclude_file " .
                             "-Dmajor.kill.log=$basedir/kill.csv " .
                             "$log $single_test_opt");
 }
