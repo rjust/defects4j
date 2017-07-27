@@ -276,11 +276,15 @@ sub _run_mutation {
     if (defined $EXCL) {
       system("cp $EXCL $root/") == 0 or die "Cannot copy exclude file";
 
-      # count number of mutants excluded
+      # count number of mutants excluded (excluding:
+      #   - empty lines, i.e., lines with only spaces or tabs; or true empty lines
+      #   - lines with comments, i.e., lines that start with '#')
       open(EXCL_FILE, "$EXCL");
-      my @str = <EXCL_FILE>;
+      while (<EXCL_FILE>) {
+        next if /^[[:space:]]*(#.*)?$/;
+        $num_excluded_mutants += 1;
+      }
       close(EXCL_FILE);
-      $num_excluded_mutants = scalar(@str);
     }
 
     # Create mutation definitions (mml file)
