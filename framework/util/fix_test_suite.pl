@@ -148,17 +148,18 @@ my $INCL = $cmd_opts{f} // "*.java";
 my $RM_ASSERTS = defined $cmd_opts{A} ? 1 : 0;
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
+my $DB_LOGGING = defined $cmd_opts{L} ? 1 : 0;
 
 # Check format of target version id
 if (defined $VID) {
     Utils::check_vid($VID);
 }
 
-# Enable logging if flag is set
-undef my $dbh_out; # by default no DB is used
-undef my $sth;
-undef my @COLS;
-if (defined $cmd_opts{L}) {
+# Enable verbose logging (DB module) if flag is set; by default DB is not used.
+my $dbh_out;
+my $sth;
+my @COLS;
+if ($DB_LOGGING) {
     require DB;
     import DB;
 
