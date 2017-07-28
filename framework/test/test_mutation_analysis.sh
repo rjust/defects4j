@@ -4,6 +4,8 @@
 # This script tests the D4J's mutation analysis script.
 #
 ################################################################################
+# TODO: There is some code duplication in this test script, which we can avoid
+# by extracting the mutation analysis workflow into a parameterized function. 
 
 HERE=$(cd `dirname $0` && pwd)
 
