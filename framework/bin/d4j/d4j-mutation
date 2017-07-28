@@ -68,7 +68,7 @@ fully-qualified class names -- one class per line.
 
 =item -e F<exclude_file>
 
-The file that contains the list of all mutants ids (one per row) to exclude (optional).
+The file that contains the list of all mutant ids (one per row) to exclude (optional).
 By default no exclude file is used and therefore no mutant is excluded.
 
 =back
@@ -111,7 +111,7 @@ my $REL_TESTS   = defined $cmd_opts{r} ? 1 : 0;
 my $SINGLE_TEST = $cmd_opts{t};
 my $TEST_SUITE  = $cmd_opts{s};
 my $INSTRUMENT  = $cmd_opts{i};
-my $EXCL        = defined $cmd_opts{e} ? $cmd_opts{e} : "";
+my $EXCL        = $cmd_opts{e};
 if ((defined $SINGLE_TEST || defined $TEST_SUITE) && $REL_TESTS==1) {
     pod2usage( { -verbose => 1, -input => __FILE__} );
 }
