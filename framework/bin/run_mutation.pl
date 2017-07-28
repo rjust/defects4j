@@ -127,7 +127,7 @@ my $PID = $cmd_opts{p};
 my $SUITE_DIR = abs_path($cmd_opts{d});
 my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $INCL = $cmd_opts{f} // "*.java";
-my $EXCL = $cmd_opts{e} if defined $cmd_opts{e};
+my $EXCL = $cmd_opts{e};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
@@ -274,10 +274,10 @@ sub _run_mutation {
 
     my $num_excluded_mutants = 0;
     if (defined $EXCL) {
-      # count number of mutants excluded (excluding:
-      #   - empty lines, i.e., lines with only spaces or tabs; or true empty lines
-      #   - lines with comments, i.e., lines that start with '#')
-      open(EXCL_FILE, "$EXCL");
+      # Count number of excluded mutants: number of lines, excluding:
+      #   - empty lines, i.e., lines with only spaces or tabs, or truly empty lines
+      #   - lines with comments, i.e., lines that start with '#'
+      open(EXCL_FILE, "<$EXCL") or die "Cannot read exclude file";
       while (<EXCL_FILE>) {
         next if /^[[:space:]]*(#.*)?$/;
         $num_excluded_mutants += 1;
