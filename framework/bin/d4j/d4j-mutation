@@ -159,11 +159,11 @@ if (defined $TEST_SUITE) {
     my $test_dir = "$WORK_DIR/.test_suite";
     Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
     $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
-    $mut_result = $project->mutation_analysis_ext($test_dir, "*.java", $EXCL, $log_file, $SINGLE_TEST);
+    $mut_result = $project->mutation_analysis_ext($test_dir, "*.java", $log_file, $EXCL, $SINGLE_TEST);
 } else {
     # Run developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $mut_result = $project->mutation_analysis($EXCL, $log_file, $REL_TESTS, $SINGLE_TEST);
+    $mut_result = $project->mutation_analysis($log_file, $REL_TESTS, $EXCL, $SINGLE_TEST);
 }
 
 if (! $mut_result) {

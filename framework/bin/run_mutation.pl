@@ -302,7 +302,7 @@ sub _run_mutation {
     # No need to run the test suite first. Major's preprocessing verifies that
     # all tests in the test suite pass before performing the mutation analysis.
     my $mut_log = "$TMP_DIR/.mutation.log"; `>$mut_log`;
-    my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", "$EXCL", $mut_log);
+    my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", $mut_log, $EXCL);
     if (defined $mut_map) {
         # Add results to database table
         Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, $gen_mutants, $num_excluded_mutants, $mut_map);
