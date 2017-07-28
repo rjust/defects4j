@@ -100,8 +100,11 @@ _test_deletion_of_test_classes_and_test_cases() {
 }
 
 _test_L_option_enabled() {
-  # are DBI and DBD:CSV available?
-  if perl -e 'use DBI;' 2>/dev/null && perl -e 'use DBD::CSV;' 2>/dev/null; then
+    # Are DBI and DBD:CSV available?
+    if ! perl -e 'use DBI; use DBD::CSV;' 2>/dev/null; then
+        die "Please make sure perl modules 'DBI' and 'DBD:CSV' are installed."
+    fi
+
     rm -rf "$suites_dir"; mkdir -p "$suites_dir"
 
     _create_tar_bz2_file "$pid" "$bid" "$suites_dir" || die "Was not possible to create a .tar.bz2 file with all test suites!"
@@ -110,27 +113,24 @@ _test_L_option_enabled() {
     fix_test_suite.pl -p "$pid" -d "$suites_dir" -v "$bid" -L || die "Script 'fix_test_suite.pl' has failed!"
 
     fix_db="$suites_dir/fix"
-    [ -s "$fix_db" ] || die "There is not any 'fix' database file or it is empty!"
+    [ -s "$fix_db" ] || die "Database file 'fix' doesn't exist or is empty!"
 
-    num_rows=$(wc -l "$fix_db" | cut -f1 -d' ')
-    [ "$num_rows" -eq "2" ] || die "Fix database file does not have 2 rows!"
+    num_rows=$(cat "$fix_db" | wc -l)
+    [ "$num_rows" -eq 2 ] || die "Database file 'fix' does not have 2 rows!"
 
+    # Columns of 'fix' database file:
     # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
     expected="$pid,$bid,test,1,2,1,3"
-    # convert DOS/Windows newline (CRLF) to Unix newline and check data of last row
-    actual=$(tr -d '\r' < "$fix_db" | tail -n1)
-    [ "$actual" == "$expected" ] || die "Expected '$expected' got '$actual'!"
-  else
-    die "Please make sure perl modules 'DBI' and 'DBD:CSV' are installed."
-  fi
 
-  return 0
+    # Convert DOS (\r\n) to Unix (\n) line ending and check data of last row
+    actual=$(tr -d '\r' < "$fix_db" | tail -n1)
+    [ "$actual" == "$expected" ] || die "Unexpected result (expected: '$expected'; actual: '$actual')!"
+
+    return 0
 }
 
 _test_deletion_of_test_classes_and_test_cases || die "Test '_test_deletion_of_test_classes_and_test_cases' has failed!"
 _test_L_option_enabled || die "Test '_test_L_option_enabled' has failed!"
 
+# Clean up
 rm -rf "$suites_dir"
-
-# EOF
-
