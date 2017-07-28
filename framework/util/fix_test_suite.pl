@@ -278,6 +278,7 @@ suite: foreach (@list) {
     while ($counter > 0) {
         # Compile generated tests
         my $comp_log = "$TMP_DIR/comp_tests.log";
+        system(">$comp_log");
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
             $LOG->log_file(" - Tests do not compile: $name", $comp_log);
             my ($n_uncompilable_tests, $n_uncompilable_test_classes) = _rm_classes($comp_log, $src, $name);
