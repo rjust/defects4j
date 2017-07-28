@@ -179,10 +179,11 @@ Additional resources
 
 #### Automated program repair (APR)
   - [Scripts and annotations for evaluating APR techniques][APR-eval]
-  - [Patches generated with the Nopol, jGenProg and jKali automatic repair systems](https://github.com/Spirals-Team/defects4j-repair/)
+  - [Patches generated with the Nopol, jGenProg, and jKali APR systems][APR-patches-spirals]
 
 [fl-eval]: https://bitbucket.org/rjust/fault-localization-data
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
+[APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
 
 License
 ---------
