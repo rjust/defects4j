@@ -124,6 +124,17 @@ The name of the database table for the results of patch review (I<review>)
 =cut
 our $TAB_REVIEW = ($ENV{TAB_REVIEW} or "review");
 
+=pod
+
+=item C<TAB_FIX>
+
+=back
+
+The name of the database table for the results of fixing automatically generated test cases (I<fix>)
+
+=cut
+our $TAB_FIX = ($ENV{TAB_FIX} or "fix");
+
 # Common columns for all tables
 our $PROJECT       = "project_id";
 our $ID            = "version_id";
@@ -146,7 +157,7 @@ our $FAIL_M_V1     = "num_fail_methods_t2v1";
 our $FAIL_ISO_V1   = "fail_iso_t2v1";
 our $PASS_ISO_V2   = "pass_iso_t2v2";
 
-# Additional columns of TAB_BUG_DETECTION and TAB_MUTATION
+# Additional columns of TAB_BUG_DETECTION, TAB_MUTATION, and TAB_FIX
 our $TEST_SUITE = "test_suite_source";
 our $TEST_ID    = "test_id";
 
@@ -170,6 +181,11 @@ our $BRANCHES_COVERED = "branches_covered";
 our $NUM_COMMITS      = "num_commits";
 our $PASSED_COMMITS   = "passed_commits";
 
+# Additional columns of TAB_FIX
+our $NUM_UNCOMPILABLE_TESTS        = "num_uncompilable_tests";
+our $NUM_UNCOMPILABLE_TEST_CLASSES = "num_uncompilable_test_classes";
+our $NUM_FAILING_TESTS             = "num_failing_tests";
+
 # Table definitions
 my %tables = (
 # TAB_REV_PAIRS
@@ -184,6 +200,8 @@ $TAB_MUTATION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $MUT_GEN, $MUT_EXCL, $MU
 $TAB_COVERAGE => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $LINES_TOTAL, $LINES_COVERED, $BRANCHES_TOTAL, $BRANCHES_COVERED],
 # Table TAB_CODE_EVOLUTION
 $TAB_CODE_EVOLUTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $NUM_COMMITS, $PASSED_COMMITS, $TEST_CLASS, $NUM_TRIGGER],
+# Table TAB_FIX
+$TAB_FIX => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $NUM_UNCOMPILABLE_TESTS, $NUM_UNCOMPILABLE_TEST_CLASSES, $NUM_FAILING_TESTS],
 );
 
 
@@ -195,6 +213,7 @@ our %PRIMARY_KEYS = (
     $TAB_MUTATION => 4,
     $TAB_COVERAGE => 4,
     $TAB_CODE_EVOLUTION => 4,
+    $TAB_FIX => 4,
 );
 
 our @EXPORT = qw(
@@ -206,6 +225,7 @@ $TAB_MUTATION
 $TAB_REVIEW
 $TAB_COVERAGE
 $TAB_CODE_EVOLUTION
+$TAB_FIX
 
 $PROJECT
 $ID
@@ -237,6 +257,9 @@ $BRANCHES_TOTAL
 $BRANCHES_COVERED
 $NUM_COMMITS
 $PASSED_COMMITS
+$NUM_UNCOMPILABLE_TESTS
+$NUM_UNCOMPILABLE_TEST_CLASSES
+$NUM_FAILING_TESTS
 
 %PRIMARY_KEYS
 );
