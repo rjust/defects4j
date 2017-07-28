@@ -1,0 +1,26 @@
+diff --git a/google/common/base/SplitterTest.java b/google/common/base/SplitterTest.java
+index 71c3230..26dad19 100644
+--- a/google/common/base/SplitterTest.java
++++ b/google/common/base/SplitterTest.java
+@@ -383,21 +383,6 @@ public class SplitterTest extends TestCase {
+   }
+ 
+   @GwtIncompatible // java.util.regex.Pattern
+-  public void testPatternSplitWordBoundary_singleCharInput() {
+-    String string = "f";
+-    Iterable<String> words = Splitter.on(Pattern.compile("\\b")).split(string);
+-    assertThat(words).containsExactly("f").inOrder();
+-  }
+-
+-  @AndroidIncompatible // Apparently Gingerbread's regex API is buggy.
+-  @GwtIncompatible // java.util.regex.Pattern
+-  public void testPatternSplitWordBoundary_singleWordInput() {
+-    String string = "foo";
+-    Iterable<String> words = Splitter.on(Pattern.compile("\\b")).split(string);
+-    assertThat(words).containsExactly("foo").inOrder();
+-  }
+-
+-  @GwtIncompatible // java.util.regex.Pattern
+   public void testPatternSplitEmptyToken() {
+     String emptyToken = "a. .c";
+     Iterable<String> letters = Splitter.on(literalDotPattern()).trimResults().split(emptyToken);
