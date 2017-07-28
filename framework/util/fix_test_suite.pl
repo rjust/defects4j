@@ -423,7 +423,7 @@ sub _rm_classes {
 
           # get rid of all test cases of this class that have been
           # selected to be removed
-          @uncompilable_tests = grep ! /^--- $class::/, @uncompilable_tests;
+          @uncompilable_tests = grep ! /^--- ${class}::/, @uncompilable_tests;
           # Update counter
           ++$num_uncompilable_test_classes;
         } else {
