@@ -22,15 +22,15 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit -- manually verified to not include irrelevant
-  changes (e.g., refactorings or feature additions).
+- Fixed in a single commit -- the Defects4J maintainers manually pruned out
+  irrelevant changes (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
   documentation, or test files).
 - A triggering test exists that failed before the fix and passes after the fix
   -- the test failure is not random or dependent on test execution order.
 
-(B)uggy and (f)ixed program revisions are labelled with `<id>b` and `<id>f`,
-respectively (`<id>` is an integer).
+The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
+`<id>f`, respectively (`<id>` is an integer).
 
 Requirements
 ----------------
@@ -94,7 +94,7 @@ Publications
 
 Documentation
 --------------------
-A detailed documentation for any script or module is available as
+Detailed documentation for any script or module is available as
 [html documentation][htmldocs].
 
 [htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
@@ -129,7 +129,7 @@ directory to export a version-specific property:
 | dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
 | tests.all        | List of all developer-written test classes                                          |
-| tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes |
+| tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
 | tests.trigger    | List of test methods that trigger (expose) the bug                                  |
 
 Test execution framework
