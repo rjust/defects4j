@@ -28,7 +28,7 @@ d4j-mutation -- run mutation analysis for a checked-out project version.
 
 =head1 SYNOPSIS
 
-  d4j-mutation [-w work_dir] [-r | [-t single_test] [-s test_suite]] [-i instrument_classes]
+  d4j-mutation [-w work_dir] [-r | [-t single_test] [-s test_suite]] [-i instrument_classes] [-e exclude_file]
 
 =head1 DESCRIPTION
 
@@ -66,6 +66,11 @@ Mutate all classes listed in F<instrument_classes> (optional). By default, only 
 classes modified by the bug fix are mutated. The file F<instrument_classes> must contain
 fully-qualified class names -- one class per line.
 
+=item -e F<exclude_file>
+
+The file that contains the list of all mutant ids (one per row) to exclude (optional).
+By default no exclude file is used and therefore no mutant is excluded.
+
 =back
 
 =head1 Test suites
@@ -99,13 +104,14 @@ use Getopt::Std;
 use Pod::Usage;
 
 my %cmd_opts;
-getopts('t:w:rs:i:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
+getopts('t:w:rs:i:e:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
 
 my $WORK_DIR    = Utils::get_abs_path($cmd_opts{w} // ".");
 my $REL_TESTS   = defined $cmd_opts{r} ? 1 : 0;
 my $SINGLE_TEST = $cmd_opts{t};
 my $TEST_SUITE  = $cmd_opts{s};
 my $INSTRUMENT  = $cmd_opts{i};
+my $EXCL        = $cmd_opts{e};
 if ((defined $SINGLE_TEST || defined $TEST_SUITE) && $REL_TESTS==1) {
     pod2usage( { -verbose => 1, -input => __FILE__} );
 }
@@ -146,8 +152,6 @@ $ENV{MML} = $mml_file;
 $project->mutate() > 0 or die "Cannot mutate project!";
 
 my $log_file = "$WORK_DIR/.mutation.log";
-# By default we do not exclude any mutants
-system("touch $WORK_DIR/exclude.txt") unless -e "$WORK_DIR/exclude.txt";
 # Run the test suite, according to the provided flags
 my $mut_result;
 if (defined $TEST_SUITE) {
@@ -155,11 +159,11 @@ if (defined $TEST_SUITE) {
     my $test_dir = "$WORK_DIR/.test_suite";
     Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
     $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
-    $mut_result = $project->mutation_analysis_ext($test_dir, "*.java", $log_file, $SINGLE_TEST);
+    $mut_result = $project->mutation_analysis_ext($test_dir, "*.java", $log_file, $EXCL, $SINGLE_TEST);
 } else {
     # Run developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $mut_result = $project->mutation_analysis($log_file, $REL_TESTS, $SINGLE_TEST);
+    $mut_result = $project->mutation_analysis($log_file, $REL_TESTS, $EXCL, $SINGLE_TEST);
 }
 
 if (! $mut_result) {

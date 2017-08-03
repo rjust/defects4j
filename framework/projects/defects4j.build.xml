@@ -198,7 +198,6 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             </else>
         </if>
 
-        <fail message="Property major.exclude not set!" unless="major.exclude" />
         <fail message="Property major.kill.log not set!" unless="major.kill.log" />
 
         <!-- Sort test classes by run time, unless a single test method is run -->
