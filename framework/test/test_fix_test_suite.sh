@@ -52,7 +52,8 @@ _create_tar_bz2_file() {
       foo/bar/FailingTests.java \
       foo/bar/InvalidImport.java \
       foo/bar/UnitTestsWithCompilationIssues.java \
-      foo/bar/ValidTestClass.java || return 1
+      foo/bar/ValidTestClass.java \
+      foo/bar/LineCommentsWithWhitespaces.java || return 1
   popd > /dev/null 2>&1
 
   return 0
@@ -96,6 +97,10 @@ _test_deletion_of_test_classes_and_test_cases() {
     "$HERE/resources/output/foo/bar/ValidTestClass.java" \
     "$suites_dir/foo/bar/ValidTestClass.java"
 
+  _check_output \
+    "$HERE/resources/output/foo/bar/LineCommentsWithWhitespaces.java" \
+    "$suites_dir/foo/bar/LineCommentsWithWhitespaces.java"
+
   return 0
 }
 
@@ -120,7 +125,7 @@ _test_L_option_enabled() {
 
     # Columns of 'fix' database file:
     # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-    expected="$pid,$bid,test,1,2,1,3"
+    expected="$pid,$bid,test,1,2,1,4"
 
     # Convert DOS (\r\n) to Unix (\n) line ending and check data of last row
     actual=$(tr -d '\r' < "$fix_db" | tail -n1)
