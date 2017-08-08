@@ -232,7 +232,7 @@ sub _remove_test_method {
             # or brackets
             my @tmp = @lines[$index..$#lines];
             foreach (@tmp) {
-                s/^\s*\/\/.*/\/\//;
+                s/\/\/.*/\/\//;
             }
 
             my @result = extract_bracketed(join("", @tmp), '{"\'}', '[^\{]*');

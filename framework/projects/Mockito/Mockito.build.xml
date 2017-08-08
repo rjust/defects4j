@@ -40,6 +40,9 @@
         <fileset dir="${d4j.home}/framework/projects/${d4j.project.id}/lib/">
             <include name="**/*.jar" />
         </fileset>
+        <fileset dir="${basedir}/compileLib/">
+            <include name="**/*.jar" />
+        </fileset>
     </path>
 
     <path id="d4j.test.classpath">
@@ -135,8 +138,10 @@
         <antcall target="gradle.compile.mutants"/>
         <antcall target="ant.compile.mutants"/>
 
-        <!-- Copy the correct version of libraries for testing -->
+        <!-- Make sure the compileLib directory exists as file sets elsewhere in
+             this build file depend on it -->
         <mkdir dir="${basedir}/compileLib"/>
+        <!-- Copy the correct version of libraries for compilation and testing -->
         <exec executable="/bin/bash" failonerror="true">
             <arg value="${d4j.home}/framework/projects/${d4j.project.id}/chooseDepedencyVersion.sh"/>
             <arg value="${basedir}"/>

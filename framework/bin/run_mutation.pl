@@ -30,7 +30,7 @@ run_mutation.pl -- mutation analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D] [-A]
+  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-e exclude_file] [-D] [-A]
 
 =head1 OPTIONS
 
@@ -64,6 +64,11 @@ test suites for the given project id are analyzed.
 
 The temporary root directory to be used to check out program versions (optional).
 The default is F</tmp>.
+
+=item -e F<exclude_file>
+
+The file that contains the list of all mutants ids (one per row) to exclude (optional).
+Per default no exclude file is used and therefore no mutant is excluded.
 
 =item -D
 
@@ -111,7 +116,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:DA', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:e:DA', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -122,6 +127,7 @@ my $PID = $cmd_opts{p};
 my $SUITE_DIR = abs_path($cmd_opts{d});
 my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $INCL = $cmd_opts{f} // "*.java";
+my $EXCL = $cmd_opts{e};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
@@ -266,6 +272,19 @@ sub _run_mutation {
     $project->{prog_root} = "$root";
     $project->checkout_vid($vid) or die "Checkout failed";
 
+    my $num_excluded_mutants = 0;
+    if (defined $EXCL) {
+      # Count number of excluded mutants: number of lines, excluding:
+      #   - empty lines, i.e., lines with only spaces or tabs, or truly empty lines
+      #   - lines with comments, i.e., lines that start with '#'
+      open(EXCL_FILE, "<$EXCL") or die "Cannot read exclude file";
+      while (<EXCL_FILE>) {
+        next if /^[[:space:]]*(#.*)?$/;
+        $num_excluded_mutants += 1;
+      }
+      close(EXCL_FILE);
+    }
+
     # Create mutation definitions (mml file)
     my $mml_dir = "$TMP_DIR/.mml";
     system("$UTIL_DIR/create_mml.pl -p $PID -c $TARGET_CLASSES_DIR/$bid.src -o $mml_dir -b $bid");
@@ -283,10 +302,10 @@ sub _run_mutation {
     # No need to run the test suite first. Major's preprocessing verifies that
     # all tests in the test suite pass before performing the mutation analysis.
     my $mut_log = "$TMP_DIR/.mutation.log"; `>$mut_log`;
-    my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", $mut_log);
+    my $mut_map = Mutation::mutation_analysis_ext($project, $test_dir, "$INCL", $mut_log, $EXCL);
     if (defined $mut_map) {
         # Add results to database table
-        Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, $gen_mutants, $mut_map);
+        Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, $gen_mutants, $num_excluded_mutants, $mut_map);
     } else {
         # Add incomplete results to database table to indicate a broken test suite
         Mutation::insert_row($OUT_DIR, $PID, $vid, $suite_src, $test_id, "-");
