@@ -167,7 +167,7 @@ if ($DB_LOGGING) {
     $dbh_out = DB::get_db_handle($DB::TAB_FIX, $SUITE_DIR);
 
     $sth = $dbh_out->prepare("SELECT * FROM $DB::TAB_FIX WHERE $DB::PROJECT=? AND $DB::TEST_SUITE=? AND $DB::ID=? AND $DB::TEST_ID=?")
-        or die $dbh_out->errstr;
+            or die $dbh_out->errstr;
 
     # Cache column names for table fix
     @COLS = DB::get_tab_columns($DB::TAB_FIX) or die "Cannot obtain table columns!";
@@ -417,39 +417,39 @@ sub _rm_classes {
         close(JAVA_FILE);
 
         if (! $removed) {
-          # in case of compilation issues due to, for example, wrong
-          # or non-existing imported classes, or problems with any
-          # super class, the source file is removed
-          $LOG->log_msg($class);
-          system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
+            # in case of compilation issues due to, for example, wrong
+            # or non-existing imported classes, or problems with any
+            # super class, the source file is removed
+            $LOG->log_msg($class);
+            system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
 
-          # get rid of all test cases of this class that have been
-          # selected to be removed
-          @uncompilable_tests = grep ! /^--- ${class}::/, @uncompilable_tests;
-          # Update counter
-          ++$num_uncompilable_test_classes;
+            # get rid of all test cases of this class that have been
+            # selected to be removed
+            @uncompilable_tests = grep ! /^--- ${class}::/, @uncompilable_tests;
+            # Update counter
+            ++$num_uncompilable_test_classes;
         } else {
-          # e.g., '--- org.foo.BarTest::test09'
-          my $test_canonical_name = "--- $class::$test_name";
-          # Skip already selected (to be removed) test cases
-          if (! grep{/^$test_canonical_name$/} @uncompilable_tests) {
-            push(@uncompilable_tests, $test_canonical_name);
-          }
+            # e.g., '--- org.foo.BarTest::test09'
+            my $test_canonical_name = "--- $class::$test_name";
+            # Skip already selected (to be removed) test cases
+            if (! grep{/^$test_canonical_name$/} @uncompilable_tests) {
+                push(@uncompilable_tests, $test_canonical_name);
+            }
         }
     }
     close(LOG);
 
     if (scalar(@uncompilable_tests) > 0) {
-      # Write to a file the name of all uncompilable test cases (one per
-      # line) and call 'rm_broken_tests.pl' to remove all of them
-      my $uncompilable_tests_file_path = "$TMP_DIR/uncompilable-test-cases.txt";
-      open my $uncompilable_tests_file, ">$uncompilable_tests_file_path" or die $!;
-      print $uncompilable_tests_file join("\n", @uncompilable_tests);
-      close($uncompilable_tests_file);
+        # Write to a file the name of all uncompilable test cases (one per
+        # line) and call 'rm_broken_tests.pl' to remove all of them
+        my $uncompilable_tests_file_path = "$TMP_DIR/uncompilable-test-cases.txt";
+        open my $uncompilable_tests_file, ">$uncompilable_tests_file_path" or die $!;
+        print $uncompilable_tests_file join("\n", @uncompilable_tests);
+        close($uncompilable_tests_file);
 
-      $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test method(s):", $uncompilable_tests_file_path);
-      Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src", "Remove uncompilable test method(s)")
-        or die "Cannot remove uncompilable test method(s)";
+        $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test method(s):", $uncompilable_tests_file_path);
+        Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src", "Remove uncompilable test method(s)")
+                or die "Cannot remove uncompilable test method(s)";
     }
 
     return (scalar(@uncompilable_tests), $num_uncompilable_test_classes);
@@ -468,13 +468,13 @@ sub _insert_row {
 
     # Build data hash
     my $data = {
-         $DB::PROJECT => $pid,
-         $DB::ID => $vid,
-         $DB::TEST_SUITE => $suite,
-         $DB::TEST_ID => $test_id,
-         $DB::NUM_UNCOMPILABLE_TESTS => $num_uncompilable_tests,
-         $DB::NUM_UNCOMPILABLE_TEST_CLASSES => $num_uncompilable_test_classes,
-         $DB::NUM_FAILING_TESTS => $num_failing_tests,
+        $DB::PROJECT => $pid,
+        $DB::ID => $vid,
+        $DB::TEST_SUITE => $suite,
+        $DB::TEST_ID => $test_id,
+        $DB::NUM_UNCOMPILABLE_TESTS => $num_uncompilable_tests,
+        $DB::NUM_UNCOMPILABLE_TEST_CLASSES => $num_uncompilable_test_classes,
+        $DB::NUM_FAILING_TESTS => $num_failing_tests,
     };
 
     # Build row based on data hash
