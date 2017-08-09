@@ -701,6 +701,22 @@ Returns the number of generated mutants on success, -1 otherwise.
 sub mutate {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $instrument_classes)  = @_;
+    my $work_dir = $self->{prog_root};
+
+    # Read all classes that should be mutated
+    -e $instrument_classes or die "Classes file ($instrument_classes) does not exist!";
+    open(IN, "<$instrument_classes") or die "Cannot read $instrument_classes";
+    my @classes = ();
+    while(<IN>) {
+        s/\r?\n//;
+        push(@classes, $_);
+    }
+    close(IN);
+    # Update properties
+    my $list = join(",", @classes);
+    my $config = {$PROP_MUTATE => $list};
+    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+
 
     # Create mutation definitions (mml file)
     my $mml_src = "$self->{prog_root}/.mml/default.mml";
