@@ -54,6 +54,49 @@ my $SUMMARY_FILE = "summary.csv";
 
 =head2 Static subroutines
 
+  Mutation::create_mml(project_ref, instrument_classes, out_dir, mml_file)
+
+Generates an mml file, enabling all mutation operators for all classes listed
+in F<instrument_classes>.
+
+=cut
+sub create_mml {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($project, $instrument_classes, $out_file) = @_;
+
+    my $OUT_DIR = Utils::get_dir($out_file);
+    my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
+
+    # The mutation operators that should be enabled in the mml file
+    my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+
+    system("mkdir -p $OUT_DIR");
+
+    open(IN, $instrument_classes);
+    my @classes = <IN>;
+    close(IN);
+
+    # Generate mml file by enabling operators for listed classes only
+    open(FILE, ">$out_file") or die "Cannot write mml file ($out_file): $!";
+    # Add operator definitions from template
+    print FILE $TEMPLATE;
+    # Enable operators for all classes
+    foreach my $class (@classes) {
+        chomp $class;
+        print FILE "\n// Enable operators for $class\n";
+        foreach my $op (@ops) {
+            # Skip disabled operators
+            next if $TEMPLATE =~ /-$op<"$class">/;
+            print FILE "$op<\"$class\">;\n";
+        }
+    }
+    close(FILE);
+    Utils::exec_cmd("$MAJOR_ROOT/bin/mmlc $out_file 2>&1", "Compiling mutant definition (mml)")
+            or die "Cannot compile mml file: $out_file!";
+}
+
+=pod
+
   Mutation::mutation_analysis(project_ref, log_file [, exclude_file, base_map, single_test])
 
 Runs mutation analysis for the developer-written test suites of the provided
