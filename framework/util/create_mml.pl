@@ -73,6 +73,7 @@ use Pod::Usage;
 
 use lib abs_path("$FindBin::Bin/../core");
 use Constants;
+use Mutation;
 use Utils;
 
 #
@@ -83,6 +84,7 @@ getopts('p:c:o:b:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{c} and defined $cmd_opts{o} and defined $cmd_opts{b};
 
+# TODO: Unused parameter: PID
 my $PID = $cmd_opts{p};
 my $CLASSES = Utils::get_abs_path($cmd_opts{c});
 my $OUT_DIR = Utils::get_abs_path($cmd_opts{o});
@@ -91,33 +93,8 @@ my $BID = $cmd_opts{b};
 $BID =~ /^(\d+)$/ or die "Wrong bug id format (\\d+): $BID!";
 -e $CLASSES or die "File with classes to mutate does not exist: $CLASSES";
 
-my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
+my $mml_src = "$OUT_DIR/$BID.mml";
+my $mml_bin = "${mml_src}.bin";
 
-# The mutation operators that should be enabled in the mml file
-my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
-
-system("mkdir -p $OUT_DIR");
-
-open(IN, $CLASSES);
-my @classes = <IN>;
-close(IN);
-
-my $file = "$OUT_DIR/$BID.mml";
-
-# Generate mml file by enabling operators for listed classes only
-open(FILE, ">$file") or die "Cannot write mml file ($file): $!";
-# Add operator definitions from template
-print FILE $TEMPLATE;
-# Enable operators for all classes
-foreach my $class (@classes) {
-    chomp $class;
-    print FILE "\n// Enable operators for $class\n";
-    foreach my $op (@ops) {
-        # Skip disabled operators
-        next if $TEMPLATE =~ /-$op<"$class">/;
-        print FILE "$op<\"$class\">;\n";
-    }
-}
-close(FILE);
-my $log = `$MAJOR_ROOT/bin/mmlc $file 2>&1`;
-$? == 0 or die "Cannot compile mml file: $file\n$log";
+Mutation::create_mml($CLASSES, $mml_src);
+-e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
