@@ -67,7 +67,7 @@ defects4j checkout -p "$pid" -v "$bid" -w "$pid_bid_dir" || die "It was not poss
 # Test mutation analysis without excluding any mutants
 
 # Remove the summary file to ensure it is regenerated
-rm "$summary_file"
+rm -f "$summary_file"
 
 defects4j mutation -w "$pid_bid_dir" -r || die "Mutation analysis (including all mutants) failed!"
 _check_mutation_result 941 913 646
@@ -76,7 +76,7 @@ _check_mutation_result 941 913 646
 # Test mutation analysis when excluding all mutants
 
 # Remove the summary file to ensure it is regenerated
-rm "$summary_file"
+rm -f "$summary_file"
 
 # Exclude all generated mutants
 exclude_file="$pid_bid_dir/exclude_all_mutants.txt"
@@ -89,7 +89,7 @@ _check_mutation_result 941 0 0
 # Test mutation analysis when explicitly providing the class(es) to mutate
 
 # Remove the summary file to ensure it is regenerated
-rm "$summary_file"
+rm -f "$summary_file"
 
 # Mutate an arbitrary, non-modified class
 instrument_classes="$pid_bid_dir/instrument_classes.txt"
