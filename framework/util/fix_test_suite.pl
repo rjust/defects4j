@@ -343,8 +343,9 @@ suite: foreach (@list) {
             $counter = $RUNS;
             # Indicate that test suite changed
             $fixed = 1;
-            $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " test methods: $name", $tests);
-            system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src") == 0 or die "Cannot remove broken test method";
+            $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " broken test method(s): $name", $tests);
+            Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src", "Remove broken test method(s)")
+                    or die "Cannot remove broken test method(s)";
             # Update counter
             $num_failing_tests += scalar(@{$list->{methods}});
         }
@@ -446,8 +447,9 @@ sub _rm_classes {
       print $uncompilable_tests_file join("\n", @uncompilable_tests);
       close($uncompilable_tests_file);
 
-      $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test case(s):", $uncompilable_tests_file_path);
-      system("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src") == 0 or die "Cannot remove broken test method(s)";
+      $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test method(s):", $uncompilable_tests_file_path);
+      Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src", "Remove uncompilable test method(s)")
+        or die "Cannot remove uncompilable test method(s)";
     }
 
     return (scalar(@uncompilable_tests), $num_uncompilable_test_classes);
