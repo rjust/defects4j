@@ -83,6 +83,10 @@ Commons lang (L<Vcs::Git> backend)
 
 Commons math (L<Vcs::Git> backend)
 
+=item * L<Mockito|Project::Mockito>
+
+Mockito (L<Vcs::Git> backend)
+
 =item * L<Time|Project::Time>
 
 Joda-time (L<Vcs::Git> backend)
