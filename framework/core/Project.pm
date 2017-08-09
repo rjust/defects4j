@@ -706,7 +706,7 @@ sub mutate {
     my $mml_src = "$self->{prog_root}/.mml/default.mml";
     my $mml_bin = "${mml_src}.bin";
 
-    Mutation::create_mml($self, $instrument_classes, $mml_src);
+    Mutation::create_mml($instrument_classes, $mml_src);
     -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
 
     # Set environment variable MML, which is read by Major
