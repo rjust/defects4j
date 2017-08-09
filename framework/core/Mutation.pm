@@ -54,14 +54,14 @@ my $SUMMARY_FILE = "summary.csv";
 
 =head2 Static subroutines
 
-  Mutation::create_mml(project_ref, instrument_classes, out_dir, mml_file)
+  Mutation::create_mml(project_ref, instrument_classes, out_file)
 
 Generates an mml file, enabling all mutation operators for all classes listed
 in F<instrument_classes>.
 
 =cut
 sub create_mml {
-    @_ >= 3 or die $ARG_ERROR;
+    @_ == 3 or die $ARG_ERROR;
     my ($project, $instrument_classes, $out_file) = @_;
 
     my $OUT_DIR = Utils::get_dir($out_file);
