@@ -37,6 +37,7 @@ use warnings;
 use strict;
 
 use File::Basename;
+use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
 
@@ -75,6 +76,20 @@ sub get_abs_path {
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
     return abs_path($dir);
+}
+
+=pod
+
+  Utils::get_dir(file)
+
+Returns the directory of the absolute path of F<file>.
+
+=cut
+sub get_dir {
+    @_ == 1 or die $ARG_ERROR;
+    my $path = shift;
+    my ($volume,$dir,$file) = File::Spec->splitpath($path);
+    return get_abs_path($dir);
 }
 
 =pod
