@@ -140,16 +140,7 @@ $project->{prog_root} = $WORK_DIR;
 # Classes to mutate -- default is all modified classes
 my $classes = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
 
-# Create mutation definitions (mml file)
-my $mml_dir = "$WORK_DIR/mml";
-
-system("$UTIL_DIR/create_mml.pl -p $pid -c $classes -o $mml_dir -b $bid");
-my $mml_file = "$mml_dir/${bid}.mml.bin";
--e $mml_file or die "Mml file does not exist: $mml_file!";
-
-# Mutate and compile sources
-$ENV{MML} = $mml_file;
-$project->mutate() > 0 or die "Cannot mutate project!";
+$project->mutate($classes) > 0 or die "Cannot mutate project!";
 
 my $log_file = "$WORK_DIR/.mutation.log";
 # Run the test suite, according to the provided flags

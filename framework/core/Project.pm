@@ -100,6 +100,7 @@ use warnings;
 use strict;
 use Constants;
 use Utils;
+use Mutation;
 use Carp qw(confess);
 
 =pod
@@ -691,14 +692,27 @@ sub coverage_report {
 
 =pod
 
-  $project->mutate()
+  $project->mutate(instrument_classes)
 
-Mutates the checked-out program version.
+Mutates all classes listed in F<instrument_classes> in the checked-out program version.
 Returns the number of generated mutants on success, -1 otherwise.
 
 =cut
 sub mutate {
-    my $self = shift;
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $instrument_classes)  = @_;
+
+    # Create mutation definitions (mml file)
+    my $mml_src = "$self->{prog_root}/.mml/default.mml";
+    my $mml_bin = "${mml_src}.bin";
+
+    Mutation::create_mml($self, $instrument_classes, $mml_src);
+    -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
+
+    # Set environment variable MML, which is read by Major
+    $ENV{MML} = $mml_bin;
+
+    # Mutate and compile sources
     if (! $self->_ant_call("mutate")) {
         return -1;
     }
