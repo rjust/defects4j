@@ -78,5 +78,29 @@ num_mutants_killed=$(tail -n1 "$summary_file" | cut -f3 -d',')
 # TODO Would be nice to test the number of excluded mutants. In order to do it
 # Major has to write that number to the '$pid_bid_dir/summary.csv' file.
 
+########################################################################
+# Test mutation analysis when explicitly providing the classes to mutate
+
+# Exclude all generated mutants
+instrument_classes="$pid_bid_dir/instrument_classes.txt"
+echo "org.apache.commons.lang3.LocaleUtils" > "$instrument_classes"
+
+defects4j mutation -w "$pid_bid_dir" -i "$instrument_classes" || die "Mutation analysis (instrument LocaleUtils) failed!"
+
+# The last row of 'summary.csv' does not have an end of line character.
+# Otherwise, using wc would be more intuitive.
+num_rows=$(grep -c "^" "$summary_file")
+[ "$num_rows" -eq "2" ] || die "Unexpected number of lines in '$summary_file'!"
+
+# Columns of summary (csv) file:
+# MutantsGenerated,MutantsCovered,MutantsKilled,MutantsLive,RuntimePreprocSeconds,RuntimeAnalysisSeconds
+num_mutants_generated=$(tail -n1 "$summary_file" | cut -f1 -d',')
+num_mutants_covered=$(tail -n1 "$summary_file" | cut -f2 -d',')
+num_mutants_killed=$(tail -n1 "$summary_file" | cut -f3 -d',')
+
+[ "$num_mutants_generated" -eq 184 ] || die "$num_mutants_generated mutants have been generated!"
+[ "$num_mutants_covered" -eq 184 ] || die "$num_mutants_covered mutants have been covered!"
+[ "$num_mutants_killed" -eq 158 ] || die "$num_mutants_killed mutants have been killed!"
+
 # Clean up
 rm -rf "$pid_bid_dir"
