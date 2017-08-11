@@ -717,7 +717,6 @@ sub mutate {
     my $config = {$PROP_MUTATE => $list};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
-
     # Create mutation definitions (mml file)
     my $mml_src = "$self->{prog_root}/.mml/default.mml";
     my $mml_bin = "${mml_src}.bin";
