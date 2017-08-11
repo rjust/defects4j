@@ -228,15 +228,22 @@ sub _remove_test_method {
                 --$index;
             }
 
-            # Remove all comments as they may contain unbalanced delimiters
-            # or brackets
+            # Remove all String/Character literals and comments from the
+            # temporary buffer as they may contain unbalanced delimiters or
+            # brackets.
+            #
+            # TODO: This is a rather hacky solution. We should think about a
+            # proper parser that computes a line-number table for all methods.
             my @tmp = @lines[$index..$#lines];
             foreach (@tmp) {
+                # This captures String literals -- accounting for escaped quotes
+                # (\") and non-escaped quotes (" and \\")
+                s/([\"'])(?:(?<!\\)\\\1|.)*?\1/$1$1/g;
                 s/\/\/.*/\/\//;
             }
 
             my @result = extract_bracketed(join("", @tmp), '{"\'}', '[^\{]*');
-            die "Could not extract method body" unless defined $result[0];
+            die "Could not extract method body for $class::$method" unless defined $result[0];
 
             my $len = scalar(split("\n", $result[2].$result[0]));
 
