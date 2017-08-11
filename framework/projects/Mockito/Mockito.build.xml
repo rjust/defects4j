@@ -40,6 +40,9 @@
         <fileset dir="${d4j.home}/framework/projects/${d4j.project.id}/lib/">
             <include name="**/*.jar" />
         </fileset>
+        <fileset dir="${basedir}/compileLib/">
+            <include name="**/*.jar" />
+        </fileset>
     </path>
 
     <path id="d4j.test.classpath">
@@ -73,7 +76,7 @@
     <!-- Compile the sources using Gradle, used in newer commits -->
     <target name="gradle.compile" if="use.gradle" unless="d4j.mutation">
         <!-- Delete a test that is causing trouble -->
-        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" />
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
 
         <!-- Call the Gradle build script -->
         <exec executable="/bin/bash" failonerror="true">
@@ -84,6 +87,9 @@
 
     <!-- Compile the tests using Gradle, used in newer commits -->
     <target name="gradle.compile.tests" if="use.gradle">
+        <!-- Delete a test that is causing trouble -->
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
+
         <!-- Call the Gradle build script -->
         <exec executable="/bin/bash" failonerror="true">
             <arg value="gradlew"/>
@@ -132,8 +138,10 @@
         <antcall target="gradle.compile.mutants"/>
         <antcall target="ant.compile.mutants"/>
 
-        <!-- Copy the correct version of libraries for testing -->
+        <!-- Make sure the compileLib directory exists as file sets elsewhere in
+             this build file depend on it -->
         <mkdir dir="${basedir}/compileLib"/>
+        <!-- Copy the correct version of libraries for compilation and testing -->
         <exec executable="/bin/bash" failonerror="true">
             <arg value="${d4j.home}/framework/projects/${d4j.project.id}/chooseDepedencyVersion.sh"/>
             <arg value="${basedir}"/>
