@@ -416,7 +416,7 @@ sub _rm_classes {
             my $t_name = $1;
 
             if ($line_index > $line_number) {
-              last;
+                last;
             }
 
             $test_name = $t_name;
