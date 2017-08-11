@@ -416,7 +416,6 @@ sub _rm_classes {
             my $t_name = $1;
 
             if ($line_index > $line_number) {
-              $SUMMARY_LOG->log_msg($t_name);
               last;
             }
 
