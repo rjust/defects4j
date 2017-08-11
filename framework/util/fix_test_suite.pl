@@ -281,8 +281,9 @@ suite: foreach (@list) {
     my $fixed = 0;
     while ($counter > 0) {
         # Temporary log file to monitor uncompilable tests
-        my $comp_log = "$TMP_DIR/comp_tests.log";
-        `>$comp_log`;
+        my $comp_log = Log::create_log("$TMP_DIR/comp_tests.log", ">")->{file_name};
+
+        # Check for compilation errors
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
             $COMPILE_LOG->log_file("- Compilation issues: $name", $comp_log);
             my ($n_uncompilable_tests, $n_uncompilable_test_classes) = _rm_classes($comp_log, $src, $name);
@@ -295,10 +296,9 @@ suite: foreach (@list) {
         }
 
         # Temporary log file to monitor failing tests
-        my $tests = "$TMP_DIR/run_tests.log";
+        my $tests = Log::create_log("$TMP_DIR/run_tests.log", ">")->{file_name};
 
         # Check for errors of runtime system
-        `>$tests`;
         if (! $project->run_ext_tests("$TMP_DIR/$src", "$INCL", $tests)) {
             $SUMMARY_LOG->log_file(" - Tests not executable: $name", $tests);
             _insert_row($pid, $vid, $src, $tid);

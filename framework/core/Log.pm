@@ -53,15 +53,16 @@ use POSIX qw(strftime);
 
 =head2 Create an instance of Log
 
-  Log::create_log(file_name)
+  Log::create_log(file_name [, mode])
 
-Open log file and return reference to log object.
+Open log file with open mode append (default) and return reference to log object.
 
 =cut
 sub create_log {
-    @_ == 1 or die "Invalid number of arguments";
-    my ($file_name) = @_;
-    open(my $fh, ">>$file_name") or die "Cannot open log file $file_name: $!";
+    @_ >= 1 or die "Invalid number of arguments";
+    my ($file_name, $mode) = @_;
+    my $open_mode = defined $mode ? $mode : ">>";
+    open(my $fh, "$open_mode", "$file_name") or die "Cannot open log file $file_name: $!";
     my $self = {
         log       => $fh,
         file_name => $file_name,
