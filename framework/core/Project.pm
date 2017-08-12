@@ -692,15 +692,16 @@ sub coverage_report {
 
 =pod
 
-  $project->mutate(instrument_classes)
+  $project->mutate(instrument_classes, mut_ops)
 
-Mutates all classes listed in F<instrument_classes> in the checked-out program version.
+Mutates all classes listed in F<instrument_classes>, using all mutation operators
+defined by the array reference C<mut_ops>, in the checked-out program version.
 Returns the number of generated mutants on success, -1 otherwise.
 
 =cut
 sub mutate {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $instrument_classes)  = @_;
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $instrument_classes, $mut_ops)  = @_;
     my $work_dir = $self->{prog_root};
 
     # Read all classes that should be mutated
@@ -721,7 +722,7 @@ sub mutate {
     my $mml_src = "$self->{prog_root}/.mml/default.mml";
     my $mml_bin = "${mml_src}.bin";
 
-    Mutation::create_mml($instrument_classes, $mml_src);
+    Mutation::create_mml($instrument_classes, $mml_src, $mut_ops);
     -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
 
     # Set environment variable MML, which is read by Major

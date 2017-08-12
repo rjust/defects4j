@@ -93,8 +93,11 @@ my $BID = $cmd_opts{b};
 $BID =~ /^(\d+)$/ or die "Wrong bug id format (\\d+): $BID!";
 -e $CLASSES or die "File with classes to mutate does not exist: $CLASSES";
 
+# The mutation operators that should be enabled
+my @MU_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+
 my $mml_src = "$OUT_DIR/$BID.mml";
 my $mml_bin = "${mml_src}.bin";
 
-Mutation::create_mml($CLASSES, $mml_src);
+Mutation::create_mml($CLASSES, $mml_src, \@MUT_OPS);
 -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";

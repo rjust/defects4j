@@ -54,21 +54,20 @@ my $SUMMARY_FILE = "summary.csv";
 
 =head2 Static subroutines
 
-  Mutation::create_mml(instrument_classes, out_file)
+  Mutation::create_mml(instrument_classes, out_file, mut_ops)
 
-Generates an mml file, enabling all mutation operators for all classes listed
-in F<instrument_classes>.
+Generates an mml file, enabling all mutation operators defined by the array
+reference C<mut_ops> for all classes listed in F<instrument_classes>. The mml
+(source) file is written to C<out_file>. This subroutine also compiles the mml
+file to F<'out_file'.bin>.
 
 =cut
 sub create_mml {
-    @_ == 2 or die $ARG_ERROR;
-    my ($instrument_classes, $out_file) = @_;
+    @_ == 3 or die $ARG_ERROR;
+    my ($instrument_classes, $out_file, $mut_ops) = @_;
 
     my $OUT_DIR = Utils::get_dir($out_file);
     my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
-
-    # The mutation operators that should be enabled in the mml file
-    my @ops =("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
 
     system("mkdir -p $OUT_DIR");
 
@@ -84,7 +83,7 @@ sub create_mml {
     foreach my $class (@classes) {
         chomp $class;
         print FILE "\n// Enable operators for $class\n";
-        foreach my $op (@ops) {
+        foreach my $op (@{$mut_ops}) {
             # Skip disabled operators
             next if $TEMPLATE =~ /-$op<"$class">/;
             print FILE "$op<\"$class\">;\n";

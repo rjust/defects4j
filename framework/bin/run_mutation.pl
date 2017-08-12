@@ -131,6 +131,9 @@ my $EXCL = $cmd_opts{e};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+# The mutation operators that should be enabled
+my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+
 # Set up project
 my $project = Project::create_project($PID);
 
@@ -285,7 +288,7 @@ sub _run_mutation {
       close(EXCL_FILE);
     }
 
-    my $gen_mutants = $project->mutate("$TARGET_CLASSES_DIR/$bid.src");
+    my $gen_mutants = $project->mutate("$TARGET_CLASSES_DIR/$bid.src", \@MUT_OPS);
     $gen_mutants > 0 or die "No mutants generated for $vid!";
 
     # Compile generated tests

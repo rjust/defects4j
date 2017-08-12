@@ -133,6 +133,9 @@ if ($type eq "b") {
     exit 1;
 }
 
+# The mutation operators that should be enabled
+my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+
 # Instantiate project and set working directory
 my $project = Project::create_project($pid);
 $project->{prog_root} = $WORK_DIR;
@@ -140,7 +143,7 @@ $project->{prog_root} = $WORK_DIR;
 # Classes to mutate -- default is all modified classes
 my $classes = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
 
-$project->mutate($classes) > 0 or die "Cannot mutate project!";
+$project->mutate($classes, \@MUT_OPS) > 0 or die "Cannot mutate project!";
 
 my $log_file = "$WORK_DIR/.mutation.log";
 # Run the test suite, according to the provided flags
