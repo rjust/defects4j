@@ -854,11 +854,19 @@ sub run_randoop {
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
+# problem: the timelimit argument was rename timeLimit
+# need to use one or other based on version???  but there are 3.1.5 versions with this difference?
                 "--timelimit=$timeout " .
+#               "--timeLimit=$timeout " .
                 "--randomseed=$seed " .
                 "$config 2>&1";
 
     my $log;
+
+    # log information about version of Randoop being used
+    $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main | grep version`;
+    print(STDERR "Randoop: $TESTGEN_LIB_DIR/randoop-current.jar, $log");
+
     my $ret = Utils::exec_cmd($cmd, "Run Randoop ($config_file)", \$log);
 
     if (defined $log_file) {
