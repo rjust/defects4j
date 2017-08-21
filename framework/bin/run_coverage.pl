@@ -30,7 +30,7 @@ run_coverage.pl -- code coverage analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-  run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D] [-A]
+  run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D] [-A] [-I]
 
 =head1 OPTIONS
 
@@ -76,6 +76,10 @@ All relevant classes: Measure code coverage for all relevant classes (i.e., all
 classes touched by the triggering tests). By default code coverage is measured
 only for classes modified by the bug fix.
 
+=item -I
+
+Ignore failing tests; report all coverage data.
+
 =back
 
 =head1 DESCRIPTION
@@ -110,7 +114,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:DA', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:DAI', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -277,7 +281,10 @@ sub _run_coverage {
     if (Utils::has_failing_tests($test_log)) {
         $LOG->log_msg(" - Broken test suite: $archive");
         printf ("Broken test suite: $archive\n");
-        $cov_info = {};
+        # randoop generated tests often have asserts; we may still want the coverage data
+        if (! defined $cmd_opts{I}) {
+            $cov_info = {};
+        }
         system("cp $test_log $LOG_DIR/$suite_src/$vid.$test_id.failing.log") == 0
             or die "Cannot copy stack traces from failing tests";
     }
