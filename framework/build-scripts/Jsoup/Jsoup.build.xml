@@ -62,6 +62,7 @@
                 <batchtest unless="test.entry.class">
                     <fileset dir="${test.home}" excludes="${exclude.list}">
                         <include name="**/*Test.class"/>
+                        <exclude name="**/MultiLocaleRule$MultiLocaleTest.class"/>
                     </fileset>
                 </batchtest>
         </junit>
