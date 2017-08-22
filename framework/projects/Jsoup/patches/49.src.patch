@@ -1,0 +1,17 @@
+diff --git a/java/org/jsoup/helper/DataUtil.java b/java/org/jsoup/helper/DataUtil.java
+index 9adfe42..b9e1fee 100644
+--- a/java/org/jsoup/helper/DataUtil.java
++++ b/java/org/jsoup/helper/DataUtil.java
+@@ -92,12 +92,6 @@ public class DataUtil {
+             docData = Charset.forName(charsetName).decode(byteData).toString();
+         }
+         if (doc == null) {
+-            // there are times where there is a spurious byte-order-mark at the start of the text. Shouldn't be present
+-            // in utf-8. If after decoding, there is a BOM, strip it; otherwise will cause the parser to go straight
+-            // into head mode
+-            if (docData.charAt(0) == 65279)
+-                docData = docData.substring(1);
+-
+             doc = parser.parseInput(docData, baseUri);
+             doc.outputSettings().charset(charsetName);
+         }

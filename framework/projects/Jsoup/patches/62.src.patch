@@ -1,0 +1,22 @@
+diff --git a/java/org/jsoup/nodes/Entities.java b/java/org/jsoup/nodes/Entities.java
+index 786b1bf..1b52a79 100644
+--- a/java/org/jsoup/nodes/Entities.java
++++ b/java/org/jsoup/nodes/Entities.java
+@@ -35,7 +35,7 @@ public class Entities {
+     private static final Map<Character, String> xhtmlByVal;
+     private static final Map<Character, String> baseByVal;
+     private static final Map<Character, String> fullByVal;
+-    private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+\\d*);?");
++    private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?");
+ 
+     static String escape(String string, Document.OutputSettings out) {
+         return escape(string, out.encoder(), out.escapeMode());
+@@ -62,7 +62,7 @@ public class Entities {
+         if (!string.contains("&"))
+             return string;
+ 
+-        Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]\\d*);?
++        Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?
+         StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
+         // todo: replace m.appendReplacement with own impl, so StringBuilder and quoteReplacement not required
+ 

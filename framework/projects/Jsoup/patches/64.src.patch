@@ -1,0 +1,69 @@
+diff --git a/java/org/jsoup/nodes/Document.java b/java/org/jsoup/nodes/Document.java
+index 47632fc..b0d89e2 100644
+--- a/java/org/jsoup/nodes/Document.java
++++ b/java/org/jsoup/nodes/Document.java
+@@ -107,18 +107,15 @@ public class Document extends Element {
+ 
+         // pull text nodes out of root, html, and head els, and push into body. non-text nodes are already taken care
+         // of. do in inverse order to maintain text order.
+-        normaliseTextNodes(head());
+-        normaliseTextNodes(htmlEl);
+-        normaliseTextNodes(this);
++        normalise(head());
++        normalise(htmlEl);
++        normalise(this);        
+ 
+-        normaliseStructure("head", htmlEl);
+-        normaliseStructure("body", htmlEl);
+-        
+         return this;
+     }
+ 
+     // does not recurse.
+-    private void normaliseTextNodes(Element element) {
++    private void normalise(Element element) {
+         List<Node> toMove = new ArrayList<Node>();
+         for (Node node: element.childNodes) {
+             if (node instanceof TextNode) {
+@@ -136,28 +133,6 @@ public class Document extends Element {
+         }
+     }
+ 
+-    // merge multiple <head> or <body> contents into one, delete the remainder, and ensure they are owned by <html>
+-    private void normaliseStructure(String tag, Element htmlEl) {
+-        Elements elements = this.getElementsByTag(tag);
+-        Element master = elements.first(); // will always be available as created above if not existent
+-        if (elements.size() > 1) { // dupes, move contents to master
+-            List<Node> toMove = new ArrayList<Node>();
+-            for (int i = 1; i < elements.size(); i++) {
+-                Node dupe = elements.get(i);
+-                for (Node node : dupe.childNodes)
+-                    toMove.add(node);
+-                dupe.remove();
+-            }
+-
+-            for (Node dupe : toMove)
+-                master.appendChild(dupe);
+-        }
+-        // ensure parented by <html>
+-        if (!master.parent().equals(htmlEl)) {
+-            htmlEl.appendChild(master); // includes remove()            
+-        }
+-    }
+-
+     // fast method to get first by tag name, used for html, head, body finders
+     private Element findFirstElementByTagName(String tag, Node node) {
+         if (node.nodeName().equals(tag))
+diff --git a/java/org/jsoup/parser/Tag.java b/java/org/jsoup/parser/Tag.java
+index d46e528..6590c82 100644
+--- a/java/org/jsoup/parser/Tag.java
++++ b/java/org/jsoup/parser/Tag.java
+@@ -296,7 +296,7 @@ public class Tag {
+ 
+         // special
+         createInline("A").setOptionalClosing(); // cannot contain self
+-        createInline("IMG").setEmpty().setAncestor("BODY", "NOSCRIPT"); // noscript so an image can be in html->head->noscript
++        createInline("IMG").setEmpty();
+         createInline("BR").setEmpty();
+         createInline("WBR").setEmpty();
+         createInline("MAP"); // map is defined as inline, but can hold block (what?) or area. Seldom used so NBD.

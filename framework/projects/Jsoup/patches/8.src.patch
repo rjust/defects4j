@@ -1,0 +1,184 @@
+diff --git a/java/org/jsoup/Jsoup.java b/java/org/jsoup/Jsoup.java
+index 84a5e34..0d5cac6 100644
+--- a/java/org/jsoup/Jsoup.java
++++ b/java/org/jsoup/Jsoup.java
+@@ -217,10 +217,6 @@ public class Jsoup {
+ 
+     /**
+      * Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of
+-     * permitted tags and attributes.
+-     * <p>The HTML is treated as a body fragment; it's expected the cleaned HTML will be used within the body of an
+-     * existing document. If you want to clean full documents, use {@link Cleaner#clean(Document)} instead, and add
+-     * structural tags (<code>html, head, body</code> etc) to the whitelist.
+      *
+      * @param bodyHtml input untrusted HTML (body fragment)
+      * @param baseUri URL to resolve relative URLs against
+@@ -238,16 +234,15 @@ public class Jsoup {
+     }
+ 
+     /**
+-     Test if the input body HTML has only tags and attributes allowed by the Whitelist. Useful for form validation.
+-     <p>The input HTML should still be run through the cleaner to set up enforced attributes, and to tidy the output.
+-     <p>Assumes the HTML is a body fragment (i.e. will be used in an existing HTML document body.)
+      @param bodyHtml HTML to test
+      @param whitelist whitelist to test against
+      @return true if no tags or attributes were removed; false otherwise
+      @see #clean(String, org.jsoup.safety.Whitelist) 
+      */
+     public static boolean isValid(String bodyHtml, Whitelist whitelist) {
+-        return new Cleaner(whitelist).isValidBodyHtml(bodyHtml);
++        Document dirty = parseBodyFragment(bodyHtml, "");
++        Cleaner cleaner = new Cleaner(whitelist);
++        return cleaner.isValid(dirty);
+     }
+     
+ }
+diff --git a/java/org/jsoup/parser/ParseErrorList.java b/java/org/jsoup/parser/ParseErrorList.java
+index b2ece0c..3824ffb 100644
+--- a/java/org/jsoup/parser/ParseErrorList.java
++++ b/java/org/jsoup/parser/ParseErrorList.java
+@@ -7,7 +7,7 @@ import java.util.ArrayList;
+  * 
+  * @author Jonathan Hedley
+  */
+-public class ParseErrorList extends ArrayList<ParseError>{
++class ParseErrorList extends ArrayList<ParseError>{
+     private static final int INITIAL_CAPACITY = 16;
+     private final int maxSize;
+     
+@@ -24,11 +24,11 @@ public class ParseErrorList extends ArrayList<ParseError>{
+         return maxSize;
+     }
+ 
+-    public static ParseErrorList noTracking() {
++    static ParseErrorList noTracking() {
+         return new ParseErrorList(0, 0);
+     }
+     
+-    public static ParseErrorList tracking(int maxSize) {
++    static ParseErrorList tracking(int maxSize) {
+         return new ParseErrorList(INITIAL_CAPACITY, maxSize);
+     }
+ }
+diff --git a/java/org/jsoup/parser/Parser.java b/java/org/jsoup/parser/Parser.java
+index 0751c22..868ef41 100644
+--- a/java/org/jsoup/parser/Parser.java
++++ b/java/org/jsoup/parser/Parser.java
+@@ -116,22 +116,6 @@ public class Parser {
+     }
+ 
+     /**
+-     * Parse a fragment of HTML into a list of nodes. The context element, if supplied, supplies parsing context.
+-     *
+-     * @param fragmentHtml the fragment of HTML to parse
+-     * @param context (optional) the element that this HTML fragment is being parsed for (i.e. for inner HTML). This
+-     * provides stack context (for implicit element creation).
+-     * @param baseUri base URI of document (i.e. original fetch location), for resolving relative URLs.
+-     * @param errorList list to add errors to
+-     *
+-     * @return list of nodes parsed from the input HTML. Note that the context element, if supplied, is not modified.
+-     */
+-    public static List<Node> parseFragment(String fragmentHtml, Element context, String baseUri, ParseErrorList errorList) {
+-        HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
+-        return treeBuilder.parseFragment(fragmentHtml, context, baseUri, errorList, treeBuilder.defaultSettings());
+-    }
+-
+-    /**
+      * Parse a fragment of XML into a list of nodes.
+      *
+      * @param fragmentXml the fragment of XML to parse
+diff --git a/java/org/jsoup/safety/Cleaner.java b/java/org/jsoup/safety/Cleaner.java
+index 1223bbe..2ddad90 100644
+--- a/java/org/jsoup/safety/Cleaner.java
++++ b/java/org/jsoup/safety/Cleaner.java
+@@ -1,21 +1,11 @@
+ package org.jsoup.safety;
+ 
+ import org.jsoup.helper.Validate;
+-import org.jsoup.nodes.Attribute;
+-import org.jsoup.nodes.Attributes;
+-import org.jsoup.nodes.DataNode;
+-import org.jsoup.nodes.Document;
+-import org.jsoup.nodes.Element;
+-import org.jsoup.nodes.Node;
+-import org.jsoup.nodes.TextNode;
+-import org.jsoup.parser.ParseErrorList;
+-import org.jsoup.parser.Parser;
++import org.jsoup.nodes.*;
+ import org.jsoup.parser.Tag;
+ import org.jsoup.select.NodeTraversor;
+ import org.jsoup.select.NodeVisitor;
+ 
+-import java.util.List;
+-
+ 
+ /**
+  The whitelist based HTML cleaner. Use to ensure that end-user provided HTML contains only the elements and attributes
+@@ -61,10 +51,7 @@ public class Cleaner {
+     }
+ 
+     /**
+-     Determines if the input document <b>body</b>is valid, against the whitelist. It is considered valid if all the tags and attributes
+-     in the input HTML are allowed by the whitelist, and that there is no content in the <code>head</code>.
+      <p>
+-     This method can be used as a validator for user input. An invalid document will still be cleaned successfully
+      using the {@link #clean(Document)} document. If using as a validator, it is recommended to still clean the document
+      to ensure enforced attributes are set correctly, and that the output is tidied.
+      </p>
+@@ -76,18 +63,7 @@ public class Cleaner {
+ 
+         Document clean = Document.createShell(dirtyDocument.baseUri());
+         int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
+-        return numDiscarded == 0
+-            && dirtyDocument.head().childNodes().size() == 0; // because we only look at the body, but we start from a shell, make sure there's nothing in the head
+-    }
+-
+-    public boolean isValidBodyHtml(String bodyHtml) {
+-        Document clean = Document.createShell("");
+-        Document dirty = Document.createShell("");
+-        ParseErrorList errorList = ParseErrorList.tracking(1);
+-        List<Node> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
+-        dirty.body().insertChildren(0, nodes);
+-        int numDiscarded = copySafeNodes(dirty.body(), clean.body());
+-        return numDiscarded == 0 && errorList.size() == 0;
++        return numDiscarded == 0;
+     }
+ 
+     /**
+diff --git a/java/org/jsoup/safety/Whitelist.java b/java/org/jsoup/safety/Whitelist.java
+index b8d0886..bf05fa7 100644
+--- a/java/org/jsoup/safety/Whitelist.java
++++ b/java/org/jsoup/safety/Whitelist.java
+@@ -497,23 +497,15 @@ public class Whitelist {
+         TagName tag = TagName.valueOf(tagName);
+         AttributeKey key = AttributeKey.valueOf(attr.getKey());
+ 
+-        Set<AttributeKey> okSet = attributes.get(tag);
+-        if (okSet != null && okSet.contains(key)) {
+-            if (protocols.containsKey(tag)) {
+-                Map<AttributeKey, Set<Protocol>> attrProts = protocols.get(tag);
+-                // ok if not defined protocol; otherwise test
+-                return !attrProts.containsKey(key) || testValidProtocol(el, attr, attrProts.get(key));
+-            } else { // attribute found, no protocols defined, so OK
+-                return true;
+-            }
+-        }
+-        // might be an enforced attribute?
+-        Map<AttributeKey, AttributeValue> enforcedSet = enforcedAttributes.get(tag);
+-        if (enforcedSet != null) {
+-            Attributes expect = getEnforcedAttributes(tagName);
+-            String attrKey = attr.getKey();
+-            if (expect.hasKeyIgnoreCase(attrKey)) {
+-                return expect.getIgnoreCase(attrKey).equals(attr.getValue());
++        if (attributes.containsKey(tag)) {
++            if (attributes.get(tag).contains(key)) {
++                if (protocols.containsKey(tag)) {
++                    Map<AttributeKey, Set<Protocol>> attrProts = protocols.get(tag);
++                    // ok if not defined protocol; otherwise test
++                    return !attrProts.containsKey(key) || testValidProtocol(el, attr, attrProts.get(key));
++                } else { // attribute found, no protocols defined, so OK
++                    return true;
++                }
+             }
+         }
+         // no attributes defined for tag, try :all tag

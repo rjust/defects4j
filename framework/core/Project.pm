@@ -88,6 +88,8 @@ name of the corresponding project.
 
 =item B<Time>  Joda-time (uses Vcs::Git as Vcs backend)
 
+=item B<Jsoup> jsoup HTML parser (uses Vcs::Git as Vcs backend)
+
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
 
 =item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)

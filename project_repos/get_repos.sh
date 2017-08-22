@@ -27,6 +27,9 @@ new=$($cmd)
 
 # Install Mockito (separate from core defects4j)
 ./get_mockito.sh
+./get_guava.sh
+./get_jacksoncore.sh
+./get_jsoup.sh
 
 # Exit if no newer file is available
 [ "$old" == "$new" ] && exit 0
