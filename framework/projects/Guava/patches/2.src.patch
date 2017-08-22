@@ -1,0 +1,13 @@
+diff --git a/guava/src/com/google/common/base/Splitter.java b/guava/src/com/google/common/base/Splitter.java
+index 907494e..ae9de76 100644
+--- a/guava/src/com/google/common/base/Splitter.java
++++ b/guava/src/com/google/common/base/Splitter.java
+@@ -557,7 +557,7 @@ public final class Splitter {
+            * of the next returned substring -- so nextStart stays the same.
+            */
+           offset++;
+-          if (offset > toSplit.length()) {
++          if (offset >= toSplit.length()) {
+             offset = -1;
+           }
+           continue;

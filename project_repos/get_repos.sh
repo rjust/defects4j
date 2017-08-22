@@ -39,3 +39,6 @@ clean
 
 # Extract new repos
 unzip -q -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
+
+./get-guava.sh
+./get-jacksoncore.sh
