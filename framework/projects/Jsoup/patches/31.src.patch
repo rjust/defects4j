@@ -1,28 +1,14 @@
-diff --git a/java/org/jsoup/nodes/Element.java b/java/org/jsoup/nodes/Element.java
-index dcfa72c..2bd9504 100644
---- a/java/org/jsoup/nodes/Element.java
-+++ b/java/org/jsoup/nodes/Element.java
-@@ -1097,8 +1097,8 @@ public class Element extends Node {
-      */
-     public String html() {
-         StringBuilder accum = new StringBuilder();
--        html(accum);
--        return getOutputSettings().prettyPrint() ? accum.toString().trim() : accum.toString();
-+        html(accum); 
-+        return accum.toString().trim();
-     }
+diff --git a/java/org/jsoup/parser/HtmlTreeBuilderState.java b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index 24bef3b..23d8af2 100644
+--- a/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -722,8 +722,7 @@ enum HtmlTreeBuilderState {
+                                 commonAncestor.appendChild(lastNode);
+                             }
  
-     private void html(StringBuilder accum) {
-diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
-index 1b97afe..9f9bfa6 100644
---- a/java/org/jsoup/nodes/Node.java
-+++ b/java/org/jsoup/nodes/Node.java
-@@ -557,7 +557,7 @@ public abstract class Node implements Cloneable {
-     }
- 
-     // if this node has no document (or parent), retrieve the default output settings
--    Document.OutputSettings getOutputSettings() {
-+    private Document.OutputSettings getOutputSettings() {
-         return ownerDocument() != null ? ownerDocument().outputSettings() : (new Document("")).outputSettings();
-     }
- 
+-                            Element adopter = new Element(formatEl.tag(), tb.getBaseUri());
+-                            adopter.attributes().addAll(formatEl.attributes());
++                            Element adopter = new Element(Tag.valueOf(name), tb.getBaseUri());
+                             Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodeSize()]);
+                             for (Node childNode : childNodes) {
+                                 adopter.appendChild(childNode); // append will reparent. thus the clone to avoid concurrent mod.

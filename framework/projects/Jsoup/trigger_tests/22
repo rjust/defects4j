@@ -1,9 +1,8 @@
---- org.jsoup.nodes.DocumentTest::testShiftJisRoundtrip
-junit.framework.AssertionFailedError: Should not have contained a '?'.
+--- org.jsoup.parser.HtmlParserTest::testInvalidTableContents
+junit.framework.AssertionFailedError: Search text did not come after comment
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.assertTrue(Assert.java:41)
-	at org.junit.Assert.assertFalse(Assert.java:64)
-	at org.jsoup.nodes.DocumentTest.testShiftJisRoundtrip(DocumentTest.java:406)
+	at org.jsoup.parser.HtmlParserTest.testInvalidTableContents(HtmlParserTest.java:864)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

@@ -1,23 +1,36 @@
-diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
-index 2e4c877..76ac270 100644
---- a/java/org/jsoup/parser/HtmlParserTest.java
-+++ b/java/org/jsoup/parser/HtmlParserTest.java
-@@ -679,18 +679,4 @@ public class HtmlParserTest {
-         Document node = Jsoup.parseBodyFragment(html);
-         assertEquals("<html><head></head><body><table><tbody><tr><td>text</td><!-- Comment --></tr></tbody></table></body></html>", TextUtil.stripNewlines(node.outerHtml()));
+diff --git a/java/org/jsoup/select/SelectorTest.java b/java/org/jsoup/select/SelectorTest.java
+index 4089f60..c1862c5 100644
+--- a/java/org/jsoup/select/SelectorTest.java
++++ b/java/org/jsoup/select/SelectorTest.java
+@@ -326,9 +326,10 @@ public class SelectorTest {
+         Document doc = Jsoup.parse(h);
+         Elements els = doc.select(".foo > ol, ol > li + li");
+ 
+-        assertEquals(2, els.size());
+-        assertEquals("li", els.get(0).tagName());
+-        assertEquals("Three", els.get(1).text());
++        assertEquals(3, els.size());
++        assertEquals("ol", els.get(0).tagName());
++        assertEquals("Two", els.get(1).text());
++        assertEquals("Three", els.get(2).text());
+     }
+ 
+     @Test public void generalSiblings() {
+@@ -584,17 +585,4 @@ public class SelectorTest {
+         assertEquals(1, el1.size());
+         assertEquals("1", el1.first().id());
      }
 -
--    @Test public void handlesQuotesInCommentsInScripts() {
--        String html = "<script>\n" +
--                "  <!--\n" +
--                "    document.write('</scr' + 'ipt>');\n" +
--                "  // -->\n" +
--                "</script>";
--        Document node = Jsoup.parseBodyFragment(html);
--        assertEquals("<script>\n" +
--                "  <!--\n" +
--                "    document.write('</scr' + 'ipt>');\n" +
--                "  // -->\n" +
--                "</script>", node.body().html());
+-    @Test public void handlesCommasInSelector() {
+-        Document doc = Jsoup.parse("<p name='1,2'>One</p><div>Two</div><ol><li>123</li><li>Text</li></ol>");
+-
+-        Elements ps = doc.select("[name=1,2]");
+-        assertEquals(1, ps.size());
+-
+-        Elements containers = doc.select("div, li:matches([0-9,]+)");
+-        assertEquals(2, containers.size());
+-        assertEquals("div", containers.get(0).tagName());
+-        assertEquals("li", containers.get(1).tagName());
+-        assertEquals("123", containers.get(1).text());
 -    }
  }

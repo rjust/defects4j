@@ -1,13 +1,10 @@
---- org.jsoup.nodes.ElementTest::testNotPretty
-junit.framework.AssertionFailedError: expected:<[   
-]<p>Hello
- there
-</p>> but was:<[]<p>Hello
- there
-</p>>
+--- org.jsoup.parser.HtmlParserTest::handlesUnclosedAnchors
+junit.framework.AssertionFailedError: expected:<...com/">Link</a>
+<p><a[ href="http://example.com/"]>Error link</a></p>> but was:<...com/">Link</a>
+<p><a[]>Error link</a></p>>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.ElementTest.testNotPretty(ElementTest.java:247)
+	at org.jsoup.parser.HtmlParserTest.handlesUnclosedAnchors(HtmlParserTest.java:529)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

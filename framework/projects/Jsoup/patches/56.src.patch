@@ -1,51 +1,62 @@
-diff --git a/java/org/jsoup/parser/CharacterReader.java b/java/org/jsoup/parser/CharacterReader.java
-index b7cce5a..632cc14 100644
---- a/java/org/jsoup/parser/CharacterReader.java
-+++ b/java/org/jsoup/parser/CharacterReader.java
-@@ -189,13 +189,6 @@ class CharacterReader {
+diff --git a/java/org/jsoup/select/Selector.java b/java/org/jsoup/select/Selector.java
+index e370de8..b46e468 100644
+--- a/java/org/jsoup/select/Selector.java
++++ b/java/org/jsoup/select/Selector.java
+@@ -107,8 +107,6 @@ public class Selector {
+         if (tq.matchesAny(combinators)) { // if starts with a combinator, use root as elements
+             elements.add(root);
+             combinator(tq.consume().toString());
+-        } else if (tq.matches(":has(")) {
+-            elements.addAll(root.getAllElements());
+         } else {
+             addElements(findElements()); // chomp first element matcher off queue 
+         }            
+@@ -180,8 +178,6 @@ public class Selector {
+             return matches(false);
+         } else if (tq.matches(":matchesOwn(")) {
+             return matches(true);
+-        } else if (tq.matches(":not(")) {
+-            return not();
+         } else { // unhandled
+             throw new SelectorParseException("Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());
          }
+@@ -305,15 +301,6 @@ public class Selector {
+         return own ? root.getElementsMatchingOwnText(regex) : root.getElementsMatchingText(regex);
      }
  
--    boolean containsIgnoreCase(String seq) {
--        // used to check presence of </title>, </style>. only finds consistent case.
--        String loScan = seq.toLowerCase();
--        String hiScan = seq.toUpperCase();
--        return (input.indexOf(loScan, pos) > -1) || (input.indexOf(hiScan, pos) > -1);
+-    // :not(selector)
+-    private Elements not() {
+-        tq.consume(":not");
+-        String subQuery = tq.chompBalanced('(', ')');
+-        Validate.notEmpty(subQuery, ":not(selector) subselect must not be empty");
+-
+-        return filterOut(root.getAllElements(), select(subQuery, root));
 -    }
 -
-     @Override
-     public String toString() {
-         return input.substring(pos);
-diff --git a/java/org/jsoup/parser/Tokeniser.java b/java/org/jsoup/parser/Tokeniser.java
-index 316cbea..c012a73 100644
---- a/java/org/jsoup/parser/Tokeniser.java
-+++ b/java/org/jsoup/parser/Tokeniser.java
-@@ -194,10 +194,6 @@ class Tokeniser {
-         return tagPending.tagName.equals(lastStartTag.tagName);
+     // direct child descendants
+     private static Elements filterForChildren(Collection<Element> parents, Collection<Element> candidates) {
+         Elements children = new Elements();
+@@ -405,23 +392,6 @@ public class Selector {
+         return children;
      }
  
--    String appropriateEndTagName() {
--        return lastStartTag.tagName;
+-    // exclude set. package open so that Elements can implement .not() selector.
+-    static Elements filterOut(Collection<Element> elements, Collection<Element> outs) {
+-        Elements output = new Elements();
+-        for (Element el: elements) {
+-            boolean found = false;
+-            for (Element out: outs) {
+-                if (el.equals(out)) {
+-                    found = true;
+-                    break;
+-                }
+-            }
+-            if (!found)
+-                output.add(el);
+-        }
+-        return output;
 -    }
 -
-     boolean isTrackErrors() {
-         return trackErrors;
-     }
-diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
-index 8774823..db08f33 100644
---- a/java/org/jsoup/parser/TokeniserState.java
-+++ b/java/org/jsoup/parser/TokeniserState.java
-@@ -215,13 +215,6 @@ enum TokeniserState {
-             if (r.matches('/')) {
-                 t.createTempBuffer();
-                 t.advanceTransition(RCDATAEndTagOpen);
--            } else if (r.matchesLetter() && !r.containsIgnoreCase("</" + t.appropriateEndTagName())) {
--                // diverge from spec: got a start tag, but there's no appropriate end tag (</title>), so rather than
--                // consuming to EOF; break out here
--                t.tagPending = new Token.EndTag(t.appropriateEndTagName());
--                t.emitTagPending();
--                r.unconsume(); // undo "<"
--                t.transition(Data);
-             } else {
-                 t.emit("<");
-                 t.transition(Rcdata);
+     public static class SelectorParseException extends IllegalStateException {
+         public SelectorParseException(String msg, Object... params) {
+             super(String.format(msg, params));

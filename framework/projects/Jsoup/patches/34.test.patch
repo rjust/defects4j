@@ -1,34 +1,36 @@
-diff --git a/java/org/jsoup/parser/CharacterReaderTest.java b/java/org/jsoup/parser/CharacterReaderTest.java
-index 8f32251..0a1176a 100644
---- a/java/org/jsoup/parser/CharacterReaderTest.java
-+++ b/java/org/jsoup/parser/CharacterReaderTest.java
-@@ -95,11 +95,6 @@ public class CharacterReaderTest {
-         assertEquals(-1, r.nextIndexOf("Two"));
+diff --git a/java/org/jsoup/nodes/ElementTest.java b/java/org/jsoup/nodes/ElementTest.java
+index b18a1fe..65a795a 100644
+--- a/java/org/jsoup/nodes/ElementTest.java
++++ b/java/org/jsoup/nodes/ElementTest.java
+@@ -474,31 +474,6 @@ public class ElementTest {
+         assertEquals("<div><p>One</p><p><span>Two</span></p></div><p><span>Two</span><span>Three</span></p>", TextUtil.stripNewlines(doc.body().html()));
      }
  
--    @Test public void nextIndexOfUnmatched() {
--        CharacterReader r = new CharacterReader("<[[one]]");
--        assertEquals(-1, r.nextIndexOf("]]>"));
+-    @Test public void testClonesClassnames() {
+-        Document doc = Jsoup.parse("<div class='one two'></div>");
+-        Element div = doc.select("div").first();
+-        Set<String> classes = div.classNames();
+-        assertEquals(2, classes.size());
+-        assertTrue(classes.contains("one"));
+-        assertTrue(classes.contains("two"));
+-
+-        Element copy = div.clone();
+-        Set<String> copyClasses = copy.classNames();
+-        assertEquals(2, copyClasses.size());
+-        assertTrue(copyClasses.contains("one"));
+-        assertTrue(copyClasses.contains("two"));
+-        copyClasses.add("three");
+-        copyClasses.remove("one");
+-
+-        assertTrue(classes.contains("one"));
+-        assertFalse(classes.contains("three"));
+-        assertFalse(copyClasses.contains("one"));
+-        assertTrue(copyClasses.contains("three"));
+-
+-        assertEquals("", div.html());
+-        assertEquals("", copy.html());
 -    }
 -
-     @Test public void consumeToChar() {
-         CharacterReader r = new CharacterReader("One Two Three");
-         assertEquals("One ", r.consumeTo('T'));
-diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
-index 6aeaeac..c717433 100644
---- a/java/org/jsoup/parser/HtmlParserTest.java
-+++ b/java/org/jsoup/parser/HtmlParserTest.java
-@@ -287,13 +287,6 @@ public class HtmlParserTest {
-         assertEquals(1, div.childNodeSize()); // no elements, one text node
-     }
- 
--    @Test public void handlesUnclosedCdataAtEOF() {
--        // https://github.com/jhy/jsoup/issues/349 would crash, as character reader would try to seek past EOF
--        String h = "<![CDATA[]]";
--        Document doc = Jsoup.parse(h);
--        assertEquals(1, doc.body().childNodeSize());
--    }
--
-     @Test public void handlesInvalidStartTags() {
-         String h = "<div>Hello < There <&amp;></div>"; // parse to <div {#text=Hello < There <&>}>
-         Document doc = Jsoup.parse(h);
+     @Test public void testTagNameSet() {
+         Document doc = Jsoup.parse("<div><i>Hello</i>");
+         doc.select("i").first().tagName("em");

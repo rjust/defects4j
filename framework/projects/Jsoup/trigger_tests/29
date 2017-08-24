@@ -1,8 +1,13 @@
---- org.jsoup.helper.DataUtilTest::discardsSpuriousByteOrderMarkWhenNoCharsetSet
-junit.framework.AssertionFailedError: expected:<[One]> but was:<[]>
+--- org.jsoup.nodes.ElementTest::testNotPretty
+junit.framework.AssertionFailedError: expected:<[   
+]<p>Hello
+ there
+</p>> but was:<[]<p>Hello
+ there
+</p>>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.helper.DataUtilTest.discardsSpuriousByteOrderMarkWhenNoCharsetSet(DataUtilTest.java:42)
+	at org.jsoup.nodes.ElementTest.testNotPretty(ElementTest.java:247)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

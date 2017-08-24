@@ -1,18 +1,19 @@
-diff --git a/java/org/jsoup/safety/CleanerTest.java b/java/org/jsoup/safety/CleanerTest.java
-index 4989ece..872b444 100644
---- a/java/org/jsoup/safety/CleanerTest.java
-+++ b/java/org/jsoup/safety/CleanerTest.java
-@@ -113,13 +113,4 @@ public class CleanerTest {
-         String clean = Jsoup.clean(html, Whitelist.basic());
-         assertEquals("<a rel=\"nofollow\">Link</a>", clean);
+diff --git a/java/org/jsoup/parser/ParserTest.java b/java/org/jsoup/parser/ParserTest.java
+index 0c12b5d..540f689 100644
+--- a/java/org/jsoup/parser/ParserTest.java
++++ b/java/org/jsoup/parser/ParserTest.java
+@@ -603,14 +603,4 @@ public class ParserTest {
+         Document doc = Jsoup.parse("<script><!-- one <script>Blah</script> --></script>");
+         assertEquals("<!-- one <script>Blah</script> -->", doc.select("script").first().data());
      }
 -
--    @Test public void handlesCustomProtocols() {
--        String html = "<img src='cid:12345' /> <img src='data:gzzt' />";
--        String dropped = Jsoup.clean(html, Whitelist.basicWithImages());
--        assertEquals("<img /> \n<img />", dropped);
+-    @Test public void handles0CharacterAsText() {
+-        Document doc = Jsoup.parse("0<p>0</p>");
+-        assertEquals("0\n<p>0</p>", doc.body().html());
+-    }
 -
--        String preserved = Jsoup.clean(html, Whitelist.basicWithImages().addProtocols("img", "src", "cid", "data"));
--        assertEquals("<img src=\"cid:12345\" /> \n<img src=\"data:gzzt\" />", preserved);
+-    @Test public void handlesNullInData() {
+-        Document doc = Jsoup.parse("<p id=\u0000>Blah \u0000</p>");
+-        assertEquals("<p id=\"\uFFFD\">Blah \u0000</p>", doc.body().html()); // replaced in attr, NOT replaced in data
 -    }
  }

@@ -1,104 +1,13 @@
-diff --git a/java/org/jsoup/helper/HttpConnection.java b/java/org/jsoup/helper/HttpConnection.java
-index b21379d..284614b 100644
---- a/java/org/jsoup/helper/HttpConnection.java
-+++ b/java/org/jsoup/helper/HttpConnection.java
-@@ -526,7 +526,7 @@ public class HttpConnection implements Connection {
-                     String location = res.header(LOCATION);
-                     if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') // fix broken Location: http:/temp/AAG_New/en/index.php
-                         location = location.substring(6);
--                    req.url(StringUtil.resolve(req.url(), encodeUrl(location)));
-+                    req.url(new URL(req.url(), encodeUrl(location)));
- 
-                     for (Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add response cookies to request (for e.g. login posts)
-                         req.cookie(cookie.getKey(), cookie.getValue());
-diff --git a/java/org/jsoup/helper/StringUtil.java b/java/org/jsoup/helper/StringUtil.java
-index 4d34182..779f40c 100644
---- a/java/org/jsoup/helper/StringUtil.java
-+++ b/java/org/jsoup/helper/StringUtil.java
-@@ -1,7 +1,5 @@
- package org.jsoup.helper;
- 
--import java.net.MalformedURLException;
--import java.net.URL;
- import java.util.Collection;
- import java.util.Iterator;
- 
-@@ -152,45 +150,4 @@ public final class StringUtil {
-         }
-         return false;
-     }
--
--    /**
--     * Create a new absolute URL, from a provided existing absolute URL and a relative URL component.
--     * @param base the existing absolulte base URL
--     * @param relUrl the relative URL to resolve. (If it's already absolute, it will be returned)
--     * @return the resolved absolute URL
--     * @throws MalformedURLException if an error occurred generating the URL
--     */
--    public static URL resolve(URL base, String relUrl) throws MalformedURLException {
--        // workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired
--        if (relUrl.startsWith("?"))
--            relUrl = base.getPath() + relUrl;
--        // workaround: //example.com + ./foo = //example.com/./foo, not //example.com/foo
--        if (relUrl.indexOf('.') == 0 && base.getFile().indexOf('/') != 0) {
--            base = new URL(base.getProtocol(), base.getHost(), base.getPort(), "/" + base.getFile());
--        }
--        return new URL(base, relUrl);
--    }
--
--    /**
--     * Create a new absolute URL, from a provided existing absolute URL and a relative URL component.
--     * @param baseUrl the existing absolute base URL
--     * @param relUrl the relative URL to resolve. (If it's already absolute, it will be returned)
--     * @return an absolute URL if one was able to be generated, or the empty string if not
--     */
--    public static String resolve(final String baseUrl, final String relUrl) {
--        URL base;
--        try {
--            try {
--                base = new URL(baseUrl);
--            } catch (MalformedURLException e) {
--                // the base is unsuitable, but the attribute/rel may be abs on its own, so try that
--                URL abs = new URL(relUrl);
--                return abs.toExternalForm();
--            }
--            return resolve(base, relUrl).toExternalForm();
--        } catch (MalformedURLException e) {
--            return "";
--        }
--
--    }
- }
-diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
-index 9df63a1..fbff765 100644
---- a/java/org/jsoup/nodes/Node.java
-+++ b/java/org/jsoup/nodes/Node.java
-@@ -178,10 +178,27 @@ public abstract class Node implements Cloneable {
-     public String absUrl(String attributeKey) {
-         Validate.notEmpty(attributeKey);
- 
-+        String relUrl = attr(attributeKey);
-         if (!hasAttr(attributeKey)) {
-             return ""; // nothing to make absolute with
-         } else {
--            return StringUtil.resolve(baseUri, attr(attributeKey));
-+            URL base;
-+            try {
-+                try {
-+                    base = new URL(baseUri);
-+                } catch (MalformedURLException e) {
-+                    // the base is unsuitable, but the attribute may be abs on its own, so try that
-+                    URL abs = new URL(relUrl);
-+                    return abs.toExternalForm();
-+                }
-+                // workaround: java resolves '//path/file + ?foo' to '//path/?foo', not '//path/file?foo' as desired
-+                if (relUrl.startsWith("?"))
-+                    relUrl = base.getPath() + relUrl;
-+                URL abs = new URL(base, relUrl);
-+                return abs.toExternalForm();
-+            } catch (MalformedURLException e) {
-+                return "";
-+            }
-         }
-     }
- 
+diff --git a/java/org/jsoup/parser/HtmlTreeBuilder.java b/java/org/jsoup/parser/HtmlTreeBuilder.java
+index 4ac8870..4a58fdf 100644
+--- a/java/org/jsoup/parser/HtmlTreeBuilder.java
++++ b/java/org/jsoup/parser/HtmlTreeBuilder.java
+@@ -391,7 +391,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
+             if ("select".equals(name)) {
+                 transition(HtmlTreeBuilderState.InSelect);
+                 break; // frag
+-            } else if (("td".equals(name) || "th".equals(name) && !last)) {
++            } else if (("td".equals(name) || "td".equals(name) && !last)) {
+                 transition(HtmlTreeBuilderState.InCell);
+                 break;
+             } else if ("tr".equals(name)) {

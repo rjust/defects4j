@@ -1,34 +1,23 @@
-diff --git a/java/org/jsoup/nodes/EntitiesTest.java b/java/org/jsoup/nodes/EntitiesTest.java
-index 8436e08..caf3d12 100644
---- a/java/org/jsoup/nodes/EntitiesTest.java
-+++ b/java/org/jsoup/nodes/EntitiesTest.java
-@@ -9,22 +9,22 @@ import java.nio.charset.Charset;
- 
- public class EntitiesTest {
-     @Test public void escape() {
--        String text = "Hello &<> Å å π 新 there ¾";
-+        String text = "Hello &<> Å å π 新 there";
-         String escapedAscii = Entities.escape(text, Charset.forName("ascii").newEncoder(), Entities.EscapeMode.base);
-         String escapedAsciiFull = Entities.escape(text, Charset.forName("ascii").newEncoder(), Entities.EscapeMode.extended);
-         String escapedAsciiXhtml = Entities.escape(text, Charset.forName("ascii").newEncoder(), Entities.EscapeMode.xhtml);
-         String escapedUtf = Entities.escape(text, Charset.forName("UTF-8").newEncoder(), Entities.EscapeMode.base);
- 
--        assertEquals("Hello &amp;&lt;&gt; &Aring; &aring; &#960; &#26032; there &frac34;", escapedAscii);
--        assertEquals("Hello &amp;&lt;&gt; &angst; &aring; &pi; &#26032; there &frac34;", escapedAsciiFull);
--        assertEquals("Hello &amp;&lt;&gt; &#197; &#229; &#960; &#26032; there &#190;", escapedAsciiXhtml);
--        assertEquals("Hello &amp;&lt;&gt; &Aring; &aring; π 新 there &frac34;", escapedUtf);
-+        assertEquals("Hello &amp;&lt;&gt; &Aring; &aring; &#960; &#26032; there", escapedAscii);
-+        assertEquals("Hello &amp;&lt;&gt; &angst; &aring; &pi; &#26032; there", escapedAsciiFull);
-+        assertEquals("Hello &amp;&lt;&gt; &#197; &#229; &#960; &#26032; there", escapedAsciiXhtml);
-+        assertEquals("Hello &amp;&lt;&gt; &Aring; &aring; π 新 there", escapedUtf);
-         // odd that it's defined as aring in base but angst in full
+diff --git a/java/org/jsoup/parser/ParserTest.java b/java/org/jsoup/parser/ParserTest.java
+index db41e83..6a93352 100644
+--- a/java/org/jsoup/parser/ParserTest.java
++++ b/java/org/jsoup/parser/ParserTest.java
+@@ -39,18 +39,6 @@ public class ParserTest {
+         assertEquals("p", p.tagName());
+         assertEquals("foo > bar", p.attr("class"));
      }
+-    
+-    @Test public void parsesQuiteRoughAttributes() {
+-        String html = "<p =a>One<a =a";
+-        Document doc = Jsoup.parse(html);
+-        assertEquals("<p>One<a></a></p>", doc.body().html());
+-        
+-        doc = Jsoup.parse("<p .....");
+-        assertEquals("<p></p>", doc.body().html());
+-        
+-        doc = Jsoup.parse("<p .....<p!!");
+-        assertEquals("<p></p>\n<p></p>", doc.body().html());
+-    }
  
-     @Test public void unescape() {
--        String text = "Hello &amp;&LT&gt; &angst &#960; &#960 &#x65B0; there &! &frac34;";
--        assertEquals("Hello &<> Å π π 新 there &! ¾", Entities.unescape(text));
-+        String text = "Hello &amp;&LT&gt; &angst &#960; &#960 &#x65B0; there &!";
-+        assertEquals("Hello &<> Å π π 新 there &!", Entities.unescape(text));
- 
-         assertEquals("&0987654321; &unknown", Entities.unescape("&0987654321; &unknown"));
-     }
+     @Test public void parsesComments() {
+         String html = "<html><head></head><body><img src=foo><!-- <table><tr><td></table> --><p>Hello</p></body></html>";

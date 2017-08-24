@@ -1,13 +1,13 @@
-diff --git a/java/org/jsoup/safety/Whitelist.java b/java/org/jsoup/safety/Whitelist.java
-index 4d14dce..51349da 100644
---- a/java/org/jsoup/safety/Whitelist.java
-+++ b/java/org/jsoup/safety/Whitelist.java
-@@ -339,8 +339,6 @@ public class Whitelist {
-         // try to resolve relative urls to abs, and optionally update the attribute so output html has abs.
-         // rels without a baseuri get removed
-         String value = el.absUrl(attr.getKey());
--        if (value.length() == 0)
--            value = attr.getValue(); // if it could not be made abs, run as-is to allow custom unknown protocols
-         if (!preserveRelativeLinks)
-             attr.setValue(value);
-         
+diff --git a/java/org/jsoup/parser/TreeBuilderState.java b/java/org/jsoup/parser/TreeBuilderState.java
+index 9fd235c..4ae01e1 100644
+--- a/java/org/jsoup/parser/TreeBuilderState.java
++++ b/java/org/jsoup/parser/TreeBuilderState.java
+@@ -1448,7 +1448,7 @@ enum TreeBuilderState {
+         }
+     };
+ 
+-    private static String nullString = String.valueOf('\u0000');
++    private static String nullString = String.valueOf(0x0000);
+ 
+     abstract boolean process(Token t, TreeBuilder tb);
+ 

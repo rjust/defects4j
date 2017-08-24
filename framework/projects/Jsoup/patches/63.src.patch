@@ -1,18 +1,44 @@
-diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
-index 71e6ff0..588022d 100644
---- a/java/org/jsoup/nodes/Node.java
-+++ b/java/org/jsoup/nodes/Node.java
-@@ -360,12 +360,7 @@ public abstract class Node {
+diff --git a/java/org/jsoup/nodes/Entities.java b/java/org/jsoup/nodes/Entities.java
+index ad825d3..0231ec6 100644
+--- a/java/org/jsoup/nodes/Entities.java
++++ b/java/org/jsoup/nodes/Entities.java
+@@ -18,6 +18,7 @@ public class Entities {
+         base, extended
      }
  
-     protected void outerHtml(StringBuilder accum) {
--        new NodeTraversor(new OuterHtmlVisitor(accum, getOutputSettings())).traverse(this);
--    }
--
--    // if this node has no document (or parent), retrieve the default output settings
--    private Document.OutputSettings getOutputSettings() {
--        return ownerDocument() != null ? ownerDocument().outputSettings() : (new Document("")).outputSettings();
-+        new NodeTraversor(new OuterHtmlVisitor(accum, ownerDocument().outputSettings())).traverse(this);
++    private static final Map<String, Character> base;
+     private static final Map<String, Character> full;
+     private static final Map<Character, String> baseByVal;
+     private static final Map<Character, String> fullByVal;
+@@ -61,7 +62,7 @@ public class Entities {
+                 } catch (NumberFormatException e) {
+                 } // skip
+             } else {
+-                String name = m.group(1);
++                String name = m.group(1).toLowerCase();
+                 if (full.containsKey(name))
+                     charval = full.get(name);
+             }
+@@ -2226,18 +2227,20 @@ public class Entities {
+     };
+ 
+     static {
++        base = new HashMap<String, Character>(baseArray.length);
+         full = new HashMap<String, Character>(fullArray.length);
+         baseByVal = new HashMap<Character, String>(baseArray.length);
+         fullByVal = new HashMap<Character, String>(fullArray.length);
+ 
+         for (Object[] entity : baseArray) {
+             Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+-            baseByVal.put(c, ((String) entity[0]));
++            base.put((String) entity[0], c);
++            baseByVal.put(c, ((String) entity[0]).toLowerCase());
+         }
+         for (Object[] entity : fullArray) {
+             Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+             full.put((String) entity[0], c);
+-            fullByVal.put(c, ((String) entity[0]));
++            fullByVal.put(c, ((String) entity[0]).toLowerCase());
+         }
      }
  
-     /**

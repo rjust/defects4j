@@ -1,10 +1,9 @@
---- org.jsoup.safety.CleanerTest::handlesCustomProtocols
-junit.framework.AssertionFailedError: expected:<<img [src="cid:12345" /> 
-<img src="data:gzzt"] />> but was:<<img [/> 
-<img] />>
+--- org.jsoup.parser.ParserTest::handles0CharacterAsText
+junit.framework.AssertionFailedError: expected:<[0
+<p>0]</p>> but was:<[<p>]</p>>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.safety.CleanerTest.handlesCustomProtocols(CleanerTest.java:123)
+	at org.jsoup.parser.ParserTest.handles0CharacterAsText(ParserTest.java:609)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

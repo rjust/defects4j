@@ -1,66 +1,38 @@
-diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
-index bb3ced7..fe6d0f2 100644
---- a/java/org/jsoup/parser/HtmlParserTest.java
-+++ b/java/org/jsoup/parser/HtmlParserTest.java
-@@ -3,13 +3,10 @@ package org.jsoup.parser;
- import org.jsoup.Jsoup;
- import org.jsoup.TextUtil;
- import org.jsoup.helper.StringUtil;
--import org.jsoup.integration.ParseTest;
- import org.jsoup.nodes.*;
- import org.jsoup.select.Elements;
- import org.junit.Test;
+diff --git a/java/org/jsoup/nodes/FormElementTest.java b/java/org/jsoup/nodes/FormElementTest.java
+index ab23933..863dd4d 100644
+--- a/java/org/jsoup/nodes/FormElementTest.java
++++ b/java/org/jsoup/nodes/FormElementTest.java
+@@ -29,7 +29,6 @@ public class FormElementTest {
+                 "<option value='four' selected><option value='five' selected><textarea name=six>seven</textarea>" +
+                 "<input name='seven' type='radio' value='on' checked><input name='seven' type='radio' value='off'>" +
+                 "<input name='eight' type='checkbox' checked><input name='nine' type='checkbox' value='unset'>" +
+-                "<input name='ten' value='text' disabled>" +
+                 "</form>";
+         Document doc = Jsoup.parse(html);
+         FormElement form = (FormElement) doc.select("form").first();
+@@ -40,10 +39,8 @@ public class FormElementTest {
+         assertEquals("three=four", data.get(1).toString());
+         assertEquals("three=five", data.get(2).toString());
+         assertEquals("six=seven", data.get(3).toString());
+-        assertEquals("seven=on", data.get(4).toString()); // set
+-        assertEquals("eight=on", data.get(5).toString()); // default
+-        // nine should not appear, not checked checkbox
+-        // ten should not appear, disabled
++        assertEquals("seven=on", data.get(4).toString());
++        assertEquals("eight=", data.get(5).toString());
+     }
  
--import java.io.File;
--import java.io.IOException;
- import java.util.List;
- 
- import static org.junit.Assert.assertEquals;
-@@ -850,24 +847,4 @@ public class HtmlParserTest {
-         assertEquals(50000, doc.body().childNodeSize());
-         assertTrue(System.currentTimeMillis() - start < 1000);
+     @Test public void createsSubmitableConnection() {
+@@ -114,12 +111,4 @@ public class FormElementTest {
+         List<Connection.KeyVal> data = form.formData();
+         assertEquals("foo=bar", data.get(0).toString());
      }
 -
--    @Test
--    public void testInvalidTableContents() throws IOException {
--        File in = ParseTest.getFile("/htmltests/table-invalid-elements.html");
--        Document doc = Jsoup.parse(in, "UTF-8");
--        doc.outputSettings().prettyPrint(true);
--        String rendered = doc.toString();
--        int endOfEmail = rendered.indexOf("Comment");
--        int guarantee = rendered.indexOf("Why am I here?");
--        assertTrue("Comment not found", endOfEmail > -1);
--        assertTrue("Search text not found", guarantee > -1);
--        assertTrue("Search text did not come after comment", guarantee > endOfEmail);
--    }
--
--    @Test public void testNormalisesIsIndex() {
--        Document doc = Jsoup.parse("<body><isindex action='/submit'></body>");
--        String html = doc.outerHtml();
--        assertEquals("<form action=\"/submit\"> <hr> <label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label> <hr> </form>",
--                StringUtil.normaliseWhitespace(doc.body().html()));
+-    @Test public void usesOnForCheckboxValueIfNoValueSet() {
+-        Document doc = Jsoup.parse("<form><input type=checkbox checked name=foo></form>");
+-        FormElement form = (FormElement) doc.select("form").first();
+-        List<Connection.KeyVal> data = form.formData();
+-        assertEquals("on", data.get(0).value());
+-        assertEquals("foo", data.get(0).key());
 -    }
  }
-diff --git a/resources/htmltests/table-invalid-elements.html b/resources/htmltests/table-invalid-elements.html
-deleted file mode 100644
-index 3aab7ea..0000000
---- a/resources/htmltests/table-invalid-elements.html
-+++ /dev/null
-@@ -1,17 +0,0 @@
--<html>
--<body>
--<table>
--  <tr>
--    <td>
--      <table>
--        <tr>
--          <!--Comment-->
--          <table>
--            <p>Why am I here?</p>
--            </tr>
--          </table>
--          </td>
--        </tr>
--      </table>
--</body>
--</html>

@@ -1,9 +1,8 @@
---- org.jsoup.helper.DataUtilTest::supportsBOMinFiles
-junit.framework.AssertionFailedError
-	at org.junit.Assert.fail(Assert.java:86)
-	at org.junit.Assert.assertTrue(Assert.java:41)
-	at org.junit.Assert.assertTrue(Assert.java:52)
-	at org.jsoup.helper.DataUtilTest.supportsBOMinFiles(DataUtilTest.java:109)
+--- org.jsoup.nodes.ElementTest::appendMustCorrectlyMoveChildrenInsideOneParentElement
+junit.framework.AssertionFailedError: expected:<...><div3>Check</div3><[div4></div4><div1></div1><div2></div2><]/body>> but was:<...><div3>Check</div3><[]/body>>
+	at org.junit.Assert.assertEquals(Assert.java:115)
+	at org.junit.Assert.assertEquals(Assert.java:144)
+	at org.jsoup.nodes.ElementTest.appendMustCorrectlyMoveChildrenInsideOneParentElement(ElementTest.java:878)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

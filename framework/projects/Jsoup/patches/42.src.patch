@@ -1,16 +1,12 @@
-diff --git a/java/org/jsoup/helper/DataUtil.java b/java/org/jsoup/helper/DataUtil.java
-index a4d4f51..581323b 100644
---- a/java/org/jsoup/helper/DataUtil.java
-+++ b/java/org/jsoup/helper/DataUtil.java
-@@ -128,10 +128,7 @@ public class DataUtil {
-         if (contentType == null) return null;
-         Matcher m = charsetPattern.matcher(contentType);
-         if (m.find()) {
--            String charset = m.group(1).trim();
--            if (Charset.isSupported(charset)) return charset;
--            charset = charset.toUpperCase(Locale.ENGLISH);
--            if (Charset.isSupported(charset)) return charset;
-+            return m.group(1).trim().toUpperCase(Locale.ENGLISH);
-         }
-         return null;
-     }
+diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
+index e3013c7..e530264 100644
+--- a/java/org/jsoup/parser/TokeniserState.java
++++ b/java/org/jsoup/parser/TokeniserState.java
+@@ -555,6 +555,7 @@ enum TokeniserState {
+                 String name = r.consumeLetterSequence();
+                 t.tagPending.appendTagName(name.toLowerCase());
+                 t.dataBuffer.append(name);
++                r.advance();
+                 return;
+             }
+ 

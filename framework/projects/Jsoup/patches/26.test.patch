@@ -1,38 +1,42 @@
-diff --git a/java/org/jsoup/nodes/FormElementTest.java b/java/org/jsoup/nodes/FormElementTest.java
-index ab23933..863dd4d 100644
---- a/java/org/jsoup/nodes/FormElementTest.java
-+++ b/java/org/jsoup/nodes/FormElementTest.java
-@@ -29,7 +29,6 @@ public class FormElementTest {
-                 "<option value='four' selected><option value='five' selected><textarea name=six>seven</textarea>" +
-                 "<input name='seven' type='radio' value='on' checked><input name='seven' type='radio' value='off'>" +
-                 "<input name='eight' type='checkbox' checked><input name='nine' type='checkbox' value='unset'>" +
--                "<input name='ten' value='text' disabled>" +
-                 "</form>";
-         Document doc = Jsoup.parse(html);
-         FormElement form = (FormElement) doc.select("form").first();
-@@ -40,10 +39,8 @@ public class FormElementTest {
-         assertEquals("three=four", data.get(1).toString());
-         assertEquals("three=five", data.get(2).toString());
-         assertEquals("six=seven", data.get(3).toString());
--        assertEquals("seven=on", data.get(4).toString()); // set
--        assertEquals("eight=on", data.get(5).toString()); // default
--        // nine should not appear, not checked checkbox
--        // ten should not appear, disabled
-+        assertEquals("seven=on", data.get(4).toString());
-+        assertEquals("eight=", data.get(5).toString());
+diff --git a/java/org/jsoup/nodes/DocumentTypeTest.java b/java/org/jsoup/nodes/DocumentTypeTest.java
+index 59a2702..f612251 100644
+--- a/java/org/jsoup/nodes/DocumentTypeTest.java
++++ b/java/org/jsoup/nodes/DocumentTypeTest.java
+@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
+  * @author Jonathan Hedley, http://jonathanhedley.com/
+  */
+ public class DocumentTypeTest {
+-    @Test
+-    public void constructorValidationOkWithBlankName() {
++    @Test(expected = IllegalArgumentException.class)
++    public void constructorValidationThrowsExceptionOnBlankName() {
+         DocumentType fail = new DocumentType("","", "", "");
      }
  
-     @Test public void createsSubmitableConnection() {
-@@ -114,12 +111,4 @@ public class FormElementTest {
-         List<Connection.KeyVal> data = form.formData();
-         assertEquals("foo=bar", data.get(0).toString());
+diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
+index e843773..dcfe4e0 100644
+--- a/java/org/jsoup/parser/HtmlParserTest.java
++++ b/java/org/jsoup/parser/HtmlParserTest.java
+@@ -806,22 +806,4 @@ public class HtmlParserTest {
+         Document doc = Jsoup.parse(h);
+         assertEquals("<img>\n<svg>\n <image />\n</svg>", doc.body().html());
      }
 -
--    @Test public void usesOnForCheckboxValueIfNoValueSet() {
--        Document doc = Jsoup.parse("<form><input type=checkbox checked name=foo></form>");
--        FormElement form = (FormElement) doc.select("form").first();
--        List<Connection.KeyVal> data = form.formData();
--        assertEquals("on", data.get(0).value());
--        assertEquals("foo", data.get(0).key());
+-    @Test public void handlesInvalidDoctypes() {
+-        // would previously throw invalid name exception on empty doctype
+-        Document doc = Jsoup.parse("<!DOCTYPE>");
+-        assertEquals(
+-                "<!DOCTYPE> <html> <head></head> <body></body> </html>",
+-                StringUtil.normaliseWhitespace(doc.outerHtml()));
+-
+-        doc = Jsoup.parse("<!DOCTYPE><html><p>Foo</p></html>");
+-        assertEquals(
+-                "<!DOCTYPE> <html> <head></head> <body> <p>Foo</p> </body> </html>",
+-                StringUtil.normaliseWhitespace(doc.outerHtml()));
+-
+-        doc = Jsoup.parse("<!DOCTYPE \u0000>");
+-        assertEquals(
+-                "<!DOCTYPE �> <html> <head></head> <body></body> </html>",
+-                StringUtil.normaliseWhitespace(doc.outerHtml()));
 -    }
  }

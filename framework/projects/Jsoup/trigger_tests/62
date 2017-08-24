@@ -1,8 +1,13 @@
---- org.jsoup.nodes.EntitiesTest::unescape
-junit.framework.AssertionFailedError: expected:<...<> Å π π 新 there &! [¾]> but was:<...<> Å π π 新 there &! [&frac34;]>
-	at org.junit.Assert.assertEquals(Assert.java:115)
-	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.EntitiesTest.unescape(EntitiesTest.java:27)
+--- org.jsoup.parser.ParserTest::parsesQuiteRoughAttributes
+java.lang.StringIndexOutOfBoundsException: String index out of range: 14
+	at java.lang.String.charAt(String.java:658)
+	at org.jsoup.parser.TokenQueue.consume(TokenQueue.java:162)
+	at org.jsoup.parser.Parser.parseAttribute(Parser.java:206)
+	at org.jsoup.parser.Parser.parseStartTag(Parser.java:139)
+	at org.jsoup.parser.Parser.parse(Parser.java:84)
+	at org.jsoup.parser.Parser.parse(Parser.java:54)
+	at org.jsoup.Jsoup.parse(Jsoup.java:41)
+	at org.jsoup.parser.ParserTest.parsesQuiteRoughAttributes(ParserTest.java:45)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

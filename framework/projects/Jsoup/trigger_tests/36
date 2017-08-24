@@ -1,9 +1,10 @@
---- org.jsoup.nodes.ElementTest::testClonesClassnames
+--- org.jsoup.safety.CleanerTest::testIsValid
 junit.framework.AssertionFailedError
 	at org.junit.Assert.fail(Assert.java:86)
 	at org.junit.Assert.assertTrue(Assert.java:41)
-	at org.junit.Assert.assertTrue(Assert.java:52)
-	at org.jsoup.nodes.ElementTest.testClonesClassnames(ElementTest.java:493)
+	at org.junit.Assert.assertFalse(Assert.java:64)
+	at org.junit.Assert.assertFalse(Assert.java:74)
+	at org.jsoup.safety.CleanerTest.testIsValid(CleanerTest.java:99)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

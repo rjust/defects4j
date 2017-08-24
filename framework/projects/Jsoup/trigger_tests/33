@@ -1,10 +1,8 @@
---- org.jsoup.parser.HtmlParserTest::handlesUnclosedAnchors
-junit.framework.AssertionFailedError: expected:<...com/">Link</a>
-<p><a[ href="http://example.com/"]>Error link</a></p>> but was:<...com/">Link</a>
-<p><a[]>Error link</a></p>>
+--- org.jsoup.parser.HtmlParserTest::handlesKnownEmptyBlocks
+junit.framework.AssertionFailedError: expected:<...src="/foo"></script>[<div id="2"><img /><img /></div><a id="3"></a><i></i><foo /><foo>One</foo> <hr /> hr text <hr />] hr text two> but was:<...src="/foo"></script>[&lt;div id=2&gt;&lt;img /&gt;&lt;img&gt;&lt;/div&gt;&lt;a id=3 /&gt;&lt;i /&gt;&lt;foo /&gt;&lt;foo&gt;One&lt;/foo&gt; &lt;hr /&gt; hr text &lt;hr&gt;] hr text two>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.parser.HtmlParserTest.handlesUnclosedAnchors(HtmlParserTest.java:529)
+	at org.jsoup.parser.HtmlParserTest.handlesKnownEmptyBlocks(HtmlParserTest.java:331)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

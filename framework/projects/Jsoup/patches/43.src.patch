@@ -1,14 +1,44 @@
-diff --git a/java/org/jsoup/safety/Cleaner.java b/java/org/jsoup/safety/Cleaner.java
-index 8110836..eda67df 100644
---- a/java/org/jsoup/safety/Cleaner.java
-+++ b/java/org/jsoup/safety/Cleaner.java
-@@ -40,8 +40,7 @@ public class Cleaner {
-         Validate.notNull(dirtyDocument);
- 
-         Document clean = Document.createShell(dirtyDocument.baseUri());
--        if (dirtyDocument.body() != null) // frameset documents won't have a body. the clean doc will have empty body.
--            copySafeNodes(dirtyDocument.body(), clean.body());
-+        copySafeNodes(dirtyDocument.body(), clean.body());
- 
-         return clean;
+diff --git a/java/org/jsoup/parser/CharacterReader.java b/java/org/jsoup/parser/CharacterReader.java
+index 4db4d79..d05c3cd 100644
+--- a/java/org/jsoup/parser/CharacterReader.java
++++ b/java/org/jsoup/parser/CharacterReader.java
+@@ -115,26 +115,6 @@ class CharacterReader {
+         return input.substring(start, pos);
      }
+ 
+-    String consumeLetterThenDigitSequence() {
+-        int start = pos;
+-        while (!isEmpty()) {
+-            char c = input.charAt(pos);
+-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+-                pos++;
+-            else
+-                break;
+-        }
+-        while (!isEmpty()) {
+-            char c = input.charAt(pos);
+-            if (c >= '0' && c <= '9')
+-                pos++;
+-            else
+-                break;
+-        }
+-
+-        return input.substring(start, pos);
+-    }
+-
+     String consumeHexSequence() {
+         int start = pos;
+         while (!isEmpty()) {
+diff --git a/java/org/jsoup/parser/Tokeniser.java b/java/org/jsoup/parser/Tokeniser.java
+index d53a49b..d1e3ee6 100644
+--- a/java/org/jsoup/parser/Tokeniser.java
++++ b/java/org/jsoup/parser/Tokeniser.java
+@@ -132,7 +132,7 @@ class Tokeniser {
+             }
+         } else { // named
+             // get as many letters as possible, and look for matching entities. unconsume backwards till a match is found
+-            String nameRef = reader.consumeLetterThenDigitSequence();
++            String nameRef = reader.consumeLetterSequence();
+             String origNameRef = new String(nameRef); // for error reporting. nameRef gets chomped looking for matches
+             boolean looksLegit = reader.matches(';');
+             boolean found = false;

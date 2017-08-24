@@ -1,26 +1,28 @@
-diff --git a/java/org/jsoup/helper/DataUtil.java b/java/org/jsoup/helper/DataUtil.java
-index 44f85be..e6971cc 100644
---- a/java/org/jsoup/helper/DataUtil.java
-+++ b/java/org/jsoup/helper/DataUtil.java
-@@ -110,15 +110,13 @@ public class DataUtil {
-             Validate.notEmpty(charsetName, "Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML");
-             docData = Charset.forName(charsetName).decode(byteData).toString();
-         }
--        // UTF-8 BOM indicator. takes precedence over everything else. rarely used. re-decodes incase above decoded incorrectly
--        if (docData.length() > 0 && docData.charAt(0) == 65279) {
--            byteData.rewind();
--            docData = Charset.forName(defaultCharset).decode(byteData).toString();
--            docData = docData.substring(1);
--            charsetName = defaultCharset;
--            doc = null;
--        }
-         if (doc == null) {
-+            // there are times where there is a spurious byte-order-mark at the start of the text. Shouldn't be present
-+            // in utf-8. If after decoding, there is a BOM, strip it; otherwise will cause the parser to go straight
-+            // into head mode
-+            if (docData.length() > 0 && docData.charAt(0) == 65279)
-+                docData = docData.substring(1);
-+
-             doc = parser.parseInput(docData, baseUri);
-             doc.outputSettings().charset(charsetName);
-         }
+diff --git a/java/org/jsoup/nodes/Element.java b/java/org/jsoup/nodes/Element.java
+index dcfa72c..2bd9504 100644
+--- a/java/org/jsoup/nodes/Element.java
++++ b/java/org/jsoup/nodes/Element.java
+@@ -1097,8 +1097,8 @@ public class Element extends Node {
+      */
+     public String html() {
+         StringBuilder accum = new StringBuilder();
+-        html(accum);
+-        return getOutputSettings().prettyPrint() ? accum.toString().trim() : accum.toString();
++        html(accum); 
++        return accum.toString().trim();
+     }
+ 
+     private void html(StringBuilder accum) {
+diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
+index 1b97afe..9f9bfa6 100644
+--- a/java/org/jsoup/nodes/Node.java
++++ b/java/org/jsoup/nodes/Node.java
+@@ -557,7 +557,7 @@ public abstract class Node implements Cloneable {
+     }
+ 
+     // if this node has no document (or parent), retrieve the default output settings
+-    Document.OutputSettings getOutputSettings() {
++    private Document.OutputSettings getOutputSettings() {
+         return ownerDocument() != null ? ownerDocument().outputSettings() : (new Document("")).outputSettings();
+     }
+ 

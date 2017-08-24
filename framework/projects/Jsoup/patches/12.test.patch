@@ -1,242 +1,30 @@
-diff --git a/java/org/jsoup/integration/UrlConnectTest.java b/java/org/jsoup/integration/UrlConnectTest.java
-index d212950..29bb9d1 100644
---- a/java/org/jsoup/integration/UrlConnectTest.java
-+++ b/java/org/jsoup/integration/UrlConnectTest.java
-@@ -36,7 +36,7 @@ public class UrlConnectTest {
-     private static final String WEBSITE_WITH_INVALID_CERTIFICATE = "https://certs.cac.washington.edu/CAtest/";
-     private static final String WEBSITE_WITH_SNI = "https://jsoup.org/";
-     private static String echoURL = "http://direct.infohound.net/tools/q.pl";
--    public static String browserUa = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36";
-+    private static String browserUa = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36";
+diff --git a/java/org/jsoup/helper/W3CDomTest.java b/java/org/jsoup/helper/W3CDomTest.java
+index bb3e284..569fbf1 100644
+--- a/java/org/jsoup/helper/W3CDomTest.java
++++ b/java/org/jsoup/helper/W3CDomTest.java
+@@ -2,7 +2,6 @@ package org.jsoup.helper;
  
-     @Test
-     public void fetchURl() throws IOException {
-diff --git a/java/org/jsoup/nodes/BuildEntities.java b/java/org/jsoup/nodes/BuildEntities.java
-deleted file mode 100644
-index 694a1a9..0000000
---- a/java/org/jsoup/nodes/BuildEntities.java
-+++ /dev/null
-@@ -1,136 +0,0 @@
--package org.jsoup.nodes;
--
--import com.google.gson.Gson;
--import com.google.gson.reflect.TypeToken;
--import org.jsoup.Connection;
--import org.jsoup.Jsoup;
--import org.jsoup.integration.UrlConnectTest;
--import org.jsoup.nodes.Entities;
--
--import java.io.File;
--import java.io.FileWriter;
--import java.io.IOException;
--import java.util.ArrayList;
--import java.util.Collections;
--import java.util.Comparator;
--import java.util.Map;
--
--/**
-- * Fetches HTML entity names from w3.org json, and outputs data files for optimized used in Entities.
-- * I refuse to believe that entity names like "NotNestedLessLess" are valuable or useful for HTML authors. Implemented
-- * only to be complete.
-- */
--class BuildEntities {
--    private static final String projectDir = "/Users/jhy/projects/jsoup";
--
--    public static void main(String[] args) throws IOException {
--        String url = "https://www.w3.org/TR/2012/WD-html5-20121025/entities.json";
--        Connection.Response res = Jsoup.connect(url)
--            .ignoreContentType(true)
--            .userAgent(UrlConnectTest.browserUa)
--            .execute();
--
--        Gson gson = new Gson();
--        Map<String, CharacterRef> input = gson.fromJson(res.body(),
--            new TypeToken<Map<String, CharacterRef>>() {
--            }.getType());
--
--
--        // build name sorted base and full character lists:
--        ArrayList<CharacterRef> base = new ArrayList<CharacterRef>();
--        ArrayList<CharacterRef> full = new ArrayList<CharacterRef>();
--
--        for (Map.Entry<String, CharacterRef> entry : input.entrySet()) {
--            String name = entry.getKey().substring(1); // name is like &acute or &acute; , trim &
--            CharacterRef ref = entry.getValue();
--            if (name.endsWith(";")) {
--                name = name.substring(0, name.length() - 1);
--                full.add(ref);
--            } else {
--                base.add(ref);
--            }
--            ref.name = name;
--        }
--        Collections.sort(base, byName);
--        Collections.sort(full, byName);
--
--        // now determine code point order
--        ArrayList<CharacterRef> baseByCode = new ArrayList<CharacterRef>(base);
--        ArrayList<CharacterRef> fullByCode = new ArrayList<CharacterRef>(full);
--        Collections.sort(baseByCode, byCode);
--        Collections.sort(fullByCode, byCode);
--
--        // and update their codepoint index. Don't
--        ArrayList<CharacterRef>[] codelists = new ArrayList[]{baseByCode, fullByCode};
--        for (ArrayList<CharacterRef> codelist : codelists) {
--            for (int i = 0; i < codelist.size(); i++) {
--                codelist.get(i).codeIndex = i;
--            }
--        }
--
--        // now write them
--        persist("entities-full.properties", full);
--        persist("entities-base.properties", base);
--
--        System.out.println("Full size: " + full.size() + ", base size: " + base.size());
--    }
--
--    private static void persist(String name, ArrayList<CharacterRef> refs) throws IOException {
--        String base = projectDir + "/src/main/java/org/jsoup/nodes";
--        File file = new File(base, name);
--        FileWriter writer = new FileWriter(file, false);
--        for (CharacterRef ref : refs) {
--            writer.append(ref.toString()).append("\n");
--        }
--        writer.close();
--    }
--
--
--    private static class CharacterRef {
--        int[] codepoints;
--        String name;
--        int codeIndex;
--
--        @Override
--        public String toString() {
--            return name
--                + "="
--                + d(codepoints[0])
--                + (codepoints.length > 1 ? "," + d(codepoints[1]) : "")
--                + ";" + d(codeIndex);
--        }
--    }
--
--    private static String d(int d) {
--        return Integer.toString(d, Entities.codepointRadix);
--    }
--
--    private static class ByName implements Comparator<CharacterRef> {
--        public int compare(CharacterRef o1, CharacterRef o2) {
--            return o1.name.compareTo(o2.name);
--        }
--    }
--
--    private static class ByCode implements Comparator<CharacterRef> {
--        public int compare(CharacterRef o1, CharacterRef o2) {
--            int[] c1 = o1.codepoints;
--            int[] c2 = o2.codepoints;
--            int first = c1[0] - c2[0];
--            if (first != 0)
--                return first;
--            if (c1.length == 1 && c2.length == 1) { // for the same code, use the shorter name
--                int len = o2.name.length() - o1.name.length();
--                if (len != 0)
--                    return len;
--                return o1.name.compareTo(o2.name);
--            }
--            if (c1.length == 2 && c2.length == 2)
--                return c1[1] - c2[1];
--            else
--                return c2.length - c1.length; // pushes multi down the list so hits on singles first (don't support multi lookup by codepoint yet)
--        }
--    }
--
--    private static ByName byName = new ByName();
--    private static ByCode byCode = new ByCode();
--}
-diff --git a/java/org/jsoup/nodes/EntitiesTest.java b/java/org/jsoup/nodes/EntitiesTest.java
-index c7ba424..9a648d5 100644
---- a/java/org/jsoup/nodes/EntitiesTest.java
-+++ b/java/org/jsoup/nodes/EntitiesTest.java
-@@ -31,45 +31,6 @@ public class EntitiesTest {
-         assertEquals(text, Entities.unescape(escapedUtfMin));
+ import org.jsoup.Jsoup;
+ import org.jsoup.integration.ParseTest;
+-import org.jsoup.nodes.Element;
+ import org.junit.Test;
+ import org.w3c.dom.Document;
+ import org.w3c.dom.Node;
+@@ -80,17 +79,5 @@ public class W3CDomTest {
+         assertEquals("section", xSection.getLocalName());
+         assertEquals("x:section", xSection.getNodeName());
      }
+-
+-    @Test
+-    public void handlesInvalidAttributeNames() {
+-        String html = "<html><head></head><body style=\"color: red\" \" name\"></body></html>";
+-        org.jsoup.nodes.Document jsoupDoc;
+-        jsoupDoc = Jsoup.parse(html);
+-        Element body = jsoupDoc.select("body").first();
+-        assertTrue(body.hasAttr("\"")); // actually an attribute with key '"'. Correct per HTML5 spec, but w3c xml dom doesn't dig it
+-        assertTrue(body.hasAttr("name\""));
+-
+-        Document w3Doc = new W3CDom().fromJsoup(jsoupDoc);
+-    }
+ }
  
--    @Test public void escapedSupplemtary() {
--        String text = "\uD835\uDD59";
--        String escapedAscii = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(base));
--        assertEquals("&#x1d559;", escapedAscii);
--        String escapedAsciiFull = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(extended));
--        assertEquals("&hopf;", escapedAsciiFull);
--        String escapedUtf= Entities.escape(text, new OutputSettings().charset("UTF-8").escapeMode(extended));
--        assertEquals(text, escapedUtf);
--    }
--
--    @Test public void unescapeMultiChars() {
--        String text = "&NestedGreaterGreater; &nGg; &nGt; &nGtv; &Gt; &gg;"; // gg is not combo, but 8811 could conflict with NestedGreaterGreater or others
--        String un = "≫ ⋙̸ ≫⃒ ≫̸ ≫ ≫";
--        assertEquals(un, Entities.unescape(text));
--        String escaped = Entities.escape(un, new OutputSettings().charset("ascii").escapeMode(extended));
--        assertEquals("&Gt; &Gg;&#x338; &Gt;&#x20d2; &Gt;&#x338; &Gt; &Gt;", escaped);
--        assertEquals(un, Entities.unescape(escaped));
--    }
--
--    @Test public void xhtml() {
--        String text = "&amp; &gt; &lt; &quot;";
--        assertEquals(38, xhtml.codepointForName("amp"));
--        assertEquals(62, xhtml.codepointForName("gt"));
--        assertEquals(60, xhtml.codepointForName("lt"));
--        assertEquals(34, xhtml.codepointForName("quot"));
--
--        assertEquals("amp", xhtml.nameForCodepoint(38));
--        assertEquals("gt", xhtml.nameForCodepoint(62));
--        assertEquals("lt", xhtml.nameForCodepoint(60));
--        assertEquals("quot", xhtml.nameForCodepoint(34));
--    }
--
--    @Test public void getByName() {
--        assertEquals("≫⃒", Entities.getByName("nGt"));
--        assertEquals("fj", Entities.getByName("fjlig"));
--        assertEquals("≫", Entities.getByName("gg"));
--        assertEquals("©", Entities.getByName("copy"));
--    }
--
-     @Test public void escapeSupplementaryCharacter() {
-         String text = new String(Character.toChars(135361));
-         String escapedAscii = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(base));
-@@ -78,21 +39,9 @@ public class EntitiesTest {
-         assertEquals(text, escapedUtf);
-     }
- 
--    @Test public void notMissingMultis() {
--        String text = "&nparsl;";
--        String un = "\u2AFD\u20E5";
--        assertEquals(un, Entities.unescape(text));
--    }
--
--    @Test public void notMissingSupplementals() {
--        String text = "&npolint; &qfr;";
--        String un = "⨔ \uD835\uDD2E"; // 𝔮
--        assertEquals(un, Entities.unescape(text));
--    }
--
-     @Test public void unescape() {
--        String text = "Hello &AElig; &amp;&LT&gt; &reg &angst; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
--        assertEquals("Hello Æ &<> ® Å &angst π π 新 there &! ¾ © ©", Entities.unescape(text));
-+        String text = "Hello &amp;&LT&gt; &reg &angst; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
-+        assertEquals("Hello &<> ® Å &angst π π 新 there &! ¾ © ©", Entities.unescape(text));
- 
-         assertEquals("&0987654321; &unknown", Entities.unescape("&0987654321; &unknown"));
-     }
-diff --git a/java/org/jsoup/safety/CleanerTest.java b/java/org/jsoup/safety/CleanerTest.java
-index 70bcfa6..79d5169 100644
---- a/java/org/jsoup/safety/CleanerTest.java
-+++ b/java/org/jsoup/safety/CleanerTest.java
-@@ -210,7 +210,7 @@ public class CleanerTest {
-         String defaultOut = Jsoup.clean(html, "http://foo.com/", Whitelist.relaxed());
-         assertNotSame(defaultOut, customOut);
- 
--        assertEquals("<div><p>&Bscr;</p></div>", customOut); // entities now prefers shorted names if aliased
-+        assertEquals("<div><p>&bernou;</p></div>", customOut);
-         assertEquals("<div>\n" +
-             " <p>ℬ</p>\n" +
-             "</div>", defaultOut);

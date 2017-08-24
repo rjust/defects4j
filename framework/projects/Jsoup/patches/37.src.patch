@@ -1,87 +1,20 @@
-diff --git a/java/org/jsoup/nodes/Element.java b/java/org/jsoup/nodes/Element.java
-index 9f2ef5c..e190f86 100644
---- a/java/org/jsoup/nodes/Element.java
-+++ b/java/org/jsoup/nodes/Element.java
-@@ -280,28 +280,6 @@ public class Element extends Node {
-         addChildren(0, child);
-         return this;
-     }
--
--
--    /**
--     * Inserts the given child nodes into this element at the specified index. Current nodes will be shifted to the
--     * right. The inserted nodes will be moved from their current parent. To prevent moving, copy the nodes first.
--     *
--     * @param index 0-based index to insert children at. Specify {@code 0} to insert at the start, {@code -1} at the
--     * end
--     * @param children child nodes to insert
--     * @return this element, for chaining.
--     */
--    public Element insertChildren(int index, Collection<? extends Node> children) {
--        Validate.notNull(children, "Children collection to be inserted must not be null.");
--        int currentSize = childNodeSize();
--        if (index < 0) index += currentSize +1; // roll around
--        Validate.isTrue(index >= 0 && index <= currentSize, "Insert position out of bounds.");
--
--        ArrayList<Node> nodes = new ArrayList<Node>(children);
--        Node[] nodeArray = nodes.toArray(new Node[nodes.size()]);
--        addChildren(index, nodeArray);
--        return this;
--    }
-     
-     /**
-      * Create a new element by tag name, and add it as the last child.
-diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
-index 95d8814..ee622ea 100644
---- a/java/org/jsoup/nodes/Node.java
-+++ b/java/org/jsoup/nodes/Node.java
-@@ -210,19 +210,13 @@ public abstract class Node implements Cloneable {
-      @return list of children. If no children, returns an empty list.
-      */
-     public List<Node> childNodes() {
--        return Collections.unmodifiableList(childNodes);
--    }
--
--    /**
--     * Get the number of child nodes that this node holds.
--     * @return the number of child nodes that this node holds.
--     */
--    public final int childNodeSize() {
--        return childNodes.size();
-+        // actually returns the real list, as this method is hit many times during selection, and so is a GC time-sink
-+        // leaving the documentation as is (warning of unmodifiability) to discourage out-of-API modifications
-+        return childNodes;
-     }
-     
-     protected Node[] childNodesAsArray() {
--        return childNodes.toArray(new Node[childNodeSize()]);
-+        return childNodes.toArray(new Node[childNodes().size()]);
+diff --git a/java/org/jsoup/nodes/Document.java b/java/org/jsoup/nodes/Document.java
+index d1d0dfd..c5814af 100644
+--- a/java/org/jsoup/nodes/Document.java
++++ b/java/org/jsoup/nodes/Document.java
+@@ -1,6 +1,5 @@
+ package org.jsoup.nodes;
+ 
+-import org.jsoup.helper.StringUtil;
+ import org.jsoup.helper.Validate;
+ import org.jsoup.parser.Tag;
+ import org.jsoup.select.Elements;
+@@ -67,7 +66,7 @@ public class Document extends Element {
+     public String title() {
+         // title is a preserve whitespace tag (for document output), but normalised here
+         Element titleEl = getElementsByTag("title").first();
+-        return titleEl != null ? StringUtil.normaliseWhitespace(titleEl.text()).trim() : "";
++        return titleEl != null ? titleEl.text().trim() : "";
      }
  
      /**
-diff --git a/java/org/jsoup/parser/HtmlTreeBuilderState.java b/java/org/jsoup/parser/HtmlTreeBuilderState.java
-index 510943e..ceab9fa 100644
---- a/java/org/jsoup/parser/HtmlTreeBuilderState.java
-+++ b/java/org/jsoup/parser/HtmlTreeBuilderState.java
-@@ -721,7 +721,7 @@ enum HtmlTreeBuilderState {
-                             }
- 
-                             Element adopter = new Element(Tag.valueOf(name), tb.getBaseUri());
--                            Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodeSize()]);
-+                            Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodes().size()]);
-                             for (Node childNode : childNodes) {
-                                 adopter.appendChild(childNode); // append will reparent. thus the clone to avoid concurrent mod.
-                             }
-diff --git a/java/org/jsoup/select/NodeTraversor.java b/java/org/jsoup/select/NodeTraversor.java
-index fd35e2e..9bb081e 100644
---- a/java/org/jsoup/select/NodeTraversor.java
-+++ b/java/org/jsoup/select/NodeTraversor.java
-@@ -28,7 +28,7 @@ public class NodeTraversor {
-         
-         while (node != null) {
-             visitor.head(node, depth);
--            if (node.childNodeSize() > 0) {
-+            if (node.childNodes().size() > 0) {
-                 node = node.childNode(0);
-                 depth++;
-             } else {

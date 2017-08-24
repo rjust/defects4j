@@ -1,34 +1,26 @@
-diff --git a/java/org/jsoup/nodes/DocumentType.java b/java/org/jsoup/nodes/DocumentType.java
-index f8c79f0..f9f77da 100644
---- a/java/org/jsoup/nodes/DocumentType.java
-+++ b/java/org/jsoup/nodes/DocumentType.java
-@@ -1,7 +1,6 @@
- package org.jsoup.nodes;
+diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
+index 9456fc4..2154a15 100644
+--- a/java/org/jsoup/nodes/Node.java
++++ b/java/org/jsoup/nodes/Node.java
+@@ -70,7 +70,7 @@ public abstract class Node implements Cloneable {
+     public String attr(String attributeKey) {
+         Validate.notNull(attributeKey);
  
- import org.jsoup.helper.StringUtil;
--import org.jsoup.helper.Validate;
- 
- /**
-  * A {@code <!DOCTPYE>} node.
-@@ -19,7 +18,6 @@ public class DocumentType extends Node {
-     public DocumentType(String name, String publicId, String systemId, String baseUri) {
-         super(baseUri);
- 
--        Validate.notEmpty(name);
-         attr("name", name);
-         attr("publicId", publicId);
-         attr("systemId", systemId);
-@@ -32,11 +30,11 @@ public class DocumentType extends Node {
- 
-     @Override
-     void outerHtmlHead(StringBuilder accum, int depth, Document.OutputSettings out) {
--        accum.append("<!DOCTYPE ").append(attr("name"));
-+        accum.append("<!DOCTYPE html");
-         if (!StringUtil.isBlank(attr("publicId")))
-             accum.append(" PUBLIC \"").append(attr("publicId")).append("\"");
-         if (!StringUtil.isBlank(attr("systemId")))
--            accum.append(" \"").append(attr("systemId")).append("\"");
-+            accum.append(' ').append(attr("systemId")).append("\"");
-         accum.append('>');
+-        if (attributes.hasKey(attributeKey))
++        if (hasAttr(attributeKey))
+             return attributes.get(attributeKey);
+         else if (attributeKey.toLowerCase().startsWith("abs:"))
+             return absUrl(attributeKey.substring("abs:".length()));
+@@ -103,12 +103,6 @@ public abstract class Node implements Cloneable {
+      */
+     public boolean hasAttr(String attributeKey) {
+         Validate.notNull(attributeKey);
+-
+-        if (attributeKey.toLowerCase().startsWith("abs:")) {
+-            String key = attributeKey.substring("abs:".length());
+-            if (attributes.hasKey(key) && !absUrl(key).equals(""))
+-                return true;
+-        }
+         return attributes.hasKey(attributeKey);
      }
  

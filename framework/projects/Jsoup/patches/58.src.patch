@@ -1,26 +1,22 @@
-diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
-index 9456fc4..2154a15 100644
---- a/java/org/jsoup/nodes/Node.java
-+++ b/java/org/jsoup/nodes/Node.java
-@@ -70,7 +70,7 @@ public abstract class Node implements Cloneable {
-     public String attr(String attributeKey) {
-         Validate.notNull(attributeKey);
+diff --git a/java/org/jsoup/nodes/Entities.java b/java/org/jsoup/nodes/Entities.java
+index 786b1bf..1b52a79 100644
+--- a/java/org/jsoup/nodes/Entities.java
++++ b/java/org/jsoup/nodes/Entities.java
+@@ -35,7 +35,7 @@ public class Entities {
+     private static final Map<Character, String> xhtmlByVal;
+     private static final Map<Character, String> baseByVal;
+     private static final Map<Character, String> fullByVal;
+-    private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+\\d*);?");
++    private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?");
  
--        if (attributes.hasKey(attributeKey))
-+        if (hasAttr(attributeKey))
-             return attributes.get(attributeKey);
-         else if (attributeKey.toLowerCase().startsWith("abs:"))
-             return absUrl(attributeKey.substring("abs:".length()));
-@@ -103,12 +103,6 @@ public abstract class Node implements Cloneable {
-      */
-     public boolean hasAttr(String attributeKey) {
-         Validate.notNull(attributeKey);
--
--        if (attributeKey.toLowerCase().startsWith("abs:")) {
--            String key = attributeKey.substring("abs:".length());
--            if (attributes.hasKey(key) && !absUrl(key).equals(""))
--                return true;
--        }
-         return attributes.hasKey(attributeKey);
-     }
+     static String escape(String string, Document.OutputSettings out) {
+         return escape(string, out.encoder(), out.escapeMode());
+@@ -62,7 +62,7 @@ public class Entities {
+         if (!string.contains("&"))
+             return string;
+ 
+-        Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]\\d*);?
++        Matcher m = unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+);?
+         StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
+         // todo: replace m.appendReplacement with own impl, so StringBuilder and quoteReplacement not required
  

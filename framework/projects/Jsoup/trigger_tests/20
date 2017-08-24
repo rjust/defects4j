@@ -1,8 +1,9 @@
---- org.jsoup.nodes.EntitiesTest::escapesGtInXmlAttributesButNotInHtml
-junit.framework.AssertionFailedError: expected:<<a title="[&lt;p>One&lt;]/p>">One</a>> but was:<<a title="[<p>One<]/p>">One</a>>
-	at org.junit.Assert.assertEquals(Assert.java:115)
-	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.EntitiesTest.escapesGtInXmlAttributesButNotInHtml(EntitiesTest.java:102)
+--- org.jsoup.nodes.DocumentTest::testShiftJisRoundtrip
+junit.framework.AssertionFailedError: Should not have contained a '?'.
+	at org.junit.Assert.fail(Assert.java:88)
+	at org.junit.Assert.assertTrue(Assert.java:41)
+	at org.junit.Assert.assertFalse(Assert.java:64)
+	at org.jsoup.nodes.DocumentTest.testShiftJisRoundtrip(DocumentTest.java:406)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

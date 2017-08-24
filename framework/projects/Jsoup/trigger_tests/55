@@ -1,8 +1,13 @@
---- org.jsoup.parser.ParserTest::handlesDataOnlyTags
-junit.framework.AssertionFailedError: expected:<Hello []There> but was:<Hello ['); i++; ]There>
-	at org.junit.Assert.assertEquals(Assert.java:115)
-	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.parser.ParserTest.handlesDataOnlyTags(ParserTest.java:163)
+--- org.jsoup.select.SelectorTest::testByAttributeRegexCombined
+org.jsoup.select.Selector$SelectorParseException: Could not parse query '=x|y]': unexpected token at '=x|y]'
+	at org.jsoup.select.Selector.findElements(Selector.java:186)
+	at org.jsoup.select.Selector.select(Selector.java:113)
+	at org.jsoup.select.Selector.select(Selector.java:84)
+	at org.jsoup.select.Selector.combinator(Selector.java:149)
+	at org.jsoup.select.Selector.select(Selector.java:126)
+	at org.jsoup.select.Selector.select(Selector.java:84)
+	at org.jsoup.nodes.Element.select(Element.java:199)
+	at org.jsoup.select.SelectorTest.testByAttributeRegexCombined(SelectorTest.java:129)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

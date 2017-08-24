@@ -1,28 +1,18 @@
-diff --git a/java/org/jsoup/nodes/ElementTest.java b/java/org/jsoup/nodes/ElementTest.java
-index cd4d348..c738473 100644
---- a/java/org/jsoup/nodes/ElementTest.java
-+++ b/java/org/jsoup/nodes/ElementTest.java
-@@ -217,7 +217,7 @@ public class ElementTest {
+diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
+index d7a1692..6aeaeac 100644
+--- a/java/org/jsoup/parser/HtmlParserTest.java
++++ b/java/org/jsoup/parser/HtmlParserTest.java
+@@ -522,13 +522,6 @@ public class HtmlParserTest {
+         assertEquals(want, doc.html());
      }
  
-     @Test public void testInnerHtml() {
--        Document doc = Jsoup.parse("<div>\n <p>Hello</p> </div>");
-+        Document doc = Jsoup.parse("<div><p>Hello</p></div>");
-         assertEquals("<p>Hello</p>", doc.getElementsByTag("div").get(0).html());
-     }
- 
-@@ -239,12 +239,9 @@ public class ElementTest {
-     }
- 
-     @Test public void testNotPretty() {
--        Document doc = Jsoup.parse("<div>   \n<p>Hello\n there\n</p></div>");
-+        Document doc = Jsoup.parse("<div>   \n<p>Hello\n there</p></div>");
-         doc.outputSettings().prettyPrint(false);
--        assertEquals("<html><head></head><body><div>   \n<p>Hello\n there\n</p></div></body></html>", doc.html());
+-    @Test public void handlesUnclosedAnchors() {
+-        String h = "<a href='http://example.com/'>Link<p>Error link</a>";
+-        Document doc = Jsoup.parse(h);
+-        String want = "<a href=\"http://example.com/\">Link</a>\n<p><a href=\"http://example.com/\">Error link</a></p>";
+-        assertEquals(want, doc.body().html());
+-    }
 -
--        Element div = doc.select("div").first();
--        assertEquals("   \n<p>Hello\n there\n</p>", div.html());
-+        assertEquals("<html><head></head><body><div>   \n<p>Hello\n there</p></div></body></html>", doc.html());
-     }
-     
-     @Test public void testEmptyElementFormatHtml() {
+     @Test public void reconstructFormattingElements() {
+         // tests attributes and multi b
+         String h = "<p><b class=one>One <i>Two <b>Three</p><p>Hello</p>";

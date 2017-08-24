@@ -1,8 +1,11 @@
---- org.jsoup.nodes.NodeTest::absHandlesDotFromIndex
-junit.framework.AssertionFailedError: expected:<http://example.com/[]one/two.html> but was:<http://example.com/[./]one/two.html>
-	at org.junit.Assert.assertEquals(Assert.java:115)
-	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.NodeTest.absHandlesDotFromIndex(NodeTest.java:131)
+--- org.jsoup.parser.HtmlParserTest::testReinsertionModeForThCelss
+junit.framework.AssertionFailedError: expected:<1> but was:<5>
+	at org.junit.Assert.fail(Assert.java:88)
+	at org.junit.Assert.failNotEquals(Assert.java:743)
+	at org.junit.Assert.assertEquals(Assert.java:118)
+	at org.junit.Assert.assertEquals(Assert.java:555)
+	at org.junit.Assert.assertEquals(Assert.java:542)
+	at org.jsoup.parser.HtmlParserTest.testReinsertionModeForThCelss(HtmlParserTest.java:877)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

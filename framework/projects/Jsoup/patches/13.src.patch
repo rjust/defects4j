@@ -1,16 +1,21 @@
-diff --git a/java/org/jsoup/helper/W3CDom.java b/java/org/jsoup/helper/W3CDom.java
-index 497e3ea..0def9a4 100644
---- a/java/org/jsoup/helper/W3CDom.java
-+++ b/java/org/jsoup/helper/W3CDom.java
-@@ -121,10 +121,7 @@ public class W3CDom {
+diff --git a/java/org/jsoup/parser/TokenQueue.java b/java/org/jsoup/parser/TokenQueue.java
+index 47947fa..269a755 100644
+--- a/java/org/jsoup/parser/TokenQueue.java
++++ b/java/org/jsoup/parser/TokenQueue.java
+@@ -262,16 +262,11 @@ public class TokenQueue {
+         int end = -1;
+         int depth = 0;
+         char last = 0;
+-        boolean inQuote = false;
  
-         private void copyAttributes(org.jsoup.nodes.Node source, Element el) {
-             for (Attribute attribute : source.attributes()) {
--                // valid xml attribute names are: ^[a-zA-Z_:][-a-zA-Z0-9_:.]
--                String key = attribute.getKey().replaceAll("[^-a-zA-Z0-9_:.]", "");
--                if (key.matches("[a-zA-Z_:]{1}[-a-zA-Z0-9_:.]*"))
--                    el.setAttribute(key, attribute.getValue());
-+                el.setAttribute(attribute.getKey(), attribute.getValue());
-             }
-         }
- 
+         do {
+             if (isEmpty()) break;
+             Character c = consume();
+             if (last == 0 || last != ESC) {
+-                if (c.equals('\'') || c.equals('"') && c != open)
+-                    inQuote = !inQuote;
+-                if (inQuote)
+-                    continue;
+                 if (c.equals(open)) {
+                     depth++;
+                     if (start == -1)

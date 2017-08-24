@@ -1,91 +1,15 @@
-diff --git a/java/org/jsoup/helper/StringUtilTest.java b/java/org/jsoup/helper/StringUtilTest.java
-index 29de2c9..0a4153d 100644
---- a/java/org/jsoup/helper/StringUtilTest.java
-+++ b/java/org/jsoup/helper/StringUtilTest.java
-@@ -5,7 +5,6 @@ import org.junit.Test;
- 
- import java.util.Arrays;
- 
--import static org.jsoup.helper.StringUtil.*;
- import static org.junit.Assert.assertEquals;
- import static org.junit.Assert.assertFalse;
- import static org.junit.Assert.assertTrue;
-@@ -59,35 +58,18 @@ public class StringUtilTest {
-     }
- 
-     @Test public void normaliseWhiteSpace() {
--        assertEquals(" ", normaliseWhitespace("    \r \n \r\n"));
--        assertEquals(" hello there ", normaliseWhitespace("   hello   \r \n  there    \n"));
--        assertEquals("hello", normaliseWhitespace("hello"));
--        assertEquals("hello there", normaliseWhitespace("hello\nthere"));
-+        assertEquals(" ", StringUtil.normaliseWhitespace("    \r \n \r\n"));
-+        assertEquals(" hello there ", StringUtil.normaliseWhitespace("   hello   \r \n  there    \n"));
-+        assertEquals("hello", StringUtil.normaliseWhitespace("hello"));
-+        assertEquals("hello there", StringUtil.normaliseWhitespace("hello\nthere"));
-     }
- 
-     @Test public void normaliseWhiteSpaceHandlesHighSurrogates() {
-         String test71540chars = "\ud869\udeb2\u304b\u309a  1";
-         String test71540charsExpectedSingleWhitespace = "\ud869\udeb2\u304b\u309a 1";
- 
--        assertEquals(test71540charsExpectedSingleWhitespace, normaliseWhitespace(test71540chars));
-+        assertEquals(test71540charsExpectedSingleWhitespace, StringUtil.normaliseWhitespace(test71540chars));
-         String extractedText = Jsoup.parse(test71540chars).text();
-         assertEquals(test71540charsExpectedSingleWhitespace, extractedText);
+diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
+index 6fd4630..d8b640d 100644
+--- a/java/org/jsoup/parser/HtmlParserTest.java
++++ b/java/org/jsoup/parser/HtmlParserTest.java
+@@ -870,10 +870,4 @@ public class HtmlParserTest {
+         assertEquals("<form action=\"/submit\"> <hr> <label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label> <hr> </form>",
+                 StringUtil.normaliseWhitespace(doc.body().html()));
      }
 -
--    @Test public void resolvesRelativeUrls() {
--        assertEquals("http://example.com/one/two?three", resolve("http://example.com", "./one/two?three"));
--        assertEquals("http://example.com/one/two?three", resolve("http://example.com?one", "./one/two?three"));
--        assertEquals("http://example.com/one/two?three#four", resolve("http://example.com", "./one/two?three#four"));
--        assertEquals("https://example.com/one", resolve("http://example.com/", "https://example.com/one"));
--        assertEquals("http://example.com/one/two.html", resolve("http://example.com/two/", "../one/two.html"));
--        assertEquals("https://example2.com/one", resolve("https://example.com/", "//example2.com/one"));
--        assertEquals("https://example.com:8080/one", resolve("https://example.com:8080", "./one"));
--        assertEquals("https://example2.com/one", resolve("http://example.com/", "https://example2.com/one"));
--        assertEquals("https://example.com/one", resolve("wrong", "https://example.com/one"));
--        assertEquals("https://example.com/one", resolve("https://example.com/one", ""));
--        assertEquals("", resolve("wrong", "also wrong"));
--        assertEquals("ftp://example.com/one", resolve("ftp://example.com/two/", "../one"));
--        assertEquals("ftp://example.com/one/two.c", resolve("ftp://example.com/one/", "./two.c"));
--        assertEquals("ftp://example.com/one/two.c", resolve("ftp://example.com/one/", "two.c"));
+-    @Test public void testReinsertionModeForThCelss() {
+-        String body = "<body> <table> <tr> <th> <table><tr><td></td></tr></table> <div> <table><tr><td></td></tr></table> </div> <div></div> <div></div> <div></div> </th> </tr> </table> </body>";
+-        Document doc = Jsoup.parse(body);
+-        assertEquals(1, doc.body().children().size());
 -    }
  }
-diff --git a/java/org/jsoup/integration/UrlConnectTest.java b/java/org/jsoup/integration/UrlConnectTest.java
-index b8556e1..3a12c58 100644
---- a/java/org/jsoup/integration/UrlConnectTest.java
-+++ b/java/org/jsoup/integration/UrlConnectTest.java
-@@ -188,16 +188,6 @@ public class UrlConnectTest {
-         Connection con = Jsoup.connect("http://direct.infohound.net/tools/302-rel-dot.pl"); // to ./ok.html
-         Document doc = con.post();
-         assertTrue(doc.title().contains("OK"));
--        assertEquals(doc.location(), "http://direct.infohound.net/tools/ok.html");
--    }
--
--    @Test
--    public void followsRelativeDotRedirect2() throws IOException {
--        //redirects to "esportspenedes.cat/./ep/index.php", should resolve to "esportspenedes.cat/ep/index.php"
--        Connection con = Jsoup.connect("http://esportspenedes.cat")  // note lack of trailing / - server should redir to / first, then to ./ep/...; but doesn't'
--                .timeout(10000);
--        Document doc = con.post();
--        assertEquals(doc.location(), "http://esportspenedes.cat/ep/index.php");
-     }
- 
-     @Test
-diff --git a/java/org/jsoup/nodes/NodeTest.java b/java/org/jsoup/nodes/NodeTest.java
-index 760dcfe..b25aaf9 100644
---- a/java/org/jsoup/nodes/NodeTest.java
-+++ b/java/org/jsoup/nodes/NodeTest.java
-@@ -124,12 +124,6 @@ public class NodeTest {
-         Element a2 = doc.select("a").get(1);
-         assertEquals("http://jsoup.org/path/bar.html?foo", a2.absUrl("href"));
-     }
--
--    @Test public void absHandlesDotFromIndex() {
--        Document doc = Jsoup.parse("<a href='./one/two.html'>One</a>", "http://example.com");
--        Element a1 = doc.select("a").first();
--        assertEquals("http://example.com/one/two.html", a1.absUrl("href"));
--    }
-     
-     @Test public void testRemove() {
-         Document doc = Jsoup.parse("<p>One <span>two</span> three</p>");

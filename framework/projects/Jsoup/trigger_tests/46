@@ -1,8 +1,8 @@
---- org.jsoup.nodes.EntitiesTest::letterDigitEntities
-junit.framework.AssertionFailedError: expected:<[&sup1;&sup2;&sup3;&frac14;&frac12;&]frac34;> but was:<[⊃1;⊃2;⊃3;&amp;frac14;&amp;frac12;&amp;]frac34;>
+--- org.jsoup.helper.DataUtilTest::discardsSpuriousByteOrderMark
+junit.framework.AssertionFailedError: expected:<[One]> but was:<[]>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.EntitiesTest.letterDigitEntities(EntitiesTest.java:60)
+	at org.jsoup.helper.DataUtilTest.discardsSpuriousByteOrderMark(DataUtilTest.java:32)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

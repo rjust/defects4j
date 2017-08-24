@@ -1,42 +1,16 @@
-diff --git a/java/org/jsoup/nodes/DocumentTypeTest.java b/java/org/jsoup/nodes/DocumentTypeTest.java
-index 59a2702..f612251 100644
---- a/java/org/jsoup/nodes/DocumentTypeTest.java
-+++ b/java/org/jsoup/nodes/DocumentTypeTest.java
-@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
-  * @author Jonathan Hedley, http://jonathanhedley.com/
-  */
- public class DocumentTypeTest {
--    @Test
--    public void constructorValidationOkWithBlankName() {
-+    @Test(expected = IllegalArgumentException.class)
-+    public void constructorValidationThrowsExceptionOnBlankName() {
-         DocumentType fail = new DocumentType("","", "", "");
-     }
- 
 diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
-index e843773..dcfe4e0 100644
+index e0604b4..f2d6e9b 100644
 --- a/java/org/jsoup/parser/HtmlParserTest.java
 +++ b/java/org/jsoup/parser/HtmlParserTest.java
-@@ -806,22 +806,4 @@ public class HtmlParserTest {
-         Document doc = Jsoup.parse(h);
-         assertEquals("<img>\n<svg>\n <image />\n</svg>", doc.body().html());
+@@ -799,11 +799,4 @@ public class HtmlParserTest {
+         assertEquals(1, doc.select("table input").size());
+         assertEquals(2, doc.select("input").size());
      }
 -
--    @Test public void handlesInvalidDoctypes() {
--        // would previously throw invalid name exception on empty doctype
--        Document doc = Jsoup.parse("<!DOCTYPE>");
--        assertEquals(
--                "<!DOCTYPE> <html> <head></head> <body></body> </html>",
--                StringUtil.normaliseWhitespace(doc.outerHtml()));
--
--        doc = Jsoup.parse("<!DOCTYPE><html><p>Foo</p></html>");
--        assertEquals(
--                "<!DOCTYPE> <html> <head></head> <body> <p>Foo</p> </body> </html>",
--                StringUtil.normaliseWhitespace(doc.outerHtml()));
--
--        doc = Jsoup.parse("<!DOCTYPE \u0000>");
--        assertEquals(
--                "<!DOCTYPE �> <html> <head></head> <body></body> </html>",
--                StringUtil.normaliseWhitespace(doc.outerHtml()));
+-    @Test public void convertsImageToImg() {
+-        // image to img, unless in a svg. old html cruft.
+-        String h = "<body><image><svg><image /></svg></body>";
+-        Document doc = Jsoup.parse(h);
+-        assertEquals("<img />\n<svg>\n <image />\n</svg>", doc.body().html());
 -    }
  }

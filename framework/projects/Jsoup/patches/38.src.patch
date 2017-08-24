@@ -1,45 +1,166 @@
-diff --git a/java/org/jsoup/parser/Token.java b/java/org/jsoup/parser/Token.java
-index 1679007..2d5643b 100644
---- a/java/org/jsoup/parser/Token.java
-+++ b/java/org/jsoup/parser/Token.java
-@@ -168,7 +168,6 @@ abstract class Token {
+diff --git a/java/org/jsoup/nodes/Entities.java b/java/org/jsoup/nodes/Entities.java
+index a60fab8..808292a 100644
+--- a/java/org/jsoup/nodes/Entities.java
++++ b/java/org/jsoup/nodes/Entities.java
+@@ -1,7 +1,5 @@
+ package org.jsoup.nodes;
  
-     static class Comment extends Token {
-         final StringBuilder data = new StringBuilder();
--        boolean bogus = false;
+-import org.jsoup.parser.Parser;
+-
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.nio.charset.CharsetEncoder;
+@@ -36,7 +34,6 @@ public class Entities {
  
-         Comment() {
-             type = TokenType.Comment;
-diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
-index cad7933..2a46cf2 100644
---- a/java/org/jsoup/parser/TokeniserState.java
-+++ b/java/org/jsoup/parser/TokeniserState.java
-@@ -1091,7 +1091,6 @@ enum TokeniserState {
-             // rewind to capture character that lead us here
-             r.unconsume();
-             Token.Comment comment = new Token.Comment();
--            comment.bogus = true;
-             comment.data.append(r.consumeTo('>'));
-             // todo: replace nullChar with replaceChar
-             t.emit(comment);
-diff --git a/java/org/jsoup/parser/XmlTreeBuilder.java b/java/org/jsoup/parser/XmlTreeBuilder.java
-index dd2cb9f..3f03ad2 100644
---- a/java/org/jsoup/parser/XmlTreeBuilder.java
-+++ b/java/org/jsoup/parser/XmlTreeBuilder.java
-@@ -63,15 +63,7 @@ public class XmlTreeBuilder extends TreeBuilder {
- 
-     void insert(Token.Comment commentToken) {
-         Comment comment = new Comment(commentToken.getData(), baseUri);
--        Node insert = comment;
--        if (commentToken.bogus) { // xml declarations are emitted as bogus comments (which is right for html, but not xml)
--            String data = comment.getData();
--            if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
--                String declaration = data.substring(1);
--                insert = new XmlDeclaration(declaration, comment.baseUri(), data.startsWith("!"));
--            }
--        }
--        insertNode(insert);
-+        insertNode(comment);
+     private static final Map<String, Character> full;
+     private static final Map<Character, String> xhtmlByVal;
+-    private static final Map<String, Character> base;
+     private static final Map<Character, String> baseByVal;
+     private static final Map<Character, String> fullByVal;
+     private static final Pattern unescapePattern = Pattern.compile("&(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]+\\d*);?");
+@@ -54,16 +51,6 @@ public class Entities {
      }
  
-     void insert(Token.Character characterToken) {
+     /**
+-     * Check if the input is a known named entity in the base entity set.
+-     * @param name the possible entity name (e.g. "lt" or "amp")
+-     * @return true if a known named entity in the base set
+-     * @see #isNamedEntity(String)
+-     */
+-    public static boolean isBaseNamedEntity(String name) {
+-        return base.containsKey(name);
+-    }
+-
+-    /**
+      * Get the Character value of the named entity
+      * @param name named entity (e.g. "lt" or "amp")
+      * @return the Character value of the named entity (e.g. '<' or '&')
+@@ -104,7 +91,38 @@ public class Entities {
+      * @return
+      */
+     static String unescape(String string, boolean strict) {
+-        return Parser.unescapeEntities(string, strict);
++        // todo: change this method to use Tokeniser.consumeCharacterReference
++        if (!string.contains("&"))
++            return string;
++
++        Matcher m = strict? strictUnescapePattern.matcher(string) : unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]\\d*);?
++        StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
++        // todo: replace m.appendReplacement with own impl, so StringBuilder and quoteReplacement not required
++
++        while (m.find()) {
++            int charval = -1;
++            String num = m.group(3);
++            if (num != null) {
++                try {
++                    int base = m.group(2) != null ? 16 : 10; // 2 is hex indicator
++                    charval = Integer.valueOf(num, base);
++                } catch (NumberFormatException e) {
++                } // skip
++            } else {
++                String name = m.group(1);
++                if (full.containsKey(name))
++                    charval = full.get(name);
++            }
++
++            if (charval != -1 || charval > 0xFFFF) { // out of range
++                String c = Character.toString((char) charval);
++                m.appendReplacement(accum, Matcher.quoteReplacement(c));
++            } else {
++                m.appendReplacement(accum, Matcher.quoteReplacement(m.group(0))); // replace with original string
++            }
++        }
++        m.appendTail(accum);
++        return accum.toString();
+     }
+ 
+     // xhtml has restricted entities
+@@ -118,8 +136,7 @@ public class Entities {
+ 
+     static {
+         xhtmlByVal = new HashMap<Character, String>();
+-        base = loadEntities("entities-base.properties");  // most common / default
+-        baseByVal = toCharacterKey(base);
++        baseByVal = toCharacterKey(loadEntities("entities-base.properties")); // most common / default
+         full = loadEntities("entities-full.properties"); // extended and overblown.
+         fullByVal = toCharacterKey(full);
+ 
+diff --git a/java/org/jsoup/parser/Parser.java b/java/org/jsoup/parser/Parser.java
+index eebce38..2236219 100644
+--- a/java/org/jsoup/parser/Parser.java
++++ b/java/org/jsoup/parser/Parser.java
+@@ -125,17 +125,6 @@ public class Parser {
+     }
+ 
+     /**
+-     * Utility method to unescape HTML entities from a string
+-     * @param string HTML escaped string
+-     * @param inAttribute if the string is to be escaped in strict mode (as attributes are)
+-     * @return an unescaped string
+-     */
+-    public static String unescapeEntities(String string, boolean inAttribute) {
+-        Tokeniser tokeniser = new Tokeniser(new CharacterReader(string), ParseErrorList.noTracking());
+-        return tokeniser.unescapeEntities(inAttribute);
+-    }
+-
+-    /**
+      * @param bodyHtml HTML to parse
+      * @param baseUri baseUri base URI of document (i.e. original fetch location), for resolving relative URLs.
+      *
+diff --git a/java/org/jsoup/parser/Tokeniser.java b/java/org/jsoup/parser/Tokeniser.java
+index 3445855..9e0e615 100644
+--- a/java/org/jsoup/parser/Tokeniser.java
++++ b/java/org/jsoup/parser/Tokeniser.java
+@@ -133,14 +133,21 @@ class Tokeniser {
+         } else { // named
+             // get as many letters as possible, and look for matching entities.
+             String nameRef = reader.consumeLetterThenDigitSequence();
++            String origNameRef = new String(nameRef); // for error reporting. nameRef gets chomped looking for matches
+             boolean looksLegit = reader.matches(';');
+-            // found if a base named entity without a ;, or an extended entity with the ;.
+-            boolean found = (Entities.isBaseNamedEntity(nameRef) || (Entities.isNamedEntity(nameRef) && looksLegit));
+-
++            boolean found = false;
++            while (nameRef.length() > 0 && !found) {
++                if (Entities.isNamedEntity(nameRef))
++                    found = true;
++                else {
++                    nameRef = nameRef.substring(0, nameRef.length()-1);
++                    reader.unconsume();
++                }
++            }
+             if (!found) {
+-                reader.rewindToMark();
+                 if (looksLegit) // named with semicolon
+-                    characterReferenceError(String.format("invalid named referenece '%s'", nameRef));
++                    characterReferenceError(String.format("invalid named referenece '%s'", origNameRef));
++                reader.rewindToMark();
+                 return null;
+             }
+             if (inAttribute && (reader.matchesLetter() || reader.matchesDigit() || reader.matchesAny('=', '-', '_'))) {
+@@ -220,25 +227,4 @@ class Tokeniser {
+         // Element currentNode = currentNode();
+         // return currentNode != null && currentNode.namespace().equals("HTML");
+     }
+-
+-    /**
+-     * Utility method to consume reader and unescape entities found within.
+-     * @param inAttribute
+-     * @return unescaped string from reader
+-     */
+-    String unescapeEntities(boolean inAttribute) {
+-        StringBuilder builder = new StringBuilder();
+-        while (!reader.isEmpty()) {
+-            builder.append(reader.consumeTo('&'));
+-            if (reader.matches('&')) {
+-                reader.consume();
+-                Character c = consumeCharacterReference(null, inAttribute);
+-                if (c == null)
+-                    builder.append('&');
+-                else
+-                    builder.append(c);
+-            }
+-        }
+-        return builder.toString();
+-    }
+ }

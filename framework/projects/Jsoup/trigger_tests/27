@@ -1,10 +1,8 @@
---- org.jsoup.nodes.ElementTest::testHashAndEquals
-junit.framework.AssertionFailedError: expected: org.jsoup.nodes.Element<<p class="one">One</p>> but was: org.jsoup.nodes.Element<<p class="one">One</p>>
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
+--- org.jsoup.helper.DataUtilTest::discardsSpuriousByteOrderMarkWhenNoCharsetSet
+junit.framework.AssertionFailedError: expected:<[One]> but was:<[]>
+	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.nodes.ElementTest.testHashAndEquals(ElementTest.java:785)
+	at org.jsoup.helper.DataUtilTest.discardsSpuriousByteOrderMarkWhenNoCharsetSet(DataUtilTest.java:42)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

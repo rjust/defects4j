@@ -1,20 +1,14 @@
-diff --git a/java/org/jsoup/nodes/Document.java b/java/org/jsoup/nodes/Document.java
-index d1d0dfd..c5814af 100644
---- a/java/org/jsoup/nodes/Document.java
-+++ b/java/org/jsoup/nodes/Document.java
-@@ -1,6 +1,5 @@
- package org.jsoup.nodes;
+diff --git a/java/org/jsoup/safety/Cleaner.java b/java/org/jsoup/safety/Cleaner.java
+index 8110836..eda67df 100644
+--- a/java/org/jsoup/safety/Cleaner.java
++++ b/java/org/jsoup/safety/Cleaner.java
+@@ -40,8 +40,7 @@ public class Cleaner {
+         Validate.notNull(dirtyDocument);
  
--import org.jsoup.helper.StringUtil;
- import org.jsoup.helper.Validate;
- import org.jsoup.parser.Tag;
- import org.jsoup.select.Elements;
-@@ -67,7 +66,7 @@ public class Document extends Element {
-     public String title() {
-         // title is a preserve whitespace tag (for document output), but normalised here
-         Element titleEl = getElementsByTag("title").first();
--        return titleEl != null ? StringUtil.normaliseWhitespace(titleEl.text()).trim() : "";
-+        return titleEl != null ? titleEl.text().trim() : "";
+         Document clean = Document.createShell(dirtyDocument.baseUri());
+-        if (dirtyDocument.body() != null) // frameset documents won't have a body. the clean doc will have empty body.
+-            copySafeNodes(dirtyDocument.body(), clean.body());
++        copySafeNodes(dirtyDocument.body(), clean.body());
+ 
+         return clean;
      }
- 
-     /**

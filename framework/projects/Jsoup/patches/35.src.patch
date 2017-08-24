@@ -1,29 +1,45 @@
-diff --git a/java/org/jsoup/parser/HtmlTreeBuilder.java b/java/org/jsoup/parser/HtmlTreeBuilder.java
-index e134a58..975411b 100644
---- a/java/org/jsoup/parser/HtmlTreeBuilder.java
-+++ b/java/org/jsoup/parser/HtmlTreeBuilder.java
-@@ -159,7 +159,6 @@ class HtmlTreeBuilder extends TreeBuilder {
-         if (startTag.isSelfClosing()) {
-             Element el = insertEmpty(startTag);
-             stack.add(el);
--            tokeniser.transition(TokeniserState.Data); // handles <script />, otherwise needs breakout steps from script data
-             tokeniser.emit(new Token.EndTag(el.tagName()));  // ensure we get out of whatever state we are in. emitted for yielded processing
-             return el;
-         }
-diff --git a/java/org/jsoup/parser/HtmlTreeBuilderState.java b/java/org/jsoup/parser/HtmlTreeBuilderState.java
-index 23d8af2..da696d9 100644
---- a/java/org/jsoup/parser/HtmlTreeBuilderState.java
-+++ b/java/org/jsoup/parser/HtmlTreeBuilderState.java
-@@ -127,11 +127,10 @@ enum HtmlTreeBuilderState {
-                         tb.transition(InHeadNoscript);
-                     } else if (name.equals("script")) {
-                         // skips some script rules as won't execute them
--
-+                        tb.insert(start);
-                         tb.tokeniser.transition(TokeniserState.ScriptData);
-                         tb.markInsertionMode();
-                         tb.transition(Text);
--                        tb.insert(start);
-                     } else if (name.equals("head")) {
-                         tb.error(this);
-                         return false;
+diff --git a/java/org/jsoup/parser/Token.java b/java/org/jsoup/parser/Token.java
+index 1679007..2d5643b 100644
+--- a/java/org/jsoup/parser/Token.java
++++ b/java/org/jsoup/parser/Token.java
+@@ -168,7 +168,6 @@ abstract class Token {
+ 
+     static class Comment extends Token {
+         final StringBuilder data = new StringBuilder();
+-        boolean bogus = false;
+ 
+         Comment() {
+             type = TokenType.Comment;
+diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
+index cad7933..2a46cf2 100644
+--- a/java/org/jsoup/parser/TokeniserState.java
++++ b/java/org/jsoup/parser/TokeniserState.java
+@@ -1091,7 +1091,6 @@ enum TokeniserState {
+             // rewind to capture character that lead us here
+             r.unconsume();
+             Token.Comment comment = new Token.Comment();
+-            comment.bogus = true;
+             comment.data.append(r.consumeTo('>'));
+             // todo: replace nullChar with replaceChar
+             t.emit(comment);
+diff --git a/java/org/jsoup/parser/XmlTreeBuilder.java b/java/org/jsoup/parser/XmlTreeBuilder.java
+index dd2cb9f..3f03ad2 100644
+--- a/java/org/jsoup/parser/XmlTreeBuilder.java
++++ b/java/org/jsoup/parser/XmlTreeBuilder.java
+@@ -63,15 +63,7 @@ public class XmlTreeBuilder extends TreeBuilder {
+ 
+     void insert(Token.Comment commentToken) {
+         Comment comment = new Comment(commentToken.getData(), baseUri);
+-        Node insert = comment;
+-        if (commentToken.bogus) { // xml declarations are emitted as bogus comments (which is right for html, but not xml)
+-            String data = comment.getData();
+-            if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
+-                String declaration = data.substring(1);
+-                insert = new XmlDeclaration(declaration, comment.baseUri(), data.startsWith("!"));
+-            }
+-        }
+-        insertNode(insert);
++        insertNode(comment);
+     }
+ 
+     void insert(Token.Character characterToken) {

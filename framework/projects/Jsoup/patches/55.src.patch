@@ -1,13 +1,35 @@
-diff --git a/java/org/jsoup/parser/TreeBuilderState.java b/java/org/jsoup/parser/TreeBuilderState.java
-index 4ae01e1..e82eed5 100644
---- a/java/org/jsoup/parser/TreeBuilderState.java
-+++ b/java/org/jsoup/parser/TreeBuilderState.java
-@@ -280,7 +280,7 @@ enum TreeBuilderState {
-                             if (!html.hasAttr(attribute.getKey()))
-                                 html.attributes().put(attribute);
-                         }
--                    } else if (StringUtil.in(name, "base", "basefont", "bgsound", "command", "link", "meta", "noframes", "script", "style", "title")) {
-+                    } else if (StringUtil.in(name, "base", "basefont", "bgsound", "command", "link", "meta", "noframes", "style", "title")) {
-                         return tb.process(t, InHead);
-                     } else if (name.equals("body")) {
-                         tb.error(this);
+diff --git a/java/org/jsoup/select/Selector.java b/java/org/jsoup/select/Selector.java
+index 691b1cf..e9a8fc5 100644
+--- a/java/org/jsoup/select/Selector.java
++++ b/java/org/jsoup/select/Selector.java
+@@ -136,7 +136,7 @@ public class Selector {
+     
+     private void combinator(char combinator) {
+         tq.consumeWhitespace();
+-        String subQuery = consumeSubQuery(); // support multi > childs
++        String subQuery = tq.consumeToAny(combinators); // support multi > childs
+         
+         Elements output;
+         if (combinator == '>')
+@@ -152,21 +152,6 @@ public class Selector {
+         
+         elements.clear(); elements.addAll(output);
+     }
+-
+-    private String consumeSubQuery() {
+-        StringBuilder sq = new StringBuilder();
+-        while (!tq.isEmpty()) {
+-            if (tq.matches("("))
+-                sq.append("(").append(tq.chompBalanced('(', ')')).append(")");
+-            else if (tq.matches("["))
+-                sq.append("[").append(tq.chompBalanced('[', ']')).append("]");
+-            else if (tq.matchesAny(combinators))
+-                break;
+-            else
+-                sq.append(tq.consume());
+-        }
+-        return sq.toString();
+-    }
+     
+     private Elements findElements() {
+         if (tq.matchChomp("#")) {

@@ -1,16 +1,68 @@
-diff --git a/java/org/jsoup/parser/HtmlParserTest.java b/java/org/jsoup/parser/HtmlParserTest.java
-index bca7937..49add0e 100644
---- a/java/org/jsoup/parser/HtmlParserTest.java
-+++ b/java/org/jsoup/parser/HtmlParserTest.java
-@@ -883,11 +883,4 @@ public class HtmlParserTest {
-         Elements main = doc.select("div[class='main']");
-         assertEquals("hello", main.text());
+diff --git a/java/org/jsoup/helper/DataUtilTest.java b/java/org/jsoup/helper/DataUtilTest.java
+index 5555ea1..d66a07b 100644
+--- a/java/org/jsoup/helper/DataUtilTest.java
++++ b/java/org/jsoup/helper/DataUtilTest.java
+@@ -1,10 +1,6 @@
+ package org.jsoup.helper;
+ 
+-import java.io.File;
+-import java.io.IOException;
+ import java.io.UnsupportedEncodingException;
+-
+-import org.jsoup.Jsoup;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.parser.Parser;
+ import org.junit.Test;
+@@ -12,7 +8,6 @@ import org.junit.Test;
+ import java.nio.ByteBuffer;
+ import java.nio.charset.Charset;
+ 
+-import static org.jsoup.integration.ParseTest.getFile;
+ import static org.junit.Assert.*;
+ 
+ public class DataUtilTest {
+@@ -100,28 +95,4 @@ public class DataUtilTest {
+             fail(ex.getMessage());
+         }
      }
 -
--    @Test public void testSupportsNonAsciiTags() {
--        String body = "<進捗推移グラフ>Yes</進捗推移グラフ>";
--        Document doc = Jsoup.parse(body);
--        Elements els = doc.select("進捗推移グラフ");
--        assertEquals("Yes", els.text());
+-    @Test
+-    public void supportsBOMinFiles() throws IOException {
+-        // test files from http://www.i18nl10n.com/korean/utftest/
+-        File in = getFile("/bomtests/bom_utf16be.html");
+-        Document doc = Jsoup.parse(in, null, "http://example.com");
+-        assertTrue(doc.title().contains("UTF-16BE"));
+-        assertTrue(doc.text().contains("가각갂갃간갅"));
+-
+-        in = getFile("/bomtests/bom_utf16le.html");
+-        doc = Jsoup.parse(in, null, "http://example.com");
+-        assertTrue(doc.title().contains("UTF-16LE"));
+-        assertTrue(doc.text().contains("가각갂갃간갅"));
+-
+-        in = getFile("/bomtests/bom_utf32be.html");
+-        doc = Jsoup.parse(in, null, "http://example.com");
+-        assertTrue(doc.title().contains("UTF-32BE"));
+-        assertTrue(doc.text().contains("가각갂갃간갅"));
+-
+-        in = getFile("/bomtests/bom_utf32le.html");
+-        doc = Jsoup.parse(in, null, "http://example.com");
+-        assertTrue(doc.title().contains("UTF-32LE"));
+-        assertTrue(doc.text().contains("가각갂갃간갅"));
 -    }
  }
+diff --git a/resources/bomtests/bom_utf16be.html b/resources/bomtests/bom_utf16be.html
+deleted file mode 100644
+index 164dc5a..0000000
+Binary files a/resources/bomtests/bom_utf16be.html and /dev/null differ
+diff --git a/resources/bomtests/bom_utf16le.html b/resources/bomtests/bom_utf16le.html
+deleted file mode 100644
+index 057c9ec..0000000
+Binary files a/resources/bomtests/bom_utf16le.html and /dev/null differ
+diff --git a/resources/bomtests/bom_utf32be.html b/resources/bomtests/bom_utf32be.html
+deleted file mode 100644
+index 4c5c046..0000000
+Binary files a/resources/bomtests/bom_utf32be.html and /dev/null differ
+diff --git a/resources/bomtests/bom_utf32le.html b/resources/bomtests/bom_utf32le.html
+deleted file mode 100644
+index 86c1ec5..0000000
+Binary files a/resources/bomtests/bom_utf32le.html and /dev/null differ

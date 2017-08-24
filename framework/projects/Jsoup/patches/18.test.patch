@@ -1,52 +1,60 @@
-diff --git a/java/org/jsoup/nodes/ElementTest.java b/java/org/jsoup/nodes/ElementTest.java
-index ec223ab..3375f56 100644
---- a/java/org/jsoup/nodes/ElementTest.java
-+++ b/java/org/jsoup/nodes/ElementTest.java
-@@ -2,14 +2,19 @@ package org.jsoup.nodes;
- 
- import org.jsoup.Jsoup;
- import org.jsoup.TextUtil;
-+import org.jsoup.helper.StringUtil;
- import org.jsoup.parser.Tag;
- import org.jsoup.select.Elements;
- import org.junit.Test;
- 
--import java.util.*;
--
- import static org.junit.Assert.*;
- 
-+import java.util.ArrayList;
-+import java.util.LinkedHashSet;
-+import java.util.List;
-+import java.util.Set;
-+import java.util.Map;
-+
- /**
-  * Tests for Element (DOM stuff mostly).
-  *
-@@ -857,25 +862,4 @@ public class ElementTest {
-         assertEquals("http://example2.com/four/", els.get(3).absUrl("href"));
-         assertEquals("https://example2.com/five/", els.get(4).absUrl("href"));
+diff --git a/java/org/jsoup/helper/HttpConnectionTest.java b/java/org/jsoup/helper/HttpConnectionTest.java
+index 41dd6f3..25fa339 100644
+--- a/java/org/jsoup/helper/HttpConnectionTest.java
++++ b/java/org/jsoup/helper/HttpConnectionTest.java
+@@ -52,17 +52,6 @@ public class HttpConnectionTest {
+         assertEquals("deflate", res.header("accept-Encoding"));
      }
--
--    @Test
--    public void appendMustCorrectlyMoveChildrenInsideOneParentElement() {
--        Document doc = new Document("");
--        Element body = doc.appendElement("body");
--        body.appendElement("div1");
--        body.appendElement("div2");
--        final Element div3 = body.appendElement("div3");
--        div3.text("Check");
--        final Element div4 = body.appendElement("div4");
--
--        ArrayList<Element> toMove = new ArrayList<Element>();
--        toMove.add(div3);
--        toMove.add(div4);
--
--        body.insertChildren(0, toMove);
--
--        String result = doc.toString().replaceAll("\\s+", "");
--        assertEquals("<body><div3>Check</div3><div4></div4><div1></div1><div2></div2></body>", result);
--
+ 
+-    @Test public void sameHeadersCombineWithComma() {
+-        Map<String, List<String>> headers = new HashMap<String, List<String>>();
+-        List<String> values = new ArrayList<String>();
+-        values.add("no-cache");
+-        values.add("no-store");
+-        headers.put("Cache-Control", values);
+-        HttpConnection.Response res = new HttpConnection.Response();
+-        res.processResponseHeaders(headers);
+-        assertEquals("no-cache, no-store", res.header("Cache-Control"));
 -    }
+-
+     @Test public void ignoresEmptySetCookies() {
+         // prep http response header map
+         Map<String, List<String>> headers = new HashMap<String, List<String>>();
+diff --git a/java/org/jsoup/integration/UrlConnectTest.java b/java/org/jsoup/integration/UrlConnectTest.java
+index 9e10f89..b8556e1 100644
+--- a/java/org/jsoup/integration/UrlConnectTest.java
++++ b/java/org/jsoup/integration/UrlConnectTest.java
+@@ -282,7 +282,7 @@ public class UrlConnectTest {
+         Connection.Response res = con.execute();
+         assertEquals("asdfg123", res.cookie("token")); // confirms that cookies set on 1st hit are presented in final result
+         Document doc = res.parse();
+-        assertEquals("token=asdfg123; uid=jhy", ihVal("HTTP_COOKIE", doc)); // confirms that redirected hit saw cookie
++        assertEquals("uid=jhy; token=asdfg123", ihVal("HTTP_COOKIE", doc)); // confirms that redirected hit saw cookie
+     }
+ 
+     @Test
+@@ -309,7 +309,7 @@ public class UrlConnectTest {
+ 
+         // send those cookies into the echo URL by map:
+         Document doc = Jsoup.connect(echoURL).cookies(cookies).get();
+-        assertEquals("token=asdfg123; uid=jhy", ihVal("HTTP_COOKIE", doc));
++        assertEquals("uid=jhy; token=asdfg123", ihVal("HTTP_COOKIE", doc));
+     }
+ 
+     @Test
+@@ -538,15 +538,4 @@ public class UrlConnectTest {
+         assertEquals("<html> <head></head> <body> <xml> <link>one <table> Two </table> </xml> </body> </html>", StringUtil.normaliseWhitespace(doc.outerHtml()));
+     }
+ 
+-    @Test
+-    public void combinesSameHeadersWithComma() throws IOException {
+-        // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+-        String url = "http://direct.infohound.net/tools/q.pl";
+-        Connection con = Jsoup.connect(url);
+-        con.get();
+-
+-        assertEquals("text/html", con.response().header("Content-Type"));
+-        assertEquals("no-cache, no-store", con.response().header("Cache-Control"));
+-    }
+-
  }

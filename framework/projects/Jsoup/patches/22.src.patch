@@ -1,13 +1,30 @@
-diff --git a/java/org/jsoup/nodes/Entities.java b/java/org/jsoup/nodes/Entities.java
-index ad80489..6ccb84e 100644
---- a/java/org/jsoup/nodes/Entities.java
-+++ b/java/org/jsoup/nodes/Entities.java
-@@ -115,7 +115,7 @@ public class Entities {
-                         if (escapeMode != EscapeMode.xhtml)
-                             accum.append("&nbsp;");
-                         else
--                            accum.append("&#xa0;");
-+                            accum.append(c);
-                         break;
-                     case '<':
-                         if (!inAttribute)
+diff --git a/java/org/jsoup/parser/TreeBuilder.java b/java/org/jsoup/parser/TreeBuilder.java
+index c6f5f20..3984e87 100644
+--- a/java/org/jsoup/parser/TreeBuilder.java
++++ b/java/org/jsoup/parser/TreeBuilder.java
+@@ -58,25 +58,16 @@ abstract class TreeBuilder {
+     protected abstract boolean process(Token token);
+ 
+     protected boolean processStartTag(String name) {
+-        if (currentToken == start) { // don't recycle an in-use token
+-            return process(new Token.StartTag().name(name));
+-        }
+         return process(start.reset().name(name));
+     }
+ 
+     public boolean processStartTag(String name, Attributes attrs) {
+-        if (currentToken == start) { // don't recycle an in-use token
+-            return process(new Token.StartTag().nameAttr(name, attrs));
+-        }
+         start.reset();
+         start.nameAttr(name, attrs);
+         return process(start);
+     }
+ 
+     protected boolean processEndTag(String name) {
+-        if (currentToken == end) { // don't recycle an in-use token
+-            return process(new Token.EndTag().name(name));
+-        }
+         return process(end.reset().name(name));
+     }
+ 

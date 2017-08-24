@@ -1,45 +1,18 @@
-diff --git a/java/org/jsoup/nodes/DocumentType.java b/java/org/jsoup/nodes/DocumentType.java
-index fc1ca23..e462157 100644
---- a/java/org/jsoup/nodes/DocumentType.java
-+++ b/java/org/jsoup/nodes/DocumentType.java
-@@ -19,6 +19,7 @@ public class DocumentType extends Node {
-     public DocumentType(String name, String publicId, String systemId, String baseUri) {
-         super(baseUri);
- 
-+        Validate.notEmpty(name);
-         attr("name", name);
-         attr("publicId", publicId);
-         attr("systemId", systemId);
-@@ -31,9 +32,7 @@ public class DocumentType extends Node {
- 
-     @Override
-     void outerHtmlHead(StringBuilder accum, int depth, Document.OutputSettings out) {
--        accum.append("<!DOCTYPE");
--        if (!StringUtil.isBlank(attr("name")))
--            accum.append(" ").append(attr("name"));
-+        accum.append("<!DOCTYPE ").append(attr("name"));
-         if (!StringUtil.isBlank(attr("publicId")))
-             accum.append(" PUBLIC \"").append(attr("publicId")).append('"');
-         if (!StringUtil.isBlank(attr("systemId")))
-diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
-index 309bfe8..315538c 100644
---- a/java/org/jsoup/parser/TokeniserState.java
-+++ b/java/org/jsoup/parser/TokeniserState.java
-@@ -1137,9 +1137,6 @@ enum TokeniserState {
-                     break;
-                 case eof:
-                     t.eofError(this);
--                    // note: fall through to > case
--                case '>': // catch invalid <!DOCTYPE>
--                    t.error(this);
-                     t.createDoctypePending();
-                     t.doctypePending.forceQuirks = true;
-                     t.emitDoctypePending();
-@@ -1168,7 +1165,6 @@ enum TokeniserState {
-                     break; // ignore whitespace
-                 case nullChar:
-                     t.error(this);
--                    t.createDoctypePending();
-                     t.doctypePending.name.append(replacementChar);
-                     t.transition(DoctypeName);
-                     break;
+diff --git a/java/org/jsoup/parser/HtmlTreeBuilderState.java b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index 2df4323..2e42446 100644
+--- a/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -452,10 +452,9 @@ enum HtmlTreeBuilderState {
+                         tb.insertEmpty(startTag);
+                         tb.framesetOk(false);
+                     } else if (name.equals("image")) {
+-                        if (tb.getFromStack("svg") == null)
+-                            return tb.process(startTag.name("img")); // change <image> to <img>, unless in svg
+-                        else
+-                            tb.insert(startTag);
++                        // we're not supposed to ask.
++                        startTag.name("img");
++                        return tb.process(startTag);
+                     } else if (name.equals("isindex")) {
+                         // how much do we care about the early 90s?
+                         tb.error(this);

@@ -1,13 +1,13 @@
-diff --git a/java/org/jsoup/parser/HtmlTreeBuilder.java b/java/org/jsoup/parser/HtmlTreeBuilder.java
-index 4ac8870..4a58fdf 100644
---- a/java/org/jsoup/parser/HtmlTreeBuilder.java
-+++ b/java/org/jsoup/parser/HtmlTreeBuilder.java
-@@ -391,7 +391,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
-             if ("select".equals(name)) {
-                 transition(HtmlTreeBuilderState.InSelect);
-                 break; // frag
--            } else if (("td".equals(name) || "th".equals(name) && !last)) {
-+            } else if (("td".equals(name) || "td".equals(name) && !last)) {
-                 transition(HtmlTreeBuilderState.InCell);
-                 break;
-             } else if ("tr".equals(name)) {
+diff --git a/java/org/jsoup/nodes/Element.java b/java/org/jsoup/nodes/Element.java
+index 1575fd0..f1ae8dd 100644
+--- a/java/org/jsoup/nodes/Element.java
++++ b/java/org/jsoup/nodes/Element.java
+@@ -571,7 +571,7 @@ public class Element extends Node {
+ 
+         for (int i = 0; i < elements.size(); i++) {
+             E element = elements.get(i);
+-            if (element == search)
++            if (element.equals(search))
+                 return i;
+         }
+         return null;
