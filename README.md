@@ -5,7 +5,7 @@ advancing software testing research.
 
 The projects
 ---------------
-Defects4J contains 395 bugs from the following open-source projects:
+Defects4J contains 417 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|

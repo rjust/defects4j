@@ -1,4 +1,4 @@
-java.com.fasterxml.jackson.core.util.JsonParserSequence
-java.com.fasterxml.jackson.core.JsonParser
-java.com.fasterxml.jackson.core.filter.FilteringParserDelegate
-java.com.fasterxml.jackson.core.JsonGenerator
+com.fasterxml.jackson.core.util.JsonParserSequence
+com.fasterxml.jackson.core.JsonParser
+com.fasterxml.jackson.core.filter.FilteringParserDelegate
+com.fasterxml.jackson.core.JsonGenerator
