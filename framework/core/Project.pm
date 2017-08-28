@@ -88,6 +88,8 @@ name of the corresponding project.
 
 =item B<JacksonCore> Jackson core (uses Vcs::Git as Vcs backend)
 
+=item B<JacksonDatabind> Jackson data binding utilities (uses Vcs::Git as Vcs backend)
+
 =item B<JacksonXml> Jackson XML utilities (uses Vcs::Git as Vcs backend)
 
 =item B<Jsoup> jsoup HTML parser (uses Vcs::Git as Vcs backend)

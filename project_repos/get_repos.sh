@@ -28,6 +28,7 @@ new=$($cmd)
 # Install additional repositories (separate from core defects4j)
 ./get_guava.sh
 ./get_jacksoncore.sh
+./get_jacksondatabind.sh
 ./get_jacksonxml.sh
 ./get_jsoup.sh
 ./get_mockito.sh
