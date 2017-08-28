@@ -82,21 +82,23 @@ name of the corresponding project.
 
 =item B<Chart>  JFreeChart (uses Vcs::Svn as Vcs backend)
 
-=item B<Math>  Commons math (uses Vcs::Git as Vcs backend)
-
-=item B<Lang>  Commons lang (uses Vcs::Git as Vcs backend)
-
-=item B<Time>  Joda-time (uses Vcs::Git as Vcs backend)
-
-=item B<Jsoup> jsoup HTML parser (uses Vcs::Git as Vcs backend)
-
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
-
-=item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)
 
 =item B<Guava> Guava Library (uses Vcs::Git as Vcs backend)
 
 =item B<JacksonCore> Jackson core (uses Vcs::Git as Vcs backend)
+
+=item B<JacksonXml> Jackson XML utilities (uses Vcs::Git as Vcs backend)
+
+=item B<Jsoup> jsoup HTML parser (uses Vcs::Git as Vcs backend)
+
+=item B<Lang>  Commons lang (uses Vcs::Git as Vcs backend)
+
+=item B<Math>  Commons math (uses Vcs::Git as Vcs backend)
+
+=item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)
+
+=item B<Time>  Joda-time (uses Vcs::Git as Vcs backend)
 
 =back
 

@@ -13,6 +13,7 @@ Defects4J contains bugs from the following open-source projects:
 | Closure    | Closure compiler     | 133            |
 | Guava      | Guava library        |   9            |
 | JacksonCore| Jackson core         |  13            |
+| JacksonXml | Jackson XML utilities|   5            |
 | Jsoup      | jsoup HTML parser    |  64            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
