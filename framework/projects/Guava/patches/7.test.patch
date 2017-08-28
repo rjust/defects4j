@@ -1,0 +1,19 @@
+diff --git a/guava-tests/test/com/google/common/cache/LocalCacheTest.java b/guava-tests/test/com/google/common/cache/LocalCacheTest.java
+index c959d54..0b25ace 100644
+--- a/guava-tests/test/com/google/common/cache/LocalCacheTest.java
++++ b/guava-tests/test/com/google/common/cache/LocalCacheTest.java
+@@ -1102,13 +1102,8 @@ public class LocalCacheTest extends TestCase {
+ 
+     assertNull(segment.get(key, hash));
+ 
+-    // count == 0
+-    table.set(index, entry);
+-    assertNull(segment.get(key, hash));
+-    assertFalse(segment.containsKey(key, hash));
+-    assertFalse(segment.containsValue(value));
+-
+     // count == 1
++    table.set(index, entry);
+     segment.count++;
+     assertSame(value, segment.get(key, hash));
+     assertTrue(segment.containsKey(key, hash));

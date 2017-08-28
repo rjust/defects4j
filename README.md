@@ -5,12 +5,14 @@ advancing software testing research.
 
 The projects
 ---------------
-Defects4J contains 395 bugs from the following open-source projects:
+Defects4J contains 417 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
 | Chart      | JFreechart           |  26            |
 | Closure    | Closure compiler     | 133            |
+| Guava      | Guava library        |   9            |
+| JacksonCore| Jackson core module  |  13            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
 | Mockito    | Mockito              |  38            |

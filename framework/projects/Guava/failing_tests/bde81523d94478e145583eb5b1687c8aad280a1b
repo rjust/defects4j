@@ -1,0 +1,10 @@
+## guava: bde81523d94478e145583eb5b1687c8aad280a1b ##
+
+--- com.google.common.base.EnumsTest::testGetIfPresent_doesNotPreventClassUnloading
+--- com.google.common.base.FinalizableReferenceQueueClassLoaderUnloadingTest::testUnloadableInStaticFieldIfClosed
+--- com.google.common.base.FinalizableReferenceQueueClassLoaderUnloadingTest::testUnloadableWithSecurityManager
+--- com.google.common.base.FinalizableReferenceQueueClassLoaderUnloadingTest::testUnloadableWithoutSecurityManager
+--- com.google.common.reflect.ClassPathTest::testResourceScanner
+--- com.google.common.reflect.ClassPathTest::testExistsThrowsSecurityException
+--- com.google.common.reflect.ClassPathTest::testEquals
+--- com.google.common.util.concurrent.FuturesGetCheckedTest::testGetChecked_classUnloading

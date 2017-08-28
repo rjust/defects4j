@@ -75,6 +75,14 @@ JFreeChart (L<Vcs::Svn> backend)
 
 Closure compiler (L<Vcs::Git> backend)
 
+=item * L<Guava|Project::Guava>
+
+Guava library (L<Vcs::Git> backend)
+
+=item * L<JacksonCore|Project::JacksonCore>
+
+Jackson core library (L<Vcs::Git> backend)
+
 =item * L<Lang|Project::Lang>
 
 Commons lang (L<Vcs::Git> backend)
