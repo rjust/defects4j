@@ -1,0 +1,45 @@
+diff --git a/java/org/apache/commons/csv/CSVPrinterTest.java b/java/org/apache/commons/csv/CSVPrinterTest.java
+index cf49a6d..3265b84 100644
+--- a/java/org/apache/commons/csv/CSVPrinterTest.java
++++ b/java/org/apache/commons/csv/CSVPrinterTest.java
+@@ -558,40 +558,6 @@ public class CSVPrinterTest {
+     }
+ 
+     @Test
+-    public void testHeaderNotSet() throws IOException {
+-        final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null));
+-        printer.printRecord("a", "b", "c");
+-        printer.printRecord("x", "y", "z");
+-        assertEquals("a,b,c\r\nx,y,z\r\n", sw.toString());
+-        printer.close();
+-    }
+-
+-    @Test
+-    public void testSkipHeaderRecordTrue() throws IOException {
+-    	// functionally identical to testHeaderNotSet, used to test CSV-153
+-        final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null)
+-                .withHeader("C1", "C2", "C3").withSkipHeaderRecord(true));
+-        printer.printRecord("a", "b", "c");
+-        printer.printRecord("x", "y", "z");
+-        assertEquals("a,b,c\r\nx,y,z\r\n", sw.toString());
+-        printer.close();
+-    }
+-
+-    @Test
+-    public void testSkipHeaderRecordFalse() throws IOException {
+-    	// functionally identical to testHeader, used to test CSV-153
+-        final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null)
+-                .withHeader("C1", "C2", "C3").withSkipHeaderRecord(false));
+-        printer.printRecord("a", "b", "c");
+-        printer.printRecord("x", "y", "z");
+-        assertEquals("C1,C2,C3\r\na,b,c\r\nx,y,z\r\n", sw.toString());
+-        printer.close();
+-    }
+-
+-    @Test
+     public void testHeaderCommentExcel() throws IOException {
+         final StringWriter sw = new StringWriter();
+         final Date now = new Date();
