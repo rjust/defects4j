@@ -1,0 +1,43 @@
+diff --git a/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java b/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+index f1a1b2b..8e3b775 100644
+--- a/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
++++ b/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+@@ -677,23 +677,24 @@ public class DOMNodePointer extends NodePointer {
+         Element element = (Element) node;
+ 
+         String uri = element.getNamespaceURI();
+-        if (uri == null) {
+-            String prefix = getPrefix(node);
+-            String qname = prefix == null ? "xmlns" : "xmlns:" + prefix;
+-    
+-            Node aNode = node;
+-            while (aNode != null) {
+-                if (aNode.getNodeType() == Node.ELEMENT_NODE) {
+-                    Attr attr = ((Element) aNode).getAttributeNode(qname);
+-                    if (attr != null) {
+-                        uri = attr.getValue();
+-                        break;
+-                    }
++        if (uri != null) {
++            return uri;
++        }
++
++        String prefix = getPrefix(node);
++        String qname = prefix == null ? "xmlns" : "xmlns:" + prefix;
++
++        Node aNode = node;
++        while (aNode != null) {
++            if (aNode.getNodeType() == Node.ELEMENT_NODE) {
++                Attr attr = ((Element) aNode).getAttributeNode(qname);
++                if (attr != null) {
++                    return attr.getValue();
+                 }
+-                aNode = aNode.getParentNode();
+             }
++            aNode = aNode.getParentNode();
+         }
+-        return "".equals(uri) ? null : uri;
++        return null;
+     }
+ 
+     public Object getValue() {

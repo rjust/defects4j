@@ -11,6 +11,7 @@ Defects4J contains bugs from the following open-source projects:
 |-----------------|--------------------------------|----------------|
 | Chart           | JFreechart                     |  26            |
 | Closure         | Closure compiler               | 133            |
+| CommonsJXPath   | Apache commons JXPath          |  14            |
 | Guava           | Guava library                  |   9            |
 | JacksonCore     | Jackson core                   |  13            |
 | JacksonDatabind | Jackson data binding utilities |  39            |

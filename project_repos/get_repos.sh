@@ -26,6 +26,7 @@ wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/defects4j-repos
 new=$($cmd)
 
 # Install additional repositories (separate from core defects4j)
+./get_commonsjxpath.sh
 ./get_guava.sh
 ./get_jacksoncore.sh
 ./get_jacksondatabind.sh

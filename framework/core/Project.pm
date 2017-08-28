@@ -84,6 +84,8 @@ name of the corresponding project.
 
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
 
+=item B<CommonsJXPath> Commons JXPath (uses Vcs::Git as Vcs backend)
+
 =item B<Guava> Guava Library (uses Vcs::Git as Vcs backend)
 
 =item B<JacksonCore> Jackson core (uses Vcs::Git as Vcs backend)

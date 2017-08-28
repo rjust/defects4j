@@ -1,0 +1,42 @@
+diff --git a/org/apache/commons/jxpath/ri/axes/UnionContext.java b/org/apache/commons/jxpath/ri/axes/UnionContext.java
+index 80e111e..bbf39b3 100644
+--- a/org/apache/commons/jxpath/ri/axes/UnionContext.java
++++ b/org/apache/commons/jxpath/ri/axes/UnionContext.java
+@@ -16,8 +16,7 @@
+  */
+ package org.apache.commons.jxpath.ri.axes;
+ 
+-import java.util.ArrayList;
+-import java.util.Iterator;
++import java.util.HashSet;
+ 
+ import org.apache.commons.jxpath.BasicNodeSet;
+ import org.apache.commons.jxpath.Pointer;
+@@ -48,23 +47,19 @@ public class UnionContext extends NodeSetContext {
+         if (!prepared) {
+             prepared = true;
+             BasicNodeSet nodeSet = (BasicNodeSet) getNodeSet();
+-            ArrayList pointers = new ArrayList();
++            HashSet set = new HashSet();
+             for (int i = 0; i < contexts.length; i++) {
+                 EvalContext ctx = (EvalContext) contexts[i];
+                 while (ctx.nextSet()) {
+                     while (ctx.nextNode()) {
+                         NodePointer ptr = ctx.getCurrentNodePointer();
+-                        if (!pointers.contains(ptr)) {
+-                            pointers.add(ptr);
++                        if (!set.contains(ptr)) {
++                            nodeSet.add(ptr);
++                            set.add(ptr);
+                         }
+                     }
+                 }
+             }
+-            sortPointers(pointers);
+-
+-            for (Iterator it = pointers.iterator(); it.hasNext();) {
+-                nodeSet.add((Pointer) it.next());
+-            }
+         }
+         return super.setPosition(position);
+     }
