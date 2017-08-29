@@ -26,6 +26,7 @@ wget -N http://homes.cs.washington.edu/~rjust/defects4j/download/defects4j-repos
 new=$($cmd)
 
 # Install additional repositories (separate from core defects4j)
+./get_commonscli.sh
 ./get_commonscodec.sh
 ./get_commonscsv.sh
 ./get_commonsjxpath.sh

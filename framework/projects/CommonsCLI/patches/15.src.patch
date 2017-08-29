@@ -1,0 +1,78 @@
+diff --git a/org/apache/commons/cli/PosixParser.java b/org/apache/commons/cli/PosixParser.java
+index 08a9280..1792c99 100644
+--- a/org/apache/commons/cli/PosixParser.java
++++ b/org/apache/commons/cli/PosixParser.java
+@@ -125,11 +125,13 @@ public class PosixParser extends Parser {
+             // single hyphen
+             else if ("-".equals(token))
+             {
+-                tokens.add(token);
++                processSingleHyphen(token);
+             }
+             else if (token.startsWith("-"))
+             {
+-                if (token.length() == 2)
++                int tokenLength = token.length();
++
++                if (tokenLength == 2)
+                 {
+                     processOptionToken(token, stopAtNonOption);
+                 }
+@@ -143,13 +145,16 @@ public class PosixParser extends Parser {
+                     burstToken(token, stopAtNonOption);
+                 }
+             }
+-            else if (stopAtNonOption)
+-            {
+-                process(token);
+-            }
+             else
+             {
+-                tokens.add(token);
++                if (stopAtNonOption)
++                {
++                    process(token);
++                }
++                else
++                {
++                    tokens.add(token);
++                }
+             }
+ 
+             gobble(iter);
+@@ -212,6 +217,17 @@ public class PosixParser extends Parser {
+     }
+ 
+     /**
++     * If it is a hyphen then add the hyphen directly to
++     * the processed tokens list.
++     *
++     * @param hyphen The hyphen token
++     */
++    private void processSingleHyphen(String hyphen)
++    {
++        tokens.add(hyphen);
++    }
++
++    /**
+      * <p>If an {@link Option} exists for <code>token</code> then
+      * set the current option and add the token to the processed 
+      * list.</p>
+@@ -226,15 +242,14 @@ public class PosixParser extends Parser {
+      */
+     private void processOptionToken(String token, boolean stopAtNonOption)
+     {
+-        if (options.hasOption(token))
++        if (this.options.hasOption(token))
+         {
+-            currentOption = options.getOption(token);
++            currentOption = this.options.getOption(token);
+             tokens.add(token);
+         }
+         else if (stopAtNonOption)
+         {
+             eatTheRest = true;
+-            tokens.add(token);
+         }
+     }
+ 

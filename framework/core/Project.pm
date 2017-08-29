@@ -84,6 +84,8 @@ name of the corresponding project.
 
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
 
+=item B<CommonsCLI> Commons CLI library (uses Vcs::Git as Vcs backend)
+
 =item B<CommonsCodec> Commons encoders and decoders (uses Vcs::Git as Vcs backend)
 
 =item B<CommonsCsv> Commons CSV (uses Vcs::Git as Vcs backend)

@@ -1,0 +1,104 @@
+diff --git a/java/org/apache/commons/cli/HelpFormatter.java b/java/org/apache/commons/cli/HelpFormatter.java
+index 4642f7c..81f7df7 100644
+--- a/java/org/apache/commons/cli/HelpFormatter.java
++++ b/java/org/apache/commons/cli/HelpFormatter.java
+@@ -347,7 +347,14 @@ public class HelpFormatter
+      */
+     public void setOptionComparator(Comparator<Option> comparator)
+     {
+-        this.optionComparator = comparator;
++        if (comparator == null)
++        {
++            this.optionComparator = new OptionComparator();
++        }
++        else
++        {
++            this.optionComparator = comparator;
++        }
+     }
+ 
+     /**
+@@ -539,17 +546,17 @@ public class HelpFormatter
+         // create a list for processed option groups
+         final Collection<OptionGroup> processedGroups = new ArrayList<OptionGroup>();
+ 
++        // temp variable
++        Option option;
++
+         List<Option> optList = new ArrayList<Option>(options.getOptions());
+-        if (getOptionComparator() != null)
+-        {
+-            Collections.sort(optList, getOptionComparator());
+-        }
++        Collections.sort(optList, getOptionComparator());
+         // iterate over the options
+         for (Iterator i = optList.iterator(); i.hasNext();)
+         {
+             // get the next Option
+-            Option option = (Option) i.next();
+-            
++            option = (Option) i.next();
++
+             // check if the option is part of an OptionGroup
+             OptionGroup group = options.getOptionGroup(option);
+ 
+@@ -604,10 +611,7 @@ public class HelpFormatter
+         }
+ 
+         List<Option> optList = new ArrayList<Option>(group.getOptions());
+-        if (getOptionComparator() != null)
+-        {
+-            Collections.sort(optList, getOptionComparator());
+-        }
++        Collections.sort(optList, getOptionComparator());
+         // for each option in the OptionGroup
+         for (Iterator i = optList.iterator(); i.hasNext();)
+         {
+@@ -753,18 +757,16 @@ public class HelpFormatter
+         // the longest opt string this list will be then used to 
+         // sort options ascending
+         int max = 0;
++        StringBuffer optBuf;
+         List<StringBuffer> prefixList = new ArrayList<StringBuffer>();
+         
+         List<Option> optList = options.helpOptions();
+         
+-        if (getOptionComparator() != null)
+-        {
+-            Collections.sort(optList, getOptionComparator());
+-        }
++        Collections.sort(optList, getOptionComparator());
+         
+         for (Option option : optList)
+         {
+-            StringBuffer optBuf = new StringBuffer();
++            optBuf = new StringBuffer();
+             
+             if (option.getOpt() == null)
+             {
+@@ -804,7 +806,7 @@ public class HelpFormatter
+         for (Iterator i = optList.iterator(); i.hasNext();)
+         {
+             Option option = (Option) i.next();
+-            StringBuffer optBuf = new StringBuffer(prefixList.get(x++).toString());
++            optBuf = new StringBuffer(prefixList.get(x++).toString());
+ 
+             if (optBuf.length() < max)
+             {
+diff --git a/java/org/apache/commons/cli/Options.java b/java/org/apache/commons/cli/Options.java
+index 778b2d2..8a3ea0f 100644
+--- a/java/org/apache/commons/cli/Options.java
++++ b/java/org/apache/commons/cli/Options.java
+@@ -50,10 +50,10 @@ public class Options implements Serializable
+     private static final long serialVersionUID = 1L;
+ 
+     /** a map of the options with the character key */
+-    private Map<String, Option> shortOpts = new LinkedHashMap<String, Option>();
++    private Map<String, Option> shortOpts = new HashMap<String, Option>();
+ 
+     /** a map of the options with the long key */
+-    private Map<String, Option> longOpts = new LinkedHashMap<String, Option>();
++    private Map<String, Option> longOpts = new HashMap<String, Option>();
+ 
+     /** a map of the required options */
+     private List<Object> requiredOpts = new ArrayList<Object>();

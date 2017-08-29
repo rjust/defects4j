@@ -12,6 +12,7 @@ Defects4J contains bugs from the following open-source projects:
 | Chart           | JFreechart                           |  26            |
 | Closure         | Closure compiler                     | 133            |
 | CommonsCodec    | Apache commons-encoders and decoders |  22            |  
+| CommonsCLI      | Apache commons-CLI library           |  24            |
 | CommonsCSV      | Apache commons-csv                   |  12            |
 | CommonsJXPath   | Apache commons-JXPath                |  14            |
 | Guava           | Guava library                        |   9            |
