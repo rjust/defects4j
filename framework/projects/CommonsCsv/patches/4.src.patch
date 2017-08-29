@@ -1,0 +1,40 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVFormat.java b/src/main/java/org/apache/commons/csv/CSVFormat.java
+index 5963edb..a6fde0a 100644
+--- a/src/main/java/org/apache/commons/csv/CSVFormat.java
++++ b/src/main/java/org/apache/commons/csv/CSVFormat.java
+@@ -605,10 +605,8 @@ public final class CSVFormat implements Serializable {
+      * @param out
+      *        the output
+      * @return a printer to an output
+-     * @throws IOException
+-     *         thrown if the optional header cannot be printed.
+      */
+-    public CSVPrinter print(final Appendable out) throws IOException {
++    public CSVPrinter print(final Appendable out) {
+         return new CSVPrinter(out, this);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/csv/CSVPrinter.java b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+index d2968b5..94d16d6 100644
+--- a/src/main/java/org/apache/commons/csv/CSVPrinter.java
++++ b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+@@ -58,18 +58,13 @@ public final class CSVPrinter implements Flushable, Closeable {
+      * @throws IllegalArgumentException
+      *         thrown if the parameters of the format are inconsistent or if either out or format are null.
+      */
+-    public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
++    public CSVPrinter(final Appendable out, final CSVFormat format) {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+ 
+         this.out = out;
+         this.format = format;
+         this.format.validate();
+-        // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+-        // It seems a pain to have to track whether the header has already been printed or not.
+-        if (format.getHeader() != null) {
+-            this.printRecord((Object[]) format.getHeader());
+-        }
+     }
+ 
+     // ======================================================

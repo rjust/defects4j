@@ -1,0 +1,85 @@
+diff --git a/src/main/java/org/jsoup/nodes/Element.java b/src/main/java/org/jsoup/nodes/Element.java
+index c07018e..cc3fd3c 100644
+--- a/src/main/java/org/jsoup/nodes/Element.java
++++ b/src/main/java/org/jsoup/nodes/Element.java
+@@ -1166,13 +1166,7 @@ public class Element extends Node {
+ 
+     @Override
+     public boolean equals(Object o) {
+-        if (this == o) return true;
+-        if (o == null || getClass() != o.getClass()) return false;
+-        if (!super.equals(o)) return false;
+-
+-        Element element = (Element) o;
+-
+-        return tag.equals(element.tag);
++        return this == o;
+     }
+ 
+     @Override
+@@ -1184,6 +1178,7 @@ public class Element extends Node {
+ 
+     @Override
+     public Element clone() {
+-        return (Element) super.clone();
++        Element clone = (Element) super.clone();
++        return clone;
+     }
+ }
+diff --git a/src/main/java/org/jsoup/nodes/Node.java b/src/main/java/org/jsoup/nodes/Node.java
+index 58fa0f7..6fdd69a 100644
+--- a/src/main/java/org/jsoup/nodes/Node.java
++++ b/src/main/java/org/jsoup/nodes/Node.java
+@@ -594,13 +594,9 @@ public abstract class Node implements Cloneable {
+      */
+     @Override
+     public boolean equals(Object o) {
+-        if (this == o) return true;
+-        if (o == null || getClass() != o.getClass()) return false;
++        // todo: have nodes hold a child index, compare against that and parent (not children)
+ 
+-        Node node = (Node) o;
+-
+-        if (childNodes != null ? !childNodes.equals(node.childNodes) : node.childNodes != null) return false;
+-        return !(attributes != null ? !attributes.equals(node.attributes) : node.attributes != null);
++        return this == o;
+     }
+ 
+     /**
+@@ -612,7 +608,8 @@ public abstract class Node implements Cloneable {
+      */
+     @Override
+     public int hashCode() {
+-        int result = childNodes != null ? childNodes.hashCode() : 0;
++        int result = parentNode != null ? parentNode.hashCode() : 0;
++        // not children, or will block stack as they go back up to parent)
+         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
+         return result;
+     }
+diff --git a/src/main/java/org/jsoup/nodes/TextNode.java b/src/main/java/org/jsoup/nodes/TextNode.java
+index e9055d4..2eebe31 100644
+--- a/src/main/java/org/jsoup/nodes/TextNode.java
++++ b/src/main/java/org/jsoup/nodes/TextNode.java
+@@ -172,22 +172,4 @@ public class TextNode extends Node {
+         ensureAttributes();
+         return super.absUrl(attributeKey);
+     }
+-
+-    @Override
+-    public boolean equals(Object o) {
+-        if (this == o) return true;
+-        if (o == null || getClass() != o.getClass()) return false;
+-        if (!super.equals(o)) return false;
+-
+-        TextNode textNode = (TextNode) o;
+-
+-        return !(text != null ? !text.equals(textNode.text) : textNode.text != null);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        int result = super.hashCode();
+-        result = 31 * result + (text != null ? text.hashCode() : 0);
+-        return result;
+-    }
+ }

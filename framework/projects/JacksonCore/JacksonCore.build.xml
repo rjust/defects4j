@@ -1,4 +1,4 @@
-<project name="Jackson-Core" basedir="${basedir}">
+<project name="JacksonCore" basedir="${basedir}">
 
     <property name="build.home" value="${basedir}" />
     <property name="test.src.home" value="${basedir}/src/test"/>
@@ -23,15 +23,13 @@
 
     <target name="compile" description="Compile the source code.">
         <exec dir="${basedir}" executable="/bin/bash">			
-            <arg value="mvn"/>
-            <arg line="compile -U"/>
+            <arg line="mvn compile -U"/>
         </exec>  
     </target>
     
     <target name="compile.tests" description="Compile the tests.">
        <exec dir="${basedir}" executable="/bin/bash">
-            <arg value="mvn"/>
-            <arg line ="test-compile -U"/>
+            <arg line ="mvn test-compile -U"/>
         </exec>
     </target>
 

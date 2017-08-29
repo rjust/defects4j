@@ -1,0 +1,49 @@
+diff --git a/src/main/java/org/jsoup/nodes/Attribute.java b/src/main/java/org/jsoup/nodes/Attribute.java
+index 38be823..8a879ea 100644
+--- a/src/main/java/org/jsoup/nodes/Attribute.java
++++ b/src/main/java/org/jsoup/nodes/Attribute.java
+@@ -29,10 +29,9 @@ public class Attribute implements Map.Entry<String, String>, Cloneable  {
+      * @see #createFromEncoded
+      */
+     public Attribute(String key, String value) {
+-        Validate.notNull(key);
++        Validate.notEmpty(key);
+         Validate.notNull(value);
+         this.key = key.trim();
+-        Validate.notEmpty(key); // trimming could potentially make empty, so validate here
+         this.value = value;
+     }
+ 
+diff --git a/src/main/java/org/jsoup/parser/Token.java b/src/main/java/org/jsoup/parser/Token.java
+index af51432..34baf19 100644
+--- a/src/main/java/org/jsoup/parser/Token.java
++++ b/src/main/java/org/jsoup/parser/Token.java
+@@ -102,19 +102,15 @@ abstract class Token {
+                 attributes = new Attributes();
+ 
+             if (pendingAttributeName != null) {
+-                // the tokeniser has skipped whitespace control chars, but trimming could collapse to empty for other control codes, so verify here
+-                pendingAttributeName = pendingAttributeName.trim();
+-                if (pendingAttributeName.length() > 0) {
+-                    Attribute attribute;
+-                    if (hasPendingAttributeValue)
+-                        attribute = new Attribute(pendingAttributeName,
+-                            pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
+-                    else if (hasEmptyAttributeValue)
+-                        attribute = new Attribute(pendingAttributeName, "");
+-                    else
+-                        attribute = new BooleanAttribute(pendingAttributeName);
+-                    attributes.put(attribute);
+-                }
++                Attribute attribute;
++                if (hasPendingAttributeValue)
++                    attribute = new Attribute(pendingAttributeName,
++                        pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString() : pendingAttributeValueS);
++                else if (hasEmptyAttributeValue)
++                    attribute = new Attribute(pendingAttributeName, "");
++                else
++                    attribute = new BooleanAttribute(pendingAttributeName);
++                attributes.put(attribute);
+             }
+             pendingAttributeName = null;
+             hasEmptyAttributeValue = false;

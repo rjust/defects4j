@@ -1,0 +1,13 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVFormatTest.java b/src/test/java/org/apache/commons/csv/CSVFormatTest.java
+index 73e3fba..e8e8aa3 100644
+--- a/src/test/java/org/apache/commons/csv/CSVFormatTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVFormatTest.java
+@@ -61,7 +61,7 @@ public class CSVFormatTest {
+         CSVFormat.DEFAULT.withDelimiter('!').withEscape('!').validate();
+     }
+ 
+-    @Test(expected = IllegalArgumentException.class)
++    @Test(expected = IllegalStateException.class)
+     public void testDuplicateHeaderElements() {
+         CSVFormat.DEFAULT.withHeader("A", "A").validate();
+     }

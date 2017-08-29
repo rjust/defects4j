@@ -1,0 +1,62 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/KeySerializers1679Test.java b/src/test/java/com/fasterxml/jackson/databind/ser/KeySerializers1679Test.java
+deleted file mode 100644
+index ea7e600..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/KeySerializers1679Test.java
++++ /dev/null
+@@ -1,25 +0,0 @@
+-package com.fasterxml.jackson.databind.ser;
+-
+-import java.util.*;
+-
+-import com.fasterxml.jackson.databind.*;
+-
+-public class KeySerializers1679Test extends BaseMapTest
+-{
+-    /*
+-    /**********************************************************
+-    /* Unit tests
+-    /**********************************************************
+-     */
+-
+-    private final ObjectMapper MAPPER = new ObjectMapper();
+-
+-    // [databind#1679]
+-    public void testRecursion1679() throws Exception
+-    {
+-        Map<Object, Object> objectMap = new HashMap<Object, Object>();
+-        objectMap.put(new Object(), "foo");
+-        String json = MAPPER.writeValueAsString(objectMap);
+-        assertNotNull(json);
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/failing/KeySerializers1679Test.java b/src/test/java/com/fasterxml/jackson/failing/KeySerializers1679Test.java
+new file mode 100644
+index 0000000..095be85
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/failing/KeySerializers1679Test.java
+@@ -0,0 +1,25 @@
++package com.fasterxml.jackson.failing;
++
++import java.util.*;
++
++import com.fasterxml.jackson.databind.*;
++
++public class KeySerializers1679Test extends BaseMapTest
++{
++    /*
++    /**********************************************************
++    /* Unit tests
++    /**********************************************************
++     */
++
++    private final ObjectMapper MAPPER = new ObjectMapper();
++
++    // [databind#1679]
++    public void testRecursion1679() throws Exception
++    {
++        Map<Object, Object> objectMap = new HashMap<Object, Object>();
++        objectMap.put(new Object(), new Object());
++        String json = MAPPER.writeValueAsString(objectMap);
++        assertEquals("{}", json);
++    }
++}

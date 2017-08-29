@@ -1,0 +1,53 @@
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/VersionInfoTest.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/VersionInfoTest.java
+index 7b67820..83f2a06 100644
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/VersionInfoTest.java
++++ b/src/test/java/com/fasterxml/jackson/dataformat/xml/VersionInfoTest.java
+@@ -1,16 +1,14 @@
+ package com.fasterxml.jackson.dataformat.xml;
+ 
++import java.io.*;
++
+ import com.fasterxml.jackson.core.Version;
+ import com.fasterxml.jackson.core.Versioned;
+-import com.fasterxml.jackson.databind.SerializationConfig;
+-import com.fasterxml.jackson.databind.SerializationFeature;
++import com.fasterxml.jackson.dataformat.xml.PackageVersion;
++import com.fasterxml.jackson.dataformat.xml.XmlFactory;
++import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.ByteArrayOutputStream;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+-
+ public class VersionInfoTest extends XmlTestBase
+ {
+     public void testMapperVersions()
+@@ -26,8 +24,7 @@ public class VersionInfoTest extends XmlTestBase
+         XmlMapper mapper1 = new XmlMapper();
+         mapper1.setXMLTextElementName("foo");
+         mapper1.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+-        mapper1.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+-
++        
+         XmlMapper mapper2 = mapper1.copy();
+         assertNotSame(mapper1, mapper2);
+         XmlFactory xf1 = mapper1.getFactory();
+@@ -39,16 +36,6 @@ public class VersionInfoTest extends XmlTestBase
+         assertEquals(xf1.getXMLTextElementName(), xf2.getXMLTextElementName());
+         assertEquals(xf1._xmlGeneratorFeatures, xf2._xmlGeneratorFeatures);
+         assertEquals(xf1._xmlParserFeatures, xf2._xmlParserFeatures);
+-
+-        // and [Issue#233]
+-        SerializationConfig sc1 = mapper1.getSerializationConfig();
+-        SerializationConfig sc2 = mapper2.getSerializationConfig();
+-        assertNotSame(sc1, sc2);
+-        assertEquals(
+-            "serialization features did not get copied",
+-            sc1.getSerializationFeatures(),
+-            sc2.getSerializationFeatures()
+-        );
+     }
+ 
+     // Another test for [Issue#48]

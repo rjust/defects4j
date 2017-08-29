@@ -5,7 +5,7 @@
     <property name="source.home" value="${basedir}/guava/src" /> 
     <property name="test.home" value="${basedir}/guava-tests/target/test-classes"/>
     <property name="classes.dir" value="${basedir}/guava/target/classes"/>
-    <property name="testlib.target" value="${basedir}/guava-testlib/target/classes"/>
+    <property name="testlib.home" value="${basedir}/guava-testlib/target/classes"/>
 	
     <path id="compile.classpath">
         <pathelement path="${classes.dir}"/>
@@ -19,7 +19,7 @@
         <pathelement path="${classes.dir}"/>
         <pathelement path="${test.src.home}"/>		
         <pathelement path="${test.home}"/>
-        <pathelement path="${testlib.target}"/>
+        <pathelement path="${testlib.home}"/>
         <fileset dir="${d4j.home}/framework/projects/Guava/lib/">
             <include name="**/*.jar" />
         </fileset>

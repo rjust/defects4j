@@ -1,0 +1,18 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVRecordTest.java b/src/test/java/org/apache/commons/csv/CSVRecordTest.java
+index 0e40ae4..9de28ee 100644
+--- a/src/test/java/org/apache/commons/csv/CSVRecordTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVRecordTest.java
+@@ -160,13 +160,6 @@ public class CSVRecordTest {
+         this.validateMap(map, true);
+     }
+ 
+-    @Test
+-    public void testToMapWithShortRecord() throws Exception {
+-       final CSVParser parser =  CSVParser.parse("a,b", CSVFormat.DEFAULT.withHeader("A", "B", "C"));
+-       final CSVRecord shortRec = parser.iterator().next();
+-       shortRec.toMap();
+-    }
+-    
+     private void validateMap(final Map<String, String> map, final boolean allowsNulls) {
+         assertTrue(map.containsKey("first"));
+         assertTrue(map.containsKey("second"));
