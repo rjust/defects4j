@@ -1,0 +1,85 @@
+diff --git a/java/org/apache/commons/codec/binary/Base32Test.java b/java/org/apache/commons/codec/binary/Base32Test.java
+index 94bba52..c081d10 100644
+--- a/java/org/apache/commons/codec/binary/Base32Test.java
++++ b/java/org/apache/commons/codec/binary/Base32Test.java
+@@ -59,16 +59,6 @@ public class Base32Test {
+         {"foobar" ,"MZXW6YTBOI======\r\n"},
+     };
+ 
+-    private static final String [][] BASE32_PAD_TEST_CASES = { // RFC 4648
+-        {""       ,""},
+-        {"f"      ,"MY%%%%%%"},
+-        {"fo"     ,"MZXQ%%%%"},
+-        {"foo"    ,"MZXW6%%%"},
+-        {"foob"   ,"MZXW6YQ%"},
+-        {"fooba"  ,"MZXW6YTB"},
+-        {"foobar" ,"MZXW6YTBOI%%%%%%"},
+-    };
+-    
+     @Test
+     public void testBase32Samples() throws Exception {
+         final Base32 codec = new Base32();
+@@ -142,13 +132,4 @@ public class Base32Test {
+             //assertEquals(b[0],codec.decode(b[1]));
+         }
+     }
+-    
+-    @Test
+-    public void testBase32SamplesNonDefaultPadding() throws Exception {
+-        final Base32 codec = new Base32((byte)0x25); // '%' <=> 0x25
+-        
+-        for (final String[] element : BASE32_PAD_TEST_CASES) {
+-                assertEquals(element[1], codec.encodeAsString(element[0].getBytes(Charsets.UTF_8)));
+-        }
+-    }
+ }
+diff --git a/java/org/apache/commons/codec/binary/BaseNCodecTest.java b/java/org/apache/commons/codec/binary/BaseNCodecTest.java
+index 253d9cf..4cfaa53 100644
+--- a/java/org/apache/commons/codec/binary/BaseNCodecTest.java
++++ b/java/org/apache/commons/codec/binary/BaseNCodecTest.java
+@@ -21,7 +21,6 @@ package org.apache.commons.codec.binary;
+ import static org.junit.Assert.assertFalse;
+ import static org.junit.Assert.assertNotNull;
+ import static org.junit.Assert.assertTrue;
+-import static org.junit.Assert.assertEquals;
+ 
+ import org.junit.Before;
+ import org.junit.Test;
+@@ -159,36 +158,11 @@ public class BaseNCodecTest {
+         assertTrue(codec.containsAlphabetOrPad("OK".getBytes()));
+         assertTrue(codec.containsAlphabetOrPad("OK ".getBytes()));
+         assertFalse(codec.containsAlphabetOrPad("ok ".getBytes()));
+-        assertTrue(codec.containsAlphabetOrPad(new byte[]{codec.pad}));
++        assertTrue(codec.containsAlphabetOrPad(new byte[]{codec.PAD}));
+     }
+ 
+ //    @Test
+ //    public void testGetEncodedLength() {
+ //        fail("Not yet implemented");
+ //    }
+-    
+-    @Test
+-    public void testProvidePaddingByte() {
+-        // Given
+-    	codec = new BaseNCodec(0, 0, 0, 0, (byte)0x25) {
+-            @Override
+-            protected boolean isInAlphabet(final byte b) {
+-                return b=='O' || b == 'K'; // allow OK
+-            }
+-
+-            @Override
+-            void encode(final byte[] pArray, final int i, final int length, final Context context) {
+-            }
+-
+-            @Override
+-            void decode(final byte[] pArray, final int i, final int length, final Context context) {
+-            }
+-        };
+-        
+-        // When
+-        byte actualPaddingByte = codec.pad;
+-        
+-        // Then
+-        assertEquals(0x25, actualPaddingByte);
+-    }
+ }

@@ -1,0 +1,20 @@
+diff --git a/org/apache/commons/codec/language/RefinedSoundexTest.java b/org/apache/commons/codec/language/RefinedSoundexTest.java
+index c827cf3..52bc861 100755
+--- a/org/apache/commons/codec/language/RefinedSoundexTest.java
++++ b/org/apache/commons/codec/language/RefinedSoundexTest.java
+@@ -104,13 +104,10 @@ public class RefinedSoundexTest extends StringEncoderAbstractTest {
+         assertEquals("T60", this.getEncoder().encode("the"));
+         assertEquals("L7050", this.getEncoder().encode("lazy"));
+         assertEquals("D6043", this.getEncoder().encode("dogs"));
+-
+-        // Testing CODEC-56
+-        assertEquals("D6043", RefinedSoundex.US_ENGLISH.encode("dogs"));
+     }
+ 
+ 	public void testGetMappingCodeNonLetter() {
+ 		char code = this.getEncoder().getMappingCode('#');
+ 		assertEquals("Code does not equals zero", 0, code);
+ 	}
+-}
++}
+\ No newline at end of file
