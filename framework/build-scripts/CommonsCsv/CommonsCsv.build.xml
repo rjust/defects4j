@@ -11,7 +11,6 @@
     <property name="build.home" value="${basedir}" />
     <property name="test.src.home"   value="${basedir}/src/test"/>
     <property name="source.home" value="${basedir}/src/main"/>
-    <!-- <property name="dir" value="${basedir}/src"/> -->
     <property name="test.home" value="${basedir}/target/test-classes"/>
     <property name="classes.dir" value="${basedir}/target/classes"/>
 	
@@ -23,7 +22,6 @@
         <pathelement path="${junit.jar}" />
         <pathelement path="${classes.dir}"/>
         <pathelement path="${test.home}"/>
-        <!-- <pathelement path="${dir}"/> -->
         <pathelement path="${formatter_cp}"/>
         <pathelement path="${test.src.home}"/>
         <fileset dir="${script.dir}/build-scripts/CommonsCsv/lib">
