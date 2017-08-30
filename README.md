@@ -5,13 +5,16 @@ advancing software testing research.
 
 The projects
 ---------------
-Defects4J contains 537 bugs from the following open-source projects:
+Defects4J contains 596 bugs from the following open-source projects:
 
 | Identifier      | Project name                         | Number of bugs |
 |-----------------|--------------------------------------|----------------|
 | Chart           | JFreechart                           |  26            |
 | Closure         | Closure compiler                     | 133            |
+| CommonsCodec    | Apache commons-encoders and decoders |  22            |  
+| CommonsCLI      | Apache commons-CLI library           |  24            |
 | CommonsCSV      | Apache commons-csv                   |  12            |
+| CommonsJXPath   | Apache commons-JXPath                |  14            |
 | Guava           | Guava library                        |   9            |
 | JacksonCore     | Jackson core module                  |  13            |
 | JacksonDatabind | Jackson data binding utilities       |  39            |
@@ -56,9 +59,9 @@ Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, export the `TZ`
 environment variable accordingly.
 
-Multiple Defects4J projects require the environment variable M2_HOME to be set
+Multiple Defects4J projects require the environment variable `M2_HOME` to be set
 to the location of the Maven installation. On most Linux systems, the default
-installation location is /usr/share/maven.
+installation location is `/usr/share/maven`.
 
 Getting started
 ----------------

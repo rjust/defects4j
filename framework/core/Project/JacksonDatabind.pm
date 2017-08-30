@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::JacksonDatabind.pm -- L<Project> submodule for Jackson core library.
+Project::JacksonDatabind.pm -- L<Project> submodule for Jackson data bindings.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-Jackson core project.
+JacksonDatabind project.
 
 =cut
 package Project::JacksonDatabind;

@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::CommonsCsv.pm -- L<Project> submodule for Jackson core library.
+Project::CommonsCsv.pm -- L<Project> submodule for Apache Commons CSV utilities.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-Jackson core project.
+CommonsCSV project.
 
 =cut
 package Project::CommonsCsv;

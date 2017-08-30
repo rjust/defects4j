@@ -1,0 +1,54 @@
+diff --git a/src/main/java/org/apache/commons/cli/DefaultParser.java b/src/main/java/org/apache/commons/cli/DefaultParser.java
+index 2f957b1..f823081 100644
+--- a/src/main/java/org/apache/commons/cli/DefaultParser.java
++++ b/src/main/java/org/apache/commons/cli/DefaultParser.java
+@@ -147,18 +147,10 @@ public class DefaultParser implements CommandLineParser
+         {
+             String option = e.nextElement().toString();
+             
+-            Option opt = options.getOption(option);
+-            if (opt == null)
+-            {
+-                throw new UnrecognizedOptionException("Default option wasn't defined", option);
+-            }
+-            
+-            // if the option is part of a group, check if another option of the group has been selected
+-            OptionGroup group = options.getOptionGroup(opt);
+-            boolean selected = group != null && group.getSelected() != null;
+-            
+-            if (!cmd.hasOption(option) && !selected)
++            if (!cmd.hasOption(option))
+             {
++                Option opt = options.getOption(option);
++                
+                 // get the value from the properties
+                 String value = properties.getProperty(option);
+                 
+diff --git a/src/main/java/org/apache/commons/cli/Parser.java b/src/main/java/org/apache/commons/cli/Parser.java
+index ba4b6bc..eecfb82 100644
+--- a/src/main/java/org/apache/commons/cli/Parser.java
++++ b/src/main/java/org/apache/commons/cli/Parser.java
+@@ -259,19 +259,11 @@ public abstract class Parser implements CommandLineParser
+         for (Enumeration e = properties.propertyNames(); e.hasMoreElements();)
+         {
+             String option = e.nextElement().toString();
+-            
+-            Option opt = options.getOption(option);
+-            if (opt == null)
+-            {
+-                throw new UnrecognizedOptionException("Default option wasn't defined", option);
+-            }
+-            
+-            // if the option is part of a group, check if another option of the group has been selected
+-            OptionGroup group = options.getOptionGroup(opt);
+-            boolean selected = group != null && group.getSelected() != null;
+-            
+-            if (!cmd.hasOption(option) && !selected)
++
++            if (!cmd.hasOption(option))
+             {
++                Option opt = getOptions().getOption(option);
++
+                 // get the value from the properties instance
+                 String value = properties.getProperty(option);
+ 

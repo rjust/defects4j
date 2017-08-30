@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::Jsoup.pm -- L<Project> submodule for Jackson core library.
+Project::Jsoup.pm -- L<Project> submodule for Jsoup HTML parser.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-Jackson core project.
+Jsoup project.
 
 =cut
 package Project::Jsoup;

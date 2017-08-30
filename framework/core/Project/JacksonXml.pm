@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::JacksonXml.pm -- L<Project> submodule for Jackson core library.
+Project::JacksonXml.pm -- L<Project> submodule for Jackson XML utilities.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-Jackson core project.
+JacksonXML project.
 
 =cut
 package Project::JacksonXml;

@@ -1,0 +1,28 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+index 69b6c39..591ee48 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+@@ -464,15 +464,6 @@ public abstract class XMLModelTestCase extends JXPathTestCase {
+             "/vendor[1]/location[1]/address[1]/street[1]");
+     }
+ 
+-    public void testAxisPreceding() {
+-        // preceding::
+-        assertXPathPointer(
+-                context,
+-                "//location[2]/preceding-sibling::location//street",
+-        "/vendor[1]/location[1]/address[1]/street[1]");
+-        assertXPathPointer(context, "//location[2]/preceding::node()[1]", "/vendor[1]/location[1]/employeeCount[1]");
+-    }
+-
+     public void testAxisAttribute() {
+         // attribute::
+         assertXPathValue(context, "vendor/location/@id", "100");
+@@ -639,7 +630,6 @@ public abstract class XMLModelTestCase extends JXPathTestCase {
+             context,
+             "//location/following::price:sale/saleEnds",
+             "never");
+-        assertXPathPointer(context, "//location[2]/following::node()[1]", "/vendor[1]/product[1]");
+     }
+ 
+     public void testAxisSelf() {
