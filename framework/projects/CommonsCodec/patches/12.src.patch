@@ -1,0 +1,116 @@
+diff --git a/src/java/org/apache/commons/codec/binary/Base64.java b/src/java/org/apache/commons/codec/binary/Base64.java
+index 2521c27..e3dbdc5 100644
+--- a/src/java/org/apache/commons/codec/binary/Base64.java
++++ b/src/java/org/apache/commons/codec/binary/Base64.java
+@@ -406,9 +406,15 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+     int readResults(byte[] b, int bPos, int bAvail) {
+         if (buffer != null) {
+             int len = Math.min(avail(), bAvail);
+-            System.arraycopy(buffer, readPos, b, bPos, len);
+-            readPos += len;
+-            if (readPos >= pos) {
++            if (buffer != b) {
++                System.arraycopy(buffer, readPos, b, bPos, len);
++                readPos += len;
++                if (readPos >= pos) {
++                    buffer = null;
++                }
++            } else {
++                // Re-using the original consumer's output array is only
++                // allowed for one round.
+                 buffer = null;
+             }
+             return len;
+@@ -417,6 +423,27 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+     }
+ 
+     /**
++     * Sets the streaming buffer. This is a small optimization where we try to buffer directly to the consumer's output
++     * array for one round (if the consumer calls this method first) instead of starting our own buffer.
++     * 
++     * @param out
++     *            byte[] array to buffer directly to.
++     * @param outPos
++     *            Position to start buffering into.
++     * @param outAvail
++     *            Amount of bytes available for direct buffering.
++     */
++    void setInitialBuffer(byte[] out, int outPos, int outAvail) {
++        // We can re-use consumer's original output array under
++        // special circumstances, saving on some System.arraycopy().
++        if (out != null && out.length == outAvail) {
++            buffer = out;
++            pos = outPos;
++            readPos = outPos;
++        }
++    }
++
++    /**
+      * <p>
+      * Encodes all of the provided data, starting at inPos, for inAvail bytes. Must be called at least twice: once with
+      * the data to encode, and once with inAvail set to "-1" to alert encoder that EOF has been reached, so flush last
+@@ -466,10 +493,7 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+                     }
+                     break;
+             }
+-            // Don't want to append the CRLF two times in a row, so make sure previous
+-            // character is not from CRLF!
+-            byte b = lineSeparator[lineSeparator.length - 1];
+-            if (lineLength > 0 && pos > 0 && buffer[pos-1] != b) {
++            if (lineLength > 0 && pos > 0) {
+                 System.arraycopy(lineSeparator, 0, buffer, pos, lineSeparator.length);
+                 pos += lineSeparator.length;
+             }
+@@ -727,6 +751,9 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+         if (pArray == null || pArray.length == 0) {
+             return pArray;
+         }
++        long len = (pArray.length * 3) / 4;
++        byte[] buf = new byte[(int) len];
++        setInitialBuffer(buf, 0, buf.length);
+         decode(pArray, 0, pArray.length);
+         decode(pArray, 0, -1); // Notify decoder of EOF.
+         byte[] result = new byte[pos];
+@@ -912,11 +939,23 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+         if (pArray == null || pArray.length == 0) {
+             return pArray;
+         }
++        long len = getEncodeLength(pArray, lineLength, lineSeparator);
++        byte[] buf = new byte[(int) len];
++        setInitialBuffer(buf, 0, buf.length);
+         encode(pArray, 0, pArray.length);
+         encode(pArray, 0, -1); // Notify encoder of EOF.
+-        byte[] buf = new byte[pos - readPos];
+-        readResults(buf, 0, buf.length);
+-        return buf;
++        // Encoder might have resized, even though it was unnecessary.
++        if (buffer != buf) {
++            readResults(buf, 0, buf.length);
++        }
++        // In URL-SAFE mode we skip the padding characters, so sometimes our
++        // final length is a bit smaller.
++        if (isUrlSafe() && pos < buf.length) {
++            byte[] smallerBuf = new byte[pos];
++            System.arraycopy(buf, 0, smallerBuf, 0, pos);
++            buf = smallerBuf;
++        }
++        return buf;        
+     }
+ 
+     /**
+diff --git a/src/java/org/apache/commons/codec/binary/Base64InputStream.java b/src/java/org/apache/commons/codec/binary/Base64InputStream.java
+index ad006f2..479638b 100644
+--- a/src/java/org/apache/commons/codec/binary/Base64InputStream.java
++++ b/src/java/org/apache/commons/codec/binary/Base64InputStream.java
+@@ -166,6 +166,11 @@ public class Base64InputStream extends FilterInputStream {
+                 if (!base64.hasData()) {
+                     byte[] buf = new byte[doEncode ? 4096 : 8192];
+                     int c = in.read(buf);
++                    // A little optimization to avoid System.arraycopy()
++                    // when possible.
++                    if (c > 0 && b.length == len) {
++                        base64.setInitialBuffer(b, offset, len);
++                    }
+                     if (doEncode) {
+                         base64.encode(buf, 0, c);
+                     } else {

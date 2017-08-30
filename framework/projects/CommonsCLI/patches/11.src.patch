@@ -1,0 +1,51 @@
+diff --git a/src/java/org/apache/commons/cli/OptionBuilder.java b/src/java/org/apache/commons/cli/OptionBuilder.java
+index 60b4967..83e0299 100644
+--- a/src/java/org/apache/commons/cli/OptionBuilder.java
++++ b/src/java/org/apache/commons/cli/OptionBuilder.java
+@@ -326,7 +326,6 @@ public final class OptionBuilder
+     {
+         if (longopt == null)
+         {
+-            OptionBuilder.reset();
+             throw new IllegalArgumentException("must specify longopt");
+         }
+ 
+@@ -345,23 +344,21 @@ public final class OptionBuilder
+      */
+     public static Option create(String opt) throws IllegalArgumentException
+     {
+-        Option option = null;
+-        try {
+-            // create the option
+-            option = new Option(opt, description);
+-
+-            // set the option properties
+-            option.setLongOpt(longopt);
+-            option.setRequired(required);
+-            option.setOptionalArg(optionalArg);
+-            option.setArgs(numberOfArgs);
+-            option.setType(type);
+-            option.setValueSeparator(valuesep);
+-            option.setArgName(argName);
+-        } finally {
+-            // reset the OptionBuilder properties
+-            OptionBuilder.reset();
+-        }
++        // create the option
++        Option option = new Option(opt, description);
++
++        // set the option properties
++        option.setLongOpt(longopt);
++        option.setRequired(required);
++        option.setOptionalArg(optionalArg);
++        option.setArgs(numberOfArgs);
++        option.setType(type);
++        option.setValueSeparator(valuesep);
++        option.setArgName(argName);
++
++
++        // reset the OptionBuilder properties
++        OptionBuilder.reset();
+ 
+         // return the Option instance
+         return option;

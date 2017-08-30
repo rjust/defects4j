@@ -1,0 +1,21 @@
+diff --git a/src/main/java/org/jsoup/parser/TokenQueue.java b/src/main/java/org/jsoup/parser/TokenQueue.java
+index 47947fa..269a755 100644
+--- a/src/main/java/org/jsoup/parser/TokenQueue.java
++++ b/src/main/java/org/jsoup/parser/TokenQueue.java
+@@ -262,16 +262,11 @@ public class TokenQueue {
+         int end = -1;
+         int depth = 0;
+         char last = 0;
+-        boolean inQuote = false;
+ 
+         do {
+             if (isEmpty()) break;
+             Character c = consume();
+             if (last == 0 || last != ESC) {
+-                if (c.equals('\'') || c.equals('"') && c != open)
+-                    inQuote = !inQuote;
+-                if (inQuote)
+-                    continue;
+                 if (c.equals(open)) {
+                     depth++;
+                     if (start == -1)

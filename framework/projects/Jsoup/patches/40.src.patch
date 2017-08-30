@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/jsoup/safety/Cleaner.java b/src/main/java/org/jsoup/safety/Cleaner.java
+index 8110836..eda67df 100644
+--- a/src/main/java/org/jsoup/safety/Cleaner.java
++++ b/src/main/java/org/jsoup/safety/Cleaner.java
+@@ -40,8 +40,7 @@ public class Cleaner {
+         Validate.notNull(dirtyDocument);
+ 
+         Document clean = Document.createShell(dirtyDocument.baseUri());
+-        if (dirtyDocument.body() != null) // frameset documents won't have a body. the clean doc will have empty body.
+-            copySafeNodes(dirtyDocument.body(), clean.body());
++        copySafeNodes(dirtyDocument.body(), clean.body());
+ 
+         return clean;
+     }

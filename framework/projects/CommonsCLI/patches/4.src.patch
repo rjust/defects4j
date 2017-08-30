@@ -1,0 +1,32 @@
+diff --git a/src/main/java/org/apache/commons/cli/HelpFormatter.java b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+index 7d8a901..8731b3b 100644
+--- a/src/main/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+@@ -901,8 +901,8 @@ public class HelpFormatter
+      */
+     protected int findWrapPos(String text, int width, int startPos)
+     {
+-        int pos;
+-        
++        int pos = -1;
++
+         // the line ends before the max wrap pos or a new line char found
+         if (((pos = text.indexOf('\n', startPos)) != -1 && pos <= width)
+                 || ((pos = text.indexOf('\t', startPos)) != -1 && pos <= width))
+@@ -934,8 +934,14 @@ public class HelpFormatter
+         
+         // if we didn't find one, simply chop at startPos+width
+         pos = startPos + width;
+-        
+-        return pos == text.length() ? -1 : pos;
++
++        while ((pos <= text.length()) && ((c = text.charAt(pos)) != ' ')
++               && (c != '\n') && (c != '\r'))
++        {
++            ++pos;
++        }
++
++        return (pos == text.length()) ? (-1) : pos;
+     }
+ 
+     /**

@@ -1,0 +1,151 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
+index 45d6ca4..92dd52b 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
+@@ -60,16 +60,8 @@ public class CollectionLikeType extends TypeBase
+      */
+     @Deprecated // since 2.7
+     public static CollectionLikeType construct(Class<?> rawType, JavaType elemT) {
+-        // First: may need to fabricate TypeBindings (needed for refining into
+-        // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 1)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, elemT);
+-        }
+-        return new CollectionLikeType(rawType, bindings,
++        return new CollectionLikeType(rawType, null, 
++                // !!! TODO: wrong, probably has super-types, but:
+                 _bogusSuperClass(rawType), null,
+                 elemT, null, null, false);
+     }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
+index e0a7856..e6bed91 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
+@@ -46,16 +46,8 @@ public final class CollectionType
+      */
+     @Deprecated // since 2.7
+     public static CollectionType construct(Class<?> rawType, JavaType elemT) {
+-        // First: may need to fabricate TypeBindings (needed for refining into
+-        // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 1)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, elemT);
+-        }
+-        return new CollectionType(rawType, bindings,
++        // nominally component types will be just Object.class
++        return new CollectionType(rawType, null,
+                 // !!! TODO: Wrong, does have supertypes, but:
+                 _bogusSuperClass(rawType), null, elemT,
+                 null, null, false);
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
+index b8d5ea4..6835004 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
+@@ -68,21 +68,10 @@ public class MapLikeType extends TypeBase {
+                 "Can not upgrade from an instance of " + baseType.getClass());
+     }
+ 
+-    @Deprecated
+-    // since 2.7; remove from 2.8
+-    public static MapLikeType construct(Class<?> rawType, JavaType keyT,
+-            JavaType valueT) {
+-        // First: may need to fabricate TypeBindings (needed for refining into
+-        // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 2)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, keyT, valueT);
+-        }
+-        return new MapLikeType(rawType, bindings, _bogusSuperClass(rawType),
+-                null, keyT, valueT, null, null, false);
++    @Deprecated // since 2.7
++    public static MapLikeType construct(Class<?> rawType, JavaType keyT, JavaType valueT) {
++        return new MapLikeType(rawType, null, _bogusSuperClass(rawType), null,
++                keyT, valueT, null, null, false);
+     }
+ 
+     @Deprecated
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
+index e71abb6..ab861d6 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
+@@ -41,19 +41,9 @@ public final class MapType extends MapLikeType
+     }
+     
+     @Deprecated // since 2.7
+-    public static MapType construct(Class<?> rawType, JavaType keyT, JavaType valueT)
+-    {
+-        // First: may need to fabricate TypeBindings (needed for refining into
+-        // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 2)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, keyT, valueT);
+-        }
++    public static MapType construct(Class<?> rawType, JavaType keyT, JavaType valueT) {
+         // !!! TODO: Wrong, does have supertypes
+-        return new MapType(rawType, bindings, _bogusSuperClass(rawType), null,
++        return new MapType(rawType, null, _bogusSuperClass(rawType), null,
+                 keyT, valueT, null, null, false);
+     }
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+index 1174710..3b05e34 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+@@ -113,9 +113,9 @@ public class SimpleType // note: until 2.6 was final
+         if (cls.isArray()) {
+             throw new IllegalArgumentException("Can not construct SimpleType for an array (class: "+cls.getName()+")");
+         }
+-        TypeBindings b = TypeBindings.emptyBindings();
+-        return new SimpleType(cls, b,
+-                _buildSuperClass(cls.getSuperclass(), b), null, null, null, false);
++        return new SimpleType(cls, TypeBindings.emptyBindings(),
++                // 18-Oct-2015, tatu: Should be ok to pass very minimal supertype info?
++                _bogusSuperClass(cls), null, null, null, false);
+     }
+ 
+     @Override
+@@ -239,31 +239,6 @@ public class SimpleType // note: until 2.6 was final
+ 
+     /*
+     /**********************************************************
+-    /* Internal methods
+-    /**********************************************************
+-     */
+-
+-    /**
+-     * Helper method we need to recursively build skeletal representations
+-     * of superclasses.
+-     * 
+-     * @since 2.7 -- remove when not needed (2.8?)
+-     */
+-    private static JavaType _buildSuperClass(Class<?> superClass, TypeBindings b)
+-    {
+-        if (superClass == null) {
+-            return null;
+-        }
+-        if (superClass == Object.class) {
+-            return TypeFactory.unknownType();
+-        }
+-        JavaType superSuper = _buildSuperClass(superClass.getSuperclass(), b);
+-        return new SimpleType(superClass, b,
+-                superSuper, null, null, null, false);
+-    }
+-
+-    /*
+-    /**********************************************************
+     /* Standard methods
+     /**********************************************************
+      */

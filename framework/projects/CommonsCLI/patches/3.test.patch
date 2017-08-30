@@ -1,0 +1,31 @@
+diff --git a/src/test/java/org/apache/commons/cli/HelpFormatterTest.java b/src/test/java/org/apache/commons/cli/HelpFormatterTest.java
+index 02a6adf..562c829 100644
+--- a/src/test/java/org/apache/commons/cli/HelpFormatterTest.java
++++ b/src/test/java/org/apache/commons/cli/HelpFormatterTest.java
+@@ -428,26 +428,6 @@ public class HelpFormatterTest extends TestCase
+                 , out.toString());
+     }
+ 
+-    public void testIndentedHeaderAndFooter()
+-    {
+-        // related to CLI-207
+-        Options options = new Options();
+-        HelpFormatter formatter = new HelpFormatter();
+-        String header = "  Header1\n  Header2";
+-        String footer = "  Footer1\n  Footer2";
+-        StringWriter out = new StringWriter();
+-        formatter.printHelp(new PrintWriter(out), 80, "foobar", header, options, 2, 2, footer, true);
+-
+-        assertEquals(
+-                "usage: foobar" + EOL +
+-                "  Header1" + EOL +
+-                "  Header2" + EOL +
+-                "" + EOL +
+-                "  Footer1" + EOL +
+-                "  Footer2" + EOL
+-                , out.toString());
+-    }
+-
+     public void testOptionWithoutShortFormat()
+     {
+         // related to Bugzilla #19383 (CLI-67)

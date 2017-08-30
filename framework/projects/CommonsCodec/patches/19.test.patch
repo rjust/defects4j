@@ -1,0 +1,146 @@
+diff --git a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+index 72a147d..47eef81 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+@@ -77,12 +77,12 @@ public class Base64InputStreamTest extends TestCase {
+         testByChunk(encoded, decoded, 76, CRLF);
+ 
+         // OpenSSL interop test.
+-        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED_64_CHARS_PER_LINE);
++        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED);
+         decoded = Base64TestData.DECODED;
+         testByChunk(encoded, decoded, 64, LF);
+ 
+         // Single Line test.
+-        String singleLine = Base64TestData.ENCODED_64_CHARS_PER_LINE.replaceAll("\n", "");
++        String singleLine = Base64TestData.ENCODED.replaceAll("\n", "");
+         encoded = StringBytesUtils.getBytesUtf8(singleLine);
+         decoded = Base64TestData.DECODED;
+         testByChunk(encoded, decoded, 0, LF);
+@@ -114,12 +114,12 @@ public class Base64InputStreamTest extends TestCase {
+         testByteByByte(encoded, decoded, 76, CRLF);
+ 
+         // OpenSSL interop test.
+-        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED_64_CHARS_PER_LINE);
++        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED);
+         decoded = Base64TestData.DECODED;
+         testByteByByte(encoded, decoded, 64, LF);
+ 
+         // Single Line test.
+-        String singleLine = Base64TestData.ENCODED_64_CHARS_PER_LINE.replaceAll("\n", "");
++        String singleLine = Base64TestData.ENCODED.replaceAll("\n", "");
+         encoded = StringBytesUtils.getBytesUtf8(singleLine);
+         decoded = Base64TestData.DECODED;
+         testByteByByte(encoded, decoded, 0, LF);
+diff --git a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+index 83db86e..3370468 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+@@ -77,12 +77,12 @@ public class Base64OutputStreamTest extends TestCase {
+         testByChunk(encoded, decoded, 76, CRLF);
+ 
+         // OpenSSL interop test.
+-        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED_64_CHARS_PER_LINE);
++        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED);
+         decoded = Base64TestData.DECODED;
+         testByChunk(encoded, decoded, 64, LF);
+ 
+         // Single Line test.
+-        String singleLine = Base64TestData.ENCODED_64_CHARS_PER_LINE.replaceAll("\n", "");
++        String singleLine = Base64TestData.ENCODED.replaceAll("\n", "");
+         encoded = StringBytesUtils.getBytesUtf8(singleLine);
+         decoded = Base64TestData.DECODED;
+         testByChunk(encoded, decoded, 0, LF);
+@@ -114,12 +114,12 @@ public class Base64OutputStreamTest extends TestCase {
+         testByteByByte(encoded, decoded, 76, CRLF);
+ 
+         // OpenSSL interop test.
+-        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED_64_CHARS_PER_LINE);
++        encoded = StringBytesUtils.getBytesUtf8(Base64TestData.ENCODED);
+         decoded = Base64TestData.DECODED;
+         testByteByByte(encoded, decoded, 64, LF);
+ 
+         // Single Line test.
+-        String singleLine = Base64TestData.ENCODED_64_CHARS_PER_LINE.replaceAll("\n", "");
++        String singleLine = Base64TestData.ENCODED.replaceAll("\n", "");
+         encoded = StringBytesUtils.getBytesUtf8(singleLine);
+         decoded = Base64TestData.DECODED;
+         testByteByByte(encoded, decoded, 0, LF);
+diff --git a/src/test/org/apache/commons/codec/binary/Base64Test.java b/src/test/org/apache/commons/codec/binary/Base64Test.java
+index b3d70a9..5593417 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64Test.java
++++ b/src/test/org/apache/commons/codec/binary/Base64Test.java
+@@ -592,11 +592,11 @@ public class Base64Test extends TestCase {
+ 
+     public void testObjectEncodeWithInvalidParameter() throws Exception {
+         Base64 b64 = new Base64();
++
+         try {
+             b64.encode("Yadayadayada");
+             fail("encode(Object) didn't throw an exception when passed a String object");
+         } catch (EncoderException e) {
+-            // Expected
+         }
+     }
+ 
+@@ -893,20 +893,6 @@ public class Base64Test extends TestCase {
+         assertEquals("empty base64 encode", null, Base64.decodeBase64(null));
+     }
+ 
+-    /**
+-     * Tests Base64.encodeToString() and Base64.decodeFromString() methods.
+-     * 
+-     * @throws Exception
+-     */
+-    public void testChunkedEncodeMultipleOf76() throws Exception {
+-        byte[] expectedEncode = Base64.encodeBase64(Base64TestData.DECODED, true);
+-        // convert to "\n" so we're 100% equal to the old openssl encoding test stored
+-        // in Base64TestData.ENCODED_76_CHARS_PER_LINE:
+-        String actualResult = Base64TestData.ENCODED_76_CHARS_PER_LINE.replaceAll("\n", "\r\n");
+-        byte[] actualEncode = actualResult.getBytes("UTF-8");
+-        assertTrue("chunkedEncodeMultipleOf76", Arrays.equals(expectedEncode, actualEncode));
+-    }
+-
+     // -------------------------------------------------------- Private Methods
+ 
+     private String toString(byte[] data) {
+diff --git a/src/test/org/apache/commons/codec/binary/Base64TestData.java b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+index 200077b..e19bead 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64TestData.java
++++ b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+@@ -33,7 +33,7 @@ public class Base64TestData {
+ 
+     // OpenSSL doesn't include the final \n, but it would be annoying beyond belief
+     // to further parameterize commons-codec to support this pointless variation.
+-    final static String ENCODED_64_CHARS_PER_LINE
++    final static String ENCODED
+             = "9IPNKwUvdLiIAp6ctz12SiQmOGstWyYvSPeevufDhrzaws65voykKjbIj33YWTa9\n"
+             + "xA7c/FHypWclrZhQ7onfc3JE93BJ5fT4R9zAEdjbjy1hv4ZYNnET4WJeXMLJ/5p+\n"
+             + "qBpTsPpepW8DNVYy1c02/1wyC+kgA6CvRUd9cSr/lt88AEdsTV4GMCn1+EwuAiYd\n"
+@@ -57,26 +57,6 @@ public class Base64TestData {
+             + "/6YAHZilo8at0OpkkNdNFuhwuGlkBqrZKNUj/gSiYYc06gF/r/z6iWAjpXJRW1qq\n"
+             + "3CLZXdZFZ/VrqXeVjtOAu2A=\n";
+ 
+-    final static String ENCODED_76_CHARS_PER_LINE
+-            = "9IPNKwUvdLiIAp6ctz12SiQmOGstWyYvSPeevufDhrzaws65voykKjbIj33YWTa9xA7c/FHypWcl\n"
+-            + "rZhQ7onfc3JE93BJ5fT4R9zAEdjbjy1hv4ZYNnET4WJeXMLJ/5p+qBpTsPpepW8DNVYy1c02/1wy\n"
+-            + "C+kgA6CvRUd9cSr/lt88AEdsTV4GMCn1+EwuAiYdivxuzn+cLM8q2jewqlI52tP9J7Cs8vqG71s6\n"
+-            + "+WAELKvm/UovvyaOi+OdMUfjQ0JLiLkHu6p9OwUgvQqiDKzEv/Augo0dTPZzYGEyCP5GVrle3QQd\n"
+-            + "gciIHnpdd4VUTPGRUbXeKbh++U3fbJIng/sQXM3IYByMZ7xt9HWS1LUcRdQ7Prwn/IlQWxOMeq+K\n"
+-            + "ZJSoAviWtdserXyHbIEa//hmr4p/j80k0g9q35hq1ayGM9984ALTSaZ8WeyFbZx1CxC/Qoqf92UH\n"
+-            + "/ylBRnSJNn4sS0oa3uUbNvOnpkB4D9V7Ut9atinCJrw+wiJcMl+9kp251IUxBGA4cUxh0eaxk3OD\n"
+-            + "WnwI95EktmWOKwCSP0xjWwIMxDjygwAG5R8fk9H9bVi1thMavm4nDc4vaNoSE1RnZNYwbiUVlVPM\n"
+-            + "9EclvJWTWd6igWeA0MxHAA8iOM5Vnmqp/WGM7UDq59rBIdNQCoeTJaAkEtAuLL5zogOa5e+MzVjv\n"
+-            + "B5MYQlOlaaTtQrRApXa5Z4VfEanu9UK2fi1T8jJPFC2PmXebxp0bnO+VW+bgyEdIIkIQCaZq1MKW\n"
+-            + "C3KuiOS9BJ1t7O0A2JKJKvoE4UNulzV2TGCC+KAnmjRqQBqXlJmgjHQAoHNZKOma/uIQOsvfDnqi\n"
+-            + "cYdDmfyCYuV89HjA1H8tiDJ85VfsrFHdcbPAoNCpi65awJSHfdPO1NDONOK++S7Y0VXUgoYYrBV4\n"
+-            + "Y7YbC8wg/nqcimr3lm3tRyp+QsgKzdREbfNRk0F5PLyLfsUElepjs1QdV3fEV1LJtiywA3ubVNQJ\n"
+-            + "RxhbYxa/C/Xy2qxpm6vvdL92l3q1ccev35IcaOiSx7Im+/GxV2lVKdaOvYVGDD1zBRe6Y2CwQb9p\n"
+-            + "088l3/93qGR5593NCiuPPWcsDWwUShM1EyW0FNX1F8bnzHnYijoyE/jf4s/l9bBd7yJdRWRCyih2\n"
+-            + "WcypAiOIEkBsH+dCTgalu8sRDoMh4ZIBBdgHfoZUycLqReQFLZZ4Sl4zSmzt5vQxQFhEKb9+ff/4\n"
+-            + "rb1KAo6wifengxVfIsa2b5ljXzAqXs7JkPvmC6fa7X4ZZndRokaxYlu3cg8OV+uG/6YAHZilo8at\n"
+-            + "0OpkkNdNFuhwuGlkBqrZKNUj/gSiYYc06gF/r/z6iWAjpXJRW1qq3CLZXdZFZ/VrqXeVjtOAu2A=\n";
+-
+     final static byte[] DECODED
+             = {-12, -125, -51, 43, 5, 47, 116, -72, -120, 2, -98, -100, -73, 61, 118, 74, 36, 38, 56, 107, 45, 91, 38,
+             47, 72, -9, -98, -66, -25, -61, -122, -68, -38, -62, -50, -71, -66, -116, -92, 42, 54, -56, -113, 125,
