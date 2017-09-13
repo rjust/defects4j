@@ -1,0 +1,21 @@
+diff --git a/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext.java b/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext.java
+index cd3d5f9..9019645 100644
+--- a/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext.java
++++ b/org/apache/commons/jxpath/ri/axes/PrecedingOrFollowingContext.java
+@@ -22,6 +22,7 @@ import org.apache.commons.jxpath.ri.EvalContext;
+ import org.apache.commons.jxpath.ri.compiler.NodeTest;
+ import org.apache.commons.jxpath.ri.model.NodeIterator;
+ import org.apache.commons.jxpath.ri.model.NodePointer;
++import org.apache.commons.jxpath.ri.model.beans.PropertyIterator;
+ 
+ /**
+  * EvalContext that walks the "preceding::" and "following::" axes.
+@@ -147,7 +148,7 @@ public class PrecedingOrFollowingContext extends EvalContext {
+                     else {
+                         stack.pop();
+                         if (!stack.isEmpty()) {
+-                            it = (NodeIterator) stack.peek();
++                            it = (PropertyIterator) stack.peek();
+                             currentNodePointer = it.getNodePointer();
+                             if (currentNodePointer.testNode(nodeTest)) {
+                                 super.setPosition(getCurrentPosition() + 1);

@@ -1,0 +1,86 @@
+diff --git a/java/org/apache/commons/csv/CSVFileParserTest.java b/java/org/apache/commons/csv/CSVFileParserTest.java
+index 4755939..b926f24 100644
+--- a/java/org/apache/commons/csv/CSVFileParserTest.java
++++ b/java/org/apache/commons/csv/CSVFileParserTest.java
+@@ -89,7 +89,6 @@ public class CSVFileParserTest {
+          // first line starts with csv data file name
+         BufferedReader csvFile = new BufferedReader(new FileReader(new File(BASE, split[0])));
+         CSVFormat fmt = CSVFormat.PRISTINE.withDelimiter(',').withEncapsulator('"');
+-        boolean checkComments = false;
+         for(int i=1; i < split.length; i++) {
+             final String option = split[i];
+             String[] option_parts = option.split("=",2);
+@@ -99,8 +98,6 @@ public class CSVFileParserTest {
+                 fmt = fmt.withSurroundingSpacesIgnored(Boolean.parseBoolean(option_parts[1]));
+             } else if ("CommentStart".equalsIgnoreCase(option_parts[0])) {
+                 fmt = fmt.withCommentStart(option_parts[1].charAt(0));
+-            } else if ("CheckComments".equalsIgnoreCase(option_parts[0])) {
+-                checkComments = true;
+             } else {
+                 fail(testName+" unexpected option: "+option);
+             }
+@@ -111,12 +108,6 @@ public class CSVFileParserTest {
+         // Now parse the file and compare against the expected results
+         for(CSVRecord rec : fmt.parse(csvFile)) {
+             String parsed = rec.toString();
+-            if (checkComments) {
+-                final String comment = rec.getComment().replace("\n", "\\n");
+-                if (comment != null) {
+-                    parsed += "#" + comment;
+-                }
+-            }
+             int count = rec.size();
+             assertEquals(testName, readTestData(), count+":"+parsed);
+         }
+diff --git a/java/org/apache/commons/csv/CSVLexerTest.java b/java/org/apache/commons/csv/CSVLexerTest.java
+index 69f4b90..e1e96e0 100644
+--- a/java/org/apache/commons/csv/CSVLexerTest.java
++++ b/java/org/apache/commons/csv/CSVLexerTest.java
+@@ -63,7 +63,7 @@ public class CSVLexerTest {
+                 "a,b x,c#no-comment\n"+    // 2
+                 "\n"+
+                 "\n"+
+-                "# foo \n"+                // 3
++                "#foo\n"+                  // 3
+                 "\n"+                      // 4
+                 "d,e,#no-comment\n"+       // 5
+                 "\n"+
+@@ -85,13 +85,13 @@ public class CSVLexerTest {
+         assertTokenEquals(TOKEN, "a", parser.nextToken(new Token()));
+         assertTokenEquals(TOKEN, "b x", parser.nextToken(new Token()));
+         assertTokenEquals(EORECORD, "c#no-comment", parser.nextToken(new Token())); // 2
+-        assertTokenEquals(COMMENT, "foo", parser.nextToken(new Token()));              // 3
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 3
+         // 4 empty line, ignored                                                    // 4
+         assertTokenEquals(TOKEN, "d", parser.nextToken(new Token()));
+         assertTokenEquals(TOKEN, "e", parser.nextToken(new Token()));
+         assertTokenEquals(EORECORD, "#no-comment", parser.nextToken(new Token()));  // 5
+-        assertTokenEquals(COMMENT, "penultimate comment", parser.nextToken(new Token()));              // 6
+-        assertTokenEquals(COMMENT, "Final comment", parser.nextToken(new Token()));              // 7
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 6
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 7
+         assertTokenEquals(EOF, "", parser.nextToken(new Token()));
+         assertTokenEquals(EOF, "", parser.nextToken(new Token()));
+ 
+@@ -130,7 +130,7 @@ public class CSVLexerTest {
+         assertTokenEquals(TOKEN, "a", parser.nextToken(new Token()));
+         assertTokenEquals(TOKEN, "b x", parser.nextToken(new Token()));
+         assertTokenEquals(EORECORD, "c#no-comment", parser.nextToken(new Token())); // 2
+-        assertTokenEquals(COMMENT, "foo", parser.nextToken(new Token()));           // 3
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 3
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 4
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 4b
+         assertTokenEquals(TOKEN, "d", parser.nextToken(new Token()));
+@@ -138,10 +138,10 @@ public class CSVLexerTest {
+         assertTokenEquals(EORECORD, "#no-comment", parser.nextToken(new Token()));  // 5
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 5b
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 5c
+-        assertTokenEquals(COMMENT, "penultimate comment", parser.nextToken(new Token()));              // 6
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 6
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 6b
+         assertTokenEquals(EORECORD, "", parser.nextToken(new Token()));             // 6c
+-        assertTokenEquals(COMMENT, "Final comment", parser.nextToken(new Token()));              // 7
++        assertTokenEquals(COMMENT, "", parser.nextToken(new Token()));              // 7
+         assertTokenEquals(EOF, "", parser.nextToken(new Token()));
+         assertTokenEquals(EOF, "", parser.nextToken(new Token()));
+ 

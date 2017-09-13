@@ -1,0 +1,55 @@
+diff --git a/org/apache/commons/codec/language/DoubleMetaphone.java b/org/apache/commons/codec/language/DoubleMetaphone.java
+index f7122d4..5186895 100644
+--- a/org/apache/commons/codec/language/DoubleMetaphone.java
++++ b/org/apache/commons/codec/language/DoubleMetaphone.java
+@@ -452,7 +452,7 @@ public class DoubleMetaphone implements StringEncoder {
+             if ((contains(value, 0 ,4, "VAN ", "VON ") || contains(value, 0, 3, "SCH")) || contains(value, index + 1, 2, "ET")) {
+                 //-- obvious germanic --//
+                 result.append('K');
+-            } else if (contains(value, index + 1, 3, "IER")) {
++            } else if (contains(value, index + 1, 4, "IER")) {
+                 result.append('J');
+             } else {
+                 result.append('J', 'K');
+@@ -561,16 +561,14 @@ public class DoubleMetaphone implements StringEncoder {
+     private int handleL(String value, 
+                         DoubleMetaphoneResult result, 
+                         int index) {
++        result.append('L');
+         if (charAt(value, index + 1) == 'L') {
+             if (conditionL0(value, index)) {
+-                result.appendPrimary('L');
+-            } else {
+-                result.append('L');
++                result.appendAlternate(' ');
+             }
+             index += 2;
+         } else {
+             index++;
+-            result.append('L');
+         }
+         return index;
+     }
+@@ -859,7 +857,7 @@ public class DoubleMetaphone implements StringEncoder {
+         if (index == value.length() - 3 && 
+             contains(value, index - 1, 4, "ILLO", "ILLA", "ALLE")) {
+             return true;
+-        } else if ((contains(value, value.length() - 2, 2, "AS", "OS") || 
++        } else if ((contains(value, index - 1, 2, "AS", "OS") || 
+                     contains(value, value.length() - 1, 1, "A", "O")) &&
+                    contains(value, index - 1, 4, "ALLE")) {
+             return true;
+@@ -1004,9 +1002,10 @@ public class DoubleMetaphone implements StringEncoder {
+     }
+     
+     /**
+-     * Determines whether <code>value</code> contains any of the criteria starting at index <code>start</code> and
+-     * matching up to length <code>length</code>
+-     */
++     * Determines whether <code>value</code> contains any of the criteria 
++     starting
++     * at index <code>start</code> and matching up to length <code>length</code>
++     */    
+     protected static boolean contains(String value, int start, int length, 
+                                       String[] criteria) {
+         boolean result = false;

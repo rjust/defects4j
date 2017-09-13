@@ -1,0 +1,4 @@
+com.fasterxml.jackson.databind.deser.BeanDeserializerBase
+com.fasterxml.jackson.databind.deser.std.CollectionDeserializer
+com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
+com.fasterxml.jackson.databind.deser.ValueInstantiator

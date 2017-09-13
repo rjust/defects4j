@@ -1,0 +1,16 @@
+diff --git a/org/apache/commons/cli/Parser.java b/org/apache/commons/cli/Parser.java
+index 2843ef1..3bd0a60 100644
+--- a/org/apache/commons/cli/Parser.java
++++ b/org/apache/commons/cli/Parser.java
+@@ -295,10 +295,7 @@ public abstract class Parser implements CommandLineParser {
+         if (requiredOptions.size() > 0)
+         {
+             Iterator iter = requiredOptions.iterator();
+-            StringBuffer buff = new StringBuffer("Missing required option");
+-            buff.append(requiredOptions.size() == 1 ? "" : "s");
+-            buff.append(": ");
+-
++            StringBuffer buff = new StringBuffer();
+ 
+             // loop through the required options
+             while (iter.hasNext())

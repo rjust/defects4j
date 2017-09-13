@@ -1,0 +1,26 @@
+diff --git a/org/apache/commons/codec/binary/Base64Test.java b/org/apache/commons/codec/binary/Base64Test.java
+index 90042c2..bcb4722 100644
+--- a/org/apache/commons/codec/binary/Base64Test.java
++++ b/org/apache/commons/codec/binary/Base64Test.java
+@@ -63,21 +63,6 @@ public class Base64Test extends TestCase {
+         byte[] encodedBytes = Base64.encodeBase64(StringUtils.getBytesUtf8(content));
+         encodedContent = StringUtils.newStringUtf8(encodedBytes);
+         assertTrue("encoding hello world", encodedContent.equals("SGVsbG8gV29ybGQ="));
+-
+-        Base64 b64 = new Base64(76, null);  // null lineSeparator same as saying no-chunking
+-        encodedBytes = b64.encode(StringUtils.getBytesUtf8(content));
+-        encodedContent = StringUtils.newStringUtf8(encodedBytes);
+-        assertTrue("encoding hello world", encodedContent.equals("SGVsbG8gV29ybGQ="));
+-
+-        b64 = new Base64(0, null);  // null lineSeparator same as saying no-chunking
+-        encodedBytes = b64.encode(StringUtils.getBytesUtf8(content));
+-        encodedContent = StringUtils.newStringUtf8(encodedBytes);
+-        assertTrue("encoding hello world", encodedContent.equals("SGVsbG8gV29ybGQ="));
+-
+-        // bogus characters to decode (to skip actually)
+-        byte[] decode = b64.decode("SGVsbG{יייייי}8gV29ybGQ=");
+-        String decodeString = StringUtils.newStringUtf8(decode);
+-        assertTrue("decode hello world", decodeString.equals("Hello World"));        
+     }
+ 
+     /**

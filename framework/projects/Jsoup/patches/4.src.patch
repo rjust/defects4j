@@ -1,0 +1,354 @@
+diff --git a/java/org/jsoup/helper/HttpConnection.java b/java/org/jsoup/helper/HttpConnection.java
+index fff2c27..f575c48 100644
+--- a/java/org/jsoup/helper/HttpConnection.java
++++ b/java/org/jsoup/helper/HttpConnection.java
+@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
+ import java.util.zip.GZIPInputStream;
+ 
+ import static org.jsoup.Connection.Method.HEAD;
+-import static org.jsoup.internal.Normalizer.lowerCase;
+ 
+ /**
+  * Implementation of {@link Connection}.
+@@ -413,7 +412,7 @@ public class HttpConnection implements Connection {
+             // quick evals for common case of title case, lower case, then scan for mixed
+             String value = headers.get(name);
+             if (value == null)
+-                value = headers.get(lowerCase(name));
++                value = headers.get(name.toLowerCase());
+             if (value == null) {
+                 Map.Entry<String, String> entry = scanHeaders(name);
+                 if (entry != null)
+@@ -423,9 +422,9 @@ public class HttpConnection implements Connection {
+         }
+ 
+         private Map.Entry<String, String> scanHeaders(String name) {
+-            String lc = lowerCase(name);
++            String lc = name.toLowerCase();
+             for (Map.Entry<String, String> entry : headers.entrySet()) {
+-                if (lowerCase(entry.getKey()).equals(lc))
++                if (entry.getKey().toLowerCase().equals(lc))
+                     return entry;
+             }
+             return null;
+diff --git a/java/org/jsoup/internal/Normalizer.java b/java/org/jsoup/internal/Normalizer.java
+deleted file mode 100644
+index 02c3158..0000000
+--- a/java/org/jsoup/internal/Normalizer.java
++++ /dev/null
+@@ -1,13 +0,0 @@
+-package org.jsoup.internal;
+-
+-import java.util.Locale;
+-
+-public class Normalizer {
+-    public static String lowerCase(String input) {
+-        return input.toLowerCase(Locale.ENGLISH);
+-    }
+-
+-    public static String normalize(String input) {
+-        return lowerCase(input).trim();
+-    }
+-}
+diff --git a/java/org/jsoup/nodes/Element.java b/java/org/jsoup/nodes/Element.java
+index a5f36e8..175654e 100644
+--- a/java/org/jsoup/nodes/Element.java
++++ b/java/org/jsoup/nodes/Element.java
+@@ -25,8 +25,6 @@ import java.util.Set;
+ import java.util.regex.Pattern;
+ import java.util.regex.PatternSyntaxException;
+ 
+-import static org.jsoup.internal.Normalizer.normalize;
+-
+ /**
+  * A HTML element consists of a tag name, attributes, and child nodes (including text nodes and
+  * other elements).
+@@ -649,7 +647,7 @@ public class Element extends Node {
+      */
+     public Elements getElementsByTag(String tagName) {
+         Validate.notEmpty(tagName);
+-        tagName = normalize(tagName);
++        tagName = tagName.toLowerCase().trim();
+ 
+         return Collector.collect(new Evaluator.Tag(tagName), this);
+     }
+diff --git a/java/org/jsoup/nodes/Node.java b/java/org/jsoup/nodes/Node.java
+index 947cfe0..ed19156 100644
+--- a/java/org/jsoup/nodes/Node.java
++++ b/java/org/jsoup/nodes/Node.java
+@@ -13,8 +13,6 @@ import java.util.Collections;
+ import java.util.LinkedList;
+ import java.util.List;
+ 
+-import static org.jsoup.internal.Normalizer.lowerCase;
+-
+ /**
+  The base, abstract Node model. Elements, Documents, Comments etc are all Node instances.
+ 
+@@ -80,7 +78,7 @@ public abstract class Node implements Cloneable {
+         String val = attributes.getIgnoreCase(attributeKey);
+         if (val.length() > 0)
+             return val;
+-        else if (lowerCase(attributeKey).startsWith("abs:"))
++        else if (attributeKey.toLowerCase().startsWith("abs:"))
+             return absUrl(attributeKey.substring("abs:".length()));
+         else return "";
+     }
+diff --git a/java/org/jsoup/parser/ParseSettings.java b/java/org/jsoup/parser/ParseSettings.java
+index e9df9df..9ac7e6b 100644
+--- a/java/org/jsoup/parser/ParseSettings.java
++++ b/java/org/jsoup/parser/ParseSettings.java
+@@ -3,8 +3,6 @@ package org.jsoup.parser;
+ import org.jsoup.nodes.Attribute;
+ import org.jsoup.nodes.Attributes;
+ 
+-import static org.jsoup.internal.Normalizer.lowerCase;
+-
+ /**
+  * Controls parser settings, to optionally preserve tag and/or attribute name case.
+  */
+@@ -39,21 +37,21 @@ public class ParseSettings {
+     String normalizeTag(String name) {
+         name = name.trim();
+         if (!preserveTagCase)
+-            name = lowerCase(name);
++            name = name.toLowerCase();
+         return name;
+     }
+ 
+     String normalizeAttribute(String name) {
+         name = name.trim();
+         if (!preserveAttributeCase)
+-            name = lowerCase(name);
++            name = name.toLowerCase();
+         return name;
+     }
+ 
+     Attributes normalizeAttributes(Attributes attributes) {
+         if (!preserveAttributeCase) {
+             for (Attribute attr : attributes) {
+-                attr.setKey(lowerCase(attr.getKey()));
++                attr.setKey(attr.getKey().toLowerCase());
+             }
+         }
+         return attributes;
+diff --git a/java/org/jsoup/parser/Token.java b/java/org/jsoup/parser/Token.java
+index c983557..af51432 100644
+--- a/java/org/jsoup/parser/Token.java
++++ b/java/org/jsoup/parser/Token.java
+@@ -5,8 +5,6 @@ import org.jsoup.nodes.Attribute;
+ import org.jsoup.nodes.Attributes;
+ import org.jsoup.nodes.BooleanAttribute;
+ 
+-import static org.jsoup.internal.Normalizer.lowerCase;
+-
+ /**
+  * Parse tokens for the Tokeniser.
+  */
+@@ -144,7 +142,7 @@ abstract class Token {
+ 
+         final Tag name(String name) {
+             tagName = name;
+-            normalName = lowerCase(name);
++            normalName = name.toLowerCase();
+             return this;
+         }
+ 
+@@ -160,7 +158,7 @@ abstract class Token {
+         // these appenders are rarely hit in not null state-- caused by null chars.
+         final void appendTagName(String append) {
+             tagName = tagName == null ? append : tagName.concat(append);
+-            normalName = lowerCase(tagName);
++            normalName = tagName.toLowerCase();
+         }
+ 
+         final void appendTagName(char append) {
+@@ -233,7 +231,7 @@ abstract class Token {
+         StartTag nameAttr(String name, Attributes attributes) {
+             this.tagName = name;
+             this.attributes = attributes;
+-            normalName = lowerCase(tagName);
++            normalName = tagName.toLowerCase();
+             return this;
+         }
+ 
+diff --git a/java/org/jsoup/safety/Whitelist.java b/java/org/jsoup/safety/Whitelist.java
+index 8258ce9..b8d0886 100644
+--- a/java/org/jsoup/safety/Whitelist.java
++++ b/java/org/jsoup/safety/Whitelist.java
+@@ -15,8 +15,6 @@ import java.util.HashSet;
+ import java.util.Map;
+ import java.util.Set;
+ 
+-import static org.jsoup.internal.Normalizer.lowerCase;
+-
+ 
+ /**
+  Whitelists define what HTML (elements and attributes) to allow through the cleaner. Everything else is removed.
+@@ -544,7 +542,7 @@ public class Whitelist {
+ 
+             prot += ":";
+ 
+-            if (lowerCase(value).startsWith(prot)) {
++            if (value.toLowerCase().startsWith(prot)) {
+                 return true;
+             }
+         }
+diff --git a/java/org/jsoup/select/Evaluator.java b/java/org/jsoup/select/Evaluator.java
+index e797495..d363f16 100644
+--- a/java/org/jsoup/select/Evaluator.java
++++ b/java/org/jsoup/select/Evaluator.java
+@@ -12,9 +12,6 @@ import java.util.List;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
+-import static org.jsoup.internal.Normalizer.lowerCase;
+-import static org.jsoup.internal.Normalizer.normalize;
+-
+ 
+ /**
+  * Evaluates that an element matches the selector.
+@@ -150,14 +147,14 @@ public abstract class Evaluator {
+ 
+         public AttributeStarting(String keyPrefix) {
+             Validate.notEmpty(keyPrefix);
+-            this.keyPrefix = lowerCase(keyPrefix);
++            this.keyPrefix = keyPrefix.toLowerCase();
+         }
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+             List<org.jsoup.nodes.Attribute> values = element.attributes().asList();
+             for (org.jsoup.nodes.Attribute attribute : values) {
+-                if (lowerCase(attribute.getKey()).startsWith(keyPrefix))
++                if (attribute.getKey().toLowerCase().startsWith(keyPrefix))
+                     return true;
+             }
+             return false;
+@@ -220,7 +217,7 @@ public abstract class Evaluator {
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return element.hasAttr(key) && lowerCase(element.attr(key)).startsWith(value); // value is lower case already
++            return element.hasAttr(key) && element.attr(key).toLowerCase().startsWith(value); // value is lower case already
+         }
+ 
+         @Override
+@@ -240,7 +237,7 @@ public abstract class Evaluator {
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return element.hasAttr(key) && lowerCase(element.attr(key)).endsWith(value); // value is lower case
++            return element.hasAttr(key) && element.attr(key).toLowerCase().endsWith(value); // value is lower case
+         }
+ 
+         @Override
+@@ -260,7 +257,7 @@ public abstract class Evaluator {
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return element.hasAttr(key) && lowerCase(element.attr(key)).contains(value); // value is lower case
++            return element.hasAttr(key) && element.attr(key).toLowerCase().contains(value); // value is lower case
+         }
+ 
+         @Override
+@@ -278,7 +275,7 @@ public abstract class Evaluator {
+         Pattern pattern;
+ 
+         public AttributeWithValueMatching(String key, Pattern pattern) {
+-            this.key = normalize(key);
++            this.key = key.trim().toLowerCase();
+             this.pattern = pattern;
+         }
+ 
+@@ -305,12 +302,12 @@ public abstract class Evaluator {
+             Validate.notEmpty(key);
+             Validate.notEmpty(value);
+ 
+-            this.key = normalize(key);
++            this.key = key.trim().toLowerCase();
+             if (value.startsWith("\"") && value.endsWith("\"")
+                     || value.startsWith("'") && value.endsWith("'")) {
+                 value = value.substring(1, value.length()-1);
+             }
+-            this.value = normalize(value);
++            this.value = value.trim().toLowerCase();
+         }
+     }
+ 
+@@ -651,12 +648,12 @@ public abstract class Evaluator {
+         private String searchText;
+ 
+         public ContainsText(String searchText) {
+-            this.searchText = lowerCase(searchText);
++            this.searchText = searchText.toLowerCase();
+         }
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return lowerCase(element.text()).contains(searchText);
++            return (element.text().toLowerCase().contains(searchText));
+         }
+ 
+         @Override
+@@ -672,12 +669,12 @@ public abstract class Evaluator {
+         private String searchText;
+ 
+         public ContainsData(String searchText) {
+-            this.searchText = lowerCase(searchText);
++            this.searchText = searchText.toLowerCase();
+         }
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return lowerCase(element.data()).contains(searchText);
++            return (element.data().toLowerCase().contains(searchText));
+         }
+ 
+         @Override
+@@ -693,12 +690,12 @@ public abstract class Evaluator {
+         private String searchText;
+ 
+         public ContainsOwnText(String searchText) {
+-            this.searchText = lowerCase(searchText);
++            this.searchText = searchText.toLowerCase();
+         }
+ 
+         @Override
+         public boolean matches(Element root, Element element) {
+-            return lowerCase(element.ownText()).contains(searchText);
++            return (element.ownText().toLowerCase().contains(searchText));
+         }
+ 
+         @Override
+diff --git a/java/org/jsoup/select/QueryParser.java b/java/org/jsoup/select/QueryParser.java
+index 46c6c2d..d3a2041 100644
+--- a/java/org/jsoup/select/QueryParser.java
++++ b/java/org/jsoup/select/QueryParser.java
+@@ -9,8 +9,6 @@ import org.jsoup.helper.StringUtil;
+ import org.jsoup.helper.Validate;
+ import org.jsoup.parser.TokenQueue;
+ 
+-import static org.jsoup.internal.Normalizer.normalize;
+-
+ /**
+  * Parses a CSS selector into an Evaluator tree.
+  */
+@@ -224,7 +222,7 @@ public class QueryParser {
+ 
+         // namespaces: wildcard match equals(tagName) or ending in ":"+tagName
+         if (tagName.startsWith("*|")) {
+-            evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(normalize(tagName)), new Evaluator.TagEndsWith(normalize(tagName.replace("*|", ":")))));
++            evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(tagName.trim().toLowerCase()), new Evaluator.TagEndsWith(tagName.replace("*|", ":").trim().toLowerCase())));
+         } else {
+             // namespaces: if element name is "abc:def", selector must be "abc|def", so flip:
+             if (tagName.contains("|"))
+@@ -290,7 +288,7 @@ public class QueryParser {
+     private static final Pattern NTH_B  = Pattern.compile("(\\+|-)?(\\d+)");
+ 
+ 	private void cssNthChild(boolean backwards, boolean ofType) {
+-		String argS = normalize(tq.chompTo(")"));
++		String argS = tq.chompTo(")").trim().toLowerCase();
+ 		Matcher mAB = NTH_AB.matcher(argS);
+ 		Matcher mB = NTH_B.matcher(argS);
+ 		final int a, b;

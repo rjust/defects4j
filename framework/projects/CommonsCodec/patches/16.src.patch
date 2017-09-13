@@ -1,0 +1,39 @@
+diff --git a/org/apache/commons/codec/binary/Base64.java b/org/apache/commons/codec/binary/Base64.java
+index 31671e6..e4d1276 100644
+--- a/org/apache/commons/codec/binary/Base64.java
++++ b/org/apache/commons/codec/binary/Base64.java
+@@ -222,7 +222,7 @@ public class Base64 implements BinaryEncoder, BinaryDecoder {
+      * </p>
+      */
+     public Base64() {
+-        this(0);
++        this(false);
+     }
+ 
+     /**
+diff --git a/org/apache/commons/codec/binary/Base64InputStream.java b/org/apache/commons/codec/binary/Base64InputStream.java
+index d6c05a6..6fd27a9 100644
+--- a/org/apache/commons/codec/binary/Base64InputStream.java
++++ b/org/apache/commons/codec/binary/Base64InputStream.java
+@@ -73,7 +73,7 @@ public class Base64InputStream extends FilterInputStream {
+     public Base64InputStream(InputStream in, boolean doEncode) {
+         super(in);
+         this.doEncode = doEncode;
+-        this.base64 = new Base64(false);
++        this.base64 = new Base64();
+     }
+ 
+     /**
+diff --git a/org/apache/commons/codec/binary/Base64OutputStream.java b/org/apache/commons/codec/binary/Base64OutputStream.java
+index 2dc26b0..e5ebcb3 100644
+--- a/org/apache/commons/codec/binary/Base64OutputStream.java
++++ b/org/apache/commons/codec/binary/Base64OutputStream.java
+@@ -72,7 +72,7 @@ public class Base64OutputStream extends FilterOutputStream {
+     public Base64OutputStream(OutputStream out, boolean doEncode) {
+         super(out);
+         this.doEncode = doEncode;
+-        this.base64 = new Base64(false);
++        this.base64 = new Base64();
+     }
+ 
+     /**

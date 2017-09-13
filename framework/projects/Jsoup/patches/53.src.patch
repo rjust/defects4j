@@ -1,0 +1,51 @@
+diff --git a/java/org/jsoup/parser/CharacterReader.java b/java/org/jsoup/parser/CharacterReader.java
+index b7cce5a..632cc14 100644
+--- a/java/org/jsoup/parser/CharacterReader.java
++++ b/java/org/jsoup/parser/CharacterReader.java
+@@ -189,13 +189,6 @@ class CharacterReader {
+         }
+     }
+ 
+-    boolean containsIgnoreCase(String seq) {
+-        // used to check presence of </title>, </style>. only finds consistent case.
+-        String loScan = seq.toLowerCase();
+-        String hiScan = seq.toUpperCase();
+-        return (input.indexOf(loScan, pos) > -1) || (input.indexOf(hiScan, pos) > -1);
+-    }
+-
+     @Override
+     public String toString() {
+         return input.substring(pos);
+diff --git a/java/org/jsoup/parser/Tokeniser.java b/java/org/jsoup/parser/Tokeniser.java
+index 316cbea..c012a73 100644
+--- a/java/org/jsoup/parser/Tokeniser.java
++++ b/java/org/jsoup/parser/Tokeniser.java
+@@ -194,10 +194,6 @@ class Tokeniser {
+         return tagPending.tagName.equals(lastStartTag.tagName);
+     }
+ 
+-    String appropriateEndTagName() {
+-        return lastStartTag.tagName;
+-    }
+-
+     boolean isTrackErrors() {
+         return trackErrors;
+     }
+diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
+index 8774823..db08f33 100644
+--- a/java/org/jsoup/parser/TokeniserState.java
++++ b/java/org/jsoup/parser/TokeniserState.java
+@@ -215,13 +215,6 @@ enum TokeniserState {
+             if (r.matches('/')) {
+                 t.createTempBuffer();
+                 t.advanceTransition(RCDATAEndTagOpen);
+-            } else if (r.matchesLetter() && !r.containsIgnoreCase("</" + t.appropriateEndTagName())) {
+-                // diverge from spec: got a start tag, but there's no appropriate end tag (</title>), so rather than
+-                // consuming to EOF; break out here
+-                t.tagPending = new Token.EndTag(t.appropriateEndTagName());
+-                t.emitTagPending();
+-                r.unconsume(); // undo "<"
+-                t.transition(Data);
+             } else {
+                 t.emit("<");
+                 t.transition(Rcdata);

@@ -1,0 +1,98 @@
+diff --git a/org/apache/commons/cli2/Option.java b/org/apache/commons/cli2/Option.java
+index 0102573..96c50c6 100644
+--- a/org/apache/commons/cli2/Option.java
++++ b/org/apache/commons/cli2/Option.java
+@@ -194,25 +194,4 @@ public interface Option {
+      * @return true iff the CommandLine will be invalid without this Option
+      */
+     boolean isRequired();
+-
+-    /**
+-     * Returns the parent of this option. Options can be organized in a
+-     * hierarchical manner if they are added to groups. This method can be used
+-     * for obtaining the parent option of this option. The result may be
+-     * <b>null</b> if this option does not have a parent.
+-     *
+-     * @return the parent of this option
+-     */
+-    Option getParent();
+-
+-    /**
+-     * Sets the parent of this option. This method is called when the option is
+-     * added to a group. Storing the parent of an option makes it possible to
+-     * keep track of hierarchical relations between options. For instance, if an
+-     * option is identified while parsing a command line, the group this option
+-     * belongs to can also be added to the command line.
+-     *
+-     * @param parent the parent option
+-     */
+-    void setParent(Option parent);
+ }
+diff --git a/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java b/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
+index ec97eab..319f8c2 100644
+--- a/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
++++ b/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
+@@ -69,13 +69,6 @@ public class WriteableCommandLineImpl
+         for (Iterator i = option.getTriggers().iterator(); i.hasNext();) {
+             nameToOption.put(i.next(), option);
+         }
+-
+-        // ensure that all parent options are also added
+-        Option parent = option.getParent();
+-        while (parent != null && !options.contains(parent)) {
+-            options.add(parent);
+-            parent = parent.getParent();
+-        }
+     }
+ 
+     public void addValue(final Option option,
+diff --git a/org/apache/commons/cli2/option/GroupImpl.java b/org/apache/commons/cli2/option/GroupImpl.java
+index 38fc6c2..e3b69f8 100644
+--- a/org/apache/commons/cli2/option/GroupImpl.java
++++ b/org/apache/commons/cli2/option/GroupImpl.java
+@@ -89,7 +89,6 @@ public class GroupImpl
+         // process the options
+         for (final Iterator i = options.iterator(); i.hasNext();) {
+             final Option option = (Option) i.next();
+-            option.setParent(this);
+ 
+             if (option instanceof Argument) {
+                 i.remove();
+diff --git a/org/apache/commons/cli2/option/OptionImpl.java b/org/apache/commons/cli2/option/OptionImpl.java
+index f74313d..eab47a9 100644
+--- a/org/apache/commons/cli2/option/OptionImpl.java
++++ b/org/apache/commons/cli2/option/OptionImpl.java
+@@ -33,7 +33,6 @@ import org.apache.commons.cli2.resource.ResourceHelper;
+ public abstract class OptionImpl implements Option {
+     private final int id;
+     private final boolean required;
+-    private Option parent;
+ 
+     /**
+      * Creates an OptionImpl with the specified id
+@@ -96,9 +95,7 @@ public abstract class OptionImpl implements Option {
+ 
+     public int hashCode() {
+         int hashCode = getId();
+-        if (getPreferredName() != null) {
+-            hashCode = (hashCode * 37) + getPreferredName().hashCode();
+-        }
++        hashCode = (hashCode * 37) + getPreferredName().hashCode();
+ 
+         if (getDescription() != null) {
+             hashCode = (hashCode * 37) + getDescription().hashCode();
+@@ -126,14 +123,6 @@ public abstract class OptionImpl implements Option {
+         // nothing to do normally
+     }
+ 
+-    public Option getParent() {
+-        return parent;
+-    }
+-
+-    public void setParent(Option parent) {
+-        this.parent = parent;
+-    }
+-
+     protected void checkPrefixes(final Set prefixes) {
+         // nothing to do if empty prefix list
+         if (prefixes.isEmpty()) {

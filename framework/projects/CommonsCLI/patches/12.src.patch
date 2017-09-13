@@ -1,0 +1,115 @@
+diff --git a/org/apache/commons/cli/PosixParser.java b/org/apache/commons/cli/PosixParser.java
+index ca8b6c6..22846a7 100644
+--- a/org/apache/commons/cli/PosixParser.java
++++ b/org/apache/commons/cli/PosixParser.java
+@@ -37,9 +37,6 @@ public class PosixParser extends Parser
+     /** specifies if bursting should continue */
+     private boolean eatTheRest;
+ 
+-    /** holder for the current option */
+-    private Option currentOption;
+-
+     /** the command line Options */
+     private Options options;
+ 
+@@ -112,14 +109,12 @@ public class PosixParser extends Parser
+                 int pos = token.indexOf('=');
+                 String opt = pos == -1 ? token : token.substring(0, pos); // --foo
+ 
+-                if (!options.hasOption(opt))
++                if (!options.hasOption(opt) && stopAtNonOption)
+                 {
+-                    processNonOptionToken(token, stopAtNonOption);
++                    processNonOptionToken(token);
+                 }
+                 else
+                 {
+-                    currentOption = options.getOption(opt);
+-                    
+                     tokens.add(opt);
+                     if (pos != -1)
+                     {
+@@ -135,19 +130,27 @@ public class PosixParser extends Parser
+             }
+             else if (token.startsWith("-"))
+             {
+-                if (token.length() == 2 || options.hasOption(token))
++                if (token.length() == 2)
+                 {
+                     processOptionToken(token, stopAtNonOption);
+                 }
++                else if (options.hasOption(token))
++                {
++                    tokens.add(token);
++                }
+                 // requires bursting
+                 else
+                 {
+                     burstToken(token, stopAtNonOption);
+                 }
+             }
++            else if (stopAtNonOption)
++            {
++                processNonOptionToken(token);
++            }
+             else
+             {
+-                processNonOptionToken(token, stopAtNonOption);
++                tokens.add(token);
+             }
+ 
+             gobble(iter);
+@@ -179,14 +182,10 @@ public class PosixParser extends Parser
+      *
+      * @param value The current token
+      */
+-    private void processNonOptionToken(String value, boolean stopAtNonOption)
++    private void processNonOptionToken(String value)
+     {
+-        if (stopAtNonOption && (currentOption == null || !currentOption.hasArg()))
+-        {
+-            eatTheRest = true;
+-            tokens.add("--");
+-        }
+-
++        eatTheRest = true;
++        tokens.add("--");
+         tokens.add(value);
+     }
+ 
+@@ -204,16 +203,11 @@ public class PosixParser extends Parser
+      */
+     private void processOptionToken(String token, boolean stopAtNonOption)
+     {
+-        if (stopAtNonOption && !options.hasOption(token))
++        if (!options.hasOption(token) && stopAtNonOption)
+         {
+             eatTheRest = true;
+         }
+ 
+-        if (options.hasOption(token))
+-        {
+-            currentOption = options.getOption(token);
+-        }
+-
+         tokens.add(token);
+     }
+ 
+@@ -245,6 +239,8 @@ public class PosixParser extends Parser
+      */
+     protected void burstToken(String token, boolean stopAtNonOption)
+     {
++        Option currentOption;
++
+         for (int i = 1; i < token.length(); i++)
+         {
+             String ch = String.valueOf(token.charAt(i));
+@@ -263,7 +259,7 @@ public class PosixParser extends Parser
+             }
+             else if (stopAtNonOption)
+             {
+-                processNonOptionToken(token.substring(i), true);
++                processNonOptionToken(token.substring(i));
+                 break;
+             }
+             else
