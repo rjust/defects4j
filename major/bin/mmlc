@@ -1,8 +1,0 @@
-#!/bin/sh 
-
-if [ $# -lt 1 ]; then
-    echo "usage: $0 <script-file> [<out-file>]"
-    exit 1
-fi
-BASE=`dirname $0`
-java -Xbootclasspath/p:$BASE/../lib/mmlc.jar:$BASE/../lib/javac.jar -jar $BASE/../lib/mmlc.jar $*
