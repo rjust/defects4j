@@ -82,19 +82,33 @@ name of the corresponding project.
 
 =item B<Chart>  JFreeChart (uses Vcs::Svn as Vcs backend)
 
-=item B<Math>  Commons math (uses Vcs::Git as Vcs backend)
-
-=item B<Lang>  Commons lang (uses Vcs::Git as Vcs backend)
-
-=item B<Time>  Joda-time (uses Vcs::Git as Vcs backend)
-
 =item B<Closure>  Closure compiler (uses Vcs::Git as Vcs backend)
 
-=item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)
+=item B<CommonsCLI> Commons CLI library (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsCodec> Commons encoders and decoders (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsCsv> Commons CSV (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsJXPath> Commons JXPath (uses Vcs::Git as Vcs backend)
 
 =item B<Guava> Guava Library (uses Vcs::Git as Vcs backend)
 
 =item B<JacksonCore> Jackson core (uses Vcs::Git as Vcs backend)
+
+=item B<JacksonDatabind> Jackson data binding utilities (uses Vcs::Git as Vcs backend)
+
+=item B<JacksonXml> Jackson XML utilities (uses Vcs::Git as Vcs backend)
+
+=item B<Jsoup> jsoup HTML parser (uses Vcs::Git as Vcs backend)
+
+=item B<Lang>  Commons lang (uses Vcs::Git as Vcs backend)
+
+=item B<Math>  Commons math (uses Vcs::Git as Vcs backend)
+
+=item B<Mockito> Mockito mock object framework (uses Vcs::Git as Vcs backend)
+
+=item B<Time>  Joda-time (uses Vcs::Git as Vcs backend)
 
 =back
 

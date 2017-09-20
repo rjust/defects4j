@@ -1,0 +1,12 @@
+diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
+index eda7f79..5f7d581 100644
+--- a/java/org/jsoup/parser/TokeniserState.java
++++ b/java/org/jsoup/parser/TokeniserState.java
+@@ -1168,7 +1168,6 @@ enum TokeniserState {
+                     break;
+                 case nullChar:
+                     t.error(this);
+-                    r.advance();
+                     t.commentPending.data.append(replacementChar);
+                     break;
+                 case eof:

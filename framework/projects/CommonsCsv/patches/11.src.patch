@@ -1,0 +1,124 @@
+diff --git a/java/org/apache/commons/csv/CSVFormat.java b/java/org/apache/commons/csv/CSVFormat.java
+index 019e767..3e8df5a 100644
+--- a/java/org/apache/commons/csv/CSVFormat.java
++++ b/java/org/apache/commons/csv/CSVFormat.java
+@@ -191,7 +191,7 @@ public class CSVFormat implements Serializable {
+         this.ignoreSurroundingSpaces = ignoreSurroundingSpaces;
+         this.ignoreEmptyLines = ignoreEmptyLines;
+         this.recordSeparator = lineSeparator;
+-        this.header = header == null ? null : header.clone();
++        this.header = header;
+     }
+ 
+     /**
+@@ -376,109 +376,7 @@ public class CSVFormat implements Serializable {
+     public Quote getQuotePolicy() {
+         return quotePolicy;
+     }
+-
+-    @Override
+-    public int hashCode()
+-    {
+-        final int prime = 31;
+-        int result = 1;
+-
+-        result = prime * result + delimiter;
+-        result = prime * result + ((quotePolicy == null) ? 0 : quotePolicy.hashCode());
+-        result = prime * result + ((quoteChar == null) ? 0 : quoteChar.hashCode());
+-        result = prime * result + ((commentStart == null) ? 0 : commentStart.hashCode());
+-        result = prime * result + ((escape == null) ? 0 : escape.hashCode());
+-        result = prime * result + (ignoreSurroundingSpaces ? 1231 : 1237);
+-        result = prime * result + (ignoreEmptyLines ? 1231 : 1237);
+-        result = prime * result + ((recordSeparator == null) ? 0 : recordSeparator.hashCode());
+-        result = prime * result + Arrays.hashCode(header);
+-        return result;
+-    }
+-
+-    @Override
+-    public boolean equals(Object obj)
+-    {
+-        if (this == obj)
+-        {
+-            return true;
+-        }
+-        if (obj == null)
+-        {
+-            return false;
+-        }
+-        if (getClass() != obj.getClass())
+-        {
+-            return false;
+-        }
+-
+-        CSVFormat other = (CSVFormat) obj;
+-        if (delimiter != other.delimiter)
+-        {
+-            return false;
+-        }
+-        if (quotePolicy != other.quotePolicy)
+-        {
+-            return false;
+-        }
+-        if (quoteChar == null)
+-        {
+-            if (other.quoteChar != null)
+-            {
+-                return false;
+-            }
+-        }
+-        else if (!quoteChar.equals(other.quoteChar))
+-        {
+-            return false;
+-        }
+-        if (commentStart == null)
+-        {
+-            if (other.commentStart != null)
+-            {
+-                return false;
+-            }
+-        }
+-        else if (!commentStart.equals(other.commentStart))
+-        {
+-            return false;
+-        }
+-        if (escape == null)
+-        {
+-            if (other.escape != null)
+-            {
+-                return false;
+-            }
+-        }
+-        else if (!escape.equals(other.escape))
+-        {
+-            return false;
+-        }
+-        if (!Arrays.equals(header, other.header))
+-        {
+-            return false;
+-        }
+-        if (ignoreSurroundingSpaces != other.ignoreSurroundingSpaces)
+-        {
+-            return false;
+-        }
+-        if (ignoreEmptyLines != other.ignoreEmptyLines)
+-        {
+-            return false;
+-        }
+-        if (recordSeparator == null)
+-        {
+-            if (other.recordSeparator != null)
+-            {
+-                return false;
+-            }
+-        }
+-        else if (!recordSeparator.equals(other.recordSeparator))
+-        {
+-            return false;
+-        }
+-        return true;
+-    }
+-
++    
+     public static class CSVFormatBuilder {
+ 
+         private char delimiter;

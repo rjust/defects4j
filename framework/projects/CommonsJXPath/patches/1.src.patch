@@ -1,0 +1,13 @@
+diff --git a/java/org/apache/commons/jxpath/ri/axes/ChildContext.java b/java/org/apache/commons/jxpath/ri/axes/ChildContext.java
+index f4853f2..550f666 100644
+--- a/java/org/apache/commons/jxpath/ri/axes/ChildContext.java
++++ b/java/org/apache/commons/jxpath/ri/axes/ChildContext.java
+@@ -110,7 +110,7 @@ public class ChildContext extends EvalContext {
+             return;
+         }
+         NodePointer useParent = startFromParentLocation ? parent.getParent() : parent;
+-        iterator = useParent == null ? null : useParent.childIterator(nodeTest, reverse,
++        iterator = useParent.childIterator(nodeTest, reverse,
+                 startFromParentLocation ? parent : null);
+     }
+ }

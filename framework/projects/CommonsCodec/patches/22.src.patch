@@ -1,0 +1,32 @@
+diff --git a/org/apache/commons/codec/language/RefinedSoundex.java b/org/apache/commons/codec/language/RefinedSoundex.java
+index 934a785..ad46621 100755
+--- a/org/apache/commons/codec/language/RefinedSoundex.java
++++ b/org/apache/commons/codec/language/RefinedSoundex.java
+@@ -30,7 +30,13 @@ import org.apache.commons.codec.StringEncoder;
+  */
+ public class RefinedSoundex implements StringEncoder {
+ 
+-   /**
++    /**
++	 * This static variable contains an instance of the RefinedSoundex using
++	 * the US_ENGLISH mapping.
++	 */
++    public static final RefinedSoundex US_ENGLISH = new RefinedSoundex();
++
++    /**
+ 	 * RefinedSoundex is *refined* for a number of reasons one being that the
+ 	 * mappings have been altered. This implementation contains default
+ 	 * mappings for US English.
+@@ -45,12 +51,6 @@ public class RefinedSoundex implements StringEncoder {
+     private final char[] soundexMapping;
+ 
+     /**
+-	 * This static variable contains an instance of the RefinedSoundex using
+-	 * the US_ENGLISH mapping.
+-	 */
+-    public static final RefinedSoundex US_ENGLISH = new RefinedSoundex();
+-
+-     /**
+ 	 * Creates an instance of the RefinedSoundex object using the default US
+ 	 * English mapping.
+ 	 */

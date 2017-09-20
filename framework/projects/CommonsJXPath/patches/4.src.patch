@@ -1,0 +1,27 @@
+diff --git a/org/apache/commons/jxpath/ri/model/beans/BeanPropertyPointer.java b/org/apache/commons/jxpath/ri/model/beans/BeanPropertyPointer.java
+index 53b499a..caf9e4f 100644
+--- a/org/apache/commons/jxpath/ri/model/beans/BeanPropertyPointer.java
++++ b/org/apache/commons/jxpath/ri/model/beans/BeanPropertyPointer.java
+@@ -208,7 +208,7 @@ public class BeanPropertyPointer extends PropertyPointer {
+         if (hint == -1) {
+             return 1;
+         }
+-        return super.getLength();
++        return ValueUtils.getLength(getBaseValue());
+     }
+ 
+     /**
+diff --git a/org/apache/commons/jxpath/ri/model/beans/PropertyPointer.java b/org/apache/commons/jxpath/ri/model/beans/PropertyPointer.java
+index f7e2525..52aa39a 100644
+--- a/org/apache/commons/jxpath/ri/model/beans/PropertyPointer.java
++++ b/org/apache/commons/jxpath/ri/model/beans/PropertyPointer.java
+@@ -149,8 +149,7 @@ public abstract class PropertyPointer extends NodePointer {
+      * @return int length
+      */
+     public int getLength() {
+-        Object baseValue = getBaseValue();
+-        return baseValue == null ? 1 : ValueUtils.getLength(baseValue);
++        return ValueUtils.getLength(getBaseValue());
+     }
+ 
+     /**

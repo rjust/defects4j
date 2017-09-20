@@ -1,0 +1,264 @@
+diff --git a/java/org/apache/commons/codec/binary/Base32.java b/java/org/apache/commons/codec/binary/Base32.java
+index d96c205..4fb9ef2 100644
+--- a/java/org/apache/commons/codec/binary/Base32.java
++++ b/java/org/apache/commons/codec/binary/Base32.java
+@@ -164,33 +164,10 @@ public class Base32 extends BaseNCodec {
+      * <p>
+      * When encoding the line length is 0 (no chunking).
+      * </p>
+-     * @param pad byte used as padding byte.
+-     */
+-    public Base32(final byte pad) {
+-        this(false, pad);
+-    }
+-
+-    /**
+-     * Creates a Base32 codec used for decoding and encoding.
+-     * <p>
+-     * When encoding the line length is 0 (no chunking).
+-     * </p>
+      * @param useHex if {@code true} then use Base32 Hex alphabet
+      */
+     public Base32(final boolean useHex) {
+-        this(0, null, useHex, PAD_DEFAULT);
+-    }
+-
+-    /**
+-     * Creates a Base32 codec used for decoding and encoding.
+-     * <p>
+-     * When encoding the line length is 0 (no chunking).
+-     * </p>
+-     * @param useHex if {@code true} then use Base32 Hex alphabet
+-     * @param pad byte used as padding byte.
+-     */
+-    public Base32(final boolean useHex, final byte pad) {
+-        this(0, null, useHex, pad);
++        this(0, null, useHex);
+     }
+ 
+     /**
+@@ -227,7 +204,7 @@ public class Base32 extends BaseNCodec {
+      *             The provided lineSeparator included some Base32 characters. That's not going to work!
+      */
+     public Base32(final int lineLength, final byte[] lineSeparator) {
+-        this(lineLength, lineSeparator, false, PAD_DEFAULT);
++        this(lineLength, lineSeparator, false);
+     }
+ 
+     /**
+@@ -252,35 +229,10 @@ public class Base32 extends BaseNCodec {
+      *             lineLength &gt; 0 and lineSeparator is null.
+      */
+     public Base32(final int lineLength, final byte[] lineSeparator, final boolean useHex) {
+-        this(lineLength, lineSeparator, useHex, PAD_DEFAULT);
+-    }
+-
+-    /**
+-     * Creates a Base32 / Base32 Hex codec used for decoding and encoding.
+-     * <p>
+-     * When encoding the line length and line separator are given in the constructor.
+-     * </p>
+-     * <p>
+-     * Line lengths that aren't multiples of 8 will still essentially end up being multiples of 8 in the encoded data.
+-     * </p>
+-     *
+-     * @param lineLength
+-     *            Each line of encoded data will be at most of the given length (rounded down to nearest multiple of
+-     *            8). If lineLength &lt;= 0, then the output will not be divided into lines (chunks). Ignored when
+-     *            decoding.
+-     * @param lineSeparator
+-     *            Each line of encoded data will end with this sequence of bytes.
+-     * @param useHex
+-     *            if {@code true}, then use Base32 Hex alphabet, otherwise use Base32 alphabet
+-     * @param pad byte used as padding byte.
+-     * @throws IllegalArgumentException
+-     *             The provided lineSeparator included some Base32 characters. That's not going to work! Or the
+-     *             lineLength &gt; 0 and lineSeparator is null.
+-     */
+-    public Base32(final int lineLength, final byte[] lineSeparator, final boolean useHex, final byte pad) {
+-        super(BYTES_PER_UNENCODED_BLOCK, BYTES_PER_ENCODED_BLOCK, lineLength,
+-                lineSeparator == null ? 0 : lineSeparator.length, pad);
+-        if (useHex) {
++        super(BYTES_PER_UNENCODED_BLOCK, BYTES_PER_ENCODED_BLOCK,
++                lineLength,
++                lineSeparator == null ? 0 : lineSeparator.length);
++        if (useHex){
+             this.encodeTable = HEX_ENCODE_TABLE;
+             this.decodeTable = HEX_DECODE_TABLE;
+         } else {
+@@ -289,7 +241,7 @@ public class Base32 extends BaseNCodec {
+         }
+         if (lineLength > 0) {
+             if (lineSeparator == null) {
+-                throw new IllegalArgumentException("lineLength " + lineLength + " > 0, but lineSeparator is null");
++                throw new IllegalArgumentException("lineLength "+lineLength+" > 0, but lineSeparator is null");
+             }
+             // Must be done after initializing the tables
+             if (containsAlphabetOrPad(lineSeparator)) {
+@@ -304,10 +256,6 @@ public class Base32 extends BaseNCodec {
+             this.lineSeparator = null;
+         }
+         this.decodeSize = this.encodeSize - 1;
+-
+-        if (isInAlphabet(pad) || isWhiteSpace(pad)) {
+-            throw new IllegalArgumentException("pad must not be in alphabet or whitespace");
+-        }
+     }
+ 
+     /**
+@@ -344,7 +292,7 @@ public class Base32 extends BaseNCodec {
+         }
+         for (int i = 0; i < inAvail; i++) {
+             final byte b = in[inPos++];
+-            if (b == pad) {
++            if (b == PAD) {
+                 // We're done.
+                 context.eof = true;
+                 break;
+@@ -450,22 +398,22 @@ public class Base32 extends BaseNCodec {
+                 case 1 : // Only 1 octet; take top 5 bits then remainder
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >> 3) & MASK_5BITS]; // 8-1*5 = 3
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea << 2) & MASK_5BITS]; // 5-3=2
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
+                     break;
+                 case 2 : // 2 octets = 16 bits to use
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >> 11) & MASK_5BITS]; // 16-1*5 = 11
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  6) & MASK_5BITS]; // 16-2*5 = 6
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  1) & MASK_5BITS]; // 16-3*5 = 1
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea <<  4) & MASK_5BITS]; // 5-1 = 4
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
+                     break;
+                 case 3 : // 3 octets = 24 bits to use
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >> 19) & MASK_5BITS]; // 24-1*5 = 19
+@@ -473,9 +421,9 @@ public class Base32 extends BaseNCodec {
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  9) & MASK_5BITS]; // 24-3*5 = 9
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  4) & MASK_5BITS]; // 24-4*5 = 4
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea <<  1) & MASK_5BITS]; // 5-4 = 1
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
+-                    buffer[context.pos++] = pad;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
++                    buffer[context.pos++] = PAD;
+                     break;
+                 case 4 : // 4 octets = 32 bits to use
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >> 27) & MASK_5BITS]; // 32-1*5 = 27
+@@ -485,7 +433,7 @@ public class Base32 extends BaseNCodec {
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  7) & MASK_5BITS]; // 32-5*5 =  7
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea >>  2) & MASK_5BITS]; // 32-6*5 =  2
+                     buffer[context.pos++] = encodeTable[(int)(context.lbitWorkArea <<  3) & MASK_5BITS]; // 5-2 = 3
+-                    buffer[context.pos++] = pad;
++                    buffer[context.pos++] = PAD;
+                     break;
+                 default:
+                     throw new IllegalStateException("Impossible modulus "+context.modulus);
+diff --git a/java/org/apache/commons/codec/binary/Base64.java b/java/org/apache/commons/codec/binary/Base64.java
+index 82c6402..b7ec687 100644
+--- a/java/org/apache/commons/codec/binary/Base64.java
++++ b/java/org/apache/commons/codec/binary/Base64.java
+@@ -348,8 +348,8 @@ public class Base64 extends BaseNCodec {
+                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea << 4) & MASK_6BITS];
+                     // URL-SAFE skips the padding to further reduce size.
+                     if (encodeTable == STANDARD_ENCODE_TABLE) {
+-                        buffer[context.pos++] = pad;
+-                        buffer[context.pos++] = pad;
++                        buffer[context.pos++] = PAD;
++                        buffer[context.pos++] = PAD;
+                     }
+                     break;
+ 
+@@ -359,7 +359,7 @@ public class Base64 extends BaseNCodec {
+                     buffer[context.pos++] = encodeTable[(context.ibitWorkArea << 2) & MASK_6BITS];
+                     // URL-SAFE skips the padding to further reduce size.
+                     if (encodeTable == STANDARD_ENCODE_TABLE) {
+-                        buffer[context.pos++] = pad;
++                        buffer[context.pos++] = PAD;
+                     }
+                     break;
+                 default:
+@@ -432,7 +432,7 @@ public class Base64 extends BaseNCodec {
+         for (int i = 0; i < inAvail; i++) {
+             final byte[] buffer = ensureBufferSize(decodeSize, context);
+             final byte b = in[inPos++];
+-            if (b == pad) {
++            if (b == PAD) {
+                 // We're done.
+                 context.eof = true;
+                 break;
+diff --git a/java/org/apache/commons/codec/binary/BaseNCodec.java b/java/org/apache/commons/codec/binary/BaseNCodec.java
+index 8652caa..4472885 100644
+--- a/java/org/apache/commons/codec/binary/BaseNCodec.java
++++ b/java/org/apache/commons/codec/binary/BaseNCodec.java
+@@ -159,8 +159,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
+     @Deprecated
+     protected final byte PAD = PAD_DEFAULT; // instance variable just in case it needs to vary later
+ 
+-    protected final byte pad; // instance variable just in case it needs to vary later
+-
+     /** Number of bytes in each full block of unencoded data, e.g. 4 for Base64 and 5 for Base32 */
+     private final int unencodedBlockSize;
+ 
+@@ -189,27 +187,11 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
+      */
+     protected BaseNCodec(final int unencodedBlockSize, final int encodedBlockSize,
+                          final int lineLength, final int chunkSeparatorLength) {
+-        this(unencodedBlockSize, encodedBlockSize, lineLength, chunkSeparatorLength, PAD_DEFAULT);
+-    }
+-
+-    /**
+-     * Note <code>lineLength</code> is rounded down to the nearest multiple of {@link #encodedBlockSize}
+-     * If <code>chunkSeparatorLength</code> is zero, then chunking is disabled.
+-     * @param unencodedBlockSize the size of an unencoded block (e.g. Base64 = 3)
+-     * @param encodedBlockSize the size of an encoded block (e.g. Base64 = 4)
+-     * @param lineLength if &gt; 0, use chunking with a length <code>lineLength</code>
+-     * @param chunkSeparatorLength the chunk separator length, if relevant
+-     * @param pad byte used as padding byte.
+-     */
+-    protected BaseNCodec(final int unencodedBlockSize, final int encodedBlockSize,
+-                         final int lineLength, final int chunkSeparatorLength, final byte pad) {
+         this.unencodedBlockSize = unencodedBlockSize;
+         this.encodedBlockSize = encodedBlockSize;
+         final boolean useChunking = lineLength > 0 && chunkSeparatorLength > 0;
+         this.lineLength = useChunking ? (lineLength / encodedBlockSize) * encodedBlockSize : 0;
+         this.chunkSeparatorLength = chunkSeparatorLength;
+-
+-        this.pad = pad;
+     }
+ 
+     /**
+@@ -462,7 +444,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
+     public boolean isInAlphabet(final byte[] arrayOctet, final boolean allowWSPad) {
+         for (int i = 0; i < arrayOctet.length; i++) {
+             if (!isInAlphabet(arrayOctet[i]) &&
+-                    (!allowWSPad || (arrayOctet[i] != pad) && !isWhiteSpace(arrayOctet[i]))) {
++                    (!allowWSPad || (arrayOctet[i] != PAD) && !isWhiteSpace(arrayOctet[i]))) {
+                 return false;
+             }
+         }
+@@ -496,7 +478,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
+             return false;
+         }
+         for (final byte element : arrayOctet) {
+-            if (pad == element || isInAlphabet(element)) {
++            if (PAD == element || isInAlphabet(element)) {
+                 return true;
+             }
+         }

@@ -31,6 +31,18 @@ fi
 wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
 new=$($cmd)
 
+# Install additional repositories (separate from core defects4j)
+./get_commonscli.sh
+./get_commonscodec.sh
+./get_commonscsv.sh
+./get_commonsjxpath.sh
+./get_guava.sh
+./get_jacksoncore.sh
+./get_jacksondatabind.sh
+./get_jacksonxml.sh
+./get_jsoup.sh
+./get_mockito.sh
+
 # Exit if no newer file is available
 [ "$old" == "$new" ] && exit 0
 

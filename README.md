@@ -7,16 +7,23 @@ The projects
 ---------------
 Defects4J contains bugs from the following open-source projects:
 
-| Identifier | Project name         | Number of bugs |
-|------------|----------------------|----------------|
-| Chart      | JFreechart           |  26            |
-| Closure    | Closure compiler     | 133            |
-| Guava      | Guava library        |   9            |
-| JacksonCore| Jackson core         |  13            |
-| Lang       | Apache commons-lang  |  65            |
-| Math       | Apache commons-math  | 106            |
-| Mockito    | Mockito              |  38            |
-| Time       | Joda-Time            |  27            |
+| Identifier      | Project name                         | Number of bugs |
+|-----------------|--------------------------------------|----------------|
+| Chart           | JFreechart                           |  26            |
+| Closure         | Closure compiler                     | 133            |
+| CommonsCodec    | Apache commons-encoders and decoders |  22            |  
+| CommonsCLI      | Apache commons-CLI library           |  24            |
+| CommonsCSV      | Apache commons-csv                   |  12            |
+| CommonsJXPath   | Apache commons-JXPath                |  14            |
+| Guava           | Guava library                        |   9            |
+| JacksonCore     | Jackson core                         |  13            |
+| JacksonDatabind | Jackson data binding utilities       |  39            |
+| JacksonXml      | Jackson XML utilities                |   5            |
+| Jsoup           | jsoup HTML parser                    |  64            |
+| Lang            | Apache commons-lang                  |  65            |
+| Math            | Apache commons-math                  | 106            |
+| Mockito         | Mockito                              |  38            |
+| Time            | Joda-Time                            |  27            |
 
 The bugs
 ---------------
@@ -71,8 +78,8 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
-[issta14]: http://homes.cs.washington.edu/~rjust/publ/defects4j_issta_2014.pdf
-[fse14]: http://homes.cs.washington.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+[issta14]: http://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: http://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 
 Documentation
 --------------------
@@ -93,7 +100,7 @@ Test execution framework
 --------------------------
 The test execution framework provides the following scripts:
   - framework/bin/run_bug_detection.pl:         
-    Determines real fault detection rates of generated test suites and stores
+    Determines real fault detection rates of generated test suites and stores    
     the results in a csv-based database. Note that this script requires Perl DBI.    
                                                                                  
   - framework/bin/run_mutation.pl:                                               
@@ -108,7 +115,7 @@ The test execution framework provides the following scripts:
     Generates test suites using EvoSuite.         
                                                                                  
   - framework/bin/run_randoop.pl: 
-    Generates test suites using Randoop.
+    Generates test suites using Randoop.         
 
 Bug mining
 -----------------

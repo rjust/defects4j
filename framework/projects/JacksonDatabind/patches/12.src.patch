@@ -1,0 +1,45 @@
+diff --git a/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java b/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java
+index 817e29e..760dfbe 100644
+--- a/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java
++++ b/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java
+@@ -580,7 +580,31 @@ public class BuilderBasedDeserializer
+             // creator property?
+             SettableBeanProperty creatorProp = creator.findCreatorProperty(propName);
+             if (creatorProp != null) {
+-                buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt));
++                // Last creator property to set?
++                if (buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt))) {
++                    t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT
++                    Object bean;
++                    try {
++                        bean = creator.build(ctxt, buffer);
++                    } catch (Exception e) {
++                        wrapAndThrow(e, _beanType.getRawClass(), propName, ctxt);
++                        continue; // never gets here
++                    }
++                    // if so, need to copy all remaining tokens into buffer
++                    while (t == JsonToken.FIELD_NAME) {
++                        p.nextToken(); // to skip name
++                        tokens.copyCurrentStructure(p);
++                        t = p.nextToken();
++                    }
++                    tokens.writeEndObject();
++                    if (bean.getClass() != _beanType.getRawClass()) {
++                        // !!! 08-Jul-2011, tatu: Could probably support; but for now
++                        //   it's too complicated, so bail out
++                        ctxt.reportMappingException("Can not create polymorphic instances with unwrapped values");
++                        return null;
++                    }
++                    return _unwrappedPropertyHandler.processUnwrapped(p, ctxt, bean, tokens);
++                }
+                 continue;
+             }
+             // Object Id property?
+@@ -675,6 +699,7 @@ public class BuilderBasedDeserializer
+                 } catch (Exception e) {
+                     wrapAndThrow(e, bean, propName, ctxt);
+                 }
++                continue;
+             } else {
+                 // Unknown: let's call handler method
+                 handleUnknownProperty(p, ctxt, bean, propName);

@@ -1,0 +1,36 @@
+diff --git a/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java b/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+index 2e68f5a..7d91706 100644
+--- a/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
++++ b/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+@@ -85,7 +85,7 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
+             return containsMatch((Iterator) left, right);
+         }
+         if (right instanceof Iterator) {
+-            return containsMatch(left, (Iterator) right);
++            return containsMatch((Iterator) right, left);
+         }
+         double ld = InfoSetUtil.doubleValue(left);
+         if (Double.isNaN(ld)) {
+@@ -130,22 +130,6 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
+     }
+ 
+     /**
+-     * Learn whether any element returned from an Iterator matches a given value.
+-     * @param it Iterator
+-     * @param value to look for
+-     * @return whether a match was found
+-     */
+-    private boolean containsMatch(Object value, Iterator it) {
+-        while (it.hasNext()) {
+-            Object element = it.next();
+-            if (compute(value, element)) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-
+-    /**
+      * Learn whether there is an intersection between two Iterators.
+      * @param lit left Iterator
+      * @param rit right Iterator

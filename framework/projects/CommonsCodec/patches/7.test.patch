@@ -1,0 +1,74 @@
+diff --git a/java/org/apache/commons/codec/net/BCodecTest.java b/java/org/apache/commons/codec/net/BCodecTest.java
+index 343a20e..053915f 100644
+--- a/java/org/apache/commons/codec/net/BCodecTest.java
++++ b/java/org/apache/commons/codec/net/BCodecTest.java
+@@ -21,8 +21,6 @@ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertNull;
+ import static org.junit.Assert.fail;
+ 
+-import java.nio.charset.UnsupportedCharsetException;
+-
+ import org.apache.commons.codec.CharEncoding;
+ import org.apache.commons.codec.DecoderException;
+ import org.apache.commons.codec.EncoderException;
+@@ -125,9 +123,21 @@ public class BCodecTest {
+         }
+     }
+ 
+-    @Test(expected=UnsupportedCharsetException.class)
++    @Test
+     public void testInvalidEncoding() {
+-        new BCodec("NONSENSE");
++        BCodec bcodec = new BCodec("NONSENSE");
++        try {
++            bcodec.encode("Hello there!");
++            fail("We set the encoding to a bogus NONSENSE value, this shouldn't have worked.");
++        } catch (EncoderException ee) {
++            // Exception expected, test segment passes.
++        }
++        try {
++            bcodec.decode("=?NONSENSE?B?Hello there!?=");
++            fail("We set the encoding to a bogus NONSENSE value, this shouldn't have worked.");
++        } catch (DecoderException ee) {
++            // Exception expected, test segment passes.
++        }
+     }
+ 
+     @Test
+diff --git a/java/org/apache/commons/codec/net/QCodecTest.java b/java/org/apache/commons/codec/net/QCodecTest.java
+index f65ae07..c4f44ab 100644
+--- a/java/org/apache/commons/codec/net/QCodecTest.java
++++ b/java/org/apache/commons/codec/net/QCodecTest.java
+@@ -24,8 +24,6 @@ import static org.junit.Assert.assertNull;
+ import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.fail;
+ 
+-import java.nio.charset.UnsupportedCharsetException;
+-
+ import org.apache.commons.codec.CharEncoding;
+ import org.apache.commons.codec.DecoderException;
+ import org.apache.commons.codec.EncoderException;
+@@ -152,9 +150,21 @@ public class QCodecTest {
+     }
+     
+ 
+-    @Test(expected=UnsupportedCharsetException.class)
++    @Test
+     public void testInvalidEncoding() {
+-        new QCodec("NONSENSE");
++        QCodec qcodec = new QCodec("NONSENSE");
++            try {
++               qcodec.encode("Hello there!");
++                fail( "We set the encoding to a bogus NONSENSE vlaue, this shouldn't have worked.");
++            } catch (EncoderException ee) {
++                // Exception expected, test segment passes.
++            }
++            try {
++               qcodec.decode("=?NONSENSE?Q?Hello there!?=");
++                fail( "We set the encoding to a bogus NONSENSE vlaue, this shouldn't have worked.");
++            } catch (DecoderException ee) {
++                // Exception expected, test segment passes.
++            }
+     }
+ 
+     @Test

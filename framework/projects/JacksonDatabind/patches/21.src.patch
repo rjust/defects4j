@@ -1,0 +1,79 @@
+diff --git a/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java b/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
+index 05240d6..48cadfc 100644
+--- a/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
++++ b/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
+@@ -228,7 +228,6 @@ public abstract class BeanDeserializerBase
+         _objectIdReader = builder.getObjectIdReader();
+         _nonStandardCreation = (_unwrappedPropertyHandler != null)
+             || _valueInstantiator.canCreateUsingDelegate()
+-            || _valueInstantiator.canCreateUsingArrayDelegate() // new in 2.7
+             || _valueInstantiator.canCreateFromObjectWith()
+             || !_valueInstantiator.canCreateUsingDefault()
+             ;
+diff --git a/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java b/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
+index 33d8878..7ccd614 100644
+--- a/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
++++ b/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
+@@ -172,24 +172,14 @@ public class CollectionDeserializer
+     {
+         // May need to resolve types for delegate-based creators:
+         JsonDeserializer<Object> delegateDeser = null;
+-        if (_valueInstantiator != null) {
+-            if (_valueInstantiator.canCreateUsingDelegate()) {
+-                JavaType delegateType = _valueInstantiator.getDelegateType(ctxt.getConfig());
+-                if (delegateType == null) {
+-                    throw new IllegalArgumentException("Invalid delegate-creator definition for "+_collectionType
+-                            +": value instantiator ("+_valueInstantiator.getClass().getName()
+-                            +") returned true for 'canCreateUsingDelegate()', but null for 'getDelegateType()'");
+-                }
+-                delegateDeser = findDeserializer(ctxt, delegateType, property);
+-            } else if (_valueInstantiator.canCreateUsingArrayDelegate()) {
+-                JavaType delegateType = _valueInstantiator.getArrayDelegateType(ctxt.getConfig());
+-                if (delegateType == null) {
+-                    throw new IllegalArgumentException("Invalid array-delegate-creator definition for "+_collectionType
+-                            +": value instantiator ("+_valueInstantiator.getClass().getName()
+-                            +") returned true for 'canCreateUsingArrayDelegate()', but null for 'getArrayDelegateType()'");
+-                }
+-                delegateDeser = findDeserializer(ctxt, delegateType, property);
++        if ((_valueInstantiator != null) && _valueInstantiator.canCreateUsingDelegate()) {
++            JavaType delegateType = _valueInstantiator.getDelegateType(ctxt.getConfig());
++            if (delegateType == null) {
++                throw new IllegalArgumentException("Invalid delegate-creator definition for "+_collectionType
++                        +": value instantiator ("+_valueInstantiator.getClass().getName()
++                        +") returned true for 'canCreateUsingDelegate()', but null for 'getDelegateType()'");
+             }
++            delegateDeser = findDeserializer(ctxt, delegateType, property);
+         }
+         // [databind#1043]: allow per-property allow-wrapping of single overrides:
+         // 11-Dec-2015, tatu: Should we pass basic `Collection.class`, or more refined? Mostly
+diff --git a/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java b/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
+index b833fe9..f0cb5f1 100644
+--- a/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
++++ b/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
+@@ -262,23 +262,15 @@ public class StdValueInstantiator
+     @Override
+     public Object createUsingDelegate(DeserializationContext ctxt, Object delegate) throws IOException
+     {
+-        // 04-Oct-2016, tatu: Need delegation to work around [databind#1392]...
+-        if (_delegateCreator == null) {
+-            if (_arrayDelegateCreator != null) {
+-                return _createUsingDelegate(_arrayDelegateCreator, _arrayDelegateArguments, ctxt, delegate);
+-            }
+-        }
+         return _createUsingDelegate(_delegateCreator, _delegateArguments, ctxt, delegate);
+     }
+ 
+     @Override
+     public Object createUsingArrayDelegate(DeserializationContext ctxt, Object delegate) throws IOException
+     {
+-        if (_arrayDelegateCreator == null) {
+-            if (_delegateCreator != null) { // sanity-check; caller should check
+-                // fallback to the classic delegate creator
+-                return createUsingDelegate(ctxt, delegate);
+-            }
++        if (_arrayDelegateCreator == null) { // sanity-check; caller should check
++            // fallback to the classic delegate creator
++            return createUsingDelegate(ctxt, delegate);
+         }
+         return _createUsingDelegate(_arrayDelegateCreator, _arrayDelegateArguments, ctxt, delegate);
+     }

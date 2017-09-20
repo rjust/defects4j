@@ -1,0 +1,49 @@
+diff --git a/java/org/apache/commons/codec/binary/StringUtils.java b/java/org/apache/commons/codec/binary/StringUtils.java
+index 7bb15e3..84a2a72 100644
+--- a/java/org/apache/commons/codec/binary/StringUtils.java
++++ b/java/org/apache/commons/codec/binary/StringUtils.java
+@@ -336,7 +336,7 @@ public class StringUtils {
+      * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
+      */
+     public static String newStringIso8859_1(final byte[] bytes) {
+-        return newString(bytes, Charsets.ISO_8859_1);
++        return new String(bytes, Charsets.ISO_8859_1);
+     }
+ 
+     /**
+@@ -352,7 +352,7 @@ public class StringUtils {
+      * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
+      */
+     public static String newStringUsAscii(final byte[] bytes) {
+-        return newString(bytes, Charsets.US_ASCII);
++        return new String(bytes, Charsets.US_ASCII);
+     }
+ 
+     /**
+@@ -368,7 +368,7 @@ public class StringUtils {
+      * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
+      */
+     public static String newStringUtf16(final byte[] bytes) {
+-        return newString(bytes, Charsets.UTF_16);
++        return new String(bytes, Charsets.UTF_16);
+     }
+ 
+     /**
+@@ -384,7 +384,7 @@ public class StringUtils {
+      * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
+      */
+     public static String newStringUtf16Be(final byte[] bytes) {
+-        return newString(bytes, Charsets.UTF_16BE);
++        return new String(bytes, Charsets.UTF_16BE);
+     }
+ 
+     /**
+@@ -400,7 +400,7 @@ public class StringUtils {
+      * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
+      */
+     public static String newStringUtf16Le(final byte[] bytes) {
+-        return newString(bytes, Charsets.UTF_16LE);
++        return new String(bytes, Charsets.UTF_16LE);
+     }
+ 
+     /**

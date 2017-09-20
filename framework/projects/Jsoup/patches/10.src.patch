@@ -1,0 +1,138 @@
+diff --git a/java/org/jsoup/nodes/DocumentType.java b/java/org/jsoup/nodes/DocumentType.java
+index 4e7730b..838ec6f 100644
+--- a/java/org/jsoup/nodes/DocumentType.java
++++ b/java/org/jsoup/nodes/DocumentType.java
+@@ -9,10 +9,7 @@ import org.jsoup.nodes.Document.OutputSettings.*;
+  * A {@code <!DOCTYPE>} node.
+  */
+ public class DocumentType extends Node {
+-    public static final String PUBLIC_KEY = "PUBLIC";
+-    public static final String SYSTEM_KEY = "SYSTEM";
+     private static final String NAME = "name";
+-    private static final String PUB_SYS_KEY = "pubSysKey"; // PUBLIC or SYSTEM
+     private static final String PUBLIC_ID = "publicId";
+     private static final String SYSTEM_ID = "systemId";
+     // todo: quirk mode from publicId and systemId
+@@ -29,27 +26,6 @@ public class DocumentType extends Node {
+ 
+         attr(NAME, name);
+         attr(PUBLIC_ID, publicId);
+-        if (has(PUBLIC_ID)) {
+-            attr(PUB_SYS_KEY, PUBLIC_KEY);
+-        }
+-        attr(SYSTEM_ID, systemId);
+-    }
+-
+-    /**
+-     * Create a new doctype element.
+-     * @param name the doctype's name
+-     * @param publicId the doctype's public ID
+-     * @param systemId the doctype's system ID
+-     * @param baseUri the doctype's base URI
+-     */
+-    public DocumentType(String name, String pubSysKey, String publicId, String systemId, String baseUri) {
+-        super(baseUri);
+-
+-        attr(NAME, name);
+-        if (pubSysKey != null) {
+-            attr(PUB_SYS_KEY, pubSysKey);
+-        }
+-        attr(PUBLIC_ID, publicId);
+         attr(SYSTEM_ID, systemId);
+     }
+ 
+@@ -68,10 +44,8 @@ public class DocumentType extends Node {
+         }
+         if (has(NAME))
+             accum.append(" ").append(attr(NAME));
+-        if (has(PUB_SYS_KEY))
+-            accum.append(" ").append(attr(PUB_SYS_KEY));
+         if (has(PUBLIC_ID))
+-            accum.append(" \"").append(attr(PUBLIC_ID)).append('"');
++            accum.append(" PUBLIC \"").append(attr(PUBLIC_ID)).append('"');
+         if (has(SYSTEM_ID))
+             accum.append(" \"").append(attr(SYSTEM_ID)).append('"');
+         accum.append('>');
+diff --git a/java/org/jsoup/parser/HtmlTreeBuilderState.java b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index c515462..9a40814 100644
+--- a/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -20,7 +20,7 @@ enum HtmlTreeBuilderState {
+                 // todo: quirk state check on doctype ids
+                 Token.Doctype d = t.asDoctype();
+                 DocumentType doctype = new DocumentType(
+-                    tb.settings.normalizeTag(d.getName()), d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(), tb.getBaseUri());
++                    tb.settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier(), tb.getBaseUri());
+                 tb.getDocument().appendChild(doctype);
+                 if (d.isForceQuirks())
+                     tb.getDocument().quirksMode(Document.QuirksMode.quirks);
+diff --git a/java/org/jsoup/parser/Token.java b/java/org/jsoup/parser/Token.java
+index 34baf19..3b110c9 100644
+--- a/java/org/jsoup/parser/Token.java
++++ b/java/org/jsoup/parser/Token.java
+@@ -32,7 +32,6 @@ abstract class Token {
+ 
+     static final class Doctype extends Token {
+         final StringBuilder name = new StringBuilder();
+-        String pubSysKey = null;
+         final StringBuilder publicIdentifier = new StringBuilder();
+         final StringBuilder systemIdentifier = new StringBuilder();
+         boolean forceQuirks = false;
+@@ -44,7 +43,6 @@ abstract class Token {
+         @Override
+         Token reset() {
+             reset(name);
+-            pubSysKey = null;
+             reset(publicIdentifier);
+             reset(systemIdentifier);
+             forceQuirks = false;
+@@ -55,10 +53,6 @@ abstract class Token {
+             return name.toString();
+         }
+ 
+-        String getPubSysKey() {
+-            return pubSysKey;
+-        }
+-
+         String getPublicIdentifier() {
+             return publicIdentifier.toString();
+         }
+diff --git a/java/org/jsoup/parser/TokeniserState.java b/java/org/jsoup/parser/TokeniserState.java
+index 6a97238..2e998d5 100644
+--- a/java/org/jsoup/parser/TokeniserState.java
++++ b/java/org/jsoup/parser/TokeniserState.java
+@@ -1,7 +1,5 @@
+ package org.jsoup.parser;
+ 
+-import org.jsoup.nodes.DocumentType;
+-
+ import java.util.Arrays;
+ 
+ /**
+@@ -1191,11 +1189,9 @@ enum TokeniserState {
+             else if (r.matches('>')) {
+                 t.emitDoctypePending();
+                 t.advanceTransition(Data);
+-            } else if (r.matchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {
+-                t.doctypePending.pubSysKey = DocumentType.PUBLIC_KEY;
++            } else if (r.matchConsumeIgnoreCase("PUBLIC")) {
+                 t.transition(AfterDoctypePublicKeyword);
+-            } else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
+-                t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;
++            } else if (r.matchConsumeIgnoreCase("SYSTEM")) {
+                 t.transition(AfterDoctypeSystemKeyword);
+             } else {
+                 t.error(this);
+diff --git a/java/org/jsoup/parser/XmlTreeBuilder.java b/java/org/jsoup/parser/XmlTreeBuilder.java
+index cfcb1a3..2ac525f 100644
+--- a/java/org/jsoup/parser/XmlTreeBuilder.java
++++ b/java/org/jsoup/parser/XmlTreeBuilder.java
+@@ -97,7 +97,7 @@ public class XmlTreeBuilder extends TreeBuilder {
+     }
+ 
+     void insert(Token.Doctype d) {
+-        DocumentType doctypeNode = new DocumentType(settings.normalizeTag(d.getName()), d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(), baseUri);
++        DocumentType doctypeNode = new DocumentType(settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier(), baseUri);
+         insertNode(doctypeNode);
+     }
+ 

@@ -1,0 +1,11 @@
+com.fasterxml.jackson.databind.type.SimpleType
+com.fasterxml.jackson.databind.type.MapType
+com.fasterxml.jackson.databind.type.ReferenceType
+com.fasterxml.jackson.databind.type.TypeFactory
+com.fasterxml.jackson.databind.type.CollectionLikeType
+com.fasterxml.jackson.databind.JavaType
+com.fasterxml.jackson.databind.type.ArrayType
+com.fasterxml.jackson.databind.type.CollectionType
+com.fasterxml.jackson.databind.type.TypeBindings
+com.fasterxml.jackson.databind.type.MapLikeType
+com.fasterxml.jackson.databind.type.ResolvedRecursiveType

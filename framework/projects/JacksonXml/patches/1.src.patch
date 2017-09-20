@@ -1,0 +1,50 @@
+diff --git a/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java b/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+index 380714a..a06f163 100644
+--- a/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
++++ b/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+@@ -86,16 +86,11 @@ public class XmlMapper extends ObjectMapper
+         _serializationConfig = _serializationConfig.withDefaultPrettyPrinter(DEFAULT_XML_PRETTY_PRINTER);
+     }
+ 
+-    protected XmlMapper(XmlMapper mapper) {
+-        super(mapper);
+-        this._xmlModule = mapper._xmlModule;
+-    }
+-
+     @Override
+     public XmlMapper copy()
+     {
+         _checkInvalidCopy(XmlMapper.class);
+-        return new XmlMapper(this);
++        return new XmlMapper((XmlFactory) _jsonFactory.copy(), _xmlModule);
+     }
+ 
+     @Override
+diff --git a/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java b/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+index 179a331..56ab515 100644
+--- a/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
++++ b/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+@@ -49,11 +49,6 @@ public class XmlSerializerProvider extends DefaultSerializerProvider
+         _rootNameLookup  = src._rootNameLookup;
+     }
+ 
+-    protected XmlSerializerProvider(XmlSerializerProvider toCopy) {
+-        super(toCopy);
+-        this._rootNameLookup = toCopy._rootNameLookup;
+-    }
+-
+     /*
+     /**********************************************************************
+     /* Overridden methods
+@@ -61,11 +56,6 @@ public class XmlSerializerProvider extends DefaultSerializerProvider
+      */
+ 
+     @Override
+-    public DefaultSerializerProvider copy() {
+-        return new XmlSerializerProvider(this);
+-    }
+-
+-    @Override
+     public DefaultSerializerProvider createInstance(SerializationConfig config,
+             SerializerFactory jsf) {
+         return new XmlSerializerProvider(this, config, jsf);

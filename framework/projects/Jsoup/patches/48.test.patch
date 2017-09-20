@@ -1,0 +1,16 @@
+diff --git a/java/org/jsoup/parser/ParserTest.java b/java/org/jsoup/parser/ParserTest.java
+index 077b1b6..786522a 100644
+--- a/java/org/jsoup/parser/ParserTest.java
++++ b/java/org/jsoup/parser/ParserTest.java
+@@ -614,11 +614,6 @@ public class ParserTest {
+         assertEquals("<p id=\"\uFFFD\">Blah \u0000</p>", doc.body().html()); // replaced in attr, NOT replaced in data
+     }
+ 
+-    @Test public void handlesNullInComments() {
+-        Document doc = Jsoup.parse("<body><!-- \u0000 \u0000 -->");
+-        assertEquals("<!-- \uFFFD \uFFFD -->", doc.body().html());
+-    }
+-
+     @Test public void handlesNewlinesAndWhitespaceInTag() {
+         Document doc = Jsoup.parse("<a \n href=\"one\" \r\n id=\"two\" \f >");
+         assertEquals("<a href=\"one\" id=\"two\"></a>", doc.body().html());
