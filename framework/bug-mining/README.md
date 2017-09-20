@@ -1,3 +1,12 @@
+Required CPAN Modules
+----------------------
+- URI
+- DBI
+- JSON
+- JSON::Parse.pm
+- DBD
+- DBD::CSV
+
 Configuring a new project
 ----------------------------
 A Perl module and a wrapper build file are necessary to configure a new project
@@ -62,11 +71,11 @@ The candidate commit database `commit-db`
 5. For trackers jira, github, google, but not sourceforge, use
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
-    - `../../download-issues.pl jira -p lang -o issues | \
-      ../../merge-issue-numbers.pl -f issues.txt`
+    - `../../framework/bug-mining/download-issues.pl jira -p lang -o issues | \  
+      ../../framework/bug-mining/merge-issue-numbers.pl -f issues.txt`
 
 6. Obtain the development history (commit logs) for the project:
-    - `git --git-dir=../../../../project_repos/commons-lang.git/ log > gitlog`
+    - `git --git-dir=../../project_repos/commons-lang.git/ log > gitlog`
 
 7. Cross-reference the commit log with the issue numbers known to be bugs
    (saved in `issues.txt` in this example) by using `vcs-log-xref.pl`. The
@@ -74,10 +83,10 @@ The candidate commit database `commit-db`
    (e.g, issue numbers, keywords, etc.). Note that the regular expression has to
    capture the issue number. The script `merge-commit-db.pl` enumerates the
    output of `vcs-log-xref.pl`, and outputs or updates the `commit-db`:
-    -  `../../vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog \
-       -r ../../../../project_repos/commons-lang.git/ \
-       -c '../../verify-bug-file.sh issues.txt' | \
-       ../../merge-commit-db.pl -f commit-db`
+    -  `../../framework/bug-mining/vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog \  
+       -r ../../project_repos/commons-lang.git/ \  
+       -c '../../framework/bug-mining/verify-bug-file.sh issues.txt' | \  
+       ../../framework/bug-mining/merge-commit-db.pl -f commit-db`  
 
 
    These are the issue trackers, project IDs, and regular expressions we used
@@ -109,23 +118,23 @@ Project setup
 2. Initialize all project revisions with `initialize-revisions.pl`. This script
    will identify the various directory layouts and run a sanity check on each
    revision in `commit-db`:
-    - `../initialize-revisions.pl -p Lang -w .`
+    - `../framework/bug-mining/initialize-revisions.pl -p Lang -w .`
 
 3. Analyze all revisions with `analyze-project.pl`. This will identify suitable
    candidates -- ones that compile and have a non-empty source diff:
-    - `../analyze-project.pl -p Lang -w .`
+    - `../framework/bug-mining/analyze-project.pl -p Lang -w .`
 
 Reproducing faults
 -------------
 1. Determine triggering tests with `get-trigger.pl`. This will determine the
    revisions in `commit-db` that have a test that can reproduce a fault:
-    - `../get-trigger.pl -p Lang -w .`
+    - `../framework/bug-mining/get-trigger.pl -p Lang -w .`
 
 2. Determine the classes modified by the bug fix with `get-class-list.pl`. This
    will determine the list of modified classes for revisions with a reproducible
    fault, and also the list of classes loaded during the execution of the
    triggering test:
-    - `../get-class-list.pl -p Lang -w .`
+    - `../framework/bug-mining/get-class-list.pl -p Lang -w .`
 
 Reviewing revisions and promoting to main database
 ------------------
@@ -142,7 +151,7 @@ Reviewing revisions and promoting to main database
    reproducible fault has an entry with the file name `<id>.src.patch` in the
    `patches` directory:
      - `ls -l Lang/patches/*.src.patch`
-     - `../minimize_patch.pl -p Lang -w . -v <id>`
+     - `../framework/bug-mining/minimize_patch.pl -p Lang -w . -v <id>`
 
    Note that the patch is the *reverse* patch, i.e., patching the fixed revision
    with this patch will reintroduce the fault.
@@ -150,7 +159,7 @@ Reviewing revisions and promoting to main database
 
 4. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
-    - `../promote-to-directory.pl -p Lang -w . -v <id>`
+    - `../framework/bug-mining/promote-to-directory.pl -p Lang -w . -v <id>`
 
    Note: Make sure to specify the `-v` option as the default is to promote all
          found bugs!
