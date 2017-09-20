@@ -1,3 +1,12 @@
+Required CPAN Modules
+----------------------
+- URI
+- DBI
+- JSON
+- JSON::Parse.pm
+- DBD
+- DBD::CSV
+
 Configuring a new project
 ----------------------------
 A Perl module and a wrapper build file are necessary to configure a new project
