@@ -45,6 +45,7 @@ my $PID  = "Lang";
 
 sub new {
     my $class= shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "commons-lang";
     my $src  = "src/main/java";
     my $test = "src/test";
@@ -53,7 +54,7 @@ sub new {
                              "$SCRIPT_DIR/projects/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir); # pass build file as undef
 }
 
 sub src_dir {

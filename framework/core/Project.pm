@@ -107,14 +107,15 @@ use Carp qw(confess);
 
 =head2 Create an instance of a Project
 
-  Project::create_project(project_id)
+  Project::create_project(project_id, work_dir)
 
 Dynamically loads the required submodule, instantiates the project, and returns a
 reference to it.
 
 =cut
 sub create_project {
-    @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
+    # TODO this needs to be >=1 for bug mining or == 1 for non bug mining
+    #@_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
@@ -122,7 +123,7 @@ sub create_project {
     eval { require $module };
     die "Invalid project_id: $pid\n$@" if $@;
 
-    return $class->new();
+    return $class->new(@_);
 }
 
 =pod
@@ -140,7 +141,7 @@ The root (working) directory for a checked-out program version of this project.
 =cut
 sub new {
     @_ >= 6 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $build_file) = @_;
+    my ($class, $pid, $prog, $vcs, $src, $test, $build_file, $work_dir) = @_;
     my $prog_root = $ENV{PROG_ROOT}; $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
     $build_file = "$SCRIPT_DIR/projects/$pid/$pid.build.xml" unless defined $build_file;
 
@@ -152,6 +153,7 @@ sub new {
         _src_dir   => $src,
         _test_dir  => $test,
         _build_file =>$build_file,
+        _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
     };
     bless $self, $class;
     return $self;
@@ -554,6 +556,7 @@ sub fix_tests {
 
     my $pid = $self->{pid};
     my $dir = $self->test_dir($vid);
+    my $work_dir = $self->{_work_dir};
 
     # TODO: Exclusively use version ids rather than revision ids
     my $revision_id = $self->lookup($vid);
@@ -966,6 +969,20 @@ Delegate to the L<VCS> backend.
 sub contains_version_id {
     my ($self, $vid) = @_;
     return $self->{_vcs}->contains_version_id($vid);
+}
+
+=pod
+=item B<checkout_id> C<checkout_id(version [, work_dir])>
+Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
+C<work_dir> is optional, the default is F<"prog_root">.
+=cut
+sub checkout_id {
+    my ($self, $revision_id, $work_dir) = @_; shift;
+    unless (defined $work_dir) {
+        $work_dir = $self->{prog_root} ;
+        push(@_, $work_dir);
+    }
+    return $self->{_vcs}->checkout_id(@_);
 }
 
 =pod
