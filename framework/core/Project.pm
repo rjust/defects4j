@@ -982,7 +982,7 @@ sub checkout_id {
         $work_dir = $self->{prog_root} ;
         push(@_, $work_dir);
     }
-    return $self->{_vcs}->checkout_id(@_);
+    return $self->{_vcs}->checkout_vid(@_);
 }
 
 =pod
