@@ -1020,6 +1020,12 @@ sub apply_patch {
     return $self->{_vcs}->apply_patch(@_);
 }
 
+sub initialize_revision {
+    my ($self, $revision) = @_; shift;
+}
+
+1; #Not sure if this should be removed
+
 ##########################################################################################
 # Helper subroutines
 # TODO: Move to Util module

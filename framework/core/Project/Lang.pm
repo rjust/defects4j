@@ -42,6 +42,7 @@ use Vcs::Git;
 
 our @ISA = qw(Project);
 my $PID  = "Lang";
+my $RANDOM_TEST_FILE = "$SCRIPT_DIR/build-scripts/$PID/random_tests";
 
 sub new {
     my $class= shift;
@@ -55,6 +56,12 @@ sub new {
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir); # pass build file as undef
+}
+
+sub initialize_revision {
+    my ($self, $revision) = @_;
+    $self->SUPER::initialize_revision($revision);
+    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($revision), $RANDOM_TEST_FILE);
 }
 
 sub src_dir {
