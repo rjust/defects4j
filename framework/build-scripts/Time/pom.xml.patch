@@ -1,0 +1,15 @@
+diff --git a/pom.xml b/pom.xml
+index 15ded7e..a4ef7fe 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -407,6 +407,10 @@
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <version>${maven-compiler-plugin.version}</version>
++          <configuration>
++            <target>1.5</target>
++            <source>1.5</source>
++          </configuration>
+         </plugin>
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>

@@ -40,6 +40,7 @@ use File::Basename;
 use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
+use Fcntl qw< LOCK_EX SEEK_END >;
 
 use Constants;
 
@@ -370,6 +371,38 @@ sub extract_test_suite {
     exec_cmd("mkdir -p $test_dir && rm -rf $test_dir/* && tar -xjf $test_suite -C $test_dir",
             "Extract test suite") or return 0;
     return 1;
+}
+
+=item B<append_to_file_unless_matches> C<append_to_file_unless_matches(file, string, regexp)>
+
+This utility method appends C<string> to C<file>, unless C<file>
+contains a line that matches C<regexp>.
+
+This is done in a way that is safe for multiple processes accessing
+C<file> by acquiring flocks.
+
+=cut
+sub append_to_file_unless_matches {
+    my ($file, $string, $includes) = @_;
+    @_ == 3 or die $ARG_ERROR;
+
+    open my $fh, ">>$file" or die "Cannot open file for appending $file: $!";
+    flock ($fh, LOCK_EX) or die "Cannot exclusively lock  $file: $!";
+    open my $fh_in, "<$file" or die "Cannot open file for reading $file: $!";
+    my $seen = 0;
+    while (my $line = <$fh_in>) {
+        if ($line =~ /$includes/) {
+            $seen = 1;
+            last;
+        }
+    }
+    close $fh_in;
+    unless ($seen) {
+        seek ($fh, 0, SEEK_END) or die "Cannot seek: $!"; # seek if someone appended while we were waiting
+        print $fh $string;
+    }
+    close $fh;
+    return $seen == 1 ? 0 : 1;
 }
 
 1;

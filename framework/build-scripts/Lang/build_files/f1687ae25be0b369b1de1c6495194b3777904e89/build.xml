@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
+
+<project name="commons-lang" default="package" basedir=".">
+
+  <path id="build.test.classpath">
+    <pathelement location="${easymock.jar}" />
+  </path>
+
+  <!-- ====================================================================== -->
+  <!-- Import maven-build.xml into the current project                        -->
+  <!-- ====================================================================== -->
+
+  <import file="maven-build.xml"/>
+  
+  <!-- ====================================================================== -->
+  <!-- Help target                                                            -->
+  <!-- ====================================================================== -->
+
+  <target name="help">
+    <echo message="Please run: $ant -projecthelp"/>
+  </target>
+
+  <path id="test.classpath">                                                                
+      <path refid="build.test.classpath"/>                                     
+      <pathelement location="${maven.build.outputDir}"/>
+      <pathelement location="${maven.build.testOutputDir}"/>                   
+  </path> 
+
+  <path id="compile.classpath">                                                                
+      <path refid="build.classpath"/>                                     
+  </path> 
+
+   <property name="test.home" value="${maven.build.testDir.0}"/>
+   <property name="source.home" value="${maven.build.srcDir.0}"/>
+   <property name="build.home" value="${maven.build.dir}"/>
+   <target name="compile.tests" depends="compile-tests"/>
+ 
+</project>

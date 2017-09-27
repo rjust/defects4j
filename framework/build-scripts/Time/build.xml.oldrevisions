@@ -1,0 +1,5 @@
+<project name="joda-time-dummy" basedir=".">
+
+    <import file="JodaTime/build.xml" />
+
+</project>

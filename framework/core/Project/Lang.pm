@@ -64,6 +64,44 @@ sub initialize_revision {
     _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $RANDOM_TEST_FILE);
 }
 
+# Search for randomly failing tests in all java files
+sub _log_random_tests {
+    my ($test_dir, $out_file) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    # TODO: Move to Consts
+    my $PREFIX = "---";
+    my @list = `cd $test_dir && find . -name *.java`;
+    die if $?!=0 or !@list;
+
+    foreach my $file (@list) {
+        chomp $file;
+        open(IN, "<$test_dir/$file") or die $!;
+        my @reason = ();
+        my $rnd=0;
+        while (<IN>) {
+            if (!$rnd) {
+                next unless /(\*|\/\/).*randomly/;
+                $rnd=1;
+            }
+            if ($rnd and /\s*public\s*void\s*([^\(]*)\s*\(/) {
+                my $method=$1;
+                my $class = $file;
+                $class =~ s/\.\/(.*).java/$1/; $class =~ s/\//\./g;
+                my $key = "${class}::$method";
+                # Only print method if it is not already in the result file
+                Utils::append_to_file_unless_matches($out_file,
+                    join('', @reason) . "$PREFIX $key\n\n",
+                    qr/$PREFIX $key/
+                );
+                @reason = ();
+                $rnd=0; next;
+            }
+            push(@reason, $_);
+        }
+        close(IN);
+    }
+}
+
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;

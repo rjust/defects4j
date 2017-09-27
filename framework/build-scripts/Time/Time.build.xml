@@ -1,0 +1,194 @@
+<project name="Time"  basedir="${basedir}">
+
+    <!-- script.dir property has to be provided from caller! -->
+    <fail message="Property script.dir not set!" unless="script.dir" />
+
+    <!-- No downloading of dependencies will be allowed. :( -->
+    <property name="maven.settings.offline" value="true" />
+    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar" />
+    <property name="config.jar" value="${script.dir}/../major/config/config.jar" />
+    <property name="jodaconvert.jar" value="${script.dir}/build-scripts/Time/lib/joda-convert-1.2.jar" />
+    <property name="maven.repo.local" value="${script.dir}/build-scripts/Time/lib/" />
+
+    <!-- Generate all debugging information -->
+    <property name="compile.debuglevel" value="lines,source,vars" />
+
+    <property name="junit.jar" value="${script.dir}/projects/lib/junit-4.11.jar" />
+    <!-- Include existing project build file -->
+    <import file="${basedir}/build.xml" />
+
+    <!-- Import overall biuld files for mutation targets -->
+    <import file="../project.build.xml" />
+
+    <!-- Additional properties such as tests to exclude (exclude.list).
+         This property file is automatically generated if necessary. -->
+    <property file="${basedir}/local.build.properties"/>
+
+
+    <!-- Values necessary for mutation scripting to work -->
+    <if> <isset property="ant.refid:compile.classpath" />
+          <then>
+            <property name="test.dir" value="${test.home}" />
+          </then>
+          <else>
+            <property name="oldversion" value="yes" />
+            <path id="compile.classpath" refid="build.classpath" />
+            <path id="test.classpath"    refid="build.test.classpath" />
+            <property name="test.dir" value="${maven.build.testDir.0}" />
+            <property name="source.home" value="${maven.build.srcDir.0}" />
+          </else>
+    </if>
+    <property name="test.home" value="${maven.build.testOutputDir}" />
+    <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
+        <isset property="maven.build.outputDir" />
+    </condition>
+    <property name="build.home" value="${classes.dir}/.." />
+
+    <!-- Classpath to run mutation analysis -->
+    <path id="major.classpath">
+        <path refid="compile.classpath" />
+        <path refid="test.classpath" />
+        <pathelement path="${classes.dir}" />
+        <pathelement path="${test.home}" />
+    </path>
+
+    <target name="compile.tests" depends="joda-time.compile.tests"> </target>
+
+
+    <property name="tz.build.notneeded" value="true" />
+    <target name="compile" depends="joda-time.compile">
+      <if> <isset property="oldversion" /> <then>
+        <java classname="org.joda.time.tz.ZoneInfoCompiler" failonerror="yes">
+          <classpath>
+            <path refid="compile.classpath" />
+            <pathelement path="${classes.dir}" />
+            <pathelement location="${config.jar}" />
+            <path refid="cobertura.classpath.include" />
+          </classpath>
+          <sysproperty key="org.joda.time.DateTimeZone.Provider" value ="org.joda.time.tz.UTCProvider" />
+          <arg value="-src" />
+          <arg value="${maven.build.srcDir.0}/org/joda/time/tz/src" />
+          <arg value="-dst" />
+          <arg value="${maven.build.outputDir}/org/joda/time/tz/data" />
+          <arg value="africa" />
+          <arg value="antarctica" />
+          <arg value="asia" />
+          <arg value="australasia" />
+          <arg value="europe" />
+          <arg value="northamerica" />
+          <arg value="southamerica" />
+          <arg value="pacificnew" />
+          <arg value="etcetera" />
+          <arg value="backward" />
+          <arg value="systemv" />
+        </java>
+      </then> <else>
+        <mkdir dir="${build.tz}" />
+        <java classname="org.joda.time.tz.ZoneInfoCompiler" failonerror="yes">
+          <classpath>
+            <path refid="compile.classpath" />
+            <pathelement path="${classes.dir}" />
+            <pathelement location="${config.jar}" />
+            <path refid="cobertura.classpath.include" />
+          </classpath>
+          <sysproperty key="org.joda.time.DateTimeZone.Provider" value ="org.joda.time.tz.UTCProvider" />
+          <arg line="-src ${source.tz} -dst ${build.tz}" />
+          <arg value="africa" />
+          <arg value="antarctica" />
+          <arg value="asia" />
+          <arg value="australasia" />
+          <arg value="europe" />
+          <arg value="northamerica" />
+          <arg value="southamerica" />
+          <arg value="pacificnew" />
+          <arg value="etcetera" />
+          <arg value="backward" />
+          <arg value="systemv" />
+        </java>
+
+
+      </else> </if>
+    </target>
+
+    <target name="test" depends="compile.tests"
+            description="Runs the test cases">
+
+        <junit printSummary="yes"
+                haltonerror="no" haltonfailure="no" fork="no">
+
+            <classpath>
+                <path refid="test.classpath" />
+                <pathelement path="${classes.dir}" />
+                <pathelement path="${test.home}" />
+                <pathelement path="${formatter_cp}" />
+				<path refid="cobertura.classpath.include" />
+            </classpath>
+            <sysproperty key="OUTFILE" value="${OUTFILE}" />
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+
+              <batchtest unless="test.entry.class">
+                  <fileset dir="${test.dir}" excludes="${exclude.list}" id="testfileset">
+                    <include name="**/TestAll.java" />
+                    <exclude name="**/*Abstract*Test.java" />
+                  </fileset>
+              </batchtest>
+        </junit>
+        <!-- fail build in case we are running all classes, but there are none in the fileset -->
+        <if> <not> <isset property="test.entry.class" /> </not> <then>
+            <pathconvert refid="testfileset" property="fileset.notempty" setonempty="false" />
+            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+        </then> </if>
+    </target>
+
+<!--
+    Run individual test and monitor class loader
+    Test has to be provided as property "test.entry" (class::method)
+    and the output is redirected to "test.output"
+-->
+    <target name="monitor.test"  description="Run unit test and monitor class loader">
+        <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner" output="${test.output}"
+            failonerror="true" logError="true">
+
+            <arg value="${test.entry}"/>
+            <jvmarg value="-verbose:class"/>
+
+            <classpath>
+                <path refid="test.classpath" />
+                <pathelement location="${junit.jar}"/>
+                <pathelement path="${classes.dir}" />
+                <pathelement path="${test.home}" />
+                <pathelement path="${formatter_cp}" />
+            </classpath>
+        </java>
+    </target>
+
+
+<!--
+    Run mutation analysis
+-->
+    <target name="mutation.test" >
+        <!-- Test a generated test suite -->
+        <if><isset property="test.include"/>
+            <then>
+                <fileset id="major.tests" dir="${bug-db.test.dir}">
+                    <include name="**/${test.include}"/>
+                    <exclude name="**/WashingtonSuite.java"/>
+                </fileset>
+            </then>
+            <else>
+                <!-- Test existing test suite -->
+                <echo message="${test.dir}" />
+                <fileset id="major.tests" dir="${test.dir}" excludes="${exclude.list}">
+                    <include name="**/TestAll.java" />
+                    <exclude name="org/joda/time/chrono/gj/TestAll.java" />
+                </fileset>
+            </else>
+        </if>
+        <!-- Call mutation test target with fileset and classpath -->
+        <antcall target="major.test" inheritRefs="true">
+            <reference refid="major.tests"/>
+            <reference refid="major.classpath"/>
+        </antcall>
+    </target>
+</project>
