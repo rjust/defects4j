@@ -59,9 +59,9 @@ sub new {
 }
 
 sub initialize_revision {
-    my ($self, $revision) = @_;
+    my ($self, $revision, $vid) = @_;
     $self->SUPER::initialize_revision($revision);
-    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($revision), $RANDOM_TEST_FILE);
+    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $RANDOM_TEST_FILE);
 }
 
 sub src_dir {

@@ -114,7 +114,7 @@ foreach my $vid (@ids) {
 
     $project->checkout_id("${vid}b");
     $project->sanity_check();
-    $project->initialize_revision($v1);
+    $project->initialize_revision($v1, "${vid}b");
     my ($src_b, $test_b) = ($project->src_dir($v1), $project->test_dir($v1));
 
     $project->checkout_id("${vid}f");
