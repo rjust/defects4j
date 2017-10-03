@@ -115,12 +115,12 @@ foreach my $vid (@ids) {
     $project->checkout_id("${vid}b");
     $project->sanity_check();
     $project->initialize_revision($v1, "${vid}b");
-    my ($src_b, $test_b) = ($project->src_dir($v1), $project->test_dir($v1));
+    my ($src_b, $test_b) = ($project->src_dir("${vid}b"), $project->test_dir("${vid}b"));
 
     $project->checkout_id("${vid}f");
     $project->sanity_check();
     $project->initialize_revision($v2, "${vid}f");
-    my ($src_f, $test_f) = ($project->src_dir($v2), $project->test_dir($v2));
+    my ($src_f, $test_f) = ($project->src_dir("${vid}f"), $project->test_dir("${vid}f"));
 
     die "Source directories don't match for buggy and fixed revisions of $vid" unless $src_b eq $src_f;
     die "Test directories don't match for buggy and fixed revisions of $vid" unless $test_b eq $test_f;
