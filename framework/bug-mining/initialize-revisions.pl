@@ -112,12 +112,12 @@ foreach my $vid (@ids) {
     my $v1 = $project->lookup("${vid}b");
     my $v2 = $project->lookup("${vid}f");
 
-    $project->checkout_id("${vid}b");
+    $project->checkout_vid("${vid}b");
     $project->sanity_check();
     $project->initialize_revision($v1, "${vid}b");
     my ($src_b, $test_b) = ($project->src_dir("${vid}b"), $project->test_dir("${vid}b"));
 
-    $project->checkout_id("${vid}f");
+    $project->checkout_vid("${vid}f");
     $project->sanity_check();
     $project->initialize_revision($v2, "${vid}f");
     my ($src_f, $test_f) = ($project->src_dir("${vid}f"), $project->test_dir("${vid}f"));
