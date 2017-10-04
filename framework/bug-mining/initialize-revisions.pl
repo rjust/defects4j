@@ -91,7 +91,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db");
 $project->{prog_root} = $TMP_DIR;
 
 ############################### MAIN LOOP
@@ -126,4 +126,3 @@ foreach my $vid (@ids) {
     die "Test directories don't match for buggy and fixed revisions of $vid" unless $test_b eq $test_f;
 }
 system("rm -rf $TMP_DIR");
-
