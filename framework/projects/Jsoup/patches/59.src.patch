@@ -1,0 +1,18 @@
+diff --git a/src/main/java/org/jsoup/nodes/Node.java b/src/main/java/org/jsoup/nodes/Node.java
+index 71e6ff0..588022d 100644
+--- a/src/main/java/org/jsoup/nodes/Node.java
++++ b/src/main/java/org/jsoup/nodes/Node.java
+@@ -360,12 +360,7 @@ public abstract class Node {
+     }
+ 
+     protected void outerHtml(StringBuilder accum) {
+-        new NodeTraversor(new OuterHtmlVisitor(accum, getOutputSettings())).traverse(this);
+-    }
+-
+-    // if this node has no document (or parent), retrieve the default output settings
+-    private Document.OutputSettings getOutputSettings() {
+-        return ownerDocument() != null ? ownerDocument().outputSettings() : (new Document("")).outputSettings();
++        new NodeTraversor(new OuterHtmlVisitor(accum, ownerDocument().outputSettings())).traverse(this);
+     }
+ 
+     /**

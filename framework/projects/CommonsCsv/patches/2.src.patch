@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVPrinter.java b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+index ac4234b..9995297 100644
+--- a/src/main/java/org/apache/commons/csv/CSVPrinter.java
++++ b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+@@ -73,7 +73,7 @@ public final class CSVPrinter implements Flushable, Closeable {
+                 }
+             }
+         }
+-        if (format.getHeader() != null && !format.getSkipHeaderRecord()) {
++        if (format.getHeader() != null) {
+             this.printRecord((Object[]) format.getHeader());
+         }
+     }

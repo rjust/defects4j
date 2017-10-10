@@ -1,0 +1,66 @@
+--- com.google.common.collect.MinMaxPriorityQueueTest::testRandomAddsAndRemoves
+java.lang.AssertionError: <[5120, 11, 2571, 6161, 4129, 5157 x 2, 1061, 48, 2097, 7729, 564, 1596, 9790, 63, 2628, 6725, 7753, 6731, 6734, 5201, 4177, 8785, 4179, 1619, 3157, 6230, 3673, 4703, 3684, 1637 x 2, 3687, 4200, 5738, 3692, 3705, 7805, 8832, 9859, 5259, 2701, 9361, 3734, 2719, 2725, 6821, 8357, 1194, 7343, 5811, 3253, 3258, 5310, 2240, 5312, 706, 5827, 1226, 8907, 9933, 725, 726, 1751, 6360, 3294, 3299, 741, 744, 233, 8939, 4332, 748, 5369, 5884, 1278, 3333, 5895, 2313, 6923, 4880, 7442, 3858, 9496, 4900, 3381, 5429, 4405, 3388, 5440, 4933, 8522, 844, 2382, 3920, 851, 2901, 5480, 6504, 5997, 372, 3446, 1401, 9083, 6535, 9612, 3984, 917, 3478, 7070, 3489, 5027, 6568, 4524, 1966, 6580, 2996, 9658, 1980, 2496, 3017, 3530, 9165, 9678, 6613, 5593, 8160, 4064, 3554, 6114, 4583, 1514, 2026, 3577, 506, 3580]> should have contained <7621>
+	at com.google.common.collect.MinMaxPriorityQueueTest.testRandomAddsAndRemoves(MinMaxPriorityQueueTest.java:809)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1060)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:911)
+Caused by: java.lang.AssertionError: <[5120, 11, 2571, 6161, 4129, 5157 x 2, 1061, 48, 2097, 7729, 564, 1596, 9790, 63, 2628, 6725, 7753, 6731, 6734, 5201, 4177, 8785, 4179, 1619, 3157, 6230, 3673, 4703, 3684, 1637 x 2, 3687, 4200, 5738, 3692, 3705, 7805, 8832, 9859, 5259, 2701, 9361, 3734, 2719, 2725, 6821, 8357, 1194, 7343, 5811, 3253, 3258, 5310, 2240, 5312, 706, 5827, 1226, 8907, 9933, 725, 726, 1751, 6360, 3294, 3299, 741, 744, 233, 8939, 4332, 748, 5369, 5884, 1278, 3333, 5895, 2313, 6923, 4880, 7442, 3858, 9496, 4900, 3381, 5429, 4405, 3388, 5440, 4933, 8522, 844, 2382, 3920, 851, 2901, 5480, 6504, 5997, 372, 3446, 1401, 9083, 6535, 9612, 3984, 917, 3478, 7070, 3489, 5027, 6568, 4524, 1966, 6580, 2996, 9658, 1980, 2496, 3017, 3530, 9165, 9678, 6613, 5593, 8160, 4064, 3554, 6114, 4583, 1514, 2026, 3577, 506, 3580]> should have contained <7621>
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:28)
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:22)
+	at com.google.common.truth.Subject.failWithRawMessage(Subject.java:423)
+	at com.google.common.truth.IterableSubject.contains(IterableSubject.java:92)
+	... 14 more
+--- com.google.common.collect.MinMaxPriorityQueueTest::testRandomRemoves
+java.lang.AssertionError: <[0, 9, 4]> should not have contained <4>
+	at com.google.common.collect.MinMaxPriorityQueueTest.testRandomRemoves(MinMaxPriorityQueueTest.java:789)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1060)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:911)
+Caused by: java.lang.AssertionError: <[0, 9, 4]> should not have contained <4>
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:28)
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:22)
+	at com.google.common.truth.Subject.failWithRawMessage(Subject.java:423)
+	at com.google.common.truth.IterableSubject.doesNotContain(IterableSubject.java:99)
+	... 14 more
+--- com.google.common.collect.MinMaxPriorityQueueTest::testRemoveRegression
+java.lang.AssertionError: <[0, 3, 1]> should not have contained <1>
+	at com.google.common.collect.MinMaxPriorityQueueTest.testRemoveRegression(MinMaxPriorityQueueTest.java:776)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1060)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:911)
+Caused by: java.lang.AssertionError: <[0, 3, 1]> should not have contained <1>
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:28)
+	at com.google.common.truth.FailureStrategy.fail(FailureStrategy.java:22)
+	at com.google.common.truth.Subject.failWithRawMessage(Subject.java:423)
+	at com.google.common.truth.IterableSubject.doesNotContain(IterableSubject.java:99)
+	... 14 more

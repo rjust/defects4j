@@ -1,0 +1,26 @@
+diff --git a/src/test/java/org/jsoup/parser/AttributeParseTest.java b/src/test/java/org/jsoup/parser/AttributeParseTest.java
+index 956220f..3752ef7 100644
+--- a/src/test/java/org/jsoup/parser/AttributeParseTest.java
++++ b/src/test/java/org/jsoup/parser/AttributeParseTest.java
+@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
+ import org.jsoup.nodes.Attribute;
+ import org.jsoup.nodes.Attributes;
+ import org.jsoup.nodes.BooleanAttribute;
+-import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+ import org.jsoup.select.Elements;
+ import org.junit.Test;
+@@ -91,13 +90,4 @@ public class AttributeParseTest {
+         assertEquals(html, el.outerHtml());
+     }
+     
+-    @Test public void dropsSlashFromAttributeName() {
+-        String html = "<img /onerror='doMyJob'/>";
+-        Document doc = Jsoup.parse(html);
+-        assertTrue("SelfClosingStartTag ignores last character", doc.select("img[onerror]").size() != 0);
+-        assertEquals("<img onerror=\"doMyJob\">", doc.body().html());
+-
+-        doc = Jsoup.parse(html, "", Parser.xmlParser());
+-        assertEquals("<img onerror=\"doMyJob\" />", doc.html());
+-    }
+ }

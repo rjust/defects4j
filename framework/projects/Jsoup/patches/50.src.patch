@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/jsoup/parser/TreeBuilderState.java b/src/main/java/org/jsoup/parser/TreeBuilderState.java
+index 9fd235c..4ae01e1 100644
+--- a/src/main/java/org/jsoup/parser/TreeBuilderState.java
++++ b/src/main/java/org/jsoup/parser/TreeBuilderState.java
+@@ -1448,7 +1448,7 @@ enum TreeBuilderState {
+         }
+     };
+ 
+-    private static String nullString = String.valueOf('\u0000');
++    private static String nullString = String.valueOf(0x0000);
+ 
+     abstract boolean process(Token t, TreeBuilder tb);
+ 

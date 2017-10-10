@@ -1,0 +1,32 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreFunction.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreFunction.java
+index 1544183..f717190 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreFunction.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreFunction.java
+@@ -653,27 +653,18 @@ public class CoreFunction extends Operation {
+     protected Object functionFloor(EvalContext context) {
+         assertArgCount(1);
+         double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
+-        if (Double.isNaN(v) || Double.isInfinite(v)) {
+-        	return new Double(v);
+-        }
+         return new Double(Math.floor(v));
+     }
+ 
+     protected Object functionCeiling(EvalContext context) {
+         assertArgCount(1);
+         double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
+-        if (Double.isNaN(v) || Double.isInfinite(v)) {
+-        	return new Double(v);
+-        }
+         return new Double(Math.ceil(v));
+     }
+ 
+     protected Object functionRound(EvalContext context) {
+         assertArgCount(1);
+         double v = InfoSetUtil.doubleValue(getArg1().computeValue(context));
+-        if (Double.isNaN(v) || Double.isInfinite(v)) {
+-        	return new Double(v);
+-        }
+         return new Double(Math.round(v));
+     }
+ 

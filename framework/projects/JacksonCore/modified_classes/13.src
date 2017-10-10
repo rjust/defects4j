@@ -1,0 +1,6 @@
+com.fasterxml.jackson.core.base.GeneratorBase
+com.fasterxml.jackson.core.json.JsonWriteContext
+com.fasterxml.jackson.core.JsonGenerator
+com.fasterxml.jackson.core.json.WriterBasedJsonGenerator
+com.fasterxml.jackson.core.json.JsonGeneratorImpl
+com.fasterxml.jackson.core.json.UTF8JsonGenerator

@@ -75,6 +75,42 @@ JFreeChart (L<Vcs::Svn> backend)
 
 Closure compiler (L<Vcs::Git> backend)
 
+=item B<CommonsCLI|Project::CommonsCLI> 
+
+Commons CLI library (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsCodec|Project::CommonsCodec>
+
+Commons encoders and decoders (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsCsv|Project::CommonsCsv> 
+
+Commons CSV (uses Vcs::Git as Vcs backend)
+
+=item B<CommonsJXPath|Project::CommonsJXPath> 
+
+Commons JXPath (uses Vcs::Git as Vcs backend)
+
+=item * L<Guava|Project::Guava>
+
+Guava library (L<Vcs::Git> backend)
+
+=item * L<JacksonCore|Project::JacksonCore>
+
+Jackson core library (L<Vcs::Git> backend)
+
+=item B<JacksonDatabind|Project::JacksonDatabind> 
+
+Jackson data binding utilities (uses Vcs::Git as Vcs backend)
+
+=item B<JacksonXml|Project::JacksonXml> 
+
+Jackson XML utilities (uses Vcs::Git as Vcs backend)
+
+=item B<Jsoup|Project:Jsoup> 
+
+jsoup HTML parser (uses Vcs::Git as Vcs backend)
+
 =item * L<Lang|Project::Lang>
 
 Commons lang (L<Vcs::Git> backend)
@@ -82,6 +118,10 @@ Commons lang (L<Vcs::Git> backend)
 =item * L<Math|Project::Math>
 
 Commons math (L<Vcs::Git> backend)
+
+=item * L<Mockito|Project::Mockito>
+
+Mockito (L<Vcs::Git> backend)
 
 =item * L<Time|Project::Time>
 

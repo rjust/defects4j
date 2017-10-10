@@ -1,0 +1,78 @@
+<project name="CommonsCLI" basedir="${basedir}">
+
+    <!-- Force build in Java 1.7 for older versions of the project -->
+    <property name="build.compiler" value="javac1.7"/>
+
+    <property name="build.home" value="${basedir}" />
+    <property name="test.src.home" value="${basedir}/src/test"/>
+    <property name="source.home" value="${basedir}/src/main"/> 
+    <property name="test.home" value="${basedir}/target/test-classes"/>
+    <property name="classes.dir" value="${basedir}/target/classes"/>
+
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+    </path>
+
+    <path id="d4j.test.classpath">
+        <pathelement path="${junit.jar}" />
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.home}"/>		
+        <pathelement path="${test.src.home}"/>
+        <fileset dir="${d4j.home}/framework/projects/CommonsCLI/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="major.classpath">
+        <path refid="d4j.test.classpath" />
+    </path>
+
+   <available file="${basedir}/pom.xml" property="use-mvn"/>
+
+   <target name="compile" description="Compile the  source code.">
+        <if>
+            <isset property="use-mvn"/>
+            <then>
+                <exec dir="${basedir}" executable="/bin/bash">			
+                    <arg line="mvn compile"/>
+               </exec>
+            </then>
+            <else>
+                <exec executable="perl" dir="${basedir}">			
+                    <arg line="${d4j.home}/framework/projects/CommonsCLI/replace_txt.pl ${basedir}"/>			
+                </exec>
+               <ant antfile="${basedir}/build.xml" target="compile" inheritAll="true"/>
+            </else>
+        </if>
+    </target>
+
+    <target name="compile.tests" description="Compile the tests.">
+        <if>
+            <isset property="use-mvn"/>
+            <then>
+                <exec dir="${basedir}" executable="/bin/bash">			
+                    <arg line="mvn test-compile"/>
+                </exec>
+            </then>
+            <else>
+                <exec executable="perl" dir="${basedir}">			
+                    <arg line="${d4j.home}/framework/projects/CommonsCLI/replace_txt.pl ${basedir}"/>			
+                </exec>
+                <ant antfile="${basedir}/build.xml" target="compile-tests" inheritAll="true"/>
+           </else>
+       </if>
+    </target>
+
+   <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
+        <include name="**/*Test.class"/>
+        <exclude name="**/PatternOptionBuilderTest.class"/>
+        <exclude name="**/OptionGroupTest.class"/>
+        <exclude name="**/bug/**/*.class"/>
+        <exclude name="**/BugsTest.class"/>
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+</project>

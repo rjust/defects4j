@@ -1,0 +1,36 @@
+diff --git a/src/main/java/org/jsoup/parser/TokenQueue.java b/src/main/java/org/jsoup/parser/TokenQueue.java
+index ffcb4a4..4e04c72 100644
+--- a/src/main/java/org/jsoup/parser/TokenQueue.java
++++ b/src/main/java/org/jsoup/parser/TokenQueue.java
+@@ -285,11 +285,7 @@ public class TokenQueue {
+                 end = pos; // don't include the outer match pair in the return
+             last = c;
+         } while (depth > 0);
+-        final String out = (end >= 0) ? queue.substring(start, end) : "";
+-        if (depth > 0) {// ran out of queue before seeing enough )
+-            Validate.fail("Did not find balanced maker at " + out);
+-        }
+-        return out;
++        return (end >= 0) ? queue.substring(start, end) : "";
+     }
+     
+     /**
+diff --git a/src/main/java/org/jsoup/select/QueryParser.java b/src/main/java/org/jsoup/select/QueryParser.java
+index d3a2041..6ba1fdd 100644
+--- a/src/main/java/org/jsoup/select/QueryParser.java
++++ b/src/main/java/org/jsoup/select/QueryParser.java
+@@ -35,12 +35,8 @@ public class QueryParser {
+      * @return Evaluator
+      */
+     public static Evaluator parse(String query) {
+-        try {
+-            QueryParser p = new QueryParser(query);
+-            return p.parse();
+-        } catch (IllegalArgumentException e) {
+-            throw new Selector.SelectorParseException(e.getMessage());
+-        }
++        QueryParser p = new QueryParser(query);
++        return p.parse();
+     }
+ 
+     /**

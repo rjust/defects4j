@@ -1,0 +1,21 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/compiler/CoreFunctionTest.java b/src/test/org/apache/commons/jxpath/ri/compiler/CoreFunctionTest.java
+index f37ac82..43da154 100644
+--- a/src/test/org/apache/commons/jxpath/ri/compiler/CoreFunctionTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/compiler/CoreFunctionTest.java
+@@ -116,16 +116,6 @@ public class CoreFunctionTest extends JXPathTestCase {
+         assertXPathValue(context, "ceiling(-1.5)", new Double(-1));
+         assertXPathValue(context, "round(1.5)", new Double(2));
+         assertXPathValue(context, "round(-1.5)", new Double(-1));
+-
+-        assertXPathValue(context, "floor('NaN')", new Double(Double.NaN));
+-        assertXPathValue(context, "floor(-2 div 0)", new Double(Double.NEGATIVE_INFINITY));
+-        assertXPathValue(context, "floor(2 div 0)", new Double(Double.POSITIVE_INFINITY));
+-        assertXPathValue(context, "ceiling('NaN')", new Double(Double.NaN));
+-        assertXPathValue(context, "ceiling(-2 div 0)", new Double(Double.NEGATIVE_INFINITY));
+-        assertXPathValue(context, "ceiling(2 div 0)", new Double(Double.POSITIVE_INFINITY));
+-        assertXPathValue(context, "round('NaN')", new Double(Double.NaN));
+-        assertXPathValue(context, "round(-2 div 0)", new Double(Double.NEGATIVE_INFINITY));
+-        assertXPathValue(context, "round(2 div 0)", new Double(Double.POSITIVE_INFINITY));
+     }
+ 
+     public void testIDFunction() {

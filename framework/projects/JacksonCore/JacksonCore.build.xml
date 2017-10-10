@@ -1,0 +1,49 @@
+<project name="JacksonCore" basedir="${basedir}">
+
+    <property name="build.home" value="${basedir}" />
+    <property name="test.src.home" value="${basedir}/src/test"/>
+    <property name="source.home" value="${basedir}/src/main"/> 
+    <property name="test.home" value="${basedir}/target/test-classes"/>
+    <property name="classes.dir" value="${basedir}/target/classes"/>
+
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+    </path>
+
+    <path id="d4j.test.classpath">
+        <pathelement path="${junit.jar}" />
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.home}"/>		
+        <pathelement path="${test.src.home}"/>
+    </path>
+
+    <path id="major.classpath">
+        <path refid="d4j.test.classpath" />
+    </path>
+
+    <target name="compile" description="Compile the source code.">
+        <exec dir="${basedir}" executable="/bin/bash">			
+            <arg line="mvn compile -U"/>
+        </exec>  
+    </target>
+    
+    <target name="compile.tests" description="Compile the tests.">
+       <exec dir="${basedir}" executable="/bin/bash">
+            <arg line ="mvn test-compile -U"/>
+        </exec>
+    </target>
+
+   <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
+        <include name="**/*Test.class"/>
+        <exclude name="**/BaseTest.class"/>
+        <exclude name="**/TrailingCommasTest.class"/>
+        <exclude name="**/ConcurrencyReadTest.class"/>
+        <exclude name="**/ManualCharAccessTest.class"/>
+        <exclude name="**/failing/**/*.class"/>
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+</project>

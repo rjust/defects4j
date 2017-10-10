@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index 24bef3b..23d8af2 100644
+--- a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -722,8 +722,7 @@ enum HtmlTreeBuilderState {
+                                 commonAncestor.appendChild(lastNode);
+                             }
+ 
+-                            Element adopter = new Element(formatEl.tag(), tb.getBaseUri());
+-                            adopter.attributes().addAll(formatEl.attributes());
++                            Element adopter = new Element(Tag.valueOf(name), tb.getBaseUri());
+                             Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodeSize()]);
+                             for (Node childNode : childNodes) {
+                                 adopter.appendChild(childNode); // append will reparent. thus the clone to avoid concurrent mod.

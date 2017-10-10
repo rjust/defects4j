@@ -39,3 +39,14 @@ clean
 
 # Extract new repos
 unzip -q -u $ARCHIVE && mv defects4j/project_repos/* . && rm -r defects4j
+
+# Install additional repositories (separate from core defects4j)
+./get_commonscli.sh
+./get_commonscodec.sh
+./get_commonscsv.sh
+./get_commonsjxpath.sh
+./get_guava.sh
+./get_jacksoncore.sh
+./get_jacksondatabind.sh
+./get_jacksonxml.sh
+./get_jsoup.sh
