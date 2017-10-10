@@ -1,6 +1,6 @@
-java.com.fasterxml.jackson.core.base.GeneratorBase
-java.com.fasterxml.jackson.core.json.JsonWriteContext
-java.com.fasterxml.jackson.core.JsonGenerator
-java.com.fasterxml.jackson.core.json.WriterBasedJsonGenerator
-java.com.fasterxml.jackson.core.json.JsonGeneratorImpl
-java.com.fasterxml.jackson.core.json.UTF8JsonGenerator
+com.fasterxml.jackson.core.base.GeneratorBase
+com.fasterxml.jackson.core.json.JsonWriteContext
+com.fasterxml.jackson.core.JsonGenerator
+com.fasterxml.jackson.core.json.WriterBasedJsonGenerator
+com.fasterxml.jackson.core.json.JsonGeneratorImpl
+com.fasterxml.jackson.core.json.UTF8JsonGenerator
