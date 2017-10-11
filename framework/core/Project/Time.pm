@@ -50,7 +50,7 @@ sub new {
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                             (shift or "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test);

@@ -163,6 +163,7 @@ sub fix_tests {
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
 
+    # TODO this used to convert maven to ant build files, might need that functionality again.
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
         system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
