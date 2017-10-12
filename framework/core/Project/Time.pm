@@ -46,14 +46,15 @@ my $PID  = "Time";
 sub new {
     my $class = shift;
     my $name = "joda-time";
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                             (shift or "$SCRIPT_DIR/projects/$PID/commit-db"),
+                             (shift // "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir);
 }
 
 

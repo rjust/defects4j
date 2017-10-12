@@ -52,7 +52,7 @@ sub new {
     my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             (shift or "$SCRIPT_DIR/projects/$PID/commit-db"),
+                             (shift // "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir); # pass build file as undef
