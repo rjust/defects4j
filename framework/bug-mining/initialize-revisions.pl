@@ -86,6 +86,8 @@ if (defined $VID) {
     $VID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $VID!";
 }
 
+`mkdir -p $WORK_DIR/$PID/patches`; # create patches dir if it doesnt exist
+
 ############################### VARIABLE SETUP
 # if work dir is relative make it absolute, this will prevent problems as the current directory suddenly changes
 $WORK_DIR = abs_path($WORK_DIR);
