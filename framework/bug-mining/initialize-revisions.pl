@@ -87,6 +87,8 @@ if (defined $VID) {
 }
 
 ############################### VARIABLE SETUP
+# if work dir is relative make it absolute, this will prevent problems as the current directory suddenly changes
+$WORK_DIR = abs_path($WORK_DIR);
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
@@ -111,6 +113,10 @@ foreach my $vid (@ids) {
 
     my $v1 = $project->lookup("${vid}b");
     my $v2 = $project->lookup("${vid}f");
+
+    # create local patch to get to buggy version, minimization wont matter here, that has to be done manually
+    # will create a file in $WORK_DIR/$PID/patches
+    $project->{'_vcs'}->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$vid.src.patch");
 
     $project->checkout_vid("${vid}b");
     $project->sanity_check();
