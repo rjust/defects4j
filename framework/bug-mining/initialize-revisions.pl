@@ -118,7 +118,7 @@ foreach my $vid (@ids) {
 
     # create local patch to get to buggy version, minimization wont matter here, that has to be done manually
     # will create a file in $WORK_DIR/$PID/patches
-    $project->{'_vcs'}->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$vid.src.patch");
+    $project->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$vid.src.patch");
 
     $project->checkout_vid("${vid}b");
     $project->sanity_check();

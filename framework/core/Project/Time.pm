@@ -79,21 +79,38 @@ sub _post_checkout {
     }
 }
 
+# special path for diff based on the file structure in those commits
+sub get_base_diff_path {
+  my ($self, $rev1, $rev2) = @_;
+
+  # look at the diff and check the paths of the files
+  my $cmd = "git diff-tree --no-commit-id --name-only -r "; # partial command
+
+  my $rev1_files = undef;
+  my $rev2_files = undef;
+  if ((! Utils::exec_cmd("$cmd $rev1", $descr, \$rev1_files)) || (! Utils::exec_cmd("$cmd $rev2", $descr, \$rev2_files))) {
+    return undef; # no files in one of the commits
+  }
+
+  # if they are both JodaTime/ then we adapt, if they are different, we cant really recover reliably
+  my $old_super_dir = /^JodaTime.*/m # heh get it, super dir is oposite of sub dir
+  if ($rev1_files =~ $old_super_dir && $rev2_files =~ $old_super_dir) {
+    return "JodaTime/";
+  } else {
+      return undef;
+  }
+}
+
 sub export_diff {
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
-    if ($self->lookup_revision_id($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    # path is an optional argument
+    $path = $self->get_base_diff_path($rev1,$rev2) . ($path//"");
     return $self->{_vcs}->export_diff($rev1, $rev2, $out_file, $path);
 }
 
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_;
-    if ($self->lookup_revision_id($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    $path = $self->get_base_diff_path($rev1,$rev2) . ($path//"");
     return $self->{_vcs}->diff($rev1, $rev2, $path);
 }
 
