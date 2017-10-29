@@ -387,12 +387,10 @@ sub checkout_vid {
     Utils::exec_cmd($cmd, "Initialize fixed program version")
             or confess("Couldn't tag fixed program version!");
 
-
     # bug mining uses a special patch dir because we make the patches on the fly
-    my $bug_mine_patch_dir = glob("$self->{_work_dir}/$pid/patches/${bid}*") ? "$self->{_work_dir}/$pid/patches" : undef;
-
     # Apply patch to obtain buggy version
-    my $patch_dir =  $bug_mine_patch_dir // "$SCRIPT_DIR/projects/$pid/patches";
+    #my $patch_dir =  glob("$self->{_work_dir}/$pid/patches/${bid}.*") ? "$self->{_work_dir}/$pid/patches" : "$SCRIPT_DIR/projects/$pid/patches";
+    my $patch_dir = "$self->{_work_dir}/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
     $self->apply_patch($work_dir, $src_patch) or return 0;
 
@@ -416,7 +414,7 @@ sub checkout_vid {
     my $rev2 = $self->lookup("${bid}b");
     # TODO: svn doesn't support diffing of binary files
     #       -> checkout and tag the pre-fix revision instead
-    $self->{_vcs}->export_diff($rev1, $rev2, $tmp_file);
+    $self->export_diff($rev1, $rev2, $tmp_file);
     $self->{_vcs}->apply_patch($work_dir, $tmp_file);
 
     # Remove temporary diff file
