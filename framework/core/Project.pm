@@ -388,10 +388,10 @@ sub checkout_vid {
             or confess("Couldn't tag fixed program version!");
 
     # bug mining uses a special patch dir because we make the patches on the fly
-    # Apply patch to obtain buggy version
-    #my $patch_dir =  glob("$self->{_work_dir}/$pid/patches/${bid}.*") ? "$self->{_work_dir}/$pid/patches" : "$SCRIPT_DIR/projects/$pid/patches";
-    my $patch_dir = "$self->{_work_dir}/$pid/patches";
+    # if it exists we use it if not we look for the main db patches, if those dont exist we will fail
+    my $patch_dir =  (-d "$self->{_work_dir}/$pid/patches") ? "$self->{_work_dir}/$pid/patches" : "$SCRIPT_DIR/projects/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
+    # Apply patch to obtain buggy version
     $self->apply_patch($work_dir, $src_patch) or return 0;
 
     # Write program and version id of buggy program version to config file
