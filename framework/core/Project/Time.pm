@@ -57,7 +57,7 @@ sub new {
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir);
 }
 
-
+#TODO should these SCRIPT_DIR/projects actually be work dir?
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $prog_root) = @_;
@@ -69,12 +69,12 @@ sub _post_checkout {
 
     # Check whether ant build file exists
     unless (-e "$prog_root/build.xml") {
-        system("cp $self->{'_work_dir'}/$PID/build_files/$revision_id/* $prog_root");
+        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $prog_root");
     }
 
     # Check for a broken-build-revision
     my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
-    my $filename = "$self->{'_work_dir'}/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "$SCRIPT_DIR/projects/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $prog_root/build.xml");
     }

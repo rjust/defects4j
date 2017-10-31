@@ -152,7 +152,7 @@ sub new {
         _vcs       => $vcs,
         _src_dir   => $src,
         _test_dir  => $test,
-        _build_file =>$build_file,
+        _build_file => $build_file,
         _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
     };
     bless $self, $class;
@@ -414,7 +414,7 @@ sub checkout_vid {
     my $rev2 = $self->lookup("${bid}b");
     # TODO: svn doesn't support diffing of binary files
     #       -> checkout and tag the pre-fix revision instead
-    $self->export_diff($rev1, $rev2, $tmp_file);
+    $self->export_diff($rev1, $rev2, $tmp_file, "src/");
     $self->{_vcs}->apply_patch($prog_root, $tmp_file);
 
     # Remove temporary diff file
