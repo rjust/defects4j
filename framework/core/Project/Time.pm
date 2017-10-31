@@ -60,22 +60,23 @@ sub new {
 
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $revision_id, $prog_root) = @_;
 
-    if (-e "$work_dir/JodaTime") {
-        system("mv $work_dir/JodaTime/* $work_dir");
+    # remove the JodaTime super directory (move things one dir up)
+    if (-e "$prog_root/JodaTime") {
+        system("mv $prog_root/JodaTime/* $prog_root");
     }
 
     # Check whether ant build file exists
-    unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
+    unless (-e "$prog_root/build.xml") {
+        system("cp $self->{'_work_dir'}/$PID/build_files/$revision_id/* $prog_root");
     }
 
     # Check for a broken-build-revision
     my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
-    my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "$self->{'_work_dir'}/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
-        system ("cp $filename $work_dir/build.xml");
+        system ("cp $filename $prog_root/build.xml");
     }
 }
 
