@@ -118,6 +118,8 @@ my ($PID, $VID, $WORK_DIR) =
 
 pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
+$WORK_DIR = abs_path($WORK_DIR);
+
 # TODO make output dir more flexible
 my $db_dir = $WORK_DIR;
 

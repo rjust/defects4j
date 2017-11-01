@@ -1099,7 +1099,7 @@ sub _ant_call {
 #
 sub _write_props {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $vid, $work_dir) = @_;
+    my ($self, $vid, $prog_root) = @_;
     my $bid = Utils::check_vid($vid)->{bid};
 
     # TODO: Provide a helper subroutine that returns a list of modified classes
@@ -1126,7 +1126,7 @@ sub _write_props {
         $PROP_CLASSES_MODIFIED=> $mod_classes,
         $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
-    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+    Utils::write_config_file("$prog_root/$PROP_FILE", $config);
 }
 
 1;
