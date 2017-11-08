@@ -95,7 +95,7 @@ The candidate commit database `commit-db`
    | Closure      | google        | closure-compiler | /issue.*(\d+)/mi       |
    | Lang         | jira          | lang             | /(LANG-\d+)/mi         |
    | Math         | jira          | math             | /(MATH-\d+)/mi         |
-   | Time         | github        | joda-time        | /Fix(?:es)?\s*#(\d+) /mi |
+   | Time         | github        | joda-time        | /Fix(?:es)?\s*#(\d+)/mi |
    | Time         | sf            | joda-time        | /\[.*?(\d+)/mi         |
 
 8. For tracker sourceforge (as we used for Time), note that due to a change in
