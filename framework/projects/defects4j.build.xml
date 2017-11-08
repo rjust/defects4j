@@ -96,6 +96,17 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     </target>
 
 <!--
+    Light weight sanity check for bug mining
+-->
+    <target name="bugmine.sanity.check" description="Check whether project is correctly set up">
+        <fail unless="test.home"/>
+        <fail unless="build.home"/>
+        <fail unless="ant.refid:test.classpath"/>
+        <fail unless="ant.refid:compile.classpath"/>
+        <fail unless="ant.refid:major.classpath"/>
+    </target>
+
+<!--
     Run developer-written tests
 -->
     <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">

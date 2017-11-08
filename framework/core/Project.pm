@@ -278,6 +278,37 @@ sub sanity_check {
     return $self->_ant_call("sanity.check");
 }
 
+
+=pod
+
+=head2 Build system related subroutines
+
+  $project->sanity_check_lite()
+
+Lightweight checking to see weather the project is correctly configured.
+
+=cut
+sub bugmine_sanity_check {
+    my ($self, $option_str, $log_file) =  @_;
+    $option_str = "" unless defined $option_str;
+    # could be either pid.build.xml or defects4j.build.xml
+    my $file = "$self->{_work_dir}/$self->{pid}/$self->{pid}.build.xml";
+    # TODO: Check also whether target is provided by the build file
+    -f $file or die "Build file does not exist: $file";
+
+    # Set up environment before running ant
+    my $cmd = "cd $self->{prog_root}; ant -f $file -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} bugmine.sanity.check 2>&1";
+    my $log;
+    my $ret = Utils::exec_cmd($cmd, "Running ant (bugmine.sanity.check)", \$log);
+
+    if (defined $log_file) {
+        open(OUT, ">>$log_file") or die "Cannot open log file: $!";
+        print(OUT "$log");
+        close(OUT);
+    }
+    return $ret;
+}
+
 =pod
 
   $project->checkout_vid(vid [, work_dir])
@@ -373,10 +404,10 @@ sub checkout_vid {
     }
 
     # Fix test suite if necessary
-    $self->fix_tests("${bid}f");
+    $self->fix_tests("${bid}f"); # TODO skip this for bug mining because we depend on things that dont exist
 
     # Write version-specific properties
-    $self->_write_props($vid, $prog_root);
+    $self->_write_props($vid, $prog_root); # TODO skip this for bug mining because we depend on things that dont exist
 
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;

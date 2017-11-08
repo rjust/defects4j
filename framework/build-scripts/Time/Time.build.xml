@@ -52,6 +52,17 @@
         <pathelement path="${test.home}" />
     </path>
 
+<!--
+    Light weight sanity check for bug mining
+-->
+    <target name="bugmine.sanity.check" description="Check whether project is correctly set up">
+        <fail unless="test.home"/>
+        <fail unless="build.home"/>
+        <fail unless="ant.refid:test.classpath"/>
+        <fail unless="ant.refid:compile.classpath"/>
+        <fail unless="ant.refid:major.classpath"/>
+    </target>
+
     <target name="compile.tests" depends="joda-time.compile.tests"> </target>
 
 
