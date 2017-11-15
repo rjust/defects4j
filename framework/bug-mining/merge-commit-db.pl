@@ -34,13 +34,14 @@ use Getopt::Std;
 use Pod::Usage;
 
 sub _usage {
-    die "usage: " . basename($0) . " -f filename";
+    die "usage: " . basename($0) . " -f filename -g git_dir";
 }
 
 my %cmd_opts;
-getopt('f:', \%cmd_opts);
+getopt('f:g:', \%cmd_opts);
 my $filename = $cmd_opts{'f'};
-_usage() unless defined $filename;
+my $git_dir = $cmd_opts{'g'};
+_usage() unless defined $filename and defined $git_dir;
 
 my @existing_commits = (); # assume order of these is not cronological
 my $last_number = 0;
@@ -68,12 +69,18 @@ if (-e $filename) {
 # buffer incomming revision ids
 # STDIN will stream commits newest to oldest
 my @new_commits = (); # likely will be duplicates in @existing_commits
+my $filtered_commits = 0;
+my $existing_commits_count = scalar @existing_commits;
 while (my $line = <STDIN>) {
     chomp $line;
     next unless $line;
-    $line =~ /(?:\d+,){0,1}(.+,.+)/; # allows a bugid but will ignore it (this is just a quick adaptation in case you feed a commit-db into this script)
-    # TODO check commits if they are non empty
-    unshift @new_commits, $1;  # unshift places line at the front
+    $line =~ /(?:\d+,){0,1}(.+),(.+)/; # allows a bugid but will ignore it (this is just a quick adaptation in case you feed a commit-db into this script)
+    # check commits src dir if they are non empty before merging
+    unless(`git --git-dir=$git_dir --no-pager diff --binary $2 $1 -- src/ src/` eq "") { # buggy to fixed
+        unshift @new_commits, "$1,$2";  # unshift places line at the front
+    } else {
+        $filtered_commits++;
+    }
 }
 
 # append new bugs to output file
@@ -86,3 +93,9 @@ foreach my $line (@new_commits) {
     }
 }
 close FH;
+
+print "Bugs filtered (empty src diff): $filtered_commits\n";
+my $total_commits = scalar @existing_commits;
+my $added_commits = $total_commits - $existing_commits_count;
+print "Bugs added: $added_commits\n";
+print "Total bugs: $total_commits\n";

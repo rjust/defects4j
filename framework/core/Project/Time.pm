@@ -84,6 +84,7 @@ sub _post_checkout {
 sub get_base_diff_path {
     my ($self, $rev1, $rev2) = @_;
 
+    # TODO use Utils::files_in_commit
     # look at the diff and check the paths of the files
     my $cmd = "cd $self->{'_vcs'}->{'repo'}; git diff-tree --no-commit-id --name-only -r"; # partial command
 

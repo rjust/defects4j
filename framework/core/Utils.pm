@@ -405,4 +405,16 @@ sub append_to_file_unless_matches {
     return $seen == 1 ? 0 : 1;
 }
 
+=item B<files_in_commit> C<files_in_commit(repo_dir,commit)>
+
+This utility method takes C<commit> and get the files it changes
+
+=cut
+sub files_in_commit {
+    my ($repo_dir, $commit) = @_;
+    my @files = "cd $repo_dir; git diff-tree --no-commit-id --name-only -r $commit";
+    chomp @files;
+    return @files;
+}
+
 1;
