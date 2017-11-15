@@ -42,25 +42,47 @@ getopt('f:', \%cmd_opts);
 my $filename = $cmd_opts{'f'};
 _usage() unless defined $filename;
 
-my %existing_commits = ();
+my @existing_commits = (); # assume order of these is not cronological
 my $last_number = 0;
 if (-e $filename) {
     open FH, $filename;
     while (my $line = <FH>) {
         chomp $line;
         $line =~ /^(\d+),(.*,.*)$/;
-        $last_number = $1;
-        $existing_commits{$2} = 1;
+        $last_number = $1 if $1 > $last_number; # last number isnt necessary the highest
+        push @existing_commits, $2;
     }
     close FH;
 }
 
-open FH, ">>$filename";
+# existing bugs must keep bug id the same
+# however new bugs will be issued a numerically higher bug id meaning newer bugs have newer bug ids
+# but the old system had lower numbers as newer
+# example bugid,date
+# 1,2015
+# 2,2014
+# 3,2013 //end of old system
+# 4,2016 //start of new system
+# 5,2017
+
+# buffer incomming revision ids
+# STDIN will stream commits newest to oldest
+my @new_commits = (); # likely will be duplicates in @existing_commits
 while (my $line = <STDIN>) {
     chomp $line;
     next unless $line;
-    ++$last_number;
-    print FH "$last_number,$line\n" unless $existing_commits{$line};
-    $existing_commits{$line} = 1;
+    $line =~ /(?:\d+,){0,1}(.+,.+)/; # allows a bugid but will ignore it (this is just a quick adaptation in case you feed a commit-db into this script)
+    # TODO check commits if they are non empty
+    unshift @new_commits, $1;  # unshift places line at the front
+}
+
+# append new bugs to output file
+open FH, ">>$filename";
+foreach my $line (@new_commits) {
+    unless(grep(/$line/,@existing_commits)) { # unless it's already in the file
+        ++$last_number;
+        print FH "$last_number,$line\n";
+        push @existing_commits, $line;
+    }
 }
 close FH;
