@@ -295,7 +295,7 @@ sub bugmine_sanity_check {
     -f $self->{_build_file} or die "Build file does not exist: $self->{_build_file}";
 
     # Set up environment before running ant
-    my $cmd = "cd $self->{prog_root}; ant -f $self->{_build_file} -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} bugmine.sanity.check 2>&1";
+    my $cmd = "cd $self->{prog_root}; ant -f $self->{_build_file} -Dd4j.home=$BASE_DIR -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} bugmine.sanity.check 2>&1";
     my $log;
     my $ret = Utils::exec_cmd($cmd, "Running ant (bugmine.sanity.check)", \$log);
 

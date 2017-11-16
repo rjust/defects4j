@@ -95,7 +95,7 @@ $WORK_DIR = abs_path($WORK_DIR);
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db");#, "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 ############################### MAIN LOOP
