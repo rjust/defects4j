@@ -281,9 +281,7 @@ sub sanity_check {
 
 =pod
 
-=head2 Build system related subroutines
-
-  $project->sanity_check_lite()
+  $project->bugmine_sanity_check()
 
 Lightweight checking to see weather the project is correctly configured.
 
@@ -293,12 +291,11 @@ sub bugmine_sanity_check {
     $option_str = "" unless defined $option_str;
     # could be either pid.build.xml or defects4j.build.xml
     # TODO for some reason it matters if this build script is in core framework vs work dir
-    my $file = "$SCRIPT_DIR/build-scripts/$self->{pid}/$self->{pid}.build.xml";  #"$self->{_work_dir}/$self->{pid}/$self->{pid}.build.xml"; 
     # TODO: Check also whether target is provided by the build file
-    -f $file or die "Build file does not exist: $file";
+    -f $self->{_build_file} or die "Build file does not exist: $self->{_build_file}";
 
     # Set up environment before running ant
-    my $cmd = "cd $self->{prog_root}; ant -f $file -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} sanity.check 2>&1";
+    my $cmd = "cd $self->{prog_root}; ant -f $self->{_build_file} -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} bugmine.sanity.check 2>&1";
     my $log;
     my $ret = Utils::exec_cmd($cmd, "Running ant (bugmine.sanity.check)", \$log);
 

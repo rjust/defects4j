@@ -53,8 +53,9 @@ sub new {
                             "$REPO_DIR/$name.git",
                              (shift // "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
+    my $build_file = shift;
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $build_file, $work_dir);
 }
 
 #TODO should these SCRIPT_DIR/projects actually be work dir?
