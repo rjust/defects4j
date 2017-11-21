@@ -287,24 +287,28 @@ Lightweight checking to see weather the project is correctly configured.
 
 =cut
 sub bugmine_sanity_check {
-    my ($self, $option_str, $log_file) =  @_;
-    $option_str = "" unless defined $option_str;
-    # could be either pid.build.xml or defects4j.build.xml
-    # TODO for some reason it matters if this build script is in core framework vs work dir
-    # TODO: Check also whether target is provided by the build file
-    -f $self->{_build_file} or die "Build file does not exist: $self->{_build_file}";
+    my $self = shift;
+    return $self->_ant_call("bugmine.sanity.check");
 
-    # Set up environment before running ant
-    my $cmd = "cd $self->{prog_root}; ant -f $self->{_build_file} -Dd4j.home=$BASE_DIR -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} bugmine.sanity.check 2>&1";
-    my $log;
-    my $ret = Utils::exec_cmd($cmd, "Running ant (bugmine.sanity.check)", \$log);
 
-    if (defined $log_file) {
-        open(OUT, ">>$log_file") or die "Cannot open log file: $!";
-        print(OUT "$log");
-        close(OUT);
-    }
-    return $ret;
+    #my ($self, $option_str, $log_file) =  @_;
+    #$option_str = "" unless defined $option_str;
+    ## could be either pid.build.xml or defects4j.build.xml
+    ## TODO for some reason it matters if this build script is in core framework vs work dir
+    ## TODO: Check also whether target is provided by the build file
+    #-f $self->{_build_file} or die "Build file does not exist: $self->{_build_file}";
+
+    ## Set up environment before running ant
+    #my $cmd = "cd $self->{prog_root}; ant -f $self->{_build_file} -Dd4j.home=$BASE_DIR -Dscript.dir=$SCRIPT_DIR -Dbasedir=$self->{prog_root} ${option_str} sanity.check 2>&1";
+    #my $log;
+    #my $ret = Utils::exec_cmd($cmd, "Running ant (bugmine.sanity.check)", \$log);
+
+    #if (defined $log_file) {
+        #open(OUT, ">>$log_file") or die "Cannot open log file: $!";
+        #print(OUT "$log");
+        #close(OUT);
+    #}
+    #return $ret;
 }
 
 =pod
@@ -317,7 +321,7 @@ The working directory (C<work_dir>) is optional, the default is C<prog_root>.
 
 =cut
 sub checkout_vid {
-    my ($self, $vid, $prog_root) = @_; shift;
+    my ($self, $vid, $prog_root, $_dummy, $is_bugmine) = @_;
     my $tmp = Utils::check_vid($vid);
     my $bid = $tmp->{bid};
     my $version_type = $tmp->{type};
@@ -401,11 +405,13 @@ sub checkout_vid {
         }
     }
 
-    # Fix test suite if necessary
-    $self->fix_tests("${bid}f"); # TODO skip this for bug mining because we depend on things that dont exist
-
-    # Write version-specific properties
-    $self->_write_props($vid, $prog_root); # TODO skip this for bug mining because we depend on things that dont exist
+    # Note: will skip both of these for bug mining, for two reasons, 1: it isnt necessary, 2: dont have depdencies yet
+    if (! $is_bugmine) {
+        # Fix test suite if necessary
+        $self->fix_tests("${bid}f");
+        # Write version-specific properties
+        $self->_write_props($vid, $prog_root);
+    }
 
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;
@@ -1124,16 +1130,12 @@ sub _ant_call {
 }
 
 #
-# Write all version-specific properties to file
+# Helper subroutine that returns a list of modified classes
 #
-sub _write_props {
-    @_ == 3 or die $ARG_ERROR;
-    my ($self, $vid, $prog_root) = @_;
-    my $bid = Utils::check_vid($vid)->{bid};
-
-    # TODO: Provide a helper subroutine that returns a list of modified classes
-    my $project_dir = "$SCRIPT_DIR/projects/$self->{pid}";
-    open(IN, "<${project_dir}/modified_classes/${bid}.src") or die "Cannot read modified classes";
+sub _modified_classes {
+    my ($self, $bid) = @_;
+    my $project_dir = "$self->{_work_dir}/$self->{pid}";
+    open(IN, "<${project_dir}/modified_classes/${bid}.src") or die "Cannot read modified classes, perhaps they have not been created yet?";
     my @classes = <IN>;
     close(IN);
     my $mod_classes = shift(@classes); chomp($mod_classes);
@@ -1142,7 +1144,20 @@ sub _write_props {
         chomp;
         $mod_classes .= ",$_";
     }
+    return $mod_classes;
+}
 
+#
+# Write all version-specific properties to file
+#
+sub _write_props {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $vid, $prog_root) = @_;
+    my $bid = Utils::check_vid($vid)->{bid};
+
+    my $modified_classes = $self->_modified_classes($bid);
+
+    my $project_dir = "$self->{_work_dir}/$self->{pid}";
     my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
     my $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
 

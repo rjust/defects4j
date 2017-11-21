@@ -95,7 +95,7 @@ $WORK_DIR = abs_path($WORK_DIR);
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db");#, "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 ############################### MAIN LOOP
@@ -121,7 +121,7 @@ foreach my $bid (@ids) {
     # create the diff only on the src/
     $project->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$bid.src.patch", "src/");
 
-    $project->checkout_vid("${bid}b");
+    $project->checkout_vid("${bid}b", $TMP_DIR, undef, 1);
     $project->bugmine_sanity_check();
     $project->initialize_revision($v1, "${bid}b");
     my ($src_b, $test_b) = ($project->src_dir("${bid}b"), $project->test_dir("${bid}b"));

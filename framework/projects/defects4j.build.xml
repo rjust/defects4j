@@ -103,7 +103,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <fail unless="build.home"/>
         <fail unless="ant.refid:test.classpath"/>
         <fail unless="ant.refid:compile.classpath"/>
-        <fail unless="ant.refid:major.classpath"/>
+        <!--fail unless="ant.refid:major.classpath"/-->
     </target>
 
 <!--
