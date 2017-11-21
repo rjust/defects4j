@@ -406,12 +406,10 @@ sub checkout_vid {
     }
 
     # Note: will skip both of these for bug mining, for two reasons, 1: it isnt necessary, 2: dont have depdencies yet
-    if (! $is_bugmine) {
-        # Fix test suite if necessary
-        $self->fix_tests("${bid}f");
-        # Write version-specific properties
-        $self->_write_props($vid, $prog_root);
-    }
+    # Fix test suite if necessary
+    $self->fix_tests("${bid}f");
+    # Write version-specific properties
+    $self->_write_props($vid, $is_bugmine);
 
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;
@@ -597,7 +595,7 @@ sub fix_tests {
 
     # TODO: Exclusively use version ids rather than revision ids
     my $revision_id = $self->lookup($vid);
-    my $file = "$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id";
+    my $file = "$self->{_work_dir}/$pid/failing_tests/$revision_id";
 
     if (-e $file) {
         $self->exclude_tests_in_file($file, $dir);
@@ -1135,11 +1133,11 @@ sub _ant_call {
 sub _modified_classes {
     my ($self, $bid) = @_;
     my $project_dir = "$self->{_work_dir}/$self->{pid}";
-    open(IN, "<${project_dir}/modified_classes/${bid}.src") or die "Cannot read modified classes, perhaps they have not been created yet?";
+    open(IN, "<${project_dir}/modified_classes/${bid}.src") or warn "Cannot read modified classes, perhaps they have not been created yet?";
     my @classes = <IN>;
     close(IN);
     my $mod_classes = shift(@classes); chomp($mod_classes);
-    defined $mod_classes or die "Set of modified classes is empty!";
+    defined $mod_classes or warn "Set of modified classes is empty!";
     foreach (@classes) {
         chomp;
         $mod_classes .= ",$_";
@@ -1152,14 +1150,19 @@ sub _modified_classes {
 #
 sub _write_props {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $vid, $prog_root) = @_;
+    my ($self, $vid, $is_bugmine) = @_;
     my $bid = Utils::check_vid($vid)->{bid};
 
-    my $modified_classes = $self->_modified_classes($bid);
+    # will skip writing mod classes and trigger tests if we are bug mining because they are not defined yet
+    my $mod_classes = "";
+    my $trigger_tests = "";
+    if(! $is_bugmine) {
+        $mod_classes = $self->_modified_classes($bid);
 
-    my $project_dir = "$self->{_work_dir}/$self->{pid}";
-    my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
-    my $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
+        my $project_dir = "$self->{_work_dir}/$self->{pid}";
+        my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
+        $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
+    }
 
     my $config = {
         $PROP_PID             => $self->{pid},
@@ -1170,7 +1173,7 @@ sub _write_props {
         $PROP_CLASSES_MODIFIED=> $mod_classes,
         $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
-    Utils::write_config_file("$prog_root/$PROP_FILE", $config);
+    Utils::write_config_file("$self->{prog_root}/$PROP_FILE", $config);
 }
 
 1;
