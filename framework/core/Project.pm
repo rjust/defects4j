@@ -602,7 +602,7 @@ sub fix_tests {
     }
 
     # This code added to exclude test dependencies
-    my $dependent_test_file = "$SCRIPT_DIR/projects/$pid/dependent_tests";
+    my $dependent_test_file = "$self->{_work_dir}/$pid/dependent_tests";
     if (-e $dependent_test_file) {
         $self->exclude_tests_in_file($dependent_test_file, $dir);
     }

@@ -86,13 +86,17 @@ if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-`mkdir -p $WORK_DIR/$PID/patches`; # create patches dir if it doesnt exist
-
-############################### VARIABLE SETUP
 # if work dir is relative make it absolute, this will prevent problems as the current directory suddenly changes
 $WORK_DIR = abs_path($WORK_DIR);
-# Temporary directory
-my $TMP_DIR = Utils::get_tmp_dir();
+
+# create necessary directories
+`mkdir -p $WORK_DIR/$PID/patches`;
+`mkdir -p $WORK_DIR/$PID/failing_tests`;
+`mkdir -p $WORK_DIR/$PID/trigger_tests`;
+`mkdir -p $WORK_DIR/$PID/modified_classes`;
+
+############################### VARIABLE SETUP
+my $TMP_DIR = Utils::get_tmp_dir(); # Temporary directory
 system("mkdir -p $TMP_DIR");
 # Set up project
 my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
