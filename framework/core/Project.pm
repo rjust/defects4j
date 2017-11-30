@@ -293,15 +293,16 @@ sub bugmine_sanity_check {
 
 =pod
 
-  $project->checkout_vid(vid [, work_dir])
+  $project->checkout_vid(vid [, work_dir, is_bugmine])
 
 Checks out the provided version id (C<vid>) to F<work_dir>, and tags the the buggy AND
 the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
 The working directory (C<work_dir>) is optional, the default is C<prog_root>.
+The is_bugmine flag (C<is_bugmine>) is optional, the default is false.
 
 =cut
 sub checkout_vid {
-    my ($self, $vid, $prog_root, $_dummy, $is_bugmine) = @_;
+    my ($self, $vid, $prog_root, $is_bugmine) = @_;
     my $tmp = Utils::check_vid($vid);
     my $bid = $tmp->{bid};
     my $version_type = $tmp->{type};
@@ -1086,6 +1087,7 @@ sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file) =  @_;
     $option_str = "" unless defined $option_str;
+    # TODO why are we checking for this if we never use it
     my $file = $self->{_build_file};
     # TODO: Check also whether target is provided by the build file
     -f $file or die "Build file does not exist: $file";

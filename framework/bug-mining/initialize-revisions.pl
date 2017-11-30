@@ -125,12 +125,12 @@ foreach my $bid (@ids) {
     # create the diff only on the src/
     $project->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$bid.src.patch", "src/");
 
-    $project->checkout_vid("${bid}b", $TMP_DIR, undef, 1);
+    $project->checkout_vid("${bid}b", $TMP_DIR, 1);
     $project->sanity_check();
     $project->initialize_revision($v1, "${bid}b");
     my ($src_b, $test_b) = ($project->src_dir("${bid}b"), $project->test_dir("${bid}b"));
 
-    $project->checkout_vid("${bid}f");
+    $project->checkout_vid("${bid}f", $TMP_DIR, 1);
     $project->sanity_check();
     $project->initialize_revision($v2, "${bid}f");
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
