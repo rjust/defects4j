@@ -138,7 +138,7 @@ my $MAX_TEST_RUNS=10;
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 # Get database handle for results
@@ -263,7 +263,7 @@ sub _check_t2v2 {
     my $v2  = $project->lookup("${vid}f");
 
     # Checkout v2
-    $project->checkout_id("${vid}f") == 0 or die;
+    $project->checkout_vid("${vid}f", $TMP_DIR, 1) == 1 or die;
 
     # Compile v2 ant t2
     my $ret = $project->compile();
@@ -317,7 +317,7 @@ sub _check_t2v1 {
     my $v2  = $project->lookup("${vid}f");
 
     # Checkout v2
-    $project->checkout_id("${vid}f") == 0 or die;
+    $project->checkout_vid("${vid}f", $TMP_DIR, 1) == 1 or die;
 
     # Lookup src directory for v2
     my $src = $project->src_dir($v2);
