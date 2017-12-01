@@ -71,7 +71,7 @@ The candidate commit database `commit-db`
 5. For trackers jira, github, google, but not sourceforge, use
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
-    - `../../framework/bug-mining/download-issues.pl jira -p lang -o issues | \  
+    - `../../framework/bug-mining/download-issues.pl jira -p lang -o issues |
       ../../framework/bug-mining/merge-issue-numbers.pl -f issues.txt`
 
 6. Obtain the development history (commit logs) for the project:
@@ -83,10 +83,10 @@ The candidate commit database `commit-db`
    (e.g, issue numbers, keywords, etc.). Note that the regular expression has to
    capture the issue number. The script `merge-commit-db.pl` enumerates the
    output of `vcs-log-xref.pl`, and outputs or updates the `commit-db`:
-    -  `../../framework/bug-mining/vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog \  
-       -r ../../project_repos/commons-lang.git/ \  
-       -c '../../framework/bug-mining/verify-bug-file.sh issues.txt' | \  
-       ../../framework/bug-mining/merge-commit-db.pl -f commit-db`  
+    -  `../../../../framework/bug-mining/vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog 
+       -r ../../../../project_repos/commons-lang.git/ 
+       -c '../../../../framework/bug-mining/verify-bug-file.sh issues.txt' | 
+       ../../../../framework/bug-mining/merge-commit-db.pl -f commit-db -g ../../../../project_repos/commons-lang.git`
 
 
    These are the issue trackers, project IDs, and regular expressions we used
