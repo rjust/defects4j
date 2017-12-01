@@ -173,7 +173,11 @@ my $sth = $dbh->prepare("SELECT * FROM $TAB_REV_PAIRS WHERE $PROJECT=? AND $ID=?
 foreach my $vid (@ids) {
     # Skip existing entries
     $sth->execute($PID, $vid);
-    next if $sth->rows !=0;
+    if($sth->rows !=0) {
+        print "Skipping $vid because of existing entry in $TAB_REV_PAIRS\n";
+        next;
+    }
+
 
     printf ("%4d: $project->{prog_name}\n", $vid);
 
