@@ -92,7 +92,7 @@ For all B<reviewed> version pairs in F<work_dir/$TAB_REV_PAIRS>:
 
 =item 9) Run every triggering test in isolation on the buggy verision and verify that it fails
 
-=item 10) Export triggering tests to F<C<work_dir>/"project_id"/triggering_tests>
+=item 10) Export triggering tests to F<C<work_dir>/"project_id"/trigger_tests>
 
 =back
 
