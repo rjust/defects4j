@@ -129,6 +129,7 @@ my ($PID, $VID, $WORK_DIR) =
     );
 
 pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
+$WORK_DIR = abs_path($WORK_DIR);
 
 # TODO make output dir more flexible
 my $db_dir = $WORK_DIR;
@@ -143,7 +144,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 # Get database handle for results
