@@ -282,11 +282,11 @@ sub _check_t2v2 {
     while ($successful_runs < $TEST_RUNS && $run <= $MAX_TEST_RUNS) {
         # Automatically fix broken tests and recompile
         $project->fix_tests("${vid}f");
-        $project->compile_tests() == 0 or die;
+        $project->compile_tests() or die;
 
         # Run t2 and get number of failing tests
         my $file = "$project->{prog_root}/v2.fail"; `>$file`;
-        $project->run_tests($file) == 0 or die;
+        $project->run_tests($file) or die;
         # Get number of failing tests
         my $list = Utils::get_failing_tests($file);
         my $fail = scalar(@{$list->{"classes"}}) + scalar(@{$list->{"methods"}});
@@ -327,7 +327,7 @@ sub _check_t2v1 {
     my $src = $project->src_dir($v2);
 
     # Apply src patch v2 -> v1
-    $project->apply_patch($project->{prog_root}, "$PATCH_DIR/$vid.src.patch", $src) == 0 or die;
+    $project->apply_patch($project->{prog_root}, "$PATCH_DIR/$vid.src.patch") or die;
 
     # Compile v1 and t2v1
     my $ret = $project->compile();
@@ -336,10 +336,10 @@ sub _check_t2v1 {
     _add_bool_result($data, $COMP_T2V1, $ret);
 }
 
-# Convert return code into boolean value and set key in data hash
+# Insert boolean success into hash
 sub _add_bool_result {
-    my ($data, $key, $ret_code) = @_;
-    $data->{$key} = ($ret_code==0 ? 1 : 0);
+    my ($data, $key, $success) = @_;
+    $data->{$key} = $success;
 }
 
 # Add a row to the database table
