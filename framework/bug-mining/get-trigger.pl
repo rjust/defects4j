@@ -284,22 +284,22 @@ sub _get_failing_tests {
     $project->{prog_root} = $root;
 
     my $v2 = $project->lookup("${id}f");
-    $project->checkout_id("${id}f") == 0 or die;
+    $project->checkout_vid("${id}f", $root, 1) or die;
 
     if (defined $patch) {
         my $src = $project->src_dir($v2);
-        $project->apply_patch($project->{prog_root}, $patch, $src) == 0 or die;
+        $project->apply_patch($project->{prog_root}, $patch) or die;
     }
 
     # Compile src and test
-    $project->compile() == 0 or die;
+    $project->compile() or die;
 
     # Fix tests if there are any broken ones
     $project->fix_tests("${id}f");
-    $project->compile_tests() == 0 or die;
+    $project->compile_tests() or die;
 
     # Run tests and get number of failing tests
-    $project->run_tests($FAILED_TESTS_FILE) == 0 or die;
+    $project->run_tests($FAILED_TESTS_FILE) or die;
     # Return failing tests
     return Utils::get_failing_tests($FAILED_TESTS_FILE);
 }
@@ -317,7 +317,7 @@ sub _run_tests_isolation {
     foreach my $test (@$list) {
         # Clean single test output
         system(">$FAILED_TESTS_FILE_SINGLE");
-        $project->run_tests($FAILED_TESTS_FILE_SINGLE, $test) == 0 or die;
+        $project->run_tests($FAILED_TESTS_FILE_SINGLE, $test) or die;
         my $fail = Utils::get_failing_tests($FAILED_TESTS_FILE_SINGLE);
         if (scalar(@{$fail->{methods}}) == $expect_fail) {
             push @succeeded_tests, $test;
