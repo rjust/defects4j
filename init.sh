@@ -20,7 +20,8 @@ BASE="$(cd $(dirname $0); pwd)"
 DIR_REPOS="$BASE/project_repos"
 DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
 DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
-mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT"
+DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
+mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 
 #
 # Download project repositories if necessary
@@ -70,6 +71,14 @@ cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
                   && wget -nv "$RANDOOP_URL/$RANDOOP_JAR"
 # Set symlink for the supported version of Randoop
 ln -sf "$DIR_LIB_GEN/$RANDOOP_JAR" "$DIR_LIB_GEN/randoop-current.jar"
+
+#
+# Download build system dependencies
+#
+echo
+echo "Setting up Gradle dependencies ... "
+(cd $DIR_LIB_GRADLE && "$BASE/framework/util/get_gradle_dependencies.pl" -pMockito | \
+    while read DEP; do wget -nv "$DEP"; done)
 
 echo
 echo "Defects4J successfully initialized."
