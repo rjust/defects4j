@@ -70,6 +70,24 @@ sub _post_checkout {
     if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
         $vcs->apply_patch($work_dir, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
+
+    # Change Url to Gradle distribution
+    my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
+    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+
+    # Read existing Gradle properties file, if it exists
+    open(PROP, "<$prop") or return;
+    my @tmp;
+    while (<PROP>) {
+        s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/$2/g;
+        push(@tmp, $_);
+    }
+    close(PROP);
+
+    # Update properties file
+    open(OUT, ">$prop") or die "Cannot write properties file";
+    print(OUT @tmp);
+    close(OUT);
 }
 
 #
