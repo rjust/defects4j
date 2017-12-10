@@ -1,9 +1,10 @@
 language: perl
+sudo: enabled
 env:
   - OS=ubuntu JDKVER=jdk7 GROUP=test
 perl:
   - "5.24"
 install:
-  - ./init.sh
+  - sudo ./init.sh
 script:
   - framework/test/test_tutorial.sh
