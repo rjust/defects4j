@@ -8,4 +8,4 @@ install:
   - sudo ./init.sh
 script:
   - cd framework/test
-  - test_tutorial.sh
+  - ./test_tutorial.sh
