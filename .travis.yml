@@ -4,7 +4,8 @@ env:
   - OS=ubuntu JDKVER=jdk7 GROUP=test
 perl:
   - "5.24"
-before_script:
+install:
   - sudo ./init.sh
 script:
-  - framework/test/test_tutorial.sh
+  - cd framework/test
+  - test_tutorial.sh
