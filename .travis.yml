@@ -1,0 +1,7 @@
+language: perl
+perl:
+  - "5.24"
+install:
+  - ./init.sh
+script:
+  - framework/test_tutorial.sh
