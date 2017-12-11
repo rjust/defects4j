@@ -4,6 +4,8 @@ env:
   - OS=ubuntu JDKVER=jdk7 GROUP=test
 perl:
   - "5.24"
+jdk:
+  - oraclejdk7
 install:
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
   - cpan install Carton
