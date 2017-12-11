@@ -1,16 +1,26 @@
 language: perl
-env:
-  - OS=ubuntu JDKVER=jdk7 GROUP=test
+
 perl:
   - "5.24"
+
+env:
+  - PID=Chart
+  - PID=Lang
+
 jdk:
   - openjdk7
+
 install:
   - jdk_switcher use openjdk7
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
   - ./init.sh
+
 script:
   - cd framework/test
   - carton exec ./test_tutorial.sh
+  - carton exec ./test_mutation_analysis.sh
+  - carton exec ./test_randoop.sh
+  - carton exec ./test_evosuite.sh
+  - carton exec ./test_verify_bugs.sh $PID
