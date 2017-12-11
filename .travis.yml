@@ -1,5 +1,5 @@
 sudo: false
-language: perl
+language: java
 jdk: openjdk7
 perl:
   - "5.24"
