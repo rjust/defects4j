@@ -11,4 +11,4 @@ install:
   - sudo ./init.sh
 script:
   - cd framework/test
-  - ./test_tutorial.sh
+  - carton exec ./test_tutorial.sh
