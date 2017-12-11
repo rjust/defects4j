@@ -13,6 +13,5 @@ install:
   - carton install
   - sudo ./init.sh
 script:
-  - echo $(java -version)
   - cd framework/test
   - carton exec ./test_tutorial.sh
