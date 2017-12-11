@@ -1,22 +1,53 @@
 #!/usr/bin/env bash
 ################################################################################
 #
-# This script verifies that all bugs in Defects4J are reproducible and that the
-# provided information about triggering tests is correct.
+# This script verifies that all bugs for a given project are reproducible and
+# that the provided information about triggering tests is correct.
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
 source test.include
 
-# Check whether only a subset of projects should be tested
-if [ $# -eq 0 ]; then
-    projects=( Chart Closure Lang Math Mockito Time )
-else
-    projects=( $* )
-    script_name=$(echo $script | sed 's/\.sh$//')
-    LOG="$TEST_DIR/${script_name}$(printf '_%s' $*).log"
+# Print usage message and exit
+usage() {
+    echo "usage: $0 [-b <bug id> ...] -p <project id>"
+    exit 1
+}
+
+# Check arguments
+while getopts ":p:b:" opt; do
+    case $opt in
+        p) PID="$OPTARG"
+            ;;
+        b) BUGS="$BUGS $OPTARG"
+            ;;
+        \?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            ;;
+        :)
+            echo "No argument provided: -$OPTARG." >&2
+            usage
+            ;;
+  esac
+done
+
+if [ "$PID" == "" ]; then
+    usage
 fi
+#TODO: Check whether PID is one of {Chart, Closure, Lang, Math, Mockito, Time}
+
 init
+
+# Run all bugs, unless otherwise specified
+if [ "$BUGS" == "" ]; then
+    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/commit-db)
+    BUGS="$(seq 1 1 $num_bugs)"
+fi
+
+# Create log file
+script_name=$(echo $script | sed 's/\.sh$//')
+LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
 
 ################################################################################
 # Run developer-written tests on all buggy and fixed program versions, and 
@@ -29,36 +60,33 @@ HALT_ON_ERROR=0
 test_dir="$TMP_DIR/test_trigger"
 mkdir -p $test_dir
 
-for pid in "${projects[@]}"; do
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$pid/commit-db)
-    work_dir="$test_dir/$pid"
-    # Clean working directory
-    rm -rf $work_dir
-    for bid in $(seq 1 1 $num_bugs); do
-        for v in "b" "f"; do
-            vid=${bid}$v
-            defects4j checkout -p $pid -v "$vid" -w "$work_dir" || die "checkout: $pid-$vid"
-            defects4j compile -w "$work_dir" || die "compile: $pid-$vid"
-            defects4j test -r -w "$work_dir" || die "run relevant tests: $pid-$vid"
-            
-            triggers=$(num_triggers "$work_dir/failing_tests")
-            # Expected number of failing tests for each fixed version is 0!
-            if [ $v == "f" ]; then
-                [ $triggers -eq 0 ] \
-                        || die "verify number of triggering tests: $pid-$vid (expected: 0, actual: $triggers)"
-                continue
-            fi
-            
-            # Expected number of failing tests for each buggy version is equal
-            # to the number of provided triggering tests
-            expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
-            [ $triggers -eq $expected ] \
-                    || die "verify number of triggering tests: $pid-$vid (expected: $expected, actual: $triggers)"
-            for t in $(get_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid"); do
-                grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
-            done
+work_dir="$test_dir/$PID"
+# Clean working directory
+rm -rf $work_dir
+for bid in $(echo $BUGS); do
+    for v in "b" "f"; do
+        vid=${bid}$v
+        defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
+        defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
+        defects4j test -r -w "$work_dir" || die "run relevant tests: $PID-$vid"
+
+        triggers=$(num_triggers "$work_dir/failing_tests")
+        # Expected number of failing tests for each fixed version is 0!
+        if [ $v == "f" ]; then
+            [ $triggers -eq 0 ] \
+                    || die "verify number of triggering tests: $PID-$vid (expected: 0, actual: $triggers)"
+            continue
+        fi
+
+        # Expected number of failing tests for each buggy version is equal
+        # to the number of provided triggering tests
+        expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
+        [ $triggers -eq $expected ] \
+                || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
+        for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
+            grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
         done
     done
-    rm -rf $work_dir
 done
+rm -rf $work_dir
 HALT_ON_ERROR=1
