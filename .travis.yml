@@ -1,16 +1,13 @@
+sudo: false
 language: perl
-sudo: enabled
-jdk:
-  - openjdk7
-env:
-  - OS=ubuntu JDKVER=jdk7 GROUP=test
+jdk: openjdk7
 perl:
   - "5.24"
 install:
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
   - cpan install Carton
   - carton install
-  - sudo ./init.sh
+  - ./init.sh
 script:
   - echo $(java -version)
   - cd framework/test
