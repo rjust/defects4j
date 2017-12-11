@@ -1,5 +1,7 @@
 language: perl
 sudo: enabled
+jdk:
+  - openjdk7
 env:
   - OS=ubuntu JDKVER=jdk7 GROUP=test
 perl:
