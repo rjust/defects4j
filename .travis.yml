@@ -1,0 +1,15 @@
+language: perl
+sudo: enabled
+env:
+  - OS=ubuntu JDKVER=jdk7 GROUP=test
+perl:
+  - "5.24"
+install:
+  - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
+  - cpan install Carton
+  - carton install
+  - sudo ./init.sh
+script:
+  - echo $(java -version)
+  - cd framework/test
+  - carton exec ./test_tutorial.sh
