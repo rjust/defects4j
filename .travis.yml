@@ -5,6 +5,8 @@ env:
 perl:
   - "5.24"
 install:
+  - cpan install Carton
+  - carton install
   - sudo ./init.sh
 script:
   - cd framework/test
