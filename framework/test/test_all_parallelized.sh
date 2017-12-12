@@ -20,6 +20,8 @@ fi
 # enable background tasks, through "Job Control"
 set -m
 
+echo "Running tests in parallel"
+
 # will use this file to indicate failed test 
 fail_status_file=.test_failed.status
 # delete failed test status process
@@ -28,6 +30,7 @@ fail_status_file=.test_failed.status
 # complete scripts
 complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) # alternativly could be `ls -1p | grep -e '^.*\.sh$'`
 
+echo "  Complete tests"
 for script in "${complete_test_scripts[@]}"; do
     ./_test_wrapper.sh "$script" & # send to our wrapper
 done
@@ -37,6 +40,7 @@ detect_failed_tests
 # argument supplied script
 PIDS=(Chart Lang)
 
+echo " Argument suplied tests"
 for pid in "${PIDS[@]}"; do
     ./_test_wrapper.sh "test_verify_bugs.sh $pid" & # send to our wrapper
 done
