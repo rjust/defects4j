@@ -29,7 +29,7 @@ fail_status_file=.test_failed.status
 complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) # alternativly could be `ls -1p | grep -e '^.*\.sh$'`
 
 for script in "${complete_test_scripts[@]}"; do
-    ./_test_wrapper.sh ${script} & # send to our wrapper
+    ./_test_wrapper.sh "$script" & # send to our wrapper
 done
 
 detect_failed_tests
