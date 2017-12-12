@@ -79,7 +79,11 @@ sub _post_checkout {
     open(PROP, "<$prop") or return;
     my @tmp;
     while (<PROP>) {
-        s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/$2/g;
+        if (/(distributionUrl=).*\/(gradle-2.*)/) {
+            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-2.2.1-all.zip/g;
+        } else {
+            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-1.12-bin.zip/g;
+        }
         push(@tmp, $_);
     }
     close(PROP);
