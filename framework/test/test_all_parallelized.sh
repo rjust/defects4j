@@ -7,7 +7,7 @@ function detect_failed_tests {
     # check if any of our tests failed
     if [ -e ${fail_status_file} ] ; then
         echo -n "Test(s) failed: "
-        sed ':a;N;$!ba;s/\n/ /g' $fail_status_file
+        cat $fail_status_file | tr "\n" ", "
         exit 1
     fi
 }
@@ -32,7 +32,7 @@ complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.s
 
 echo "  Complete tests"
 for script in "${complete_test_scripts[@]}"; do
-    ./_test_wrapper.sh "$script" & # send to our wrapper
+    ./_test_wrapper.sh "$script" & > /dev/null 2>&1 # send to our wrapper
 done
 
 detect_failed_tests
