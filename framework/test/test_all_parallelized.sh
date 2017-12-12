@@ -36,3 +36,14 @@ PIDS=(Chart Lang)
 for pid in PIDS; do
     ./_test_wrapper.sh "test_verify_bugs.sh $pid" & # send to our wrapper
 done
+
+# wait for all parallel jobs to finish
+while [ 1 ]; do fg 2> /dev/null; [ $? == 1 ] && break; done
+
+# check if any of our tests failed
+if [ -e ${fail_status_file} ] ; then
+    echo -n "Test(s) failed: "
+    sed ':a;N;$!ba;s/\n/ /g' $fail_status_file
+    exit 1
+fi
+
