@@ -11,10 +11,22 @@ install:
   - cpan install Carton
   - carton install
   - ./init.sh
-
-script:
   - cd framework/test
-  - carton exec ./test_tutorial.sh
-  - carton exec ./test_mutation_analysis.sh
-  - carton exec ./test_randoop.sh
-  - carton exec ./test_fix_test_suite.sh
+
+jobs:
+  include:
+    # Test the tutorial and basic commands
+    - stage: test
+      script: carton exec ./test_tutorial.sh
+      script: carton exec ./test_mutation_analysis.sh
+      script: carton exec ./test_randoop.sh
+      script: carton exec ./test_fix_test_suite.sh
+    # Verify that the bugs are reproducible
+    - stage: verify
+      script: carton exec ./test_verify_bugs.sh -p Time
+      script: carton exec ./test_verify_bugs.sh -p Lang
+      script: carton exec ./test_verify_bugs.sh -p Chart
+      script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
+      script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
+      script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
+      script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
