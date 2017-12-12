@@ -1,11 +1,6 @@
 language: perl
-
 perl:
   - "5.24"
-
-env:
-  - PID=Chart
-  - PID=Lang
 
 jdk:
   - openjdk7
@@ -22,5 +17,4 @@ script:
   - carton exec ./test_tutorial.sh
   - carton exec ./test_mutation_analysis.sh
   - carton exec ./test_randoop.sh
-  - carton exec ./test_evosuite.sh
-  - carton exec ./test_verify_bugs.sh $PID
+  - carton exec ./test_fix_test_suite.sh
