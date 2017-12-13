@@ -18,7 +18,7 @@ if `pwd | grep -v '.*/defects4j/framework/test$'` > /dev/null; then
 fi
 
 # enable background tasks, through "Job Control"
-set +m
+set -m
 
 echo "Running tests in parallel"
 
