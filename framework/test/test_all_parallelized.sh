@@ -41,7 +41,7 @@ if ls ./*.out &> /dev/null; then
 fi
 
 # complete scripts
-complete_test_scripts=(test_tutorial.sh) #test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) 
+complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) 
 
 echo "Complete tests"
 for script in "${complete_test_scripts[@]}"; do
