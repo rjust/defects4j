@@ -11,7 +11,7 @@ function detect_failed_tests {
         for fail_output in "${fail_outputs[@]}"; do
             echo "==============================================================="
             echo "$fail_output has failed"
-            cat "$fail_output.out"
+            cat ".$fail_output.out"
             echo "===================================================================="
             echo "===================================================================="
             echo "===================================================================="
@@ -46,7 +46,7 @@ complete_test_scripts=(test_tutorial.sh) #test_mutation_analysis.sh test_randoop
 echo "Complete tests"
 for script in "${complete_test_scripts[@]}"; do
     echo "carton exec $script" # let the user know what's going on
-    ./_test_wrapper.sh "$script" > "$script.out" 2>&1 & # send to our wrapper
+    ./_test_wrapper.sh "$script" > ".$script.out" 2>&1 & # send to our wrapper
 done
 
 detect_failed_tests
@@ -58,7 +58,7 @@ echo "Argument suplied tests"
 for pid in "${PIDS[@]}"; do
     break; # skip
     echo "carton exec test_verify_bugs.sh $pid" # let the user know what's going on
-    ./_test_wrapper.sh "test_verify_bugs.sh $pid" > "test_verify_bugs.sh.$pid.out" 2>&1 & # send to our wrapper
+    ./_test_wrapper.sh "test_verify_bugs.sh $pid" > ".test_verify_bugs.sh.$pid.out" 2>&1 & # send to our wrapper
 done
 
 detect_failed_tests
