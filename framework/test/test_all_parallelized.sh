@@ -7,7 +7,16 @@ function detect_failed_tests {
     # check if any of our tests failed
     if [ -e ${fail_status_file} ] ; then
         echo -n "Test(s) failed: "
-        cat $fail_status_file | tr "\n" ", "
+        fail_outputs=(`cat $fail_status_file`)
+        for fail_output in "${fail_outputs[@]}"; do
+            echo "==============================================================="
+            echo "$fail_output has failed"
+            cat "$fail_output.out"
+            echo "===================================================================="
+            echo "===================================================================="
+            echo "===================================================================="
+            echo "===================================================================="
+        done
         exit 1
     fi
 }
@@ -20,19 +29,24 @@ fi
 # enable background tasks, through "Job Control"
 set -m
 
-echo "Running tests in parallel"
+echo "Running tests in parallel, only failing output will be shown (at the end)"
 
 # will use this file to indicate failed test 
 fail_status_file=.test_failed.status
-# delete failed test status process
+
+# delete failed test status process and output files
 [ -e $fail_status_file ] && rm ./${fail_status_file}
+if ls ./*.out &> /dev/null; then
+    rm ./*.out
+fi
 
 # complete scripts
-complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) # alternativly could be `ls -1p | grep -e '^.*\.sh$'`
+complete_test_scripts=(test_tutorial.sh) #test_mutation_analysis.sh test_randoop.sh test_evosuite.sh) 
 
-echo "  Complete tests"
+echo "Complete tests"
 for script in "${complete_test_scripts[@]}"; do
-    { ./_test_wrapper.sh "$script" & } 2> /dev/null # send to our wrapper
+    echo "carton exec $script" # let the user know what's going on
+    ./_test_wrapper.sh "$script" > "$script.out" 2>&1 & # send to our wrapper
 done
 
 detect_failed_tests
@@ -40,9 +54,11 @@ detect_failed_tests
 # argument supplied script
 PIDS=(Chart Lang)
 
-echo "  Argument suplied tests"
+echo "Argument suplied tests"
 for pid in "${PIDS[@]}"; do
-    { ./_test_wrapper.sh "test_verify_bugs.sh $pid" & } 2> /dev/null # send to our wrapper
+    break; # skip
+    echo "carton exec test_verify_bugs.sh $pid" # let the user know what's going on
+    ./_test_wrapper.sh "test_verify_bugs.sh $pid" > "test_verify_bugs.sh.$pid.out" 2>&1 & # send to our wrapper
 done
 
 detect_failed_tests
