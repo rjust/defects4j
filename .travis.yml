@@ -14,7 +14,4 @@ install:
 
 script:
   - cd framework/test
-  - carton exec ./test_tutorial.sh
-  - carton exec ./test_mutation_analysis.sh
-  - carton exec ./test_randoop.sh
-  - carton exec ./test_fix_test_suite.sh
+  - ./test_all_parallelized.sh
