@@ -18,7 +18,7 @@ if `pwd | grep -v '.*/defects4j/framework/test$'` > /dev/null; then
 fi
 
 # enable background tasks, through "Job Control"
-set -m
+set +m
 
 echo "Running tests in parallel"
 
@@ -32,7 +32,7 @@ complete_test_scripts=(test_tutorial.sh test_mutation_analysis.sh test_randoop.s
 
 echo "  Complete tests"
 for script in "${complete_test_scripts[@]}"; do
-    ./_test_wrapper.sh "$script" & > /dev/null 2>&1 # send to our wrapper
+    { ./_test_wrapper.sh "$script" & } 2> /dev/null # send to our wrapper
 done
 
 detect_failed_tests
@@ -40,9 +40,9 @@ detect_failed_tests
 # argument supplied script
 PIDS=(Chart Lang)
 
-echo " Argument suplied tests"
+echo "  Argument suplied tests"
 for pid in "${PIDS[@]}"; do
-    ./_test_wrapper.sh "test_verify_bugs.sh $pid" & # send to our wrapper
+    { ./_test_wrapper.sh "test_verify_bugs.sh $pid" & } 2> /dev/null # send to our wrapper
 done
 
 detect_failed_tests
