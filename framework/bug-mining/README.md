@@ -7,6 +7,8 @@ Required CPAN Modules
 - DBD
 - DBD::CSV
 
+These can be installed using Carton CPAN module version manager, just make sure you prefix each command with `carton exec ...` to point perl to the write modules directory.
+
 Configuring a new project
 ----------------------------
 A Perl module and a wrapper build file are necessary to configure a new project
@@ -56,10 +58,10 @@ The candidate commit database `commit-db`
     - sourceforge (sf)
 
 2. Create a directory as the working directory for the bug-mining process:
-    - `mkdir working`
-    - `cd working`
+    - `mkdir -p working/framework/projects/`
+    - `cd working/framework/projects`
 
-3. Create a directory inside `working` for the project you are mining bugs for
+3. Create a directory inside `working/framework/projects` for the project you are mining bugs for
    (Supported project names are `Chart`, `Closure`, `Math`, `Lang`, and `Time`):
     - `mkdir Lang`
     - `cd Lang`
@@ -71,11 +73,11 @@ The candidate commit database `commit-db`
 5. For trackers jira, github, google, but not sourceforge, use
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
-    - `../../framework/bug-mining/download-issues.pl jira -p lang -o issues |
-      ../../framework/bug-mining/merge-issue-numbers.pl -f issues.txt`
+    - `../../../../framework/bug-mining/download-issues.pl jira -p lang -o issues |
+      ../../../../framework/bug-mining/merge-issue-numbers.pl -f issues.txt`
 
 6. Obtain the development history (commit logs) for the project:
-    - `git --git-dir=../../project_repos/commons-lang.git/ log > gitlog`
+    - `git --git-dir=../../../../project_repos/commons-lang.git/ log > gitlog`
 
 7. Cross-reference the commit log with the issue numbers known to be bugs
    (saved in `issues.txt` in this example) by using `vcs-log-xref.pl`. The
@@ -83,23 +85,23 @@ The candidate commit database `commit-db`
    (e.g, issue numbers, keywords, etc.). Note that the regular expression has to
    capture the issue number. The script `merge-commit-db.pl` enumerates the
    output of `vcs-log-xref.pl`, and outputs or updates the `commit-db`:
-    -  `../../../../framework/bug-mining/vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog 
-       -r ../../../../project_repos/commons-lang.git/ 
-       -c '../../../../framework/bug-mining/verify-bug-file.sh issues.txt' | 
+    -  `../../../../framework/bug-mining/vcs-log-xref.pl git -b '/(LANG-\d+)/mi' -l gitlog
+       -r ../../../../project_repos/commons-lang.git/
+       -c '../../../../framework/bug-mining/verify-bug-file.sh issues.txt' |
        ../../../../framework/bug-mining/merge-commit-db.pl -f commit-db -g ../../../../project_repos/commons-lang.git`
 
 
    These are the issue trackers, project IDs, and regular expressions we used
    (Note that we manually built the commit-db for Chart):
 
-   | Defects4J ID | Issue tracker | Project ID       | Regexp                 |
-   |--------------|---------------|------------------|------------------------|
-   | Chart        |               |                  |                        |
-   | Closure      | google        | closure-compiler | /issue.*(\d+)/mi       |
-   | Lang         | jira          | lang             | /(LANG-\d+)/mi         |
-   | Math         | jira          | math             | /(MATH-\d+)/mi         |
-   | Time         | github        | joda-time        | /Fix(?:es)?\s*#(\d+)/mi |
-   | Time         | sf            | joda-time        | /\[.*?(\d+)/mi         |
+   | Defects4J ID | Issue tracker | Project ID        | Regexp                  |
+   |--------------|---------------|-------------------|-------------------------|
+   | Chart        |               |                   |                         |
+   | Closure      | google        | closure-compiler  | /issue.*(\d+)/mi        |
+   | Lang         | jira          | lang              | /(LANG-\d+)/mi          |
+   | Math         | jira          | math              | /(MATH-\d+)/mi          |
+   | Time         | github        | JodaOrg/joda-time | /Fix(?:es)?\s*#(\d+)/mi |
+   | Time         | sf            | joda-time         | /\[.*?(\d+)/mi          |
 
 8. For tracker sourceforge (as we used for Time), note that due to a change in
    sourceforge's structure, bug ids which were once universal became project
@@ -109,7 +111,6 @@ The candidate commit database `commit-db`
    Provide `verify-bug-sf.sh <project-id>` as the `-c` option to do this query
    on an individual basis.
 
-
 Project setup
 ------------
 1. Change to the working directory:
@@ -118,23 +119,23 @@ Project setup
 2. Initialize all project revisions with `initialize-revisions.pl`. This script
    will identify the various directory layouts and run a sanity check on each
    revision in `commit-db`:
-    - `../framework/bug-mining/initialize-revisions.pl -p Lang -w .`
+    - `../../../framework/bug-mining/initialize-revisions.pl -p Lang -w .`
 
 3. Analyze all revisions with `analyze-project.pl`. This will identify suitable
    candidates -- ones that compile and have a non-empty source diff:
-    - `../framework/bug-mining/analyze-project.pl -p Lang -w .`
+    - `../../../framework/bug-mining/analyze-project.pl -p Lang -w .`
 
 Reproducing faults
 -------------
 1. Determine triggering tests with `get-trigger.pl`. This will determine the
    revisions in `commit-db` that have a test that can reproduce a fault:
-    - `../framework/bug-mining/get-trigger.pl -p Lang -w .`
+    - `../../../framework/bug-mining/get-trigger.pl -p Lang -w .`
 
 2. Determine the classes modified by the bug fix with `get-class-list.pl`. This
    will determine the list of modified classes for revisions with a reproducible
    fault, and also the list of classes loaded during the execution of the
    triggering test:
-    - `../framework/bug-mining/get-class-list.pl -p Lang -w .`
+    - `../../../framework/bug-mining/get-class-list.pl -p Lang -w .`
 
 Reviewing revisions and promoting to main database
 ------------------

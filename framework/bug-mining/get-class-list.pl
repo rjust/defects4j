@@ -108,6 +108,7 @@ my ($PID, $VID, $WORK_DIR) =
     );
 
 pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
+$WORK_DIR = abs_path($WORK_DIR);
 
 # TODO make output dir more flexible
 my $db_dir = $WORK_DIR;
@@ -122,7 +123,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 # Set up directory for loaded and modified classes
@@ -153,25 +154,25 @@ foreach my $vid (@ids) {
     printf ("%4d: $project->{prog_name}\n", $vid);
 
     # Checkout to version 2
-    $project->checkout_id("${vid}f") == 0 or die;
+    $project->checkout_vid("${vid}f", $TMP_DIR, 1) or die;
 
     # Compile sources and tests
-    $project->compile() == 0 or die;
+    $project->compile() or die;
     $project->fix_tests("${vid}f");
-    $project->compile_tests() == 0 or die;
+    $project->compile_tests() or die;
 
     my %src;
     my %test;
     foreach my $test (@list) {
         my $log_file = "$TMP_DIR/tests.fail";
         # Run triggering test and verify that it passes
-        $project->run_tests($log_file, $test) == 0 or die;
+        $project->run_tests($log_file, $test) or die;
         # Get number of failing tests -> has to be 0
         my $fail = Utils::get_failing_tests($log_file);
         (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die;
 
         # Run tests again and monitor class loader
-        my $loaded = $project->monitor_test($test, $v2);
+        my $loaded = $project->monitor_test($test, "${vid}f");
         die unless defined $loaded;
 
         foreach (@{$loaded->{src}}) {
