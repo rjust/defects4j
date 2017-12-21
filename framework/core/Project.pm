@@ -788,7 +788,7 @@ sub mutation_analysis {
     my $basedir = $self->{prog_root};
 
     return $self->_ant_call("mutation.test",
-                            "-Dmajor.kill.log=$basedir/kill.csv " .
+                            "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$relevant $log $exclude $single_test_opt");
 }
 
@@ -820,7 +820,7 @@ sub mutation_analysis_ext {
 
     return $self->_ant_call("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
-                            "-Dmajor.kill.log=$basedir/kill.csv " .
+                            "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$log $exclude $single_test_opt");
 }
 
