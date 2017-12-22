@@ -106,8 +106,7 @@ use Carp qw(confess);
 =pod
 
 =head2 Create an instance of a Project
-
-  Project::create_project(project_id, work_dir)
+  Project::create_project(project_id, work_dir, [commit-db, build.xml])
 
 Dynamically loads the required submodule, instantiates the project, and returns a
 reference to it.
@@ -797,9 +796,9 @@ sub mutation_analysis {
   $project->mutation_analysis_ext(test_dir, test_include, log_file [, exclude_file, single_test])
 
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
-C<test_include>. 
+C<test_include>.
 The output of the mutation analysis process is redirected to F<log_file>. If
-C<single_test> is specified, only that test is run. 
+C<single_test> is specified, only that test is run.
 
 B<Note that C<mutate> is not called implicitly>.
 
