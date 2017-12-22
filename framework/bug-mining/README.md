@@ -1,14 +1,3 @@
-Required CPAN Modules
-----------------------
-- URI
-- DBI
-- JSON
-- JSON::Parse.pm
-- DBD
-- DBD::CSV
-
-These can be installed using Carton CPAN module version manager, just make sure you prefix each command with `carton exec ...` to point perl to the write modules directory.
-
 Configuring a new project
 ----------------------------
 A Perl module and a wrapper build file are necessary to configure a new project

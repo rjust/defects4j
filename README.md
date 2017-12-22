@@ -3,6 +3,31 @@ Defects4J -- version 1.1.0
 Defects4J is a collection of reproducible bugs collected with the goal of
 advancing software testing research.
 
+Required CPAN Modules
+----------------------
+- URI
+- DBI
+- JSON
+- JSON::Parse.pm
+- DBD
+- DBD::CSV
+- PatchReader
+
+These can be installed using Carton CPAN module version manager, just make sure you prefix each command with `carton exec ...` to point perl to the write modules directory.
+
+Glossary
+--------------
+Terms commonly used in Defects4J
+
+- `commit-db` : csv table for storage of issues we can use
+- `PID` : project id
+- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
+- `work_dir` : local directory to work out of
+- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
+- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
+- `revision_id` : a Vcs revision id
+- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
+
 The projects
 ---------------
 Defects4J contains 395 bugs from the following open-source projects:
