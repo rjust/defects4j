@@ -42,6 +42,7 @@ use Vcs::Git;
 
 our @ISA = qw(Project);
 my $PID  = "Lang";
+# TODO changeme
 my $RANDOM_TEST_FILE = "$SCRIPT_DIR/build-scripts/$PID/random_tests";
 
 sub new {
