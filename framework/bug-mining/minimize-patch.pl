@@ -88,7 +88,8 @@ my $VID      = $cmd_opts{v};
 # Check format of target version id
 $VID =~ /^(\d+)$/ or die "Wrong version id format: $VID -- expected: (\\d+)!";
 
-my $patch_dir = abs_path("$WORK_DIR") . "/$PID/patches";
+$WORK_DIR = abs_path("$WORK_DIR");
+my $patch_dir = $WORK_DIR . "/$PID/patches";
 -e $patch_dir or die "Cannot read patch directory: $patch_dir";
 
 my $src_patch = "$patch_dir/${VID}.src.patch";
@@ -97,13 +98,13 @@ my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 $project->{prog_root} = $TMP_DIR;
 
 my $rev = $project->lookup("${VID}f");
 my $src_path = $project->src_dir($rev);
-$project->checkout_id("${VID}f");
-$project->apply_patch($TMP_DIR, $src_patch, $src_path) == 0 or die;
+$project->checkout_vid("${VID}f", $TMP_DIR, 1);
+$project->apply_patch($TMP_DIR, $src_patch) or die;
 
 # Minimize patch with configured editor
 system("$EDITOR $TMP_DIR");
@@ -115,12 +116,12 @@ exit 0 unless $input eq "y";
 
 my $orig=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $orig;
-system("cd $TMP_DIR; git commit -a -m \"minimized patch\""); 
+system("cd $TMP_DIR; git commit -a -m \"minimized patch\"");
 my $min=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $min;
 
 # Last chance to reject patch
-system("cd $TMP_DIR; git diff $orig:$src_path $min:$src_path"); 
+system("cd $TMP_DIR; git diff $orig:$src_path $min:$src_path");
 print "Patch correct? [y/n] >";
 $input = <STDIN>; chomp $input;
 exit 0 unless $input eq "y";

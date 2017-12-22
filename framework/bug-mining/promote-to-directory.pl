@@ -83,7 +83,7 @@ use Utils;
 # Issue usage message and quit
 sub _usage {
     die "usage: " . basename($0) . " -p project_id " .
-        "-w working_dir";
+        "-w WORK_DIR";
         "[-v version_range] " .
         "[-o output_dir] " .
         "[-d output_db_dir] ";
@@ -92,7 +92,7 @@ sub _usage {
 my %cmd_opts;
 getopts('p:w:v:o:d:', \%cmd_opts) or _usage();
 
-my ($PID, $working_dir, $VID, $output_dir, $output_db_dir) =
+my ($PID, $WORK_DIR, $VID, $output_dir, $output_db_dir) =
     ($cmd_opts{p},
      $cmd_opts{w},
      $cmd_opts{v},
@@ -100,21 +100,23 @@ my ($PID, $working_dir, $VID, $output_dir, $output_db_dir) =
      $cmd_opts{d} // $DB_DIR);
 
 # ok for VID to be undef
-_usage() unless all {defined} ($PID, $working_dir, $output_dir, $output_db_dir);
+_usage() unless all {defined} ($PID, $WORK_DIR, $output_dir, $output_db_dir);
 
 # Check format of target version id
 if (defined $VID) {
     $VID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $VID!";
 }
 
+$WORK_DIR = abs_path("$WORK_DIR");
+
 system("mkdir -p $output_dir/$PID");
 system("mkdir -p $output_db_dir");
 
 ############################### VARIABLE SETUP
-my $project = Project::create_project($PID, $working_dir);
-my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $working_dir);
+my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
 my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $output_db_dir);
-my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $working_dir);
+my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
 my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $output_db_dir);
 
 my @rev_specific_files = ("failing_tests/<rev>",);
@@ -162,7 +164,7 @@ foreach my $id (@ids) {
     for my $rev ($v1, $v2) {
         for my $fn (@rev_specific_files) {
             $fn =~ s/<rev>/$rev/;
-            my $src = "$working_dir/$PID/$fn";
+            my $src = "$WORK_DIR/$PID/$fn";
             my $dst = "$output_dir/$PID/$fn";
             _cp($src, $dst);
         }
@@ -170,7 +172,7 @@ foreach my $id (@ids) {
     for my $fn (@id_specific_files) {
         my $fn_src = $fn; $fn_src =~ s/<id>/$id/;
         my $fn_dst = $fn; $fn_dst =~ s/<id>/$max_number/;
-        my $src = "$working_dir/$PID/$fn_src";
+        my $src = "$WORK_DIR/$PID/$fn_src";
         my $dst = "$output_dir/$PID/$fn_dst";
         _cp($src, $dst);
     }
@@ -181,7 +183,7 @@ foreach my $id (@ids) {
 }
 
 for my $fn (@generic_files) {
-    my $src = "$working_dir/$PID/$fn";
+    my $src = "$WORK_DIR/$PID/$fn";
     my $dst = "$output_dir/$PID/$fn";
     my $tmp = "$output_dir/$PID/${fn}_tmp";
     if (-e $src) {
