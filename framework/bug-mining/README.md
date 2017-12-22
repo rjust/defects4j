@@ -55,20 +55,23 @@ The candidate commit database `commit-db`
     - `mkdir Lang`
     - `cd Lang`
 
-4. For trackers jira, github, google, but not sourceforge, create a
+4. Copy your build script ${PID}.build.xml in ~Defects4J/framework/build-scripts/$PID/${PID}.build.xml
+    - `cp ../../../../framework/build-scripts/Lang/Lang.build.xml .`
+
+5. For trackers jira, github, google, but not sourceforge, create a
    directory `issues` to download the issue numbers:
     - `mkdir issues`
 
-5. For trackers jira, github, google, but not sourceforge, use
+6. For trackers jira, github, google, but not sourceforge, use
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
     - `../../../../framework/bug-mining/download-issues.pl jira -p lang -o issues |
       ../../../../framework/bug-mining/merge-issue-numbers.pl -f issues.txt`
 
-6. Obtain the development history (commit logs) for the project:
+7. Obtain the development history (commit logs) for the project:
     - `git --git-dir=../../../../project_repos/commons-lang.git/ log > gitlog`
 
-7. Cross-reference the commit log with the issue numbers known to be bugs
+8. Cross-reference the commit log with the issue numbers known to be bugs
    (saved in `issues.txt` in this example) by using `vcs-log-xref.pl`. The
    script requires a Perl regular expression that matches bug-fixing commits
    (e.g, issue numbers, keywords, etc.). Note that the regular expression has to
@@ -92,7 +95,7 @@ The candidate commit database `commit-db`
    | Time         | github        | JodaOrg/joda-time | /Fix(?:es)?\s*#(\d+)/mi |
    | Time         | sf            | joda-time         | /\[.*?(\d+)/mi          |
 
-8. For tracker sourceforge (as we used for Time), note that due to a change in
+9. For tracker sourceforge (as we used for Time), note that due to a change in
    sourceforge's structure, bug ids which were once universal became project
    specific. Unfortunately the old, universal IDs are not available publicly for
    bulk query. Fortunately, the old ids web page will still redirect to the new
