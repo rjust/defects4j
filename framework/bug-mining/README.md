@@ -141,15 +141,14 @@ Reviewing revisions and promoting to main database
    reproducible fault has an entry with the file name `<id>.src.patch` in the
    `patches` directory:
      - `ls -l Lang/patches/*.src.patch`
-     - `../framework/bug-mining/minimize_patch.pl -p Lang -w . -v <id>`
+     - `../../../framework/bug-mining/minimize-patch.pl -p Lang -w . -v <id>`
 
    Note that the patch is the *reverse* patch, i.e., patching the fixed revision
    with this patch will reintroduce the fault.
 
-
 4. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
-    - `../framework/bug-mining/promote-to-directory.pl -p Lang -w . -v <id>`
+    - `../../../framework/bug-mining/promote-to-directory.pl -p Lang -w . -v <id>`
 
    Note: Make sure to specify the `-v` option as the default is to promote all
          found bugs!
