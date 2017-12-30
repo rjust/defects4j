@@ -57,6 +57,24 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
+Bug mining process
+----------------------------
+1. Find candidate revisions by cross-referencing a development commit log
+   with an issue tracker database (jira, github etc).
+
+2. Project setup: Making sure that the candidate revisions are compilable and
+   conform to path expectations of `Defects4J`.
+
+3. Reproducing faults: Running tests to verify that the bug can be reproduced
+   reliably with a test that fails before the fix and passes afterwards.
+
+4. Reviewing revisions and promoting to main database: Manually determine
+   whether the bug fix is minimal (i.e., does not include features or
+   refactorings). If the bug fix is minimal, promote the bug to the main
+   `Defects4J` database!
+
+More information available in `framework/bug-mining/README.md`
+
 Requirements
 ----------------
  - Java 1.7
