@@ -24,9 +24,9 @@ jobs:
     # Parralized tests
     - stage: verify
       script: carton exec ./test_verify_bugs.sh -p Time
-      script: carton exec ./test_verify_bugs.sh -p Lang
-      script: carton exec ./test_verify_bugs.sh -p Chart
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
+    - script: carton exec ./test_verify_bugs.sh -p Lang
+    - script: carton exec ./test_verify_bugs.sh -p Chart
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
