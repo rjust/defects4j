@@ -21,7 +21,9 @@ jobs:
     - script: carton exec ./test_randoop.sh
     - script: carton exec ./test_fix_test_suite.sh
     # Verify that the bugs are reproducible
-    # Parralized tests
+    # STOP STOP STOP
+    # Do not edit the lines below manually, they will be overwritten by framework/test/parallelize-travis.pl
+    # Parralized tests are broken down into stages
     - stage: verify
       script: carton exec ./test_verify_bugs.sh -p Time
     - script: carton exec ./test_verify_bugs.sh -p Lang
