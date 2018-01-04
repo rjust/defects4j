@@ -21,3 +21,9 @@ my ($TRAVIS_CONFIG, $COMMIT_DB) =
     );
 
 pod2usage(1) unless defined $TRAVIS_CONFIG and defined $COMMIT_DB;
+
+# go through the commit-db and collect bug id's
+
+
+# add bug id's correct section of travis config
+
