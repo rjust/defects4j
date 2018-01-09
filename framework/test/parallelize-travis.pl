@@ -37,12 +37,17 @@ my ($TRAVIS_CONFIG, $COMMIT_DB) =
 pod2usage(1) unless defined $TRAVIS_CONFIG and defined $COMMIT_DB;
 
 # go through the commit-db and collect bug id's
-my $dbh = DB::get_db_handle($TAB_REV_PAIRS, dirname($COMMIT_DB));
-my $sth = $dbh->prepare("SELECT * FROM $TAB_REV_PAIRS") or die $dbh->errstr;
-$sth->execute();
+my $dbh = DBI->connect("dbi:CSV:", undef, undef, {
+                       f_dir      => dirname($COMMIT_DB),
+                       RaiseError => 1,
+                       skip_first_row => 0,
+                      })
+          or die "Cannot connect: $DBI::errstr";
+my $sth = $dbh->prepare("SELECT * FROM " . $dbh->quote(basename($COMMIT_DB))) or die $dbh->errstr;
+$sth->execute() or die $sth->errstr;
 
 my %row;
-while(%row = $sth->fetchrow_hashref()) {
+while(%row = $sth->fetchrow_hashref) {
   print "$row{PROJECT} $row{ID}";
   exit;
 }
