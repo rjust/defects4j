@@ -87,10 +87,7 @@ sub read_commit_db {
   $sth->execute() or die $sth->errstr;
 
   my @bugs;
-  my %row;
-  while(%row = $sth->fetchrow_hashref) {
-    push(@bugs, $row{bug_id});
-  }
+  my @rows = $sth->fetchall_arrayref;
   return @bugs;
 }
 
