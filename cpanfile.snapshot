@@ -115,11 +115,11 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 6.48
       Test::Simple 0.90
       perl 5.008
-  JSON-2.97000
-    pathname: I/IS/ISHIGAKI/JSON-2.97000.tar.gz
+  JSON-2.97001
+    pathname: I/IS/ISHIGAKI/JSON-2.97001.tar.gz
     provides:
-      JSON 2.97000
-      JSON::Backend::PP 2.97000
+      JSON 2.97001
+      JSON::Backend::PP 2.97001
     requirements:
       ExtUtils::MakeMaker 0
       Test::More 0
@@ -202,6 +202,24 @@ DISTRIBUTIONS
       Scalar::Util 1.18
       Test::More 0.42
       perl 5.00503
+  PatchReader-0.9.6
+    pathname: T/TM/TMANNERM/PatchReader-0.9.6.tar.gz
+    provides:
+      PatchReader 0.009006
+      PatchReader::AddCVSContext undef
+      PatchReader::Base undef
+      PatchReader::CVSClient undef
+      PatchReader::DiffPrinter::raw undef
+      PatchReader::DiffPrinter::template undef
+      PatchReader::FilterPatch undef
+      PatchReader::FixPatchRoot undef
+      PatchReader::NarrowPatch undef
+      PatchReader::PatchInfoGrabber undef
+      PatchReader::Raw undef
+    requirements:
+      Cwd 2
+      ExtUtils::MakeMaker 0
+      File::Temp 0.05
   SQL-Statement-1.412
     pathname: R/RE/REHSACK/SQL-Statement-1.412.tar.gz
     provides:
@@ -341,3 +359,31 @@ DISTRIBUTIONS
       strict 0
       utf8 0
       warnings 0
+  YAML-1.24
+    pathname: T/TI/TINITA/YAML-1.24.tar.gz
+    provides:
+      YAML 1.24
+      YAML::Any 1.24
+      YAML::Dumper undef
+      YAML::Dumper::Base undef
+      YAML::Error undef
+      YAML::Loader undef
+      YAML::Loader::Base undef
+      YAML::Marshall undef
+      YAML::Mo undef
+      YAML::Node undef
+      YAML::Tag undef
+      YAML::Type::blessed undef
+      YAML::Type::code undef
+      YAML::Type::glob undef
+      YAML::Type::ref undef
+      YAML::Type::regexp undef
+      YAML::Type::undef undef
+      YAML::Types undef
+      YAML::Warning undef
+      yaml_mapping undef
+      yaml_scalar undef
+      yaml_sequence undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.008001

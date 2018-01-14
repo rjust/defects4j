@@ -19,6 +19,7 @@ use File::Basename;
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
+use YAML;
 
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
