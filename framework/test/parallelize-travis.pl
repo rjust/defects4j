@@ -38,10 +38,8 @@ my ($TRAVIS_CONFIG, $STR_DATABASES) =
 pod2usage(1) unless defined $TRAVIS_CONFIG and defined $STR_DATABASES;
 
 # break down databases
-my @db_list = split(/:/,$STR_DATABASES);
 my %project_pairs;
-
-foreach (@db_list) {
+foreach (split(/:/,$STR_DATABASES)) {
   my @pair = split(/,/);
   # build hash of databases { project => filename }
   $project_pairs{$pair[0]} = $pair[1];
@@ -87,8 +85,10 @@ sub read_commit_db {
   $sth->execute() or die $sth->errstr;
 
   my @bugs;
-  my @rows = $sth->fetchall_arrayref;
-  return @bugs;
+  while(my @row = $sth->fetchrow_array) {
+    push @bugs, $row[0];
+  }
+  return \@bugs;
 }
 
 1;
