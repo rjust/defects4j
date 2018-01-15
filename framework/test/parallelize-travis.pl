@@ -31,39 +31,59 @@ use Utils;
 my %cmd_opts;
 getopts('t:c:', \%cmd_opts) or pod2usage(1);
 
-my ($TRAVIS_CONFIG, $STR_DATABASES) =
-($cmd_opts{t},
-  $cmd_opts{c}
-);
+my ($TRAVIS_CONFIG, $STR_DATABASES) = ($cmd_opts{t}, $cmd_opts{c});
+$TRAVIS_CONFIG = abs_path($TRAVIS_CONFIG); # the YAML module doesn't like relative paths
 
 pod2usage(1) unless defined $TRAVIS_CONFIG and defined $STR_DATABASES;
 
-# break down databases
-my %project_pairs;
-foreach (split(/:/,$STR_DATABASES)) {
-  my @pair = split(/,/);
-  # build hash of databases { project => filename }
-  $project_pairs{$pair[0]} = $pair[1];
-}
-
-# go through the commit-db and collect bug id's
-my %bugs;
-foreach my $key (keys %project_pairs) {
-  $bugs{$key} = read_commit_db($project_pairs{$key});
-}
+# parse database input into hash { project => [ bugs ] }
+my %bugs = read_databases($STR_DATABASES);
 
 # update travis yml file
+
 # read yml to hash buffer
-my $travis_yml = YAML->LoadFile($TRAVIS_CONFIG);
+my $travis_yml = YAML::LoadFile($TRAVIS_CONFIG);
+
 # remove any test_verify_bugs.sh references to projects we have in our bugs hash
+
 # add back in new bugs from test_verify_bugs
 # write yml hash buffer to file
+
+1;
+
+=pod
+
+  read_databases(str_databases);
+
+=head1 DESCRIPTION
+
+parse command like database string then read bugs from databases
+
+=cut
+
+sub read_databases {
+  my $str_databases = shift;
+  # break down databases
+  my %project_pairs;
+  foreach (split(/:/,$str_databases)) {
+    my @pair = split(/,/);
+    # build hash of databases { project => filename }
+    $project_pairs{$pair[0]} = $pair[1];
+  }
+
+  # go through the commit-db and collect bug id's
+  my %bugs;
+  foreach my $key (keys %project_pairs) {
+    $bugs{$key} = read_commit_db($project_pairs{$key});
+  }
+  return %bugs;
+}
 
 =pod
 
   read_commit_db(csv_filename)
 
-=head1
+=head1 DESCRIPTION
 
 Read the commit-db and pull bugs out of it
 
@@ -95,5 +115,3 @@ sub read_commit_db {
   }
   return \@bugs;
 }
-
-1;
