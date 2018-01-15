@@ -41,8 +41,8 @@ my %bugs = read_databases($STR_DATABASES);
 
 # update travis yml file
 
-# read yml to hash buffer
-my $travis_yml = YAML::LoadFile($TRAVIS_CONFIG);
+# read yml to hash buffer and immediately dereference it
+my %travis_yml = %{YAML::LoadFile($TRAVIS_CONFIG)};
 
 # remove any test_verify_bugs.sh references to projects we have in our bugs hash
 
