@@ -52,8 +52,12 @@ foreach my $key (keys %project_pairs) {
   $bugs{$key} = read_commit_db($project_pairs{$key});
 }
 
-# add bug id's correct section of travis config
-
+# update travis yml file
+# read yml to hash buffer
+my $travis_yml = YAML->LoadFile($TRAVIS_CONFIG);
+# remove any test_verify_bugs.sh references to projects we have in our bugs hash
+# add back in new bugs from test_verify_bugs
+# write yml hash buffer to file
 
 =pod
 
