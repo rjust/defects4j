@@ -2,12 +2,16 @@
 use strict;
 use warnings;
 
+use POSIX qw(strftime);
+
 # perl script to count the number of invariants in a 'run_dyntrace' log file
 
 my $test_count = 0;
 my $tot_line = 0;
 my $tot_exec = 0;
 my @fields;
+
+    print(STDERR strftime("%Y-%m-%d %H:%M:%S", localtime), "\n");
 
     while (<>) {
         chomp;

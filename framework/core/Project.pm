@@ -888,10 +888,11 @@ sub run_randoop {
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
-# problem: the timelimit argument was rename timeLimit
+# problem: the timelimit argument was renamed time-limit
 # need to use one or other based on version???  but there are 3.1.5 versions with this difference?
-                "--timelimit=$timeout " .
-#               "--timeLimit=$timeout " .
+#               "--timelimit=$timeout " .
+                "--time-limit=$timeout " .
+                "--usethreads " .
                 "--randomseed=$seed " .
                 "$config 2>&1";
 

@@ -43,10 +43,7 @@ which are not included in the git repository for size purposes and to avoid redu
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
 
-4. Set the temp directory environment variable:
-    - `export TMP_DIR="path2yourtmpdir"`
-
-5. Verify you have the perl package for DBI access to CSV files:
+4. Verify you have the perl package for DBI access to CSV files:
     - `perldoc DBD/CSV.pm`
     If this produces the man page for DBM::CSV you are ok, if not
     you must install the package:
@@ -54,16 +51,25 @@ which are not included in the git repository for size purposes and to avoid redu
 
 Running the coverage tests
 ----------------
+5. Please note you must use Java 7; Java 8 will cause failures.
+
 6. Tell the tools which version of Randoop you wish to test:
     By default, the system runs an old (3.1.0) version of Randoop.
+    (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
     The randoop.jar you wish to test must be named randoop-current.jar.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
+    Note: If you are using the 3.1.5 release version of Randoop (or older) you must edit
+    "framework/util/randoop.config" and "framework/core/Project.pm".  There are comments
+    in these files explaining the changes required.
 
 7. Run the coverage suite:
     - `cd framework/test`
-    - `bash -v ./run-test.sh`
+    - `bash -v ./randoop_coverage.sh`
     Currently, this does not run all the tests, just five in each of the suites
     for a total of 30 tests. It takes about 90 minutes to run.
+    The test scripts set TMP_DIR to /tmp/test_d4j.  If you wish to change this,
+    you will need to modify "framework/test/test.include".
+
 
 8. Calculate the coverage:
     The raw coverage data will be found at $TMP_DIR/test_d4j/coverage.
