@@ -890,8 +890,8 @@ sub run_randoop {
                 "--junit-output-dir=randoop " .
 # problem: the timelimit argument was renamed time-limit
 # need to use one or other based on version???  but there are 3.1.5 versions with this difference?
-#               "--timelimit=$timeout " .
-                "--time-limit=$timeout " .
+                "--timelimit=$timeout " .
+#               "--time-limit=$timeout " .
                 "--usethreads " .
                 "--randomseed=$seed " .
                 "$config 2>&1";

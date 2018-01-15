@@ -11,7 +11,7 @@ Defects4J contains 395 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
-| Chart      | JFreechart           |  26            |
+| Chart      | JFreeChart           |  26            |
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
@@ -58,9 +58,9 @@ Running the coverage tests
     (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
     The randoop.jar you wish to test must be named randoop-current.jar.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
-    Note: If you are using the 3.1.5 release version of Randoop (or older) you must edit
-    "framework/util/randoop.config" and "framework/core/Project.pm".  There are comments
-    in these files explaining the changes required.
+    Note: If you are using a current master branch version of Randoop (i.e., much newer
+    than the 3.1.5 release version) you must edit "framework/util/randoop.config" and
+    "framework/core/Project.pm".  There are comments in these files explaining the changes required.
 
 7. Run the coverage suite:
     - `cd framework/test`
