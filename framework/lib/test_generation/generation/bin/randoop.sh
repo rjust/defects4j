@@ -16,15 +16,22 @@
 #                          most per target class.
 # D4J_SEED:                The random seed.
 
+# Check whether the D4J_DIR_TESTGEN_LIB variable is set
+if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
+    echo "Variable D4J_DIR_TESTGEN_LIB not set!"
+    exit 1
+fi
+
 # General helper functions
 source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
 
 # Overall budget is #classes * class_budget
 num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
 budget=$(echo "$num_classes * $D4J_CLASS_BUDGET" | bc)
+project_cp=$(get_project_cp)
 
 cmd="java -ea -javaagent:$D4J_DIR_TESTGEN_LIB/randoop-agent-current.jar \
--classpath $(get_project_cp):$D4J_DIR_TESTGEN_LIB/randoop-current.jar:$D4J_DIR_TESTGEN_LIB/javassist.jar \
+-classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar:$D4J_DIR_TESTGEN_LIB/javassist.jar \
 randoop.main.Main gentests \
 --classlist=$D4J_FILE_ALL_CLASSES \
 --junit-output-dir=$D4J_DIR_OUTPUT \

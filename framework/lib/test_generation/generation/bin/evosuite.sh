@@ -16,6 +16,12 @@
 #                          most per target class.
 # D4J_SEED:                The random seed.
 
+# Check whether the D4J_DIR_TESTGEN_LIB variable is set
+if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
+    echo "Variable D4J_DIR_TESTGEN_LIB not set!"
+    exit 1
+fi
+
 # General helper functions
 source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
 
