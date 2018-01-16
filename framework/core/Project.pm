@@ -83,6 +83,10 @@ Commons lang (L<Vcs::Git> backend)
 
 Commons math (L<Vcs::Git> backend)
 
+=item * L<Mockito|Project::Mockito>
+
+Mockito (L<Vcs::Git> backend)
+
 =item * L<Time|Project::Time>
 
 Joda-time (L<Vcs::Git> backend)
@@ -96,6 +100,7 @@ use warnings;
 use strict;
 use Constants;
 use Utils;
+use Mutation;
 use Carp qw(confess);
 
 =pod
@@ -687,14 +692,43 @@ sub coverage_report {
 
 =pod
 
-  $project->mutate()
+  $project->mutate(instrument_classes, mut_ops)
 
-Mutates the checked-out program version.
+Mutates all classes listed in F<instrument_classes>, using all mutation operators
+defined by the array reference C<mut_ops>, in the checked-out program version.
 Returns the number of generated mutants on success, -1 otherwise.
 
 =cut
 sub mutate {
-    my $self = shift;
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $instrument_classes, $mut_ops)  = @_;
+    my $work_dir = $self->{prog_root};
+
+    # Read all classes that should be mutated
+    -e $instrument_classes or die "Classes file ($instrument_classes) does not exist!";
+    open(IN, "<$instrument_classes") or die "Cannot read $instrument_classes";
+    my @classes = ();
+    while(<IN>) {
+        s/\r?\n//;
+        push(@classes, $_);
+    }
+    close(IN);
+    # Update properties
+    my $list = join(",", @classes);
+    my $config = {$PROP_MUTATE => $list};
+    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+
+    # Create mutation definitions (mml file)
+    my $mml_src = "$self->{prog_root}/.mml/default.mml";
+    my $mml_bin = "${mml_src}.bin";
+
+    Mutation::create_mml($instrument_classes, $mml_src, $mut_ops);
+    -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
+
+    # Set environment variable MML, which is read by Major
+    $ENV{MML} = $mml_bin;
+
+    # Mutate and compile sources
     if (! $self->_call_major("mutate")) {
         return -1;
     }
@@ -735,7 +769,7 @@ sub mutation_analysis {
     my $basedir = $self->{prog_root};
 
     return $self->_call_major("mutation.test",
-                            "-Dmajor.kill.log=$basedir/kill.csv " .
+                            "-Dmajor.kill.log=$basedir$Mutation::KILL_FILE " .
                             "$relevant $log $exclude $single_test_opt");
 }
 
@@ -767,7 +801,7 @@ sub mutation_analysis_ext {
 
     return $self->_call_major("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
-                            "-Dmajor.kill.log=$basedir/kill.csv " .
+                            "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$log $exclude $single_test_opt");
 }
 
