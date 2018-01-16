@@ -871,16 +871,29 @@ sub run_evosuite {
     }
     close(IN);
 
-    my $cmd = "cd $self->{prog_root}" .
-              " && java -cp $TESTGEN_LIB_DIR/evosuite-current.jar org.evosuite.EvoSuite " .
-                "-class $class " .
-                "-projectCP $cp " .
-                "-Dtest_dir=evosuite-$criterion " .
-                "-criterion $criterion " .
-                "-Dsearch_budget=$time " .
-                "-Dassertion_timeout=$timeout " .
-                "-Dshow_progress=false " .
-                "$config 2>&1";
+    my $cmd = "";
+    if ($criterion eq "default") {
+        $cmd = "java -cp $TESTGEN_LIB_DIR/evosuite-current.jar org.evosuite.EvoSuite " .
+                    "-class $class " .
+                    "-projectCP $cp " .
+                    "-base_dir $self->{prog_root} " .
+                    "-Dtest_dir=evosuite-$criterion " .
+                    "-Dsearch_budget=$time " .
+                    "-Dassertion_timeout=$timeout " .
+                    "-Dshow_progress=false " .
+                    "$config 2>&1";
+    } else {
+        $cmd = "java -cp $TESTGEN_LIB_DIR/evosuite-current.jar org.evosuite.EvoSuite " .
+                    "-class $class " .
+                    "-projectCP $cp " .
+                    "-base_dir $self->{prog_root} " .
+                    "-Dtest_dir=evosuite-$criterion " .
+                    "-criterion $criterion " .
+                    "-Dsearch_budget=$time " .
+                    "-Dassertion_timeout=$timeout " .
+                    "-Dshow_progress=false " .
+                    "$config 2>&1";
+    }
 
     my $log;
     my $ret = Utils::exec_cmd($cmd, "Run EvoSuite ($criterion;$config_file)", \$log);
