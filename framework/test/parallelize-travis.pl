@@ -45,6 +45,15 @@ my %bugs = read_databases($STR_DATABASES);
 my %travis_yml = %{YAML::LoadFile($TRAVIS_CONFIG)};
 
 # remove any test_verify_bugs.sh references to projects we have in our bugs hash
+my @all_jobs = @{$travis_yml{jobs}{include}};
+my @salvagable_jobs = ();
+my $regex_proj_str = join('|', keys(%bugs)); # will use these to match script command to project we will be updating
+foreach (@all_jobs) {
+  if( ${$_}{script} =~ m/test_verify_bugs\.sh -p ($regex_proj_str)/ ) {
+    push @salvagable_jobs, $_;
+  }
+}
+$travis_yml{jobs}{include} = @salvagable_jobs; # overwrite the jobs with ones that wont be changing
 
 # add back in new bugs from test_verify_bugs
 # write yml hash buffer to file
