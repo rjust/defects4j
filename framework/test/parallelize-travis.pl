@@ -45,15 +45,33 @@ my %bugs = read_databases($STR_DATABASES);
 my %travis_yml = %{YAML::LoadFile($TRAVIS_CONFIG)};
 
 # remove any test_verify_bugs.sh references to projects we have in our bugs hash
+#   because we will be updated them
 my @all_jobs = @{$travis_yml{jobs}{include}};
-my @salvagable_jobs = ();
+my @new_jobs = ();
 my $regex_proj_str = join('|', keys(%bugs)); # will use these to match script command to project we will be updating
 foreach (@all_jobs) {
-  if( ${$_}{script} =~ m/test_verify_bugs\.sh -p ($regex_proj_str)/ ) {
-    push @salvagable_jobs, $_;
+  if( !(${$_}{script} =~ m/test_verify_bugs\.sh -p ($regex_proj_str)/) ) {
+    # salvage the job if it isnt one we will be adding back
+    push @new_jobs, $_;
   }
 }
-$travis_yml{jobs}{include} = @salvagable_jobs; # overwrite the jobs with ones that wont be changing
+
+# add in our bugs to the mix
+foreach my $proj_name (keys %bugs) {
+  my @bug_ids = @{$bugs{$proj_name}};
+  # take group of 9 bug ids
+  for my $slice_id (0..((scalar(@bug_ids)-1)/9)) {
+    my @bug_slice = grep( { $_ } @bug_ids[(9*$slice_id)...(9*$slice_id+8)]); # build the slice then cut out any undefined entries due to non whole entries
+    my $bug_id_args = ("-b" . join(" -b", @bug_slice)); # build a bug arg string like -b9 -b10 -b11 -b12 -b13 -b14
+    push(@new_jobs,
+      { stage => 'verify',
+        script => "carton exec ./test_verify_bugs.sh -p $proj_name $bug_id_args"
+      });
+  }
+}
+
+# rewrite jobs into hash
+$travis_yml{jobs}{include} = \@new_jobs;
 
 # add back in new bugs from test_verify_bugs
 # write yml hash buffer to file
@@ -124,3 +142,15 @@ sub read_commit_db {
   }
   return \@bugs;
 }
+
+=pod
+
+  update_travis_yml(travis_config, bugs)
+
+=head1 DESCRIPTION
+
+Read update the jobs in the travis yml file
+
+=cut
+
+#FIXME move the code here for updating the travisyml
