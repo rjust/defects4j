@@ -108,3 +108,9 @@ new=$($cmd)
 cd "$BASE"
 echo
 echo "Defects4J successfully initialized."
+echo
+echo "Environment:"
+echo " * JAVA_HOME: $JAVA_HOME"
+echo " * java location: $(which java)"
+echo " * javac location: $(which javac)"
+echo " * javac version: $(javac -version 2>&1)"
