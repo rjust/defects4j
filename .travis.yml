@@ -5,6 +5,11 @@ perl:
 jdk:
   - openjdk7
 
+addons:
+  apt:
+    packages:
+      - openjdk-7-jdk
+
 install:
   - jdk_switcher use openjdk7
   - export PATH=$JAVA_HOME/bin:$PATH
