@@ -1,4 +1,4 @@
-language: java
+language: perl
 perl:
   - "5.24"
 
@@ -7,6 +7,7 @@ jdk:
 
 install:
   - jdk_switcher use openjdk7
+  - export PATH=$JAVA_HOME/bin:$PATH
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
