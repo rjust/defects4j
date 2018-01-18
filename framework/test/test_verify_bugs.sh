@@ -4,13 +4,19 @@
 # This script verifies that all bugs for a given project are reproducible and
 # that the provided information about triggering tests is correct.
 #
+# Examples for Lang:
+#   * Verify all bugs:         ./test_verify_bugs.sh -pLang
+#   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
+#   * Verify bugs 1 and 3:     ./test_verify_bugs.sh -pLang -b1 -b3
+#   * Verify bugs 1-10 and 20: ./test_verify_bugs.sh -pLang -b1..10 -b20
+#
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
 source test.include
 
 # Print usage message and exit
 usage() {
-    echo "usage: $0 [-b <bug id> ...] -p <project id>"
+    echo "usage: $0 [-b <bug id> ... | -b <bug id range> ... ] -p <project id>"
     exit 1
 }
 
@@ -19,7 +25,11 @@ while getopts ":p:b:" opt; do
     case $opt in
         p) PID="$OPTARG"
             ;;
-        b) BUGS="$BUGS $OPTARG"
+        b) if [[ "$OPTARG" =~ ^[1-9]*\.\.[0-9]*$ ]]; then
+                BUGS="$BUGS $(eval echo {$OPTARG})"
+           else
+                BUGS="$BUGS $OPTARG"
+           fi
             ;;
         \?)
             echo "Unknown option: -$OPTARG" >&2
