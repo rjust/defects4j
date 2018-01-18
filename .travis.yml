@@ -40,10 +40,10 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
     - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
 ## Mockito
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..8
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b9..16
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b17..24
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b25..32
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b33..38
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..7
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b8..14
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b15..22
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b23..28
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b29..38
 ## Time
     - script: carton exec ./test_verify_bugs.sh -p Time
