@@ -92,6 +92,11 @@ sub _post_checkout {
     open(OUT, ">$prop") or die "Cannot write properties file";
     print(OUT @tmp);
     close(OUT);
+
+    # Disable the Gradle daemon
+    if (-e "$work_dir/gradle.properties") {
+        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
+    }
 }
 
 #
