@@ -75,7 +75,9 @@ foreach my $proj_name (keys %bugs) {
 $travis_yml{jobs}{include} = \@new_jobs;
 
 # write yml hash buffer to file
-YAML::DumpFile($TRAVIS_CONFIG, \%travis_yml);
+#FIXME renable this # YAML::DumpFile($TRAVIS_CONFIG, \%travis_yml);
+
+print_bug_data(\%bugs);
 
 1;
 
@@ -167,5 +169,8 @@ Print out a description of projects and the bugs
 =cut
 
 sub print_bug_data {
-  my %bugs = shift;
+  my %bugs = %{(shift)};
+  foreach (keys %bugs) {
+    print "$_ : " . scalar(@{$bugs{$_}}) . " bugs added\n";
+  }
 }
