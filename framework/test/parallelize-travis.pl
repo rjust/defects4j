@@ -20,6 +20,7 @@ use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
 use YAML;
+use Data::Dumper;
 
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
@@ -73,8 +74,8 @@ foreach my $proj_name (keys %bugs) {
 # rewrite jobs into hash
 $travis_yml{jobs}{include} = \@new_jobs;
 
-# add back in new bugs from test_verify_bugs
 # write yml hash buffer to file
+YAML::DumpFile($TRAVIS_CONFIG, \%travis_yml);
 
 1;
 
@@ -154,3 +155,17 @@ Read update the jobs in the travis yml file
 =cut
 
 #FIXME move the code here for updating the travisyml
+
+=pod
+
+  print_bug_data(bugs)
+
+=head1 DESCRIPTION
+
+Print out a description of projects and the bugs
+
+=cut
+
+sub print_bug_data {
+  my %bugs = shift;
+}
