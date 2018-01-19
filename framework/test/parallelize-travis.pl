@@ -16,7 +16,6 @@ example B<perl framework/test/parallelize-travis.pl -c Time,framework/projects/T
 use warnings;
 use strict;
 use File::Basename;
-use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
 use YAML;
@@ -33,7 +32,6 @@ my %cmd_opts;
 getopts('t:c:', \%cmd_opts) or pod2usage(1);
 
 my ($TRAVIS_CONFIG, $STR_DATABASES) = ($cmd_opts{t}, $cmd_opts{c});
-$TRAVIS_CONFIG = abs_path($TRAVIS_CONFIG); # the YAML module doesn't like relative paths
 
 pod2usage(1) unless defined $TRAVIS_CONFIG and defined $STR_DATABASES;
 
