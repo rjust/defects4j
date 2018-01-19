@@ -16,6 +16,7 @@ example B<perl framework/test/parallelize-travis.pl -c Time,framework/projects/T
 use warnings;
 use strict;
 use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
 use YAML;
@@ -122,7 +123,7 @@ Read update the jobs in the travis yml file
 
 sub update_travis_yml {
   my $travis_config = shift;
-  my %bugs = %{(shift}};
+  my %bugs = %{(shift)};
 
   # read yml to hash buffer and immediately dereference it
   my %travis_yml = %{YAML::LoadFile($travis_config)};
