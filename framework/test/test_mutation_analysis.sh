@@ -15,7 +15,7 @@ init
 
 # Any version should work, but the test cases below are specific to this version
 pid="Lang"
-bid="1f"
+bid="6f"
 pid_bid_dir="$TMP_DIR/$pid-$bid"
 rm -rf "$pid_bid_dir"
 
@@ -70,7 +70,7 @@ defects4j checkout -p "$pid" -v "$bid" -w "$pid_bid_dir" || die "It was not poss
 rm -f "$summary_file"
 
 defects4j mutation -w "$pid_bid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-_check_mutation_result 941 913 646
+_check_mutation_result 42 42 36
 
 ###################################################
 # Test mutation analysis when excluding all mutants
@@ -83,7 +83,7 @@ exclude_file="$pid_bid_dir/exclude_all_mutants.txt"
 cut -f1 -d':' "$mutants_file" > "$exclude_file"
 
 defects4j mutation -w "$pid_bid_dir" -r -e "$exclude_file" || die "Mutation analysis (excluding all mutants) failed!"
-_check_mutation_result 941 0 0
+_check_mutation_result 42 0 0
 
 ##########################################################################
 # Test mutation analysis when explicitly providing the class(es) to mutate
@@ -96,7 +96,7 @@ instrument_classes="$pid_bid_dir/instrument_classes.txt"
 echo "org.apache.commons.lang3.LocaleUtils" > "$instrument_classes"
 
 defects4j mutation -w "$pid_bid_dir" -i "$instrument_classes" || die "Mutation analysis (instrument LocaleUtils) failed!"
-_check_mutation_result 184 184 158
+_check_mutation_result 189 189 149
 
 # Clean up
 rm -rf "$pid_bid_dir"

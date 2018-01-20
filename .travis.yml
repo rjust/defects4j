@@ -1,7 +1,13 @@
 ---
+=======
+addons:
+  apt:
+    packages:
+    - openjdk-7-jdk
 install:
   - jdk_switcher use openjdk7
-  - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
+  - export PATH=$JAVA_HOME/bin:$PATH
+  - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
   - ./init.sh

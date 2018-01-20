@@ -79,9 +79,13 @@
         <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
 
         <!-- Call the Gradle build script -->
-        <exec executable="/bin/bash" failonerror="true">
-            <arg value="gradlew"/>
+        <exec executable="${basedir}/gradlew" failonerror="true">
+            <arg value="-xtestClasses"/>
+            <arg value="-xtest"/>
             <arg value="classes"/>
+        </exec>
+        <exec executable="${basedir}/gradlew" failonerror="true">
+            <arg value="--stop"/>
         </exec>
     </target>
 
@@ -91,9 +95,12 @@
         <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
 
         <!-- Call the Gradle build script -->
-        <exec executable="/bin/bash" failonerror="true">
-            <arg value="gradlew"/>
+        <exec executable="${basedir}/gradlew" failonerror="true">
+            <arg value="-xtest"/>
             <arg value="testClasses"/>
+        </exec>
+        <exec executable="${basedir}/gradlew" failonerror="true">
+            <arg value="--stop"/>
         </exec>
     </target>
 
@@ -109,12 +116,13 @@
                 <arg value="${d4j.home}"/>
             </exec>
              <!-- Call the Gradle build script -->
-            <exec executable="/bin/bash" failonerror="true">
-                <arg value="gradlew"/>
-                <arg value="classes"/>
+            <exec executable="${basedir}/gradlew" failonerror="true">
                 <arg value="-xtestClasses"/>
                 <arg value="-xtest"/>
-                <arg value="-xjar"/>
+                <arg value="classes"/>
+            </exec>
+            <exec executable="${basedir}/gradlew" failonerror="true">
+                <arg value="--stop"/>
             </exec>
         </try>
         <finally>
