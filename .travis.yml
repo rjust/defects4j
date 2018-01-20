@@ -1,10 +1,4 @@
-language: perl
-perl:
-  - "5.24"
-
-jdk:
-  - openjdk7
-
+---
 install:
   - jdk_switcher use openjdk7
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
@@ -12,28 +6,50 @@ install:
   - carton install
   - ./init.sh
   - cd framework/test
-
+jdk:
+  - openjdk7
 jobs:
   include:
-    - stage: test
-      script: carton exec ./test_tutorial.sh
-    - stage: test
-      script: carton exec ./test_mutation_analysis.sh
-    - stage: test
-      script: carton exec ./test_randoop.sh
-    - stage: test
-      script: carton exec ./test_fix_test_suite.sh
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Time
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Lang
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Chart
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
-    - stage: verify
-      script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
+    - script: carton exec ./test_tutorial.sh
+      stage: test
+    - script: carton exec ./test_mutation_analysis.sh
+      stage: test
+    - script: carton exec ./test_randoop.sh
+      stage: test
+    - script: carton exec ./test_fix_test_suite.sh
+      stage: test
+    - script: carton exec ./test_verify_bugs.sh -p Chart
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Time -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Time -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Time -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b37 -b38 -b39 -b40 -b41 -b42 -b43 -b44 -b45
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b46 -b47 -b48 -b49 -b50 -b51 -b52 -b53 -b54
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b55 -b56 -b57 -b58 -b59 -b60 -b61 -b62 -b63
+      stage: verify
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b64 -b65
+      stage: verify
+language: perl
+perl:
+  - 5.24

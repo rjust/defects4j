@@ -158,7 +158,7 @@ sub update_travis_yml {
   $travis_yml{jobs}{include} = \@new_jobs;
 
   # write yml hash buffer to file
-  #FIXME renable this # YAML::DumpFile($travis_config, \%travis_yml);
+  YAML::DumpFile($travis_config, \%travis_yml);
 
   return 1;
 }
