@@ -2,6 +2,8 @@
 ################################################################################
 #
 # This script generates coverage data for Randoop generated tests over the defects4j suite.
+# An optional first agument will replace the default project list.
+# An optional second agument will replace the default bid list.
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
@@ -14,10 +16,27 @@ master_coverage=$TMP_DIR/coverage
 # Directory for Randoop test suites
 randoop_dir=$TMP_DIR/randoop
 
+if [ -z "$1" ] ; then
 # Generate tests for all projects
-# Mockito #1 and #3 don't work; problem finding classes in byte-buddy?
-# Thus the strange hack below
-projects=( Chart Closure Lang Math Mockito Time )
+    projects=( Chart Closure Lang Math Mockito Time )
+# Generate tests for all bids
+    bids=( 1 2 3 4 5 )
+else
+# Generate tests for supplied project list
+    projects=( $1 )
+    if [ -z "$2" ] ; then
+# Generate tests for all bids
+        bids=( 1 2 3 4 5 )
+    else
+# Generate tests for supplied bid list
+        bids=( $2 )
+    fi
+fi
+
+echo "Projects: ${projects[@]}"
+echo "Bids: ${bids[@]}"
+
+# We want the 'fixed' version of the sample.
 type=f
 
 # Test suite source and number
@@ -28,10 +47,7 @@ suite_num=1
 #rm -f $master_coverage
 
 for pid in "${projects[@]}"; do
-    for bid in 1 2 3 4 5; do
-        if [ "$pid" = 'Mockito' ]; then
-            bid=$(($bid + 3))
-        fi
+    for bid in "${bids[@]}"; do
         vid=${bid}$type
 
         # Run Randoop

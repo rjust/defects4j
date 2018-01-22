@@ -54,7 +54,7 @@ Running the coverage tests
 5. Please note you must use Java 7; Java 8 will cause failures.
 
 6. Tell the tools which version of Randoop you wish to test:
-    By default, the system runs an old (3.1.0) version of Randoop.
+    By default, the system runs version 3.1.5 of Randoop.
     (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
     The randoop.jar you wish to test must be named randoop-current.jar.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
@@ -69,6 +69,8 @@ Running the coverage tests
     for a total of 30 tests. It takes about 90 minutes to run.
     The test scripts set TMP_DIR to /tmp/test_d4j.  If you wish to change this,
     you will need to modify "framework/test/test.include".
+    If you wish to override the defaults for "randoop_coverage.sh" you may supply
+    an optional project list argument followed by an optional bid list argument.
 
 
 8. Calculate the coverage:

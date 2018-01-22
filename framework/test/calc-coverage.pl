@@ -4,7 +4,7 @@ use warnings;
 
 use POSIX qw(strftime);
 
-# perl script to count the number of invariants in a 'run_dyntrace' log file
+# perl script to display a defect4j coverage file and calculate the percent coverage
 
 my $test_count = 0;
 my $tot_line = 0;
