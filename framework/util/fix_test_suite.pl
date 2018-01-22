@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -228,18 +228,22 @@ system("mkdir -p $TMP_DIR");
 
 =head2 Logging
 
-This script logs all information to fix_tests.log in the test suite directory
-F<SUITE_DIR>.
+This script logs all test-compilation steps information to fix_test_suite.compile.log,
+all test-execution steps to fix_test_suite.run.log, and it also logs summary
+information (e.g., how many tests were removed) to fix_test_suite.summary.log
+in the test suite directory F<SUITE_DIR>.
 
 =cut
-my $LOG = Log::create_log("$SUITE_DIR/fix_test_suite.log");
+my $COMPILE_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.compile.log");
+my $RUN_LOG     = Log::create_log("$SUITE_DIR/fix_test_suite.run.log");
+my $SUMMARY_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.summary.log");
 
 # Line separator
 my $sep = "-"x80;
 
 # Log current time
-$LOG->log_time("Start fixing tests");
-$LOG->log_msg("- Found " . scalar(@list) . " test archive(s)");
+$SUMMARY_LOG->log_time("Start fixing tests");
+$SUMMARY_LOG->log_msg("- Found " . scalar(@list) . " test archive(s)");
 
 suite: foreach (@list) {
     my $name = $_->{name};
@@ -254,7 +258,7 @@ suite: foreach (@list) {
         # Skip existing entries
         $sth->execute($pid, $src, $vid, $tid);
         if ($sth->rows != 0) {
-            $LOG->log_msg(" - Skipping $name since results already exist in database!");
+            $SUMMARY_LOG->log_msg(" - Skipping $name since results already exist in database!");
             next;
         }
     }
@@ -276,11 +280,12 @@ suite: foreach (@list) {
 
     my $fixed = 0;
     while ($counter > 0) {
-        # Compile generated tests
-        my $comp_log = "$TMP_DIR/comp_tests.log";
-        system(">$comp_log");
+        # Temporary log file to monitor uncompilable tests
+        my $comp_log = Log::create_log("$TMP_DIR/comp_tests.log", ">")->{file_name};
+
+        # Check for compilation errors
         if (! $project->compile_ext_tests("$TMP_DIR/$src", $comp_log)) {
-            $LOG->log_file(" - Tests do not compile: $name", $comp_log);
+            $COMPILE_LOG->log_file("- Compilation issues: $name", $comp_log);
             my ($n_uncompilable_tests, $n_uncompilable_test_classes) = _rm_classes($comp_log, $src, $name);
             # Update counters
             $num_uncompilable_tests += $n_uncompilable_tests;
@@ -291,12 +296,11 @@ suite: foreach (@list) {
         }
 
         # Temporary log file to monitor failing tests
-        my $tests = "$TMP_DIR/run_tests.log";
+        my $tests = Log::create_log("$TMP_DIR/run_tests.log", ">")->{file_name};
 
         # Check for errors of runtime system
-        `>$tests`;
         if (! $project->run_ext_tests("$TMP_DIR/$src", "$INCL", $tests)) {
-            $LOG->log_file(" - Tests not executable: $name", $tests);
+            $SUMMARY_LOG->log_file(" - Tests not executable: $name", $tests);
             _insert_row($pid, $vid, $src, $tid);
             next suite;
         }
@@ -304,10 +308,10 @@ suite: foreach (@list) {
         # Check failing test classes and methods
         my $list = Utils::get_failing_tests($tests) or die;
         if (scalar(@{$list->{classes}}) != 0) {
-            $LOG->log_msg(" - Failing test classes: $name");
-            $LOG->log_msg(join("\n", @{$list->{classes}}));
-            $LOG->log_msg("Failing test classes are NOT automatically removed!");
-            $LOG->log_file("Stack traces:", $tests);
+            $SUMMARY_LOG->log_msg(" - Failing test classes: $name");
+            $SUMMARY_LOG->log_msg(join("\n", @{$list->{classes}}));
+            $SUMMARY_LOG->log_msg("Failing test classes are NOT automatically removed!");
+            $SUMMARY_LOG->log_file("Stack traces:", $tests);
             #
             # TODO: Automatically remove failing test classes?
             #
@@ -339,11 +343,14 @@ suite: foreach (@list) {
             --$counter;
             next;
         } else {
+            $RUN_LOG->log_file(scalar(@{$list->{methods}}) . " broken test method(s): $name", $tests);
+
             # Reset counter and fix tests
             $counter = $RUNS;
             # Indicate that test suite changed
             $fixed = 1;
-            $LOG->log_file(" - Removing " . scalar(@{$list->{methods}}) . " broken test method(s): $name", $tests);
+            $SUMMARY_LOG->log_msg(" - Removing " . scalar(@{$list->{methods}}) . " broken test method(s): $name");
+            $SUMMARY_LOG->log_msg(join("\n", @{$list->{methods}}));
             Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $tests $TMP_DIR/$src", "Remove broken test method(s)")
                     or die "Cannot remove broken test method(s)";
             # Update counter
@@ -365,8 +372,10 @@ if (defined $dbh_out) {
     $dbh_out->disconnect();
 }
 # Log current time
-$LOG->log_time("End fixing tests");
-$LOG->close();
+$SUMMARY_LOG->log_time("End fixing tests");
+$SUMMARY_LOG->close();
+$COMPILE_LOG->close();
+$RUN_LOG->close();
 
 # Clean up
 system("rm -rf $TMP_DIR") unless $DEBUG;
@@ -379,7 +388,7 @@ system("rm -rf $TMP_DIR") unless $DEBUG;
 sub _rm_classes {
     my ($comp_log, $src, $name) = @_;
     open(LOG, "<$comp_log") or die "Cannot read compiler log!";
-    $LOG->log_msg(" - Removing uncompilable test cases from: $name");
+    $SUMMARY_LOG->log_msg(" - Removing uncompilable test method(s): $name");
     my $num_uncompilable_test_classes = 0;
     my @uncompilable_tests = ();
     while (<LOG>) {
@@ -407,8 +416,7 @@ sub _rm_classes {
             my $t_name = $1;
 
             if ($line_index > $line_number) {
-              $LOG->log_msg($t_name);
-              last;
+                last;
             }
 
             $test_name = $t_name;
@@ -420,7 +428,7 @@ sub _rm_classes {
             # in case of compilation issues due to, for example, wrong
             # or non-existing imported classes, or problems with any
             # super class, the source file is removed
-            $LOG->log_msg($class);
+            $SUMMARY_LOG->log_msg($class);
             system("mv $file $file.broken") == 0 or die "Cannot rename uncompilable source file";
 
             # get rid of all test cases of this class that have been
@@ -447,7 +455,7 @@ sub _rm_classes {
         print $uncompilable_tests_file join("\n", @uncompilable_tests);
         close($uncompilable_tests_file);
 
-        $LOG->log_file(" - Removing " . scalar(@uncompilable_tests) . " uncompilable test method(s):", $uncompilable_tests_file_path);
+        $SUMMARY_LOG->log_file("  - Removing " . scalar(@uncompilable_tests) . " uncompilable test method(s):", $uncompilable_tests_file_path);
         Utils::exec_cmd("export D4J_RM_ASSERTS=$RM_ASSERTS && $UTIL_DIR/rm_broken_tests.pl $uncompilable_tests_file_path $TMP_DIR/$src", "Remove uncompilable test method(s)")
                 or die "Cannot remove uncompilable test method(s)";
     }
@@ -461,6 +469,13 @@ sub _rm_classes {
 sub _insert_row {
     @_ >= 4 or die $ARG_ERROR;
     my ($pid, $vid, $suite, $test_id, $num_uncompilable_tests, $num_uncompilable_test_classes, $num_failing_tests) = @_;
+
+    $SUMMARY_LOG->log_msg("Number of uncompilable test classes: $num_uncompilable_test_classes" .
+                    ($num_uncompilable_test_classes > 0 ? " (see $COMPILE_LOG->{file_name} file for more information)" : ""));
+    $SUMMARY_LOG->log_msg("Number of uncompilable tests: $num_uncompilable_tests" .
+                    ($num_uncompilable_tests > 0 ? " (see $COMPILE_LOG->{file_name} file for more information)" : ""));
+    $SUMMARY_LOG->log_msg("Number of failing tests: $num_failing_tests" .
+                    ($num_failing_tests > 0 ? " (see $RUN_LOG->{file_name} file for more information)" : ""));
 
     if (not defined $dbh_out) {
         return ; # explicitly do nothing
