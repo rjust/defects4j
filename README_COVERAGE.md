@@ -58,9 +58,6 @@ Running the coverage tests
     (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
     The randoop.jar you wish to test must be named randoop-current.jar.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
-    Note: If you are using a current master branch version of Randoop (i.e., much newer
-    than the 3.1.5 release version) you must edit "framework/util/randoop.config" and
-    "framework/core/Project.pm".  There are comments in these files explaining the changes required.
 
 7. Run the coverage suite:
     - `cd framework/test`
