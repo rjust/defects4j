@@ -9,7 +9,7 @@ install:
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
-  - ./init.sh
+  - ./init_debug.sh
   - cd framework/test
 jdk:
   - openjdk7
