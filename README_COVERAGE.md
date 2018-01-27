@@ -70,7 +70,10 @@ Running the coverage tests
     an optional project list argument followed by an optional bid list argument.
 
 
-8. Calculate the coverage:
+8. Displaying the coverage data:
     The raw coverage data will be found at $TMP_DIR/test_d4j/coverage.
-    - `./calc-coverage.pl $TMP_DIR/test_d4j/coverage`
+    You may display the coverage results by running the perl script:
+    - `./show-coverage.pl`
+    This script will accept an optional argument of an alternative file location.
+    Invoke the script with -help for a full list of options.
 
