@@ -884,15 +884,29 @@ sub run_randoop {
     }
     close(IN);
 
+    # Get information about version of Randoop being used
+    # and set appropriate arguments.
+    my $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main`;
+    if (($log =~ /minimize/) == 1) {
+#       print "new version \n";
+        $config = "$config --time-limit=$timeout --flaky-test-behavior=output";
+    } else {
+#       print "old version \n";
+        $config = "$config --timelimit=$timeout  --ignore-flaky-tests=true";
+    }
+
     my $cmd = "cd $self->{prog_root}" .
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
-                "--timelimit=$timeout " .
+                "--usethreads " .
                 "--randomseed=$seed " .
                 "$config 2>&1";
 
-    my $log;
+    # log information about version of Randoop being used
+    my @values = ( split /\n/, $log );
+    print(STDERR "Randoop: $TESTGEN_LIB_DIR/randoop-current.jar, $values[0] \n");
+
     my $ret = Utils::exec_cmd($cmd, "Run Randoop ($config_file)", \$log);
 
     if (defined $log_file) {
