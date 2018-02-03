@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-show-coverage.pl
+show_coverage.pl
 
 =head1 SYNOPSIS
 
-show-coverage.pl [options] [optional defects4j coverage file]
+show_coverage.pl [options] [optional defects4j coverage file]
 
  Options:
   -help        brief help message
