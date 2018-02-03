@@ -3,8 +3,27 @@ Test and analysis scripts
 
 * `test.include`: Constants and helper functions for test scripts.
 
+* `test_evosuite.sh`: Generates tests with Evosuite and checks whether the
+   generated test suites are compatible with the coverage, mutation, and bug
+   detection analyses.
+
+* `test_fix_test_suite.sh`: Tests the
+  [fix_test_suite.pl](https://github.com/rjust/defects4j/blob/master/framework/util/fix_test_suite.pl) script.
+
+* `test_mutation_analysis.sh`: Tests various options for the mutation analysis.
+
+* `test_randoop.sh`: Generates tests with Randoop and checks whether the
+   generated test suites are compatible with the coverage, mutation, and bug
+   detection analyses.
+
+* `test_sanity_check.sh`: Checks out each buggy and fixed project version and
+   makes sure that it compiles.
+
 * `test_tutorial.sh`: Runs the tutorial described in the top-level
    [README](https://github.com/rjust/defects4j#using-defects4j).
+
+* `test_verify_bugs.sh`: Reproduces each defect and verifies the triggering
+   tests.
 
 Randoop coverage on the Defects4J defects
 ----------------
