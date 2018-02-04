@@ -56,6 +56,6 @@ test_bug_detection $pid $suite_dir
 test_mutation $pid $suite_dir
 
 # Run test suites and determine code coverage
-test_coverage $pid $suite_dir
+test_coverage $pid $suite_dir 0
 
 rm -rf $evo_dir

@@ -1,7 +1,7 @@
-Defects4J -- version 1.1.0
+Defects4J -- version 1.1.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ----------------
-Defects4J is a collection of reproducible bugs collected with the goal of
-advancing software testing research.
+Defects4J is a collection of reproducible bugs and a supporting infrastructure
+with the goal of advancing software engineering research.
 
 Required CPAN Modules
 ----------------------
@@ -34,7 +34,7 @@ Defects4J contains 395 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
-| Chart      | JFreechart           |  26            |
+| Chart      | JFreeChart           |  26            |
 | Closure    | Closure compiler     | 133            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |

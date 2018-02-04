@@ -5,16 +5,46 @@ perl:
 jdk:
   - openjdk7
 
+addons:
+  apt:
+    packages:
+      - openjdk-7-jdk
+
 install:
   - jdk_switcher use openjdk7
-  - (echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
+  - export PATH=$JAVA_HOME/bin:$PATH
+  - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
   - ./init.sh
-
-script:
   - cd framework/test
-  - carton exec ./test_tutorial.sh
-  - carton exec ./test_mutation_analysis.sh
-  - carton exec ./test_randoop.sh
-  - carton exec ./test_fix_test_suite.sh
+
+jobs:
+  include:
+    # Test the tutorial and basic commands
+    - script: carton exec ./test_tutorial.sh
+    - script: carton exec ./test_mutation_analysis.sh
+    - script: carton exec ./test_randoop.sh
+    - script: carton exec ./test_fix_test_suite.sh
+    # Verify that all bugs are reproducible (run multiple jobs for projects that
+    # take a long time to finish.
+    - stage: verify
+## Chart
+      script: carton exec ./test_verify_bugs.sh -p Chart
+## Lang
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
+## Math
+    - script: carton exec ./test_verify_bugs.sh -p Math -b1..27
+    - script: carton exec ./test_verify_bugs.sh -p Math -b28..54
+    - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
+    - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
+## Mockito
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..5
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b11..15
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b16..20
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b21..27
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b28..38
+## Time
+    - script: carton exec ./test_verify_bugs.sh -p Time
