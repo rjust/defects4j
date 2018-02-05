@@ -71,6 +71,7 @@ echo "Setting up Randoop ... "
 RANDOOP_VERSION="3.1.5"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
+RANDOOP_AGENT_JAR="exercised-class-${RANDOOP_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
                 && wget -nv "$RANDOOP_URL/$RANDOOP_JAR" \
                 && wget -nv "$RANDOOP_URL/$RANDOOP_AGENT_JAR"
