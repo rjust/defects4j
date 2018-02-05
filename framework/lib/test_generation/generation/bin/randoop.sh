@@ -31,7 +31,7 @@ budget=$(echo "$num_classes * $D4J_CLASS_BUDGET" | bc)
 project_cp=$(get_project_cp)
 
 cmd="java -ea -javaagent:$D4J_DIR_TESTGEN_LIB/randoop-agent-current.jar \
--classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar:$D4J_DIR_TESTGEN_LIB/javassist.jar \
+-classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
 randoop.main.Main gentests \
 --classlist=$D4J_FILE_ALL_CLASSES \
 --junit-output-dir=$D4J_DIR_OUTPUT \
