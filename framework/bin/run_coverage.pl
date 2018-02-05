@@ -71,7 +71,6 @@ Measure code coverage for all classes listed in F<instrument_classes> (optional)
 default, code coverage is measured only for the classes modified by the bug fix. The file
 F<instrument_classes> must contain fully-qualified class names -- one class per line.
 
-
 =item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory

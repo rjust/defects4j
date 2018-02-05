@@ -70,6 +70,12 @@ The default is F</tmp>.
 The file that contains the list of all mutants ids (one per row) to exclude (optional).
 Per default no exclude file is used and therefore no mutant is excluded.
 
+=item -i F<mutate_classes>
+
+Measure mutation score for all classes listed in F<mutate_classes> (optional). By
+default, mutation score is measured only for the classes modified by the bug fix. The file
+F<mutate_classes> must contain fully-qualified class names -- one class per line.
+
 =item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
@@ -80,12 +86,6 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 All relevant classes: Perform mutation analysis for all relevant classes (i.e., all
 classes touched by the triggering tests). By default only classes modified by
 the bug fix are analyzed.
-
-=item -i F<mutate_classes>
-
-Measure mutation score for all classes listed in F<mutate_classes> (optional). By
-default, mutation score is measured only for the classes modified by the bug fix. The file
-F<mutate_classes> must contain fully-qualified class names -- one class per line.
 
 =back
 
