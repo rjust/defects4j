@@ -283,7 +283,7 @@ sub sanity_check {
 
 Checks out the provided version id (C<vid>) to F<work_dir>, and tags the the buggy AND
 the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
-The working directory (C<work_dir>) is optional, the default is C<prog_root>.
+The project temporary directory (C<prog_root>) is optional, the default is C<prog_root> from the instance of this class.
 The is_bugmine flag (C<is_bugmine>) is optional, the default is false.
 
 =cut
