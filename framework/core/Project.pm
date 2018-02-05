@@ -277,19 +277,6 @@ sub sanity_check {
     return $self->_ant_call("sanity.check");
 }
 
-
-=pod
-
-  $project->bugmine_sanity_check()
-
-Lightweight checking to see weather the project is correctly configured.
-
-=cut
-sub bugmine_sanity_check {
-    my $self = shift;
-    return $self->_ant_call("bugmine.sanity.check");
-}
-
 =pod
 
   $project->checkout_vid(vid [, work_dir, is_bugmine])
