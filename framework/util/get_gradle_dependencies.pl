@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+#
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
@@ -24,62 +26,71 @@
 
 =head1 NAME
 
-d4j-compile -- compile a checked-out project version.
+get_gradle_dependencies.pl -- obtain a list of all gradle versions used in the
+entire history of a particular project.
 
 =head1 SYNOPSIS
 
-  d4j-compile [-w work_dir]
+  get_gradle_dependencies.pl -p project_id
 
 =head1 DESCRIPTION
 
-This script compiles sources and tests of a checked-out project version.
+Extract all references to gradle distributions from the project's version
+control history.
+
+B<TODO: This script currently expects the repository to be a git repository!>
 
 =head1 OPTIONS
 
 =over 4
 
-=item -w F<work_dir>
+=item -p C<project_id>
 
-The working directory of the checked-out project version (optional). Default is
-the current directory.
+The id of the project for which the list of gradle dependencies is extracted.
 
 =back
 
 =cut
-
-use strict;
 use warnings;
+use strict;
 
-use Constants;
-use Utils;
-use Project;
+use FindBin;
+use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
+use Pod::Usage;
+
+use lib abs_path("$FindBin::Bin/../core");
+use Constants;
+use Project;
 
 #
-# Issue usage message and quit
+# Process arguments and issue usage message if necessary.
 #
-sub _usage {
-    print "usage: $0 [-w work_dir]\n";
-    exit 1;
-}
-
 my %cmd_opts;
-getopts('w:', \%cmd_opts) or _usage();
+getopts('p:', \%cmd_opts) or pod2usage(1);
 
-my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
+pod2usage(1) unless defined $cmd_opts{p};
 
-my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
-unless(defined $config) {
-    print(STDERR "$WORK_DIR is not a valid working directory!\n");
-    exit 1;
+my $PID = $cmd_opts{p};
+
+# Set up project
+my $project = Project::create_project($PID);
+my $repo = $project->{_vcs}->{repo};
+my $cmd = "git -C $repo log -p -- gradle/wrapper/gradle-wrapper.properties | grep distributionUrl";
+
+# Parse the vcs history and grep for distribution urls
+my $log;
+Utils::exec_cmd($cmd, "Obtaining all gradle dependencies", \$log);
+
+# Process the list and remove duplicates
+my %all_deps;
+foreach (split(/\n/, $log)) {
+    /[+-]distributionUrl=(.+)/ or die "Unexpected line extracted: $_!";
+    my $url = $1;
+    $url =~ s/\\:/:/g;
+    $all_deps{$url} = 1;   
 }
 
-# Instantiate project and set working directory
-my $project = Project::create_project($config->{$CONFIG_PID});
-$project->{prog_root} = $WORK_DIR;
-
-# Checkout and compile project version
-$project->compile() or die "Cannot compile sources!";
-$project->compile_tests() or die "Cannot compile tests!";
-
-1;
+# Print the ordered list of dependencies to STDOUT
+print(join("\n", sort(keys(%all_deps))), "\n");

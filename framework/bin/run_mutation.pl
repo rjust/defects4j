@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ run_mutation.pl -- mutation analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-e exclude_file] [-D] [-A]
+  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-e exclude_file] [-D] [-A | -i mutate_classes]
 
 =head1 OPTIONS
 
@@ -69,6 +69,12 @@ The default is F</tmp>.
 
 The file that contains the list of all mutants ids (one per row) to exclude (optional).
 Per default no exclude file is used and therefore no mutant is excluded.
+
+=item -i F<mutate_classes>
+
+Measure mutation score for all classes listed in F<mutate_classes> (optional). By
+default, mutation score is measured only for the classes modified by the bug fix. The file
+F<mutate_classes> must contain fully-qualified class names -- one class per line.
 
 =item -D
 
@@ -116,7 +122,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:e:DA', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:e:i:DA', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -133,6 +139,14 @@ $DEBUG = 1 if defined $cmd_opts{D};
 
 # The mutation operators that should be enabled
 my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+
+# Directory of class lists used for mutation step
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
+my $MUTATE_CLASSES = $cmd_opts{i} if defined $cmd_opts{i};
+if (defined $cmd_opts{A} && defined $cmd_opts{i}) {
+    pod2usage( { -verbose => 1, -input => __FILE__} );
+}
 
 # Set up project
 my $project = Project::create_project($PID);
@@ -201,10 +215,6 @@ Examples:
 
 # Get all test suite archives that match the given project id and version id
 my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
-
-# Directory of class lists used for mutation step
-my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
-my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 
 # Get database handle for result table
 my $dbh_out = DB::get_db_handle($TAB_MUTATION, $OUT_DIR);
@@ -288,7 +298,12 @@ sub _run_mutation {
       close(EXCL_FILE);
     }
 
-    my $gen_mutants = $project->mutate("$TARGET_CLASSES_DIR/$bid.src", \@MUT_OPS);
+    my $gen_mutants = 0;
+    if (defined $MUTATE_CLASSES) {
+        $gen_mutants = $project->mutate("$MUTATE_CLASSES", \@MUT_OPS);
+    } else {
+        $gen_mutants = $project->mutate("$TARGET_CLASSES_DIR/$bid.src", \@MUT_OPS);
+    }
     $gen_mutants > 0 or die "No mutants generated for $vid!";
 
     # Compile generated tests

@@ -32,7 +32,7 @@ for type in f b; do
     test_mutation $pid $suite_dir
    
     # Run test suite and determine code coverage
-    test_coverage $pid $suite_dir
+    test_coverage $pid $suite_dir 0
    
     rm -rf $randoop_dir
 done

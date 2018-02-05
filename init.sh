@@ -20,20 +20,23 @@ BASE="$(cd $(dirname $0); pwd)"
 DIR_REPOS="$BASE/project_repos"
 DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
 DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
-mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT"
+DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
+mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 
+################################################################################
 #
 # Download project repositories if necessary
 #
 echo "Setting up project repositories ... "
 cd "$DIR_REPOS" && ./get_repos.sh
 
+################################################################################
 #
 # Download Major
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="1.3.1"
+MAJOR_VERSION="1.3.2"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
@@ -41,6 +44,7 @@ cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
            && rm "$MAJOR_ZIP" \
            && cp major/bin/.ant major/bin/ant
 
+################################################################################
 #
 # Download EvoSuite
 #
@@ -58,21 +62,18 @@ cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
 ln -sf "$DIR_LIB_GEN/$EVOSUITE_JAR" "$DIR_LIB_GEN/evosuite-current.jar"
 ln -sf "$DIR_LIB_RT/$EVOSUITE_RT_JAR" "$DIR_LIB_RT/evosuite-rt.jar"
 
+################################################################################
 #
 # Download Randoop
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="3.1.1"
+RANDOOP_VERSION="3.1.5"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
-RANDOOP_AGENT_JAR="exercised-class-${RANDOOP_VERSION}.jar"
-# TODO: Remove the temporary download of javassist once it is included in the
-# Randoop release.
 cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
                 && wget -nv "$RANDOOP_URL/$RANDOOP_JAR" \
-                && wget -nv "$RANDOOP_URL/$RANDOOP_AGENT_JAR" \
-                && wget -nv "https://people.cs.umass.edu/~rjust/javassist.jar"
+                && wget -nv "$RANDOOP_URL/$RANDOOP_AGENT_JAR"
 # Set symlink for the supported version of Randoop
 ln -sf "$DIR_LIB_GEN/$RANDOOP_JAR" "$DIR_LIB_GEN/randoop-current.jar"
 ln -sf "$DIR_LIB_GEN/$RANDOOP_AGENT_JAR" "$DIR_LIB_GEN/randoop-agent-current.jar"
@@ -105,5 +106,35 @@ cd "$DIR_LIB_GEN" && [ ! -f grt.jar ] \
 ln -sf "$DIR_LIB_GEN/grt.jar" "$DIR_LIB_GEN/grt-current.jar"
 ln -sf "$DIR_LIB_GEN/JTExpert/JTExpert-1.4.jar" "$DIR_LIB_GEN/jtexpert-current.jar"
 
+################################################################################
+#
+# Download build system dependencies
+#
+echo
+echo "Setting up Gradle dependencies ... "
+GRADLE_ZIP=defects4j-gradle.zip
+# The BSD version of stat does not support --version or -c
+if stat --version &> /dev/null; then
+    # GNU version
+    cmd="stat -c %Y $GRADLE_ZIP"
+else
+    # BSD version
+    cmd="stat -f %m $GRADLE_ZIP"
+fi
+
+cd "$DIR_LIB_GRADLE"
+if [ -e $GRADLE_ZIP ]; then
+    old_ts=$($cmd)
+else
+    old_ts=0
+fi
+# Only download archive if the server has a newer file
+wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_ZIP
+new=$($cmd)
+
+# Update gradle versions if a newer archive was available
+[ "$old" != "$new" ] && unzip -q -u $GRADLE_ZIP
+
+cd "$BASE"
 echo
 echo "Defects4J successfully initialized."

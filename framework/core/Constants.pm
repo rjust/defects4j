@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -154,6 +154,16 @@ our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/gen
 
 =pod
 
+=item C<BUILD_SYSTEMS_LIB_DIR>
+
+The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_systems>)
+
+=cut
+our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_systems");
+
+
+=pod
+
 =item C<D4J_BUILD_FILE>
 
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
@@ -170,11 +180,13 @@ our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j
 # - External libraries (test generation) available?
 #
 -e "$REPO_DIR/README"
-        or die("Couldn't find project repositories! Did you run 'defects4j/init.sh'?\n\n");
+        or die("Couldn't find project repositories! Did you (re)run 'defects4j/init.sh'?\n\n");
 -e "$MAJOR_ROOT/bin/ant"
-        or die("Couldn't find Major mutation framework! Did you run 'defects4j/init.sh'?\n\n");
+        or die("Couldn't find Major mutation framework! Did you (re)run 'defects4j/init.sh'?\n\n");
 -d "$TESTGEN_LIB_DIR"
-        or die("Couldn't find external libraries! Did you run 'defects4j/init.sh'?\n\n");
+        or die("Couldn't find test generation tools! Did you (re)run 'defects4j/init.sh'?\n\n");
+-d "$BUILD_SYSTEMS_LIB_DIR"
+        or die("Couldn't find build system tools! Did you (re)run 'defects4j/init.sh'?\n\n");
 
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
@@ -221,6 +233,7 @@ $UTIL_DIR
 $BASE_DIR
 $MAJOR_ROOT
 $TESTGEN_LIB_DIR
+$BUILD_SYSTEMS_LIB_DIR
 $REPO_DIR
 $D4J_TMP_DIR
 

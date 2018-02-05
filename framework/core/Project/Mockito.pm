@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2017 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,33 @@ sub _post_checkout {
     my $mockito_junit_runner_patch_file = "$SCRIPT_DIR/projects/$PID/mockito_test_runners.patch";
     if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
         $vcs->apply_patch($work_dir, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
+    }
+
+    # Change Url to Gradle distribution
+    my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
+    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+
+    # Read existing Gradle properties file, if it exists
+    open(PROP, "<$prop") or return;
+    my @tmp;
+    while (<PROP>) {
+        if (/(distributionUrl=).*\/(gradle-2.*)/) {
+            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-2.2.1-all.zip/g;
+        } else {
+            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-1.12-bin.zip/g;
+        }
+        push(@tmp, $_);
+    }
+    close(PROP);
+
+    # Update properties file
+    open(OUT, ">$prop") or die "Cannot write properties file";
+    print(OUT @tmp);
+    close(OUT);
+
+    # Disable the Gradle daemon
+    if (-e "$work_dir/gradle.properties") {
+        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
     }
 }
 
