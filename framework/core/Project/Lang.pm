@@ -46,14 +46,14 @@ my $PID  = "Lang";
 my $RANDOM_TEST_FILE = "$SCRIPT_DIR/build-scripts/$PID/random_tests";
 
 sub new {
-    my $class= shift;
-    my $work_dir = shift // "$SCRIPT_DIR/projects";
+    my ($class, $work_dir, $commit_db) = @_;
+    $work_dir = $work_dir // "$SCRIPT_DIR/projects";
     my $name = "commons-lang";
     my $src  = "src/main/java";
     my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             (shift // "$SCRIPT_DIR/projects/$PID/commit-db"),
+                             ($commit_db // "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, undef, $work_dir); # pass build file as undef
