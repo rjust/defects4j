@@ -44,16 +44,16 @@ our @ISA = qw(Project);
 my $PID  = "Time";
 
 sub new {
-    my $class = shift;
+    my ($class, $work_dir, $commit_db, $build_file) = @_;
+
     my $name = "joda-time";
-    my $work_dir = shift // "$SCRIPT_DIR/projects";
+    $work_dir = $work_dir // "$SCRIPT_DIR/projects";
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                             (shift // "$SCRIPT_DIR/projects/$PID/commit-db"),
+                             ($commit_db // "$SCRIPT_DIR/projects/$PID/commit-db"),
                              \&_post_checkout);
-    my $build_file = shift;
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, $build_file, $work_dir);
 }
