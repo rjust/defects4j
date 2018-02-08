@@ -988,15 +988,15 @@ sub contains_version_id {
 }
 
 =pod
-=item B<checkout_id> C<checkout_id(version [, work_dir])>
+=item B<checkout_id> C<checkout_id(vid [, prog_root])>
 Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
-C<work_dir> is optional, the default is F<"prog_root">.
+C<prog_root> is optional, the default is C<self->{prog_root}>.
 =cut
 sub checkout_id {
-    my ($self, $revision_id, $work_dir) = @_; shift;
-    unless (defined $work_dir) {
-        $work_dir = $self->{prog_root} ;
-        push(@_, $work_dir);
+    my ($self, $vid, $prog_root) = @_; shift;
+    unless (defined $prog_root) {
+        $prog_root = $self->{prog_root} ;
+        push(@_, $prog_root);
     }
     return $self->{_vcs}->checkout_vid(@_);
 }
