@@ -279,12 +279,13 @@ sub sanity_check {
 
 =pod
 
-  $project->checkout_vid(vid [, work_dir, is_bugmine])
+  $project->checkout_vid(vid [, prog_root, is_bugmine])
 
-Checks out the provided version id (C<vid>) to F<work_dir>, and tags the the buggy AND
+Checks out the provided version id (C<vid>) to F<prog_root>, and tags the the buggy AND
 the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
-The project temporary directory (C<prog_root>) is optional, the default is C<prog_root> from the instance of this class.
-The is_bugmine flag (C<is_bugmine>) is optional, the default is false.
+The temporary project directory (C<prog_root>) is optional, the default is C<prog_root> from the instance of this class.
+The is_bugmine flag (C<is_bugmine>) is optional and indicates whether the
+framework is used for bug mining, the default is false.
 
 =cut
 sub checkout_vid {
