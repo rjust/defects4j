@@ -42,27 +42,27 @@ use Vcs::Git;
 
 our @ISA = qw(Project);
 my $PID  = "Lang";
-# TODO changeme
-my $RANDOM_TEST_FILE = "$SCRIPT_DIR/build-scripts/$PID/random_tests";
 
 sub new {
-    my ($class, $work_dir, $commit_db, $build_file) = @_;
-    $work_dir = $work_dir // "$SCRIPT_DIR/projects";
-    $commit_db = $commit_db // "$work_dir/$PID/commit-db",
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
+
     my $name = "commons-lang";
     my $src  = "src/main/java";
     my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             $commit_db,
+                             "$work_dir/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $build_file, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
 sub initialize_revision {
     my ($self, $revision, $vid) = @_;
     $self->SUPER::initialize_revision($revision);
+    # TODO: define the file name for random tests in Constants
+    my $RANDOM_TEST_FILE = "$self->{_work_dir}/$self->{pid}/random_tests";
     _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $RANDOM_TEST_FILE);
 }
 
@@ -70,7 +70,7 @@ sub initialize_revision {
 sub _log_random_tests {
     my ($test_dir, $out_file) = @_;
     @_ == 2 or die $ARG_ERROR;
-    # TODO: Move to Consts
+    # TODO: Move to Constants
     my $PREFIX = "---";
     my @list = `cd $test_dir && find . -name *.java`;
     die if $?!=0 or !@list;

@@ -106,16 +106,19 @@ use Carp qw(confess);
 =pod
 
 =head2 Create an instance of a Project
-  Project::create_project(project_id, work_dir, [commit-db, build.xml])
+  Project::create_project(project_id [, work_dir])
 
 Dynamically loads the required submodule, instantiates the project, and returns a
-reference to it.
+reference to it. Provide an optional C<work_dir> for bug mining. C<work_dir> is
+the temporary working directory used to create metadata for a project before the
+project and all reproducible bugs are promoted to the core framework.
 
 =cut
 sub create_project {
-    # TODO this needs to be >=1 for bug mining or == 1 for non bug mining
+    # TODO this needs to be == 2 for bug mining or == 1 for non bug mining
     #@_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -140,14 +143,12 @@ The root (program) directory for a checked-out program version of this project.
 =cut
 sub new {
     @_ >= 6 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $build_file, $work_dir) = @_;
-    my $prog_root = $ENV{PROG_ROOT};
-    $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
+    my ($class, $pid, $prog, $vcs, $src, $test, $work_dir) = @_;
 
     my $self = {
         pid        => $pid,
         prog_name  => $prog,
-        prog_root  => $prog_root,
+        prog_root  => $ENV{PROG_ROOT} // "/tmp/${pid}_".time,
         _vcs       => $vcs,
         _src_dir   => $src,
         _test_dir  => $test,
