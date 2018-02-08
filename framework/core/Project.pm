@@ -989,20 +989,6 @@ sub contains_version_id {
 }
 
 =pod
-=item B<checkout_id> C<checkout_id(vid [, prog_root])>
-Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
-C<prog_root> is optional, the default is C<self->{prog_root}>.
-=cut
-sub checkout_id {
-    my ($self, $vid, $prog_root) = @_; shift;
-    unless (defined $prog_root) {
-        $prog_root = $self->{prog_root} ;
-        push(@_, $prog_root);
-    }
-    return $self->{_vcs}->checkout_vid(@_);
-}
-
-=pod
 
   $project->diff(revision_id_1, revision_id_2 [, path])
 
