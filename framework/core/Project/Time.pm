@@ -48,11 +48,12 @@ sub new {
 
     my $name = "joda-time";
     $work_dir = $work_dir // "$SCRIPT_DIR/projects";
+    $commit_df = $commit_db // "$work_dir/$PID/commit-db";
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                             ($commit_db // "$SCRIPT_DIR/projects/$PID/commit-db"),
+                             $commit_db,
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs, $src, $test, $build_file, $work_dir);
