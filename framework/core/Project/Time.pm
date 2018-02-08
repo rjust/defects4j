@@ -75,7 +75,7 @@ sub _post_checkout {
 
     # Check for a broken-build-revision
     my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
-    my $filename = "$SCRIPT_DIR/projects/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $prog_root/build.xml");
     }
