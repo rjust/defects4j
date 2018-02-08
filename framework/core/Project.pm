@@ -135,14 +135,14 @@ The program name of the project.
 
   $project->{prog_root}
 
-The root (working) directory for a checked-out program version of this project.
+The root (program) directory for a checked-out program version of this project.
 
 =cut
 sub new {
     @_ >= 6 or die $ARG_ERROR;
     my ($class, $pid, $prog, $vcs, $src, $test, $build_file, $work_dir) = @_;
-    my $prog_root = $ENV{PROG_ROOT}; $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
-    $build_file = "$SCRIPT_DIR/projects/$pid/$pid.build.xml" unless defined $build_file;
+    my $prog_root = $ENV{PROG_ROOT};
+    $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
 
     my $self = {
         pid        => $pid,
@@ -151,8 +151,8 @@ sub new {
         _vcs       => $vcs,
         _src_dir   => $src,
         _test_dir  => $test,
-        _build_file => $build_file,
         _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
+        _build_file => $build_file // "$work_dir/$pid/$pid.build.xml",
     };
     bless $self, $class;
     return $self;
