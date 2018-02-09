@@ -6,17 +6,17 @@ in `Defects4J` -- templates exist for both to ease this task.
 1. Suppose the new project's name is `my-new-project` and its project id is
 `MyProject`, then create the Perl module and wrapper build file for the new
 project with:
-  - `./create-project -pMyProject -n"my-new-project"`
+  - `./create-project.pl -pMyProject -n"my-new-project" -w bug-mining`
 
 This command creates the following files:
-  - Perl module: `defects4j/framework/core/Project/MyProject.pm`
-  - Wrapper build file: `defects4j/framework/build-scripts/MyProject/MyProject.build.xml`
-  - Empty commit-db: `defects4j/framework/projects/MyProject/commit-db`
+  - Perl module: `bug-mining/framework/core/Project/MyProject.pm`
+  - Wrapper build file: `bug-mining/framework/build-scripts/MyProject/MyProject.build.xml`
+  - Empty commit-db: `bug-mining/framework/projects/MyProject/commit-db`
 
 2. Adapt the Perl module and the following properties if necessary:
     - Version control system (default is Git)
     - Location of the version control repository (default is
-      `defects4j/project_repos/<project_name>.git`)
+      `bug-mining/project_repos/<project_name>.git`)
     - Project layout (source and test directories)
 
 3. Adapt the Wrapper build file
