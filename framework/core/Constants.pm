@@ -80,6 +80,13 @@ The directory that contains all scripts and modules (I<parent of this module's d
 =cut
 our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
 
+=item C<PROJECTS_DIR>
+
+The directory that contains all project metadata (I<C<SCRIPT_DIR>/projects>)
+
+=cut
+our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
+
 =pod
 
 =item C<CORE_DIR>
@@ -227,6 +234,7 @@ our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
 our @EXPORT = qw(
 $SCRIPT_DIR
+$PROJECTS_DIR
 $CORE_DIR
 $LIB_DIR
 $UTIL_DIR
