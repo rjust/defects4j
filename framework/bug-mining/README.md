@@ -13,12 +13,13 @@ following files:
   - Project Perl module: `bug-mining/framework/core/Project/MyProject.pm`
   - Project build file: `bug-mining/framework/projects/MyProject/MyProject.build.xml`
 
-For example, the project name for the Apache commons-lang project already
-included in Defects4J is *commons-lang*, and its project id is *Lang*. The
-project id should start with an upper-case letter and should be short yet
-descriptive (keep in mind that this id is used for commands such as `defects4j
-checkout -p <project_id>`). The project name should be hyphenated and must not
-include spaces.
+For example, the project name for the Apache Commons-Lang project, already
+included in Defects4J, is *commons-lang*, and its project id is *Lang*.
+
+The **project id** should **start with an upper-case letter** and should be
+**short yet descriptive** (keep in mind that this id is used for commands such
+as `defects4j checkout -p <project_id>`). The **project name** should be
+**hyphenated and must not include spaces**.
 
 2. Adapt the Perl module and the following properties if necessary:
     - Version control system (default is Git)
