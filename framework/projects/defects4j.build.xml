@@ -39,6 +39,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <!-- Check whether d4j.home is set -->
     <fail message="Property d4j.home not set!" unless="d4j.home" />
 
+    <!-- The default location for the projects meta data -->
+    <property name="d4j.dir.projects" value="${d4j.home}/framework/projects" />
+
     <taskdef resource="net/sf/antcontrib/antlib.xml"
             classpath="${d4j.home}/framework/lib/ant-contrib.jar"/>
 
@@ -74,7 +77,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
 
     <!-- Include project-specific build file -->
-    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
+    <import file="${d4j.dir.projects}/${d4j.project.id}/${d4j.project.id}.build.xml"/>
 
 
 <!--
