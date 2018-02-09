@@ -166,7 +166,7 @@ foreach my $bid (@ids) {
     # Defects4J cannot handle empty patch files -> skip the sanity check since
     # these candidates are filtered in a later step anyway.
     if (-z "$PATCH_DIR/$bid.src.patch") {
-        printf ("Empty source patch -> skip candidate\n");
+        printf("      -> Skipping sanity check (empty source patch)\n");
         next;
     }
 

@@ -165,15 +165,14 @@ if (defined $BID) {
 
 my $sth = $dbh->prepare("SELECT * FROM $TAB_REV_PAIRS WHERE $PROJECT=? AND $ID=?") or die $dbh->errstr;
 foreach my $bid (@ids) {
+    printf ("%4d: $project->{prog_name}\n", $bid);
+
     # Skip existing entries
     $sth->execute($PID, $bid);
     if($sth->rows !=0) {
-        print "Skipping $bid because of existing entry in $TAB_REV_PAIRS\n";
+        printf("      -> Skipping (existing entry in $TAB_REV_PAIRS)\n");
         next;
     }
-
-
-    printf ("%4d: $project->{prog_name}\n", $bid);
 
     my %data;
     $data{$PROJECT} = $PID;
@@ -211,6 +210,7 @@ sub _check_diff {
 
     if (-z $patch_src) {
         $data->{$DIFF_SRC} = 0;
+        return 0;
     } else {
         my $diff = _read_file($patch_src);
         die unless defined $diff;
