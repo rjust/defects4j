@@ -44,21 +44,23 @@ our @ISA = qw(Project);
 my $PID  = "Closure";
 
 sub new {
-    my $class = shift;
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
+
     my $name = "closure-compiler";
     my $src  = "src";
     my $test = "test";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$work_dir/$PID/commit-db",
                     \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $revision_id, $prog_root) = @_;
 
     open FH, "$work_dir/build.xml" or die $!;
     my $build_file = do { local $/; <FH> };
@@ -67,7 +69,7 @@ sub _post_checkout {
     $build_file =~ s/debug=".*"//g;
     $build_file =~ s/<javac (.*)/<javac debug="true" $1/g;
 
-    open FH, ">$work_dir/build.xml" or die $!;
+    open FH, ">$prog_root/build.xml" or die $!;
     print FH $build_file;
     close FH;
 }

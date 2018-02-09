@@ -44,15 +44,17 @@ our @ISA = qw(Project);
 my $PID  = "Math";
 
 sub new {
-    my $class = shift;
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
+
     my $name = "commons-math";
     my $src  = "src/main/java";
     my $test = "src/test";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db");
+                            "$work_dir/$PID/commit-db");
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
 sub src_dir {

@@ -44,21 +44,20 @@ our @ISA = qw(Project);
 my $PID  = "Time";
 
 sub new {
-    my ($class, $work_dir, $commit_db, $build_file) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
 
     my $name = "joda-time";
-    $work_dir = $work_dir // "$SCRIPT_DIR/projects";
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                             ($commit_db // "$SCRIPT_DIR/projects/$PID/commit-db"),
+                            "$work_dir/$PID/commit-db";
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $build_file, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
-#TODO should these SCRIPT_DIR/projects actually be work dir?
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $prog_root) = @_;
@@ -68,14 +67,15 @@ sub _post_checkout {
         system("mv $prog_root/JodaTime/* $prog_root");
     }
 
+    my $project_dir = "$self->{_work_dir}/$self->{pid}";
     # Check whether ant build file exists
     unless (-e "$prog_root/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $prog_root");
+        system("cp $project_dir/build_files/$revision_id/* $prog_root");
     }
 
     # Check for a broken-build-revision
     my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
-    my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "$project_dir/broken-builds/build-${id}.xml";
     if (-e $filename) {
         system ("cp $filename $prog_root/build.xml");
     }

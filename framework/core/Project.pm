@@ -106,16 +106,19 @@ use Carp qw(confess);
 =pod
 
 =head2 Create an instance of a Project
-  Project::create_project(project_id, work_dir, [commit-db, build.xml])
+  Project::create_project(project_id [, work_dir])
 
 Dynamically loads the required submodule, instantiates the project, and returns a
-reference to it.
+reference to it. Provide an optional C<work_dir> for bug mining. C<work_dir> is
+the temporary working directory used to create metadata for a project before the
+project and all reproducible bugs are promoted to the core framework.
 
 =cut
 sub create_project {
-    # TODO this needs to be >=1 for bug mining or == 1 for non bug mining
+    # TODO this needs to be == 2 for bug mining or == 1 for non bug mining
     #@_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
+    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -135,24 +138,22 @@ The program name of the project.
 
   $project->{prog_root}
 
-The root (working) directory for a checked-out program version of this project.
+The root (program) directory for a checked-out program version of this project.
 
 =cut
 sub new {
     @_ >= 6 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $build_file, $work_dir) = @_;
-    my $prog_root = $ENV{PROG_ROOT}; $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
-    $build_file = "$SCRIPT_DIR/projects/$pid/$pid.build.xml" unless defined $build_file;
+    my ($class, $pid, $prog, $vcs, $src, $test, $work_dir) = @_;
 
     my $self = {
         pid        => $pid,
         prog_name  => $prog,
-        prog_root  => $prog_root,
+        prog_root  => $ENV{PROG_ROOT} // "/tmp/${pid}_".time,
         _vcs       => $vcs,
         _src_dir   => $src,
         _test_dir  => $test,
-        _build_file => $build_file,
         _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
+        _build_file => $build_file // "$work_dir/$pid/$pid.build.xml",
     };
     bless $self, $class;
     return $self;
@@ -279,12 +280,13 @@ sub sanity_check {
 
 =pod
 
-  $project->checkout_vid(vid [, work_dir, is_bugmine])
+  $project->checkout_vid(vid [, prog_root, is_bugmine])
 
-Checks out the provided version id (C<vid>) to F<work_dir>, and tags the the buggy AND
+Checks out the provided version id (C<vid>) to F<prog_root>, and tags the the buggy AND
 the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
-The project temporary directory (C<prog_root>) is optional, the default is C<prog_root> from the instance of this class.
-The is_bugmine flag (C<is_bugmine>) is optional, the default is false.
+The temporary project directory (C<prog_root>) is optional, the default is C<prog_root> from the instance of this class.
+The is_bugmine flag (C<is_bugmine>) is optional and indicates whether the
+framework is used for bug mining, the default is false.
 
 =cut
 sub checkout_vid {
@@ -985,20 +987,6 @@ Delegate to the L<VCS> backend.
 sub contains_version_id {
     my ($self, $vid) = @_;
     return $self->{_vcs}->contains_version_id($vid);
-}
-
-=pod
-=item B<checkout_id> C<checkout_id(vid [, prog_root])>
-Delegate to the checkout_id method of the vcs backend -- see Vcs.pm
-C<prog_root> is optional, the default is C<self->{prog_root}>.
-=cut
-sub checkout_id {
-    my ($self, $vid, $prog_root) = @_; shift;
-    unless (defined $prog_root) {
-        $prog_root = $self->{prog_root} ;
-        push(@_, $prog_root);
-    }
-    return $self->{_vcs}->checkout_vid(@_);
 }
 
 =pod

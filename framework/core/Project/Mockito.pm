@@ -44,20 +44,22 @@ our @ISA = qw(Project);
 my $PID  = "Mockito";
 
 sub new {
-    my $class = shift;
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
+
     my $name = "mockito";
     my $src  = "src/main/java";
     my $test = "src/test/java";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$SCRIPT_DIR/projects/$PID/commit-db",
+                             "$work_dir/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
 sub _post_checkout {
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision, $prog_root) = @_;
     my $name = $vcs->{prog_name};
 
     #
@@ -66,13 +68,14 @@ sub _post_checkout {
 
     # Fix Mockito's test runners
     my $id = $vcs->lookup_revision_id($revision);
+    # TODO: Remove this occurrence of SCRIPT_DIR/projects
     my $mockito_junit_runner_patch_file = "$SCRIPT_DIR/projects/$PID/mockito_test_runners.patch";
     if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
-        $vcs->apply_patch($work_dir, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
+        $vcs->apply_patch($prog_root, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
     # Change Url to Gradle distribution
-    my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
+    my $prop = "$prog_root/gradle/wrapper/gradle-wrapper.properties";
     my $lib_dir = "$LIB_DIR/build_systems/gradle";
 
     # Read existing Gradle properties file, if it exists
@@ -94,8 +97,8 @@ sub _post_checkout {
     close(OUT);
 
     # Disable the Gradle daemon
-    if (-e "$work_dir/gradle.properties") {
-        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
+    if (-e "$prog_root/gradle.properties") {
+        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$prog_root/gradle.properties\"");
     }
 }
 

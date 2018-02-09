@@ -44,24 +44,26 @@ our @ISA = qw(Project);
 my $PID = "Chart";
 
 sub new {
-    my $class = shift;
+    @_ == 2 or die $ARG_ERROR;
+    my ($class, $work_dir) = @_;
+
     my $name = "jfreechart";
     my $src  = "source";
     my $test = "tests";
     my $vcs = Vcs::Svn->new($PID,
                             "file://$REPO_DIR/$name/trunk",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$work_dir/$PID/commit-db",
                             \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
 }
 
 sub _post_checkout {
     # Fix compilation errors if necessary
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $revision_id, $prog_root) = @_;
 
-    my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
+    my $compile_errors = "$self->{_work_dir}/$self->{pid}/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
     my @entries = readdir(DIR);
     closedir(DIR);
@@ -69,7 +71,7 @@ sub _post_checkout {
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
             if ($revision_id >= $1 && $revision_id <= $2) {
-                $self->{_vcs}->apply_patch($work_dir, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
+                $self->{_vcs}->apply_patch($prog_root, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
             }
         }
     }
