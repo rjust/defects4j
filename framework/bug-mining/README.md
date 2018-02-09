@@ -3,8 +3,8 @@ Creating a bug-mining working directory and configuring a project
 A Perl module and a wrapper build file are necessary to mine defects for a (new)
 project in `Defects4J` -- templates exist for both to ease this task.
 
-1. Suppose the project's name is `my-awesome-project` and the descriptive
-*<project id>* is `MyProject`, then create the Perl module and wrapper build file
+1. Suppose the project's name is `my-awesome-project` and the short, descriptive
+*project id* is `MyProject`, then create the Perl module and wrapper build file
 for the new project with:
   - `./create-project.pl -pMyProject -n"my-new-project" -w bug-mining`
 
