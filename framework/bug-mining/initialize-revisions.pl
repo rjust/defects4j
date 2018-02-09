@@ -27,11 +27,11 @@
 =head1 NAME
 
 initialize-revisions.pl -- Initialize all revisions: identify the directory 
-                           layout and perform a sanity check on each revision.
+                           layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
-initialize-revisions.pl -p project_id -w work_dir [ -v version_id]
+initialize-revisions.pl -p project_id -w work_dir [ -b bug_id]
 
 =head1 OPTIONS
 
@@ -45,12 +45,12 @@ The id of the project for which the revisions are initialized.
 
 Use C<work_dir> as the working directory.
 
-=item B<-v C<version_id>>
+=item B<-b C<bug_id>>
 
-Only analyze this version id or interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+Only analyze this bug id or interval of bug ids (optional).
+The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
 provided, the interval boundaries are included in the analysis.
-Per default all version ids are considered.
+Per default all bug ids listed in the commit-db are considered.
 
 =back
 
@@ -71,15 +71,15 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
 my ($PID, $BID, $WORK_DIR) =
     ($cmd_opts{p},
-     $cmd_opts{v},
+     $cmd_opts{b},
      $cmd_opts{w}
     );
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
 
 # Check format of target version id
 if (defined $BID) {
