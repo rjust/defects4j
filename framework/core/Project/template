@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-Project/<PID>.pm -- Concrete project instance for <PROJECT_NAME>.
+Project::<PID>.pm -- L<Project> submodule for <PROJECT_NAME>.
 
 =head1 DESCRIPTION
 
-This module provides all project-specific configurations and methods for the
+This module provides all project-specific configurations and subroutines for the
 <PROJECT_NAME> project.
 
 =cut
@@ -44,7 +44,9 @@ our @ISA = qw(Project);
 my $PID  = "<PID>";
 
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "<PROJECT_NAME>";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
@@ -55,16 +57,16 @@ sub new {
 }
 
 #
-# Determine the project layout for the checked-out version.
+# Determines the directory layout for sources and tests
 #
 sub determine_layout {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision_id) = @_;
+    my ($self, $rev_id) = @_;
     my $dir = $self->{prog_root};
 
     # Add additional layouts if necessary
     my $result = _layout1($dir) // _layout2($dir);
-    die "Unknown layout for revision: ${revision_id}" unless defined $result;
+    die "Unknown layout for revision: ${rev_id}" unless defined $result;
     return $result;
 }
 
@@ -85,7 +87,9 @@ sub _post_checkout {
 # test directory, relative to the working directory.
 #
 
-# Existing build.xml and default.properties
+#
+# Existing Ant build.xml and default.properties
+#
 sub _layout1 {
     my $dir = shift;
     my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
