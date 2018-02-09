@@ -45,14 +45,13 @@ my $PID  = "<PID>";
 
 sub new {
     my $class = shift;
-    my $work_dir = shift // "$SCRIPT_DIR/projects";
     my $name = "<PROJECT_NAME>";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$work_dir/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 #
@@ -69,14 +68,14 @@ sub determine_layout {
     return $result;
 }
 
+#
+# Post-checkout tasks include, for instance, providing proper build files,
+# fixing compilation errors, etc.
+#
 sub _post_checkout {
-    my ($vcs, $revision, $work_dir) = @_;
+    my ($vcs, $revision_id, $work_dir) = @_;
     my $name = $vcs->{prog_name};
 
-    #
-    # Post-checkout tasks include, for instance, providing proper build files,
-    # fixing compilation errors, etc.
-    #
 }
 
 #
@@ -114,11 +113,3 @@ sub _layout2 {
 }
 
 1;
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
