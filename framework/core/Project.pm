@@ -1087,10 +1087,6 @@ sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file) =  @_;
     $option_str = "" unless defined $option_str;
-    # TODO why are we checking for this if we never use it
-    my $file = $self->{_build_file};
-    # TODO: Check also whether target is provided by the build file
-    -f $file or die "Build file does not exist: $file";
 
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
