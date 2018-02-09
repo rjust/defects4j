@@ -89,17 +89,24 @@ if (defined $BID) {
 # if work dir is relative make it absolute, this will prevent problems as the current directory suddenly changes
 $WORK_DIR = abs_path($WORK_DIR);
 
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Set the projects and repository directories to the current working directory.
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+$REPO_DIR = "$WORK_DIR/project_repos";
+
 # create necessary directories
-`mkdir -p $WORK_DIR/$PID/patches`;
-`mkdir -p $WORK_DIR/$PID/failing_tests`;
-`mkdir -p $WORK_DIR/$PID/trigger_tests`;
-`mkdir -p $WORK_DIR/$PID/modified_classes`;
+`mkdir -p $WORK_DIR/framework/projects/$PID/patches`;
+`mkdir -p $WORK_DIR/framework/projects/$PID/failing_tests`;
+`mkdir -p $WORK_DIR/framework/projects/$PID/trigger_tests`;
+`mkdir -p $WORK_DIR/framework/projects/$PID/modified_classes`;
 
 ############################### VARIABLE SETUP
 my $TMP_DIR = Utils::get_tmp_dir(); # Temporary directory
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 ############################### MAIN LOOP

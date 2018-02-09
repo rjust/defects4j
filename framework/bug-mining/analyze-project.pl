@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -120,6 +120,13 @@ pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
 
 $WORK_DIR = abs_path($WORK_DIR);
 
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Set the projects and repository directories to the current working directory.
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+$REPO_DIR = "$WORK_DIR/project_repos";
+
 # TODO make output dir more flexible
 my $db_dir = $WORK_DIR;
 
@@ -138,7 +145,7 @@ my $MAX_TEST_RUNS=10;
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 # Get database handle for results
@@ -146,14 +153,14 @@ my $dbh = DB::get_db_handle($TAB_REV_PAIRS, $db_dir);
 my @COLS = DB::get_tab_columns($TAB_REV_PAIRS) or die;
 
 # Set up directory for src and test patches
-my $PATCH_DIR = "$WORK_DIR/$PID/patches";
+my $PATCH_DIR = "$WORK_DIR/framework/projects/$PID/patches";
 system("mkdir -p $PATCH_DIR");
 
 # Directory for patches already minimized manually
-my $MINIMIZED_PATCHES = "$SCRIPT_DIR/minimized-patches/$PID";
+my $MINIMIZED_PATCHES = "$WORK_DIR/minimized-patches/$PID";
 
 # Set up directory for failing tests
-my $FAIL_DIR = "$WORK_DIR/$PID/failing_tests";
+my $FAIL_DIR = "$WORK_DIR/framework/projects/$PID/failing_tests";
 system("mkdir -p $FAIL_DIR");
 
 
@@ -206,8 +213,8 @@ sub _check_diff {
     my $v2  = $project->lookup("${vid}f");
 
     # Lookup src and test directory for v2
-    my $src  = $project->src_dir($v2);
-    my $test = $project->test_dir($v2);
+    my $src  = $project->src_dir("${vid}f");
+    my $test = $project->test_dir("${vid}f");
 
     # Determine patch size for src and test patches (rev2 -> rev1)
     my $minimized_patch_test = "$MINIMIZED_PATCHES/$v2-$v1.test.patch";
