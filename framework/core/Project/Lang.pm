@@ -69,7 +69,7 @@ sub determine_layout {
 }
 
 #
-# Existing And build.xml and default.properties
+# Existing Ant build.xml and default.properties
 #
 sub _layout1 {
     my $dir = shift;
