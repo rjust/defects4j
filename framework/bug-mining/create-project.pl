@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,11 @@
 
 =head1 NAME
 
-create-project.pl -- Configure a new project in Defects4J.
+create-project.pl -- Configure a new project for Defects4J.
 
 =head1 SYNOPSIS
 
-create-project.pl -p project_id -n project_name
+create-project.pl -p project_id -n project_name -w work_dir
 
 =head1 OPTIONS
 
@@ -44,6 +44,10 @@ The id of the new project (e.g., Lang).
 
 The (descriptive) name of the new project (e.g., commons-lang).
 
+=item B<-w C<work_dir>>
+
+The working directory for the bug-mining process.
+
 =back
 
 =head1 DESCRIPTION
@@ -52,9 +56,9 @@ Provides templates for the Perl module and wrapper build file for a new project:
 
 =over 4
 
-=item 1) F<framework/core/Project/"project_id".pm>
+=item 1) F<"work_dir"/framework/core/Project/"project_id".pm>
 
-=item 2) F<framework/build-scripts/"project_id"/"project_id".build.xml>
+=item 2) F<"work_dir"/framework/projects/"project_id"/"project_id".build.xml>
 
 =back
 
@@ -71,18 +75,24 @@ use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
 
 my %cmd_opts;
-getopts('p:n:', \%cmd_opts) or pod2usage(1);
-my ($PID, $NAME) = ($cmd_opts{p}, $cmd_opts{n});
+getopts('p:n:w:', \%cmd_opts) or pod2usage(1);
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n} and defined $cmd_opts{w};
 
-pod2usage(1) unless defined $PID and defined $NAME;
+my ($PID, $NAME, $WORK_DIR) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w});
+
+# TODO: Copy existing project module and build file to working directory
+-e "$CORE_DIR/Project/$PID.pm" and die "Project $PID already exists!";
 
 my $module_template = "$CORE_DIR/Project/template";
-my $module_file  = "$CORE_DIR/Project/$PID.pm";
+my $build_template  = "$SCRIPT_DIR/projects/template.build.xml";
 
-my $build_template = "$SCRIPT_DIR/build-scripts/template";
-my $build_file  = "$SCRIPT_DIR/build-scripts/$PID/$PID.build.xml";
+my $module_file  = "$WORK_DIR/framework/core/Project/$PID.pm";
+my $build_file   = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
 
--e $module_file and die "Project $PID already exists!";
+# Initialize working directory and create empty commit-db
+system("mkdir -p $WORK_DIR/framework/core/Project");
+system("mkdir -p $WORK_DIR/framework/projects/$PID");
+system("touch $WORK_DIR/framework/projects/$PID/commit-db");
 
 # Copy module template and set project id and name
 open(IN, "<$module_template") or die "Cannot open template file: $!";
@@ -95,11 +105,7 @@ while(<IN>) {
 close(IN);
 close(OUT);
 
-# Create project directory and empty commit-db
-system("mkdir $PROJECT_DIR/$PID && touch $PROJECT_DIR/$PID/commit-db");
-
 # Copy wrapper build file template and set project id
-system("mkdir $SCRIPT_DIR/build-scripts/$PID");
 open(IN, "<$build_template") or die "Cannot open template file: $!";
 open(OUT, ">$build_file") or die "Cannot open build file: $!";
 while(<IN>) {
@@ -109,11 +115,3 @@ while(<IN>) {
 }
 close(IN);
 close(OUT);
-
-=pod
-
-=head1 SEE ALSO
-
-F<Project.pm>
-
-=cut
