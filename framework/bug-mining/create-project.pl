@@ -98,7 +98,7 @@ my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
 # Directory for the perl module
-my $core_dir = $WORK_DIR/framework/core/Project
+my $core_dir = "$WORK_DIR/framework/core/Project";
 
 system("mkdir -p $core_dir $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 system("touch $project_dir/commit-db");
