@@ -125,7 +125,7 @@ sub create_project {
     eval { require $module };
     die "Invalid project_id: $pid\n$@" if $@;
 
-    return $class->new(@_);
+    return $class->new($work_dir);
 }
 
 =pod
@@ -142,7 +142,7 @@ The root (program) directory for a checked-out program version of this project.
 
 =cut
 sub new {
-    @_ >= 6 or die $ARG_ERROR;
+    @_ == 7 or die $ARG_ERROR;
     my ($class, $pid, $prog, $vcs, $src, $test, $work_dir) = @_;
 
     my $self = {
@@ -152,8 +152,8 @@ sub new {
         _vcs       => $vcs,
         _src_dir   => $src,
         _test_dir  => $test,
-        _work_dir   => $work_dir // "$SCRIPT_DIR/projects",
-        _build_file => $build_file // "$work_dir/$pid/$pid.build.xml",
+        _work_dir   => $work_dir,
+        _build_file => "$work_dir/$pid/$pid.build.xml",
     };
     bless $self, $class;
     return $self;
