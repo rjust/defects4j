@@ -90,9 +90,18 @@ my $module_file  = "$WORK_DIR/framework/core/Project/$PID.pm";
 my $build_file   = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
 
 # Initialize working directory and create empty commit-db
-system("mkdir -p $WORK_DIR/framework/core/Project");
-system("mkdir -p $WORK_DIR/framework/projects/$PID");
-system("touch $WORK_DIR/framework/projects/$PID/commit-db");
+my $project_dir = "$WORK_DIR/framework/projects/$PID";
+
+# Directories for meta data
+my $PATCH_DIR   = "$project_dir/patches";
+my $FAILING_DIR = "$project_dir/failing_tests";
+my $TRIGGER_DIR = "$project_dir/trigger_tests";
+my $MOD_CLASSES = "$project_dir/modified_classes";
+# Directory for the perl module
+my $core_dir = $WORK_DIR/framework/core/Project
+
+system("mkdir -p $core_dir $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
+system("touch $project_dir/commit-db");
 
 # Copy module template and set project id and name
 open(IN, "<$module_template") or die "Cannot open template file: $!";

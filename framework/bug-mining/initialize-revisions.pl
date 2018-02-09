@@ -96,11 +96,15 @@ unshift(@INC, "$WORK_DIR/framework/core");
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 $REPO_DIR = "$WORK_DIR/project_repos";
 
-# create necessary directories
-`mkdir -p $WORK_DIR/framework/projects/$PID/patches`;
-`mkdir -p $WORK_DIR/framework/projects/$PID/failing_tests`;
-`mkdir -p $WORK_DIR/framework/projects/$PID/trigger_tests`;
-`mkdir -p $WORK_DIR/framework/projects/$PID/modified_classes`;
+# Create necessary directories
+my $project_dir = "$WORK_DIR/framework/projects/$PID";
+
+my $PATCH_DIR   = "$project_dir/patches";
+my $FAILING_DIR = "$project_dir/failing_tests";
+my $TRIGGER_DIR = "$project_dir/trigger_tests";
+my $MOD_CLASSES = "$project_dir/modified_classes";
+
+system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 
 ############################### VARIABLE SETUP
 my $TMP_DIR = Utils::get_tmp_dir(); # Temporary directory
@@ -109,7 +113,39 @@ system("mkdir -p $TMP_DIR");
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
-############################### MAIN LOOP
+#
+# The Defects4J core framework requires certain metadata for each defect.
+# This routine creates these artifacts, if necessary.
+#
+sub _bootstrap {
+    my ($project, $bid) = @_;
+
+    # This defect is already initialized
+    -e "$PATCH_DIR/$bid.src.patch" and return;
+
+    my $v1 = $project->lookup("${bid}b");
+    my $v2 = $project->lookup("${bid}f");
+
+    # Use the VCS checkout routine, which does not apply the cached, possibly
+    # minimized patch to obtain the buggy version.
+    $project->{_vcs}->checkout_vid("${bid}b", $TMP_DIR) or die "Cannot checkout pre-fix version";
+    $project->initialize_revision($v1, "${bid}b");
+    my ($src_b, $test_b) = ($project->src_dir("${bid}b"), $project->test_dir("${bid}b"));
+
+    $project->{_vcs}->checkout_vid("${bid}f", $TMP_DIR) or die "Cannot checkout post-fix version";
+    $project->initialize_revision($v2, "${bid}f");
+    my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
+
+    die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
+    die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
+
+    # Create local patch so that we can use the D4J core framework.
+    # Minimization doesn't matter here, which has to be done manually.
+    $project->export_diff($v2, $v1,"$PATCH_DIR/$bid.src.patch", "$src_f");
+    $project->export_diff($v2, $v1,"$PATCH_DIR/$bid.test.patch", "$test_f");
+}
+
+################################################################################
 # figure out which IDs to run script for
 my @ids = $project->get_version_ids();
 if (defined $BID) {
@@ -124,25 +160,14 @@ if (defined $BID) {
 foreach my $bid (@ids) {
     printf ("%4d: $project->{prog_name}\n", $bid);
 
-    my $v1 = $project->lookup("${bid}b");
-    my $v2 = $project->lookup("${bid}f");
+    # Populate the layout map and patches directory
+    _bootstrap($project, $bid);
 
-    # create local patch to get to buggy version, minimization wont matter here, that has to be done manually
-    # will create a file in $WORK_DIR/$PID/patches
-    # create the diff only on the src/
-    $project->export_diff($v2,$v1,"$WORK_DIR/$PID/patches/$bid.src.patch", "src/");
-
-    $project->checkout_vid("${bid}b", $TMP_DIR, 1);
+    # Clean the temporary directory
+    Utils::exec_cmd("rm -rf $TMP_DIR && mkdir -p $TMP_DIR", "Cleaning working directory")
+            or die "Cannot clean working directory";
+    $project->checkout_vid("${bid}f", $TMP_DIR, 1) or die "Cannot checkout fixed version";
     $project->sanity_check();
-    $project->initialize_revision($v1, "${bid}b");
-    my ($src_b, $test_b) = ($project->src_dir("${bid}b"), $project->test_dir("${bid}b"));
-
-    $project->checkout_vid("${bid}f", $TMP_DIR, 1);
-    $project->sanity_check();
-    $project->initialize_revision($v2, "${bid}f");
-    my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
-
-    die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
-    die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
 }
+
 system("rm -rf $TMP_DIR");
