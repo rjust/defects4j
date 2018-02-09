@@ -163,6 +163,13 @@ foreach my $bid (@ids) {
     # Populate the layout map and patches directory
     _bootstrap($project, $bid);
 
+    # Defects4J cannot handle empty patch files -> skip the sanity check since
+    # these candidates are filtered in a later step anyway.
+    if (-z "$PATCH_DIR/$bid.src.patch") {
+        printf ("Empty source patch -> skip candidate\n");
+        next;
+    }
+
     # Clean the temporary directory
     Utils::exec_cmd("rm -rf $TMP_DIR && mkdir -p $TMP_DIR", "Cleaning working directory")
             or die "Cannot clean working directory";
