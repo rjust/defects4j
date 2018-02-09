@@ -30,7 +30,7 @@ create-project.pl -- Configure a new project for Defects4J.
 
 =head1 SYNOPSIS
 
-create-project.pl -p project_id -n project_name -w work_dir
+create-project.pl -p project_id -n project_name -w work_dir -r repository_url
 
 =head1 OPTIONS
 
@@ -47,6 +47,11 @@ The (descriptive) name of the new project (e.g., commons-lang).
 =item B<-w C<work_dir>>
 
 The working directory for the bug-mining process.
+
+=item B<-r C<repository_url>>
+
+The remote URL of the source code repository for the new project.
+TODO: Currently, this has to be a git repository.
 
 =back
 
@@ -75,10 +80,11 @@ use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
 
 my %cmd_opts;
-getopts('p:n:w:', \%cmd_opts) or pod2usage(1);
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n} and defined $cmd_opts{w};
+getopts('p:n:w:r:', \%cmd_opts) or pod2usage(1);
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n}
+                    and defined $cmd_opts{w} and defined $cmd_opts{r};
 
-my ($PID, $NAME, $WORK_DIR) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w});
+my ($PID, $NAME, $WORK_DIR, $URL) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w}, $cmd_opts{r});
 
 # TODO: Copy existing project module and build file to working directory
 -e "$CORE_DIR/Project/$PID.pm" and die "Project $PID already exists!";
@@ -88,6 +94,9 @@ my $build_template  = "$SCRIPT_DIR/projects/template.build.xml";
 
 my $module_file  = "$WORK_DIR/framework/core/Project/$PID.pm";
 my $build_file   = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
+
+# Directory to which the remote repository is cloned.
+my $repo_dir    = "$WORK_DIR/project_repos";
 
 # Initialize working directory and create empty commit-db
 my $project_dir = "$WORK_DIR/framework/projects/$PID";
@@ -124,3 +133,6 @@ while(<IN>) {
 }
 close(IN);
 close(OUT);
+
+# Clone the repository
+system("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git")
