@@ -558,16 +558,21 @@ sub fix_tests {
 
     # TODO: Exclusively use version ids rather than revision ids
     my $revision_id = $self->lookup($vid);
-    my $file = "$PROJECTS_DIR/$pid/failing_tests/$revision_id";
-
-    if (-e $file) {
-        $self->exclude_tests_in_file($file, $dir);
+    my $failing_tests_file = "$PROJECTS_DIR/$pid/failing_tests/$revision_id";
+    if (-e $failing_tests_file) {
+        $self->exclude_tests_in_file($failing_tests_file, $dir);
     }
 
-    # This code added to exclude test dependencies
+    # Remove flaky/dependent tests, if any
     my $dependent_test_file = "$PROJECTS_DIR/$pid/dependent_tests";
     if (-e $dependent_test_file) {
         $self->exclude_tests_in_file($dependent_test_file, $dir);
+    }
+
+    # Remove randomly failing tests, if any
+    my $random_tests_file = "$PROJECTS_DIR/$pid/random_tests";
+    if (-e $random_tests_file) {
+        $self->exclude_tests_in_file($random_tests_file, $dir);
     }
 }
 
