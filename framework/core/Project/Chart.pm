@@ -63,7 +63,7 @@ sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $prog_root) = @_;
 
-    my $compile_errors = "$self->{_work_dir}/$self->{pid}/compile-errors/";
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
     opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
     my @entries = readdir(DIR);
     closedir(DIR);

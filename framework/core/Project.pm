@@ -103,7 +103,7 @@ use Utils;
 use Mutation;
 use Carp qw(confess);
 
-our $DIR_LAYOUT_CSV = "dir-layout.csv"
+our $DIR_LAYOUT_CSV = "dir-layout.csv";
 
 =pod
 
@@ -117,14 +117,13 @@ reference to it.
 sub create_project {
     @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
-    my $work_dir = "$PROJECTS_DIR";
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
     eval { require $module };
     die "Invalid project_id: $pid\n$@" if $@;
 
-    return $class->new($work_dir);
+    return $class->new();
 }
 
 =pod
@@ -149,9 +148,9 @@ sub new {
         prog_name  => $prog,
         prog_root  => $ENV{PROG_ROOT} // "/tmp/${pid}_".time,
         _vcs       => $vcs,
-        _build_file => "$work_dir/$pid/$pid.build.xml",
     };
     bless $self, $class;
+    $self->_cache_layout_map();
     return $self;
 }
 
@@ -166,16 +165,17 @@ Prints all general and project-specific properties to STDOUT.
 =cut
 sub print_info {
     my $self = shift;
-    print "Summary of configuration for Project: $self->{pid}\n";
+    my $pid = $self->{pid};
+    print "Summary of configuration for Project: $pid\n";
     print "-"x80 . "\n";
     printf ("%14s: %s\n", "Script dir", $SCRIPT_DIR);
     printf ("%14s: %s\n", "Base dir", $BASE_DIR);
     printf ("%14s: %s\n", "Major root", $MAJOR_ROOT);
     printf ("%14s: %s\n", "Repo dir", $REPO_DIR);
     print "-"x80 . "\n";
-    printf ("%14s: %s\n", "Project ID", $self->{pid});
+    printf ("%14s: %s\n", "Project ID", $pid);
     printf ("%14s: %s\n", "Program", $self->{prog_name});
-    printf ("%14s: %s\n", "Build file", $self->{_build_file});
+    printf ("%14s: %s\n", "Build file", "$PROJECTS_DIR/$pid/$pid.build.xml");
     print "-"x80 . "\n";
     printf ("%14s: %s\n", "Vcs", ref $self->{_vcs});
     printf ("%14s: %s\n", "Repository", $self->{_vcs}->{repo});
@@ -196,7 +196,8 @@ The returned path is relative to the working directory.
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
-    return $self->{_src_dir};
+    my $revision_id = $self->lookup($vid);
+    return $self->_determine_layout($revision_id)->{src};
 }
 
 =pod
@@ -210,7 +211,8 @@ The returned path is relative to the working directory.
 sub test_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
-    return $self->{_test_dir};
+    my $revision_id = $self->lookup($vid);
+    return $self->_determine_layout($revision_id)->{test};
 }
 
 =pod
@@ -236,10 +238,11 @@ F<"work_dir"/$PROP_FILE>.
 sub exclude_tests_in_file {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $file, $tests_dir) = @_;
-    my $work_dir = $self->{prog_root};
+    my $prog_root = $self->{prog_root};
 
     # Remove broken test methods
-    system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$tests_dir") == 0 or die;
+    Utils::exec_cmd("$UTIL_DIR/rm_broken_tests.pl $file $prog_root/$tests_dir",
+            "Excluding broken/flaky tests") or die;
 
     # Check whether broken test classes should be excluded
     my $failed = Utils::get_failing_tests($file);
@@ -256,7 +259,7 @@ sub exclude_tests_in_file {
     # imported by the top-level build file.
     my $list = join(",", @classes);
     my $config = {$PROP_EXCLUDE => $list};
-    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+    Utils::write_config_file("$prog_root/$PROP_FILE", $config);
 }
 
 
@@ -1188,7 +1191,7 @@ sub _determine_layout {
             $self->{_layout_cache}->{$rev_id}->{test}
         );
     }
-    return $self->{_layout_cache}->{$revision_id};
+    return $self->{_layout_cache}->{$rev_id};
 }
 
 1;

@@ -44,29 +44,88 @@ our @ISA = qw(Project);
 my $PID  = "Lang";
 
 sub new {
-    @_ == 2 or die $ARG_ERROR;
-    my ($class, $work_dir) = @_;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
 
     my $name = "commons-lang";
-    my $src  = "src/main/java";
-    my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$work_dir/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
+#
+# Determines the directory layout for sources and tests
+#
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    my $dir = $self->{prog_root};
+    my $result = _layout1($dir) // _layout2($dir);
+    die "Unknown layout for revision: ${rev_id}" unless defined $result;
+    return $result;
+}
+
+#
+# Existing And build.xml and default.properties
+#
+sub _layout1 {
+    my $dir = shift;
+    my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
+    my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*source.home\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*test.home\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Generated build.xml (from mvn ant:ant) with maven-build.properties
+#
+sub _layout2 {
+    my $dir = shift;
+    my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
+    my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*maven\.build\.srcDir\.0\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*maven\.build\.testDir\.0\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Copy the generated build.xml, if necessary.
+#
+sub _post_checkout {
+    my ($self, $revision_id, $prog_root) = @_;
+
+    # Check whether ant build file exists
+    unless (-e "$prog_root/build.xml") {
+        system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $prog_root");
+    }
+}
+
+#
+# Determine and log random tests when initializing a revision.
+#
 sub initialize_revision {
     my ($self, $revision, $vid) = @_;
     $self->SUPER::initialize_revision($revision);
     # TODO: define the file name for random tests in Constants
-    my $RANDOM_TEST_FILE = "$self->{_work_dir}/$self->{pid}/random_tests";
-    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $RANDOM_TEST_FILE);
+    my $random_tests_file = "$PROJECTS_DIR/$self->{pid}/random_tests";
+    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $random_tests_file);
 }
 
-# Search for randomly failing tests in all java files
+#
+# Search for clearly labeled, randomly failing tests in all Java files
+#
 sub _log_random_tests {
     my ($test_dir, $out_file) = @_;
     @_ == 2 or die $ARG_ERROR;
@@ -102,90 +161,6 @@ sub _log_random_tests {
         }
         close(IN);
     }
-}
-
-sub src_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($vid);
-}
-
-sub test_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($vid);
-}
-
-#
-# Remove randomly failing tests in addition to the broken ones
-#
-sub fix_tests {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    # Call fix_tests in super class to fix all broken methods
-    $self->SUPER::fix_tests($vid);
-
-    # Remove randomly failing tests
-    my $work_dir = $self->{prog_root};
-    my $dir = $self->test_dir($vid);
-
-    my $file = "$SCRIPT_DIR/projects/$PID/random_tests";
-    if (-e $file) {
-        # Remove broken test methods
-        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
-    }
-}
-
-sub _post_checkout {
-    my ($self, $revision_id, $work_dir) = @_;
-
-    # Check whether ant build file exists
-    unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
-    }
-}
-
-sub _build_dir_map {
-    my $self = shift;
-
-    return if defined $self->{_dir_map};
-
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
-    }
-    close IN;
-    $self->{_dir_map}=$cache;
 }
 
 1;

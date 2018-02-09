@@ -44,18 +44,16 @@ our @ISA = qw(Project);
 my $PID  = "Time";
 
 sub new {
-    @_ == 2 or die $ARG_ERROR;
-    my ($class, $work_dir) = @_;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
 
     my $name = "joda-time";
-    my $src  = "src/main/java";
-    my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$work_dir/$PID/commit-db";
+                            "$PROJECTS_DIR/$PID/commit-db";
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 sub _post_checkout {
@@ -67,7 +65,7 @@ sub _post_checkout {
         system("mv $prog_root/JodaTime/* $prog_root");
     }
 
-    my $project_dir = "$self->{_work_dir}/$self->{pid}";
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     # Check whether ant build file exists
     unless (-e "$prog_root/build.xml") {
         system("cp $project_dir/build_files/$revision_id/* $prog_root");
@@ -120,6 +118,5 @@ sub diff {
     $path = $self->get_base_diff_path($rev1,$rev2) . ($path//"");
     return $self->{_vcs}->diff($rev1, $rev2, $path);
 }
-
 
 1;
