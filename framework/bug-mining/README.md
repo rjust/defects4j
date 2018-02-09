@@ -1,25 +1,27 @@
 Creating a bug-mining working directory and configuring a project
 -------------------------
-A Perl module and a wrapper build file are necessary to mine defects for a (new)
-project in `Defects4J` -- templates exist for both to ease this task.
+A Perl module, a wrapper build file, and a cloned repository are necessary to
+mine defects for a (new) project in `Defects4J` -- templates and a wrapper
+script exist ease the configuration process.
 
-1. Suppose the project's name is `my-awesome-project` and the short, descriptive
-*project id* is `MyProject`, then create the Perl module and wrapper build file
-for the new project with:
-  - `./create-project.pl -pMyProject -n"my-new-project" -w bug-mining`
+1. Suppose the project's name is `my-awesome-project`, the project's repository
+URL is `https://github.com/my-awesome-project`, and the short, descriptive
+*project id* is `MyProject`, then configure the project for bug mining with:
+  - `./create-project.pl -p MyProject -n my-awesome-project -w bug-mining -r https://github.com/my-awesome-project`
 
 This command initializes the *bug-mining* working directory and creates the
 following files:
   - Project Perl module: `bug-mining/framework/core/Project/MyProject.pm`
   - Project build file: `bug-mining/framework/projects/MyProject/MyProject.build.xml`
-
-For example, the project name for the Apache Commons-Lang project, already
-included in Defects4J, is *commons-lang*, and its project id is *Lang*.
+  - Project repository: `bug-mining/project_repos/my-awesome-project.git`
 
 The **project id** should **start with an upper-case letter** and should be
 **short yet descriptive** (keep in mind that this id is used for commands such
 as `defects4j checkout -p <project_id>`). The **project name** should be
 **hyphenated and must not include spaces**.
+
+For example, the project name for the Apache Commons-Lang project, already
+included in Defects4J, is *commons-lang*, and its project id is *Lang*.
 
 2. Adapt the Perl module and the following properties if necessary:
     - Version control system (default is Git)
