@@ -103,22 +103,21 @@ use Utils;
 use Mutation;
 use Carp qw(confess);
 
+our $DIR_LAYOUT_CSV = "dir-layout.csv"
+
 =pod
 
 =head2 Create an instance of a Project
-  Project::create_project(project_id [, work_dir])
+  Project::create_project(project_id)
 
 Dynamically loads the required submodule, instantiates the project, and returns a
-reference to it. Provide an optional C<work_dir> for bug mining. C<work_dir> is
-the temporary working directory used to create metadata for a project before the
-project and all reproducible bugs are promoted to the core framework.
+reference to it.
 
 =cut
 sub create_project {
-    # TODO this needs to be == 2 for bug mining or == 1 for non bug mining
-    #@_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
+    @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
     my $pid = shift;
-    my $work_dir = shift // "$SCRIPT_DIR/projects";
+    my $work_dir = "$PROJECTS_DIR";
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -142,17 +141,14 @@ The root (program) directory for a checked-out program version of this project.
 
 =cut
 sub new {
-    @_ == 7 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $work_dir) = @_;
+    @_ == 4 or die $ARG_ERROR;
+    my ($class, $pid, $prog, $vcs) = @_;
 
     my $self = {
         pid        => $pid,
         prog_name  => $prog,
         prog_root  => $ENV{PROG_ROOT} // "/tmp/${pid}_".time,
         _vcs       => $vcs,
-        _src_dir   => $src,
-        _test_dir  => $test,
-        _work_dir   => $work_dir,
         _build_file => "$work_dir/$pid/$pid.build.xml",
     };
     bless $self, $class;
@@ -389,9 +385,8 @@ sub checkout_vid {
     Utils::exec_cmd($cmd, "Initialize fixed program version")
             or confess("Couldn't tag fixed program version!");
 
-    # bug mining uses a special patch dir because we make the patches on the fly
-    # if it exists we use it if not we look for the main db patches, if those dont exist we will fail
-    my $patch_dir =  (-d "$self->{_work_dir}/$pid/patches") ? "$self->{_work_dir}/$pid/patches" : "$SCRIPT_DIR/projects/$pid/patches";
+    # Bug mining uses its own patch dir because it creates the patches on the fly
+    my $patch_dir =  "$PROJECTS_DIR/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
     # Apply patch to obtain buggy version
     $self->apply_patch($prog_root, $src_patch) or return 0;
@@ -550,7 +545,7 @@ sub run_ext_tests {
 
 Removes all broken tests in the checked-out program version. Which tests are broken and
 removed is determined based on the provided version id C<vid>:
-all tests listed in F<$SCRIPT_DIR/projects/$PID/failing_tests/rev-id> are removed.
+all tests listed in F<$PROJECTS_DIR/$PID/failing_tests/rev-id> are removed.
 
 =cut
 sub fix_tests {
@@ -560,18 +555,17 @@ sub fix_tests {
 
     my $pid = $self->{pid};
     my $dir = $self->test_dir($vid);
-    my $work_dir = $self->{_work_dir};
 
     # TODO: Exclusively use version ids rather than revision ids
     my $revision_id = $self->lookup($vid);
-    my $file = "$self->{_work_dir}/$pid/failing_tests/$revision_id";
+    my $file = "$PROJECTS_DIR/$pid/failing_tests/$revision_id";
 
     if (-e $file) {
         $self->exclude_tests_in_file($file, $dir);
     }
 
     # This code added to exclude test dependencies
-    my $dependent_test_file = "$self->{_work_dir}/$pid/dependent_tests";
+    my $dependent_test_file = "$PROJECTS_DIR/$pid/dependent_tests";
     if (-e $dependent_test_file) {
         $self->exclude_tests_in_file($dependent_test_file, $dir);
     }
@@ -1098,7 +1092,7 @@ sub _ant_call {
 #
 sub _modified_classes {
     my ($self, $bid) = @_;
-    my $project_dir = "$self->{_work_dir}/$self->{pid}";
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     open(IN, "<${project_dir}/modified_classes/${bid}.src") or warn "Cannot read modified classes, perhaps they have not been created yet?";
     my @classes = <IN>;
     close(IN);
@@ -1125,7 +1119,7 @@ sub _write_props {
     if(! $is_bugmine) {
         $mod_classes = $self->_modified_classes($bid);
 
-        my $project_dir = "$self->{_work_dir}/$self->{pid}";
+        my $project_dir = "$PROJECTS_DIR/$self->{pid}";
         my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
         $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
     }
@@ -1140,6 +1134,56 @@ sub _write_props {
         $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
     Utils::write_config_file("$self->{prog_root}/$PROP_FILE", $config);
+}
+
+#
+# Cache the directory-layout map from the project directory, if it exists.
+#
+sub _cache_layout_map {
+    my $self = shift;
+    my $pid = $self->{pid};
+    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    return unless -e $map_file;
+
+    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
+    my $cache = {};
+    while (<IN>) {
+        chomp;
+        /^([^,]+),([^,]+),(.+)$/ or die;
+        $cache->{$1} = {src=>$2, test=>$3};
+    }
+    close IN;
+    $self->{_layout_cache} = $cache;
+}
+
+#
+# Add a missing mapping to the directory-layout map
+#
+sub _add_to_layout_map {
+    @_ == 4 or die $ARG_ERROR;
+    my ($self, $rev_id, $src_dir, $test_dir) = @_;
+
+    my $pid = $self->{pid};
+    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    Utils::append_to_file_unless_matches($map_file, "${rev_id},${src_dir},${test_dir}\n", qr/^${rev_id}/);
+}
+
+#
+# Determines directory layout for a given revision. It returns the cached
+# layout, if it exists, or invokes determine_layout (has to be defined in each
+# Project module) to determine and cache the layout.
+#
+sub _determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    unless (defined $self->{_layout_cache}->{$rev_id}) {
+        $self->{_layout_cache}->{$rev_id} = $self->determine_layout($rev_id);
+        $self->_add_to_layout_map($rev_id,
+            $self->{_layout_cache}->{$rev_id}->{src},
+            $self->{_layout_cache}->{$rev_id}->{test}
+        );
+    }
+    return $self->{_layout_cache}->{$revision_id};
 }
 
 1;
