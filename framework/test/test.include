@@ -23,7 +23,7 @@ TMP_DIR=/tmp/test_d4j
 # By default exit on first error
 HALT_ON_ERROR=1
 
-# Indicate whether an error occured
+# Indicate whether an error occurred
 ERROR=0
 
 ################################################################################
