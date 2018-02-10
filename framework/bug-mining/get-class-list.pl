@@ -105,7 +105,24 @@ my ($PID, $BID, $WORK_DIR) =
     );
 
 pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
+
 $WORK_DIR = abs_path($WORK_DIR);
+
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Set the projects and repository directories to the current working directory.
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+$REPO_DIR = "$WORK_DIR/project_repos";
+
+my $project_dir = "$PROJECTS_DIR/$PID";
+# Directories for loaded and modified classes
+my $LOADED = "$project_dir/loaded_classes";
+my $MODIFIED = "$project_dir/modified_classes";
+
+# Directories containing triggering tests and patches
+my $TRIGGER = "$project_dir/trigger_tests";
+my $PATCHES = "$project_dir/patches";
 
 # TODO make output dir more flexible; maybe organize the csv-based db differently
 my $db_dir = $WORK_DIR;
@@ -122,14 +139,6 @@ system("mkdir -p $TMP_DIR");
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
-
-# Set up directory for loaded and modified classes
-my $LOADED = "$WORK_DIR/$PID/loaded_classes";
-my $MODIFIED = "$WORK_DIR/$PID/modified_classes";
-system("mkdir -p $LOADED $MODIFIED");
-# Directory containing triggering tests and patches
-my $TRIGGER = "$WORK_DIR/$PID/trigger_tests";
-my $PATCHES = "$WORK_DIR/$PID/patches";
 
 my @bids  = _get_bug_ids($BID);
 foreach my $vid (@bids) {

@@ -106,10 +106,11 @@ my $PATCH_DIR   = "$project_dir/patches";
 my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
+my $REL_CLASSES = "$project_dir/loaded_classes";
 # Directory for the perl module
 my $core_dir = "$WORK_DIR/framework/core/Project";
 
-system("mkdir -p $core_dir $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
+system("mkdir -p $core_dir $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES $REL_CLASSES");
 system("touch $project_dir/commit-db");
 
 # Copy module template and set project id and name
