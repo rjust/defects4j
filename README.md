@@ -3,31 +3,6 @@ Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
 
-Required CPAN Modules
-----------------------
-- URI
-- DBI
-- JSON
-- JSON::Parse.pm
-- DBD
-- DBD::CSV
-- PatchReader
-
-These can be installed using Carton CPAN module version manager, just make sure you prefix each command with `carton exec ...` to point perl to the write modules directory.
-
-Glossary
---------------
-Terms commonly used in Defects4J
-
-- `commit-db` : csv table for storage of issues we can use
-- `PID` : project id
-- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
-- `work_dir` : local directory to work out of
-- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
-- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
-- `revision_id` : a Vcs revision id
-- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
-
 The projects
 ---------------
 Defects4J contains 395 bugs from the following open-source projects:
@@ -57,26 +32,13 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
-Bug mining process
+Mining and contributing additional bugs
 ----------------------------
-1. Find candidate revisions by cross-referencing a development commit log
-   with an issue tracker database (jira, github etc).
-
-2. Project setup: Making sure that the candidate revisions are compilable and
-   conform to path expectations of `Defects4J`.
-
-3. Reproducing faults: Running tests to verify that the bug can be reproduced
-   reliably with a test that fails before the fix and passes afterwards.
-
-4. Reviewing revisions and promoting to main database: Manually determine
-   whether the bug fix is minimal (i.e., does not include features or
-   refactorings). If the bug fix is minimal, promote the bug to the main
-   `Defects4J` database!
-
-More information available in `framework/bug-mining/README.md`
+The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
 
 Requirements
 ----------------
+#### System requirements
  - Java 1.7
  - Perl >= 5.0.10
  - Git >= 1.9
@@ -88,9 +50,24 @@ Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
+#### Timezone
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, export the `TZ`
 environment variable accordingly.
+
+#### Perl modules
+The following additional Perl modules are required for bug mining:
+- URI
+- DBI
+- JSON
+- JSON::Parse
+- DBD
+- DBD::CSV
+
+These can be manually installed using CPAN or automatically installed on-demand
+using the *Carton* CPAN module version manager. Prefix any Perl script execution
+with `carton exec <script>` to have carton invoke the script and automatically
+install its dependencies.
 
 Getting started
 ----------------
@@ -227,6 +204,19 @@ Additional resources
 [fl-eval]: https://bitbucket.org/rjust/fault-localization-data
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
+
+Glossary
+--------------
+Terms commonly used in Defects4J
+
+- `commit-db` : csv table for storage of issues we can use
+- `PID` : project id
+- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
+- `work_dir` : local directory to work out of
+- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
+- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
+- `revision_id` : a Vcs revision id
+- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
 
 License
 ---------
