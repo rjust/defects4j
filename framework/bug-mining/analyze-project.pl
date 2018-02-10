@@ -333,9 +333,8 @@ sub _add_row {
 
 =head1 SEE ALSO
 
-All valid C<project_id>s are listed in F<Project.pm>
-To achieve workflow, after this script manually verify that all test failures are valid
-and not spurious, broken, random, or due to classpath issues.
+Previous step in workflow: Manually verify that all test failures (failing_tests)
+are valid and not spurious, broken, random, or due to classpath issues.
 
 Next step in workflow: F<get-trigger.pl>
 =cut
