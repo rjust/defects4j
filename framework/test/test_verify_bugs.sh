@@ -16,7 +16,12 @@ source test.include
 
 # Print usage message and exit
 usage() {
-    echo "usage: $0 [-b <bug id> ... | -b <bug id range> ... ] -p <project id>"
+    local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
+    echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
+    echo "Project ids:"
+    for pid in $known_pids; do
+        echo "  * $pid"
+    done
     exit 1
 }
 
@@ -45,7 +50,10 @@ done
 if [ "$PID" == "" ]; then
     usage
 fi
-#TODO: Check whether PID is one of {Chart, Closure, Lang, Math, Mockito, Time}
+
+if [ ! -e "$BASE_DIR/framework/core/Project/$PID.pm" ]; then
+    usage
+fi
 
 init
 
@@ -101,4 +109,13 @@ done
 rm -rf $work_dir
 HALT_ON_ERROR=1
 
+# Print a summary of what went wrong
+if [ $ERROR != 0 ]; then
+    printf '=%.s' $(seq 1 80) 1>&2
+    echo 1>&2
+    echo "The following errors occurred:" 1>&2
+    cat $LOG 1>&2
+fi
+
+# Indicate whether an error occurred
 exit $ERROR
