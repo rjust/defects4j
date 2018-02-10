@@ -78,6 +78,7 @@ use Pod::Usage;
 
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
+use Utils;
 
 my %cmd_opts;
 getopts('p:n:w:r:', \%cmd_opts) or pod2usage(1);
@@ -136,4 +137,6 @@ close(IN);
 close(OUT);
 
 # Clone the repository
-system("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git")
+Utils::exec_cmd("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git 2>&1"
+        . " && echo $NAME: Cloned from $URL >> $repo_dir/README",
+        "Cloning repository (please hang tight)") or die "Failed to clone repository";
