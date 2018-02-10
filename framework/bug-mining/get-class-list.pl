@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ export class names of loaded and modified classes.
 
 =head1 SYNOPSIS
 
-get-class-list.pl -p project_id -w work_dir [-v version_id]
+get-class-list.pl -p project_id -w work_dir [-b bug_id]
 
 =head1 OPTIONS
 
@@ -45,21 +45,21 @@ The id of the project for which loaded and modified classes are determined.
 
 Use C<work_dir> as the working directory.
 
-=item B<-v C<version_id>>
+=item B<-b C<bug_id>>
 
-Only analyze this version id or interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+Only analyze this bug id or interval of bug ids (optional).
+The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
 provided, the interval boundaries are included in the analysis.
-Per default all version ids are considered.
+Per default all bug ids are considered that are listed in $TAB_TRIGGER.
 
 =back
 
 =head1 DESCRIPTION
 
 Runs the following workflow for the project C<project_id> -- the loaded classes
-are written to F<C<work_dir>/"project_id"/loaded_classes> and the
+are written to F<C<PROJECTS_DIR>/"project_id"/loaded_classes> and the
 modified classes are written to
-F<C<work_dir>/projects/"project_id"/modified_classes>.
+F<C<PROJECTS_DIR/"project_id"/modified_classes>.
 
 For all version pairs that have reviewed triggering test(s) in $TAB_TRIGGER:
 
@@ -88,9 +88,6 @@ use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
 
-require PatchReader::Raw;
-require PatchReader::PatchInfoGrabber;
-
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Constants;
 use Project;
@@ -99,23 +96,23 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:v:w:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $VID, $WORK_DIR) =
+my ($PID, $BID, $WORK_DIR) =
     ($cmd_opts{p},
-     $cmd_opts{v},
+     $cmd_opts{b},
      $cmd_opts{w}
     );
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $VID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
 $WORK_DIR = abs_path($WORK_DIR);
 
-# TODO make output dir more flexible
+# TODO make output dir more flexible; maybe organize the csv-based db differently
 my $db_dir = $WORK_DIR;
 
-# Check format of target version id
-if (defined $VID) {
-    $VID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $VID!";
+# Check format of target bug id
+if (defined $BID) {
+    $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
 ############################### VARIABLE SETUP
@@ -123,7 +120,7 @@ if (defined $VID) {
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 # Set up directory for loaded and modified classes
@@ -134,8 +131,8 @@ system("mkdir -p $LOADED $MODIFIED");
 my $TRIGGER = "$WORK_DIR/$PID/trigger_tests";
 my $PATCHES = "$WORK_DIR/$PID/patches";
 
-my @ids  = _get_version_ids($VID);
-foreach my $vid (@ids) {
+my @bids  = _get_bug_ids($BID);
+foreach my $vid (@bids) {
     # Lookup revision ids
     my $v1  = $project->lookup("${vid}b");
     my $v2  = $project->lookup("${vid}f");
@@ -197,30 +194,13 @@ foreach my $vid (@ids) {
     }
     close(OUT);
 
-    # Read patch file and determine modified files
+    # Determine modified files
     #
     # Note:
-    # We use the source patch file instead of the Vcs-diff between
-    # v1 and v2 since the patch might have been minimized
-    my $filename = "$PATCHES/$vid.src.patch";
-    my $reader = new PatchReader::Raw();
-    my $patch_info_grabber = new PatchReader::PatchInfoGrabber();
-    $reader->sends_data_to($patch_info_grabber);
-    $reader->iterate_file($filename);
-    my $patch_info = $patch_info_grabber->patch_info();
-
-    # Write list of modified classes
-    open(OUT, ">$MODIFIED/$vid.src") or die "Cannot write modified classes!";
-    foreach (keys(%{$patch_info->{files}})) {
-        # Skip modified properties and js files
-        next if /^(a\/)?(.+)\.properties/;
-        next if /^(a\/)?(.+)\.js/;
-        s/^(a\/)?(.+)\.java/$2/ or die "Unknown file format: $_!";
-        s/\//\./g;
-
-        print OUT "$_\n";
-    }
-    close(OUT);
+    # This util script uses the possibly minimized source patch file instead of
+    # the Vcs-diff between the pre-fix and post-fix revision.
+    Utils::exec_cmd("$UTIL_DIR/get_modified_classes.pl -p $PID -b $vid > $MODIFIED/$vid.src",
+            "Exporting the set of modified classes");
 }
 # Remove temporary directory
 system("rm -rf $TMP_DIR");
@@ -232,12 +212,12 @@ system("rm -rf $TMP_DIR");
 # - Triggering test exists
 #    + Triggering test fails in isolation on rev1
 #
-sub _get_version_ids {
-    my $target_vid = shift;
+sub _get_bug_ids {
+    my $target_bid = shift;
 
     my $min_id;
     my $max_id;
-    if (defined($target_vid) && $target_vid =~ /(\d+)(:(\d+))?/) {
+    if (defined($target_bid) && $target_bid =~ /(\d+)(:(\d+))?/) {
         $min_id = $max_id = $1;
         $max_id = $3 if defined $3;
     }
@@ -252,13 +232,13 @@ sub _get_version_ids {
     $sth->execute($PID) or die "Cannot query database: $dbh->errstr";
     my @ids = ();
     foreach (@{$sth->fetchall_arrayref}) {
-        my $vid = $_->[0];
+        my $bid = $_->[0];
 
         # Filter ids if necessary
-        next if (defined $min_id && ($vid<$min_id || $vid>$max_id));
+        next if (defined $min_id && ($bid<$min_id || $bid>$max_id));
 
         # Add id to result array
-        push(@ids, $vid);
+        push(@ids, $bid);
     }
     $sth->finish();
     $dbh->disconnect();
