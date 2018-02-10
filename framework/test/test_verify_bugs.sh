@@ -100,3 +100,5 @@ for bid in $(echo $BUGS); do
 done
 rm -rf $work_dir
 HALT_ON_ERROR=1
+
+exit $ERROR
