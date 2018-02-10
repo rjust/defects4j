@@ -238,10 +238,10 @@ sub contains_version_id {
 
 =pod
 
-  $vcs->checkout_vid(vid, prog_root)
+  $vcs->checkout_vid(vid, work_dir)
 
 Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
-the corresponding revision with C<revision_id> to F<prog_root>.
+the corresponding revision with C<revision_id> to F<work_dir>.
 Format of C<vid>: C<\d+[bf]>.
 
 B<Always performs a clean checkout, i.e., the working directory is deleted before the
@@ -250,17 +250,17 @@ checkout, if it already exists>.
 =cut
 sub checkout_vid {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $vid, $prog_root) = @_;
+    my ($self, $vid, $work_dir) = @_;
     Utils::check_vid($vid);
     my $revision_id = $self->lookup($vid);
 
     # Check whether working directory exists
-    if (-d $prog_root) {
+    if (-d $work_dir) {
         # Check whether we should not delete the existing directory: do not
         # delete if it is not empty or not a previously used working directory
 
         # Is the existing directory empty?
-        opendir(DIR, $prog_root) or die "Could not open directory: $prog_root!";
+        opendir(DIR, $work_dir) or die "Could not open directory: $work_dir!";
         my @entries = readdir(DIR);
         closedir(DIR);
         my $dir_empty=1;
@@ -273,33 +273,33 @@ sub checkout_vid {
         # If the directory is not empty check whether it is a previously used
         # working directory, and delete all files if so.
         unless ($dir_empty) {
-            my $config = Utils::read_config_file("$prog_root/$CONFIG");
+            my $config = Utils::read_config_file("$work_dir/$CONFIG");
             unless(defined $config) {
-                die "Directory exists but is not a previously used working directory: $prog_root";
+                die "Directory exists but is not a previously used working directory: $work_dir";
             }
 
             foreach (@entries) {
                 next if m/^\.\.?$/;
-                system("rm -rf $prog_root/$_") == 0 or confess("Failed to clean working directory: $!");
+                system("rm -rf $work_dir/$_") == 0 or confess("Failed to clean working directory: $!");
             }
         }
     } else {
-        make_path($prog_root) or confess("Failed to create working directory: $!");
+        make_path($work_dir) or confess("Failed to create working directory: $!");
     }
 
     # Get and run specific checkout command
-    my $cmd = $self->_checkout_cmd($revision_id, $prog_root);
-    Utils::exec_cmd($cmd, "Checking out " . _trunc_rev_id($revision_id) . " to $prog_root") or return 0;
+    my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
+    Utils::exec_cmd($cmd, "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir") or return 0;
 
     # Check whether post-checkout hook is provided
-    $self->{_co_hook}($self, $revision_id, $prog_root) if defined $self->{_co_hook};
+    $self->{_co_hook}($self, $revision_id, $work_dir) if defined $self->{_co_hook};
 
     # Write version info file to indicate that this directory is a Defects4J
     # working directory.
     my %config = ();
     $config{$CONFIG_PID} = $self->{pid};
     $config{$CONFIG_VID} = $vid;
-    Utils::write_config_file("$prog_root/$CONFIG", \%config);
+    Utils::write_config_file("$work_dir/$CONFIG", \%config);
 }
 
 =pod

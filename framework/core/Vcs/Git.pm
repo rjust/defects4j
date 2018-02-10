@@ -52,7 +52,7 @@ sub _checkout_cmd {
 sub _apply_cmd {
     @_ == 3 or confess($ARG_ERROR);
     my ($self, $work_dir, $patch_file) = @_;
-    return "cd $work_dir && git apply -v $patch_file 2>&1";
+    return "cd $work_dir && git apply $patch_file 2>&1";
 }
 
 sub _diff_cmd {
