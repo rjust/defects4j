@@ -1,8 +1,27 @@
-Creating a bug-mining working directory and configuring a project
+Overview of the bug-mining process
+----------------------------
+1. Initializing the bug-mining working directory and configuring the project.
+
+2. Identifying candidate bugs by cross-referencing the project's version control
+   history with the project's bug tracker.
+
+3. Analyzing the pre-fix and post-fix revisions of the candidate bugs:
+   Making sure that the revisions are compilable and testable.
+
+4. Reproducing bugs: Running tests to verify that the bug can be reliably
+   reproduced with a test that fails before the fix and passes afterwards.
+
+5. Reviewing and isolating bugs: Manually minimize the bug if necessary (i.e.,
+   eliminate features or refactorings).
+
+6. Promoting reproducible bugs to the main database:
+   Promote all reproducible minimized bugs to the main `Defects4J` database!
+
+Initializing the bug-mining working directory and configuring the project
 -------------------------
 A Perl module, a wrapper build file, and a cloned repository are necessary to
 mine defects for a (new) project in `Defects4J` -- templates and a wrapper
-script exist ease the configuration process.
+script exist that ease the configuration process.
 
 1. Suppose the project's name is `my-awesome-project`, the project's repository
 URL is `https://github.com/my-awesome-project`, and the short, descriptive
@@ -31,23 +50,7 @@ included in Defects4J, is *commons-lang*, and its project id is *Lang*.
 
 3. Adapt the Wrapper build file
 
-Overview of the bug-mining process for a configured project
-----------------------------
-1. Finding candidate revisions by cross-referencing a development commit log
-   with an issue tracker database.
-
-2. Project setup: Making sure that the candidate revisions are compilable and
-   conform to path expectations of `Defects4J`.
-
-3. Reproducing faults: Running tests to verify that the bug can be reproduced
-   reliably with a test that fails before the fix and passes afterwards.
-
-4. Reviewing revisions and promoting to main database: Manually determine
-   whether the bug fix is minimal (i.e., does not include features or
-   refactorings). If the bug fix is minimal, promote the bug to the main
-   `Defects4J` database!
-
-The candidate commit database `commit-db`
+Identifying candidate bugs (populating the `commit-db`)
 -------------------------
 1. Bug mining starts with identifying the issue tracker for the project you are
    interested in. Defects4j's bug-mining framework supports:
@@ -101,7 +104,7 @@ The candidate commit database `commit-db`
    Provide `verify-bug-sf.sh <project_id>` as the `-c` option to do this query
    on an individual basis.
 
-Project setup
+Analyzing the pre-fix and post-fix revisions of the candidate bugs
 ------------
 1. Initialize all project revisions with `initialize-revisions.pl`. This script
    will identify the various directory layouts and run a sanity check on each
@@ -112,7 +115,7 @@ Project setup
    candidates -- ones that compile and have a non-empty source diff:
     - `./analyze-project.pl -p Lang -w bug-mining`
 
-Reproducing faults
+Reproducing bugs
 -------------
 1. Determine triggering tests with `get-trigger.pl`. This will determine the
    revisions in `commit-db` that have a test that can reproduce a fault:
@@ -124,7 +127,7 @@ Reproducing faults
    triggering test:
     - `./get-class-list.pl -p Lang -w bug-mining`
 
-Reviewing revisions and promoting to main database
+Reviewing and isolating the bugs
 ------------------
 1. Each reproducible fault has an entry in the `trigger_tests` directory:
     - `ls bug-mining/framework/projects/<project_id>/trigger_tests`
@@ -145,7 +148,9 @@ Reviewing revisions and promoting to main database
    Note that the patch is the *reverse* patch, i.e., patching the fixed revision
    with this patch will reintroduce the fault.
 
-4. For each fault, if the diff is minimal (i.e., does not include features or
+Promoting reproducible bugs to the main database
+------------------
+1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
     - `./promote-to-directory.pl -p <project_id> -v <id> -w bug-mining`
 
