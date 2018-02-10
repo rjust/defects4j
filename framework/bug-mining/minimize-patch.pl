@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2015 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ minimize-patch.pl -- View and minimize patch in a merge editor.
 
 =head1 SYNOPSIS
 
-minimize-patch.pl -p project_id -w work_dir -v version_id
+minimize-patch.pl -p project_id -w work_dir -b bug_id
 
 =head1 OPTIONS
 
@@ -44,9 +44,9 @@ The id of the project for which a patch should be minimized.
 
 Use C<work_dir> as the working directory.
 
-=item B<-v C<version_id>>
+=item B<-b C<bug_id>>
 
-The id of the project version for which a patch should be minimized.
+The id of the bug for which a patch should be minimized.
 
 =back
 
@@ -68,9 +68,9 @@ use Project;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:w:v:', \%cmd_opts) or pod2usage(1);
+getopts('p:w:b:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w} and defined $cmd_opts{v};
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w} and defined $cmd_opts{b};
 
 =pod
 
@@ -84,27 +84,38 @@ my $EDITOR = $ENV{"D4J_EDITOR"} // "meld";
 
 my $PID      = $cmd_opts{p};
 my $WORK_DIR = $cmd_opts{w};
-my $VID      = $cmd_opts{v};
+my $BID      = $cmd_opts{b};
 # Check format of target version id
-$VID =~ /^(\d+)$/ or die "Wrong version id format: $VID -- expected: (\\d+)!";
+$BID =~ /^(\d+)$/ or die "Wrong version id format: $BID -- expected: (\\d+)!";
 
 $WORK_DIR = abs_path("$WORK_DIR");
-my $patch_dir = $WORK_DIR . "/$PID/patches";
--e $patch_dir or die "Cannot read patch directory: $patch_dir";
 
-my $src_patch = "$patch_dir/${VID}.src.patch";
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Set the projects and repository directories to the current working directory.
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+$REPO_DIR = "$WORK_DIR/project_repos";
+
+my $PATCH_DIR   = "$PROJECTS_DIR/$PID/patches";
+-d $PATCH_DIR or die "Cannot read patch directory: $PATCH_DIR";
 
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
+my $src_patch = "$PATCH_DIR/$BID.src.patch";
+
 # Set up project
-my $project = Project::create_project($PID, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
-my $rev = $project->lookup("${VID}f");
-my $src_path = $project->src_dir($rev);
-$project->checkout_vid("${VID}f", $TMP_DIR, 1);
-$project->apply_patch($TMP_DIR, $src_patch) or die;
+my $src_path = $project->src_dir("${BID}f");
+$project->checkout_vid("${BID}f", $TMP_DIR, 1);
+$project->apply_patch($TMP_DIR, $src_patch) or die "Cannot apply patch";
+
+# Copy the non-minimized patch
+Utils::exec_cmd("cp $src_patch $TMP_DIR", "Back up original patch")
+        or die "Cannot backup patch file";
 
 # Minimize patch with configured editor
 system("$EDITOR $TMP_DIR");
@@ -121,11 +132,25 @@ my $min=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $min;
 
 # Last chance to reject patch
-system("cd $TMP_DIR; git diff $orig:$src_path $min:$src_path");
+system("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path");
 print "Patch correct? [y/n] >";
 $input = <STDIN>; chomp $input;
 exit 0 unless $input eq "y";
-system("cd $TMP_DIR; git diff $orig:$src_path $min:$src_path > $src_patch");
+
+# Store minimized patch
+Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $src_patch",
+        "Export minimized patch") or die "Cannot export patch";
+
+# Run sanity check
+# Export variables to make sure the sanity check script picks up the right directories.
+$ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
+$ENV{'REPO_DIR'} = abs_path($REPO_DIR);
+# TODO: This should also be configurable in Constants.pm
+$ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
+if (!Utils::exec_cmd("$UTIL_DIR/sanity_check.pl -p$PID -b$BID", "Run sanity check")) {
+    Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
+            or die "Cannot restore patch";
+}
 
 # Remove temporary directory
  system("rm -rf $TMP_DIR");
