@@ -81,6 +81,16 @@ sub _post_checkout {
 }
 
 #
+# This subroutine is called by the bug-mining framework for each revision during
+# the initialization of the project. Example uses are: converting and caching
+# build files or other time-consuming tasks, whose results should be cached.
+#
+sub initialize_revision {
+    my ($self, $revision, $vid) = @_;
+    $self->SUPER::initialize_revision($revision);
+}
+
+#
 # Distinguish between project layouts and determine src and test directories.
 # Each _layout subroutine returns undef if it doesn't match the layout of the
 # checked-out version. Otherwise, it returns a hash that provides the src and
