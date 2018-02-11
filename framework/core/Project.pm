@@ -49,13 +49,11 @@ A specific project instance can be created with C<create_project(project_id)>.
   sub new {
     my $class = shift;
     my $name  = "my-project-name";
-    my $src   = "src/main/java";
-    my $test  = "src/test/java";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
-                              "$SCRIPT_DIR/projects/$PID/commit-db");
+                              "$PROJECTS_DIR/$PID/commit-db");
 
-    return $class->SUPER::new($name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 =head1 DESCRIPTION
