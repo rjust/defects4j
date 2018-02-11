@@ -104,11 +104,11 @@ sub _layout2 {
 # Copy the generated build.xml, if necessary.
 #
 sub _post_checkout {
-    my ($self, $revision_id, $prog_root) = @_;
+    my ($self, $revision_id, $work_dir) = @_;
 
     # Check whether ant build file exists
     unless (-e "$prog_root/build.xml") {
-        system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $prog_root");
+        system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $work_dir");
     }
 }
 
