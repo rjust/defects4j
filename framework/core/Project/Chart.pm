@@ -37,6 +37,8 @@ package Project::Chart;
 use strict;
 use warnings;
 
+use Carp qw(confess);
+
 use Constants;
 use Vcs::Svn;
 
@@ -72,14 +74,15 @@ sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
 
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
-    opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
     my @entries = readdir(DIR);
     closedir(DIR);
 
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
             if ($revision_id >= $1 && $revision_id <= $2) {
-                $self->{_vcs}->apply_patch($work_dir, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
             }
         }
     }

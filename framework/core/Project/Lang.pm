@@ -107,7 +107,7 @@ sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
 
     # Check whether ant build file exists
-    unless (-e "$prog_root/build.xml") {
+    unless (-e "$work_dir/build.xml") {
         system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $work_dir");
     }
 }
