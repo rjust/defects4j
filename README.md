@@ -50,10 +50,12 @@ Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
-#### Timezone
+#### Timezone and locale settings
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, export the `TZ`
-environment variable accordingly.
+environment variable accordingly. All bugs are deterministically reproducible
+using the following locale settings: English (US), UTF-8. While many other
+locales work as well, this is the default used for testing.
 
 #### Perl modules
 The following additional Perl modules are required for bug mining:
