@@ -23,7 +23,7 @@ TMP_DIR=/tmp/test_d4j
 # By default exit on first error
 HALT_ON_ERROR=1
 
-# Indicate whether an error occured
+# Indicate whether an error occurred
 ERROR=0
 
 ################################################################################
@@ -196,18 +196,25 @@ test_mutation() {
 }
 
 # Run coverage analysis
-# test_coverage <pid> <suite_dir>
+# test_coverage <pid> <suite_dir> <all_flag>
 test_coverage() {
-    [ $# -eq 2 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir>"
+    [ $# -eq 3 ] || die "usage: ${FUNCNAME[0]} <pid> <suite_dir> <all_flag>"
     local pid=$1
     local suite_dir=$2
+    local all_flag=$3
 
     local db_dir=$TMP_DIR/result_db
     # Clean result table
     rm -f $db_dir/coverage
 
-    # Run coverage analysis for all test suites in suite_dir 
-    run_coverage.pl -p $pid -d $suite_dir -o $db_dir || die "run coverage analysis"
+    # Run coverage analysis for all test suites in suite_dir
+    if [ $all_flag -eq 1 ]; then
+        # -A => collect coverage data for all methods, not just methods with defects
+        # -I => report coverage for failing tests
+        run_coverage.pl -p $pid -d $suite_dir -o $db_dir -A -I || die "run coverage analysis"
+      else
+        run_coverage.pl -p $pid -d $suite_dir -o $db_dir || die "run coverage analysis"
+    fi
 
     # Check results for each test suite
     for file in $(get_test_suites $pid $suite_dir); do

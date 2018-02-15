@@ -30,7 +30,7 @@ run_coverage.pl -- code coverage analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-  run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D] [-A]
+  run_coverage.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-D] [-A | -i instrument_classes] [-I]
 
 =head1 OPTIONS
 
@@ -65,6 +65,12 @@ test suites for the given project id are analyzed.
 The temporary root directory to be used to check out program versions (optional).
 The default is F</tmp>.
 
+=item -i F<instrument_classes>
+
+Measure code coverage for all classes listed in F<instrument_classes> (optional). By
+default, code coverage is measured only for the classes modified by the bug fix. The file
+F<instrument_classes> must contain fully-qualified class names -- one class per line.
+
 =item -D
 
 Debug: Enable verbose logging and do not delete the temporary check-out directory
@@ -75,6 +81,10 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 All relevant classes: Measure code coverage for all relevant classes (i.e., all
 classes touched by the triggering tests). By default code coverage is measured
 only for classes modified by the bug fix.
+
+=item -I
+
+Ignore failing tests; report all coverage data.
 
 =back
 
@@ -110,7 +120,7 @@ use DB;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:d:v:t:o:f:DA', \%cmd_opts) or pod2usage(1);
+getopts('p:d:v:t:o:f:i:DAI', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{d} and defined $cmd_opts{o};
 
@@ -123,6 +133,14 @@ my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $INCL = $cmd_opts{f} // "*.java";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
+
+# Directory of class lists used for instrumentation step
+my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
+my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
+my $INSTRUMENT_CLASSES = $cmd_opts{i} if defined $cmd_opts{i};
+if (defined $cmd_opts{A} && defined $cmd_opts{i}) {
+    pod2usage( { -verbose => 1, -input => __FILE__} );
+}
 
 # Set up project
 my $project = Project::create_project($PID);
@@ -191,10 +209,6 @@ Examples:
 
 # Get all test suite archives that match the given project id and version id
 my $test_suites = Utils::get_all_test_suites($SUITE_DIR, $PID, $VID);
-
-# Directory of class lists used for instrumentation step
-my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
-my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
 
 # Get database handle for result table
 my $dbh_out = DB::get_db_handle($TAB_COVERAGE, $OUT_DIR);
@@ -273,11 +287,19 @@ sub _run_coverage {
 
     my $src_dir = $project->src_dir($vid);
     my $test_log = "$TMP_DIR/.coverage.log"; `>$test_log`;
-    my $cov_info = Coverage::coverage_ext($project, "$TARGET_CLASSES_DIR/$bid.src", $src_dir, $test_dir, $INCL, $test_log);
+    my $cov_info;
+    if (defined $INSTRUMENT_CLASSES) {
+      $cov_info = Coverage::coverage_ext($project, "$INSTRUMENT_CLASSES", $src_dir, $test_dir, $INCL, $test_log);
+    } else {
+      $cov_info = Coverage::coverage_ext($project, "$TARGET_CLASSES_DIR/$bid.src", $src_dir, $test_dir, $INCL, $test_log);
+    }
     if (Utils::has_failing_tests($test_log)) {
         $LOG->log_msg(" - Broken test suite: $archive");
         printf ("Broken test suite: $archive\n");
-        $cov_info = {};
+        # randoop generated tests often have asserts; we may still want the coverage data
+        if (! defined $cmd_opts{I}) {
+            $cov_info = {};
+        }
         system("cp $test_log $LOG_DIR/$suite_src/$vid.$test_id.failing.log") == 0
             or die "Cannot copy stack traces from failing tests";
     }
