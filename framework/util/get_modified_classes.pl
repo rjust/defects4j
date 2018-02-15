@@ -82,7 +82,7 @@ my $project = Project::create_project($PID);
 my $src_dir = $project->src_dir("${BID}f");
 
 # Directory that holds all patches for the given project ID
-my $patch = "$SCRIPT_DIR/projects/$PID/patches/$BID.src.patch";
+my $patch = "$PROJECTS_DIR/$PID/patches/$BID.src.patch";
 -e $patch or die "Cannot read patch: $patch";
 
 my $classes;

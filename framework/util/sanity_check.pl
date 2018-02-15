@@ -143,7 +143,7 @@ foreach my $bid (@ids) {
         else {
             my $error = 0;
             # Get all expected triggering tests
-            $trigger = Utils::get_failing_tests("$SCRIPT_DIR/projects/$PID/trigger_tests/$bid") or die "Cannot determine expected triggering tests!";
+            $trigger = Utils::get_failing_tests("$PROJECTS_DIR/$PID/trigger_tests/$bid") or die "Cannot determine expected triggering tests!";
             # Verify that each expected triggering test indeed exists in actual triggers
             foreach my $test ((@{$trigger->{classes}}, @{$trigger->{methods}})) {
                 if (!defined $actual_triggers{$test}) {
