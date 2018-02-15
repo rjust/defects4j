@@ -35,8 +35,9 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
 ## Math
-    - script: carton exec ./test_verify_bugs.sh -p Math -b1..27
-    - script: carton exec ./test_verify_bugs.sh -p Math -b28..54
+    - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
+    - script: carton exec ./test_verify_bugs.sh -p Math -b19..36
+    - script: carton exec ./test_verify_bugs.sh -p Math -b20..54
     - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
     - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
 ## Mockito
