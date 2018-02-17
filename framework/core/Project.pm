@@ -1024,8 +1024,10 @@ sub apply_patch {
     return $self->{_vcs}->apply_patch(@_);
 }
 
+# TODO: Document the purpose of this subroutine and indicate that it needs to be
+# implemented in an inheriting module.
 sub initialize_revision {
-    my ($self, $revision) = @_; shift;
+    my ($self, $revision, $vid) = @_;
 }
 
 ##########################################################################################
