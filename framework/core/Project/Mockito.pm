@@ -44,34 +44,30 @@ our @ISA = qw(Project);
 my $PID  = "Mockito";
 
 sub new {
-    @_ == 2 or die $ARG_ERROR;
-    my ($class, $work_dir) = @_;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
 
     my $name = "mockito";
-    my $src  = "src/main/java";
-    my $test = "src/test/java";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$work_dir/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test, $work_dir);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 sub _post_checkout {
-    my ($vcs, $revision, $prog_root) = @_;
-    my $name = $vcs->{prog_name};
-
-    #
-    # Post-checkout tasks include, for instance, providing proper build files,
-    # fixing compilation errors, etc.
+    my ($self, $rev_id, $prog_root) = @_;
 
     # Fix Mockito's test runners
-    my $id = $vcs->lookup_revision_id($revision);
-    # TODO: Remove this occurrence of SCRIPT_DIR/projects
-    my $mockito_junit_runner_patch_file = "$SCRIPT_DIR/projects/$PID/mockito_test_runners.patch";
-    if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
-        $vcs->apply_patch($prog_root, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
+    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+    # TODO: Testing for vids is super brittle! Find a better way to determine
+    # whether a test class needs to be patched, or provide a patch for each
+    # affected revision id.
+    my $mockito_junit_runner_patch_file = "$PROJECTS_DIR/$PID/mockito_test_runners.patch";
+    if ($vid == 16 || $vid == 17 || ($vid >= 34 && $vid <= 38)) {
+        $self->apply_patch($prog_root, "$mockito_junit_runner_patch_file")
+                or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
     # Change Url to Gradle distribution
@@ -102,79 +98,17 @@ sub _post_checkout {
     }
 }
 
-#
-# Remove falky tests in addition to the broken ones
-#
-sub fix_tests {
+sub determine_layout {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    # Call fix_tests in super class to fix all broken methods
-    $self->SUPER::fix_tests($vid);
-
-    # Remove randomly failing tests
+    my ($self, $rev_id) = @_;
     my $work_dir = $self->{prog_root};
-    my $dir = $self->test_dir($vid);
-
-    my $file = "$SCRIPT_DIR/projects/$PID/flaky_tests";
-    if (-e $file) {
-        # Remove broken test methods
-        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
+    if (-e "$work_dir/src/main/java") {
+        return {src=>"src/main/java", test=>"src/test/java"};
+    } elsif(-e "$work_dir/src") {
+        return {src=>"src", test=>"test"};
+    } else {
+        die "Unknown directory layout";
     }
-}
-
-sub src_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($vid);
-}
-
-sub test_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($vid);
-}
-
-sub _build_dir_map {
-    my $self = shift;
-
-    return if defined $self->{_dir_map};
-
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
-    }
-    close IN;
-    $self->{_dir_map}=$cache;
 }
 
 sub _ant_call {
