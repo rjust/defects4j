@@ -23,23 +23,23 @@ jobs:
   include:
     # Test the tutorial and basic commands
     - script: carton exec ./test_tutorial.sh
-    - script: carton exec ./test_mutation_analysis.sh
-    - script: carton exec ./test_randoop.sh
-    - script: carton exec ./test_fix_test_suite.sh
+#    - script: carton exec ./test_mutation_analysis.sh
+#    - script: carton exec ./test_randoop.sh
+#    - script: carton exec ./test_fix_test_suite.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
     # take a long time to finish.
     - stage: verify
 ## Chart
-      script: carton exec ./test_verify_bugs.sh -p Chart
+#      script: carton exec ./test_verify_bugs.sh -p Chart
 ## Lang
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
+#    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
+#    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
 ## Math
-    - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
-    - script: carton exec ./test_verify_bugs.sh -p Math -b19..36
-    - script: carton exec ./test_verify_bugs.sh -p Math -b20..54
-    - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
-    - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
+#    - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
+#    - script: carton exec ./test_verify_bugs.sh -p Math -b19..36
+#    - script: carton exec ./test_verify_bugs.sh -p Math -b20..54
+#    - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
+#    - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
 ## Mockito
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..5
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
