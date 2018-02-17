@@ -71,13 +71,11 @@ sub determine_layout {
 }
 
 #
-# Post-checkout tasks include, for instance, providing proper build files,
+# Post-checkout tasks include, for instance, providing cached build files,
 # fixing compilation errors, etc.
 #
 sub _post_checkout {
-    my ($vcs, $revision_id, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
-
+    my ($self, $rev_id, $work_dir) = @_;
 }
 
 #
@@ -86,7 +84,7 @@ sub _post_checkout {
 # build files or other time-consuming tasks, whose results should be cached.
 #
 sub initialize_revision {
-    my ($self, $revision, $vid) = @_;
+    my ($self, $rev_id, $vid) = @_;
     $self->SUPER::initialize_revision($revision);
 }
 
