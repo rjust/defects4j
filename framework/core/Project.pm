@@ -945,14 +945,14 @@ sub lookup {
 
 =pod
 
-  $project->lookup_revision_id(revision)
+  $project->lookup_vid(revision_id)
 
 Delegate to the L<VCS> backend.
 
 =cut
-sub lookup_revision_id {
-    my ($self, $revision) = @_;
-    return $self->{_vcs}->lookup_revision_id($revision);
+sub lookup_vid {
+    my ($self, $rev_id) = @_;
+    return $self->{_vcs}->lookup_vid($rev_id);
 }
 
 =pod
