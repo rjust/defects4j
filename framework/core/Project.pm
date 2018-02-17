@@ -558,6 +558,8 @@ sub fix_tests {
     my $dir = $self->test_dir($vid);
 
     # TODO: Exclusively use version ids rather than revision ids
+    # -> The bug-mining script that populates the database should deal with any
+    # ID conversions.
     my $revision_id = $self->lookup($vid);
     my $failing_tests_file = "$PROJECTS_DIR/$pid/failing_tests/$revision_id";
     if (-e $failing_tests_file) {
