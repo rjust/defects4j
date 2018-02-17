@@ -75,15 +75,12 @@ sub _post_checkout {
                 "Copy generated Ant build file") or die;
     }
 
-#    TODO: Double-check whether we need to patch auto-generated Ant build files
-#    when performing additional bug mining; if so, the build files generated
-#    in initialize_revision should be patched and cached.
-#
-#    # Check for a broken-build-revision
-#    my $filename = "$project_dir/broken-builds/build-${rev_id}.xml";
-#    if (-e $filename) {
-#        system ("cp $filename $work_dir/build.xml");
-#    }
+    # Check for a broken-build-revision
+    my $filename = "$project_dir/broken-builds/build-${rev_id}.xml";
+    if (-e $filename) {
+        Utils::exec_cmd("cp $filename $work_dir/build.xml",
+                "Fix broken build") or die;
+    }
 }
 
 sub determine_layout {
