@@ -139,23 +139,22 @@ Reviewing and isolating the bugs
     - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
 
 3. Manually review the diff for each fault and make sure it is minimal. Every
-   reproducible fault has an entry with the file name `<id>.src.patch` in the
+   reproducible fault has an entry with the file name `<bid>.src.patch` in the
    `patches` directory:
      - `ls -l Lang/patches/*.src.patch`
      - `ls -l bug-mining/framework/projects/<project_id>/patches/*.src.patch`
-     - `./minimize-patch.pl -p <project_id> -v <id> -w bug-mining`
+     - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
 
-   Note that the patch is the *reverse* patch, i.e., patching the fixed revision
+   Note that the patch is the *reverse* patch, i.e., patching the fixed version
    with this patch will reintroduce the fault.
 
 Promoting reproducible bugs to the main database
 ------------------
 1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
-    - `./promote-to-directory.pl -p <project_id> -v <id> -w bug-mining`
+    - `./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining`
 
-   Note: Make sure to specify the `-v` option as the default is to promote all
-         found bugs!
+   Note: Make sure to specify the `-b` option as the default is to promote all bugs!
 
 Glossary
 --------------
