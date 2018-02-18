@@ -161,13 +161,14 @@ Glossary
 --------------
 Terms commonly used in Defects4J
 
-- `commit-db` : csv table for storage of issues we can use
-- `PID` : project id
-- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
-- `work_dir` : local directory to work out of
-- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
-- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
-- `revision_id` : a Vcs revision id
-- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
-
-
+- `PID`: *Project ID* (e.g., Lang, Math, Closure, etc.).
+- `BID`: *Bug ID* (Defects4J enumerates all bugs per project, and the bug id is
+         an integer. Historically, numerically higher BIDs are older bugs. As of
+         *v1.3.0*, this is reversed -- with existing BIDs preserved).
+- `VID`: *Version ID* ({BID}**b** refers to the **b**uggy and {BID}**f** refers
+         to the **f**ixed version of a bug with the bug id {BID}.
+- `VCS`: Version control system (e.g., git, mercurial, or subversion; all VCS
+         abstractions in Defects4J inherit from Vcs.pm).
+- `Rev ID`: A VCS-specific revision id (e.g., a git commit hash).
+- `commit-db`: A csv file, per project, that maps each BID to the revision ids
+               of the pre-fix and post-fix revision.
