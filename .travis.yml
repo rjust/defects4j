@@ -33,7 +33,8 @@ jobs:
       script: carton exec ./test_verify_bugs.sh -p Chart
 ## Closure
     - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
-    - script: carton exec ./test_verify_bugs.sh -p Closure -b11..20
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b11..15
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b16..20
     - script: carton exec ./test_verify_bugs.sh -p Closure -b21..30
     - script: carton exec ./test_verify_bugs.sh -p Closure -b31..40
     - script: carton exec ./test_verify_bugs.sh -p Closure -b41..50
