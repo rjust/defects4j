@@ -207,19 +207,6 @@ Additional resources
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
 
-Glossary
---------------
-Terms commonly used in Defects4J
-
-- `commit-db` : csv table for storage of issues we can use
-- `PID` : project id
-- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
-- `work_dir` : local directory to work out of
-- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
-- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
-- `revision_id` : a Vcs revision id
-- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
-
 License
 ---------
 MIT License, see `license.txt` for more information.
