@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Build_Analyzer" default="jar" basedir=".">
+
+    <property name="dir.src.classes"    value = "src"/>
+    <property name="dir.src.tests"      value = "test"/>
+    <property name="dir.target"         value = "bin"/>
+    <property name="dir.target.classes" value = "${dir.target}/classes"/>
+    <property name="dir.target.tests"   value = "${dir.target}/tests"/>
+    <property name="dir.jar" value = "../"/>
+
+    <!-- Base compile classpath -->
+    <path id="compile.classpath">
+        <!-- Add libraries if necessary -->
+        <pathelement location="${dir.target.classes}" />
+        <pathelement location="lib/ant-launcher-1.9.1.jar"/>
+        <pathelement location="lib/ant-1.9.1.jar"/>
+    </path>
+
+    <!-- Test classpath -->
+    <path id="test.classpath">
+        <pathelement location="${dir.target.classes}"/>
+        <pathelement location="${dir.target.tests}"/>
+        <pathelement location="lib/junit-4.11.jar"/>
+        <pathelement location="lib/commons-io-2.6.jar"/>
+    </path>
+
+    <target name="clean" description="Clean the project">
+        <delete dir="${dir.target}" />
+        <delete file="failing-tests.txt" />
+    </target>
+
+    <target name="init" description="Init directories">
+        <mkdir dir="${dir.target.classes}" />
+        <mkdir dir="${dir.target.tests}" />
+    </target>
+
+    <target name="compile" depends="init" description="Compile the sources">
+        <javac srcdir="${dir.src.classes}"
+              destdir="${dir.target.classes}"
+    includeantruntime="true"
+                debug="true"
+               source="1.7"
+               target="1.7">
+            <classpath refid="compile.classpath" />
+        </javac>
+    </target>
+
+    <target name="compile.tests" depends="compile" description="Compile the tests">
+        <javac srcdir="${dir.src.tests}"
+              destdir="${dir.target.tests}"
+    includeantruntime="false"
+                debug="true"
+               source="1.7"
+               target="1.7">
+            <classpath refid="test.classpath" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Build jar for this project">
+        <jar destfile="${dir.jar}/analyzer.jar" basedir="${dir.target.classes}">
+          <manifest>
+            <attribute name = "Main-Class" value = "Driver"/>
+          </manifest>
+          <zipgroupfileset dir="lib" includes="*.jar"/>
+        </jar>
+    </target>
+
+    <target name="test" depends="compile.tests">
+        <junit fork="yes" timeout="1000" showoutput="true">
+            <classpath refid="test.classpath" />
+            <formatter type="xml"/>
+            <batchtest>
+                <fileset dir="${dir.src.tests}">
+                    <include name="TestAll.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+</project>
