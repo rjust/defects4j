@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-initialize-revisions.pl -- Initialize all revisions: identify the directory 
+initialize-revisions.pl -- Initialize all revisions: identify the directory
                            layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
@@ -135,6 +135,17 @@ sub _bootstrap {
     $project->{_vcs}->checkout_vid("${bid}f", $TMP_DIR) or die "Cannot checkout post-fix version";
     $project->initialize_revision($v2, "${bid}f");
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
+
+    #Temporary solution to call analyzer and store developer tests in metadata
+    system("mkdir -p $DEV_TESTS/${bid}");
+    if(-f "$TMP_DIR/pom.xml"){
+      system("cd $TMP_DIR && mvn ant:ant");
+      system("java -jar ../lib/analyzer.jar $TMP_DIR  $DEV_TESTS/${bid} maven-build.xml");
+    } elsif (-f "$TMP_DIR/build.xml"){
+      system("java -jar ../lib/analyzer.jar $TMP_DIR  $DEV_TESTS/${bid} build.xml");
+    } else {
+      die "No build file exist in this revision!"
+    }
 
     die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
     die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
