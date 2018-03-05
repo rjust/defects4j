@@ -26,17 +26,33 @@ jobs:
     - script: carton exec ./test_mutation_analysis.sh
     - script: carton exec ./test_randoop.sh
     - script: carton exec ./test_fix_test_suite.sh
-    # Verify that all bugs are reproducible (run multiple jobs for projects that
-    # take a long time to finish.
-    - stage: verify
+# Verify that all bugs are reproducible (run multiple jobs for projects that
+# take a long time to finish).
+    - stage: verify-bugs
 ## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart
+## Closure
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b11..15
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b16..20
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b21..30
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b31..40
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b41..50
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b51..60
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b61..70
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b71..80
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b81..90
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b91..100
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b101..111
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b112..122
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b123..133
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
 ## Math
-    - script: carton exec ./test_verify_bugs.sh -p Math -b1..27
-    - script: carton exec ./test_verify_bugs.sh -p Math -b28..54
+    - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
+    - script: carton exec ./test_verify_bugs.sh -p Math -b19..36
+    - script: carton exec ./test_verify_bugs.sh -p Math -b20..54
     - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
     - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
 ## Mockito
@@ -44,9 +60,7 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b11..15
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b16..20
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b21..25
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b26
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b27
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b28..38
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b21..26
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b27..38
 ## Time
     - script: carton exec ./test_verify_bugs.sh -p Time

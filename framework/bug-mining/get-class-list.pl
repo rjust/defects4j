@@ -133,7 +133,7 @@ if (defined $BID) {
 }
 
 ############################### VARIABLE SETUP
-# Temportary directory
+# Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 # Set up project
@@ -203,6 +203,11 @@ foreach my $vid (@bids) {
     }
     close(OUT);
 
+    # Export variables to make sure the get_modified_classes script picks up the right directories.
+    $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
+    $ENV{'REPO_DIR'} = abs_path($REPO_DIR);
+    # TODO: This should also be configurable in Constants.pm
+    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
     # Determine modified files
     #
     # Note:

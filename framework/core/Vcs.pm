@@ -180,16 +180,16 @@ sub lookup {
 
 =pod
 
-  $vcs->lookup_revision_id(revision)
+  $vcs->lookup_vid(revision_id)
 
-Returns the C<revision_id> for the given revision number or hash.
+Returns the C<version_id> for the given revision id.
 
 =cut
-sub lookup_revision_id {
+sub lookup_vid {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision) = @_;
-    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
-                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
+    my ($self, $rev_id) = @_;
+    my @answer = grep {$self->lookup($_ . "f") eq $rev_id ||
+                       $self->lookup($_ . "b") eq $rev_id} $self->get_version_ids();
     return -1 unless scalar(@answer) > 0;
     return $answer[0];
 }

@@ -26,13 +26,12 @@
 
 =head1 NAME
 
-promote-to-directory.pl -- Once a revision pair is reviewed for a minimized patch,
-                             this script will promote it to being part of the main
-                             defects4j database.
+promote-to-db.pl -- promote reproducible and minimized bugs with all meta data
+                    to the main Defects4J database.
 
 =head1 SYNOPSIS
 
-promote-to-directory.pl -p project_id -w work_dir [-v version_id] [-o output_dir] [-d output_db_dir]
+promote-to-db.pl -p project_id -w work_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
 
 =head1 OPTIONS
 
@@ -42,12 +41,12 @@ promote-to-directory.pl -p project_id -w work_dir [-v version_id] [-o output_dir
 
 The id of the project for which the revision pairs are to be promoted.
 
-=item B<-v C<version_id>>
+=item B<-b C<bug_id>>
 
-Only promote this version id or an interval of version ids (optional).
-The version_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
+Only promote this bug id or an interval of bug ids (optional).
+The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
 the interval boundaries are included in the analysis.
-Per default all version ids are considered.
+Per default all bug ids are considered.
 
 =item B<-w C<work_dir>>
 
@@ -55,11 +54,11 @@ Use C<work_dir> as the working directory.
 
 =item B<-o C<output_dir>>
 
-Use C<output_dir> as the defects4j directory. Defaults to F<$SCRIPT_DIR/projects>.
+Use C<output_dir> as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
 
 =item B<-d C<output_db_dir>>
 
-Use C<output_db_dir> as the defects4j C<result_db> directory. Defaults to F<$DB_DIR>.
+Use C<output_db_dir> as the C<result_db> directory. Defaults to F<$DB_DIR>.
 
 =back
 
@@ -84,27 +83,27 @@ use Utils;
 sub _usage {
     die "usage: " . basename($0) . " -p project_id " .
         "-w WORK_DIR";
-        "[-v version_range] " .
+        "[-b bug_range] " .
         "[-o output_dir] " .
         "[-d output_db_dir] ";
 }
 
 my %cmd_opts;
-getopts('p:w:v:o:d:', \%cmd_opts) or _usage();
+getopts('p:w:b:o:d:', \%cmd_opts) or _usage();
 
-my ($PID, $WORK_DIR, $VID, $output_dir, $output_db_dir) =
+my ($PID, $WORK_DIR, $BID, $output_dir, $output_db_dir) =
     ($cmd_opts{p},
      $cmd_opts{w},
-     $cmd_opts{v},
+     $cmd_opts{b},
      $cmd_opts{o} // "$SCRIPT_DIR/projects",
      $cmd_opts{d} // $DB_DIR);
 
-# ok for VID to be undef
+# ok for BID to be undef
 _usage() unless all {defined} ($PID, $WORK_DIR, $output_dir, $output_db_dir);
 
 # Check format of target version id
-if (defined $VID) {
-    $VID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $VID!";
+if (defined $BID) {
+    $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong bug id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
 $WORK_DIR = abs_path("$WORK_DIR");
@@ -128,7 +127,7 @@ my @generic_files = ("dependent_tests");
 
 ############################### MAIN LOOP
 # figure out which IDs to run script for
-my @ids = _get_version_ids($VID);
+my @ids = _get_version_ids($BID);
 foreach my $id (@ids) {
     printf ("%4d: $project->{prog_name}\n", $id);
     my $v1 = $project->lookup("${id}b");

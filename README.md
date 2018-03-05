@@ -50,10 +50,12 @@ Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
-#### Timezone
+#### Timezone and locale settings
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, export the `TZ`
-environment variable accordingly.
+environment variable accordingly. All bugs are deterministically reproducible
+using the following locale settings: English (US), UTF-8. While many other
+locales work as well, this is the default used for testing.
 
 #### Perl modules
 The following additional Perl modules are required for bug mining:
@@ -204,19 +206,6 @@ Additional resources
 [fl-eval]: https://bitbucket.org/rjust/fault-localization-data
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
-
-Glossary
---------------
-Terms commonly used in Defects4J
-
-- `commit-db` : csv table for storage of issues we can use
-- `PID` : project id
-- `BID` : bug id, sometimes used interchangeably with vid but usually just a number; historically, numerically higher vids are older than lower vids, however as of 2633f0245cd04851c, this is reversed (with existing preserved)
-- `work_dir` : local directory to work out of
-- `vid` : version id, "${vid}b" for buggy and "${vid}f" for fixed.
-- `Vcs` : version control system (be it git, mecurial or subversion or other, all inherit from Vcs.pm)
-- `revision_id` : a Vcs revision id
-- `SCRIPT_DIR`: `~Defects4J_root/framework/core`
 
 License
 ---------

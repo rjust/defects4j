@@ -139,20 +139,35 @@ Reviewing and isolating the bugs
     - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
 
 3. Manually review the diff for each fault and make sure it is minimal. Every
-   reproducible fault has an entry with the file name `<id>.src.patch` in the
+   reproducible fault has an entry with the file name `<bid>.src.patch` in the
    `patches` directory:
      - `ls -l Lang/patches/*.src.patch`
      - `ls -l bug-mining/framework/projects/<project_id>/patches/*.src.patch`
-     - `./minimize-patch.pl -p <project_id> -v <id> -w bug-mining`
+     - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
 
-   Note that the patch is the *reverse* patch, i.e., patching the fixed revision
+   Note that the patch is the *reverse* patch, i.e., patching the fixed version
    with this patch will reintroduce the fault.
 
 Promoting reproducible bugs to the main database
 ------------------
 1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
-    - `./promote-to-directory.pl -p <project_id> -v <id> -w bug-mining`
+    - `./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining`
 
-   Note: Make sure to specify the `-v` option as the default is to promote all
-         found bugs!
+   Note: Make sure to specify the `-b` option as the default is to promote all bugs!
+
+Glossary
+--------------
+Terms commonly used in Defects4J
+
+- `PID`: *Project ID* (e.g., Lang, Math, Closure, etc.).
+- `BID`: *Bug ID* (Defects4J enumerates all bugs per project, and the bug id is
+         an integer. Historically, numerically higher BIDs are older bugs. As of
+         *v1.3.0*, this is reversed -- with existing BIDs preserved).
+- `VID`: *Version ID* ({BID}**b** refers to the **b**uggy and {BID}**f** refers
+         to the **f**ixed version of a bug with the bug id {BID}.
+- `VCS`: Version control system (e.g., git, mercurial, or subversion; all VCS
+         abstractions in Defects4J inherit from Vcs.pm).
+- `Rev ID`: A VCS-specific revision id (e.g., a git commit hash).
+- `commit-db`: A csv file, per project, that maps each BID to the revision ids
+               of the pre-fix and post-fix revision.
