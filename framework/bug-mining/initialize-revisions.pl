@@ -103,6 +103,7 @@ my $PATCH_DIR   = "$project_dir/patches";
 my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
+my $DEV_TESTS = "$project_dir/all_dev_tests";
 
 system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 
@@ -136,15 +137,14 @@ sub _bootstrap {
     $project->initialize_revision($v2, "${bid}f");
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
 
-    #Temporary solution to call analyzer and store developer tests in metadata
+    # TODO: Should try to find it in cached file directory instead of running again
     system("mkdir -p $DEV_TESTS/${bid}");
     if(-f "$TMP_DIR/pom.xml"){
-      system("cd $TMP_DIR && mvn ant:ant");
-      system("java -jar ../lib/analyzer.jar $TMP_DIR  $DEV_TESTS/${bid} maven-build.xml");
-    } elsif (-f "$TMP_DIR/build.xml"){
-      system("java -jar ../lib/analyzer.jar $TMP_DIR  $DEV_TESTS/${bid} build.xml");
-    } else {
-      die "No build file exist in this revision!"
+      system("cd $TMP_DIR && mvn ant:ant -Doverwrite=true &> /dev/null");
+      my $cmd = "java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} maven-build.xml 2>&1";
+      Utils::exec_cmd($cmd, "Retrieving developer-included test patterns.");
+    }else{
+      Utils::exec_cmd("java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} build.xml 2>&1", "Retrieving developer-included test patterns.");
     }
 
     die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
