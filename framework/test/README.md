@@ -47,7 +47,7 @@ more details about the defects and requirements).
 3. Please note you must use Java 7; Java 8 will cause failures.
 
 4. Tell the tools which version of Randoop you wish to test:
-    By default, the system runs version 3.1.5 of Randoop.
+    By default, the system runs version 4.0.0 of Randoop.
     (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
     The randoop.jar you wish to test must be named randoop-current.jar.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
