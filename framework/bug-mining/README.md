@@ -130,19 +130,18 @@ Reproducing bugs
 Reviewing and isolating the bugs
 ------------------
 1. Each reproducible fault has an entry in the `trigger_tests` directory:
-    - `ls bug-mining/framework/projects/<project_id>/trigger_tests`
+    - `ls ../bug-mining/<branch_id>/framework/projects/<project_id>/trigger_tests`
 
 2. Manually analyze the stack trace for each fault and make sure this is a real
    fault reproduction, not a configuration issue (e.g., `CLASSPATH` errors or
    missing files). Each file in `trigger_tests` contains the stack trace for a
    reproduced fault:
-    - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
+    - `vim ../bug-mining/<branch_id>/framework/projects/<project_id>/trigger_tests/*`
 
 3. Manually review the diff for each fault and make sure it is minimal. Every
    reproducible fault has an entry with the file name `<bid>.src.patch` in the
    `patches` directory:
-     - `ls -l Lang/patches/*.src.patch`
-     - `ls -l bug-mining/framework/projects/<project_id>/patches/*.src.patch`
+     - `ls -l bug-mining/<branch_id>/framework/projects/<project_id>/patches/*.src.patch`
      - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
 
    Note that the patch is the *reverse* patch, i.e., patching the fixed version
