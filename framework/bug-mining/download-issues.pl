@@ -153,10 +153,11 @@ my %supported_trackers = (
                     'build_uri' => sub {
                                             my ($tracker, $project, $query, $START, $limit, $organization_id) = @_;
                                             die unless all {defined $_} ($tracker, $project, $query, $start, $limit);
-                                            die 'github requires an organization id argument' unless $project =~ /.+\/.+/ or (defined $organization_id and $organization_id ne '');
+                                            my $has_org_in_proj = $project =~ /.+\/.+/; 
+                                            die 'github requires an organization id argument' unless $has_org_in_proj or (defined $organization_id and $organization_id ne '');
                                             my $page = $start / $limit + 1;
                                             my $uri = $tracker
-                                                         . $project
+                                                         . $project . ( $has_org_in_proj ? '' : "/$organization_id" )
                                                          . "/issues?state=all&"
                                                          . $query
                                                          . "&per_page=${limit}"
