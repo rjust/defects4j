@@ -110,10 +110,17 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
    will identify the various directory layouts and run a sanity check on each
    candidate revision in `commit-db`:
     - `./initialize-revisions.pl -p Lang -w bug-mining`
+**TODO: Describe the build-file analyzer, which is called during the
+initialize-revisions step, and integrate it into the framework**
 
 2. Analyze all candidate revisions with `analyze-project.pl`. This will identify suitable
    candidates -- ones that compile and have a non-empty source diff:
     - `./analyze-project.pl -p Lang -w bug-mining`
+
+3. **TODO: Describe the following review process, which may lead to several
+   iterations of steps 1-3: check all entries in failing_tests and verify that
+   1) no test clases are failing and 2) all failing tests are indeed broken
+   tests that do not fail due to configuration issues.**
 
 Reproducing bugs
 -------------
@@ -121,24 +128,27 @@ Reproducing bugs
    revisions in `commit-db` that have a test that can reproduce a fault:
     - `./get-trigger.pl -p Lang -w bug-mining`
 
-2. Determine the classes modified by the bug fix with `get-class-list.pl`. This
-   will determine the list of modified classes for revisions with a reproducible
-   fault, and also the list of classes loaded during the execution of the
-   triggering test:
-    - `./get-class-list.pl -p Lang -w bug-mining`
-
-Reviewing and isolating the bugs
-------------------
-1. Each reproducible fault has an entry in the `trigger_tests` directory:
+2. Each reproducible fault has an entry in the `trigger_tests` directory:
     - `ls bug-mining/framework/projects/<project_id>/trigger_tests`
 
-2. Manually analyze the stack trace for each fault and make sure this is a real
+3. Manually analyze the stack trace for each fault and make sure this is a real
    fault reproduction, not a configuration issue (e.g., `CLASSPATH` errors or
    missing files). Each file in `trigger_tests` contains the stack trace for a
    reproduced fault:
     - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
+**TODO: Describe how to repeat steps 1-3 if an invalid triggering test is
+encountered. Also, describe whether analyze-project needs to be rerun in case a
+configuration issue is fixed.**
 
-3. Manually review the diff for each fault and make sure it is minimal. Every
+4. Determine relevant meta data (i.e., modified classes, loaded classes, and
+   relevant tests) with `get-class-list.pl`. For each reproducible bug, this
+   script determines the meta data, which will be promoted to the main database
+   together with that bug:
+    - `./get-metadata.pl -p Lang -w bug-mining`
+
+Reviewing and isolating the bugs
+------------------
+1. Manually review the diff for each fault and make sure it is minimal. Every
    reproducible fault has an entry with the file name `<bid>.src.patch` in the
    `patches` directory:
      - `ls -l Lang/patches/*.src.patch`
@@ -153,6 +163,10 @@ Promoting reproducible bugs to the main database
 1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
     - `./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining`
+
+**TODO: Augment the promote script: 1) reinvoke get-metadata.pl for all bugs for
+which the patch was manually minimized and 2) store the issue tracker IDs in
+D4J: add issue-tracker ID and URL as two new columns to the commit-db**
 
    Note: Make sure to specify the `-b` option as the default is to promote all bugs!
 
