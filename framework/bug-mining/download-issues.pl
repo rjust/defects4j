@@ -30,7 +30,7 @@ download-issues.pl -- Determine the layout and obtain paths for each revision.
 
 =head1 SYNOPSIS
 
-download-issues.pl tracker-type -p project_id [-q query] [-t tracker-uri] [-l fetching_limit] [-o output_dir] [-v (verbose)]
+download-issues.pl tracker-type -p project_id [-g organization_id] [-q query] [-t tracker-uri] [-l fetching_limit] [-o output_dir] [-v (verbose)]
 
 =head1 OPTIONS
 
@@ -39,6 +39,10 @@ download-issues.pl tracker-type -p project_id [-q query] [-t tracker-uri] [-l fe
 =item B<C<tracker_type>>
 
 C<tracker_type> should be one of C<google>, C<jira>, C<sourceforge>, or C<github>
+
+=item B<-g C<organization_id>>
+
+C<organization_id> is an param required for the github issue tracker, it specifies the organization the repo is under
 
 =item B<-p C<project_id>>
 
@@ -147,11 +151,13 @@ my %supported_trackers = (
                     'default_query' => 'labels=Bug',
                     'default_limit' => 100,
                     'build_uri' => sub {
-                                            my ($tracker, $project, $query, $start, $limit) = @_;
+                                            my ($tracker, $project, $query, $start, $limit, $organization_id) = @_;
                                             die unless all {defined $_} ($tracker, $project, $query, $start, $limit);
+                                            my $has_org_in_proj = $project =~ /.+\/.+/; 
+                                            die 'github requires an organization id argument' unless $has_org_in_proj or (defined $organization_id and $organization_id ne '');
                                             my $page = $start / $limit + 1;
                                             my $uri = $tracker
-                                                         . $project
+                                                         . ( $has_org_in_proj ? '' : "$organization_id/" ) . $project 
                                                          . "/issues?state=all&"
                                                          . $query
                                                          . "&per_page=${limit}"
@@ -206,6 +212,7 @@ die "usage: " . basename($0) . " tracker_name \n" .
 my %tracker = %{$supported_trackers{$tracker_name}};
 sub _usage {
     die "usage: " . basename($0) . " -p project-id \n"
+                . "\t[-g (organization_id)]\n"
                 . "\t[-q query=${tracker{'default_query'}}]\n"
                 . "\t[-t tracker_uri=${tracker{'default_tracker_uri'}}]\n"
                 . "\t[-o output_directory=.]\n"
@@ -214,10 +221,11 @@ sub _usage {
                 ;
 }
 my %cmd_opts;
-getopts('p:q:t:o:l:v', \%cmd_opts) or _usage();
+getopts('p:g:q:t:o:l:v', \%cmd_opts) or _usage();
 
-my ($project, $query, $tracker_uri, $output_dir, $limit, $verbose) =
+my ($project,  $organization_id, $query, $tracker_uri, $output_dir, $limit, $verbose) =
         ($cmd_opts{p},
+         $cmd_opts{g} // '',
          $cmd_opts{q} // $tracker{'default_query'},
          $cmd_opts{t} // $tracker{'default_tracker_uri'},
          $cmd_opts{o} // '.',
@@ -225,10 +233,10 @@ my ($project, $query, $tracker_uri, $output_dir, $limit, $verbose) =
          $cmd_opts{v} // 0,
          );
 
-_usage() unless all {defined $_} ($project, $query, $tracker_uri, $output_dir, $limit, $verbose);
+_usage() unless all {defined $_} ($project, $organization_id, $query, $tracker_uri, $output_dir, $limit, $verbose);
 
 for (my $start = 0; ; $start += $limit) {
-    my $uri = $tracker{'build_uri'}($tracker_uri, $project, $query, $start, $limit);
+    my $uri = $tracker{'build_uri'}($tracker_uri, $project, $query, $start, $limit, $organization_id);
     my $project_in_file = $project;
     $project_in_file =~ tr*/*-*;
     my $out_file = "${output_dir}/${project_in_file}-issues-${start}.txt";
