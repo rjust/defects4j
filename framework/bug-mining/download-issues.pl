@@ -151,13 +151,13 @@ my %supported_trackers = (
                     'default_query' => 'labels=Bug',
                     'default_limit' => 100,
                     'build_uri' => sub {
-                                            my ($tracker, $project, $query, $START, $limit, $organization_id) = @_;
+                                            my ($tracker, $project, $query, $start, $limit, $organization_id) = @_;
                                             die unless all {defined $_} ($tracker, $project, $query, $start, $limit);
                                             my $has_org_in_proj = $project =~ /.+\/.+/; 
                                             die 'github requires an organization id argument' unless $has_org_in_proj or (defined $organization_id and $organization_id ne '');
                                             my $page = $start / $limit + 1;
                                             my $uri = $tracker
-                                                         . $project . ( $has_org_in_proj ? '' : "/$organization_id" )
+                                                         . ( $has_org_in_proj ? '' : "$organization_id/" ) . $project 
                                                          . "/issues?state=all&"
                                                          . $query
                                                          . "&per_page=${limit}"
@@ -235,7 +235,7 @@ my ($project,  $organization_id, $query, $tracker_uri, $output_dir, $limit, $ver
 
 _usage() unless all {defined $_} ($project, $organization_id, $query, $tracker_uri, $output_dir, $limit, $verbose);
 
-for (my $start = 0; ; $sTART += $LIMIT) {
+for (my $start = 0; ; $start += $limit) {
     my $uri = $tracker{'build_uri'}($tracker_uri, $project, $query, $start, $limit, $organization_id);
     my $project_in_file = $project;
     $project_in_file =~ tr*/*-*;
