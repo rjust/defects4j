@@ -68,6 +68,8 @@ Identifying candidate bugs (populating the `commit-db`)
    `merge-issue-numbers.pl` if a project has multiple trackers):
     - `./download-issues.pl jira -p lang -o bug-mining/issues |
       ./merge-issue-numbers.pl -f bug-mining/issues.txt`
+   Make sure the project id supplied to the download-issues script 
+   is the project id and not the defects4j id.
 
 4. Obtain the development history (commit logs) for the project:
     - `git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitlog`
