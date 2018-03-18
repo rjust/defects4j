@@ -103,7 +103,7 @@ my $PATCH_DIR   = "$PROJECTS_DIR/$PID/patches";
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
-my $src_patch = "$PATCH_DIR/$BID.src.patch";
+my $src_patch = "$BID.src.patch";
 
 # Set up project
 my $project = Project::create_project($PID);
@@ -111,10 +111,10 @@ $project->{prog_root} = $TMP_DIR;
 
 my $src_path = $project->src_dir("${BID}f");
 $project->checkout_vid("${BID}f", $TMP_DIR, 1);
-$project->apply_patch($TMP_DIR, $src_patch) or die "Cannot apply patch";
+$project->apply_patch($TMP_DIR, "$PATCH_DIR/$src_patch") or die "Cannot apply patch";
 
 # Copy the non-minimized patch
-Utils::exec_cmd("cp $src_patch $TMP_DIR", "Back up original patch")
+Utils::exec_cmd("cp $PATCH_DIR/$src_patch $TMP_DIR", "Back up original patch")
         or die "Cannot backup patch file";
 
 # Minimize patch with configured editor
@@ -138,7 +138,7 @@ $input = <STDIN>; chomp $input;
 exit 0 unless $input eq "y";
 
 # Store minimized patch
-Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $src_patch",
+Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $PATCH_DIR/$src_patch",
         "Export minimized patch") or die "Cannot export patch";
 
 # Run sanity check
