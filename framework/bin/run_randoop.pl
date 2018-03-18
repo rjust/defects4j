@@ -176,7 +176,7 @@ $LOG->log_time("Start test generation");
 
 # Build class list arguments
 my $test_classes="--classlist=$LOADED_CLASSES";
-my $target_classes="--include-if-class-exercised=$MOD_CLASSES";
+my $target_classes="--require-covered-classes=$MOD_CLASSES";
 
 # Iterate over all modified classes
 my $log = "$TMP_DIR/$PID.$VID.$TID.log";

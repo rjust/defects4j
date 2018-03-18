@@ -1,0 +1,351 @@
+# carton snapshot format: version 1.0
+DISTRIBUTIONS
+  Clone-0.39
+    pathname: G/GA/GARU/Clone-0.39.tar.gz
+    provides:
+      Clone 0.39
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  DBD-CSV-0.49
+    pathname: H/HM/HMBRAND/DBD-CSV-0.49.tgz
+    provides:
+      DBD::CSV 0.49
+    requirements:
+      DBD::File 0.42
+      DBI 1.628
+      Encode 0
+      ExtUtils::MakeMaker 0
+      SQL::Statement 1.405
+      Test::More 0.9
+      Text::CSV_XS 1.01
+      charnames 0
+  DBI-1.640
+    pathname: T/TI/TIMB/DBI-1.640.tar.gz
+    provides:
+      Bundle::DBI 12.008696
+      DBD::DBM 0.08
+      DBD::DBM::Statement 0.08
+      DBD::DBM::Table 0.08
+      DBD::DBM::db 0.08
+      DBD::DBM::dr 0.08
+      DBD::DBM::st 0.08
+      DBD::ExampleP 12.014311
+      DBD::ExampleP::db 12.014311
+      DBD::ExampleP::dr 12.014311
+      DBD::ExampleP::st 12.014311
+      DBD::File 0.44
+      DBD::File::DataSource::File 0.44
+      DBD::File::DataSource::Stream 0.44
+      DBD::File::Statement 0.44
+      DBD::File::Table 0.44
+      DBD::File::TableSource::FileSystem 0.44
+      DBD::File::db 0.44
+      DBD::File::dr 0.44
+      DBD::File::st 0.44
+      DBD::Gofer 0.015327
+      DBD::Gofer::Policy::Base 0.010088
+      DBD::Gofer::Policy::classic 0.010088
+      DBD::Gofer::Policy::pedantic 0.010088
+      DBD::Gofer::Policy::rush 0.010088
+      DBD::Gofer::Transport::Base 0.014121
+      DBD::Gofer::Transport::corostream undef
+      DBD::Gofer::Transport::null 0.010088
+      DBD::Gofer::Transport::pipeone 0.010088
+      DBD::Gofer::Transport::stream 0.014599
+      DBD::Gofer::db 0.015327
+      DBD::Gofer::dr 0.015327
+      DBD::Gofer::st 0.015327
+      DBD::Mem 0.001
+      DBD::Mem::DataSource 0.001
+      DBD::Mem::Statement 0.001
+      DBD::Mem::Table 0.001
+      DBD::Mem::db 0.001
+      DBD::Mem::dr 0.001
+      DBD::Mem::st 0.001
+      DBD::NullP 12.014715
+      DBD::NullP::db 12.014715
+      DBD::NullP::dr 12.014715
+      DBD::NullP::st 12.014715
+      DBD::Proxy 0.2004
+      DBD::Proxy::RPC::PlClient 0.2004
+      DBD::Proxy::db 0.2004
+      DBD::Proxy::dr 0.2004
+      DBD::Proxy::st 0.2004
+      DBD::Sponge 12.010003
+      DBD::Sponge::db 12.010003
+      DBD::Sponge::dr 12.010003
+      DBD::Sponge::st 12.010003
+      DBDI 12.015129
+      DBI 1.640
+      DBI::Const::GetInfo::ANSI 2.008697
+      DBI::Const::GetInfo::ODBC 2.011374
+      DBI::Const::GetInfoReturn 2.008697
+      DBI::Const::GetInfoType 2.008697
+      DBI::DBD 12.015129
+      DBI::DBD::Metadata 2.014214
+      DBI::DBD::SqlEngine 0.06
+      DBI::DBD::SqlEngine::DataSource 0.06
+      DBI::DBD::SqlEngine::Statement 0.06
+      DBI::DBD::SqlEngine::Table 0.06
+      DBI::DBD::SqlEngine::TableSource 0.06
+      DBI::DBD::SqlEngine::TieMeta 0.06
+      DBI::DBD::SqlEngine::TieTables 0.06
+      DBI::DBD::SqlEngine::db 0.06
+      DBI::DBD::SqlEngine::dr 0.06
+      DBI::DBD::SqlEngine::st 0.06
+      DBI::Gofer::Execute 0.014283
+      DBI::Gofer::Request 0.012537
+      DBI::Gofer::Response 0.011566
+      DBI::Gofer::Serializer::Base 0.009950
+      DBI::Gofer::Serializer::DataDumper 0.009950
+      DBI::Gofer::Serializer::Storable 0.015586
+      DBI::Gofer::Transport::Base 0.012537
+      DBI::Gofer::Transport::pipeone 0.012537
+      DBI::Gofer::Transport::stream 0.012537
+      DBI::Profile 2.015065
+      DBI::ProfileData 2.010008
+      DBI::ProfileDumper 2.015325
+      DBI::ProfileDumper::Apache 2.014121
+      DBI::ProfileSubs 0.009396
+      DBI::ProxyServer 0.3005
+      DBI::ProxyServer::db 0.3005
+      DBI::ProxyServer::dr 0.3005
+      DBI::ProxyServer::st 0.3005
+      DBI::SQL::Nano 1.015544
+      DBI::SQL::Nano::Statement_ 1.015544
+      DBI::SQL::Nano::Table_ 1.015544
+      DBI::Util::CacheMemory 0.010315
+      DBI::Util::_accessor 0.009479
+      DBI::common 1.640
+    requirements:
+      ExtUtils::MakeMaker 6.48
+      Storable 2.16
+      Test::Simple 0.90
+      perl 5.008
+  JSON-2.97001
+    pathname: I/IS/ISHIGAKI/JSON-2.97001.tar.gz
+    provides:
+      JSON 2.97001
+      JSON::Backend::PP 2.97001
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  JSON-Parse-0.55
+    pathname: B/BK/BKB/JSON-Parse-0.55.tar.gz
+    provides:
+      JSON::Parse 0.55
+      JSON::Tokenize 0.55
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.008009
+  Module-Build-0.4224
+    pathname: L/LE/LEONT/Module-Build-0.4224.tar.gz
+    provides:
+      Module::Build 0.4224
+      Module::Build::Base 0.4224
+      Module::Build::Compat 0.4224
+      Module::Build::Config 0.4224
+      Module::Build::Cookbook 0.4224
+      Module::Build::Dumper 0.4224
+      Module::Build::Notes 0.4224
+      Module::Build::PPMMaker 0.4224
+      Module::Build::Platform::Default 0.4224
+      Module::Build::Platform::MacOS 0.4224
+      Module::Build::Platform::Unix 0.4224
+      Module::Build::Platform::VMS 0.4224
+      Module::Build::Platform::VOS 0.4224
+      Module::Build::Platform::Windows 0.4224
+      Module::Build::Platform::aix 0.4224
+      Module::Build::Platform::cygwin 0.4224
+      Module::Build::Platform::darwin 0.4224
+      Module::Build::Platform::os2 0.4224
+      Module::Build::PodParser 0.4224
+    requirements:
+      CPAN::Meta 2.142060
+      CPAN::Meta::YAML 0.003
+      Cwd 0
+      Data::Dumper 0
+      ExtUtils::CBuilder 0.27
+      ExtUtils::Install 0
+      ExtUtils::Manifest 0
+      ExtUtils::Mkbootstrap 0
+      ExtUtils::ParseXS 2.21
+      File::Basename 0
+      File::Compare 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.82
+      File::Temp 0.15
+      Getopt::Long 0
+      Module::Metadata 1.000002
+      Parse::CPAN::Meta 1.4401
+      Perl::OSType 1
+      Pod::Man 2.17
+      TAP::Harness 3.29
+      Test::More 0.49
+      Text::Abbrev 0
+      Text::ParseWords 0
+      perl 5.006001
+      version 0.87
+  Module-Runtime-0.016
+    pathname: Z/ZE/ZEFRAM/Module-Runtime-0.016.tar.gz
+    provides:
+      Module::Runtime 0.016
+    requirements:
+      Module::Build 0
+      Test::More 0.41
+      perl 5.006
+      strict 0
+      warnings 0
+  Params-Util-1.07
+    pathname: A/AD/ADAMK/Params-Util-1.07.tar.gz
+    provides:
+      Params::Util 1.07
+    requirements:
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 6.52
+      File::Spec 0.80
+      Scalar::Util 1.18
+      Test::More 0.42
+      perl 5.00503
+  SQL-Statement-1.412
+    pathname: R/RE/REHSACK/SQL-Statement-1.412.tar.gz
+    provides:
+      SQL::Dialects::ANSI 1.412
+      SQL::Dialects::AnyData 1.412
+      SQL::Dialects::CSV 1.412
+      SQL::Dialects::Role 1.412
+      SQL::Eval 1.412
+      SQL::Eval::Table 1.412
+      SQL::Parser 1.412
+      SQL::Statement 1.412
+      SQL::Statement::Aggregate 1.412
+      SQL::Statement::ColumnValue 1.412
+      SQL::Statement::ConstantTerm 1.412
+      SQL::Statement::Function 1.412
+      SQL::Statement::Function::NumericEval 1.412
+      SQL::Statement::Function::StrConcat 1.412
+      SQL::Statement::Function::SubString 1.412
+      SQL::Statement::Function::Trim 1.412
+      SQL::Statement::Function::UserFunc 1.412
+      SQL::Statement::Functions 1.412
+      SQL::Statement::GetInfo 1.412
+      SQL::Statement::Group 1.412
+      SQL::Statement::Limit 1.412
+      SQL::Statement::Operation 1.412
+      SQL::Statement::Operation::ANSI::Is 1.412
+      SQL::Statement::Operation::And 1.412
+      SQL::Statement::Operation::Between 1.412
+      SQL::Statement::Operation::Clike 1.412
+      SQL::Statement::Operation::Contains 1.412
+      SQL::Statement::Operation::Equal 1.412
+      SQL::Statement::Operation::Equality 1.412
+      SQL::Statement::Operation::Greater 1.412
+      SQL::Statement::Operation::GreaterEqual 1.412
+      SQL::Statement::Operation::Is 1.412
+      SQL::Statement::Operation::Like 1.412
+      SQL::Statement::Operation::Lower 1.412
+      SQL::Statement::Operation::LowerEqual 1.412
+      SQL::Statement::Operation::Neg 1.412
+      SQL::Statement::Operation::NotEqual 1.412
+      SQL::Statement::Operation::Or 1.412
+      SQL::Statement::Operation::Regexp 1.412
+      SQL::Statement::Operation::Rlike 1.412
+      SQL::Statement::Order 1.412
+      SQL::Statement::Param 1.412
+      SQL::Statement::Placeholder 1.412
+      SQL::Statement::RAM 1.412
+      SQL::Statement::RAM::Table 1.412
+      SQL::Statement::Table 1.412
+      SQL::Statement::TempTable 1.412
+      SQL::Statement::Term 1.412
+      SQL::Statement::TermFactory 1.412
+      SQL::Statement::Util 1.412
+      SQL::Statement::Util::Column 1.412
+      SQL::Statement::Util::Function 1.412
+    requirements:
+      Carp 0
+      Clone 0.30
+      Data::Dumper 0
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0
+      Params::Util 1.00
+      Scalar::Util 1.0
+      Text::Balanced 0
+      perl 5.008
+  Text-CSV_XS-1.34
+    pathname: H/HM/HMBRAND/Text-CSV_XS-1.34.tgz
+    provides:
+      Text::CSV_XS 1.34
+    requirements:
+      Config 0
+      DynaLoader 0
+      ExtUtils::MakeMaker 0
+      IO::Handle 0
+      Test::More 0
+  URI-1.73
+    pathname: E/ET/ETHER/URI-1.73.tar.gz
+    provides:
+      URI 1.73
+      URI::Escape 3.31
+      URI::Heuristic 4.20
+      URI::IRI 1.73
+      URI::QueryParam 1.73
+      URI::Split 1.73
+      URI::URL 5.04
+      URI::WithBase 2.20
+      URI::data 1.73
+      URI::file 4.21
+      URI::file::Base 1.73
+      URI::file::FAT 1.73
+      URI::file::Mac 1.73
+      URI::file::OS2 1.73
+      URI::file::QNX 1.73
+      URI::file::Unix 1.73
+      URI::file::Win32 1.73
+      URI::ftp 1.73
+      URI::gopher 1.73
+      URI::http 1.73
+      URI::https 1.73
+      URI::ldap 1.73
+      URI::ldapi 1.73
+      URI::ldaps 1.73
+      URI::mailto 1.73
+      URI::mms 1.73
+      URI::news 1.73
+      URI::nntp 1.73
+      URI::pop 1.73
+      URI::rlogin 1.73
+      URI::rsync 1.73
+      URI::rtsp 1.73
+      URI::rtspu 1.73
+      URI::sftp 1.73
+      URI::sip 1.73
+      URI::sips 1.73
+      URI::snews 1.73
+      URI::ssh 1.73
+      URI::telnet 1.73
+      URI::tn3270 1.73
+      URI::urn 1.73
+      URI::urn::isbn 1.73
+      URI::urn::oid 1.73
+    requirements:
+      Carp 0
+      Cwd 0
+      Data::Dumper 0
+      Encode 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      MIME::Base64 2
+      Net::Domain 0
+      Scalar::Util 0
+      constant 0
+      integer 0
+      overload 0
+      parent 0
+      perl 5.008001
+      strict 0
+      utf8 0
+      warnings 0

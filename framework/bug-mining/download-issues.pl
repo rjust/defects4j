@@ -30,7 +30,7 @@ download-issues.pl -- Determine the layout and obtain paths for each revision.
 
 =head1 SYNOPSIS
 
-download-issues.pl tracker-type -p project_id [-g organization_id] [-q query] [-t tracker-uri] [-l fetching_limit] [-o output_dir] [-v (verbose)]
+download-issues.pl tracker-type -p tracker_project_id [-g organization_id] [-q query] [-t tracker-uri] [-l fetching_limit] [-o output_dir] [-v (verbose)]
 
 =head1 OPTIONS
 
@@ -44,9 +44,9 @@ C<tracker_type> should be one of C<google>, C<jira>, C<sourceforge>, or C<github
 
 C<organization_id> is an param required for the github issue tracker, it specifies the organization the repo is under
 
-=item B<-p C<project_id>>
+=item B<-p C<tracker_project_id>>
 
-C<project_id> is the name used on the issue tracker to identify the project.
+C<tracker_project_id> is the name used on the issue tracker to identify the project. This is not the same as the defects4j id
 
 =item B<-q C<query>>
 
@@ -153,11 +153,11 @@ my %supported_trackers = (
                     'build_uri' => sub {
                                             my ($tracker, $project, $query, $start, $limit, $organization_id) = @_;
                                             die unless all {defined $_} ($tracker, $project, $query, $start, $limit);
-                                            my $has_org_in_proj = $project =~ /.+\/.+/; 
+                                            my $has_org_in_proj = $project =~ /.+\/.+/;
                                             die 'github requires an organization id argument' unless $has_org_in_proj or (defined $organization_id and $organization_id ne '');
                                             my $page = $start / $limit + 1;
                                             my $uri = $tracker
-                                                         . ( $has_org_in_proj ? '' : "$organization_id/" ) . $project 
+                                                         . ( $has_org_in_proj ? '' : "$organization_id/" ) . $project
                                                          . "/issues?state=all&"
                                                          . $query
                                                          . "&per_page=${limit}"
