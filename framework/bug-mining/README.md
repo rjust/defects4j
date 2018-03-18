@@ -140,9 +140,9 @@ Reproducing bugs
 encountered. Also, describe whether analyze-project needs to be rerun in case a
 configuration issue is fixed.**
 
-4. Determine relevant meta data (i.e., modified classes, loaded classes, and
+4. Determine relevant metadata (i.e., modified classes, loaded classes, and
    relevant tests) with `get-class-list.pl`. For each reproducible bug, this
-   script determines the meta data, which will be promoted to the main database
+   script determines the metadata, which will be promoted to the main database
    together with that bug:
     - `./get-metadata.pl -p Lang -w bug-mining`
 
