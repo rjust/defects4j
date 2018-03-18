@@ -26,8 +26,8 @@
 
 =head1 NAME
 
-get-class-list.pl -- Run triggerng tests in isolation, monitor class loader, and
-export class names of loaded and modified classes.
+get-metadata.pl -- Generates the bug meta data (modified classes, loaded
+classes, relevant tests) for each reproducible bug.
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ get-class-list.pl -p project_id -w work_dir [-b bug_id]
 
 =item B<-p C<project_id>>
 
-The id of the project for which loaded and modified classes are determined.
+The id of the project for which the meta data should be generated.
 
 =item B<-w C<work_dir>>
 
@@ -56,12 +56,14 @@ Per default all bug ids are considered that are listed in $TAB_TRIGGER.
 
 =head1 DESCRIPTION
 
-Runs the following workflow for the project C<project_id> -- the loaded classes
-are written to F<C<PROJECTS_DIR>/"project_id"/loaded_classes> and the
-modified classes are written to
-F<C<PROJECTS_DIR/"project_id"/modified_classes>.
+This script runs each triggerng test in isolation, monitors the class loader,
+and exports the class names of loaded and modified classes. It also, determines
+the set of relevant tests (i.e., tests that touch at least one of the modified
+classes).
 
-For all version pairs that have reviewed triggering test(s) in $TAB_TRIGGER:
+This script runs the following workflow for the provided C<project_id>:
+
+For each bug that has at least one (reviewed) triggering test(s) in $TAB_TRIGGER:
 
 =over 4
 
@@ -70,15 +72,28 @@ For all version pairs that have reviewed triggering test(s) in $TAB_TRIGGER:
 =item 2) Compile src and test.
 
 =item 3) Run triggering test(s), verify that they pass, monitor class loader,
-         and export the list of class names.
+         and export the list of class names (loaded classes).
 
 =item 4) Determine modified source files from source patch and export the list
-         of class names.
+         of class names (modified classes).
+
+=item 5) Run each test class (monitor the class loader) and determine whether it
+         loads at least one modified class. Export the set of all test classes
+         that do load at least one modified class (relevant tests).
 
 =back
 
-For each loaded or modified (project-related) class, the corresponding output file contains one row
-with the fully-qualified classname.
+This script writes the loaded classes, modified classes, and relevant tests to:
+
+=over 4
+
+=item * F<C<PROJECTS_DIR>/"project_id"/loaded_classes>
+
+=item * F<C<PROJECTS_DIR/"project_id"/modified_classes>
+
+=item * F<C<PROJECTS_DIR/"project_id"/relevant_tests>
+
+=back
 
 =cut
 use warnings;
@@ -120,9 +135,9 @@ my $project_dir = "$PROJECTS_DIR/$PID";
 my $LOADED = "$project_dir/loaded_classes";
 my $MODIFIED = "$project_dir/modified_classes";
 
-# Directories containing triggering tests and patches
+# Directories containing triggering tests and relevant tests
 my $TRIGGER = "$project_dir/trigger_tests";
-my $PATCHES = "$project_dir/patches";
+my $RELEVANT= "$project_dir/relevant_tests";
 
 # TODO make output dir more flexible; maybe organize the csv-based db differently
 my $db_dir = $WORK_DIR;
@@ -136,35 +151,39 @@ if (defined $BID) {
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
+
+# Set up output directories
+system("mkdir -p $LOADED $MODIFIED $RELEVANT");
+
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 my @bids  = _get_bug_ids($BID);
-foreach my $vid (@bids) {
+foreach my $bid (@bids) {
     # Lookup revision ids
-    my $v1  = $project->lookup("${vid}b");
-    my $v2  = $project->lookup("${vid}f");
+    my $v1  = $project->lookup("${bid}b");
+    my $v2  = $project->lookup("${bid}f");
 
-    my $file = "$TRIGGER/$vid";
+    my $file = "$TRIGGER/$bid";
     -e $file or die "Triggering test does not exist: $file!";
 
     # TODO: Skip if file already exists
     # TODO: Check whether triggering test file has been modified
-    # next if -e "$LOADED/$vid.src";
+    # next if -e "$LOADED/$bid.src";
 
     my @list = @{Utils::get_failing_tests($file)->{methods}};
     # There has to be a triggering test
     scalar(@list) > 0 or die "No triggering test: $v2";
 
-    printf ("%4d: $project->{prog_name}\n", $vid);
+    printf ("%4d: $project->{prog_name}\n", $bid);
 
     # Checkout to version 2
-    $project->checkout_vid("${vid}f", $TMP_DIR, 1) or die;
+    $project->checkout_vid("${bid}f", $TMP_DIR, 1) or die;
 
     # Compile sources and tests
     $project->compile() or die;
-    $project->fix_tests("${vid}f");
+    $project->fix_tests("${bid}f");
     $project->compile_tests() or die;
 
     my %src;
@@ -178,7 +197,7 @@ foreach my $vid (@bids) {
         (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die;
 
         # Run tests again and monitor class loader
-        my $loaded = $project->monitor_test($test, "${vid}f");
+        my $loaded = $project->monitor_test($test, "${bid}f");
         die unless defined $loaded;
 
         foreach (@{$loaded->{src}}) {
@@ -190,14 +209,14 @@ foreach my $vid (@bids) {
     }
 
     # Write list of loaded classes
-    open(OUT, ">$LOADED/$vid.src") or die "Cannot write loaded classes!";
+    open(OUT, ">$LOADED/$bid.src") or die "Cannot write loaded classes!";
     foreach (keys %src) {
         print OUT "$_\n";
     }
     close(OUT);
 
     # Write list of loaded test classes
-    open(OUT, ">$LOADED/$vid.test") or die "Cannot write loaded test classes!";
+    open(OUT, ">$LOADED/$bid.test") or die "Cannot write loaded test classes!";
     foreach (keys %test) {
         print OUT "$_\n";
     }
@@ -213,8 +232,11 @@ foreach my $vid (@bids) {
     # Note:
     # This util script uses the possibly minimized source patch file instead of
     # the Vcs-diff between the pre-fix and post-fix revision.
-    Utils::exec_cmd("$UTIL_DIR/get_modified_classes.pl -p $PID -b $vid > $MODIFIED/$vid.src",
+    Utils::exec_cmd("$UTIL_DIR/get_modified_classes.pl -p $PID -b $bid > $MODIFIED/$bid.src",
             "Exporting the set of modified classes");
+
+    # Determine and export all relevant test classes
+    _export_relevant_tests($bid);
 }
 # Remove temporary directory
 system("rm -rf $TMP_DIR");
@@ -260,6 +282,47 @@ sub _get_bug_ids {
     return @ids;
 }
 
+#
+# Determine all relevant tests
+#
+sub _export_relevant_tests {
+    my $bid = shift;
+
+    # Hash all modified classes
+    my %mod_classes = ();
+    open(IN, "<$MODIFIED/${bid}.src") or die "Cannot read modified classes";
+    while(<IN>) {
+        chomp;
+        $mod_classes{$_} = 1;
+    }
+    close(IN);
+
+    # Result: list of relevant tests
+    my @relevant = ();
+
+    # Iterate over all tests and determine whether or not a test is relevant
+    my @all_tests = `cd $TMP_DIR && $SCRIPT_DIR/bin/defects4j export -ptests.all`;
+    foreach my $test (@all_tests) {
+        chomp($test);
+        print(STDERR "Analyze test: $test\n");
+        my $loaded = $project->monitor_test($test, "${bid}f");
+        die("Failed test: $test\n") unless (defined $loaded);
+
+        foreach my $class (@{$loaded->{src}}) {
+            if (defined $mod_classes{$class}) {
+                push(@relevant, $test);
+                # A test is relevant if it loads at least one of the modified
+                # classes!
+                last;
+            }
+        }
+    }
+    open(OUT, ">$RELEVANT/$bid") or die "Cannot write relevant tests";
+    for (@relevant) {
+        print(OUT $_, "\n");
+    }
+    close(OUT);
+}
 
 =pod
 
