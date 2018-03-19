@@ -355,7 +355,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
                    build file should not rely on the current directory structure
               => D4J should provide properly filtered files in the working directory-->
-        <loadfile srcfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
+        <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
                  property="rel.files">
             <filterchain>
                 <tokenfilter>
