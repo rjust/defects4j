@@ -13,63 +13,65 @@ import util.WildCardResolver;
 
 
 public class Analyzer {
-	
+
 	private Project project;
 	private TargetGetter targetGetter;
 	private TestGetter testGetter;
 	private PathParser pathParser;
-	
+
 	public Analyzer(File buildFile) {
-		
+
 		//Load in build file
 		project = new Project();
 		project.init();
 		ProjectHelper helper = new ProjectHelper();
 		helper.configureProject(project, buildFile);
-		
+
 		//Initialize Target getter
 		if(project.getDefaultTarget() != null)
 			targetGetter = new TargetGetter(project.topoSort(project.getDefaultTarget(), project.getTargets()));
 		else
 			targetGetter = new TargetGetter(project.topoSort("", project.getTargets()));
-		
+
 		//Initialize Test getter
 		testGetter = new TestGetter(targetGetter.getJunitTarget());
-		
+
 		//Initialize Path parser
 		pathParser = new PathParser(project);
-		
+
 	}
-	
+
 	public Target getCompileTarget() {
 		return targetGetter.getCompileTarget();
 	}
-	
+
 	public Target getCompileTestTarget() {
 		return targetGetter.getCompileTestTarget();
 	}
-	
+
 	public String getIncludes() {
 		return testGetter.getIncludesPattern();
 	}
-	
+
 	public String getExcludes() {
 		return testGetter.getExcludesPattern();
 	}
-	
+
+	//Get all test classes that are executed by developers
 	public String getTests() {
 		String tests = "";
+		//Get project directory that contains test classes using PathParser
 		String dir = this.project.getBaseDir().toString()+Paths.get("/")+this.pathParser.parse(testGetter.getTestDir());
-		
+		//Get includes and excludes patters, so WildCardResolver can scan through the directory and find all file names
 		String str[] = WildCardResolver.resolveWildCard(this.getIncludes().split("\n"), this.getExcludes().split("\n"), dir);
 		for(int i = 0; i<str.length; i++) {
 			tests = tests + str[i] + '\n';
 		}
 		return tests;
 	}
-	
+
 	public Target getJunitTarget() {
 		return targetGetter.getJunitTarget();
 	}
-	
+
 }
