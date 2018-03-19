@@ -138,14 +138,14 @@ sub _bootstrap {
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
 
     # TODO: Should try to find it in cached file directory instead of running again
-    system("mkdir -p $DEV_TESTS/${bid}");
-    if(-f "$TMP_DIR/pom.xml"){
-      system("cd $TMP_DIR && mvn ant:ant -Doverwrite=true &> /dev/null");
-      my $cmd = "java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} maven-build.xml 2>&1";
-      Utils::exec_cmd($cmd, "Retrieving developer-included test patterns.");
-    }else{
-      Utils::exec_cmd("java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} build.xml 2>&1", "Retrieving developer-included test patterns.");
-    }
+    # system("mkdir -p $DEV_TESTS/${bid}");
+    # if(-f "$TMP_DIR/pom.xml"){
+    #   system("cd $TMP_DIR && mvn ant:ant -Doverwrite=true &> /dev/null");
+    #   my $cmd = "java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} maven-build.xml 2>&1";
+    #   Utils::exec_cmd($cmd, "Retrieving developer-included test patterns.");
+    # }else{
+    #   Utils::exec_cmd("java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} build.xml 2>&1", "Retrieving developer-included test patterns.");
+    # }
 
     # die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
     # die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
