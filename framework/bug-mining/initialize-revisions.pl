@@ -147,8 +147,8 @@ sub _bootstrap {
       Utils::exec_cmd("java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} build.xml 2>&1", "Retrieving developer-included test patterns.");
     }
 
-    die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
-    die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
+    # die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
+    # die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
 
     # Create local patch so that we can use the D4J core framework.
     # Minimization doesn't matter here, which has to be done manually.
