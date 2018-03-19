@@ -9,12 +9,15 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
+/**
+ * Class that writes analyzer output to files.
+*/
 public class FileWriter {
-	
+
 	private FileWriter() {
-		
+
 	}
-	
+
 	public static void write(String string, String data) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 	        new FileOutputStream(string), "utf-8"))) {

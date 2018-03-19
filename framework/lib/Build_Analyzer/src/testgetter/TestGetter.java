@@ -14,6 +14,9 @@ import org.apache.tools.ant.Task;
 import util.Debugger;
 import util.TaskHelper;
 
+/**
+ * Class for getting developer included tests from given build file.
+ */
 public class TestGetter {
 
 	private Target target;
@@ -28,6 +31,7 @@ public class TestGetter {
 		this.getPatterns();
 	}
 
+	// Get includes pattern from all "includes" attribute
 	public String getIncludesPattern() {
 		String ret = "";
 
@@ -49,6 +53,7 @@ public class TestGetter {
 		return ret;
 	}
 
+	// Get excludes pattern from all "excludes attribute"
 	public String getExcludesPattern() {
 		String ret = "";
 		List <String> list = new ArrayList<String>();
@@ -68,6 +73,7 @@ public class TestGetter {
 			}
 		}
 //		list = list.stream().distinct().collect(Collectors.toList());
+		// Remove duplicates
 		hs.addAll(list);
 		list.clear();
 		list.addAll(hs);
@@ -78,6 +84,7 @@ public class TestGetter {
 		return ret;
 	}
 
+	// Get directory that contains the tests
 	public String getTestDir() {
 		String dir = "";
 		if(filesets != null) {
@@ -89,6 +96,8 @@ public class TestGetter {
 		return dir;
 	}
 
+	// Find fileset, includes, and excludes under junit batchtest.
+	// Then store them to the ArrayList.
 	private void getPatterns() {
 		List<Task> tasks = TaskHelper.getTasks("junit", target);
 		for(Task task:tasks) {
@@ -102,17 +111,14 @@ public class TestGetter {
 		}
 	}
 
+	//Helper method to recursively get certain subtasks
 	private void getSubTask(String taskName, Enumeration<RuntimeConfigurable> subTasks, List<RuntimeConfigurable> list) {
-
 		if(!subTasks.hasMoreElements())
 			return;
-
 		while(subTasks.hasMoreElements()) {
 			RuntimeConfigurable temp = subTasks.nextElement();
-
 			if(temp.getElementTag().equalsIgnoreCase(taskName))
 				list.add(temp);
-
 			getSubTask(taskName, temp.getChildren(), list);
 		}
 

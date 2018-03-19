@@ -6,8 +6,11 @@ import java.util.List;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 
+/**
+ * TaskHelper provides convinient methods for task related operations.
+*/
 public class TaskHelper {
-	
+
 	public static List<Task> getTasks(String taskType, Target target){
 		if(target == null) {
 			Debugger.log("target is null when trying to get task.");
