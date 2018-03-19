@@ -1029,7 +1029,7 @@ sub apply_patch {
 # TODO: Document the purpose of this subroutine and indicate that it needs to be
 # implemented in an inheriting module.
 sub initialize_revision {
-    my ($self, $revision, $vid) = @_;
+    my ($self, $rev_id, $vid) = @_;
 }
 
 ##########################################################################################

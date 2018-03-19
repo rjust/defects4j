@@ -85,7 +85,7 @@ sub _post_checkout {
 #
 sub initialize_revision {
     my ($self, $rev_id, $vid) = @_;
-    $self->SUPER::initialize_revision($revision);
+    $self->SUPER::initialize_revision($rev_id);
 }
 
 #
