@@ -68,6 +68,8 @@ Identifying candidate bugs (populating the `commit-db`)
    `merge-issue-numbers.pl` if a project has multiple trackers):
     - `./download-issues.pl jira -p lang -o bug-mining/issues |
       ./merge-issue-numbers.pl -f bug-mining/issues.txt`
+   Make sure the project id supplied to the download-issues script 
+   is the project id and not the defects4j id.
 
 4. Obtain the development history (commit logs) for the project:
     - `git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitlog`
@@ -140,9 +142,9 @@ Reproducing bugs
 encountered. Also, describe whether analyze-project needs to be rerun in case a
 configuration issue is fixed.**
 
-4. Determine relevant meta data (i.e., modified classes, loaded classes, and
+4. Determine relevant metadata (i.e., modified classes, loaded classes, and
    relevant tests) with `get-class-list.pl`. For each reproducible bug, this
-   script determines the meta data, which will be promoted to the main database
+   script determines the metadata, which will be promoted to the main database
    together with that bug:
     - `./get-metadata.pl -p Lang -w bug-mining`
 
