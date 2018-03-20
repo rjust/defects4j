@@ -119,8 +119,32 @@ initialize-revisions step, and integrate it into the framework**
    candidates -- ones that compile and have a non-empty source diff:
     - `./analyze-project.pl -p Lang -w bug-mining`
 
-3. **TODO: Describe the following review process, which may lead to several
-   iterations of steps 1-3: check all entries in failing_tests and verify that
+3. If any revisions fail to build, inspect the project build script and error 
+   message and attempt to diagnose the issue. One common problem is missing 
+   dependencies. 
+
+4. If a build fails due to an empty test step, this is a common indication that
+   there is a missing dependency on the test classpath (all tests fail due to
+   the missing dependency). This can be confirmed by inspecting the corresponding 
+   file for the revision in the failing_tests folder. This file contains the stack
+   trace for all tests that fail when executed against the "fixed" version of a 
+   class. If all tests fail due to a NoClassDefFoundError (or similar exception), 
+   then remove the failing_test file, ensure that the missing dependency is in place,
+    and reanalyze the revision.
+
+4. If particular revisions cannot be built, often due to dependencies that no 
+   longer exist, then they may be removed from the commit-db. It is recommended 
+   to keep a backup of the commit-db until the entire bug mining process is
+   complete.
+
+5. Upon completion of this stage, inspect all stack traces in the files that are 
+   generated in the failing_tests folder to ensure that tests failed for valid 
+   reasons, and not due to configuration errors. Failed assertions are generally 
+   valid test failures. Missing files or classes are generally due to a configuration
+   issue.
+
+**TODO: Describe the following review process, which may lead to several
+   iterations of steps 1-5: check all entries in failing_tests and verify that
    1) no test clases are failing and 2) all failing tests are indeed broken
    tests that do not fail due to configuration issues.**
 
@@ -138,6 +162,13 @@ Reproducing bugs
    missing files). Each file in `trigger_tests` contains the stack trace for a
    reproduced fault:
     - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
+
+4. If an invalid triggering test is encountered (e.g., due to a configuration 
+   issue), remove the corresponding line from the rev_pairs file, fix the issue, 
+   and reexecute Step 1. If there is a corresponding file for the fixed revision
+   in the failing_tests folder, then reexecute the analysis script for this bug
+   as well. 
+
 **TODO: Describe how to repeat steps 1-3 if an invalid triggering test is
 encountered. Also, describe whether analyze-project needs to be rerun in case a
 configuration issue is fixed.**
