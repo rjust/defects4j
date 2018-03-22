@@ -7,6 +7,9 @@ Test and analysis scripts
    generated test suites are compatible with the coverage, mutation, and bug
    detection analyses.
 
+* `test_export_command.sh`: Tests the
+  [export](https://github.com/rjust/defects4j/blob/master/framework/bin/d4j/d4j-export) command.
+
 * `test_fix_test_suite.sh`: Tests the
   [fix_test_suite.pl](https://github.com/rjust/defects4j/blob/master/framework/util/fix_test_suite.pl) script.
 
