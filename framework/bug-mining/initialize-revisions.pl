@@ -145,6 +145,10 @@ sub _bootstrap {
                 #TODO: Configure your input to analyzer here
                 " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
          Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.");
+      # Get dependencies if it is maven-ant project
+      my $download_dep = "cd $TMP_DIR" .
+                  "&& ant -Dmaven.repo.local=\"$project_dir/lib\" get-deps";
+      Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
       }else{
         my $cmd = " cd $TMP_DIR" .
                   #TODO: Configure your input to analyzer here
