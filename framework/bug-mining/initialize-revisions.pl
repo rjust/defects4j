@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-initialize-revisions.pl -- Initialize all revisions: identify the directory 
+initialize-revisions.pl -- Initialize all revisions: identify the directory
                            layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
@@ -103,6 +103,7 @@ my $PATCH_DIR   = "$project_dir/patches";
 my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
+my $ANALYZER_OUTPUT = "$project_dir/analyzer_output";
 
 system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 
@@ -135,6 +136,21 @@ sub _bootstrap {
     $project->{_vcs}->checkout_vid("${bid}f", $TMP_DIR) or die "Cannot checkout post-fix version";
     $project->initialize_revision($v2, "${bid}f");
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
+
+    system("mkdir -p $ANALYZER_OUTPUT/$bid");
+    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
+    if (-e "$TMP_DIR/pom.xml"){
+      my $cmd = " cd $TMP_DIR" .
+                " && mvn ant:ant -Doverwrite=true 2>&1" .
+                #TODO: Configure your input to analyzer here
+                " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+         Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.");
+      }else{
+        my $cmd = " cd $TMP_DIR" .
+                  #TODO: Configure your input to analyzer here
+                  " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+           Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+      }
 
     die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
     die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
