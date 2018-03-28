@@ -77,11 +77,13 @@ public class Formatter implements JUnitResultFormatter {
 			return;
 		}
 
+		className = test.getClass().getName();
 		{
 			Pattern regexp = Pattern.compile("(.*)\\((.*)\\)\\s*");
 			Matcher match  = regexp.matcher(test.toString());
 			if (match.matches()) {
-				className = match.group(2);
+				if(className.contains("junit.framework"))
+					className = match.group(2);
 				methodName = match.group(1);
 			}
 		}
