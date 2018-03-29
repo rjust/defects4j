@@ -112,6 +112,11 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
    will identify the various directory layouts and run a sanity check on each
    candidate revision in `commit-db`:
     - `./initialize-revisions.pl -p Lang -w bug-mining`
+    - Note: This step uses build-file analyzer to identify developer included & excluded test sets.  
+      Configuration for the analyzer may be needed(labeled TODO in initialize-revisions.pl).  
+      Arguments: `<path to build file>, <path of generated output files>, <name of the build file>`.  
+      In the case when analyzer produces incorrect result, please manually generalize patterns
+      for the test sets.
 **TODO: Describe the build-file analyzer, which is called during the
 initialize-revisions step, and integrate it into the framework**
 
