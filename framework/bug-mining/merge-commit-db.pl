@@ -38,10 +38,11 @@ sub _usage {
 }
 
 my %cmd_opts;
-getopt('f:g:', \%cmd_opts);
+getopt('f:g:t', \%cmd_opts);
 my $filename = $cmd_opts{'f'};
 my $git_dir = $cmd_opts{'g'};
-_usage() unless defined $filename and defined $git_dir;
+my $tracker_id = $cmd_opts{'t'};
+_usage() unless defined $filename and defined $git_dir and defined $tracker_id;
 
 my @existing_commits = (); # assume order of these is not cronological
 my $last_number = 0;
@@ -88,7 +89,7 @@ open FH, ">>$filename";
 foreach my $line (@new_commits) {
     unless(grep(/$line/,@existing_commits)) { # unless it's already in the file
         ++$last_number;
-        print FH "$last_number,$line\n";
+        print FH "$last_number,$line,$tracker_id\n";
         push @existing_commits, $line;
     }
 }
