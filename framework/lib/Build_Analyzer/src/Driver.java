@@ -20,7 +20,7 @@ public class Driver {
 		if(args.length == 3) {
 			pathToProject = args[0];
 			pathToOutput = args[1];
-			buildFile = new File(pathToProject+"/"+args[2]);
+			buildFile = new File(pathToProject+Paths.get("/")+args[2]);
 
 			Analyzer analyzer = new Analyzer(buildFile);
 			FileWriter.write(pathToOutput+Paths.get("/")+"targets", analyzer.getCompileTarget().getName()+'\n'+analyzer.getCompileTestTarget());
