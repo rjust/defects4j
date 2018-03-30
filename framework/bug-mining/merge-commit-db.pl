@@ -34,7 +34,7 @@ use Getopt::Std;
 use Pod::Usage;
 
 sub _usage {
-    die "usage: " . basename($0) . " -f filename -g git_dir";
+    die "usage: " . basename($0) . " -f filename -g git_dir -t tracker_id";
 }
 
 my %cmd_opts;
