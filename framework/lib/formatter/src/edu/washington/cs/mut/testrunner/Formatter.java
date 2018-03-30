@@ -82,7 +82,9 @@ public class Formatter implements JUnitResultFormatter {
 			Pattern regexp = Pattern.compile("(.*)\\((.*)\\)\\s*");
 			Matcher match  = regexp.matcher(test.toString());
 			if (match.matches()) {
-				if(className.contains("junit.framework"))
+				// Class name will equal to junit.framework.Junit4TestCaseFacade if Junit4
+				// style tests are ran with Junit3 style test runner.
+				if(className.equals("junit.framework.JUnit4TestCaseFacade"))
 					className = match.group(2);
 				methodName = match.group(1);
 			}
