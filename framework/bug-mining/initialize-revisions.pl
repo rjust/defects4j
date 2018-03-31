@@ -103,7 +103,7 @@ my $PATCH_DIR   = "$project_dir/patches";
 my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
-my $DEV_TESTS = "$project_dir/all_dev_tests";
+my $ANALYZER_OUTPUT = "$project_dir/analyzer_output";
 
 system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 
@@ -137,18 +137,27 @@ sub _bootstrap {
     $project->initialize_revision($v2, "${bid}f");
     my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
 
-    # TODO: Should try to find it in cached file directory instead of running again
-    # system("mkdir -p $DEV_TESTS/${bid}");
-    # if(-f "$TMP_DIR/pom.xml"){
-    #   system("cd $TMP_DIR && mvn ant:ant -Doverwrite=true &> /dev/null");
-    #   my $cmd = "java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} maven-build.xml 2>&1";
-    #   Utils::exec_cmd($cmd, "Retrieving developer-included test patterns.");
-    # }else{
-    #   Utils::exec_cmd("java -jar ../lib/analyzer.jar $TMP_DIR $DEV_TESTS/${bid} build.xml 2>&1", "Retrieving developer-included test patterns.");
-    # }
+    system("mkdir -p $ANALYZER_OUTPUT/$bid");
+    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
+    if (-e "$TMP_DIR/pom.xml"){
+      my $cmd = " cd $TMP_DIR" .
+                " && mvn ant:ant -Doverwrite=true 2>&1" .
+                #TODO: Configure your input to analyzer here
+                " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+         Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.");
+      # Get dependencies if it is maven-ant project
+      my $download_dep = "cd $TMP_DIR" .
+                  "&& ant -Dmaven.repo.local=\"$project_dir/lib\" get-deps";
+      Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
+      }else{
+        my $cmd = " cd $TMP_DIR" .
+                  #TODO: Configure your input to analyzer here
+                  " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+           Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+      }
 
-    # die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
-    # die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
+    die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
+    die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
 
     # Create local patch so that we can use the D4J core framework.
     # Minimization doesn't matter here, which has to be done manually.
