@@ -1,0 +1,26 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/EncryptedArchiveTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/EncryptedArchiveTest.java
+index c73bf4ff..babbf694 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/EncryptedArchiveTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/EncryptedArchiveTest.java
+@@ -36,8 +36,8 @@ public class EncryptedArchiveTest extends TestCase {
+         try {
+             zf = new ZipFile(file);
+             ZipArchiveEntry zae = zf.getEntry("LICENSE.txt");
+-            assertTrue(zae.getGeneralPurposeBit().usesEncryption());
+-            assertFalse(zae.getGeneralPurposeBit().usesStrongEncryption());
++            assertTrue(zae.isEncrypted());
++            assertFalse(zae.isStronglyEncrypted());
+             assertFalse(zf.canReadEntryData(zae));
+             try {
+                 zf.getInputStream(zae);
+@@ -60,8 +60,8 @@ public class EncryptedArchiveTest extends TestCase {
+             zin = new ZipArchiveInputStream(new FileInputStream(file));
+             ZipArchiveEntry zae = zin.getNextZipEntry();
+             assertEquals("LICENSE.txt", zae.getName());
+-            assertTrue(zae.getGeneralPurposeBit().usesEncryption());
+-            assertFalse(zae.getGeneralPurposeBit().usesStrongEncryption());
++            assertTrue(zae.isEncrypted());
++            assertFalse(zae.isStronglyEncrypted());
+             assertFalse(zin.canReadEntryData(zae));
+             try {
+                 byte[] buf = new byte[1024];

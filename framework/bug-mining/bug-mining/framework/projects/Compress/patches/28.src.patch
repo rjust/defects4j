@@ -1,0 +1,16 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/package.html b/src/main/java/org/apache/commons/compress/archivers/tar/package.html
+index 141f33b6..00a4cf21 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/package.html
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/package.html
+@@ -20,11 +20,5 @@
+   <body>
+     <p>Provides stream classes for reading and writing archives using
+       the TAR format.</p>
+-
+-    <p>There are many different format dialects that call themselves
+-      TAR.  The classes of this package can read and write archives in
+-      the traditional pre-POSIX <b>ustar</b> format and support GNU
+-      specific extensions for long filenames that GNU tar itself by
+-      now refers to as <b>oldgnu</b>.</p>
+   </body>
+ </html>

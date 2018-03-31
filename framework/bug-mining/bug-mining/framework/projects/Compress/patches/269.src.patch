@@ -1,0 +1,19 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ParallelScatterZipCreator.java b/src/main/java/org/apache/commons/compress/archivers/zip/ParallelScatterZipCreator.java
+index 9513da20..dc144994 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ParallelScatterZipCreator.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ParallelScatterZipCreator.java
+@@ -246,11 +246,9 @@ public class ParallelScatterZipCreator {
+         // It is important that all threads terminate before we go on, ensure happens-before relationship
+         compressionDoneAt = System.currentTimeMillis();
+ 
+-        synchronized (streams) {
+-            for (final ScatterZipOutputStream scatterStream : streams) {
+-                scatterStream.writeTo(targetStream);
+-                scatterStream.close();
+-            }
++        for (final ScatterZipOutputStream scatterStream : streams) {
++            scatterStream.writeTo(targetStream);
++            scatterStream.close();
+         }
+ 
+         scatterDoneAt = System.currentTimeMillis();

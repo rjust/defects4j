@@ -1,0 +1,303 @@
+diff --git a/src/java/org/apache/commons/collections/functors/CloneTransformer.java b/src/java/org/apache/commons/collections/functors/CloneTransformer.java
+index 5841b31e..2900f7a6 100644
+--- a/src/java/org/apache/commons/collections/functors/CloneTransformer.java
++++ b/src/java/org/apache/commons/collections/functors/CloneTransformer.java
+@@ -69,8 +69,4 @@ public class CloneTransformer<T> implements Transformer<T, T>, Serializable {
+         return PrototypeFactory.getInstance(input).create();
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/ExceptionClosure.java b/src/java/org/apache/commons/collections/functors/ExceptionClosure.java
+index 516111e3..755e4a7a 100644
+--- a/src/java/org/apache/commons/collections/functors/ExceptionClosure.java
++++ b/src/java/org/apache/commons/collections/functors/ExceptionClosure.java
+@@ -65,8 +65,4 @@ public final class ExceptionClosure<E> implements Closure<E>, Serializable {
+         throw new FunctorException("ExceptionClosure invoked");
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/ExceptionFactory.java b/src/java/org/apache/commons/collections/functors/ExceptionFactory.java
+index 7c1b00d2..aa8e0226 100644
+--- a/src/java/org/apache/commons/collections/functors/ExceptionFactory.java
++++ b/src/java/org/apache/commons/collections/functors/ExceptionFactory.java
+@@ -65,8 +65,4 @@ public final class ExceptionFactory<T> implements Factory<T>, Serializable {
+         throw new FunctorException("ExceptionFactory invoked");
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/ExceptionPredicate.java b/src/java/org/apache/commons/collections/functors/ExceptionPredicate.java
+index c8c36797..238e455e 100644
+--- a/src/java/org/apache/commons/collections/functors/ExceptionPredicate.java
++++ b/src/java/org/apache/commons/collections/functors/ExceptionPredicate.java
+@@ -66,8 +66,4 @@ public final class ExceptionPredicate<T> implements Predicate<T>, Serializable {
+         throw new FunctorException("ExceptionPredicate invoked");
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/ExceptionTransformer.java b/src/java/org/apache/commons/collections/functors/ExceptionTransformer.java
+index 308fc2a5..b1bcf2cb 100644
+--- a/src/java/org/apache/commons/collections/functors/ExceptionTransformer.java
++++ b/src/java/org/apache/commons/collections/functors/ExceptionTransformer.java
+@@ -66,8 +66,4 @@ public final class ExceptionTransformer<I, O> implements Transformer<I, O>, Seri
+         throw new FunctorException("ExceptionTransformer invoked");
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/FalsePredicate.java b/src/java/org/apache/commons/collections/functors/FalsePredicate.java
+index 1cbf8948..a96e54f8 100644
+--- a/src/java/org/apache/commons/collections/functors/FalsePredicate.java
++++ b/src/java/org/apache/commons/collections/functors/FalsePredicate.java
+@@ -76,8 +76,4 @@ public final class FalsePredicate<T> implements Predicate<T>, Serializable {
+         return false;
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/NOPClosure.java b/src/java/org/apache/commons/collections/functors/NOPClosure.java
+index 3b7cadbb..4da423d0 100644
+--- a/src/java/org/apache/commons/collections/functors/NOPClosure.java
++++ b/src/java/org/apache/commons/collections/functors/NOPClosure.java
+@@ -63,8 +63,19 @@ public final class NOPClosure<E> implements Closure<E>, Serializable {
+         // do nothing
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
++    /**
++     * {@inheritDoc}
++     */
++    @Override
++    public boolean equals(Object arg0) {
++        return arg0 == this || arg0 instanceof NOPClosure<?>;
+     }
+ 
++    /**
++     * {@inheritDoc}
++     */
++    @Override
++    public int hashCode() {
++        return System.identityHashCode(INSTANCE);
++    }
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/NOPTransformer.java b/src/java/org/apache/commons/collections/functors/NOPTransformer.java
+index 18d4b35a..eedf67e6 100644
+--- a/src/java/org/apache/commons/collections/functors/NOPTransformer.java
++++ b/src/java/org/apache/commons/collections/functors/NOPTransformer.java
+@@ -38,7 +38,7 @@ public class NOPTransformer<T> implements Transformer<T, T>, Serializable {
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      */
+@@ -56,7 +56,7 @@ public class NOPTransformer<T> implements Transformer<T, T>, Serializable {
+ 
+     /**
+      * Transforms the input to result by doing nothing.
+-     *
++     * 
+      * @param input  the input object to transform
+      * @return the transformed result which is the input
+      */
+@@ -64,8 +64,4 @@ public class NOPTransformer<T> implements Transformer<T, T>, Serializable {
+         return input;
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/NotNullPredicate.java b/src/java/org/apache/commons/collections/functors/NotNullPredicate.java
+index 19d847ce..545265b3 100644
+--- a/src/java/org/apache/commons/collections/functors/NotNullPredicate.java
++++ b/src/java/org/apache/commons/collections/functors/NotNullPredicate.java
+@@ -32,13 +32,13 @@ public final class NotNullPredicate<T> implements Predicate<T>, Serializable {
+ 
+     /** Serial version UID */
+     private static final long serialVersionUID = 7533784454832764388L;
+-
++    
+     /** Singleton predicate instance */
+     public static final Predicate<Object> INSTANCE = new NotNullPredicate<Object>();
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      */
+@@ -56,7 +56,7 @@ public final class NotNullPredicate<T> implements Predicate<T>, Serializable {
+ 
+     /**
+      * Evaluates the predicate returning true if the object does not equal null.
+-     *
++     * 
+      * @param object  the object to evaluate
+      * @return true if not null
+      */
+@@ -64,8 +64,4 @@ public final class NotNullPredicate<T> implements Predicate<T>, Serializable {
+         return (object != null);
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/NullPredicate.java b/src/java/org/apache/commons/collections/functors/NullPredicate.java
+index b2931f15..6fa409a2 100644
+--- a/src/java/org/apache/commons/collections/functors/NullPredicate.java
++++ b/src/java/org/apache/commons/collections/functors/NullPredicate.java
+@@ -32,13 +32,13 @@ public final class NullPredicate<T> implements Predicate<T>, Serializable {
+ 
+     /** Serial version UID */
+     private static final long serialVersionUID = 7533784454832764388L;
+-
++    
+     /** Singleton predicate instance */
+     public static final Predicate<?> INSTANCE = new NullPredicate<Object>();
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      * @deprecated use {@link #nullPredicate()} instead.
+@@ -50,7 +50,7 @@ public final class NullPredicate<T> implements Predicate<T>, Serializable {
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      */
+@@ -68,7 +68,7 @@ public final class NullPredicate<T> implements Predicate<T>, Serializable {
+ 
+     /**
+      * Evaluates the predicate returning true if the input is null.
+-     *
++     * 
+      * @param object  the input object
+      * @return true if input is null
+      */
+@@ -76,8 +76,4 @@ public final class NullPredicate<T> implements Predicate<T>, Serializable {
+         return (object == null);
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/StringValueTransformer.java b/src/java/org/apache/commons/collections/functors/StringValueTransformer.java
+index e95cfc03..fb27dfe8 100644
+--- a/src/java/org/apache/commons/collections/functors/StringValueTransformer.java
++++ b/src/java/org/apache/commons/collections/functors/StringValueTransformer.java
+@@ -39,7 +39,7 @@ public final class StringValueTransformer<T> implements Transformer<T, String>,
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      */
+@@ -57,7 +57,7 @@ public final class StringValueTransformer<T> implements Transformer<T, String>,
+ 
+     /**
+      * Transforms the input to result by calling <code>String.valueOf</code>.
+-     *
++     * 
+      * @param input  the input object to transform
+      * @return the transformed result
+      */
+@@ -65,8 +65,4 @@ public final class StringValueTransformer<T> implements Transformer<T, String>,
+         return String.valueOf(input);
+     }
+ 
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }
+diff --git a/src/java/org/apache/commons/collections/functors/TruePredicate.java b/src/java/org/apache/commons/collections/functors/TruePredicate.java
+index 21e5644d..fa6bd57d 100644
+--- a/src/java/org/apache/commons/collections/functors/TruePredicate.java
++++ b/src/java/org/apache/commons/collections/functors/TruePredicate.java
+@@ -33,25 +33,25 @@ public final class TruePredicate<T> implements Predicate<T>, Serializable {
+ 
+     /** Serial version UID */
+     private static final long serialVersionUID = 3374767158756189740L;
+-
++    
+     /** Singleton predicate instance */
+     public static final Predicate<?> INSTANCE = new TruePredicate<Object>();
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      * @deprecated
+      */
+-    @Deprecated
++    @Deprecated 
+     public static <T> Predicate<T> getInstance() {
+         return truePredicate();
+     }
+ 
+     /**
+      * Factory returning the singleton instance.
+-     *
++     * 
+      * @return the singleton instance
+      * @since Commons Collections 3.1
+      */
+@@ -69,16 +69,11 @@ public final class TruePredicate<T> implements Predicate<T>, Serializable {
+ 
+     /**
+      * Evaluates the predicate returning true always.
+-     *
++     * 
+      * @param object  the input object
+      * @return true always
+      */
+     public boolean evaluate(T object) {
+         return true;
+     }
+-
+-    private Object readResolve() {
+-        return INSTANCE;
+-    }
+-
+ }

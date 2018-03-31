@@ -1,0 +1,70 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
+index 789448da..99427d33 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
+@@ -64,7 +64,7 @@ public class ZCompressorInputStream extends InternalLZWInputStream {
+      * {@inheritDoc}
+      * <p><strong>This method is only protected for technical reasons
+      * and is not part of Commons Compress' published API.  It may
+-     * change or disappear without warning.</strong></p>
++     * change without warning.</strong></p>
+      */
+     @Override
+     protected int readNextCode() throws IOException {
+@@ -95,7 +95,7 @@ public class ZCompressorInputStream extends InternalLZWInputStream {
+      * {@inheritDoc}
+      * <p><strong>This method is only protected for technical reasons
+      * and is not part of Commons Compress' published API.  It may
+-     * change or disappear without warning.</strong></p>
++     * change without warning.</strong></p>
+      */
+     @Override
+     protected int addEntry(int previousCode, byte character) throws IOException {
+@@ -112,7 +112,7 @@ public class ZCompressorInputStream extends InternalLZWInputStream {
+      * {@inheritDoc}
+      * <p><strong>This method is only protected for technical reasons
+      * and is not part of Commons Compress' published API.  It may
+-     * change or disappear without warning.</strong></p>
++     * change without warning.</strong></p>
+      */
+     @Override
+     protected int decompressNextSymbol() throws IOException {
+diff --git a/src/main/java/org/apache/commons/compress/compressors/z/_internal_/InternalLZWInputStream.java b/src/main/java/org/apache/commons/compress/compressors/z/_internal_/InternalLZWInputStream.java
+index a19e54b4..c0b21de7 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/z/_internal_/InternalLZWInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/z/_internal_/InternalLZWInputStream.java
+@@ -24,13 +24,12 @@ import java.io.InputStream;
+ import org.apache.commons.compress.compressors.CompressorInputStream;
+ 
+ /**
+- * <strong>This class is only public for technical reasons and is not
+- * part of Commons Compress' published API - it may change or
+- * disappear without warning.</strong>
+- *
+- * <p>Base-class for traditional Unix ".Z" compression and the
+- * Unshrinking method of ZIP archive.</p>
++ * Base-class for traditional Unix ".Z" compression and the
++ * Unshrinking method of ZIP archive.
+  *
++ * <p><strong>This class is only public for technical reasons and is
++ * not part of Commons Compress' published API.  It may change without
++ * warning.</strong></p>
+  * @NotThreadSafe
+  * @since 1.7
+  */
+diff --git a/src/main/java/org/apache/commons/compress/compressors/z/_internal_/package.html b/src/main/java/org/apache/commons/compress/compressors/z/_internal_/package.html
+index b0f1525e..544d2f79 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/z/_internal_/package.html
++++ b/src/main/java/org/apache/commons/compress/compressors/z/_internal_/package.html
+@@ -18,8 +18,8 @@
+ 
+ -->
+   <body>
+-    <p><strong>This package is not part of Commons Compress' published
+-    API.  It may change without warning.</strong>  Contains classes
+-    used by Commons Compress internally.</p>
++    <p>Contains classes used by Commons Compress
++    internally.  <strong>This package is not part of Commons Compress'
++    published API.  It may change without warning.</strong></p>
+   </body>
+ </html>

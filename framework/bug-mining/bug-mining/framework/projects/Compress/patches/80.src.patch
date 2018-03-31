@@ -1,0 +1,86 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 2f03c1c2..b2b0ce96 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -23,10 +23,10 @@
+ 
+ package org.apache.commons.compress.archivers.tar;
+ 
+-import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.io.InputStreamReader;
++import java.io.Reader;
+ import java.util.HashMap;
+ import java.util.Map;
+ import java.util.Map.Entry;
+@@ -311,44 +311,57 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+     }
+ 
+     private void paxHeaders() throws IOException{
+-        Map<String, String> headers = parsePaxHeaders(this);
++        Reader br = new InputStreamReader(this, "UTF-8") {
++                @Override
++                public void close() {
++                    // make sure GC doesn't close "this" before we are done
++                }
++            };
++        Map<String, String> headers = null;
++        try {
++            headers = parsePaxHeaders(br);
++        } finally {
++            // NO-OP but makes FindBugs happy
++            br.close();
++        }
++
+         getNextEntry(); // Get the actual file entry
+         applyPaxHeadersToCurrentEntry(headers);
+     }
+ 
+-    Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
++    Map<String, String> parsePaxHeaders(Reader br) throws IOException {
+         Map<String, String> headers = new HashMap<String, String>();
+         // Format is "length keyword=value\n";
+         while(true){ // get length
+             int ch;
+             int len = 0;
+             int read = 0;
+-            while((ch = i.read()) != -1) {
++            while((ch = br.read()) != -1){
+                 read++;
+                 if (ch == ' '){ // End of length string
+                     // Get keyword
+-                    ByteArrayOutputStream coll = new ByteArrayOutputStream();
+-                    while((ch = i.read()) != -1) {
++                    StringBuffer sb = new StringBuffer();
++                    while((ch = br.read()) != -1){
+                         read++;
+                         if (ch == '='){ // end of keyword
+-                            String keyword = coll.toString("UTF-8");
++                            String keyword = sb.toString();
+                             // Get rest of entry
+-                            byte[] rest = new byte[len - read];
+-                            int got = i.read(rest);
++                            char[] cbuf = new char[len-read];
++                            int got = br.read(cbuf);
+                             if (got != len - read){
+                                 throw new IOException("Failed to read "
+                                                       + "Paxheader. Expected "
+                                                       + (len - read)
+-                                                      + " bytes, read "
++                                                      + " chars, read "
+                                                       + got);
+                             }
+                             // Drop trailing NL
+-                            String value = new String(rest, 0,
+-                                                      len - read - 1, "UTF-8");
++                            String value = new String(cbuf, 0,
++                                                      len - read - 1);
+                             headers.put(keyword, value);
+                             break;
+                         }
+-                        coll.write((byte) ch);
++                        sb.append((char) ch);
+                     }
+                     break; // Processed single header
+                 }

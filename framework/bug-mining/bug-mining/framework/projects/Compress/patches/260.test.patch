@@ -1,0 +1,20 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
+index 40db7661..a0d9666c 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
+@@ -151,11 +151,10 @@ public class X5455_ExtendedTimestampTest {
+                                     } else {
+                                         assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+                                     }
+-                                }
+-                                if (year < 2038) {
+-                                    assertEquals(year + "-01-01/00:00:01 +0000", modTime);
+-                                    assertEquals(year + "-01-01/00:00:03 +0000", accTime);
+-                                }
++                                }if(year <2038) {
++                                assertEquals(year + "-01-01/00:00:01 +0000", modTime);
++                                assertEquals(year + "-01-01/00:00:03 +0000", accTime);
++                            }
+                                 break;
+                         }
+                     }

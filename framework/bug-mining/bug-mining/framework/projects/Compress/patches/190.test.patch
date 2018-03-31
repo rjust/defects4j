@@ -1,0 +1,17 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStreamTest.java
+index d62d3a07..ae09d63c 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStreamTest.java
+@@ -51,12 +51,6 @@ public class ArArchiveInputStreamTest extends AbstractTestCase {
+             byte[] hello = new byte[14];
+             s.read(hello);
+             assertEquals("Hello, world!\n", ArchiveUtils.toAsciiString(hello));
+-            e = s.getNextEntry();
+-            assertEquals("this_is_a_long_file_name_as_well.txt", e.getName());
+-            assertEquals(4, e.getSize());
+-            byte[] bye = new byte[4];
+-            s.read(bye);
+-            assertEquals("Bye\n", ArchiveUtils.toAsciiString(bye));
+             assertNull(s.getNextEntry());
+         } finally {
+             if (s != null) {

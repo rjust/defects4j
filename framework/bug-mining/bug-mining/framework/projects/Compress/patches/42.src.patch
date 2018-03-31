@@ -1,0 +1,75 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
+index e6ad9a25..20ab303d 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
+@@ -78,10 +78,6 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
+ 
+     /**
+      * Creates a new zip entry with the specified name.
+-     *
+-     * <p>Assumes the entry represents a directory if and only if the
+-     * name ends with a forward slash "/".</p>
+-     *
+      * @param name the name of the entry
+      */
+     public ZipArchiveEntry(String name) {
+@@ -91,10 +87,6 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
+ 
+     /**
+      * Creates a new zip entry with fields taken from the specified zip entry.
+-     *
+-     * <p>Assumes the entry represents a directory if and only if the
+-     * name ends with a forward slash "/".</p>
+-     *
+      * @param entry the entry to get fields from
+      * @throws ZipException on error
+      */
+@@ -115,10 +107,6 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
+ 
+     /**
+      * Creates a new zip entry with fields taken from the specified zip entry.
+-     *
+-     * <p>Assumes the entry represents a directory if and only if the
+-     * name ends with a forward slash "/".</p>
+-     *
+      * @param entry the entry to get fields from
+      * @throws ZipException on error
+      */
+@@ -135,15 +123,6 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
+         this("");
+     }
+ 
+-    /**
+-     * Creates a new zip entry taking some information from the given
+-     * file and using the provided name.
+-     *
+-     * <p>The name will be adjusted to end with a forward slash "/" if
+-     * the file is a directory.  If the file is not a directory a
+-     * potential trailing forward slash will be stripped from the
+-     * entry name.</p>
+-     */
+     public ZipArchiveEntry(File inputFile, String entryName) {
+         this(inputFile.isDirectory() && !entryName.endsWith("/") ? 
+              entryName + "/" : entryName);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 988a7fd9..ccd97d83 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -948,17 +948,6 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+         }
+     }
+ 
+-    /**
+-     * Creates a new zip entry taking some information from the given
+-     * file and using the provided name.
+-     *
+-     * <p>The name will be adjusted to end with a forward slash "/" if
+-     * the file is a directory.  If the file is not a directory a
+-     * potential trailing forward slash will be stripped from the
+-     * entry name.</p>
+-     *
+-     * <p>Must not be used if the stream has already been closed.</p>
+-     */
+     public ArchiveEntry createArchiveEntry(File inputFile, String entryName)
+             throws IOException {
+         if(finished) {

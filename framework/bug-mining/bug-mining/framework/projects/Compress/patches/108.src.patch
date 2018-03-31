@@ -1,0 +1,66 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index d20d039e..eb8cd706 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -311,11 +311,11 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+ 
+         byte[] headerBuf = buffer.readRecord();
+ 
+-        if (buffer.isEOFRecord(headerBuf)) {
++        if (headerBuf == null) {
+             hasHitEOF = true;
+-            if (headerBuf != null) {
+-                buffer.tryToConsumeSecondEOFRecord();
+-            }
++        } else if (buffer.isEOFRecord(headerBuf)) {
++            hasHitEOF = true;
++            buffer.tryToConsumeSecondEOFRecord();
+         }
+ 
+         return hasHitEOF ? null : headerBuf;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarBuffer.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarBuffer.java
+index 4e13f542..9c41ae58 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarBuffer.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarBuffer.java
+@@ -153,13 +153,12 @@ class TarBuffer { // Not public, because only needed by the Tar IO streams
+      * @return true if the record data is an End of Archive
+      */
+     public boolean isEOFRecord(byte[] record) {
+-        if (record != null) {
+-            for (int i = 0, sz = getRecordSize(); i < sz; ++i) {
+-                if (record[i] != 0) {
+-                    return false;
+-                }
++        for (int i = 0, sz = getRecordSize(); i < sz; ++i) {
++            if (record[i] != 0) {
++                return false;
+             }
+         }
++
+         return true;
+     }
+ 
+@@ -182,7 +181,7 @@ class TarBuffer { // Not public, because only needed by the Tar IO streams
+     /**
+      * Read a record from the input stream and return the data.
+      *
+-     * @return The record data or null if EOF has been hit.
++     * @return The record data.
+      * @throws IOException on error
+      */
+     public byte[] readRecord() throws IOException {
+@@ -408,12 +407,12 @@ class TarBuffer { // Not public, because only needed by the Tar IO streams
+     }
+ 
+     /**
+-     * Tries to read the next record rewinding the stream if it is not a EOF record.
++     * Tries to read the next record rewinding the stream if if is not a EOF record.
+      *
+      * <p>This is meant to protect against cases where a tar
+      * implemenation has written only one EOF record when two are
+      * expected.  Actually this won't help since a non-conforming
+-     * implementation likely won't fill full blocks consisting of - by
++     * implementation likely won't fill full blocks consisting of - be
+      * default - ten records either so we probably have already read
+      * beyond the archive anyway.</p>
+      */

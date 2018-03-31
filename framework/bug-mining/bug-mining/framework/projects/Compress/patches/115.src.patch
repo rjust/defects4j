@@ -1,0 +1,119 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index 14b94ccc..6ed62803 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -676,16 +676,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Indicate if this entry is a GNU long linkname block
+-     *
+-     * @return true if this is a long name extension provided by GNU tar
+-     */
+-    public boolean isGNULongLinkEntry() {
+-        return linkFlag == LF_GNUTYPE_LONGLINK
+-            && name.equals(GNU_LONGLINK);
+-    }
+-
+-    /**
+      * Indicate if this entry is a GNU long name block
+      *
+      * @return true if this is a long name extension provided by GNU tar
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 1eb0b683..d20d039e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -248,13 +248,31 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+         entryOffset = 0;
+         entrySize = currEntry.getSize();
+ 
+-        if (currEntry.isGNULongLinkEntry()) {
+-            byte[] longLinkData = getLongNameData();
+-            currEntry.setLinkName(encoding.decode(longLinkData));
+-        }
+-
+         if (currEntry.isGNULongNameEntry()) {
+-            byte[] longNameData = getLongNameData();
++            // read in the name
++            ByteArrayOutputStream longName = new ByteArrayOutputStream();
++            int length = 0;
++            while ((length = read(SMALL_BUF)) >= 0) {
++                longName.write(SMALL_BUF, 0, length);
++            }
++            getNextEntry();
++            if (currEntry == null) {
++                // Bugzilla: 40334
++                // Malformed tar file - long entry name not followed by entry
++                return null;
++            }
++            byte[] longNameData = longName.toByteArray();
++            // remove trailing null terminator(s)
++            length = longNameData.length;
++            while (length > 0 && longNameData[length - 1] == 0) {
++                --length;
++            }
++            if (length != longNameData.length) {
++                byte[] l = new byte[length];
++                System.arraycopy(longNameData, 0, l, 0, length);
++                longNameData = l;
++            }
++
+             currEntry.setName(encoding.decode(longNameData));
+         }
+ 
+@@ -275,39 +293,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+     }
+ 
+     /**
+-     * Get the next entry in this tar archive as longname data.
+-     *
+-     * @return The next entry in the archive as longname data, or null.
+-     * @throws IOException on error
+-     */
+-    protected byte[] getLongNameData() throws IOException {
+-        // read in the name
+-        ByteArrayOutputStream longName = new ByteArrayOutputStream();
+-        int length = 0;
+-        while ((length = read(SMALL_BUF)) >= 0) {
+-            longName.write(SMALL_BUF, 0, length);
+-        }
+-        getNextEntry();
+-        if (currEntry == null) {
+-            // Bugzilla: 40334
+-            // Malformed tar file - long entry name not followed by entry
+-            return null;
+-        }
+-        byte[] longNameData = longName.toByteArray();
+-        // remove trailing null terminator(s)
+-        length = longNameData.length;
+-        while (length > 0 && longNameData[length - 1] == 0) {
+-            --length;
+-        }
+-        if (length != longNameData.length) {
+-            byte[] l = new byte[length];
+-            System.arraycopy(longNameData, 0, l, 0, length);
+-            longNameData = l;
+-        }
+-        return longNameData;
+-    }
+-
+-    /**
+      * Get the next record in this tar archive. This will skip
+      * over any remaining data in the current entry, if there
+      * is one, and place the input stream at the header of the
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+index 5e5889cd..7b7c9cd3 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+@@ -233,11 +233,6 @@ public interface TarConstants {
+     byte   LF_CONTIG = (byte) '7';
+ 
+     /**
+-     * Identifies the *next* file on the tape as having a long linkname.
+-     */
+-    byte LF_GNUTYPE_LONGLINK = (byte) 'K';
+-
+-    /**
+      * Identifies the *next* file on the tape as having a long name.
+      */
+     byte LF_GNUTYPE_LONGNAME = (byte) 'L';

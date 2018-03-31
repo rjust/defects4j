@@ -1,0 +1,39 @@
+diff --git a/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java b/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
+index e898c20f..cf7a4207 100644
+--- a/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
++++ b/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
+@@ -23,8 +23,6 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Set;
+ 
+-import org.apache.commons.collections4.IteratorUtils;
+-
+ /**
+  * Extension of {@link AbstractSetTest} for exercising the
+  * {@link ListOrderedSet} implementation.
+@@ -229,25 +227,6 @@ public class ListOrderedSetTest<E>
+         assertTrue(stop - start < 5000);
+     }
+ 
+-    @SuppressWarnings("unchecked")
+-    public void testDuplicates() {
+-        final List<E> list = new ArrayList<E>(10);
+-        list.add((E) Integer.valueOf(1));
+-        list.add((E) Integer.valueOf(2));
+-        list.add((E) Integer.valueOf(3));
+-        list.add((E) Integer.valueOf(1));
+-
+-        final ListOrderedSet<E> orderedSet = ListOrderedSet.listOrderedSet(list);
+-
+-        assertEquals(3, orderedSet.size());
+-        assertEquals(3, IteratorUtils.toArray(orderedSet.iterator()).length);
+-
+-        // insertion order preserved?
+-        assertEquals(Integer.valueOf(1), orderedSet.get(0));
+-        assertEquals(Integer.valueOf(2), orderedSet.get(1));
+-        assertEquals(Integer.valueOf(3), orderedSet.get(2));
+-    }
+-
+     static class A {
+ 
+         @Override

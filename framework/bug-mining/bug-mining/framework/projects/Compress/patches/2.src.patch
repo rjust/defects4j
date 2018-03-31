@@ -1,0 +1,30 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+index 5a3240eb..65115835 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+@@ -321,10 +321,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+         }
+ 
+         ret.setInode(readAsciiLong(8, 16));
+-        long mode = readAsciiLong(8, 16);
+-        if (mode != 0){ // mode is initialised to 0
+-            ret.setMode(mode);
+-        }
++        ret.setMode(readAsciiLong(8, 16));
+         ret.setUID(readAsciiLong(8, 16));
+         ret.setGID(readAsciiLong(8, 16));
+         ret.setNumberOfLinks(readAsciiLong(8, 16));
+@@ -336,12 +333,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+         ret.setRemoteDeviceMin(readAsciiLong(8, 16));
+         long namesize = readAsciiLong(8, 16);
+         ret.setChksum(readAsciiLong(8, 16));
+-        String name = readCString((int) namesize);
+-        ret.setName(name);
+-        if (mode == 0 && !name.equals(CPIO_TRAILER)){
+-            // TODO - change this to throw
+-            new IOException("Mode 0 only allowed in the trailer. Found: "+name).printStackTrace();
+-        }
++        ret.setName(readCString((int) namesize));
+         pad(ret.getHeaderSize() + namesize, 4);
+ 
+         return ret;

@@ -1,0 +1,25 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+index d24680da..c5383fad 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+@@ -358,18 +358,18 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+         TarArchiveEntry t = new TarArchiveEntry(n);
+         t.setSize(10 * 1024);
+         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+-        TarArchiveOutputStream tos = new TarArchiveOutputStream(bos, "ASCII");
++        TarArchiveOutputStream tos = new TarArchiveOutputStream(bos);
+         tos.setLongFileMode(mode);
+         tos.putArchiveEntry(t);
+         tos.write(new byte[10 * 1024]);
+         tos.closeArchiveEntry();
+-        tos.close();
+         byte[] data = bos.toByteArray();
+         TarArchiveInputStream tin =
+             new TarArchiveInputStream(new ByteArrayInputStream(data));
+         TarArchiveEntry e = tin.getNextTarEntry();
+         assertEquals(n, e.getName());
+         tin.close();
++        tos.close();
+     }
+ 
+ }

@@ -1,0 +1,133 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
+index 35348056..75648230 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
+@@ -294,18 +294,18 @@ class TapeInputStream extends FilterInputStream {
+                         0x03)) {
+                     case ZLIB:
+ 
+-                        Inflater inflator = new Inflater();
+                         try {
++                            Inflater inflator = new Inflater();
+                             inflator.setInput(compBuffer, 0, compBuffer.length);
+                             length = inflator.inflate(blockBuffer);
+ 
+                             if (length != blockSize) {
+                                 throw new ShortFileException();
+                             }
++
++                            inflator.end();
+                         } catch (DataFormatException e) {
+                             throw new DumpArchiveException("bad data", e);
+-                        } finally {
+-                            inflator.end();
+                         }
+ 
+                         break;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 584aa4a8..2f7894aa 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -519,11 +519,8 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+     public void close() throws IOException {
+         if (!closed) {
+             closed = true;
+-            try {
+-                in.close();
+-            } finally {
+-                inf.end();
+-            }
++            in.close();
++            inf.end();
+         }
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+index 31444d75..51fe7713 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+@@ -420,11 +420,8 @@ public class ZipFile implements Closeable {
+                 return new InflaterInputStream(bis, inflater) {
+                     @Override
+                     public void close() throws IOException {
+-                        try {
+-                            super.close();
+-                        } finally {
+-                            inflater.end();
+-                        }
++                        super.close();
++                        inflater.end();
+                     }
+                 };
+             case BZIP2:
+diff --git a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
+index f7b8dd03..d4fec63f 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
+@@ -37,7 +37,6 @@ public class DeflateCompressorInputStream extends CompressorInputStream {
+     private static final int MAGIC_2d = 0xda;
+     
+     private final InputStream in;
+-    private final Inflater inflater;
+ 
+     /**
+      * Creates a new input stream that decompresses Deflate-compressed data
+@@ -59,8 +58,7 @@ public class DeflateCompressorInputStream extends CompressorInputStream {
+      */
+     public DeflateCompressorInputStream(InputStream inputStream,
+                                         DeflateParameters parameters) {
+-        inflater = new Inflater(!parameters.withZlibHeader());
+-        in = new InflaterInputStream(inputStream, inflater);
++        in = new InflaterInputStream(inputStream, new Inflater(!parameters.withZlibHeader()));
+     }
+     
+     /** {@inheritDoc} */
+@@ -94,11 +92,7 @@ public class DeflateCompressorInputStream extends CompressorInputStream {
+     /** {@inheritDoc} */
+     @Override
+     public void close() throws IOException {
+-        try {
+-            in.close();
+-        } finally {
+-            inflater.end();
+-        }
++        in.close();
+     }
+     
+     /**
+diff --git a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorOutputStream.java b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorOutputStream.java
+index e978a577..3714fe44 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorOutputStream.java
+@@ -31,8 +31,7 @@ import org.apache.commons.compress.compressors.CompressorOutputStream;
+  */
+ public class DeflateCompressorOutputStream extends CompressorOutputStream {
+     private final DeflaterOutputStream out;
+-    private final Deflater deflater;
+-
++   
+     /**
+      * Creates a Deflate compressed output stream with the default parameters.
+      * @param outputStream the stream to wrap
+@@ -50,8 +49,7 @@ public class DeflateCompressorOutputStream extends CompressorOutputStream {
+      */
+     public DeflateCompressorOutputStream(OutputStream outputStream,
+                                          DeflateParameters parameters) throws IOException {
+-        this.deflater = new Deflater(parameters.getCompressionLevel(), !parameters.withZlibHeader());
+-        this.out = new DeflaterOutputStream(outputStream, deflater);
++        this.out = new DeflaterOutputStream(outputStream, new Deflater(parameters.getCompressionLevel(), !parameters.withZlibHeader()));
+     }
+ 
+     @Override
+@@ -85,10 +83,6 @@ public class DeflateCompressorOutputStream extends CompressorOutputStream {
+ 
+     @Override
+     public void close() throws IOException {
+-        try {
+-            out.close();
+-        } finally {
+-            deflater.end();
+-        }
++        out.close();
+     }
+ }

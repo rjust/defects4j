@@ -1,0 +1,59 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+index 967e71d1..d06355e6 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+@@ -204,16 +204,46 @@ public class ZipFileTest extends TestCase {
+         }
+     }
+ 
+-    /**
+-     * @see https://issues.apache.org/jira/browse/COMPRESS-227
+-     */
+     public void testDuplicateEntry() throws Exception {
+-        File archive = getFile("COMPRESS-227.zip");
+-        zf = new ZipFile(archive);
++        File f = File.createTempFile("commons-compress-zipfiletest", ".zip");
++        f.deleteOnExit();
++        File f2 = File.createTempFile("commons-compress-zipfiletest", ".txt");
++        f2.deleteOnExit();
++
++        OutputStream o = null;
++        try {
++            o = new FileOutputStream(f);
++            ZipArchiveOutputStream zo = new ZipArchiveOutputStream(o);
++            // simple way to ensure entries have extra data
++            zo.setUseZip64(Zip64Mode.Always);
+ 
+-        ZipArchiveEntry ze = zf.getEntry("test1.txt");
+-        assertNotNull(ze);
+-        assertNotNull(zf.getInputStream(ze));
++            // add the same file twice
++            ZipArchiveEntry ze = new ZipArchiveEntry(f2, "foo");
++            zo.putArchiveEntry(ze);
++            zo.write(new byte[0]);
++            zo.closeArchiveEntry();
++            ze = new ZipArchiveEntry(f2, "foo");
++            zo.putArchiveEntry(ze);
++            zo.write(new byte[0]);
++            zo.closeArchiveEntry();
++            zo.close();
++
++            o.close();
++            o = null;
++
++            System.err.println("-------------------vvvvvvvvvvvvvvvvvvvvvvv-----------");
++            zf = new ZipFile(f);
++            ze = zf.getEntry("foo");
++            assertNotNull(ze);
++            assertNotNull(zf.getInputStream(ze));
++        } finally {
++            System.err.println("-------------------^^^^^^^^^^^^^^^^^^^^^^^-----------");
++            if (o != null) {
++                o.close();
++            }
++            f.delete();
++            f2.delete();
++        }
+     }
+ 
+     /*

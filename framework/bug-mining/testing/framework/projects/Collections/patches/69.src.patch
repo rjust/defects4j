@@ -1,0 +1,22 @@
+diff --git a/src/main/java/org/apache/commons/collections/iterators/CollatingIterator.java b/src/main/java/org/apache/commons/collections/iterators/CollatingIterator.java
+index 4bcb55c8..84353d75 100644
+--- a/src/main/java/org/apache/commons/collections/iterators/CollatingIterator.java
++++ b/src/main/java/org/apache/commons/collections/iterators/CollatingIterator.java
+@@ -346,7 +346,7 @@ public class CollatingIterator<E> implements Iterator<E> {
+      * Returns the index of the least element in {@link #values},
+      * {@link #set(int) setting} any uninitialized values.
+      * 
+-     * @throws NullPointerException if no comparator is set
++     * @throws IllegalStateException
+      */
+     private int least() {
+         int leastIndex = -1;
+@@ -362,7 +362,7 @@ public class CollatingIterator<E> implements Iterator<E> {
+                 } else {
+                     E curObject = values.get(i);
+                     if (comparator == null) {
+-                        throw new NullPointerException("You must invoke setComparator() to set a comparator first.");
++                        throw new NullPointerException("You must invoke setComparator() to set a compator first.");
+                     }
+                     if (comparator.compare(curObject, leastObject) < 0) {
+                         leastObject = curObject;

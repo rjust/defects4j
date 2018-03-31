@@ -1,0 +1,302 @@
+diff --git a/src/main/java/org/apache/commons/collections4/bag/AbstractBagDecorator.java b/src/main/java/org/apache/commons/collections4/bag/AbstractBagDecorator.java
+index 819632ec..b01d44ee 100644
+--- a/src/main/java/org/apache/commons/collections4/bag/AbstractBagDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/bag/AbstractBagDecorator.java
+@@ -63,16 +63,6 @@ public abstract class AbstractBagDecorator<E>
+         return (Bag<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public int getCount(final Object object) {
+diff --git a/src/main/java/org/apache/commons/collections4/bag/PredicatedBag.java b/src/main/java/org/apache/commons/collections4/bag/PredicatedBag.java
+index f3a14d48..44796d73 100644
+--- a/src/main/java/org/apache/commons/collections4/bag/PredicatedBag.java
++++ b/src/main/java/org/apache/commons/collections4/bag/PredicatedBag.java
+@@ -87,16 +87,6 @@ public class PredicatedBag<E> extends PredicatedCollection<E> implements Bag<E>
+         return (Bag<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public boolean add(final E object, final int count) {
+diff --git a/src/main/java/org/apache/commons/collections4/bag/SynchronizedBag.java b/src/main/java/org/apache/commons/collections4/bag/SynchronizedBag.java
+index 00b0a161..6c3e0bc7 100644
+--- a/src/main/java/org/apache/commons/collections4/bag/SynchronizedBag.java
++++ b/src/main/java/org/apache/commons/collections4/bag/SynchronizedBag.java
+@@ -82,23 +82,6 @@ public class SynchronizedBag<E> extends SynchronizedCollection<E> implements Bag
+         return (Bag<E>) decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        if (object == this) {
+-            return true;
+-        }
+-        synchronized (lock) {
+-            return getBag().equals(object);
+-        }
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        synchronized (lock) {
+-            return getBag().hashCode();
+-        }
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public boolean add(final E object, final int count) {
+diff --git a/src/main/java/org/apache/commons/collections4/bag/TransformedBag.java b/src/main/java/org/apache/commons/collections4/bag/TransformedBag.java
+index 21d01c78..52a01cff 100644
+--- a/src/main/java/org/apache/commons/collections4/bag/TransformedBag.java
++++ b/src/main/java/org/apache/commons/collections4/bag/TransformedBag.java
+@@ -18,10 +18,10 @@ package org.apache.commons.collections4.bag;
+ 
+ import java.util.Set;
+ 
++import org.apache.commons.collections4.set.TransformedSet;
+ import org.apache.commons.collections4.Bag;
+ import org.apache.commons.collections4.Transformer;
+ import org.apache.commons.collections4.collection.TransformedCollection;
+-import org.apache.commons.collections4.set.TransformedSet;
+ 
+ /**
+  * Decorates another {@link Bag} to transform objects that are added.
+@@ -110,16 +110,6 @@ public class TransformedBag<E> extends TransformedCollection<E> implements Bag<E
+         return (Bag<E>) decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public int getCount(final Object object) {
+diff --git a/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java b/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
+index 4bffdb13..3a8c3fba 100644
+--- a/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
++++ b/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
+@@ -343,16 +343,6 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
+         }
+ 
+         @Override
+-        public boolean equals(final Object object) {
+-            return object == this || decorated().equals(object);
+-        }
+-
+-        @Override
+-        public int hashCode() {
+-            return decorated().hashCode();
+-        }
+-
+-        @Override
+         public boolean removeAll(final Collection<?> coll) {
+             if (parent.isEmpty() || coll.isEmpty()) {
+                 return false;
+diff --git a/src/main/java/org/apache/commons/collections4/collection/AbstractCollectionDecorator.java b/src/main/java/org/apache/commons/collections4/collection/AbstractCollectionDecorator.java
+index 961f4e46..de1d484c 100644
+--- a/src/main/java/org/apache/commons/collections4/collection/AbstractCollectionDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/collection/AbstractCollectionDecorator.java
+@@ -34,19 +34,6 @@ import java.util.Iterator;
+  * {@link #iterator()}. Instead it simply returns the value from the
+  * wrapped collection. This may be undesirable, for example if you are trying
+  * to write an unmodifiable implementation it might provide a loophole.
+- * <p>
+- * This implementation does not forward the hashCode and equals methods through
+- * to the backing object, but relies on Object's implementation. This is necessary
+- * to preserve the symmetry of equals. Custom definitions of equality are usually
+- * based on an interface, such as Set or List, so that the implementation of equals
+- * can cast the object being tested for equality to the custom interface.
+- * AbstractCollectionDecorator does not implement such custom interfaces directly;
+- * they are implemented only in subclasses. Therefore, forwarding equals would break
+- * symmetry, as the forwarding object might consider itself equal to the object being
+- * tested, but the reverse could not be true. This behavior is consistent with the
+- * JDK's collection wrappers, such as {@link java.util.Collections#unmodifiableCollection(Collection)}.
+- * Use an interface-specific subclass of AbstractCollectionDecorator, such as
+- * AbstractListDecorator, to preserve equality behavior, or override equals directly.
+  *
+  * @param <E> the type of the elements in the collection
+  * @since 3.0
+@@ -158,6 +145,16 @@ public abstract class AbstractCollectionDecorator<E>
+     }
+ 
+     @Override
++    public boolean equals(final Object object) {
++        return object == this || decorated().equals(object);
++    }
++
++    @Override
++    public int hashCode() {
++        return decorated().hashCode();
++    }
++
++    @Override
+     public String toString() {
+         return decorated().toString();
+     }
+diff --git a/src/main/java/org/apache/commons/collections4/list/AbstractListDecorator.java b/src/main/java/org/apache/commons/collections4/list/AbstractListDecorator.java
+index 67b89287..d7a5bc46 100644
+--- a/src/main/java/org/apache/commons/collections4/list/AbstractListDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/list/AbstractListDecorator.java
+@@ -65,16 +65,6 @@ public abstract class AbstractListDecorator<E> extends AbstractCollectionDecorat
+         return (List<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public void add(final int index, final E object) {
+diff --git a/src/main/java/org/apache/commons/collections4/list/PredicatedList.java b/src/main/java/org/apache/commons/collections4/list/PredicatedList.java
+index 5d51b600..4dc9bdb1 100644
+--- a/src/main/java/org/apache/commons/collections4/list/PredicatedList.java
++++ b/src/main/java/org/apache/commons/collections4/list/PredicatedList.java
+@@ -94,16 +94,6 @@ public class PredicatedList<E> extends PredicatedCollection<E> implements List<E
+         return (List<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public E get(final int index) {
+diff --git a/src/main/java/org/apache/commons/collections4/list/TransformedList.java b/src/main/java/org/apache/commons/collections4/list/TransformedList.java
+index 6a0ce29a..adf19d8f 100644
+--- a/src/main/java/org/apache/commons/collections4/list/TransformedList.java
++++ b/src/main/java/org/apache/commons/collections4/list/TransformedList.java
+@@ -114,16 +114,6 @@ public class TransformedList<E> extends TransformedCollection<E> implements List
+         return (List<E>) decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     public E get(final int index) {
+diff --git a/src/main/java/org/apache/commons/collections4/queue/AbstractQueueDecorator.java b/src/main/java/org/apache/commons/collections4/queue/AbstractQueueDecorator.java
+index eabee450..440fa329 100644
+--- a/src/main/java/org/apache/commons/collections4/queue/AbstractQueueDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/queue/AbstractQueueDecorator.java
+@@ -24,12 +24,6 @@ import org.apache.commons.collections4.collection.AbstractCollectionDecorator;
+  * Decorates another {@link Queue} to provide additional behaviour.
+  * <p>
+  * Methods are forwarded directly to the decorated queue.
+- * <p>
+- * This implementation does not forward the hashCode and equals methods through
+- * to the backing object, but relies on Object's implementation. This is
+- * necessary as some Queue implementations, e.g. LinkedList, have custom a
+- * equals implementation for which symmetry can not be preserved.
+- * See class javadoc of AbstractCollectionDecorator for more information.
+  *
+  * @param <E> the type of the elements in the queue
+  * @since 4.0
+diff --git a/src/main/java/org/apache/commons/collections4/set/AbstractSetDecorator.java b/src/main/java/org/apache/commons/collections4/set/AbstractSetDecorator.java
+index 1be4a123..c664043f 100644
+--- a/src/main/java/org/apache/commons/collections4/set/AbstractSetDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/set/AbstractSetDecorator.java
+@@ -63,14 +63,4 @@ public abstract class AbstractSetDecorator<E> extends AbstractCollectionDecorato
+         return (Set<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+ }
+diff --git a/src/main/java/org/apache/commons/collections4/set/PredicatedSet.java b/src/main/java/org/apache/commons/collections4/set/PredicatedSet.java
+index 472a1317..af048f9e 100644
+--- a/src/main/java/org/apache/commons/collections4/set/PredicatedSet.java
++++ b/src/main/java/org/apache/commons/collections4/set/PredicatedSet.java
+@@ -86,14 +86,4 @@ public class PredicatedSet<E> extends PredicatedCollection<E> implements Set<E>
+         return (Set<E>) super.decorated();
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+ }
+diff --git a/src/main/java/org/apache/commons/collections4/set/TransformedSet.java b/src/main/java/org/apache/commons/collections4/set/TransformedSet.java
+index 234fcb29..cf5db63a 100644
+--- a/src/main/java/org/apache/commons/collections4/set/TransformedSet.java
++++ b/src/main/java/org/apache/commons/collections4/set/TransformedSet.java
+@@ -101,14 +101,4 @@ public class TransformedSet<E> extends TransformedCollection<E> implements Set<E
+         super(set, transformer);
+     }
+ 
+-    @Override
+-    public boolean equals(final Object object) {
+-        return object == this || decorated().equals(object);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return decorated().hashCode();
+-    }
+-
+ }

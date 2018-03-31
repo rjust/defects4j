@@ -1,0 +1,22 @@
+diff --git a/src/main/java/org/apache/commons/collections4/map/PassiveExpiringMap.java b/src/main/java/org/apache/commons/collections4/map/PassiveExpiringMap.java
+index 2a18e45f..c6776a70 100644
+--- a/src/main/java/org/apache/commons/collections4/map/PassiveExpiringMap.java
++++ b/src/main/java/org/apache/commons/collections4/map/PassiveExpiringMap.java
+@@ -121,7 +121,7 @@ public class PassiveExpiringMap<K, V>
+          */
+         public ConstantTimeToLiveExpirationPolicy(final long timeToLive,
+                                                   final TimeUnit timeUnit) {
+-            this(validateAndConvertToMillis(timeToLive, timeUnit));
++            this(validateAndConvertToMillis(timeToLive, TimeUnit.MILLISECONDS));
+         }
+ 
+         /**
+@@ -196,7 +196,7 @@ public class PassiveExpiringMap<K, V>
+         if (timeUnit == null) {
+             throw new IllegalArgumentException("Time unit must not be null");
+         }
+-        return TimeUnit.MILLISECONDS.convert(timeToLive, timeUnit);
++        return timeUnit.convert(timeToLive, TimeUnit.MILLISECONDS);
+     }
+ 
+     /** map used to manage expiration times for the actual map entries. */

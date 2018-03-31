@@ -1,0 +1,45 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+index 07da7d5c..29761838 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+@@ -17,10 +17,10 @@
+  */
+ package org.apache.commons.compress.archivers.zip;
+ 
+-import org.apache.commons.compress.utils.ByteUtils;
+-
+ import java.io.Serializable;
+ 
++import org.apache.commons.compress.utils.ByteUtils;
++
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.WORD;
+ 
+ /**
+@@ -82,14 +82,6 @@ public final class ZipLong implements Cloneable, Serializable {
+     }
+ 
+     /**
+-     * create instance from a java int.
+-      * @param value
+-     */
+-    public ZipLong(int value) {
+-        this.value = value;
+-    }
+-
+-    /**
+      * Create instance from bytes.
+      * @param bytes the bytes to store as a ZipLong
+      */
+@@ -123,12 +115,6 @@ public final class ZipLong implements Cloneable, Serializable {
+     }
+ 
+     /**
+-     * Get value as a (signed) java int
+-     * @return
+-     */
+-    public int getIntValue() { return (int)value;}
+-
+-    /**
+      * Get value as four bytes in big endian byte order.
+      * @param value the value to convert
+      * @return value as four bytes in big endian byte order

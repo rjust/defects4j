@@ -1,0 +1,28 @@
+diff --git a/src/main/java/org/apache/commons/collections4/map/AbstractReferenceMap.java b/src/main/java/org/apache/commons/collections4/map/AbstractReferenceMap.java
+index e0fa7e27..f1140838 100644
+--- a/src/main/java/org/apache/commons/collections4/map/AbstractReferenceMap.java
++++ b/src/main/java/org/apache/commons/collections4/map/AbstractReferenceMap.java
+@@ -1045,15 +1045,6 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
+         final int capacity = in.readInt();
+         init();
+         data = new HashEntry[capacity];
+-
+-        // COLLECTIONS-599: Calculate threshold before populating, otherwise it will be 0 
+-        // when it hits AbstractHashedMap.checkCapacity() and so will unnecessarily 
+-        // double up the size of the "data" array during population.
+-        //
+-        // NB: AbstractHashedMap.doReadObject() DOES calculate the threshold before populating.
+-        //
+-        threshold = calculateThreshold(data.length, loadFactor);
+-        
+         while (true) {
+             final K key = (K) in.readObject();
+             if (key == null) {
+@@ -1062,6 +1053,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
+             final V value = (V) in.readObject();
+             put(key, value);
+         }
++        threshold = calculateThreshold(data.length, loadFactor);
+         // do not call super.doReadObject() as code there doesn't work for reference map
+     }
+ 

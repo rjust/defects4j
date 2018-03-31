@@ -1,0 +1,30 @@
+diff --git a/src/test/java/org/apache/commons/collections4/map/AbstractMapTest.java b/src/test/java/org/apache/commons/collections4/map/AbstractMapTest.java
+index ccd1fc3f..280404be 100644
+--- a/src/test/java/org/apache/commons/collections4/map/AbstractMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/AbstractMapTest.java
+@@ -1956,13 +1956,19 @@ public abstract class AbstractMapTest<K, V> extends AbstractObjectTest {
+         assertEquals("Map should be same size as HashMap", size, getMap().size());
+         assertEquals("Map should be empty if HashMap is", empty, getMap().isEmpty());
+         assertEquals("hashCodes should be the same", getConfirmed().hashCode(), getMap().hashCode());
+-        // changing the order of the assertion below fails for LRUMap because confirmed is
+-        // another collection (e.g. treemap) and confirmed.equals() creates a normal iterator (not
+-        // #mapIterator()), which modifies the parent expected modCount of the map object, causing
+-        // concurrent modification exceptions.
+-        // Because of this we have assertEquals(map, confirmed), and not the other way around.
+-        assertEquals("Map should still equal HashMap", map, confirmed);
++        // this fails for LRUMap because confirmed.equals() somehow modifies
++        // map, causing concurrent modification exceptions.
++        // assertEquals("Map should still equal HashMap", confirmed, map);
++        // this works though and performs the same verification:
+         assertTrue("Map should still equal HashMap", getMap().equals(getConfirmed()));
++        // TODO: this should really be reexamined to figure out why LRU map
++        // behaves like it does (the equals shouldn't modify since all accesses
++        // by the confirmed collection should be through an iterator, thus not
++        // causing LRUMap to change).
++        // When comparing two maps, the entries in the map have to be accessed
++        // (usually with the get(Object) method). In the case of the LRUMap, this
++        // also alters the modCount as moveToMRU is called for the retrieved entry.
++        // Imho, the modCount should not be increased for a read-only operation.
+     }
+ 
+     public void verifyEntrySet() {

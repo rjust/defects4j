@@ -1,0 +1,129 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java
+index a508fede..f99aa0da 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/arj/ArjArchiveInputStream.java
+@@ -341,9 +341,6 @@ public class ArjArchiveInputStream extends ArchiveInputStream {
+     
+     @Override
+     public int read(final byte[] b, final int off, final int len) throws IOException {
+-        if (currentLocalFileHeader == null) {
+-            throw new IllegalStateException("No current arj entry");
+-        }
+         if (currentLocalFileHeader.method != LocalFileHeader.Methods.STORED) {
+             throw new IOException("Unsupported compression method " + currentLocalFileHeader.method);
+         }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+index bf411e37..0f804545 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+@@ -465,10 +465,6 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+             return -1;
+         }
+ 
+-        if (active == null) {
+-            throw new IllegalStateException("No current dump entry");
+-        }
+-
+         if (len + entryOffset > entrySize) {
+             len = (int) (entrySize - entryOffset);
+         }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
+index ae350b62..e1502e2c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
+@@ -871,9 +871,6 @@ public class SevenZFile implements Closeable {
+      *             if an I/O error has occurred
+      */
+     public int read() throws IOException {
+-        if (currentEntryInputStream == null) {
+-            throw new IllegalStateException("No current 7z entry");
+-        }
+         return currentEntryInputStream.read();
+     }
+     
+@@ -900,9 +897,6 @@ public class SevenZFile implements Closeable {
+      *             if an I/O error has occurred
+      */
+     public int read(byte[] b, int off, int len) throws IOException {
+-        if (currentEntryInputStream == null) {
+-            throw new IllegalStateException("No current 7z entry");
+-        }
+         return currentEntryInputStream.read(b, off, len);
+     }
+     
+diff --git a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+index 84d1431b..b99cf4e9 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+@@ -181,7 +181,7 @@ public class SevenZOutputFile implements Closeable {
+         compressedCrc32.reset();
+         fileBytesWritten = 0;
+     }
+-
++    
+     /**
+      * Writes a byte to the current archive entry.
+      * @param b The byte to be written.
+@@ -272,10 +272,6 @@ public class SevenZOutputFile implements Closeable {
+     }
+ 
+     private CountingOutputStream setupFileOutputStream() throws IOException {
+-        if (files.isEmpty()) {
+-            throw new IllegalStateException("No current 7z entry");
+-        }
+-
+         OutputStream out = new OutputStreamWrapper();
+         ArrayList<CountingOutputStream> moreStreams = new ArrayList<CountingOutputStream>();
+         boolean first = true;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index fe2c1133..d79eb8aa 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -573,10 +573,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             return -1;
+         }
+ 
+-        if (currEntry == null) {
+-            throw new IllegalStateException("No current tar entry");
+-        }
+-
+         numToRead = Math.min(numToRead, available());
+         
+         totalRead = is.read(buf, offset, numToRead);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+index 2a5d5910..cd7368ae 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+@@ -265,7 +265,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+      */
+     @Override
+     public void putArchiveEntry(ArchiveEntry archiveEntry) throws IOException {
+-        if (finished) {
++        if(finished) {
+             throw new IOException("Stream has already been finished");
+         }
+         TarArchiveEntry entry = (TarArchiveEntry) archiveEntry;
+@@ -369,9 +369,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+      */
+     @Override
+     public void write(byte[] wBuf, int wOffset, int numToWrite) throws IOException {
+-        if (!haveUnclosedEntry) {
+-            throw new IllegalStateException("No current tar entry");
+-        }
+         if (currBytes + numToWrite > currSize) {
+             throw new IOException("request to write '" + numToWrite
+                                   + "' bytes exceeds size in header of '"
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 20985faa..12a1c66e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -753,9 +753,6 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+      */
+     @Override
+     public void write(byte[] b, int offset, int length) throws IOException {
+-        if (entry == null) {
+-            throw new IllegalStateException("No current entry");
+-        }
+         ZipUtil.checkRequestedFeatures(entry.entry);
+         entry.hasWritten = true;
+         if (entry.entry.getMethod() == DEFLATED) {

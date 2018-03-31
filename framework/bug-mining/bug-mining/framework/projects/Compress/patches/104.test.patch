@@ -1,0 +1,59 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+index c1651d54..7bd10e32 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+@@ -19,22 +19,15 @@
+ package org.apache.commons.compress.archivers.zip;
+ 
+ import static org.apache.commons.compress.AbstractTestCase.getFile;
+-import static org.apache.commons.compress.AbstractTestCase.mkdir;
+-import static org.apache.commons.compress.AbstractTestCase.rmdir;
+ import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertTrue;
+ 
+ import java.io.BufferedInputStream;
+-import java.io.File;
+ import java.io.FileInputStream;
+-import java.io.FileOutputStream;
+ import java.io.InputStream;
+-import java.io.IOException;
+-import java.io.OutputStream;
+ 
+ import org.junit.Test;
+-import org.apache.commons.compress.utils.IOUtils;
+ 
+ public class ZipArchiveInputStreamTest {
+ 
+@@ -100,31 +93,4 @@ public class ZipArchiveInputStreamTest {
+         assertArrayEquals(expected, actual);
+         zip.close();
+     }
+-
+-    /**
+-     * @see "https://issues.apache.org/jira/browse/COMPRESS-219"
+-     */
+-    @Test
+-    public void shouldReadNestedZip() throws IOException {
+-        ZipArchiveInputStream in = null;
+-        try {
+-            in = new ZipArchiveInputStream(new FileInputStream(getFile("COMPRESS-219.zip")));
+-            extractZipInputStream(in);
+-        } finally {
+-            if (in != null) {
+-                in.close();
+-            }
+-        }
+-    }
+-
+-    private void extractZipInputStream(final ZipArchiveInputStream in)
+-        throws IOException {
+-        ZipArchiveEntry zae = in.getNextZipEntry();
+-        while (zae != null) {
+-            if (zae.getName().endsWith(".zip")) {
+-                extractZipInputStream(new ZipArchiveInputStream(in));
+-            }
+-            zae = in.getNextZipEntry();
+-        }
+-    }
+ }

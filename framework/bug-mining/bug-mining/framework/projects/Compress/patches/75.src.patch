@@ -1,0 +1,44 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+index ad844900..e77ce97c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+@@ -58,13 +58,6 @@ public interface TarConstants {
+     int    GIDLEN = 8;
+ 
+     /**
+-     * The maximum value of gid/uid in a tar archive which can
+-     * be expressed in octal char notation (that's 7 sevens, octal).
+-     * @since 1.4
+-     */
+-    long    MAXID = 07777777L;
+- 
+-    /**
+      * The length of the checksum field in a header buffer.
+      */
+     int    CHKSUMLEN = 8;
+@@ -76,8 +69,7 @@ public interface TarConstants {
+     int    SIZELEN = 12;
+ 
+     /**
+-     * The maximum size of a file in a tar archive 
+-     * which can be expressed in octal char notation (that's 11 sevens, octal).
++     * The maximum size of a file in a tar archive (That's 11 sevens, octal).
+      */
+     long   MAXSIZE = 077777777777L;
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 7afe0d34..674fd226 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -324,10 +324,7 @@ public class TarUtils {
+     public static int formatLongOctalOrBinaryBytes(
+         final long value, byte[] buf, final int offset, final int length) {
+ 
+-        // Check whether we are dealing with UID/GID or SIZE field
+-        final long maxAsOctalChar = length == TarConstants.UIDLEN ? TarConstants.MAXID : TarConstants.MAXSIZE;
+-
+-        if (value <= maxAsOctalChar) { // OK to store as octal chars
++        if (value < TarConstants.MAXSIZE + 1) {
+             return formatLongOctalBytes(value, buf, offset, length);
+         }
+ 

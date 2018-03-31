@@ -1,0 +1,413 @@
+diff --git a/src/java/org/apache/commons/collections/BagUtils.java b/src/java/org/apache/commons/collections/BagUtils.java
+index a390e46d..4642cbea 100644
+--- a/src/java/org/apache/commons/collections/BagUtils.java
++++ b/src/java/org/apache/commons/collections/BagUtils.java
+@@ -140,9 +140,6 @@ public class BagUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Bag. It is important not to use the original bag after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified bag will not be transformed.
+-     * If you want that behaviour, see {@link TransformedBag#decorateTransform}.
+      *
+      * @param bag  the bag to predicate, must not be null
+      * @param transformer  the transformer for the bag, must not be null
+@@ -234,9 +231,6 @@ public class BagUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Bag. It is important not to use the original bag after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified bag will not be transformed.
+-     * If you want that behaviour, see {@link TransformedSortedBag#decorateTransform}.
+      *
+      * @param bag  the bag to predicate, must not be null
+      * @param transformer  the transformer for the bag, must not be null
+diff --git a/src/java/org/apache/commons/collections/BufferUtils.java b/src/java/org/apache/commons/collections/BufferUtils.java
+index 4fab0170..eb8b157f 100644
+--- a/src/java/org/apache/commons/collections/BufferUtils.java
++++ b/src/java/org/apache/commons/collections/BufferUtils.java
+@@ -188,9 +188,6 @@ public class BufferUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Buffer. It is important not to use the original buffer after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified buffer will not be transformed.
+-     * If you want that behaviour, see {@link TransformedBuffer#decorateTransform}.
+      *
+      * @param buffer  the buffer to predicate, must not be null
+      * @param transformer  the transformer for the buffer, must not be null
+diff --git a/src/java/org/apache/commons/collections/CollectionUtils.java b/src/java/org/apache/commons/collections/CollectionUtils.java
+index 7d9af578..efe88e67 100644
+--- a/src/java/org/apache/commons/collections/CollectionUtils.java
++++ b/src/java/org/apache/commons/collections/CollectionUtils.java
+@@ -1201,9 +1201,6 @@ public class CollectionUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Collection. It is important not to use the original collection after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified collection will not be transformed.
+-     * If you want that behaviour, see {@link TransformedCollection#decorateTransform}.
+      *
+      * @param collection  the collection to predicate, must not be null
+      * @param transformer  the transformer for the collection, must not be null
+diff --git a/src/java/org/apache/commons/collections/ListUtils.java b/src/java/org/apache/commons/collections/ListUtils.java
+index 8cfec138..e721600f 100644
+--- a/src/java/org/apache/commons/collections/ListUtils.java
++++ b/src/java/org/apache/commons/collections/ListUtils.java
+@@ -350,9 +350,6 @@ public class ListUtils {
+      * Each object is passed through the transformer as it is added to the
+      * List. It is important not to use the original list after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified list will not be transformed.
+-     * If you want that behaviour, see {@link TransformedList#decorateTransform}.
+      *
+      * @param list  the list to predicate, must not be null
+      * @param transformer  the transformer for the list, must not be null
+diff --git a/src/java/org/apache/commons/collections/SetUtils.java b/src/java/org/apache/commons/collections/SetUtils.java
+index 5270321e..93a3e5bd 100644
+--- a/src/java/org/apache/commons/collections/SetUtils.java
++++ b/src/java/org/apache/commons/collections/SetUtils.java
+@@ -212,9 +212,6 @@ public class SetUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Set. It is important not to use the original set after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified set will not be transformed.
+-     * If you want that behaviour, see {@link TransformedSet#decorateTransform}.
+      *
+      * @param set  the set to transform, must not be null
+      * @param transformer  the transformer for the set, must not be null
+@@ -316,9 +313,6 @@ public class SetUtils {
+      * Each object is passed through the transformer as it is added to the
+      * Set. It is important not to use the original set after invoking this 
+      * method, as it is a backdoor for adding untransformed objects.
+-     * <p>
+-     * Existing entries in the specified set will not be transformed.
+-     * If you want that behaviour, see {@link TransformedSortedSet#decorateTransform}.
+      *
+      * @param set  the set to transform, must not be null
+      * @param transformer  the transformer for the set, must not be null
+diff --git a/src/java/org/apache/commons/collections/bag/TransformedBag.java b/src/java/org/apache/commons/collections/bag/TransformedBag.java
+index 962b8c1f..b5600d82 100644
+--- a/src/java/org/apache/commons/collections/bag/TransformedBag.java
++++ b/src/java/org/apache/commons/collections/bag/TransformedBag.java
+@@ -17,7 +17,6 @@
+ package org.apache.commons.collections.bag;
+ 
+ import java.util.Set;
+-import java.util.Collection;
+ 
+ import org.apache.commons.collections.Bag;
+ import org.apache.commons.collections.Transformer;
+@@ -50,7 +49,6 @@ public class TransformedBag
+      * <p>
+      * If there are any elements already in the bag being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param bag  the bag to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -61,32 +59,6 @@ public class TransformedBag
+         return new TransformedBag(bag, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming bag that will transform
+-     * existing contents of the specified bag.
+-     * <p>
+-     * If there are any elements already in the bag being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param bag  the bag to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed Bag
+-     * @throws IllegalArgumentException if bag or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static Bag decorateTransform(Bag bag, Transformer transformer) {
+-        TransformedBag decorated = new TransformedBag(bag, transformer);
+-        if (transformer != null && bag != null && bag.size() > 0) {
+-            Object[] values = bag.toArray();
+-            bag.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/bag/TransformedSortedBag.java b/src/java/org/apache/commons/collections/bag/TransformedSortedBag.java
+index d39d4f87..efe39088 100644
+--- a/src/java/org/apache/commons/collections/bag/TransformedSortedBag.java
++++ b/src/java/org/apache/commons/collections/bag/TransformedSortedBag.java
+@@ -47,7 +47,6 @@ public class TransformedSortedBag
+      * <p>
+      * If there are any elements already in the bag being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param bag  the bag to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -58,32 +57,6 @@ public class TransformedSortedBag
+         return new TransformedSortedBag(bag, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming sorted bag that will transform
+-     * existing contents of the specified sorted bag.
+-     * <p>
+-     * If there are any elements already in the bag being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param bag  the bag to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed SortedBag
+-     * @throws IllegalArgumentException if bag or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static SortedBag decorateTransform(SortedBag bag, Transformer transformer) {
+-        TransformedSortedBag decorated = new TransformedSortedBag(bag, transformer);
+-        if (transformer != null && bag != null && bag.size() > 0) {
+-            Object[] values = bag.toArray();
+-            bag.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/buffer/TransformedBuffer.java b/src/java/org/apache/commons/collections/buffer/TransformedBuffer.java
+index 76038da9..c7942f49 100644
+--- a/src/java/org/apache/commons/collections/buffer/TransformedBuffer.java
++++ b/src/java/org/apache/commons/collections/buffer/TransformedBuffer.java
+@@ -45,7 +45,6 @@ public class TransformedBuffer extends TransformedCollection implements Buffer {
+      * <p>
+      * If there are any elements already in the buffer being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param buffer  the buffer to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -56,32 +55,6 @@ public class TransformedBuffer extends TransformedCollection implements Buffer {
+         return new TransformedBuffer(buffer, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming buffer that will transform
+-     * existing contents of the specified buffer.
+-     * <p>
+-     * If there are any elements already in the buffer being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param buffer  the buffer to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed Buffer
+-     * @throws IllegalArgumentException if buffer or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static Buffer decorateTransform(Buffer buffer, Transformer transformer) {
+-        TransformedBuffer decorated = new TransformedBuffer(buffer, transformer);
+-        if (transformer != null && buffer != null && buffer.size() > 0) {
+-            Object[] values = buffer.toArray();
+-            buffer.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/collection/TransformedCollection.java b/src/java/org/apache/commons/collections/collection/TransformedCollection.java
+index a182431f..4a85e4a0 100644
+--- a/src/java/org/apache/commons/collections/collection/TransformedCollection.java
++++ b/src/java/org/apache/commons/collections/collection/TransformedCollection.java
+@@ -51,7 +51,6 @@ public class TransformedCollection extends AbstractSerializableCollectionDecorat
+      * <p>
+      * If there are any elements already in the collection being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param coll  the collection to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -62,32 +61,6 @@ public class TransformedCollection extends AbstractSerializableCollectionDecorat
+         return new TransformedCollection(coll, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming collection that will transform
+-     * existing contents of the specified collection.
+-     * <p>
+-     * If there are any elements already in the collection being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param collection  the collection to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed Collection
+-     * @throws IllegalArgumentException if collection or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static Collection decorateTransform(Collection collection, Transformer transformer) {
+-        TransformedCollection decorated = new TransformedCollection(collection, transformer);
+-        if (transformer != null && collection != null && collection.size() > 0) {
+-            Object[] values = collection.toArray();
+-            collection.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/list/TransformedList.java b/src/java/org/apache/commons/collections/list/TransformedList.java
+index b9f66ac0..d1076553 100644
+--- a/src/java/org/apache/commons/collections/list/TransformedList.java
++++ b/src/java/org/apache/commons/collections/list/TransformedList.java
+@@ -49,7 +49,6 @@ public class TransformedList extends TransformedCollection implements List {
+      * <p>
+      * If there are any elements already in the list being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param list  the list to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -59,32 +58,6 @@ public class TransformedList extends TransformedCollection implements List {
+         return new TransformedList(list, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming list that will transform
+-     * existing contents of the specified list.
+-     * <p>
+-     * If there are any elements already in the list being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param list  the list to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed List
+-     * @throws IllegalArgumentException if list or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static List decorateTransform(List list, Transformer transformer) {
+-        TransformedList decorated = new TransformedList(list, transformer);
+-        if (transformer != null && list != null && list.size() > 0) {
+-            Object[] values = list.toArray();
+-            list.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/set/TransformedSet.java b/src/java/org/apache/commons/collections/set/TransformedSet.java
+index 190234c2..463bf58f 100644
+--- a/src/java/org/apache/commons/collections/set/TransformedSet.java
++++ b/src/java/org/apache/commons/collections/set/TransformedSet.java
+@@ -46,7 +46,6 @@ public class TransformedSet extends TransformedCollection implements Set {
+      * <p>
+      * If there are any elements already in the set being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param set  the set to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -56,32 +55,6 @@ public class TransformedSet extends TransformedCollection implements Set {
+         return new TransformedSet(set, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming set that will transform
+-     * existing contents of the specified set.
+-     * <p>
+-     * If there are any elements already in the set being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param set  the set to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed Set
+-     * @throws IllegalArgumentException if set or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static Set decorateTransform(Set set, Transformer transformer) {
+-        TransformedSet decorated = new TransformedSet(set, transformer);
+-        if (transformer != null && set != null && set.size() > 0) {
+-            Object[] values = set.toArray();
+-            set.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).
+diff --git a/src/java/org/apache/commons/collections/set/TransformedSortedSet.java b/src/java/org/apache/commons/collections/set/TransformedSortedSet.java
+index 98084f9f..1472ee59 100644
+--- a/src/java/org/apache/commons/collections/set/TransformedSortedSet.java
++++ b/src/java/org/apache/commons/collections/set/TransformedSortedSet.java
+@@ -46,7 +46,6 @@ public class TransformedSortedSet extends TransformedSet implements SortedSet {
+      * <p>
+      * If there are any elements already in the set being decorated, they
+      * are NOT transformed.
+-     * Constrast this with {@link #decorateTransform}.
+      * 
+      * @param set  the set to decorate, must not be null
+      * @param transformer  the transformer to use for conversion, must not be null
+@@ -56,32 +55,6 @@ public class TransformedSortedSet extends TransformedSet implements SortedSet {
+         return new TransformedSortedSet(set, transformer);
+     }
+     
+-    /**
+-     * Factory method to create a transforming sorted set that will transform
+-     * existing contents of the specified sorted set.
+-     * <p>
+-     * If there are any elements already in the set being decorated, they
+-     * will be transformed by this method.
+-     * Constrast this with {@link #decorate}.
+-     * 
+-     * @param set  the set to decorate, must not be null
+-     * @param transformer  the transformer to use for conversion, must not be null
+-     * @return a new transformed SortedSet
+-     * @throws IllegalArgumentException if set or transformer is null
+-     * @since Commons Collections 3.3
+-     */
+-    public static SortedSet decorateTransform(SortedSet set, Transformer transformer) {
+-        TransformedSortedSet decorated = new TransformedSortedSet(set, transformer);
+-        if (transformer != null && set != null && set.size() > 0) {
+-            Object[] values = set.toArray();
+-            set.clear();
+-            for(int i=0; i<values.length; i++) {
+-                decorated.getCollection().add(transformer.transform(values[i]));
+-            }
+-        }
+-        return decorated;
+-    }
+-
+     //-----------------------------------------------------------------------
+     /**
+      * Constructor that wraps (not copies).

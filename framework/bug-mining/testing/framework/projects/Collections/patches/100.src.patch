@@ -1,0 +1,44 @@
+diff --git a/src/main/java/org/apache/commons/collections4/iterators/ArrayIterator.java b/src/main/java/org/apache/commons/collections4/iterators/ArrayIterator.java
+index 13792371..0bdd3506 100644
+--- a/src/main/java/org/apache/commons/collections4/iterators/ArrayIterator.java
++++ b/src/main/java/org/apache/commons/collections4/iterators/ArrayIterator.java
+@@ -38,13 +38,13 @@ import org.apache.commons.collections4.ResettableIterator;
+ public class ArrayIterator<E> implements ResettableIterator<E> {
+ 
+     /** The array to iterate over */
+-    final Object array;
++    protected final Object array;
+     /** The start index to loop from */
+-    final int startIndex;
++    protected final int startIndex;
+     /** The end index to loop to */
+-    final int endIndex;
++    protected final int endIndex;
+     /** The current iterator index */
+-    int index = 0;
++    protected int index = 0;
+ 
+     // Constructors
+     // ----------------------------------------------------------------------
+diff --git a/src/main/java/org/apache/commons/collections4/iterators/ObjectArrayIterator.java b/src/main/java/org/apache/commons/collections4/iterators/ObjectArrayIterator.java
+index 0bf82be5..c11da69b 100644
+--- a/src/main/java/org/apache/commons/collections4/iterators/ObjectArrayIterator.java
++++ b/src/main/java/org/apache/commons/collections4/iterators/ObjectArrayIterator.java
+@@ -37,13 +37,13 @@ public class ObjectArrayIterator<E>
+         implements Iterator<E>, ResettableIterator<E> {
+ 
+     /** The array */
+-    final E[] array;
++    protected final E[] array;
+     /** The start index to loop from */
+-    final int startIndex;
++    protected final int startIndex;
+     /** The end index to loop to */
+-    final int endIndex;
++    protected final int endIndex;
+     /** The current iterator index */
+-    int index = 0;
++    protected int index = 0;
+ 
+     //-------------------------------------------------------------------------
+     /**

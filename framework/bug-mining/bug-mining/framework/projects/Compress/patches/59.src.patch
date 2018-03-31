@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index feea2703..09b00834 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -420,7 +420,7 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+ 
+             long inB;
+             if (current.getMethod() == ZipArchiveOutputStream.DEFLATED) {
+-                inB = ZipUtil.adjustToLong(inf.getTotalIn());
++                inB = inf.getTotalIn();
+             } else {
+                 inB = readBytesOfEntry;
+             }

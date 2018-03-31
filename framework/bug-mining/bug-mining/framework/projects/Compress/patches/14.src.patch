@@ -1,0 +1,211 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+index 38c1c388..34dfc0ca 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+@@ -23,7 +23,6 @@ import java.io.InputStream;
+ 
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveInputStream;
+-import org.apache.commons.compress.utils.ArchiveUtils;
+ 
+ /**
+  * Implements the "ar" archive format as an input stream.
+@@ -74,7 +73,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+         }
+ 
+         if (offset == 0) {
+-            final byte[] expected = ArchiveUtils.toAsciiBytes(ArArchiveEntry.HEADER);
++            final byte[] expected = ArArchiveEntry.HEADER.getBytes();
+             final byte[] realized = new byte[expected.length]; 
+             final int read = read(realized);
+             if (read != expected.length) {
+@@ -82,7 +81,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+             }
+             for (int i = 0; i < expected.length; i++) {
+                 if (expected[i] != realized[i]) {
+-                    throw new IOException("invalid header " + ArchiveUtils.toAsciiString(realized));
++                    throw new IOException("invalid header " + new String(realized));
+                 }
+             }
+         }
+@@ -113,7 +112,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+         read(length);
+ 
+         {
+-            final byte[] expected = ArchiveUtils.toAsciiBytes(ArArchiveEntry.TRAILER);
++            final byte[] expected = ArArchiveEntry.TRAILER.getBytes();
+             final byte[] realized = new byte[expected.length]; 
+             final int read = read(realized);
+             if (read != expected.length) {
+@@ -133,7 +132,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+         if (temp.endsWith("/")){
+             temp=temp.substring(0, temp.length()-1);
+         }
+-        currentEntry = new ArArchiveEntry(temp, // TODO is it correct to use the default charset here?
++        currentEntry = new ArArchiveEntry(temp,
+                                           Long.parseLong(new String(length)
+                                                          .trim()));
+         return currentEntry;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
+index ee7eceea..aa95aca4 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
+@@ -24,7 +24,6 @@ import java.io.OutputStream;
+ 
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveOutputStream;
+-import org.apache.commons.compress.utils.ArchiveUtils;
+ 
+ /**
+  * Implements the "ar" archive format as an output stream.
+@@ -44,7 +43,7 @@ public class ArArchiveOutputStream extends ArchiveOutputStream {
+     }
+ 
+     private long writeArchiveHeader() throws IOException {
+-        byte [] header = ArchiveUtils.toAsciiBytes(ArArchiveEntry.HEADER);
++        byte [] header = ArArchiveEntry.HEADER.getBytes();
+         out.write(header);
+         return header.length;
+     }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+index 6cd17db4..4d36d5dc 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+@@ -24,7 +24,6 @@ import java.io.InputStream;
+ 
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveInputStream;
+-import org.apache.commons.compress.utils.ArchiveUtils;
+ 
+ /**
+  * CPIOArchiveInputStream is a stream for reading cpio streams. All formats of
+@@ -176,7 +175,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+             System.arraycopy(magic, 0, tmp, 0, magic.length);
+             System.arraycopy(more_magic, 0, tmp, magic.length,
+                     more_magic.length);
+-            String magicString = ArchiveUtils.toAsciiString(tmp);
++            String magicString = new String(tmp);
+             if (magicString.equals(MAGIC_NEW)) {
+                 this.entry = readNewEntry(false);
+             } else if (magicString.equals(MAGIC_NEW_CRC)) {
+@@ -289,7 +288,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+             throws IOException {
+         byte tmpBuffer[] = new byte[length];
+         readFully(tmpBuffer, 0, tmpBuffer.length);
+-        return Long.parseLong(ArchiveUtils.toAsciiString(tmpBuffer), radix);
++        return Long.parseLong(new String(tmpBuffer), radix);
+     }
+ 
+     private CpioArchiveEntry readNewEntry(final boolean hasCrc)
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index 4221c54e..19ce3eb2 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -26,7 +26,6 @@ import java.util.HashMap;
+ 
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveOutputStream;
+-import org.apache.commons.compress.utils.ArchiveUtils;
+ 
+ /**
+  * CPIOArchiveOutputStream is a stream for writing CPIO streams. All formats of
+@@ -168,15 +167,15 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+     private void writeHeader(final CpioArchiveEntry e) throws IOException {
+         switch (e.getFormat()) {
+         case FORMAT_NEW:
+-            out.write(ArchiveUtils.toAsciiBytes(MAGIC_NEW));
++            out.write(MAGIC_NEW.getBytes());
+             writeNewEntry(e);
+             break;
+         case FORMAT_NEW_CRC:
+-            out.write(ArchiveUtils.toAsciiBytes(MAGIC_NEW_CRC));
++            out.write(MAGIC_NEW_CRC.getBytes());
+             writeNewEntry(e);
+             break;
+         case FORMAT_OLD_ASCII:
+-            out.write(ArchiveUtils.toAsciiBytes(MAGIC_OLD_ASCII));
++            out.write(MAGIC_OLD_ASCII.getBytes());
+             writeOldAsciiEntry(e);
+             break;
+         case FORMAT_OLD_BINARY:
+@@ -373,12 +372,12 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         } else {
+             tmpStr = tmp.substring(tmp.length() - length);
+         }
+-        out.write(tmpStr.getBytes()); // TODO is it correct to use the default charset here?
++        out.write(tmpStr.getBytes());
+     }
+ 
+     private void writeCString(final String str) throws IOException {
+         out.write(str.getBytes());
+-        out.write('\0'); // TODO is it correct to use the default charset here?
++        out.write('\0');
+     }
+ 
+     public ArchiveEntry createArchiveEntry(File inputFile, String entryName)
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+index 1d9e5c5e..f859ee81 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+@@ -158,7 +158,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+                 TarArchiveEntry longLinkEntry = new TarArchiveEntry(TarConstants.GNU_LONGLINK,
+                                                                     TarConstants.LF_GNUTYPE_LONGNAME);
+ 
+-                final byte[] nameBytes = entry.getName().getBytes(); // TODO is it correct to use the default charset here?
++                final byte[] nameBytes = entry.getName().getBytes();
+                 longLinkEntry.setSize(nameBytes.length + 1); // +1 for NUL
+                 putArchiveEntry(longLinkEntry);
+                 write(nameBytes);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/AsiExtraField.java b/src/main/java/org/apache/commons/compress/archivers/zip/AsiExtraField.java
+index 1e916951..922eff60 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/AsiExtraField.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/AsiExtraField.java
+@@ -101,7 +101,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
+                           + WORD         // SizDev
+                           + 2         // UID
+                           + 2         // GID
+-                          + getLinkedFile().getBytes().length); // TODO is it correct to use the default charset here?
++                          + getLinkedFile().getBytes().length);
+     }
+ 
+     /**
+@@ -122,7 +122,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
+         byte[] data = new byte[getLocalFileDataLength().getValue() - WORD];
+         System.arraycopy(ZipShort.getBytes(getMode()), 0, data, 0, 2);
+ 
+-        byte[] linkArray = getLinkedFile().getBytes(); // TODO is it correct to use the default charset here?
++        byte[] linkArray = getLinkedFile().getBytes();
+         // CheckStyle:MagicNumber OFF
+         System.arraycopy(ZipLong.getBytes(linkArray.length),
+                          0, data, 2, WORD);
+@@ -280,7 +280,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
+             link = "";
+         } else {
+             System.arraycopy(tmp, 10, linkArray, 0, linkArray.length);
+-            link = new String(linkArray); // TODO is it correct to use the default charset here?
++            link = new String(linkArray);
+         }
+         // CheckStyle:MagicNumber ON
+         setDirectory((newMode & DIR_FLAG) != 0);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/FallbackZipEncoding.java b/src/main/java/org/apache/commons/compress/archivers/zip/FallbackZipEncoding.java
+index 14c5ea68..33559419 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/FallbackZipEncoding.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/FallbackZipEncoding.java
+@@ -75,7 +75,7 @@ class FallbackZipEncoding implements ZipEncoding {
+      */
+     public ByteBuffer encode(String name) throws IOException {
+         if (this.charset == null) {
+-            return ByteBuffer.wrap(name.getBytes()); // TODO is it correct to use the default charset here?
++            return ByteBuffer.wrap(name.getBytes());
+         } else {
+             return ByteBuffer.wrap(name.getBytes(this.charset));
+         }
+@@ -87,7 +87,7 @@ class FallbackZipEncoding implements ZipEncoding {
+      */
+     public String decode(byte[] data) throws IOException {
+         if (this.charset == null) {
+-            return new String(data); // TODO is it correct to use the default charset here?
++            return new String(data);
+         } else {
+             return new String(data,this.charset);
+         }

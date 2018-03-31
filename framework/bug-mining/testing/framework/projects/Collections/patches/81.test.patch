@@ -1,0 +1,12 @@
+diff --git a/src/test/java/org/apache/commons/collections4/list/SetUniqueListTest.java b/src/test/java/org/apache/commons/collections4/list/SetUniqueListTest.java
+index 1ae473c7..6f995d3d 100644
+--- a/src/test/java/org/apache/commons/collections4/list/SetUniqueListTest.java
++++ b/src/test/java/org/apache/commons/collections4/list/SetUniqueListTest.java
+@@ -613,6 +613,7 @@ public class SetUniqueListTest<E> extends AbstractListTest<E> {
+         assertTrue(lset.contains(obj2));
+     }
+ 
++    @SuppressWarnings("serial")
+     class SetUniqueList307 extends SetUniqueList<E> {
+         /**
+          * Generated serial version ID.

@@ -1,0 +1,158 @@
+diff --git a/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java b/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
+index 193604e0..33377ba8 100644
+--- a/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
++++ b/src/main/java/org/apache/commons/collections4/bidimap/AbstractDualBidiMap.java
+@@ -44,32 +44,32 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
+     /**
+      * Normal delegate map.
+      */
+-    transient Map<K, V> normalMap;
++    protected transient Map<K, V> normalMap;
+ 
+     /**
+      * Reverse delegate map.
+      */
+-    transient Map<V, K> reverseMap;
++    protected transient Map<V, K> reverseMap;
+ 
+     /**
+      * Inverse view of this map.
+      */
+-    transient BidiMap<V, K> inverseBidiMap = null;
++    protected transient BidiMap<V, K> inverseBidiMap = null;
+ 
+     /**
+      * View of the keys.
+      */
+-    transient Set<K> keySet = null;
++    protected transient Set<K> keySet = null;
+ 
+     /**
+      * View of the values.
+      */
+-    transient Collection<V> values = null;
++    protected transient Collection<V> values = null;
+ 
+     /**
+      * View of the entries.
+      */
+-    transient Set<Map.Entry<K, V>> entrySet = null;
++    protected transient Set<Map.Entry<K, V>> entrySet = null;
+ 
+     /**
+      * Creates an empty map, initialised by <code>createMap</code>.
+diff --git a/src/main/java/org/apache/commons/collections4/list/AbstractLinkedList.java b/src/main/java/org/apache/commons/collections4/list/AbstractLinkedList.java
+index 9e80e073..9d1bf372 100644
+--- a/src/main/java/org/apache/commons/collections4/list/AbstractLinkedList.java
++++ b/src/main/java/org/apache/commons/collections4/list/AbstractLinkedList.java
+@@ -59,13 +59,13 @@ public abstract class AbstractLinkedList<E> implements List<E> {
+      * hold a value. The value of <code>next</code> is the first item in the
+      * list. The value of of <code>previous</code> is the last item in the list.
+      */
+-    transient Node<E> header;
++    protected transient Node<E> header;
+ 
+     /** The size of the list */
+-    transient int size;
++    protected transient int size;
+ 
+     /** Modification count for iterators */
+-    transient int modCount;
++    protected transient int modCount;
+ 
+     /**
+      * Constructor that does nothing intended for deserialization.
+diff --git a/src/main/java/org/apache/commons/collections4/map/AbstractHashedMap.java b/src/main/java/org/apache/commons/collections4/map/AbstractHashedMap.java
+index 4026f735..884b6d20 100644
+--- a/src/main/java/org/apache/commons/collections4/map/AbstractHashedMap.java
++++ b/src/main/java/org/apache/commons/collections4/map/AbstractHashedMap.java
+@@ -76,21 +76,21 @@ public class AbstractHashedMap<K, V> extends AbstractMap<K, V> implements Iterab
+     protected static final Object NULL = new Object();
+ 
+     /** Load factor, normally 0.75 */
+-    transient float loadFactor;
++    protected transient float loadFactor;
+     /** The size of the map */
+-    transient int size;
++    protected transient int size;
+     /** Map entries */
+-    transient HashEntry<K, V>[] data;
++    protected transient HashEntry<K, V>[] data;
+     /** Size at which to rehash */
+-    transient int threshold;
++    protected transient int threshold;
+     /** Modification count for iterators */
+-    transient int modCount;
++    protected transient int modCount;
+     /** Entry set */
+-    transient EntrySet<K, V> entrySet;
++    protected transient EntrySet<K, V> entrySet;
+     /** Key set */
+-    transient KeySet<K> keySet;
++    protected transient KeySet<K> keySet;
+     /** Values */
+-    transient Values<V> values;
++    protected transient Values<V> values;
+ 
+     /**
+      * Constructor only used in deserialization, do not use otherwise.
+diff --git a/src/main/java/org/apache/commons/collections4/map/AbstractLinkedMap.java b/src/main/java/org/apache/commons/collections4/map/AbstractLinkedMap.java
+index 4ad6c0f7..ebfd0685 100644
+--- a/src/main/java/org/apache/commons/collections4/map/AbstractLinkedMap.java
++++ b/src/main/java/org/apache/commons/collections4/map/AbstractLinkedMap.java
+@@ -62,7 +62,7 @@ import org.apache.commons.collections4.iterators.EmptyOrderedMapIterator;
+ public abstract class AbstractLinkedMap<K, V> extends AbstractHashedMap<K, V> implements OrderedMap<K, V> {
+ 
+     /** Header in the linked list */
+-    transient LinkEntry<K, V> header;
++    protected transient LinkEntry<K, V> header;
+ 
+     /**
+      * Constructor only used in deserialization, do not use otherwise.
+diff --git a/src/main/java/org/apache/commons/collections4/map/AbstractMapDecorator.java b/src/main/java/org/apache/commons/collections4/map/AbstractMapDecorator.java
+index ddf94549..f67c4c5f 100644
+--- a/src/main/java/org/apache/commons/collections4/map/AbstractMapDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/map/AbstractMapDecorator.java
+@@ -41,7 +41,7 @@ import java.util.Set;
+ public abstract class AbstractMapDecorator<K, V> extends AbstractIterableMap<K, V> {
+ 
+     /** The map to decorate */
+-    transient Map<K, V> map;
++    protected transient Map<K, V> map;
+ 
+     /**
+      * Constructor only used in deserialization, do not use otherwise.
+diff --git a/src/main/java/org/apache/commons/collections4/map/EntrySetToMapIteratorAdapter.java b/src/main/java/org/apache/commons/collections4/map/EntrySetToMapIteratorAdapter.java
+index 668d555a..00c03f8d 100644
+--- a/src/main/java/org/apache/commons/collections4/map/EntrySetToMapIteratorAdapter.java
++++ b/src/main/java/org/apache/commons/collections4/map/EntrySetToMapIteratorAdapter.java
+@@ -32,13 +32,13 @@ import org.apache.commons.collections4.ResettableIterator;
+ public class EntrySetToMapIteratorAdapter<K, V> implements MapIterator<K, V>, ResettableIterator<K> {
+ 
+     /** The adapted Map entry Set. */
+-    Set<Map.Entry<K, V>> entrySet;
++    protected Set<Map.Entry<K, V>> entrySet;
+ 
+     /** The resettable iterator in use. */
+-    transient Iterator<Map.Entry<K, V>> iterator;
++    protected transient Iterator<Map.Entry<K, V>> iterator;
+ 
+     /** The currently positioned Map entry. */
+-    transient Map.Entry<K, V> entry;
++    protected transient Map.Entry<K, V> entry;
+ 
+     /**
+      * Create a new EntrySetToMapIteratorAdapter.
+diff --git a/src/main/java/org/apache/commons/collections4/splitmap/AbstractIterableGetMapDecorator.java b/src/main/java/org/apache/commons/collections4/splitmap/AbstractIterableGetMapDecorator.java
+index 15a5f886..c9f4f52a 100644
+--- a/src/main/java/org/apache/commons/collections4/splitmap/AbstractIterableGetMapDecorator.java
++++ b/src/main/java/org/apache/commons/collections4/splitmap/AbstractIterableGetMapDecorator.java
+@@ -34,7 +34,7 @@ import org.apache.commons.collections4.map.EntrySetToMapIteratorAdapter;
+ public class AbstractIterableGetMapDecorator<K, V> implements IterableGet<K, V> {
+ 
+     /** The map to decorate */
+-    transient Map<K, V> map;
++    protected transient Map<K, V> map;
+ 
+     /**
+      * Create a new AbstractSplitMapDecorator.

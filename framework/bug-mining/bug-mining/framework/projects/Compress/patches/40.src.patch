@@ -1,0 +1,51 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 3a8ff14c..d196bb6a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -373,15 +373,7 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+         }
+ 
+         if (hasDataDescriptor) {
+-            byte[] sig = new byte[WORD];
+-            readFully(sig);
+-            if (ZipLong.DD_SIG.equals(new ZipLong(sig))) {
+-                readFully(new byte[3 * WORD]);
+-            } else {
+-                // data descriptor without signature, we've already
+-                // read the CRC
+-                readFully(new byte[2 * WORD]);
+-            }
++            readFully(new byte[4 * WORD]);
+         }
+ 
+         inf.reset();
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index ccd97d83..2793de6b 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -597,7 +597,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+     /**
+      * data descriptor signature
+      */
+-    static final byte[] DD_SIG = ZipLong.DD_SIG.getBytes();
++    static final byte[] DD_SIG = ZipLong.getBytes(0X08074B50L);
+     /**
+      * central file header signature
+      */
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+index af9648b7..6119fb2b 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+@@ -49,12 +49,6 @@ public final class ZipLong implements Cloneable {
+     public static final ZipLong LFH_SIG = new ZipLong(0X04034B50L);
+ 
+     /**
+-     * Data Descriptor signature
+-     * @since Commons Compress 1.1
+-     */
+-    public static final ZipLong DD_SIG = new ZipLong(0X08074B50L);
+-
+-    /**
+      * Create instance from a number.
+      * @param value the long to store as a ZipLong
+      */

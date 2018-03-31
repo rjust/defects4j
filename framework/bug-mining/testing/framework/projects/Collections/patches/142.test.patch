@@ -1,0 +1,121 @@
+diff --git a/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java b/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
+index f1551c46..f3222c08 100644
+--- a/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
+@@ -16,14 +16,14 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertNotNull;
+-import static org.junit.Assert.assertNull;
+-import static org.junit.Assert.assertSame;
+-import static org.junit.Assert.assertTrue;
+-import static org.junit.Assert.fail;
++import static org.junit.Assert.*;
+ 
++import java.io.ByteArrayInputStream;
++import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
++import java.io.NotSerializableException;
++import java.io.ObjectInputStream;
++import java.io.ObjectOutputStream;
+ import java.io.Serializable;
+ import java.util.Date;
+ import java.util.TimeZone;
+@@ -106,6 +106,15 @@ public class FactoryUtilsTest {
+         final Date created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
++
++        // check serialisation works
++        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
++        final ObjectOutputStream out = new ObjectOutputStream(buffer);
++        out.writeObject(factory);
++        out.close();
++        final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
++        in.readObject();
++        in.close();
+     }
+ 
+     @Test
+@@ -116,6 +125,23 @@ public class FactoryUtilsTest {
+         final Object created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
++
++        // check serialisation works
++        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
++        ObjectOutputStream out = new ObjectOutputStream(buffer);
++        try {
++            out.writeObject(factory);
++        } catch (final NotSerializableException ex) {
++            out.close();
++        }
++        factory = FactoryUtils.<Object>prototypeFactory(new Mock2("S"));
++        buffer = new ByteArrayOutputStream();
++        out = new ObjectOutputStream(buffer);
++        out.writeObject(factory);
++        out.close();
++        final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
++        in.readObject();
++        in.close();
+     }
+ 
+     @Test
+@@ -126,6 +152,15 @@ public class FactoryUtilsTest {
+         final Integer created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
++
++        // check serialisation works
++        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
++        final ObjectOutputStream out = new ObjectOutputStream(buffer);
++        out.writeObject(factory);
++        out.close();
++        final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
++        in.readObject();
++        in.close();
+     }
+ 
+     @Test
+diff --git a/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java b/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
+index 372b363f..6c558943 100644
+--- a/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
+@@ -16,10 +16,7 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertNotNull;
+-import static org.junit.Assert.assertSame;
+-import static org.junit.Assert.fail;
++import static org.junit.Assert.*;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -29,6 +26,7 @@ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
+ 
++import org.apache.commons.collections4.functors.CloneTransformer;
+ import org.apache.commons.collections4.functors.ConstantTransformer;
+ import org.apache.commons.collections4.functors.EqualPredicate;
+ import org.apache.commons.collections4.functors.ExceptionTransformer;
+@@ -249,7 +247,6 @@ public class TransformerUtilsTest {
+         assertEquals("B", TransformerUtils.ifTransformer(FalsePredicate.falsePredicate(), a, b).transform(null));
+ 
+         Predicate<Integer> lessThanFivePredicate = new Predicate<Integer>() {
+-            @Override
+             public boolean evaluate(Integer value) {
+                 return value < 5;
+             }
+@@ -484,6 +481,7 @@ public class TransformerUtilsTest {
+     @Test
+     public void testSingletonPatternInSerialization() {
+         final Object[] singletones = new Object[] {
++                CloneTransformer.INSTANCE,
+                 ExceptionTransformer.INSTANCE,
+                 NOPTransformer.INSTANCE,
+                 StringValueTransformer.stringValueTransformer(),

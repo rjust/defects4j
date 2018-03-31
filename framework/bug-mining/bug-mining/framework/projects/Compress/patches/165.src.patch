@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+index 348d86b9..13dff056 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+@@ -134,7 +134,7 @@ public class ZipFile implements Closeable {
+     /**
+      * Whether the file is closed.
+      */
+-    private volatile boolean closed = true;
++    private boolean closed = true;
+ 
+     // cached buffers - must only be used locally in the class (COMPRESS-172 - reduce garbage collection)
+     private final byte[] DWORD_BUF = new byte[DWORD];

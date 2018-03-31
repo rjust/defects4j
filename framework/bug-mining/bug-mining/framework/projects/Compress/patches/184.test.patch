@@ -1,0 +1,87 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
+index 84476697..47616546 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestampTest.java
+@@ -100,11 +100,6 @@ public class X5455_ExtendedTimestampTest {
+         1999's zip time:  Jan 1st, 1999-01-01/00:00:02
+         1999's mod time:  Jan 1st, 1999-01-01/00:00:01
+         1999's acc time:  Jan 1st, 1999-01-01/00:00:03
+-
+-        Starting with a patch release of Java8, "zip time" actually
+-        uses the extended time stamp field itself and should be the
+-        same as "mod time".
+-        http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/rev/90df6756406f
+          */
+ 
+         File archive = getFile("COMPRESS-210_unix_time_zip_test.zip");
+@@ -121,10 +116,8 @@ public class X5455_ExtendedTimestampTest {
+                 ZipArchiveEntry zae = en.nextElement();
+                 String name = zae.getName();
+                 X5455_ExtendedTimestamp xf = (X5455_ExtendedTimestamp) zae.getExtraField(X5455);
+-                Date rawZ = zae.getLastModifiedDate();
++                Date z = adjustFromGMTToExpectedOffset(zae.getLastModifiedDate());
+                 Date m = xf.getModifyJavaTime();
+-                boolean zipTimeUsesExtendedTimestamp = rawZ.equals(m);
+-                Date z = zipTimeUsesExtendedTimestamp ? rawZ : adjustFromGMTToExpectedOffset(rawZ);
+                 Date a = xf.getAccessJavaTime();
+ 
+                 String zipTime = DATE_FORMAT.format(z);
+@@ -143,30 +136,24 @@ public class X5455_ExtendedTimestampTest {
+                     if (year >= 0) {
+                         switch (year) {
+                             case 2107:
+-                                if (!zipTimeUsesExtendedTimestamp) {
+-                                    // Zip time is okay up to 2107.
+-                                    assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+-                                }
++                                // Zip time is okay up to 2107.
++                                assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+                                 // But the X5455 data has overflowed:
+                                 assertEquals("1970-11-24/17:31:45 +0000", modTime);
+                                 assertEquals("1970-11-24/17:31:47 +0000", accTime);
+                                 break;
+                             case 2108:
+-                                if (!zipTimeUsesExtendedTimestamp) {
+-                                    // Zip time is still okay at Jan 1st midnight (UTC) in 2108
+-                                    // because we created the zip file in pacific time zone, so it's
+-                                    // actually still 2107 in the zip file!
+-                                    assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+-                                }
++                                // Zip time is still okay at Jan 1st midnight (UTC) in 2108
++                                // because we created the zip file in pacific time zone, so it's
++                                // actually still 2107 in the zip file!
++                                assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+                                 // The X5455 data is still overflowed, of course:
+                                 assertEquals("1971-11-24/17:31:45 +0000", modTime);
+                                 assertEquals("1971-11-24/17:31:47 +0000", accTime);
+                                 break;
+                             case 2109:
+                                 // All three timestamps have overflowed by 2109.
+-                                if (!zipTimeUsesExtendedTimestamp) {
+-                                    assertEquals("1981-01-01/00:00:02 +0000", zipTime);
+-                                }
++                                assertEquals("1981-01-01/00:00:02 +0000", zipTime);
+                                 assertEquals("1972-11-24/17:31:45 +0000", modTime);
+                                 assertEquals("1972-11-24/17:31:47 +0000", accTime);
+ 
+@@ -176,14 +163,12 @@ public class X5455_ExtendedTimestampTest {
+ 
+                                 break;
+                             default:
+-                                if (!zipTimeUsesExtendedTimestamp) {
+-                                    // X5455 time is good from epoch (1970) to 2106.
+-                                    // Zip time is good from 1980 to 2107.
+-                                    if (year < 1980) {
+-                                        assertEquals("1980-01-01/08:00:00 +0000", zipTime);
+-                                    } else {
+-                                        assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+-                                    }
++                                // X5455 time is good from epoch (1970) to 2106.
++                                // Zip time is good from 1980 to 2107.
++                                if (year < 1980) {
++                                    assertEquals("1980-01-01/08:00:00 +0000", zipTime);
++                                } else {
++                                    assertEquals(year + "-01-01/00:00:02 +0000", zipTime);
+                                 }
+                                 assertEquals(year + "-01-01/00:00:01 +0000", modTime);
+                                 assertEquals(year + "-01-01/00:00:03 +0000", accTime);

@@ -1,0 +1,23 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+index 482cbcd0..44894418 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
++++ b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+@@ -206,15 +206,15 @@ public class CompressorStreamFactory {
+         try {
+ 
+             if (GZIP.equalsIgnoreCase(name)) {
+-                return new GzipCompressorInputStream(in, decompressConcatenated);
++                return new GzipCompressorInputStream(in);
+             }
+ 
+             if (BZIP2.equalsIgnoreCase(name)) {
+-                return new BZip2CompressorInputStream(in, decompressConcatenated);
++                return new BZip2CompressorInputStream(in);
+             }
+ 
+             if (XZ.equalsIgnoreCase(name)) {
+-                return new XZCompressorInputStream(in, decompressConcatenated);
++                return new XZCompressorInputStream(in);
+             }
+ 
+             if (LZMA.equalsIgnoreCase(name)) {

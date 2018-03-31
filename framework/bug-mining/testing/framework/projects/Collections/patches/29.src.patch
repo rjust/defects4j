@@ -1,0 +1,22 @@
+diff --git a/src/java/org/apache/commons/collections/map/LRUMap.java b/src/java/org/apache/commons/collections/map/LRUMap.java
+index 4c9ce4ab..d0da4edd 100644
+--- a/src/java/org/apache/commons/collections/map/LRUMap.java
++++ b/src/java/org/apache/commons/collections/map/LRUMap.java
+@@ -102,7 +102,7 @@ public class LRUMap
+      * Constructs a new, empty map with the specified initial capacity and
+      * load factor. 
+      *
+-     * @param maxSize  the maximum size of the map
++     * @param maxSize  the maximum size of the map, -1 for no limit,
+      * @param loadFactor  the load factor
+      * @throws IllegalArgumentException if the maximum size is less than one
+      * @throws IllegalArgumentException if the load factor is less than zero
+@@ -115,7 +115,7 @@ public class LRUMap
+      * Constructs a new, empty map with the specified initial capacity and
+      * load factor.
+      *
+-     * @param maxSize  the maximum size of the ma
++     * @param maxSize  the maximum size of the map, -1 for no limit,
+      * @param loadFactor  the load factor
+      * @param scanUntilRemovable  scan until a removeable entry is found, default false
+      * @throws IllegalArgumentException if the maximum size is less than one

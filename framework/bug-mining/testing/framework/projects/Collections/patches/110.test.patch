@@ -1,0 +1,47 @@
+diff --git a/src/test/java/org/apache/commons/collections4/map/MultiKeyMapTest.java b/src/test/java/org/apache/commons/collections4/map/MultiKeyMapTest.java
+index ab98d961..ba5ec247 100644
+--- a/src/test/java/org/apache/commons/collections4/map/MultiKeyMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/MultiKeyMapTest.java
+@@ -315,34 +315,34 @@ public class MultiKeyMapTest<K, V> extends AbstractIterableMapTest<MultiKey<? ex
+             switch (key.size()) {
+                 case 2:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1)));
+-                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1)));
++                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1)));
++                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1)));
+                 break;
+                 case 3:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+-                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2)));
++                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2)));
++                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 break;
+                 case 4:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+-                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
++                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
++                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 break;
+                 case 5:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+-                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
++                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
++                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 break;
+                 default:

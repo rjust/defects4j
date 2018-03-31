@@ -1,0 +1,69 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 5ad6742f..2b3af252 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -41,7 +41,6 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
+-import static org.apache.commons.compress.archivers.zip.ZipConstants.DEFLATE_MIN_VERSION;
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD;
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.INITIAL_VERSION;
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.SHORT;
+@@ -696,7 +695,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+                 // do some cleanup:
+                 // * rewrite version needed to extract
+                 channel.position(entry.localDataStart  - 5 * SHORT);
+-                writeOut(ZipShort.getBytes(versionNeededToExtractMethod(entry.entry.getMethod())));
++                writeOut(ZipShort.getBytes(INITIAL_VERSION));
+ 
+                 // * remove ZIP64 extra so it doesn't get written
+                 //   to the central directory
+@@ -1072,7 +1071,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+         final int zipMethod = ze.getMethod();
+ 
+         if (phased &&  !isZip64Required(entry.entry, zip64Mode)){
+-            putShort(versionNeededToExtractMethod(zipMethod), buf, LFH_VERSION_NEEDED_OFFSET);
++            putShort(INITIAL_VERSION, buf, LFH_VERSION_NEEDED_OFFSET);
+         } else {
+             putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze)), buf, LFH_VERSION_NEEDED_OFFSET);
+         }
+@@ -1484,18 +1483,15 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+         }
+         // requires version 2 as we are going to store length info
+         // in the data descriptor
+-        return isDeflatedToOutputStream(zipMethod)
+-            ? DATA_DESCRIPTOR_MIN_VERSION
+-            : versionNeededToExtractMethod(zipMethod);
++        return (isDeflatedToOutputStream(zipMethod)) ?
++                DATA_DESCRIPTOR_MIN_VERSION :
++                INITIAL_VERSION;
+     }
+ 
+     private boolean isDeflatedToOutputStream(final int zipMethod) {
+         return zipMethod == DEFLATED && channel == null;
+     }
+ 
+-    private int versionNeededToExtractMethod(int zipMethod) {
+-        return zipMethod == DEFLATED ? DEFLATE_MIN_VERSION : INITIAL_VERSION;
+-    }
+ 
+     /**
+      * Creates a new zip entry taking some information from the given
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java
+index 23f04a88..b6e2d453 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipConstants.java
+@@ -40,12 +40,6 @@ final class ZipConstants {
+     /** Initial ZIP specification version */
+     static final int INITIAL_VERSION = 10;
+ 
+-    /**
+-     * ZIP specification version that introduced DEFLATE compression method.
+-     * @since 1.15
+-     */
+-    static final int DEFLATE_MIN_VERSION = 20;
+-
+     /** ZIP specification version that introduced data descriptor method */
+     static final int DATA_DESCRIPTOR_MIN_VERSION = 20;
+ 

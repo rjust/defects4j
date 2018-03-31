@@ -1,0 +1,22 @@
+diff --git a/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java b/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
+index 390d1a7c..b1192fd9 100644
+--- a/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
++++ b/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
+@@ -411,7 +411,7 @@ public class TreeBidiMap<K extends Comparable<K>, V extends Comparable<V>> imple
+      */
+     public Set<Map.Entry<K, V>> entrySet() {
+         if (entrySet == null) {
+-            entrySet = new EntryView();
++            return new EntryView();
+         }
+         return entrySet;
+     }
+@@ -2092,7 +2092,7 @@ public class TreeBidiMap<K extends Comparable<K>, V extends Comparable<V>> imple
+ 
+         public Set<Map.Entry<V, K>> entrySet() {
+             if (entrySet == null) {
+-                entrySet = new InverseEntryView();
++                return new InverseEntryView();
+             }
+             return entrySet;
+         }

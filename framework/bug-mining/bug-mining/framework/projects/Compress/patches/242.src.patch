@@ -1,0 +1,17 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+index fc7510ab..0623656d 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+@@ -1126,11 +1126,10 @@ public class ZipFile implements Closeable {
+             else {
+                 singleByteBuffer.rewind();
+             }
+-            int read = read(loc, singleByteBuffer);
++            int read = read(loc++, singleByteBuffer);
+             if (read < 0) {
+                 return read;
+             }
+-            loc++;
+             return singleByteBuffer.get() & 0xff;
+         }
+ 

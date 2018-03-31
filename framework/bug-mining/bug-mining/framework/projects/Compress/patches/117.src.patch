@@ -1,0 +1,44 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+index e48184f6..d1ba9f9c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+@@ -316,14 +316,14 @@ public class ZipFile {
+      * the archive's central directory.
+      *
+      * @param name name of the entry.
+-     * @return the Iterable<ZipArchiveEntry> corresponding to the
++     * @return the Iterator<ZipArchiveEntry> corresponding to the
+      * given name
+      * @since 1.6
+      */
+-    public Iterable<ZipArchiveEntry> getEntries(String name) {
++    public Iterator<ZipArchiveEntry> getEntries(String name) {
+         List<ZipArchiveEntry> entriesOfThatName = nameMap.get(name);
+-        return entriesOfThatName != null ? entriesOfThatName
+-            : Collections.<ZipArchiveEntry>emptyList();
++        return entriesOfThatName != null ? entriesOfThatName.iterator()
++            : Collections.<ZipArchiveEntry>emptyList().iterator();
+     }
+ 
+     /**
+@@ -331,17 +331,17 @@ public class ZipFile {
+      * appear within the archive.
+      *
+      * @param name name of the entry.
+-     * @return the Iterable<ZipArchiveEntry> corresponding to the
++     * @return the Iterator<ZipArchiveEntry> corresponding to the
+      * given name
+      * @since 1.6
+      */
+-    public Iterable<ZipArchiveEntry> getEntriesInPhysicalOrder(String name) {
++    public Iterator<ZipArchiveEntry> getEntriesInPhysicalOrder(String name) {
+         ZipArchiveEntry[] entriesOfThatName = new ZipArchiveEntry[0];
+         if (nameMap.containsKey(name)) {
+             entriesOfThatName = nameMap.get(name).toArray(entriesOfThatName);
+             Arrays.sort(entriesOfThatName, OFFSET_COMPARATOR);
+         }
+-        return Arrays.asList(entriesOfThatName);
++        return Arrays.asList(entriesOfThatName).iterator();
+     }
+ 
+     /**

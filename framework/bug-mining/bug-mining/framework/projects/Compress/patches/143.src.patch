@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index d79eb8aa..2f4ce6ea 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -418,7 +418,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+                             String keyword = coll.toString(CharsetNames.UTF_8);
+                             // Get rest of entry
+                             byte[] rest = new byte[len - read];
+-                            int got = IOUtils.readFully(i, rest);
++                            int got = i.read(rest);
+                             if (got != len - read){
+                                 throw new IOException("Failed to read "
+                                                       + "Paxheader. Expected "

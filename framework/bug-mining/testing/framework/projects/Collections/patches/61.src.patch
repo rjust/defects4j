@@ -1,0 +1,49 @@
+diff --git a/src/main/java/org/apache/commons/collections/CollectionUtils.java b/src/main/java/org/apache/commons/collections/CollectionUtils.java
+index 15785917..da01b448 100644
+--- a/src/main/java/org/apache/commons/collections/CollectionUtils.java
++++ b/src/main/java/org/apache/commons/collections/CollectionUtils.java
+@@ -28,7 +28,6 @@ import java.util.ListIterator;
+ import java.util.Map;
+ import java.util.Set;
+ 
+-import org.apache.commons.collections.bag.HashBag;
+ import org.apache.commons.collections.collection.PredicatedCollection;
+ import org.apache.commons.collections.collection.SynchronizedCollection;
+ import org.apache.commons.collections.collection.TransformedCollection;
+@@ -246,12 +245,6 @@ public class CollectionUtils {
+      * Returns a new {@link Collection} containing <i>a</i> minus a subset of
+      * <i>b</i>.  Only the elements of <i>b</i> that satisfy the predicate
+      * condition, <i>p</i> are subtracted from <i>a</i>.
+-     * 
+-     * <p>The cardinality of each element <i>e</i> in the returned {@link Collection}
+-     * that satisfies the predicate condition will be the cardinality of <i>e</i> in <i>a</i>
+-     * minus the cardinality of <i>e</i> in <i>b</i>, or zero, whichever is greater.</p>
+-     * <p>The cardinality of each element <i>e</i> in the returned {@link Collection} that does <b>not</b>
+-     * satisfy the predicate condition will be equal to the cardinality of <i>e</i> in <i>a</i>.</p>
+      *
+      * @param a  the collection to subtract from, must not be null
+      * @param b  the collection to subtract, must not be null
+@@ -263,19 +256,12 @@ public class CollectionUtils {
+      * @since 4.0
+      * @see Collection#removeAll
+      */
+-    public static <O> Collection<O> subtract(final Iterable<? extends O> a,
+-                                             final Iterable<? extends O> b,
+-                                             final Predicate<O> p) {
+-        final ArrayList<O> list = new ArrayList<O>();
+-        final HashBag<O> bag = new HashBag<O>();
++    public static <O> Collection<O> subtract(final Iterable<? extends O> a, final Iterable<? extends O> b, final Predicate<O> p) {
++        ArrayList<O> list = new ArrayList<O>();
++        addAll(list, a);
+         for (O element : b) {
+             if (p.evaluate(element)) {
+-                bag.add(element);
+-            }
+-        }
+-        for (O element : a) {
+-            if (!bag.remove(element, 1)) {
+-                list.add(element);
++                list.remove(element);
+             }
+         }
+         return list;

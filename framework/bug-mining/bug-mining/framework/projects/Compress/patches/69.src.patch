@@ -1,0 +1,50 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index 25ddaa7a..d16069ca 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -572,20 +572,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Set this entry's file size.
+-     *
+-     * <p>Invoked by input stream when reading a PAX header.</p>
+-     * @throws IllegalArgumentException if the size is &lt; 0
+-     * @since Apache Commons Compress 1.4
+-     */
+-    void adjustSize(long size) {
+-        if (size < 0){
+-            throw new IllegalArgumentException("Size is out of range: " + size);
+-        }
+-        this.size = size;
+-    }
+-
+-    /**
+      * Indicates in case of a sparse file if an extension sparse header
+      * follows.
+      *
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index db87d2bd..6e7a7ef0 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -229,11 +229,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             readGNUSparse();
+         }
+ 
+-        // If the size of the next element in the archive has changed
+-        // due to a new size being reported in the posix header
+-        // information, we update entrySize here so that it contains
+-        // the correct value.
+-        entrySize = currEntry.getSize();
+         return currEntry;
+     }
+ 
+@@ -346,7 +341,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             } else if ("uname".equals(key)){
+                 currEntry.setUserName(val);
+             } else if ("size".equals(key)){
+-                currEntry.adjustSize(Long.parseLong(val));
++                currEntry.setSize(Long.parseLong(val));
+             }
+         }
+     }

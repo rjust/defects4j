@@ -1,0 +1,43 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index d989b8a7..7afe0d34 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -34,18 +34,13 @@ public class TarUtils {
+ 
+     /**
+      * Parse an octal string from a buffer.
+-     *
+-     * <p>Leading spaces are ignored.
++     * Leading spaces are ignored.
+      * The buffer must contain a trailing space or NUL,
+-     * and may contain an additional trailing space or NUL.</p>
++     * and may contain an additional trailing space or NUL.
+      *
+-     * <p>The input buffer is allowed to contain all NULs,
++     * The input buffer is allowed to contain all NULs,
+      * in which case the method returns 0L
+-     * (this allows for missing fields).</p>
+-     *
+-     * <p>To work-around some tar implementations that insert a
+-     * leading NUL this method returns 0 if it detects a leading NUL
+-     * since Commons Compress 1.4.</p>
++     * (this allows for missing fields).
+      *
+      * @param buffer The buffer from which to parse.
+      * @param offset The offset into the buffer from which to parse.
+@@ -62,7 +57,14 @@ public class TarUtils {
+             throw new IllegalArgumentException("Length "+length+" must be at least 2");
+         }
+ 
+-        if (buffer[start] == 0) {
++        boolean allNUL = true;
++        for (int i = start; i < end; i++){
++            if (buffer[i] != 0){
++                allNUL = false;
++                break;
++            }
++        }
++        if (allNUL) {
+             return 0L;
+         }
+ 

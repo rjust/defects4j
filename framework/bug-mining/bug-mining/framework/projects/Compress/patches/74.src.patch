@@ -1,0 +1,16 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index a5b037e2..69a00ebb 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -803,9 +803,9 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+         offset += NAMELEN;
+         mode = (int) TarUtils.parseOctal(header, offset, MODELEN);
+         offset += MODELEN;
+-        userId = (int) TarUtils.parseOctalOrBinary(header, offset, UIDLEN);
++        userId = (int) TarUtils.parseOctal(header, offset, UIDLEN);
+         offset += UIDLEN;
+-        groupId = (int) TarUtils.parseOctalOrBinary(header, offset, GIDLEN);
++        groupId = (int) TarUtils.parseOctal(header, offset, GIDLEN);
+         offset += GIDLEN;
+         size = TarUtils.parseOctalOrBinary(header, offset, SIZELEN);
+         offset += SIZELEN;

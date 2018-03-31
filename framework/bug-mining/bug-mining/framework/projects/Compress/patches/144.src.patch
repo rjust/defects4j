@@ -1,0 +1,47 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+index aeb3a157..e65f27be 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+@@ -384,7 +384,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+     private ArArchiveEntry readGNUStringTable(byte[] length) throws IOException {
+         int bufflen = asInt(length); // Assume length will fit in an int
+         namebuffer = new byte[bufflen];
+-        int read = IOUtils.readFully(this, namebuffer, 0, bufflen);
++        int read = read(namebuffer, 0, bufflen);
+         if (read != bufflen){
+             throw new IOException("Failed to read complete // record: expected="
+                                   + bufflen + " read=" + read);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
+index 75648230..d7a9a2bd 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/TapeInputStream.java
+@@ -238,8 +238,6 @@ class TapeInputStream extends FilterInputStream {
+     public byte[] readRecord() throws IOException {
+         byte[] result = new byte[recordSize];
+ 
+-        // the read implementation will loop internally as long as
+-        // input is available
+         if (-1 == read(result, 0, result.length)) {
+             throw new ShortFileException();
+         }
+diff --git a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+index cf08a646..46c21886 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+@@ -22,7 +22,6 @@ import java.io.IOException;
+ import java.io.InputStream;
+ 
+ import org.apache.commons.compress.compressors.CompressorInputStream;
+-import org.apache.commons.compress.utils.IOUtils;
+ 
+ /**
+  * CompressorInputStream for the raw Snappy format.
+@@ -304,7 +303,7 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+      * @return True if the decompressed data should be flushed
+      */
+     private boolean expandLiteral(final int length) throws IOException {
+-        int bytesRead = IOUtils.readFully(in, decompressBuf, writeIndex, length);
++        int bytesRead = in.read(decompressBuf, writeIndex, length);
+         count(bytesRead);
+         if (length != bytesRead) {
+             throw new IOException("Premature end of stream");

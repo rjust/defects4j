@@ -1,0 +1,87 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 54aa0ab9..47668fc8 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -34,7 +34,6 @@ import java.util.zip.ZipException;
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveInputStream;
+ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+-import org.apache.commons.compress.utils.ArchiveUtils;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.DWORD;
+@@ -654,8 +653,12 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+         while (remaining > 0) {
+             final long n = in.read(buf.array(), 0, (int) Math.min(buf.capacity(), remaining));
+             if (n < 0) {
+-                throw new EOFException("Truncated ZIP entry: "
+-                                       + ArchiveUtils.sanitize(current.entry.getName()));
++                String name = current.entry.getName();
++                int idx = firstUnprintableCharacter(current.entry.getName());
++                if (idx >= 0) {
++                    name = "corrupted name starting with '" + name.substring(0, idx) + "'";
++                }
++                throw new EOFException("Truncated ZIP entry: " + name);
+             }
+             count(n);
+             remaining -= n;
+@@ -985,6 +988,17 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+         return b == ZipArchiveOutputStream.EOCD_SIG[0];
+     }
+ 
++    private int firstUnprintableCharacter(String name) {
++        final char[] chars = name.toCharArray();
++        final int len = chars.length;
++        for (int i = 0; i < len; i++) {
++            if (Character.isISOControl(chars[i]) || !Character.isDefined(chars[i])) {
++                return i;
++            }
++        }
++        return -1;
++    }
++
+     /**
+      * Structure collecting information for the entry that is
+      * currently being read.
+diff --git a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
+index 107bf0b8..e39e4f35 100644
+--- a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
++++ b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
+@@ -251,37 +251,4 @@ public class ArchiveUtils {
+         }
+         return true;
+     }
+-
+-    /**
+-     * Returns a "sanitized" version of the string given as arguments,
+-     * where sanitized means non-printable characters have been
+-     * replaced with a question mark.
+-     *
+-     * <p>This method is used to clean up file names when they are
+-     * used in exception messages as they may end up in log files or
+-     * as console output and may have been read from a corrupted
+-     * input.</p>
+-     *
+-     * @param s the string to sanitize
+-     * @return a sanitized version of the argument
+-     * @since Compress 1.12
+-     */
+-    public static String sanitize(String s) {
+-        final char[] chars = s.toCharArray();
+-        final int len = chars.length;
+-        final StringBuilder sb = new StringBuilder();
+-        for (int i = 0; i < len; i++) {
+-            final char c = chars[i];
+-            if (!Character.isISOControl(c)) {
+-                Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
+-                if (block != null && block != Character.UnicodeBlock.SPECIALS) {
+-                    sb.append(c);
+-                    continue;
+-                }
+-            }
+-            sb.append('?');
+-        }
+-        return sb.toString();
+-    }
+-
+ }

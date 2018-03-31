@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 4e99a203..c0dac4ca 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -496,8 +496,8 @@ public class TarUtils {
+                                          final boolean negative) {
+         final int bits = (length - 1) * 8;
+         final long max = 1l << bits;
+-        long val = Math.abs(value); // Long.MIN_VALUE stays Long.MIN_VALUE
+-        if (val < 0 || val >= max) {
++        long val = Math.abs(value);
++        if (val >= max) {
+             throw new IllegalArgumentException("Value " + value +
+                 " is too large for " + length + " byte field.");
+         }

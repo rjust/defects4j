@@ -1,0 +1,222 @@
+diff --git a/src/test/org/apache/commons/collections/bag/TestTransformedBag.java b/src/test/org/apache/commons/collections/bag/TestTransformedBag.java
+index a38e4ea0..24145f9b 100644
+--- a/src/test/org/apache/commons/collections/bag/TestTransformedBag.java
++++ b/src/test/org/apache/commons/collections/bag/TestTransformedBag.java
+@@ -63,23 +63,7 @@ public class TestTransformedBag extends AbstractTestBag {
+         
+         assertEquals(false, bag.remove(els[0]));
+         assertEquals(true, bag.remove(new Integer((String) els[0])));
+-    }
+-
+-    public void testTransformedBag_decorateTransform() {
+-        Bag originalBag = new HashBag();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalBag.add(els[i]);
+-        }
+-        Bag bag = TransformedBag.decorateTransform(originalBag, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, bag.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, bag.contains(new Integer((String) els[i])));
+-            assertEquals(false, bag.contains(els[i]));
+-        }
+         
+-        assertEquals(false, bag.remove(els[0]));
+-        assertEquals(true, bag.remove(new Integer((String) els[0])));
+     }
+ 
+     public String getCompatibilityVersion() {
+diff --git a/src/test/org/apache/commons/collections/bag/TestTransformedSortedBag.java b/src/test/org/apache/commons/collections/bag/TestTransformedSortedBag.java
+index f68bf50b..b886c3a4 100644
+--- a/src/test/org/apache/commons/collections/bag/TestTransformedSortedBag.java
++++ b/src/test/org/apache/commons/collections/bag/TestTransformedSortedBag.java
+@@ -64,21 +64,6 @@ public class TestTransformedSortedBag extends AbstractTestSortedBag {
+         
+     }
+ 
+-    public void testTransformedBag_decorateTransform() {
+-        Bag originalBag = new TreeBag();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalBag.add(els[i]);
+-        }
+-        Bag bag = TransformedBag.decorateTransform(originalBag, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, bag.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, bag.contains(new Integer((String) els[i])));
+-        }
+-        
+-        assertEquals(true, bag.remove(new Integer((String) els[0])));
+-    }
+-
+     public String getCompatibilityVersion() {
+         return "3.1";
+     }
+diff --git a/src/test/org/apache/commons/collections/buffer/TestTransformedBuffer.java b/src/test/org/apache/commons/collections/buffer/TestTransformedBuffer.java
+index ffcba822..7ad1e766 100644
+--- a/src/test/org/apache/commons/collections/buffer/TestTransformedBuffer.java
++++ b/src/test/org/apache/commons/collections/buffer/TestTransformedBuffer.java
+@@ -63,25 +63,4 @@ public class TestTransformedBuffer extends TestCase {
+         assertEquals(true, buffer.remove(new Integer((String) els[0])));
+         
+     }
+-
+-    public void testTransformedBuffer_decorateTransform() {
+-        Buffer originalBuffer = new ArrayStack();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalBuffer.add(els[i]);
+-        }
+-        Buffer buffer = TransformedBuffer.decorateTransform(originalBuffer, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, buffer.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, buffer.contains(new Integer((String) els[i])));
+-            assertEquals(false, buffer.contains(els[i]));
+-        }
+-        
+-        assertEquals(false, buffer.remove(els[0]));
+-        assertEquals(true, buffer.remove(new Integer((String) els[0])));
+-    }
+-
+-    public String getCompatibilityVersion() {
+-        return "3.1";
+-    }
+ }
+diff --git a/src/test/org/apache/commons/collections/collection/TestTransformedCollection.java b/src/test/org/apache/commons/collections/collection/TestTransformedCollection.java
+index 37420060..5b8a7b25 100644
+--- a/src/test/org/apache/commons/collections/collection/TestTransformedCollection.java
++++ b/src/test/org/apache/commons/collections/collection/TestTransformedCollection.java
+@@ -105,23 +105,6 @@ public class TestTransformedCollection extends AbstractTestCollection {
+         assertEquals(true, coll.remove(new Integer((String) els[0])));
+     }
+ 
+-    public void testTransformedCollection_decorateTransform() {
+-        Collection originalCollection = new ArrayList();
+-        Object[] els = getFullElements();
+-        for (int i = 0; i < els.length; i++) {
+-            originalCollection.add(els[i]);
+-        }
+-        Collection collection = TransformedCollection.decorateTransform(originalCollection, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, collection.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, collection.contains(new Integer((String) els[i])));
+-            assertEquals(false, collection.contains(els[i]));
+-        }
+-        
+-        assertEquals(false, collection.remove(els[0]));
+-        assertEquals(true, collection.remove(new Integer((String) els[0])));
+-    }
+-
+     public String getCompatibilityVersion() {
+         return "3.1";
+     }
+diff --git a/src/test/org/apache/commons/collections/list/TestTransformedList.java b/src/test/org/apache/commons/collections/list/TestTransformedList.java
+index b2bc5cc3..237a9ba3 100644
+--- a/src/test/org/apache/commons/collections/list/TestTransformedList.java
++++ b/src/test/org/apache/commons/collections/list/TestTransformedList.java
+@@ -118,23 +118,6 @@ public class TestTransformedList extends AbstractTestList {
+         assertEquals(new Integer(2), list.get(2));
+     }
+ 
+-    public void testTransformedList_decorateTransform() {
+-        List originalList = new ArrayList();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalList.add(els[i]);
+-        }
+-        List list = TransformedList.decorateTransform(originalList, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, list.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, list.contains(new Integer((String) els[i])));
+-            assertEquals(false, list.contains(els[i]));
+-        }
+-        
+-        assertEquals(false, list.remove(els[0]));
+-        assertEquals(true, list.remove(new Integer((String) els[0])));
+-    }
+-
+     public String getCompatibilityVersion() {
+         return "3.1";
+     }
+diff --git a/src/test/org/apache/commons/collections/set/TestTransformedSet.java b/src/test/org/apache/commons/collections/set/TestTransformedSet.java
+index f8dd9495..0ca17a64 100644
+--- a/src/test/org/apache/commons/collections/set/TestTransformedSet.java
++++ b/src/test/org/apache/commons/collections/set/TestTransformedSet.java
+@@ -86,23 +86,6 @@ public class TestTransformedSet extends AbstractTestSet {
+         
+     }
+ 
+-    public void testTransformedSet_decorateTransform() {
+-        Set originalSet = new HashSet();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalSet.add(els[i]);
+-        }
+-        Set set = TransformedSet.decorateTransform(originalSet, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, set.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, set.contains(new Integer((String) els[i])));
+-            assertEquals(false, set.contains(els[i]));
+-        }
+-        
+-        assertEquals(false, set.remove(els[0]));
+-        assertEquals(true, set.remove(new Integer((String) els[0])));
+-    }
+-
+     public String getCompatibilityVersion() {
+         return "3.1";
+     }
+diff --git a/src/test/org/apache/commons/collections/set/TestTransformedSortedSet.java b/src/test/org/apache/commons/collections/set/TestTransformedSortedSet.java
+index 7c30e258..71805e9d 100644
+--- a/src/test/org/apache/commons/collections/set/TestTransformedSortedSet.java
++++ b/src/test/org/apache/commons/collections/set/TestTransformedSortedSet.java
+@@ -17,9 +17,10 @@
+ package org.apache.commons.collections.set;
+ 
+ import java.util.Arrays;
+-import java.util.TreeSet;
++import java.util.HashSet;
+ import java.util.Set;
+ import java.util.SortedSet;
++import java.util.TreeSet;
+ 
+ import junit.framework.Test;
+ 
+@@ -63,34 +64,21 @@ public class TestTransformedSortedSet extends AbstractTestSortedSet {
+     
+     //-----------------------------------------------------------------------   
+     public void testTransformedSet() {
+-        Set set = TransformedSortedSet.decorate(new TreeSet(), TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
++        Set set = TransformedSortedSet.decorate(new HashSet(), TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+         assertEquals(0, set.size());
+         Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+         for (int i = 0; i < els.length; i++) {
+             set.add(els[i]);
+             assertEquals(i + 1, set.size());
+             assertEquals(true, set.contains(new Integer((String) els[i])));
++            assertEquals(false, set.contains(els[i]));
+         }
+         
++        assertEquals(false, set.remove(els[0]));
+         assertEquals(true, set.remove(new Integer((String) els[0])));
+         
+     } 
+ 
+-    public void testTransformedSet_decorateTransform() {
+-        Set originalSet = new TreeSet();
+-        Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
+-        for (int i = 0; i < els.length; i++) {
+-            originalSet.add(els[i]);
+-        }
+-        Set set = TransformedSortedSet.decorateTransform(originalSet, TestTransformedCollection.STRING_TO_INTEGER_TRANSFORMER);
+-        assertEquals(els.length, set.size());
+-        for (int i = 0; i < els.length; i++) {
+-            assertEquals(true, set.contains(new Integer((String) els[i])));
+-        }
+-        
+-        assertEquals(true, set.remove(new Integer((String) els[0])));
+-    }
+-
+     public String getCompatibilityVersion() {
+         return "3.1";
+     }

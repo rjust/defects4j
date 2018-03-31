@@ -1,0 +1,20 @@
+diff --git a/src/main/java/org/apache/commons/compress/utils/ChecksumCalculatingInputStream.java b/src/main/java/org/apache/commons/compress/utils/ChecksumCalculatingInputStream.java
+index 4a408a56..ebf44fdc 100644
+--- a/src/main/java/org/apache/commons/compress/utils/ChecksumCalculatingInputStream.java
++++ b/src/main/java/org/apache/commons/compress/utils/ChecksumCalculatingInputStream.java
+@@ -31,15 +31,6 @@ public class ChecksumCalculatingInputStream extends InputStream {
+     private final Checksum checksum;
+ 
+     public ChecksumCalculatingInputStream(final Checksum checksum, final InputStream in) {
+-
+-        if ( checksum == null ){
+-            throw new NullPointerException("Parameter checksum must not be null");
+-        }
+-
+-        if ( in == null ){
+-            throw new NullPointerException("Parameter in must not be null");
+-        }
+-
+         this.checksum = checksum;
+         this.in = in;
+     }

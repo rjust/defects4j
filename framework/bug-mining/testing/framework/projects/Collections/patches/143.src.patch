@@ -1,0 +1,83 @@
+diff --git a/src/main/java/org/apache/commons/collections4/map/MultiValueMap.java b/src/main/java/org/apache/commons/collections4/map/MultiValueMap.java
+index 3c690ab0..095a5024 100644
+--- a/src/main/java/org/apache/commons/collections4/map/MultiValueMap.java
++++ b/src/main/java/org/apache/commons/collections4/map/MultiValueMap.java
+@@ -20,6 +20,7 @@ import java.io.IOException;
+ import java.io.ObjectInputStream;
+ import java.io.ObjectOutputStream;
+ import java.io.Serializable;
++
+ import java.util.AbstractCollection;
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -208,7 +209,6 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+      * @param value the value to remove
+      * @return {@code true} if the mapping was removed, {@code false} otherwise
+      */
+-    @Override
+     public boolean removeMapping(final Object key, final Object value) {
+         final Collection<V> valuesForKey = getCollection(key);
+         if (valuesForKey == null) {
+@@ -434,18 +434,14 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+                 }
+                 final K key = keyIterator.next();
+                 final Transformer<V, Entry<K, V>> transformer = new Transformer<V, Entry<K, V>>() {
+-                    @Override
+                     public Entry<K, V> transform(final V input) {
+                         return new Entry<K, V>() {
+-                            @Override
+                             public K getKey() {
+                                 return key;
+                             }
+-                            @Override
+                             public V getValue() {
+                                 return input;
+                             }
+-                            @Override
+                             public V setValue(V value) {
+                                 throw new UnsupportedOperationException();
+                             }
+@@ -523,7 +519,6 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+             this.iterator = values.iterator();
+         }
+ 
+-        @Override
+         public void remove() {
+             iterator.remove();
+             if (values.isEmpty()) {
+@@ -531,12 +526,10 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+             }
+         }
+ 
+-        @Override
+         public boolean hasNext() {
+             return iterator.hasNext();
+         }
+ 
+-        @Override
+         public V next() {
+             return iterator.next();
+         }
+@@ -556,7 +549,6 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+             this.clazz = clazz;
+         }
+ 
+-        @Override
+         public T create() {
+             try {
+                 return clazz.newInstance();
+@@ -564,14 +556,6 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+                 throw new FunctorException("Cannot instantiate class: " + clazz, ex);
+             }
+         }
+-
+-        private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
+-            is.defaultReadObject();
+-            // ensure that the de-serialized class is a Collection, COLLECTIONS-580
+-            if (clazz != null && !Collection.class.isAssignableFrom(clazz)) {
+-                throw new UnsupportedOperationException();
+-            }
+-        }
+     }
+ 
+ }

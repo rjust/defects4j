@@ -1,0 +1,46 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+index bea91bcd..b6332b5b 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
++++ b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+@@ -28,7 +28,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
+-import org.apache.commons.compress.compressors.xz.XZUtils;
+ import org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream;
+ import org.apache.commons.compress.compressors.pack200.Pack200CompressorOutputStream;
+ 
+@@ -118,8 +117,7 @@ public class CompressorStreamFactory {
+                 return new GzipCompressorInputStream(in);
+             }
+ 
+-            if (XZUtils.isXZCompressionAvailable() &&
+-                XZCompressorInputStream.matches(signature, signatureLength)) {
++            if (XZCompressorInputStream.matches(signature, signatureLength)) {
+                 return new XZCompressorInputStream(in);
+             }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/compressors/xz/XZUtils.java b/src/main/java/org/apache/commons/compress/compressors/xz/XZUtils.java
+index 71101a2d..6d23ae1d 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/xz/XZUtils.java
++++ b/src/main/java/org/apache/commons/compress/compressors/xz/XZUtils.java
+@@ -44,19 +44,6 @@ public class XZUtils {
+     }
+ 
+     /**
+-     * Are the classes required to support XZ compression available?
+-     * @since Commons Compress 1.5
+-     */
+-    public static boolean isXZCompressionAvailable() {
+-        try {
+-            XZCompressorInputStream.matches(null, 0);
+-            return true;
+-        } catch (NoClassDefFoundError error) {
+-            return false;
+-        }
+-    }
+-
+-    /**
+      * Detects common xz suffixes in the given filename.
+      *
+      * @param filename name of a file

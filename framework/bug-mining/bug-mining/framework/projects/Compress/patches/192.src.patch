@@ -1,0 +1,120 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index d206d757..8a7af0e3 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -110,34 +110,6 @@ import org.apache.commons.compress.utils.ArchiveUtils;
+  * };
+  * </pre>
+  *
+- * <p>
+- * The C structure for a xstar (Jörg Schilling star) Tar Entry's header is:
+- * <pre>
+- * struct star_header {
+- *  char name[100];		// offset  0
+- *  char mode[8];		// offset100
+- *  char uid[8];		// offset108
+- *  char gid[8];		// offset116
+- *  char size[12];		// offset124
+- *  char mtime[12];		// offset136
+- *  char chksum[8];		// offset148
+- *  char typeflag;		// offset156
+- *  char linkname[100];		// offset157
+- *  char magic[6];		// offset257
+- *  char version[2];		// offset263
+- *  char uname[32];		// offset265
+- *  char gname[32];		// offset297
+- *  char devmajor[8];		// offset329
+- *  char devminor[8];		// offset337
+- *  char prefix[131];		// offset345
+- *  char atime[12];             // offset476
+- *  char ctime[12];             // offset488
+- *  char mfill[8];              // offset500 
+- *  char xmagic[4];             // offset508  "tar"
+- * };
+- * </pre>
+- * which is identical to new-style POSIX up to the first 130 bytes of the prefix.</p>
+- *
+  * @NotThreadSafe
+  */
+ 
+@@ -1081,15 +1053,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+             offset += REALSIZELEN_GNU;
+             break;
+         }
+-        case FORMAT_XSTAR: {
+-            String xstarPrefix = oldStyle
+-                ? TarUtils.parseName(header, offset, PREFIXLEN_XSTAR)
+-                : TarUtils.parseName(header, offset, PREFIXLEN_XSTAR, encoding);
+-            if (xstarPrefix.length() > 0) {
+-                name = xstarPrefix + "/" + name;
+-            }
+-            break;
+-        }
+         case FORMAT_POSIX:
+         default: {
+             String prefix = oldStyle
+@@ -1161,10 +1124,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+             return FORMAT_OLDGNU;
+         }
+         if (ArchiveUtils.matchAsciiBuffer(MAGIC_POSIX, header, MAGIC_OFFSET, MAGICLEN)) {
+-            if (ArchiveUtils.matchAsciiBuffer(MAGIC_XSTAR, header, XSTAR_MAGIC_OFFSET,
+-                                              XSTAR_MAGIC_LEN)) {
+-                return FORMAT_XSTAR;
+-            }
+             return FORMAT_POSIX;
+         }
+         return 0;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+index fa4e40ae..000d1265 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+@@ -44,11 +44,6 @@ public interface TarConstants {
+     int    FORMAT_POSIX = 3;
+ 
+     /**
+-     * xstar format used by Jörg Schilling's star.
+-     */
+-    int    FORMAT_XSTAR = 4;
+-
+-    /**
+      * The length of the name field in a header buffer.
+      */
+     int    NAMELEN = 100;
+@@ -316,37 +311,4 @@ public interface TarConstants {
+      */
+     String GNU_LONGLINK = "././@LongLink"; // TODO rename as LONGLINK_GNU ?
+ 
+-    /**
+-     * The magix string used in the last four bytes of the header to
+-     * identify the xstar format.
+-     */
+-    String MAGIC_XSTAR = "tar\0";
+-
+-    /**
+-     * Offset inside the header for the xstar magic bytes.
+-     */
+-    int XSTAR_MAGIC_OFFSET = 508;
+-
+-    /**
+-     * Length of the XSTAR magic.
+-     */
+-    int XSTAR_MAGIC_LEN = 4;
+-
+-    /**
+-     * Length of the prefix field in xstar archives.
+-     * 
+-     */
+-    int PREFIXLEN_XSTAR = 131;
+-
+-    /**
+-     * The length of the access time field in a xstar header buffer.
+-     * 
+-     */
+-    int ATIMELEN_XSTAR = 12;
+-
+-    /**
+-     * The length of the created time field in a xstar header buffer.
+-     * 
+-     */
+-    int CTIMELEN_XSTAR = 12;
+ }

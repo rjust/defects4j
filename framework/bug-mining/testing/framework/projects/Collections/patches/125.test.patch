@@ -1,0 +1,39 @@
+diff --git a/src/test/java/org/apache/commons/collections4/trie/PatriciaTrieTest.java b/src/test/java/org/apache/commons/collections4/trie/PatriciaTrieTest.java
+index def26b9b..1cf483a4 100755
+--- a/src/test/java/org/apache/commons/collections4/trie/PatriciaTrieTest.java
++++ b/src/test/java/org/apache/commons/collections4/trie/PatriciaTrieTest.java
+@@ -26,6 +26,7 @@ import junit.framework.Test;
+ 
+ import org.apache.commons.collections4.BulkTest;
+ import org.apache.commons.collections4.map.AbstractSortedMapTest;
++
+ import org.junit.Assert;
+ 
+ /**
+@@ -325,26 +326,6 @@ public class PatriciaTrieTest<V> extends AbstractSortedMapTest<String, V> {
+         Assert.assertFalse(iter.hasNext());
+     }
+ 
+-    public void testPrefixMapSizes() {
+-        // COLLECTIONS-525
+-        PatriciaTrie<String> aTree = new PatriciaTrie<String>();
+-        aTree.put("点评", "测试");
+-        aTree.put("书评", "测试");
+-        assertTrue(aTree.prefixMap("点").containsKey("点评"));
+-        assertEquals("测试", aTree.prefixMap("点").get("点评"));
+-        assertFalse(aTree.prefixMap("点").isEmpty());
+-        assertEquals(1, aTree.prefixMap("点").size());
+-        assertEquals(1, aTree.prefixMap("点").keySet().size());
+-        assertEquals(1, aTree.prefixMap("点").entrySet().size());
+-        assertEquals(1, aTree.prefixMap("点评").values().size());
+-
+-        aTree.clear();
+-        aTree.put("点评", "联盟");
+-        aTree.put("点版", "定向");
+-        assertEquals(2, aTree.prefixMap("点").keySet().size());
+-        assertEquals(2, aTree.prefixMap("点").values().size());
+-    }
+-
+     //-----------------------------------------------------------------------
+ 
+     @Override

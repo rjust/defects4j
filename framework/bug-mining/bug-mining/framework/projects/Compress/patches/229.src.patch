@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+index 237809f0..a9bb94a4 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+@@ -350,7 +350,7 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+      */
+     private boolean expandCopy(final long off, final int length) throws IOException {
+         if (off > blockSize) {
+-            throw new IOException("Offset " + off + " is larger than block size " + blockSize);
++            throw new IOException("Offset is larger than block size");
+         }
+         final int offset = (int) off;
+         boolean shouldFlush = ensureBufferSpace(length);

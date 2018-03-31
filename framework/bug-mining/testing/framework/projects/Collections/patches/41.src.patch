@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/collections/bidimap/DualTreeBidiMap.java b/src/java/org/apache/commons/collections/bidimap/DualTreeBidiMap.java
+index 93ba66f3..dcba0eda 100644
+--- a/src/java/org/apache/commons/collections/bidimap/DualTreeBidiMap.java
++++ b/src/java/org/apache/commons/collections/bidimap/DualTreeBidiMap.java
+@@ -387,7 +387,7 @@ public class DualTreeBidiMap<K, V> extends AbstractDualBidiMap<K, V> implements
+     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+         in.defaultReadObject();
+         normalMap = new TreeMap(comparator);
+-        reverseMap = new TreeMap(valueComparator);
++        reverseMap = new TreeMap(comparator);
+         Map map = (Map) in.readObject();
+         putAll(map);
+     }

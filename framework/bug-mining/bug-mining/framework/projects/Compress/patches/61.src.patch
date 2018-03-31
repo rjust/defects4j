@@ -1,0 +1,24 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 92e083a3..a78a9550 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -364,7 +364,6 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+         if (!closed) {
+             closed = true;
+             in.close();
+-            inf.end();
+         }
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 9e0e0ab0..3be2ad5e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -357,7 +357,6 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+         writeCentralDirectoryEnd();
+         offsets.clear();
+         entries.clear();
+-        def.end();
+         finished = true;
+     }
+ 

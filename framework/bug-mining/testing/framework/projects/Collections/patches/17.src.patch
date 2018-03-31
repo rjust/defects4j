@@ -1,0 +1,61 @@
+diff --git a/src/java/org/apache/commons/collections/collection/CompositeCollection.java b/src/java/org/apache/commons/collections/collection/CompositeCollection.java
+index dd629653..3ba350cb 100644
+--- a/src/java/org/apache/commons/collections/collection/CompositeCollection.java
++++ b/src/java/org/apache/commons/collections/collection/CompositeCollection.java
+@@ -16,7 +16,6 @@
+  */
+ package org.apache.commons.collections.collection;
+ 
+-import java.io.Serializable;
+ import java.lang.reflect.Array;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+@@ -41,7 +40,7 @@ import org.apache.commons.collections.list.UnmodifiableList;
+  * @author Stephen Colebourne
+  * @author Phil Steitz
+  */
+-public class CompositeCollection implements Collection, Serializable {
++public class CompositeCollection implements Collection {
+     
+     /** CollectionMutator to handle changes to the collection */
+     protected CollectionMutator mutator;
+@@ -394,7 +393,7 @@ public class CompositeCollection implements Collection, Serializable {
+     /**
+      * Pluggable strategy to handle changes to the composite.
+      */
+-    public interface CollectionMutator extends Serializable {
++    public interface CollectionMutator {
+         
+         /**
+          * Called when an object is to be added to the composite.
+diff --git a/src/java/org/apache/commons/collections/map/CompositeMap.java b/src/java/org/apache/commons/collections/map/CompositeMap.java
+index bd839455..7fa3c460 100644
+--- a/src/java/org/apache/commons/collections/map/CompositeMap.java
++++ b/src/java/org/apache/commons/collections/map/CompositeMap.java
+@@ -16,8 +16,6 @@
+  */
+ package org.apache.commons.collections.map;
+ 
+-import java.io.Serializable;
+-
+ import java.util.Collection;
+ import java.util.Iterator;
+ import java.util.Map;
+@@ -45,7 +43,7 @@ import org.apache.commons.collections.set.CompositeSet;
+  *
+  * @author Brian McCallister
+  */
+-public class CompositeMap implements Map, Serializable {
++public class CompositeMap implements Map {
+ 
+     /** Array of all maps in the composite */
+     private Map[] composite;
+@@ -481,7 +479,7 @@ public class CompositeMap implements Map, Serializable {
+      * mutators in a CompositeMap, as well as providing a hook for
+      * callbacks on key collisions.
+      */
+-    public static interface MapMutator extends Serializable {
++    public static interface MapMutator {
+         /**
+          * Called when adding a new Composited Map results in a
+          * key collision.

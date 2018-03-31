@@ -1,0 +1,18 @@
+diff --git a/src/java/org/apache/commons/collections/splitmap/AbstractIterableGetMapDecorator.java b/src/java/org/apache/commons/collections/splitmap/AbstractIterableGetMapDecorator.java
+index 7ce43925..fa5271fd 100644
+--- a/src/java/org/apache/commons/collections/splitmap/AbstractIterableGetMapDecorator.java
++++ b/src/java/org/apache/commons/collections/splitmap/AbstractIterableGetMapDecorator.java
+@@ -48,13 +48,6 @@ public class AbstractIterableGetMapDecorator<K, V> implements IterableGet<K, V>
+     }
+ 
+     /**
+-     * Constructor only used in deserialization, do not use otherwise.
+-     */
+-    protected AbstractIterableGetMapDecorator() {
+-        super();
+-    }
+-
+-    /**
+      * Gets the map being decorated.
+      *
+      * @return the decorated map

@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
+index fbdbcf44..d32ab855 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZFile.java
+@@ -895,7 +895,7 @@ public class SevenZFile {
+     }
+     
+     private static long readUint64(final DataInput in) throws IOException {
+-        long firstByte = in.readUnsignedByte();
++        int firstByte = in.readUnsignedByte();
+         int mask = 0x80;
+         long value = 0;
+         for (int i = 0; i < 8; i++) {

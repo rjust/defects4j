@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/collections/TransformerUtils.java b/src/main/java/org/apache/commons/collections/TransformerUtils.java
+index 03a2f1ed..f67a6db7 100644
+--- a/src/main/java/org/apache/commons/collections/TransformerUtils.java
++++ b/src/main/java/org/apache/commons/collections/TransformerUtils.java
+@@ -393,7 +393,8 @@ public class TransformerUtils {
+      * @see org.apache.commons.collections.functors.MapTransformer
+      * 
+      * @param map  the map to use to transform the objects
+-     * @return the transformer, or a {@link ConstantTransformer#NULL_INSTANCE} if the {@code map} is {@code null}
++     * @return the transformer
++     * @throws IllegalArgumentException if the map is null
+      */
+     public static <I, O> Transformer<I, O> mapTransformer(Map<? super I, ? extends O> map) {
+         return MapTransformer.mapTransformer(map);

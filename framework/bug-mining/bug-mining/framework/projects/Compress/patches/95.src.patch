@@ -1,0 +1,59 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 61f034f1..0d65141c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -380,9 +380,20 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+      */
+     private int readDeflated(byte[] buffer, int start, int length)
+         throws IOException {
+-        int read = readFromInflater(buffer, start, length);
++        if (inf.needsInput()) {
++            fill();
++            if (buf.lengthOfLastRead > 0) {
++                current.bytesReadFromStream += buf.lengthOfLastRead;
++            }
++        }
++        int read = 0;
++        try {
++            read = inf.inflate(buffer, start, length);
++        } catch (DataFormatException e) {
++            throw new ZipException(e.getMessage());
++        }
+         if (read == 0) {
+-            if (inf.finished() || inf.needsDictionary()) {
++            if (inf.finished()) {
+                 return -1;
+             } else if (buf.lengthOfLastRead == -1) {
+                 throw new IOException("Truncated ZIP file");
+@@ -392,31 +403,6 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+         return read;
+     }
+ 
+-    /**
+-     * Potentially reads more bytes to fill the inflater's buffer and
+-     * reads from it.
+-     */
+-    private int readFromInflater(byte[] buffer, int start, int length)
+-        throws IOException {
+-        int read = 0;
+-        do {
+-            if (inf.needsInput()) {
+-                fill();
+-                if (buf.lengthOfLastRead > 0) {
+-                    current.bytesReadFromStream += buf.lengthOfLastRead;
+-                } else {
+-                    break;
+-                }
+-            }
+-            try {
+-                read = inf.inflate(buffer, start, length);
+-            } catch (DataFormatException e) {
+-                throw new ZipException(e.getMessage());
+-            }
+-        } while (read == 0 && inf.needsInput());
+-        return read;
+-    }
+-
+     @Override
+     public void close() throws IOException {
+         if (!closed) {

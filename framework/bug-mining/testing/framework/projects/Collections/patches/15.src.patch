@@ -1,0 +1,39 @@
+diff --git a/src/java/org/apache/commons/collections/TreeBag.java b/src/java/org/apache/commons/collections/TreeBag.java
+index f591eb2d..098d51bd 100644
+--- a/src/java/org/apache/commons/collections/TreeBag.java
++++ b/src/java/org/apache/commons/collections/TreeBag.java
+@@ -62,14 +62,6 @@ public class TreeBag extends DefaultMapBag implements SortedBag {
+         addAll(coll);
+     }
+ 
+-    public boolean add(Object o) {
+-        if(comparator() == null && !(o instanceof Comparable)) {
+-            throw new IllegalArgumentException("Objects of type " + o.getClass() + " cannot be added to " + 
+-                                               "a naturally ordered TreeBag as it does not implement Comparable");
+-        }
+-        return super.add(o);
+-    }
+-
+     public Object first() {
+         return ((SortedMap) getMap()).firstKey();
+     }
+diff --git a/src/java/org/apache/commons/collections/bag/TreeBag.java b/src/java/org/apache/commons/collections/bag/TreeBag.java
+index 7191d6d3..6c4ca968 100644
+--- a/src/java/org/apache/commons/collections/bag/TreeBag.java
++++ b/src/java/org/apache/commons/collections/bag/TreeBag.java
+@@ -81,15 +81,6 @@ public class TreeBag
+     }
+ 
+     //-----------------------------------------------------------------------
+-    public boolean add(Object o) {
+-        if(comparator() == null && !(o instanceof Comparable)) {
+-            throw new IllegalArgumentException("Objects of type " + o.getClass() + " cannot be added to " + 
+-                                               "a naturally ordered TreeBag as it does not implement Comparable");
+-        }
+-        return super.add(o);
+-    }
+-
+-    //-----------------------------------------------------------------------
+     public Object first() {
+         return ((SortedMap) getMap()).firstKey();
+     }

@@ -1,0 +1,24 @@
+diff --git a/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java b/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
+index d68ac830..0b5cfa3c 100644
+--- a/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
++++ b/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
+@@ -42,7 +42,7 @@ import org.apache.commons.collections.list.UnmodifiableList;
+  * the set can be obtained via <code>asList()</code>.
+  * <p>
+  * This class cannot implement the <code>List</code> interface directly as
+- * various interface methods (notably equals/hashCode) are incompatible with a set.
++ * various interface methods (notably equals/hashCode) are incompatable with a set.
+  * <p>
+  * This class is Serializable from Commons Collections 3.1.
+  *
+@@ -200,9 +200,7 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+     @Override
+     public boolean remove(Object object) {
+         boolean result = collection.remove(object);
+-        if (result) {
+-            setOrder.remove(object);
+-        }
++        setOrder.remove(object);
+         return result;
+     }
+ 

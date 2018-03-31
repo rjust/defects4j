@@ -1,0 +1,44 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
+index a4468aff..2d0ef4e5 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
+@@ -272,8 +272,7 @@ public class UTF8ZipFilesTest extends AbstractTestCase {
+                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
+                                                            en.array(),
+                                                            en.arrayOffset(),
+-                                                           en.limit()
+-                                                           - en.position()));
++                                                           en.limit()));
+             }
+ 
+             zos.putArchiveEntry(ze);
+@@ -289,8 +288,7 @@ public class UTF8ZipFilesTest extends AbstractTestCase {
+                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
+                                                            en.array(),
+                                                            en.arrayOffset(),
+-                                                           en.limit()
+-                                                           - en.position()));
++                                                           en.limit()));
+             }
+ 
+             zos.putArchiveEntry(ze);
+@@ -307,8 +305,7 @@ public class UTF8ZipFilesTest extends AbstractTestCase {
+                 ze.addExtraField(new UnicodePathExtraField(ze.getName(),
+                                                            en.array(),
+                                                            en.arrayOffset(),
+-                                                           en.limit()
+-                                                           - en.position()));
++                                                           en.limit()));
+             }
+ 
+             zos.putArchiveEntry(ze);
+@@ -367,8 +364,7 @@ public class UTF8ZipFilesTest extends AbstractTestCase {
+             ByteBuffer ne = enc.encode(ze.getName());
+ 
+             CRC32 crc = new CRC32();
+-            crc.update(ne.array(), ne.arrayOffset(),
+-                       ne.limit() - ne.position());
++            crc.update(ne.array(),ne.arrayOffset(),ne.limit());
+ 
+             assertEquals(crc.getValue(), ucpf.getNameCRC32());
+             assertEquals(expectedName, new String(ucpf.getUnicodeName(),

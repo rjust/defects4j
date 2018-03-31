@@ -1,0 +1,70 @@
+diff --git a/src/java/org/apache/commons/collections/map/MultiValueMap.java b/src/java/org/apache/commons/collections/map/MultiValueMap.java
+index 2de5fbff..e333947a 100644
+--- a/src/java/org/apache/commons/collections/map/MultiValueMap.java
++++ b/src/java/org/apache/commons/collections/map/MultiValueMap.java
+@@ -16,11 +16,6 @@
+  */
+ package org.apache.commons.collections.map;
+ 
+-import java.io.IOException;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+-import java.io.Serializable;
+-
+ import java.util.AbstractCollection;
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -66,10 +61,7 @@ import org.apache.commons.collections.iterators.IteratorChain;
+  * @version $Revision$ $Date$
+  * @since Commons Collections 3.2
+  */
+-public class MultiValueMap extends AbstractMapDecorator implements MultiMap, Serializable {
+-
+-    /** Serialization version */
+-    private static final long serialVersionUID = -2214159910087182007L;
++public class MultiValueMap extends AbstractMapDecorator implements MultiMap {
+ 
+     /** The factory for creating value collections. */
+     private final Factory collectionFactory;
+@@ -134,32 +126,6 @@ public class MultiValueMap extends AbstractMapDecorator implements MultiMap, Ser
+ 
+     //-----------------------------------------------------------------------
+     /**
+-     * Write the map out using a custom routine.
+-     * 
+-     * @param out  the output stream
+-     * @throws IOException
+-     * @since Commons Collections 3.3
+-     */
+-    private void writeObject(ObjectOutputStream out) throws IOException {
+-        out.defaultWriteObject();
+-        out.writeObject(map);
+-    }
+-
+-    /**
+-     * Read the map in using a custom routine.
+-     * 
+-     * @param in  the input stream
+-     * @throws IOException
+-     * @throws ClassNotFoundException
+-     * @since Commons Collections 3.3
+-     */
+-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+-        in.defaultReadObject();
+-        map = (Map) in.readObject();
+-    }
+-
+-    //-----------------------------------------------------------------------
+-    /**
+      * Clear the map.
+      */
+     public void clear() {
+@@ -458,7 +424,7 @@ public class MultiValueMap extends AbstractMapDecorator implements MultiMap, Ser
+     /**
+      * Inner class that provides a simple reflection factory.
+      */
+-    private static class ReflectionFactory implements Factory, Serializable {
++    private static class ReflectionFactory implements Factory {
+         private final Class clazz;
+ 
+         public ReflectionFactory(Class clazz) {

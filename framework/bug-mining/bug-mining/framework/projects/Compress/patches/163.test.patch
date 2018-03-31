@@ -1,0 +1,13 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+index 7de18ff5..f18f6a56 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+@@ -188,7 +188,7 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+     private byte[] writePaxHeader(Map<String, String> m) throws Exception {
+         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         TarArchiveOutputStream tos = new TarArchiveOutputStream(bos, "ASCII");
+-        tos.writePaxHeaders(new TarArchiveEntry("x"), "foo", m);
++        tos.writePaxHeaders("foo", m);
+ 
+         // add a dummy entry so data gets written
+         TarArchiveEntry t = new TarArchiveEntry("foo");

@@ -1,0 +1,1592 @@
+diff --git a/src/test/java/org/apache/commons/collections4/BagUtilsTest.java b/src/test/java/org/apache/commons/collections4/BagUtilsTest.java
+index a7f36aed..9ff790f5 100644
+--- a/src/test/java/org/apache/commons/collections4/BagUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/BagUtilsTest.java
+@@ -16,7 +16,9 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import org.apache.commons.collections4.bag.HashBag;
+ import org.apache.commons.collections4.bag.PredicatedBag;
+@@ -50,8 +52,8 @@ public class BagUtilsTest {
+             bag instanceof SynchronizedBag);
+         try {
+             BagUtils.synchronizedBag(null);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -63,8 +65,8 @@ public class BagUtilsTest {
+             bag instanceof UnmodifiableBag);
+         try {
+             BagUtils.unmodifiableBag(null);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         
+@@ -78,14 +80,14 @@ public class BagUtilsTest {
+             bag instanceof PredicatedBag);
+         try {
+             BagUtils.predicatedBag(null,truePredicate);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             BagUtils.predicatedBag(new HashBag<Object>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -97,14 +99,14 @@ public class BagUtilsTest {
+             bag instanceof TransformedBag);
+         try {
+             BagUtils.transformingBag(null, nopTransformer);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             BagUtils.transformingBag(new HashBag<Object>(), null);
+-            fail("Expecting NullPointerException for null transformer.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null transformer.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -116,8 +118,8 @@ public class BagUtilsTest {
+             bag instanceof SynchronizedSortedBag);
+         try {
+             BagUtils.synchronizedSortedBag(null);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -129,8 +131,8 @@ public class BagUtilsTest {
+             bag instanceof UnmodifiableSortedBag);
+         try {
+             BagUtils.unmodifiableSortedBag(null);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         
+@@ -144,14 +146,14 @@ public class BagUtilsTest {
+             bag instanceof PredicatedSortedBag);
+         try {
+             BagUtils.predicatedSortedBag(null, truePredicate);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             BagUtils.predicatedSortedBag(new TreeBag<Object>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -163,14 +165,14 @@ public class BagUtilsTest {
+             bag instanceof TransformedSortedBag);
+         try {
+             BagUtils.transformingSortedBag(null, nopTransformer);
+-            fail("Expecting NullPointerException for null bag.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null bag.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             BagUtils.transformingSortedBag(new TreeBag<Object>(), null);
+-            fail("Expecting NullPointerException for null transformer.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null transformer.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/ClosureUtilsTest.java b/src/test/java/org/apache/commons/collections4/ClosureUtilsTest.java
+index d9c2defc..54256b69 100644
+--- a/src/test/java/org/apache/commons/collections4/ClosureUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/ClosureUtilsTest.java
+@@ -16,7 +16,10 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.fail;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -137,15 +140,15 @@ public class ClosureUtilsTest {
+         try {
+             ClosureUtils.whileClosure(null, ClosureUtils.nopClosure());
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.whileClosure(FalsePredicate.falsePredicate(), null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.whileClosure(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // doWhileClosure
+@@ -164,7 +167,7 @@ public class ClosureUtilsTest {
+         try {
+             ClosureUtils.doWhileClosure(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // chainedClosure
+@@ -201,26 +204,26 @@ public class ClosureUtilsTest {
+         try {
+             ClosureUtils.chainedClosure(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<Object>chainedClosure((Closure[]) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<Object>chainedClosure((Collection<Closure<Object>>) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<Object>chainedClosure(new Closure[] {null, null});
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             coll = new ArrayList<Closure<Object>>();
+             coll.add(null);
+             coll.add(null);
+             ClosureUtils.chainedClosure(coll);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // ifClosure
+@@ -321,19 +324,19 @@ public class ClosureUtilsTest {
+         try {
+             ClosureUtils.switchClosure(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<String>switchClosure((Predicate<String>[]) null, (Closure<String>[]) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<String>switchClosure((Map<Predicate<String>, Closure<String>>) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<String>switchClosure(new Predicate[2], new Closure[2]);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             ClosureUtils.<String>switchClosure(
+                     new Predicate[] { TruePredicate.<String>truePredicate() },
+@@ -382,7 +385,7 @@ public class ClosureUtilsTest {
+         try {
+             ClosureUtils.switchMapClosure(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // asClosure
+diff --git a/src/test/java/org/apache/commons/collections4/CollectionUtilsTest.java b/src/test/java/org/apache/commons/collections4/CollectionUtilsTest.java
+index 8959626c..63fd19bd 100644
+--- a/src/test/java/org/apache/commons/collections4/CollectionUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/CollectionUtilsTest.java
+@@ -581,7 +581,7 @@ public class CollectionUtilsTest extends MockTestCase {
+         assertFalse(CollectionUtils.isEqualCollection(collectionA, collB, defaultEquator));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testIsEqualCollectionNullEquator() {
+         CollectionUtils.isEqualCollection(collectionA, collectionA, null);
+     }
+@@ -1324,14 +1324,14 @@ public class CollectionUtilsTest extends MockTestCase {
+         assertTrue("returned object should be a PredicatedCollection", collection instanceof PredicatedCollection);
+         try {
+             CollectionUtils.predicatedCollection(new ArrayList<Number>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             CollectionUtils.predicatedCollection(null, predicate);
+-            fail("Expecting NullPointerException for null collection.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null collection.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -1499,14 +1499,14 @@ public class CollectionUtilsTest extends MockTestCase {
+         assertTrue("returned object should be a TransformedCollection", collection instanceof TransformedCollection);
+         try {
+             CollectionUtils.transformingCollection(new ArrayList<Object>(), null);
+-            fail("Expecting NullPointerException for null transformer.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null transformer.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             CollectionUtils.transformingCollection(null, transformer);
+-            fail("Expecting NullPointerException for null collection.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null collection.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -1543,8 +1543,8 @@ public class CollectionUtilsTest extends MockTestCase {
+         assertTrue("Returned object should be a UnmodifiableCollection.", col instanceof UnmodifiableCollection);
+         try {
+             CollectionUtils.unmodifiableCollection(null);
+-            fail("Expecting NullPointerException for null collection.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null collection.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -1676,8 +1676,8 @@ public class CollectionUtilsTest extends MockTestCase {
+         ArrayList<String> coll = null;
+         try {
+             CollectionUtils.extractSingleton(coll);
+-            fail("expected NullPointerException from extractSingleton(null)");
+-        } catch (final NullPointerException e) {
++            fail("expected IllegalArgumentException from extractSingleton(null)");
++        } catch (final IllegalArgumentException e) {
+         }
+         coll = new ArrayList<String>();
+         try {
+@@ -1703,12 +1703,12 @@ public class CollectionUtilsTest extends MockTestCase {
+         expect(iterator.next()).andReturn(t);
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void collateException1() {
+         CollectionUtils.collate(collectionA, null);
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void collateException2() {
+         CollectionUtils.collate(collectionA, collectionC, null);
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java b/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
+index f3222c08..1932de0f 100644
+--- a/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/FactoryUtilsTest.java
+@@ -16,7 +16,12 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
+@@ -249,7 +254,7 @@ public class FactoryUtilsTest {
+     // instantiateFactory
+     //------------------------------------------------------------------
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void instantiateFactoryNull() {
+         FactoryUtils.instantiateFactory(null);
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/ListUtilsTest.java b/src/test/java/org/apache/commons/collections4/ListUtilsTest.java
+index 7c43997d..30774efb 100644
+--- a/src/test/java/org/apache/commons/collections4/ListUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/ListUtilsTest.java
+@@ -16,7 +16,11 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import java.util.ArrayList;
+ import java.util.Arrays;
+@@ -133,13 +137,13 @@ public class ListUtilsTest {
+         try {
+             ListUtils.predicatedList(new ArrayList<Object>(), null);
+             fail("Expecting IllegalArgumentException for null predicate.");
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             ListUtils.predicatedList(null, predicate);
+             fail("Expecting IllegalArgumentException for null list.");
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -322,17 +326,17 @@ public class ListUtilsTest {
+         try {
+             ListUtils.longestCommonSubsequence((List<?>) null, null);
+             fail("failed to check for null argument");
+-        } catch (final NullPointerException e) {}
++        } catch (final IllegalArgumentException e) {}
+ 
+         try {
+             ListUtils.longestCommonSubsequence(Arrays.asList('A'), null);
+             fail("failed to check for null argument");
+-        } catch (final NullPointerException e) {}
++        } catch (final IllegalArgumentException e) {}
+ 
+         try {
+             ListUtils.longestCommonSubsequence(null, Arrays.asList('A'));
+             fail("failed to check for null argument");
+-        } catch (final NullPointerException e) {}
++        } catch (final IllegalArgumentException e) {}
+ 
+         @SuppressWarnings("unchecked")
+         List<Character> lcs = ListUtils.longestCommonSubsequence(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+@@ -363,17 +367,17 @@ public class ListUtilsTest {
+       try {
+           ListUtils.longestCommonSubsequence((String) null, null);
+           fail("failed to check for null argument");
+-      } catch (final NullPointerException e) {}
++      } catch (final IllegalArgumentException e) {}
+ 
+       try {
+           ListUtils.longestCommonSubsequence("A", null);
+           fail("failed to check for null argument");
+-      } catch (final NullPointerException e) {}
++      } catch (final IllegalArgumentException e) {}
+ 
+       try {
+           ListUtils.longestCommonSubsequence(null, "A");
+           fail("failed to check for null argument");
+-      } catch (final NullPointerException e) {}
++      } catch (final IllegalArgumentException e) {}
+ 
+       String lcs = ListUtils.longestCommonSubsequence("", "");
+       assertEquals(0, lcs.length());
+@@ -412,7 +416,7 @@ public class ListUtilsTest {
+         try {
+             ListUtils.partition(null, 3);
+             fail("failed to check for null argument");
+-        } catch (final NullPointerException e) {}
++        } catch (final IllegalArgumentException e) {}
+ 
+         try {
+             ListUtils.partition(strings, 0);
+diff --git a/src/test/java/org/apache/commons/collections4/MapUtilsTest.java b/src/test/java/org/apache/commons/collections4/MapUtilsTest.java
+index 20b18886..2d485c7c 100644
+--- a/src/test/java/org/apache/commons/collections4/MapUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/MapUtilsTest.java
+@@ -16,21 +16,25 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotSame;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.PrintStream;
+-import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.Iterator;
+-import java.util.List;
+ import java.util.ListResourceBundle;
+ import java.util.Map;
+ import java.util.ResourceBundle;
+ import java.util.Set;
+ import java.util.TreeMap;
++import java.util.List;
++import java.util.ArrayList;
+ 
+ import org.apache.commons.collections4.collection.TransformedCollectionTest;
+ import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
+@@ -64,8 +68,8 @@ public class MapUtilsTest {
+         assertTrue("returned object should be a PredicatedMap", map instanceof PredicatedMap);
+         try {
+             MapUtils.predicatedMap(null, p, p);
+-            fail("Expecting NullPointerException for null map.");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null map.");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+     }
+@@ -77,14 +81,14 @@ public class MapUtilsTest {
+         assertTrue(map instanceof LazyMap);
+         try {
+             map = MapUtils.lazyMap(new HashMap<Object, Object>(), (Factory<Object>) null);
+-            fail("Expecting NullPointerException for null factory");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null factory");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+         try {
+             map = MapUtils.lazyMap((Map<Object, Object>) null, factory);
+-            fail("Expecting NullPointerException for null map");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null map");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+         final Transformer<Object, Integer> transformer = TransformerUtils.asTransformer(factory);
+@@ -92,14 +96,14 @@ public class MapUtilsTest {
+         assertTrue(map instanceof LazyMap);
+         try {
+             map = MapUtils.lazyMap(new HashMap<Object, Object>(), (Transformer<Object, Object>) null);
+-            fail("Expecting NullPointerException for null transformer");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null transformer");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+         try {
+             map = MapUtils.lazyMap((Map<Object, Object>) null, transformer);
+-            fail("Expecting NullPointerException for null map");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null map");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+     }
+@@ -855,8 +859,8 @@ public class MapUtilsTest {
+     public void testIterableMap() {
+         try {
+             MapUtils.iterableMap(null);
+-            fail("Should throw NullPointerException");
+-        } catch (final NullPointerException e) {
++            fail("Should throw IllegalArgumentException");
++        } catch (final IllegalArgumentException e) {
+         }
+         final HashMap<String, String> map = new HashMap<String, String>();
+         map.put("foo", "foov");
+@@ -873,8 +877,8 @@ public class MapUtilsTest {
+     public void testIterableSortedMap() {
+         try {
+             MapUtils.iterableSortedMap(null);
+-            fail("Should throw NullPointerException");
+-        } catch (final NullPointerException e) {
++            fail("Should throw IllegalArgumentException");
++        } catch (final IllegalArgumentException e) {
+         }
+         final TreeMap<String, String> map = new TreeMap<String, String>();
+         map.put("foo", "foov");
+diff --git a/src/test/java/org/apache/commons/collections4/PredicateUtilsTest.java b/src/test/java/org/apache/commons/collections4/PredicateUtilsTest.java
+index 73a0c816..a3d88364 100644
+--- a/src/test/java/org/apache/commons/collections4/PredicateUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/PredicateUtilsTest.java
+@@ -16,9 +16,12 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.apache.commons.collections4.functors.NullPredicate.*;
+-import static org.apache.commons.collections4.functors.TruePredicate.*;
+-import static org.junit.Assert.*;
++import static org.apache.commons.collections4.functors.NullPredicate.nullPredicate;
++import static org.apache.commons.collections4.functors.TruePredicate.truePredicate;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.fail;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -130,7 +133,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.notPredicate(TruePredicate.truePredicate()).evaluate(cInteger));
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testNotPredicateEx() {
+         PredicateUtils.notPredicate(null);
+     }
+@@ -146,7 +149,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.andPredicate(FalsePredicate.falsePredicate(), FalsePredicate.falsePredicate()).evaluate(null));
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAndPredicateEx() {
+         PredicateUtils.andPredicate(null, null);
+     }
+@@ -196,24 +199,24 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertTrue(AllPredicate.allPredicate(coll), null);
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAllPredicateEx1() {
+         AllPredicate.allPredicate((Predicate<Object>[]) null);
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAllPredicateEx2() {
+         AllPredicate.<Object>allPredicate(new Predicate[] { null });
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAllPredicateEx3() {
+         AllPredicate.allPredicate(new Predicate[] { null, null });
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAllPredicateEx4() {
+         AllPredicate.allPredicate((Collection<Predicate<Object>>) null);
+     }
+@@ -223,7 +226,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         AllPredicate.allPredicate(Collections.<Predicate<Object>>emptyList());
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAllPredicateEx6() {
+         final Collection<Predicate<Object>> coll = new ArrayList<Predicate<Object>>();
+         coll.add(null);
+@@ -242,7 +245,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.orPredicate(FalsePredicate.falsePredicate(), FalsePredicate.falsePredicate()).evaluate(null));
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testOrPredicateEx() {
+         PredicateUtils.orPredicate(null, null);
+     }
+@@ -293,24 +296,24 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertFalse(PredicateUtils.anyPredicate(coll), null);
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAnyPredicateEx1() {
+         PredicateUtils.anyPredicate((Predicate<Object>[]) null);
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAnyPredicateEx2() {
+         PredicateUtils.anyPredicate(new Predicate[] {null});
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAnyPredicateEx3() {
+         PredicateUtils.anyPredicate(new Predicate[] {null, null});
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAnyPredicateEx4() {
+         PredicateUtils.anyPredicate((Collection<Predicate<Object>>) null);
+     }
+@@ -320,7 +323,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         PredicateUtils.anyPredicate(Collections.<Predicate<Object>>emptyList());
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testAnyPredicateEx6() {
+         final Collection<Predicate<Object>> coll = new ArrayList<Predicate<Object>>();
+         coll.add(null);
+@@ -339,7 +342,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.eitherPredicate(FalsePredicate.falsePredicate(), FalsePredicate.falsePredicate()).evaluate(null));
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testEitherPredicateEx() {
+         PredicateUtils.eitherPredicate(null, null);
+     }
+@@ -393,24 +396,24 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertFalse(PredicateUtils.onePredicate(coll), null);
+     }
+ 
+-    @Test(expected=NullPointerException.class) 
++    @Test(expected=IllegalArgumentException.class) 
+     public void testOnePredicateEx1() {
+         PredicateUtils.onePredicate((Predicate<Object>[]) null);
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testOnePredicateEx2() {
+         PredicateUtils.onePredicate(new Predicate[] {null});
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testOnePredicateEx3() {
+         PredicateUtils.onePredicate(new Predicate[] {null, null});
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testOnePredicateEx4() {
+         PredicateUtils.onePredicate((Collection<Predicate<Object>>) null);
+     }
+@@ -421,7 +424,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         PredicateUtils.onePredicate(Collections.EMPTY_LIST);
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testOnePredicateEx6() {
+         final Collection<Predicate<Object>> coll = new ArrayList<Predicate<Object>>();
+         coll.add(null);
+@@ -440,7 +443,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(true, PredicateUtils.neitherPredicate(FalsePredicate.falsePredicate(), FalsePredicate.falsePredicate()).evaluate(null));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNeitherPredicateEx() {
+         PredicateUtils.neitherPredicate(null, null);
+     }
+@@ -490,24 +493,24 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertTrue(PredicateUtils.nonePredicate(coll), null);
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNonePredicateEx1() {
+         PredicateUtils.nonePredicate((Predicate<Object>[]) null);
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNonePredicateEx2() {
+         PredicateUtils.nonePredicate(new Predicate[] {null});
+     }
+ 
+     @SuppressWarnings("unchecked")
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNonePredicateEx3() {
+         PredicateUtils.nonePredicate(new Predicate[] {null, null});
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNonePredicateEx4() {
+         PredicateUtils.nonePredicate((Collection<Predicate<Object>>) null);
+     }
+@@ -517,7 +520,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         PredicateUtils.nonePredicate(Collections.<Predicate<Object>>emptyList());
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNonePredicateEx6() {
+         final Collection<Predicate<Object>> coll = new ArrayList<Predicate<Object>>();
+         coll.add(null);
+@@ -560,7 +563,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(true, PredicateUtils.asPredicate(TransformerUtils.<Boolean>nopTransformer()).evaluate(true));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testAsPredicateTransformerEx1() {
+         PredicateUtils.asPredicate(null);
+     }
+@@ -581,7 +584,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.invokerPredicate("isEmpty").evaluate(list));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testInvokerPredicateEx1() {
+         PredicateUtils.invokerPredicate(null);
+     }
+@@ -609,7 +612,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+             "contains", new Class[] {Object.class}, new Object[] {cString}).evaluate(list));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testInvokerPredicate2Ex1() {
+         PredicateUtils.invokerPredicate(null, null, null);
+     }
+@@ -634,7 +637,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         PredicateUtils.nullIsExceptionPredicate(TruePredicate.truePredicate()).evaluate(null);
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNullIsExceptionPredicateEx1() {
+         PredicateUtils.nullIsExceptionPredicate(null);
+     }
+@@ -649,7 +652,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.nullIsTruePredicate(FalsePredicate.falsePredicate()).evaluate(new Object()));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNullIsTruePredicateEx1() {
+         PredicateUtils.nullIsTruePredicate(null);
+     }
+@@ -664,7 +667,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         assertEquals(false, PredicateUtils.nullIsFalsePredicate(FalsePredicate.falsePredicate()).evaluate(new Object()));
+     }
+ 
+-    @Test(expected=NullPointerException.class)
++    @Test(expected=IllegalArgumentException.class)
+     public void testNullIsFalsePredicateEx1() {
+         PredicateUtils.nullIsFalsePredicate(null);
+     }
+@@ -687,7 +690,7 @@ public class PredicateUtilsTest extends AbstractPredicateTest {
+         try {
+             PredicateUtils.transformedPredicate(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // misc tests
+diff --git a/src/test/java/org/apache/commons/collections4/QueueUtilsTest.java b/src/test/java/org/apache/commons/collections4/QueueUtilsTest.java
+index 10bfaef7..2be4ec1b 100644
+--- a/src/test/java/org/apache/commons/collections4/QueueUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/QueueUtilsTest.java
+@@ -16,7 +16,9 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import java.util.LinkedList;
+ import java.util.Queue;
+@@ -45,8 +47,8 @@ public class QueueUtilsTest {
+         assertTrue("Returned object should be an UnmodifiableQueue.", queue instanceof UnmodifiableQueue);
+         try {
+             QueueUtils.unmodifiableQueue(null);
+-            fail("Expecting NullPointerException for null queue.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null queue.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         
+@@ -59,14 +61,14 @@ public class QueueUtilsTest {
+         assertTrue("Returned object should be a PredicatedQueue.", queue instanceof PredicatedQueue);
+         try {
+             QueueUtils.predicatedQueue(null, truePredicate);
+-            fail("Expecting NullPointerException for null queue.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null queue.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             QueueUtils.predicatedQueue(new LinkedList<Object>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+@@ -77,14 +79,14 @@ public class QueueUtilsTest {
+         assertTrue("Returned object should be an TransformedQueue.", queue instanceof TransformedQueue);
+         try {
+             QueueUtils.transformingQueue(null, nopTransformer);
+-            fail("Expecting NullPointerException for null queue.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null queue.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             QueueUtils.transformingQueue(new LinkedList<Object>(), null);
+-            fail("Expecting NullPointerException for null transformer.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null transformer.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/SetUtilsTest.java b/src/test/java/org/apache/commons/collections4/SetUtilsTest.java
+index ff5a54fb..ee8df9e0 100644
+--- a/src/test/java/org/apache/commons/collections4/SetUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/SetUtilsTest.java
+@@ -16,7 +16,10 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import java.util.Arrays;
+ import java.util.Collection;
+@@ -44,14 +47,14 @@ public class SetUtilsTest {
+         assertTrue("returned object should be a PredicatedSet", set instanceof PredicatedSet);
+         try {
+             SetUtils.predicatedSet(new HashSet<Object>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         try {
+             SetUtils.predicatedSet(null, predicate);
+-            fail("Expecting NullPointerException for null set.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null set.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java b/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
+index 6c558943..837fe867 100644
+--- a/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/TransformerUtilsTest.java
+@@ -16,7 +16,10 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.fail;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
+@@ -149,7 +152,7 @@ public class TransformerUtilsTest {
+         assertEquals(cInteger, TransformerUtils.asTransformer(ClosureUtils.nopClosure()).transform(cInteger));
+         try {
+             TransformerUtils.asTransformer((Closure<Object>) null);
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             return;
+         }
+         fail();
+@@ -183,7 +186,7 @@ public class TransformerUtilsTest {
+         assertEquals(null, TransformerUtils.asTransformer(FactoryUtils.nullFactory()).transform(cInteger));
+         try {
+             TransformerUtils.asTransformer((Factory<Object>) null);
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             return;
+         }
+         fail();
+@@ -212,26 +215,26 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.chainedTransformer(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.chainedTransformer((Transformer[]) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.chainedTransformer((Collection<Transformer<Object, Object>>) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.chainedTransformer(new Transformer[] {null, null});
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             coll = new ArrayList<Transformer<Object, Object>>();
+             coll.add(null);
+             coll.add(null);
+             TransformerUtils.chainedTransformer(coll);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // ifTransformer
+@@ -263,19 +266,19 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.ifTransformer(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.ifTransformer(TruePredicate.truePredicate(), null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.ifTransformer(null, ConstantTransformer.constantTransformer("A"));
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.ifTransformer(null, null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+     
+     // switchTransformer
+@@ -323,19 +326,19 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.switchTransformer(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.switchTransformer((Predicate[]) null, (Transformer[]) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.switchTransformer((Map<Predicate<Object>, Transformer<Object, Object>>) null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.switchTransformer(new Predicate[2], new Transformer[2]);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.switchTransformer(
+                     new Predicate[] { TruePredicate.truePredicate() },
+@@ -370,7 +373,7 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.switchMapTransformer(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     // invokerTransformer
+@@ -387,7 +390,7 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.invokerTransformer(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.invokerTransformer("noSuchMethod").transform(new Object());
+             fail();
+@@ -411,7 +414,7 @@ public class TransformerUtilsTest {
+         try {
+             TransformerUtils.invokerTransformer(null, null, null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+         try {
+             TransformerUtils.invokerTransformer("noSuchMethod", new Class[] { Object.class },
+                     new Object[] { cString }).transform(new Object());
+diff --git a/src/test/java/org/apache/commons/collections4/TrieUtilsTest.java b/src/test/java/org/apache/commons/collections4/TrieUtilsTest.java
+index 71c78075..cf1b6793 100644
+--- a/src/test/java/org/apache/commons/collections4/TrieUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/TrieUtilsTest.java
+@@ -16,7 +16,9 @@
+  */
+ package org.apache.commons.collections4;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
+ 
+ import org.apache.commons.collections4.trie.PatriciaTrie;
+ import org.apache.commons.collections4.trie.UnmodifiableTrie;
+@@ -38,8 +40,8 @@ public class TrieUtilsTest {
+             trie instanceof UnmodifiableTrie);
+         try {
+             TrieUtils.unmodifiableTrie(null);
+-            fail("Expecting NullPointerException for null trie.");
+-        } catch (final NullPointerException ex) {
++            fail("Expecting IllegalArgumentException for null trie.");
++        } catch (final IllegalArgumentException ex) {
+             // expected
+         }
+         
+diff --git a/src/test/java/org/apache/commons/collections4/bag/PredicatedBagTest.java b/src/test/java/org/apache/commons/collections4/bag/PredicatedBagTest.java
+index cb7a70c7..7fa5eda2 100644
+--- a/src/test/java/org/apache/commons/collections4/bag/PredicatedBagTest.java
++++ b/src/test/java/org/apache/commons/collections4/bag/PredicatedBagTest.java
+@@ -116,8 +116,8 @@ public class PredicatedBagTest<T> extends AbstractBagTest<T> {
+         }
+         try {
+             decorateBag(new HashBag<T>(), null);
+-            fail("Expecting NullPointerException for null predicate.");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null predicate.");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/bag/PredicatedSortedBagTest.java b/src/test/java/org/apache/commons/collections4/bag/PredicatedSortedBagTest.java
+index c7fb92d4..cae5ba22 100644
+--- a/src/test/java/org/apache/commons/collections4/bag/PredicatedSortedBagTest.java
++++ b/src/test/java/org/apache/commons/collections4/bag/PredicatedSortedBagTest.java
+@@ -76,12 +76,12 @@ public class PredicatedSortedBagTest<T> extends AbstractSortedBagTest<T> {
+         ((PredicatedSortedBag<T>) bag).decorated();
+         try {
+             decorateBag(new TreeBag<T>(), null);
+-            fail("Expecting NullPointerException for null predicate");
+-        } catch (final NullPointerException e) {}
++            fail("Expecting IllegalArgumentException for null predicate");
++        } catch (final IllegalArgumentException e) {}
+         try {
+             decorateBag(nullBag, stringPredicate());
+-            fail("Expecting NullPointerException for null bag");
+-        } catch (final NullPointerException e) {}
++            fail("Expecting IllegalArgumentException for null bag");
++        } catch (final IllegalArgumentException e) {}
+     }
+ 
+     @SuppressWarnings("unchecked")
+diff --git a/src/test/java/org/apache/commons/collections4/bag/UnmodifiableBagTest.java b/src/test/java/org/apache/commons/collections4/bag/UnmodifiableBagTest.java
+index 3a19a780..6211d6b5 100644
+--- a/src/test/java/org/apache/commons/collections4/bag/UnmodifiableBagTest.java
++++ b/src/test/java/org/apache/commons/collections4/bag/UnmodifiableBagTest.java
+@@ -89,7 +89,7 @@ public class UnmodifiableBagTest<E> extends AbstractBagTest<E> {
+         try {
+             UnmodifiableBag.unmodifiableBag(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/bag/UnmodifiableSortedBagTest.java b/src/test/java/org/apache/commons/collections4/bag/UnmodifiableSortedBagTest.java
+index 2d5227da..370212db 100644
+--- a/src/test/java/org/apache/commons/collections4/bag/UnmodifiableSortedBagTest.java
++++ b/src/test/java/org/apache/commons/collections4/bag/UnmodifiableSortedBagTest.java
+@@ -89,7 +89,7 @@ public class UnmodifiableSortedBagTest<E> extends AbstractSortedBagTest<E> {
+         try {
+             UnmodifiableSortedBag.unmodifiableSortedBag(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableBidiMapTest.java b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableBidiMapTest.java
+index 3eb0eaed..fab0cf30 100644
+--- a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableBidiMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableBidiMapTest.java
+@@ -94,7 +94,7 @@ public class UnmodifiableBidiMapTest<K, V> extends AbstractBidiMapTest<K, V> {
+         try {
+             UnmodifiableBidiMap.unmodifiableBidiMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+     
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableOrderedBidiMapTest.java b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableOrderedBidiMapTest.java
+index a2aa1eaf..546064bc 100644
+--- a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableOrderedBidiMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableOrderedBidiMapTest.java
+@@ -104,6 +104,6 @@ public class UnmodifiableOrderedBidiMapTest<K extends Comparable<K>, V extends C
+         try {
+             UnmodifiableOrderedBidiMap.unmodifiableOrderedBidiMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableSortedBidiMapTest.java b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableSortedBidiMapTest.java
+index 8a1b88f4..4737e47c 100644
+--- a/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableSortedBidiMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/bidimap/UnmodifiableSortedBidiMapTest.java
+@@ -110,7 +110,7 @@ public class UnmodifiableSortedBidiMapTest<K extends Comparable<K>, V extends Co
+         try {
+             UnmodifiableSortedBidiMap.unmodifiableSortedBidiMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
+index 081fccce..483534dc 100644
+--- a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
++++ b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
+@@ -96,7 +96,7 @@ public class UnmodifiableBoundedCollectionTest<E> extends AbstractCollectionTest
+         try {
+             UnmodifiableBoundedCollection.unmodifiableBoundedCollection(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+     
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableCollectionTest.java b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableCollectionTest.java
+index d5e87459..c275b3b4 100644
+--- a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableCollectionTest.java
++++ b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableCollectionTest.java
+@@ -85,7 +85,7 @@ public class UnmodifiableCollectionTest<E> extends AbstractCollectionTest<E> {
+         try {
+             UnmodifiableCollection.unmodifiableCollection(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/functors/AbstractCompositePredicateTest.java b/src/test/java/org/apache/commons/collections4/functors/AbstractCompositePredicateTest.java
+index 432ea7f3..7032c8e6 100644
+--- a/src/test/java/org/apache/commons/collections4/functors/AbstractCompositePredicateTest.java
++++ b/src/test/java/org/apache/commons/collections4/functors/AbstractCompositePredicateTest.java
+@@ -16,15 +16,15 @@
+  */
+ package org.apache.commons.collections4.functors;
+ 
++import org.apache.commons.collections4.Predicate;
++import org.junit.Assert;
++import org.junit.Test;
++
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.Collections;
+ import java.util.List;
+ 
+-import org.apache.commons.collections4.Predicate;
+-import org.junit.Assert;
+-import org.junit.Test;
+-
+ /**
+  * Base class for tests of composite predicates.
+  *
+@@ -100,7 +100,7 @@ public abstract class AbstractCompositePredicateTest<T> extends AbstractMockPred
+     /**
+      * Tests <code>getInstance</code> with a null predicate array.
+      */
+-    @Test(expected = NullPointerException.class)
++    @Test(expected = IllegalArgumentException.class)
+     public final void nullArrayToGetInstance() {
+         getPredicateInstance((Predicate<T>[]) null);
+     }
+@@ -109,7 +109,7 @@ public abstract class AbstractCompositePredicateTest<T> extends AbstractMockPred
+      * Tests <code>getInstance</code> with a single null element in the predicate array.
+      */
+     @SuppressWarnings({"unchecked"})
+-    @Test(expected = NullPointerException.class)
++    @Test(expected = IllegalArgumentException.class)
+     public final void nullElementInArrayToGetInstance() {
+         getPredicateInstance(new Predicate[] { null });
+     }
+@@ -118,7 +118,7 @@ public abstract class AbstractCompositePredicateTest<T> extends AbstractMockPred
+      * Tests <code>getInstance</code> with two null elements in the predicate array.
+      */
+     @SuppressWarnings({"unchecked"})
+-    @Test(expected = NullPointerException.class)
++    @Test(expected = IllegalArgumentException.class)
+     public final void nullElementsInArrayToGetInstance() {
+         getPredicateInstance(new Predicate[] { null, null });
+     }
+@@ -127,7 +127,7 @@ public abstract class AbstractCompositePredicateTest<T> extends AbstractMockPred
+     /**
+      * Tests <code>getInstance</code> with a null predicate collection
+      */
+-    @Test(expected = NullPointerException.class)
++    @Test(expected = IllegalArgumentException.class)
+     public final void nullCollectionToGetInstance() {
+         getPredicateInstance((Collection<Predicate<T>>) null);
+     }
+@@ -135,7 +135,7 @@ public abstract class AbstractCompositePredicateTest<T> extends AbstractMockPred
+     /**
+      * Tests <code>getInstance</code> with a predicate collection that contains null elements
+      */
+-    @Test(expected = NullPointerException.class)
++    @Test(expected = IllegalArgumentException.class)
+     public final void nullElementsInCollectionToGetInstance() {
+         final Collection<Predicate<T>> coll = new ArrayList<Predicate<T>>();
+         coll.add(null);
+diff --git a/src/test/java/org/apache/commons/collections4/iterators/NodeListIteratorTest.java b/src/test/java/org/apache/commons/collections4/iterators/NodeListIteratorTest.java
+index 65931322..6c075de4 100644
+--- a/src/test/java/org/apache/commons/collections4/iterators/NodeListIteratorTest.java
++++ b/src/test/java/org/apache/commons/collections4/iterators/NodeListIteratorTest.java
+@@ -15,8 +15,6 @@
+  */
+ package org.apache.commons.collections4.iterators;
+ 
+-import static org.easymock.EasyMock.*;
+-
+ import java.util.Iterator;
+ 
+ import org.w3c.dom.Element;
+@@ -24,6 +22,10 @@ import org.w3c.dom.Node;
+ import org.w3c.dom.NodeList;
+ import org.w3c.dom.Text;
+ 
++import static org.easymock.EasyMock.createMock;
++import static org.easymock.EasyMock.expect;
++import static org.easymock.EasyMock.replay;
++
+ /**
+  * Tests the NodeListIterator.
+  */
+@@ -110,8 +112,8 @@ public class NodeListIteratorTest extends AbstractIteratorTest<Node> {
+     public void testNullConstructor(){
+         try{
+             new NodeListIterator((Node) null);
+-            fail("NullPointerException expected!");
+-        }catch(final NullPointerException e){
++            fail("IllegalArgumentException expected!");
++        }catch(final IllegalArgumentException e){
+             // expected.
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableIteratorTest.java b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableIteratorTest.java
+index 829a4375..652e580e 100644
+--- a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableIteratorTest.java
++++ b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableIteratorTest.java
+@@ -78,7 +78,7 @@ public class UnmodifiableIteratorTest<E> extends AbstractIteratorTest<E> {
+         try {
+             UnmodifiableIterator.unmodifiableIterator(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableListIteratorTest.java b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableListIteratorTest.java
+index bba5ecc0..cdeb267d 100644
+--- a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableListIteratorTest.java
++++ b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableListIteratorTest.java
+@@ -88,7 +88,7 @@ public class UnmodifiableListIteratorTest<E> extends AbstractListIteratorTest<E>
+         try {
+             UnmodifiableListIterator.umodifiableListIterator(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableMapIteratorTest.java b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableMapIteratorTest.java
+index c6b1b689..b3e730d8 100644
+--- a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableMapIteratorTest.java
++++ b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableMapIteratorTest.java
+@@ -90,7 +90,7 @@ public class UnmodifiableMapIteratorTest<K, V> extends AbstractMapIteratorTest<K
+         try {
+             UnmodifiableMapIterator.unmodifiableMapIterator(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableOrderedMapIteratorTest.java b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableOrderedMapIteratorTest.java
+index 55867a2d..581cd1a4 100644
+--- a/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableOrderedMapIteratorTest.java
++++ b/src/test/java/org/apache/commons/collections4/iterators/UnmodifiableOrderedMapIteratorTest.java
+@@ -92,7 +92,7 @@ public class UnmodifiableOrderedMapIteratorTest<K, V> extends AbstractOrderedMap
+         try {
+             UnmodifiableOrderedMapIterator.unmodifiableOrderedMapIterator(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+ }
+diff --git a/src/test/java/org/apache/commons/collections4/list/UnmodifiableListTest.java b/src/test/java/org/apache/commons/collections4/list/UnmodifiableListTest.java
+index 0e1fa5b5..c9b00d27 100644
+--- a/src/test/java/org/apache/commons/collections4/list/UnmodifiableListTest.java
++++ b/src/test/java/org/apache/commons/collections4/list/UnmodifiableListTest.java
+@@ -89,7 +89,7 @@ public class UnmodifiableListTest<E> extends AbstractListTest<E> {
+         try {
+             UnmodifiableList.unmodifiableList(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     @SuppressWarnings("unchecked")
+diff --git a/src/test/java/org/apache/commons/collections4/map/LazySortedMapTest.java b/src/test/java/org/apache/commons/collections4/map/LazySortedMapTest.java
+index e42c3212..1abba675 100644
+--- a/src/test/java/org/apache/commons/collections4/map/LazySortedMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/LazySortedMapTest.java
+@@ -16,7 +16,7 @@
+  */
+ package org.apache.commons.collections4.map;
+ 
+-import static org.apache.commons.collections4.map.LazySortedMap.*;
++import static org.apache.commons.collections4.map.LazySortedMap.lazySortedMap;
+ 
+ import java.util.Comparator;
+ import java.util.Map;
+@@ -103,14 +103,14 @@ public class LazySortedMapTest<K, V> extends AbstractSortedMapTest<K, V> {
+         assertTrue(map instanceof LazySortedMap);
+          try {
+             map = lazySortedMap(new TreeMap<Integer, Number>(), (Transformer<Integer, Number>) null);
+-            fail("Expecting NullPointerException for null transformer");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null transformer");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+         try {
+             map = lazySortedMap((SortedMap<Integer,Number>) null, transformer);
+-            fail("Expecting NullPointerException for null map");
+-        } catch (final NullPointerException e) {
++            fail("Expecting IllegalArgumentException for null map");
++        } catch (final IllegalArgumentException e) {
+             // expected
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/map/PassiveExpiringMapTest.java b/src/test/java/org/apache/commons/collections4/map/PassiveExpiringMapTest.java
+index edb44bd0..da564573 100644
+--- a/src/test/java/org/apache/commons/collections4/map/PassiveExpiringMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/PassiveExpiringMapTest.java
+@@ -106,7 +106,7 @@ public class PassiveExpiringMapTest<K, V> extends AbstractMapTest<K, V> {
+             final Map<String, String> map = null;
+             new PassiveExpiringMap<String, String>(map);
+             fail("constructor - exception should have been thrown.");
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             // success
+         }
+ 
+@@ -114,7 +114,7 @@ public class PassiveExpiringMapTest<K, V> extends AbstractMapTest<K, V> {
+             final ExpirationPolicy<String, String> policy = null;
+             new PassiveExpiringMap<String, String>(policy);
+             fail("constructor - exception should have been thrown.");
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             // success
+         }
+ 
+@@ -122,7 +122,7 @@ public class PassiveExpiringMapTest<K, V> extends AbstractMapTest<K, V> {
+             final TimeUnit unit = null;
+             new PassiveExpiringMap<String, String>(10L, unit);
+             fail("constructor - exception should have been thrown.");
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+             // success
+         }
+     }
+diff --git a/src/test/java/org/apache/commons/collections4/map/UnmodifiableMapTest.java b/src/test/java/org/apache/commons/collections4/map/UnmodifiableMapTest.java
+index cabf3f07..f53c1e2d 100644
+--- a/src/test/java/org/apache/commons/collections4/map/UnmodifiableMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/UnmodifiableMapTest.java
+@@ -78,7 +78,7 @@ public class UnmodifiableMapTest<K, V> extends AbstractIterableMapTest<K, V> {
+         try {
+             UnmodifiableMap.unmodifiableMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/map/UnmodifiableOrderedMapTest.java b/src/test/java/org/apache/commons/collections4/map/UnmodifiableOrderedMapTest.java
+index 0c98a352..53c48487 100644
+--- a/src/test/java/org/apache/commons/collections4/map/UnmodifiableOrderedMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/UnmodifiableOrderedMapTest.java
+@@ -77,7 +77,7 @@ public class UnmodifiableOrderedMapTest<K, V> extends AbstractOrderedMapTest<K,
+         try {
+             UnmodifiableOrderedMap.unmodifiableOrderedMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/map/UnmodifiableSortedMapTest.java b/src/test/java/org/apache/commons/collections4/map/UnmodifiableSortedMapTest.java
+index b50b9038..fa77083a 100644
+--- a/src/test/java/org/apache/commons/collections4/map/UnmodifiableSortedMapTest.java
++++ b/src/test/java/org/apache/commons/collections4/map/UnmodifiableSortedMapTest.java
+@@ -77,7 +77,7 @@ public class UnmodifiableSortedMapTest<K, V> extends AbstractSortedMapTest<K, V>
+         try {
+             UnmodifiableSortedMap.unmodifiableSortedMap(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/queue/UnmodifiableQueueTest.java b/src/test/java/org/apache/commons/collections4/queue/UnmodifiableQueueTest.java
+index 5fe8d483..3b37dd6f 100644
+--- a/src/test/java/org/apache/commons/collections4/queue/UnmodifiableQueueTest.java
++++ b/src/test/java/org/apache/commons/collections4/queue/UnmodifiableQueueTest.java
+@@ -104,7 +104,7 @@ public class UnmodifiableQueueTest<E> extends AbstractQueueTest<E> {
+         try {
+             UnmodifiableQueue.unmodifiableQueue(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java b/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
+index 38b431a0..ba6b0d5c 100644
+--- a/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
++++ b/src/test/java/org/apache/commons/collections4/set/ListOrderedSetTest.java
+@@ -253,27 +253,27 @@ public class ListOrderedSetTest<E>
+         try {
+             ListOrderedSet.listOrderedSet((List<E>) null);
+             fail();
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+         }
+         try {
+             ListOrderedSet.listOrderedSet((Set<E>) null);
+             fail();
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+         }
+         try {
+             ListOrderedSet.listOrderedSet(null, null);
+             fail();
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+         }
+         try {
+             ListOrderedSet.listOrderedSet(new HashSet<E>(), null);
+             fail();
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+         }
+         try {
+             ListOrderedSet.listOrderedSet(null, new ArrayList<E>());
+             fail();
+-        } catch (final NullPointerException ex) {
++        } catch (final IllegalArgumentException ex) {
+         }
+     }
+ 
+diff --git a/src/test/java/org/apache/commons/collections4/set/UnmodifiableNavigableSetTest.java b/src/test/java/org/apache/commons/collections4/set/UnmodifiableNavigableSetTest.java
+index d2c4a427..39bfde4c 100644
+--- a/src/test/java/org/apache/commons/collections4/set/UnmodifiableNavigableSetTest.java
++++ b/src/test/java/org/apache/commons/collections4/set/UnmodifiableNavigableSetTest.java
+@@ -101,7 +101,7 @@ public class UnmodifiableNavigableSetTest<E> extends AbstractNavigableSetTest<E>
+         try {
+             UnmodifiableNavigableSet.unmodifiableNavigableSet(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     /**
+diff --git a/src/test/java/org/apache/commons/collections4/set/UnmodifiableSetTest.java b/src/test/java/org/apache/commons/collections4/set/UnmodifiableSetTest.java
+index f5ec1691..0a465029 100644
+--- a/src/test/java/org/apache/commons/collections4/set/UnmodifiableSetTest.java
++++ b/src/test/java/org/apache/commons/collections4/set/UnmodifiableSetTest.java
+@@ -79,7 +79,7 @@ public class UnmodifiableSetTest<E> extends AbstractSetTest<E> {
+         try {
+             UnmodifiableSet.unmodifiableSet(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------
+diff --git a/src/test/java/org/apache/commons/collections4/set/UnmodifiableSortedSetTest.java b/src/test/java/org/apache/commons/collections4/set/UnmodifiableSortedSetTest.java
+index 0a24cd69..1590bd4b 100644
+--- a/src/test/java/org/apache/commons/collections4/set/UnmodifiableSortedSetTest.java
++++ b/src/test/java/org/apache/commons/collections4/set/UnmodifiableSortedSetTest.java
+@@ -96,7 +96,7 @@ public class UnmodifiableSortedSetTest<E> extends AbstractSortedSetTest<E> {
+         try {
+             UnmodifiableSortedSet.unmodifiableSortedSet(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     /**
+diff --git a/src/test/java/org/apache/commons/collections4/trie/UnmodifiableTrieTest.java b/src/test/java/org/apache/commons/collections4/trie/UnmodifiableTrieTest.java
+index 1fc8c01d..8fa4f0ca 100644
+--- a/src/test/java/org/apache/commons/collections4/trie/UnmodifiableTrieTest.java
++++ b/src/test/java/org/apache/commons/collections4/trie/UnmodifiableTrieTest.java
+@@ -83,7 +83,7 @@ public class UnmodifiableTrieTest<V> extends AbstractSortedMapTest<String, V> {
+         try {
+             UnmodifiableTrie.unmodifiableTrie(null);
+             fail();
+-        } catch (final NullPointerException ex) {}
++        } catch (final IllegalArgumentException ex) {}
+     }
+ 
+     //-----------------------------------------------------------------------

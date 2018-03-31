@@ -1,0 +1,73 @@
+diff --git a/src/main/java/org/apache/commons/collections4/ClosureUtils.java b/src/main/java/org/apache/commons/collections4/ClosureUtils.java
+index fd09abe7..b339a1a0 100644
+--- a/src/main/java/org/apache/commons/collections4/ClosureUtils.java
++++ b/src/main/java/org/apache/commons/collections4/ClosureUtils.java
+@@ -37,6 +37,7 @@ import org.apache.commons.collections4.functors.WhileClosure;
+  * <li>Invoker - invokes a method on the input object
+  * <li>For - repeatedly calls a closure for a fixed number of times
+  * <li>While - repeatedly calls a closure while a predicate is true
++ * <li>DoWhile - repeatedly calls a closure while a predicate is true
+  * <li>Chained - chains two or more closures together
+  * <li>If - calls one closure or another based on a predicate
+  * <li>Switch - calls one closure based on one or more predicates
+@@ -45,14 +46,7 @@ import org.apache.commons.collections4.functors.WhileClosure;
+  * <li>NOP - does nothing
+  * <li>Exception - always throws an exception
+  * </ul>
+- * <p>
+- * Since v4.1 only closures which are considered to be unsafe are
+- * Serializable. Closures considered to be unsafe for serialization are:
+- * <ul>
+- * <li>Invoker
+- * <li>For
+- * <li>While
+- * </ul>
++ * All the supplied closures are Serializable.
+  *
+  * @since 3.0
+  * @version $Id$
+diff --git a/src/main/java/org/apache/commons/collections4/FactoryUtils.java b/src/main/java/org/apache/commons/collections4/FactoryUtils.java
+index 6d776357..bb5887f8 100644
+--- a/src/main/java/org/apache/commons/collections4/FactoryUtils.java
++++ b/src/main/java/org/apache/commons/collections4/FactoryUtils.java
+@@ -26,18 +26,12 @@ import org.apache.commons.collections4.functors.PrototypeFactory;
+  * for the Factory functor interface. The supplied factories are:
+  * <ul>
+  * <li>Prototype - clones a specified object
+- * <li>Instantiate - creates objects using reflection
++ * <li>Reflection - creates objects using reflection
+  * <li>Constant - always returns the same object
+  * <li>Null - always returns null
+  * <li>Exception - always throws an exception
+  * </ul>
+- * <p>
+- * Since v4.1 only factories which are considered to be unsafe are
+- * Serializable. Factories considered to be unsafe for serialization are:
+- * <ul>
+- * <li>Prototype
+- * <li>Instantiate
+- * </ul>
++ * All the supplied factories are Serializable.
+  *
+  * @since 3.0
+  * @version $Id$
+diff --git a/src/main/java/org/apache/commons/collections4/TransformerUtils.java b/src/main/java/org/apache/commons/collections4/TransformerUtils.java
+index ad6265a3..05a94f5e 100644
+--- a/src/main/java/org/apache/commons/collections4/TransformerUtils.java
++++ b/src/main/java/org/apache/commons/collections4/TransformerUtils.java
+@@ -56,14 +56,7 @@ import org.apache.commons.collections4.functors.SwitchTransformer;
+  * <li>Exception - always throws an exception
+  * <li>StringValue - returns a <code>java.lang.String</code> representation of the input object
+  * </ul>
+- * <p>
+- * Since v4.1 only transformers which are considered to be unsafe are
+- * Serializable. Transformers considered to be unsafe for serialization are:
+- * <ul>
+- * <li>Invoker
+- * <li>Clone
+- * <li>Instantiate
+- * </ul>
++ * All the supplied transformers are Serializable.
+  *
+  * @since 3.0
+  * @version $Id$

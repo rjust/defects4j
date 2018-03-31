@@ -1,0 +1,134 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index 2108aecc..ccc3ee1d 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -132,9 +132,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+     /** The entry's modification time. */
+     private long modTime;
+ 
+-    /** If the header checksum is reasonably correct. */
+-    private boolean checkSumOK;
+-
+     /** The entry's link flag. */
+     private byte linkFlag;
+ 
+@@ -554,17 +551,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Get this entry's checksum status.
+-     *
+-     * @return if the header checksum is reasonably correct
+-     * @see TarUtils#verifyCheckSum(byte[])
+-     * @since 1.5
+-     */
+-    public boolean isCheckSumOK() {
+-        return checkSumOK;
+-    }
+-
+-    /**
+      * Get this entry's file.
+      *
+      * @return This entry's file.
+@@ -956,7 +942,6 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+         offset += SIZELEN;
+         modTime = TarUtils.parseOctalOrBinary(header, offset, MODTIMELEN);
+         offset += MODTIMELEN;
+-        checkSumOK = TarUtils.verifyCheckSum(header);
+         offset += CHKSUMLEN;
+         linkFlag = header[offset++];
+         linkName = oldStyle ? TarUtils.parseName(header, offset, NAMELEN)
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+index 3872946c..9221f470 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarConstants.java
+@@ -69,11 +69,6 @@ public interface TarConstants {
+     int    CHKSUMLEN = 8;
+ 
+     /**
+-     * Offset of the checksum field within header record.
+-     */
+-    int    CHKSUM_OFFSET = 148;
+-
+-    /**
+      * The length of the size field in a header buffer.
+      * Includes the trailing space or NUL.
+      */
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 4940d1d5..deb29f02 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -18,9 +18,6 @@
+  */
+ package org.apache.commons.compress.archivers.tar;
+ 
+-import static org.apache.commons.compress.archivers.tar.TarConstants.CHKSUMLEN;
+-import static org.apache.commons.compress.archivers.tar.TarConstants.CHKSUM_OFFSET;
+-
+ import java.io.IOException;
+ import java.math.BigInteger;
+ import java.nio.ByteBuffer;
+@@ -561,63 +558,4 @@ public class TarUtils {
+         return sum;
+     }
+ 
+-    /**
+-     * Wikipedia <a href="http://en.wikipedia.org/wiki/Tar_(file_format)#File_header">says</a>:
+-     * <blockquote>
+-     * The checksum is calculated by taking the sum of the unsigned byte values
+-     * of the header block with the eight checksum bytes taken to be ascii
+-     * spaces (decimal value 32). It is stored as a six digit octal number with
+-     * leading zeroes followed by a NUL and then a space. Various
+-     * implementations do not adhere to this format. For better compatibility,
+-     * ignore leading and trailing whitespace, and get the first six digits. In
+-     * addition, some historic tar implementations treated bytes as signed.
+-     * Implementations typically calculate the checksum both ways, and treat it
+-     * as good if either the signed or unsigned sum matches the included
+-     * checksum.
+-     * </blockquote>
+-     * <p>
+-     * In addition there are
+-     * <a href="https://issues.apache.org/jira/browse/COMPRESS-117">some tar files</a>
+-     * that seem to have parts of their header cleared to zero (no detectable
+-     * magic bytes, etc.) but still have a reasonable-looking checksum field
+-     * present. It looks like we can detect such cases reasonably well by
+-     * checking whether the stored checksum is <em>greater than</em> the
+-     * computed unsigned checksum. That check is unlikely to pass on some
+-     * random file header, as it would need to have a valid sequence of
+-     * octal digits in just the right place.
+-     * <p>
+-     * The return value of this method should be treated as a best-effort
+-     * heuristic rather than an absolute and final truth. The checksum
+-     * verification logic may well evolve over time as more special cases
+-     * are encountered.
+-     *
+-     * @param header tar header
+-     * @return whether the checksum is reasonably good
+-     * @see <a href="https://issues.apache.org/jira/browse/COMPRESS-191">COMPRESS-191</a>
+-     * @since 1.5
+-     */
+-    public static boolean verifyCheckSum(byte[] header) {
+-        long storedSum = 0;
+-        long unsignedSum = 0;
+-        long signedSum = 0;
+-
+-        int digits = 0;
+-        for (int i = 0; i < header.length; i++) {
+-            byte b = header[i];
+-            if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
+-                if ('0' <= b && b <= '7' && digits++ < 6) {
+-                    storedSum = storedSum * 8 + b - '0';
+-                } else if (digits > 0) {
+-                    digits = 6; // only look at the first octal digit sequence
+-                }
+-                b = ' ';
+-            }
+-            unsignedSum += 0xff & b;
+-            signedSum += b;
+-        }
+-
+-        return storedSum == unsignedSum || storedSum == signedSum
+-                || storedSum > unsignedSum; // COMPRESS-177
+-    }
+-
+ }

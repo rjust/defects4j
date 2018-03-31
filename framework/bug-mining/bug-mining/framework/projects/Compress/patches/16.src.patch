@@ -1,0 +1,113 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/ArchiveOutputStream.java
+index 1d6e78ea..2cad89d7 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ArchiveOutputStream.java
+@@ -74,9 +74,6 @@ public abstract class ArchiveOutputStream extends OutputStream {
+     /**
+      * Finishes the addition of entries to this stream, without closing it.
+      * Additional data can be written, if the format supports it.
+-     * 
+-     * The finish() method throws an Exception if the user forgets to close the entry
+-     * .
+      * @throws IOException
+      */
+     public abstract void finish() throws IOException;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
+index de1a87c5..8a48da57 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveOutputStream.java
+@@ -153,6 +153,7 @@ public class ArArchiveOutputStream extends ArchiveOutputStream {
+     }
+ 
+     public void close() throws IOException {
++        closeArchiveEntry();
+         out.close();
+         prevEntry = null;
+     }
+@@ -166,8 +167,6 @@ public class ArArchiveOutputStream extends ArchiveOutputStream {
+      * @see org.apache.commons.compress.archivers.ArchiveOutputStream#finish()
+      */
+     public void finish() throws IOException {
+-        if(haveUnclosedEntry) {
+-            throw new IOException("This archives contains unclosed entries.");
+-        }
++        // Nothing to do
+     }
+ }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index 3641ab69..b9b1eadd 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -315,7 +315,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+             return;
+         }
+         if (this.entry != null) {
+-            throw new IOException("This archives contains unclosed entries.");
++            closeArchiveEntry();
+         }
+         this.entry = new CpioArchiveEntry(this.entryFormat);
+         this.entry.setName(CPIO_TRAILER);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+index 2dc3b26f..1d9e5c5e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+@@ -51,9 +51,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+ 
+     private boolean closed = false;
+ 
+-    /* Indicates if putArchiveEntry has been called without closeArchiveEntry */
+-    private boolean haveUnclosedEntry = false;
+-    
+     private final OutputStream out;
+ 
+     /**
+@@ -110,9 +107,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+      * @throws IOException on error
+      */
+     public void finish() throws IOException {
+-        if(haveUnclosedEntry) {
+-            throw new IOException("This archives contains unclosed entries.");
+-        }
+         writeEOFRecord();
+         writeEOFRecord();
+     }
+@@ -188,7 +182,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+             currSize = entry.getSize();
+         }
+         currName = entry.getName();
+-        haveUnclosedEntry = true;
+     }
+ 
+     /**
+@@ -219,7 +212,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+                                   + "' before the '" + currSize
+                                   + "' bytes specified in the header were written");
+         }
+-        haveUnclosedEntry = false;
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 645d3af4..cb8a2036 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -328,14 +328,13 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+         fallbackToUTF8 = b;
+     }
+ 
+-    /* (non-Javadoc)
+-     * @see org.apache.commons.compress.archivers.ArchiveOutputStream#finish()
++    /**
++     * Finishs writing the contents and closes this as well as the
++     * underlying stream.
++     * @throws IOException on error
+      */
+     public void finish() throws IOException {
+-        if(entry != null) {
+-            throw new IOException("This archives contains unclosed entries.");
+-        }
+-        
++        closeArchiveEntry();
+         cdOffset = written;
+         for (Iterator i = entries.iterator(); i.hasNext(); ) {
+             writeCentralFileHeader((ZipArchiveEntry) i.next());

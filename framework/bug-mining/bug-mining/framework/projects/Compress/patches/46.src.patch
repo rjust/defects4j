@@ -1,0 +1,105 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 2773c25e..582d4509 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -23,15 +23,8 @@
+ 
+ package org.apache.commons.compress.archivers.tar;
+ 
+-import java.io.BufferedReader;
+ import java.io.IOException;
+ import java.io.InputStream;
+-import java.io.InputStreamReader;
+-import java.util.HashMap;
+-import java.util.Iterator;
+-import java.util.Map;
+-import java.util.Map.Entry;
+-
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveInputStream;
+ import org.apache.commons.compress.utils.ArchiveUtils;
+@@ -223,84 +216,9 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             currEntry.setName(longName.toString());
+         }
+ 
+-        if (currEntry != null && currEntry.isPaxHeader()){ // Process Pax headers
+-            paxHeaders();
+-        }
+-
+         return currEntry;
+     }
+ 
+-    private void paxHeaders() throws IOException{
+-        BufferedReader br = new BufferedReader(new InputStreamReader(this, "UTF-8"));
+-        Map headers = new HashMap();
+-        // Format is "length keyword=value\n";
+-        while(true){ // get length
+-            int ch;
+-            int len=0;
+-            int read=0;
+-            while((ch = br.read()) != -1){
+-                read++;
+-                if (ch == ' '){ // End of length string
+-                    // Get keyword
+-                    StringBuffer sb = new StringBuffer();
+-                    while((ch = br.read()) != -1){
+-                        read++;
+-                        if (ch == '='){ // end of keyword
+-                            String keyword = sb.toString();
+-                            // Get rest of entry
+-                            char[] cbuf = new char[len-read];
+-                            int got = br.read(cbuf);
+-                            if (got != len-read){
+-                                throw new IOException("Failed to read Paxheader. Expected "+(len-read)+" chars, read "+got);
+-                            }
+-                            String value = new String(cbuf, 0 , len-read-1); // Drop trailing NL
+-                            headers.put(keyword, value);
+-                            break;
+-                        }
+-                        sb.append((char)ch);
+-                    }
+-                    break; // Processed single header
+-                }
+-                len *= 10;
+-                len += ch - '0';
+-            }
+-            if (ch == -1){ // EOF
+-                break;
+-            }
+-        }
+-        getNextEntry(); // Get the actual file entry
+-        /*
+-         * The following headers are defined for Pax.
+-         * atime, ctime, mtime, charset: cannot use these without changing TarArchiveEntry fields
+-         * comment
+-         * gid, gname
+-         * linkpath
+-         * size
+-         * uid,uname
+-         */
+-        Iterator hdrs = headers.entrySet().iterator();
+-        while(hdrs.hasNext()){
+-            Entry ent = (Entry) hdrs.next();
+-            String key = (String) ent.getKey();
+-            String val = (String) ent.getValue();
+-            if ("path".equals(key)){
+-                currEntry.setName(val);
+-            } else if ("linkpath".equals(key)){
+-                currEntry.setLinkName(val);
+-            } else if ("gid".equals(key)){
+-                currEntry.setGroupId(Integer.parseInt(val));
+-            } else if ("gname".equals(key)){
+-                currEntry.setGroupName(val);
+-            } else if ("uid".equals(key)){
+-                currEntry.setUserId(Integer.parseInt(val));
+-            } else if ("uname".equals(key)){
+-                currEntry.setUserName(val);
+-            } else if ("size".equals(key)){
+-                currEntry.setSize(Long.parseLong(val));
+-            }
+-        }
+-    }
+-
+     public ArchiveEntry getNextEntry() throws IOException {
+         return getNextTarEntry();
+     }

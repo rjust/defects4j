@@ -1,0 +1,49 @@
+diff --git a/src/java/org/apache/commons/collections/list/SetUniqueList.java b/src/java/org/apache/commons/collections/list/SetUniqueList.java
+index 25d1504f..b0756083 100644
+--- a/src/java/org/apache/commons/collections/list/SetUniqueList.java
++++ b/src/java/org/apache/commons/collections/list/SetUniqueList.java
+@@ -155,25 +155,20 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
+     }
+ 
+     /**
+-     * Adds a collection of objects to the end of the list avoiding duplicates.
+-     * <p>
+-     * Only elements that are not already in this list will be added, and
+-     * duplicates from the specified collection will be ignored.
++     * Adds an element to the end of the list if it is not already present.
+      * <p>
+      * <i>(Violation)</i>
+-     * The <code>List</code> interface makes the assumption that the elements
+-     * are always inserted. This may not happen with this implementation.
++     * The <code>List</code> interface makes the assumption that the element is
++     * always inserted. This may not happen with this implementation.
+      * 
+-     * @param coll  the collection to add in iterator order
+-     * @return true if this collection changed
++     * @param coll  the collection to add
+      */
+     public boolean addAll(Collection coll) {
+         return addAll(size(), coll);
+     }
+ 
+     /**
+-     * Adds a collection of objects a specific index in the list avoiding 
+-     * duplicates.
++     * Adds a collection of objects to the end of the list avoiding duplicates.
+      * <p>
+      * Only elements that are not already in this list will be added, and
+      * duplicates from the specified collection will be ignored.
+@@ -192,12 +187,7 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
+ 
+         // adds all elements
+         for (final Iterator it = coll.iterator(); it.hasNext();) {
+-            int sizeBeforeAddNext = size();
+-            add(index, it.next());
+-            // if it was inserted, then increase the target index
+-            if (sizeBeforeAddNext != size()) {
+-              index++;
+-            }
++            add(it.next());
+         }
+ 
+         // compares sizes to detect if collection changed

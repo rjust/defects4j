@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/collections4/comparators/TransformingComparator.java b/src/main/java/org/apache/commons/collections4/comparators/TransformingComparator.java
+index 51607b1a..cb24d431 100644
+--- a/src/main/java/org/apache/commons/collections4/comparators/TransformingComparator.java
++++ b/src/main/java/org/apache/commons/collections4/comparators/TransformingComparator.java
+@@ -120,8 +120,8 @@ public class TransformingComparator<I, O> implements Comparator<I>, Serializable
+         }
+         if (object.getClass().equals(this.getClass())) {
+             final TransformingComparator<?, ?> comp = (TransformingComparator<?, ?>) object;
+-            return (null == decorated ? null == comp.decorated : decorated.equals(comp.decorated)) &&
+-                   (null == transformer ? null == comp.transformer : transformer.equals(comp.transformer));
++            return null == decorated ? null == comp.decorated : decorated.equals(comp.decorated) &&
++                    null == transformer ? null == comp.transformer : transformer.equals(comp.transformer);
+         }
+         return false;
+     }

@@ -1,0 +1,147 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+index f18f6a56..60017a6e 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStreamTest.java
+@@ -23,23 +23,17 @@ import java.io.ByteArrayOutputStream;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.FileOutputStream;
+-import java.io.IOException;
+-import java.security.MessageDigest;
+ import java.util.Calendar;
+-import java.util.Date;
+ import java.util.HashMap;
+ import java.util.Map;
+ import java.util.TimeZone;
+ 
+ import org.apache.commons.compress.AbstractTestCase;
+-import org.apache.commons.compress.archivers.ArchiveEntry;
+ import org.apache.commons.compress.archivers.ArchiveOutputStream;
+ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+ import org.apache.commons.compress.utils.CharsetNames;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+-import org.junit.Assert;
+-
+ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+ 
+     public void testCount() throws Exception {
+@@ -392,7 +386,7 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+             tos.putArchiveEntry(t);
+             tos.closeArchiveEntry();
+             tos.close();
+-
++            
+             fail("Truncated name didn't throw an exception");
+         } catch (RuntimeException e) {
+             // expected
+@@ -504,7 +498,7 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+                 + "01234567890123456789012345678901234567890123456789/test";
+         TarArchiveEntry entry = new TarArchiveEntry("test", TarConstants.LF_SYMLINK);
+         entry.setLinkName(linkname);
+-
++        
+         try {
+             ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             TarArchiveOutputStream tos = new TarArchiveOutputStream(bos, "ASCII");
+@@ -512,7 +506,7 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+             tos.putArchiveEntry(entry);
+             tos.closeArchiveEntry();
+             tos.close();
+-
++            
+             fail("Truncated link name didn't throw an exception");
+         } catch (RuntimeException e) {
+             // expected
+@@ -525,14 +519,14 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+             + "01234567890123456789012345678901234567890123456789/";
+         TarArchiveEntry entry = new TarArchiveEntry("test" , TarConstants.LF_SYMLINK);
+         entry.setLinkName(linkname);
+-
++        
+         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         TarArchiveOutputStream tos = new TarArchiveOutputStream(bos, "ASCII");
+         tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_TRUNCATE);
+         tos.putArchiveEntry(entry);
+         tos.closeArchiveEntry();
+         tos.close();
+-
++        
+         byte[] data = bos.toByteArray();
+         TarArchiveInputStream tin = new TarArchiveInputStream(new ByteArrayInputStream(data));
+         TarArchiveEntry e = tin.getNextTarEntry();
+@@ -563,14 +557,14 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+             + "01234567890123456789012345678901234567890123456789/test";
+         TarArchiveEntry entry = new TarArchiveEntry("test", TarConstants.LF_SYMLINK);
+         entry.setLinkName(linkname);
+-
++        
+         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         TarArchiveOutputStream tos = new TarArchiveOutputStream(bos, "ASCII");
+         tos.setLongFileMode(mode);
+         tos.putArchiveEntry(entry);
+         tos.closeArchiveEntry();
+         tos.close();
+-
++        
+         byte[] data = bos.toByteArray();
+         TarArchiveInputStream tin = new TarArchiveInputStream(new ByteArrayInputStream(data));
+         TarArchiveEntry e = tin.getNextTarEntry();
+@@ -597,57 +591,4 @@ public class TarArchiveOutputStreamTest extends AbstractTestCase {
+         assertEquals(TarConstants.DEFAULT_BLKSIZE, f.length());
+     }
+ 
+-    /**
+-     * When using long file names the longLinkEntry included the
+-     * current timestamp as the Entry modification date. This was
+-     * never exposed to the client but it caused identical archives to
+-     * have different MD5 hashes.
+-     *
+-     * @throws Exception
+-     */
+-    public void testLongNameMd5Hash() throws Exception {
+-        final String longFileName = "a/considerably/longer/file/name/which/forces/use/of/the/long/link/header/which/appears/to/always/use/the/current/time/as/modification/date";
+-        String fname = longFileName;
+-        final Date modificationDate = new Date();
+-
+-        byte[] archive1 = createTarArchiveContainingOneDirectory(fname, modificationDate);
+-        byte[] digest1 = MessageDigest.getInstance("MD5").digest(archive1);
+-
+-        // let a second elapse otherwise the modification dates will be equal
+-        Thread.sleep(1000L);
+-
+-        // now recreate exactly the same tar file
+-        byte[] archive2 = createTarArchiveContainingOneDirectory(fname, modificationDate);
+-        // and I would expect the MD5 hash to be the same, but for long names it isn't
+-        byte[] digest2 = MessageDigest.getInstance("MD5").digest(archive2);
+-
+-        Assert.assertArrayEquals(digest1, digest2);
+-
+-        // do I still have the correct modification date?
+-        // let a second elapse so we don't get the current time
+-        Thread.sleep(1000);
+-        TarArchiveInputStream tarIn = new TarArchiveInputStream(new ByteArrayInputStream(archive2));
+-        ArchiveEntry nextEntry = tarIn.getNextEntry();
+-        assertEquals(longFileName, nextEntry.getName());
+-        // tar archive stores modification time to second granularity only (floored)
+-        assertEquals(modificationDate.getTime() / 1000, nextEntry.getLastModifiedDate().getTime() / 1000);
+-        tarIn.close();
+-    }
+-
+-    private static byte[] createTarArchiveContainingOneDirectory(String fname, Date modificationDate) throws IOException {
+-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+-        TarArchiveOutputStream tarOut = new TarArchiveOutputStream(baos, 1024);
+-        tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+-        TarArchiveEntry tarEntry = new TarArchiveEntry("d");
+-        tarEntry.setModTime(modificationDate);
+-        tarEntry.setMode(TarArchiveEntry.DEFAULT_DIR_MODE);
+-        tarEntry.setModTime(modificationDate.getTime());
+-        tarEntry.setName(fname);
+-        tarOut.putArchiveEntry(tarEntry);
+-        tarOut.closeArchiveEntry();
+-        tarOut.close();
+-
+-        return baos.toByteArray();
+-    }
+-
+ }

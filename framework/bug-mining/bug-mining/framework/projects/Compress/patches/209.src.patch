@@ -1,0 +1,46 @@
+diff --git a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
+index cd0165fd..107bf0b8 100644
+--- a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
++++ b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
+@@ -19,7 +19,6 @@
+ package org.apache.commons.compress.utils;
+ 
+ import java.io.UnsupportedEncodingException;
+-import java.util.Arrays;
+ 
+ import org.apache.commons.compress.archivers.ArchiveEntry;
+ 
+@@ -28,8 +27,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
+  */
+ public class ArchiveUtils {
+ 
+-    private static final int MAX_SANITIZED_NAME_LENGTH = 255;
+-
+     /** Private constructor to prevent instantiation of this utility class. */
+     private ArchiveUtils(){
+     }
+@@ -258,8 +255,7 @@ public class ArchiveUtils {
+     /**
+      * Returns a "sanitized" version of the string given as arguments,
+      * where sanitized means non-printable characters have been
+-     * replaced with a question mark and the outcome is not longer
+-     * than 255 chars.
++     * replaced with a question mark.
+      *
+      * <p>This method is used to clean up file names when they are
+      * used in exception messages as they may end up in log files or
+@@ -271,13 +267,7 @@ public class ArchiveUtils {
+      * @since Compress 1.12
+      */
+     public static String sanitize(String s) {
+-        final char[] cs = s.toCharArray();
+-        final char[] chars = cs.length <= MAX_SANITIZED_NAME_LENGTH ? cs : Arrays.copyOf(cs, MAX_SANITIZED_NAME_LENGTH);
+-        if (cs.length > MAX_SANITIZED_NAME_LENGTH) {
+-            for (int i = MAX_SANITIZED_NAME_LENGTH - 3; i < MAX_SANITIZED_NAME_LENGTH; i++) {
+-                chars[i] = '.';
+-            }
+-        }
++        final char[] chars = s.toCharArray();
+         final int len = chars.length;
+         final StringBuilder sb = new StringBuilder();
+         for (int i = 0; i < len; i++) {

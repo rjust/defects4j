@@ -1,0 +1,23 @@
+diff --git a/src/main/java/org/apache/commons/collections4/bag/AbstractMapBag.java b/src/main/java/org/apache/commons/collections4/bag/AbstractMapBag.java
+index 4a9c5271..6c85c8af 100644
+--- a/src/main/java/org/apache/commons/collections4/bag/AbstractMapBag.java
++++ b/src/main/java/org/apache/commons/collections4/bag/AbstractMapBag.java
+@@ -147,14 +147,14 @@ public abstract class AbstractMapBag<E> implements Bag<E> {
+      * @return <code>true</code> if the Bag contains all the collection
+      */
+     boolean containsAll(final Bag<?> other) {
++        boolean result = true;
+         final Iterator<?> it = other.uniqueSet().iterator();
+         while (it.hasNext()) {
+             final Object current = it.next();
+-            if (getCount(current) < other.getCount(current)) {
+-                return false;
+-            }
++            final boolean contains = getCount(current) >= other.getCount(current);
++            result = result && contains;
+         }
+-        return true;
++        return result;
+     }
+ 
+     //-----------------------------------------------------------------------

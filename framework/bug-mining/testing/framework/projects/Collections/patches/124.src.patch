@@ -1,0 +1,194 @@
+diff --git a/src/main/java/org/apache/commons/collections4/ClosureUtils.java b/src/main/java/org/apache/commons/collections4/ClosureUtils.java
+index c7c38ddf..48c37cda 100644
+--- a/src/main/java/org/apache/commons/collections4/ClosureUtils.java
++++ b/src/main/java/org/apache/commons/collections4/ClosureUtils.java
+@@ -216,7 +216,7 @@ public class ClosureUtils {
+      * @throws IllegalArgumentException if the closures collection is empty
+      * @throws IllegalArgumentException if any closure in the collection is null
+      */
+-    public static <E> Closure<E> chainedClosure(final Collection<? extends Closure<? super E>> closures) {
++    public static <E> Closure<E> chainedClosure(final Collection<Closure<E>> closures) {
+         return ChainedClosure.chainedClosure(closures);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/collections4/PredicateUtils.java b/src/main/java/org/apache/commons/collections4/PredicateUtils.java
+index 1171c77c..bab7e4e4 100644
+--- a/src/main/java/org/apache/commons/collections4/PredicateUtils.java
++++ b/src/main/java/org/apache/commons/collections4/PredicateUtils.java
+@@ -286,7 +286,7 @@ public class PredicateUtils {
+      * @throws IllegalArgumentException if any predicate in the collection is null
+      * @see org.apache.commons.collections4.functors.AllPredicate
+      */
+-    public static <T> Predicate<T> allPredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> allPredicate(final Collection<? extends Predicate<T>> predicates) {
+         return AllPredicate.allPredicate(predicates);
+     }
+ 
+@@ -334,7 +334,7 @@ public class PredicateUtils {
+      * @throws IllegalArgumentException if any predicate in the collection is null
+      * @see org.apache.commons.collections4.functors.AnyPredicate
+      */
+-    public static <T> Predicate<T> anyPredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> anyPredicate(final Collection<? extends Predicate<T>> predicates) {
+         return AnyPredicate.anyPredicate(predicates);
+     }
+ 
+@@ -384,7 +384,7 @@ public class PredicateUtils {
+      * @throws IllegalArgumentException if any predicate in the collection is null
+      * @see org.apache.commons.collections4.functors.OnePredicate
+      */
+-    public static <T> Predicate<T> onePredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> onePredicate(final Collection<Predicate<T>> predicates) {
+         return OnePredicate.onePredicate(predicates);
+     }
+ 
+@@ -434,7 +434,7 @@ public class PredicateUtils {
+      * @throws IllegalArgumentException if any predicate in the collection is null
+      * @see org.apache.commons.collections4.functors.NonePredicate
+      */
+-    public static <T> Predicate<T> nonePredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> nonePredicate(final Collection<? extends Predicate<T>> predicates) {
+         return NonePredicate.nonePredicate(predicates);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/collections4/TransformerUtils.java b/src/main/java/org/apache/commons/collections4/TransformerUtils.java
+index f8d4478c..6be9cb48 100644
+--- a/src/main/java/org/apache/commons/collections4/TransformerUtils.java
++++ b/src/main/java/org/apache/commons/collections4/TransformerUtils.java
+@@ -208,7 +208,7 @@ public class TransformerUtils {
+      * @see org.apache.commons.collections4.functors.ChainedTransformer
+      */
+     public static <T> Transformer<T, T> chainedTransformer(
+-            final Collection<? extends Transformer<? super T, ? extends T>> transformers) {
++            final Collection<? extends Transformer<T, T>> transformers) {
+         return ChainedTransformer.chainedTransformer(transformers);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/collections4/functors/AllPredicate.java b/src/main/java/org/apache/commons/collections4/functors/AllPredicate.java
+index f6da168b..af4ed995 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/AllPredicate.java
++++ b/src/main/java/org/apache/commons/collections4/functors/AllPredicate.java
+@@ -76,13 +76,13 @@ public final class AllPredicate<T> extends AbstractQuantifierPredicate<T> {
+      * @throws IllegalArgumentException if the predicates array is null
+      * @throws IllegalArgumentException if any predicate in the array is null
+      */
+-    public static <T> Predicate<T> allPredicate(final Collection<? extends Predicate<? super T>> predicates) {
+-        final Predicate<? super T>[] preds = validate(predicates);
++    public static <T> Predicate<T> allPredicate(final Collection<? extends Predicate<T>> predicates) {
++        final Predicate<T>[] preds = validate(predicates);
+         if (preds.length == 0) {
+             return truePredicate();
+         }
+         if (preds.length == 1) {
+-            return coerce(preds[0]);
++            return preds[0];
+         }
+         return new AllPredicate<T>(preds);
+     }
+diff --git a/src/main/java/org/apache/commons/collections4/functors/AnyPredicate.java b/src/main/java/org/apache/commons/collections4/functors/AnyPredicate.java
+index 522e7662..f3e43d2d 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/AnyPredicate.java
++++ b/src/main/java/org/apache/commons/collections4/functors/AnyPredicate.java
+@@ -73,7 +73,7 @@ public final class AnyPredicate<T> extends AbstractQuantifierPredicate<T> {
+      * @throws IllegalArgumentException if any predicate in the array is null
+      */
+     @SuppressWarnings("unchecked")
+-    public static <T> Predicate<T> anyPredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> anyPredicate(final Collection<? extends Predicate<T>> predicates) {
+         final Predicate<? super T>[] preds = FunctorUtils.validate(predicates);
+         if (preds.length == 0) {
+             return FalsePredicate.<T>falsePredicate();
+diff --git a/src/main/java/org/apache/commons/collections4/functors/ChainedClosure.java b/src/main/java/org/apache/commons/collections4/functors/ChainedClosure.java
+index 2d8c8587..2e4436a2 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/ChainedClosure.java
++++ b/src/main/java/org/apache/commons/collections4/functors/ChainedClosure.java
+@@ -64,7 +64,7 @@ public class ChainedClosure<E> implements Closure<E>, Serializable {
+      * @throws IllegalArgumentException if any closure in the collection is null
+      */
+     @SuppressWarnings("unchecked")
+-    public static <E> Closure<E> chainedClosure(final Collection<? extends Closure<? super E>> closures) {
++    public static <E> Closure<E> chainedClosure(final Collection<Closure<E>> closures) {
+         if (closures == null) {
+             throw new IllegalArgumentException("Closure collection must not be null");
+         }
+diff --git a/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java b/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
+index 1892ddd3..ca5c5f41 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
++++ b/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
+@@ -67,8 +67,7 @@ public class ChainedTransformer<T> implements Transformer<T, T>, Serializable {
+      * @throws IllegalArgumentException if any transformer in the collection is null
+      */
+     @SuppressWarnings("unchecked")
+-    public static <T> Transformer<T, T> chainedTransformer(
+-            final Collection<? extends Transformer<? super T, ? extends T>> transformers) {
++    public static <T> Transformer<T, T> chainedTransformer(final Collection<? extends Transformer<T, T>> transformers) {
+         if (transformers == null) {
+             throw new IllegalArgumentException("Transformer collection must not be null");
+         }
+diff --git a/src/main/java/org/apache/commons/collections4/functors/FunctorUtils.java b/src/main/java/org/apache/commons/collections4/functors/FunctorUtils.java
+index 89c66072..babb42c0 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/FunctorUtils.java
++++ b/src/main/java/org/apache/commons/collections4/functors/FunctorUtils.java
+@@ -66,7 +66,7 @@ class FunctorUtils {
+      * @return the coerced predicate.
+      */
+     @SuppressWarnings("unchecked")
+-    static <T> Predicate<T> coerce(final Predicate<? super T> predicate) {
++    static <T> Predicate<T> coerce(final Predicate<? super T> predicate){
+         return (Predicate<T>) predicate;
+     }
+ 
+@@ -93,15 +93,15 @@ class FunctorUtils {
+      * @param predicates  the predicates to validate
+      * @return predicate array
+      */
+-    static <T> Predicate<? super T>[] validate(final Collection<? extends Predicate<? super T>> predicates) {
++    static <T> Predicate<T>[] validate(final Collection<? extends Predicate<T>> predicates) {
+         if (predicates == null) {
+             throw new IllegalArgumentException("The predicate collection must not be null");
+         }
+         // convert to array like this to guarantee iterator() ordering
+         @SuppressWarnings("unchecked") // OK
+-        final Predicate<? super T>[] preds = new Predicate[predicates.size()];
++        final Predicate<T>[] preds = new Predicate[predicates.size()];
+         int i = 0;
+-        for (final Predicate<? super T> predicate : predicates) {
++        for (final Predicate<T> predicate : predicates) {
+             preds[i] = predicate;
+             if (preds[i] == null) {
+                 throw new IllegalArgumentException(
+@@ -154,7 +154,7 @@ class FunctorUtils {
+      * @return the coerced closure.
+      */
+     @SuppressWarnings("unchecked")
+-    static <T> Closure<T> coerce(final Closure<? super T> closure) {
++    static <T> Closure<T> coerce(final Closure<? super T> closure){
+         return (Closure<T>) closure;
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/collections4/functors/NonePredicate.java b/src/main/java/org/apache/commons/collections4/functors/NonePredicate.java
+index 23ad4b87..012932ad 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/NonePredicate.java
++++ b/src/main/java/org/apache/commons/collections4/functors/NonePredicate.java
+@@ -66,7 +66,7 @@ public final class NonePredicate<T> extends AbstractQuantifierPredicate<T> {
+      * @throws IllegalArgumentException if the predicates array is null
+      * @throws IllegalArgumentException if any predicate in the array is null
+      */
+-    public static <T> Predicate<T> nonePredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> nonePredicate(final Collection<? extends Predicate<T>> predicates) {
+         final Predicate<? super T>[] preds = FunctorUtils.validate(predicates);
+         if (preds.length == 0) {
+             return TruePredicate.<T>truePredicate();
+diff --git a/src/main/java/org/apache/commons/collections4/functors/OnePredicate.java b/src/main/java/org/apache/commons/collections4/functors/OnePredicate.java
+index 84aee438..a2da0bc1 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/OnePredicate.java
++++ b/src/main/java/org/apache/commons/collections4/functors/OnePredicate.java
+@@ -69,7 +69,7 @@ public final class OnePredicate<T> extends AbstractQuantifierPredicate<T> {
+      * @throws IllegalArgumentException if the predicates array is null
+      * @throws IllegalArgumentException if any predicate in the array is null
+      */
+-    public static <T> Predicate<T> onePredicate(final Collection<? extends Predicate<? super T>> predicates) {
++    public static <T> Predicate<T> onePredicate(final Collection<? extends Predicate<T>> predicates) {
+         final Predicate<? super T>[] preds = FunctorUtils.validate(predicates);
+         return new OnePredicate<T>(preds);
+     }

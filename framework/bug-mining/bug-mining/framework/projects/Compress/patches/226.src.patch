@@ -1,0 +1,46 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+index faeabffd..781ebbf2 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/snappy/SnappyCompressorInputStream.java
+@@ -310,7 +310,6 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+      * @return True if the decompressed data should be flushed
+      */
+     private boolean expandLiteral(final int length) throws IOException {
+-        boolean shouldFlush = ensureBufferSpace(length);
+         final int bytesRead = IOUtils.readFully(in, decompressBuf, writeIndex, length);
+         count(bytesRead);
+         if (length != bytesRead) {
+@@ -318,15 +317,7 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+         }
+ 
+         writeIndex += length;
+-        return shouldFlush || writeIndex >= 2 * this.blockSize;
+-    }
+-
+-    private boolean ensureBufferSpace(final int length) {
+-        if (writeIndex + length >= decompressBuf.length) {
+-            slideBuffer();
+-            return true;
+-        }
+-        return false;
++        return writeIndex >= 2 * this.blockSize;
+     }
+ 
+     /**
+@@ -353,7 +344,6 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+             throw new IOException("Offset is larger than block size");
+         }
+         final int offset = (int) off;
+-        boolean shouldFlush = ensureBufferSpace(length);
+ 
+         if (offset == 1) {
+             final byte lastChar = decompressBuf[writeIndex - 1];
+@@ -381,7 +371,7 @@ public class SnappyCompressorInputStream extends CompressorInputStream {
+                 writeIndex += pad;
+             }
+         }
+-        return shouldFlush || writeIndex >= 2 * this.blockSize;
++        return writeIndex >= 2 * this.blockSize;
+     }
+ 
+     /**

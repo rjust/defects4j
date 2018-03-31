@@ -1,0 +1,72 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+index fac5539c..41b3433c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+@@ -385,7 +385,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+     private String readCString(final int length) throws IOException {
+         byte tmpBuffer[] = new byte[length];
+         readFully(tmpBuffer, 0, tmpBuffer.length);
+-        return new String(tmpBuffer, 0, tmpBuffer.length - 1); // TODO default charset?
++        return new String(tmpBuffer, 0, tmpBuffer.length - 1);
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+index d09bdacf..b64c1b27 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+@@ -326,7 +326,7 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+ 
+                 byte type = blockBuffer[i + 6];
+ 
+-                String name = new String(blockBuffer, i + 8, blockBuffer[i + 7]); // TODO default charset?
++                String name = new String(blockBuffer, i + 8, blockBuffer[i + 7]);
+ 
+                 if (".".equals(name) || "..".equals(name)) {
+                     // do nothing...
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveSummary.java b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveSummary.java
+index fca377fd..952bf6b3 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveSummary.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveSummary.java
+@@ -45,11 +45,11 @@ public class DumpArchiveSummary {
+         dumpDate = 1000L * DumpArchiveUtil.convert32(buffer, 4);
+         previousDumpDate = 1000L * DumpArchiveUtil.convert32(buffer, 8);
+         volume = DumpArchiveUtil.convert32(buffer, 12);
+-        label = new String(buffer, 676, DumpArchiveConstants.LBLSIZE).trim(); // TODO default charset?
++        label = new String(buffer, 676, DumpArchiveConstants.LBLSIZE).trim();
+         level = DumpArchiveUtil.convert32(buffer, 692);
+-        filesys = new String(buffer, 696, DumpArchiveConstants.NAMELEN).trim(); // TODO default charset?
+-        devname = new String(buffer, 760, DumpArchiveConstants.NAMELEN).trim(); // TODO default charset?
+-        hostname = new String(buffer, 824, DumpArchiveConstants.NAMELEN).trim(); // TODO default charset?
++        filesys = new String(buffer, 696, DumpArchiveConstants.NAMELEN).trim();
++        devname = new String(buffer, 760, DumpArchiveConstants.NAMELEN).trim();
++        hostname = new String(buffer, 824, DumpArchiveConstants.NAMELEN).trim();
+         flags = DumpArchiveUtil.convert32(buffer, 888);
+         firstrec = DumpArchiveUtil.convert32(buffer, 892);
+         ntrec = DumpArchiveUtil.convert32(buffer, 896);
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index ada4746c..f614bb9c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -249,7 +249,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             byte[] buf = new byte[SMALL_BUFFER_SIZE];
+             int length = 0;
+             while ((length = read(buf)) >= 0) {
+-                longName.append(new String(buf, 0, length)); // TODO default charset?
++                longName.append(new String(buf, 0, length));
+             }
+             getNextEntry();
+             if (currEntry == null) {
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 747e64a2..6cff3d5a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -235,7 +235,7 @@ public class TarUtils {
+     // Helper method to generate the exception message
+     private static String exceptionMessage(byte[] buffer, final int offset,
+             final int length, int current, final byte currentByte) {
+-        String string = new String(buffer, offset, length); // TODO default charset?
++        String string = new String(buffer, offset, length);
+         string=string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
+         final String s = "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
+         return s;

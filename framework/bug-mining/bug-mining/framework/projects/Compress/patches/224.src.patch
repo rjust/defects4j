@@ -1,0 +1,12 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ScatterZipOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ScatterZipOutputStream.java
+index 7e3bae0c..7c10d378 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ScatterZipOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ScatterZipOutputStream.java
+@@ -125,7 +125,6 @@ public class ScatterZipOutputStream implements Closeable {
+     @Override
+     public void close() throws IOException {
+         backingStore.close();
+-        streamCompressor.close();
+     }
+ 
+     /**

@@ -1,0 +1,18 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+index 3b89be3d..d93820fa 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+@@ -217,9 +217,11 @@ public class ZipFileTest extends TestCase {
+         assertNotNull(zf.getInputStream(ze));
+ 
+         int numberOfEntries = 0;
+-        for (ZipArchiveEntry entry : zf.getEntries("test1.txt")) {
++        for (Iterator<ZipArchiveEntry> it = zf.getEntries("test1.txt");
++             it.hasNext(); ) {
+             numberOfEntries++;
+-            assertNotNull(zf.getInputStream(entry));
++            ze = it.next();
++            assertNotNull(zf.getInputStream(ze));
+         }
+         assertEquals(2, numberOfEntries);
+     }

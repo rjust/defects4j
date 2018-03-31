@@ -1,0 +1,329 @@
+diff --git a/src/test/org/apache/commons/collections/TestClosureUtils.java b/src/test/org/apache/commons/collections/TestClosureUtils.java
+index f0d1ab19..dc2de5d0 100644
+--- a/src/test/org/apache/commons/collections/TestClosureUtils.java
++++ b/src/test/org/apache/commons/collections/TestClosureUtils.java
+@@ -27,7 +27,6 @@ import junit.framework.TestSuite;
+ import junit.textui.TestRunner;
+ 
+ import org.apache.commons.collections.functors.EqualPredicate;
+-import org.apache.commons.collections.functors.ExceptionClosure;
+ import org.apache.commons.collections.functors.FalsePredicate;
+ import org.apache.commons.collections.functors.NOPClosure;
+ import org.apache.commons.collections.functors.TruePredicate;
+@@ -426,24 +425,4 @@ public class TestClosureUtils extends junit.framework.TestCase {
+         assertEquals(ClosureUtils.nopClosure(), ClosureUtils.asClosure(null));
+     }
+ 
+-    // misc tests
+-    //------------------------------------------------------------------
+-
+-    /**
+-     * Test that all Closure singletones hold singleton pattern in
+-     * serialization/deserialization process.
+-     */
+-    public void testSingletonPatternInSerialization() {
+-        final Object[] singletones = new Object[] {
+-                ExceptionClosure.INSTANCE,
+-                NOPClosure.INSTANCE,
+-        };
+-
+-        for (final Object original : singletones) {
+-            TestUtils.assertSameAfterSerialization(
+-                    "Singletone patern broken for " + original.getClass(),
+-                    original
+-            );
+-        }
+-    }
+ }
+diff --git a/src/test/org/apache/commons/collections/TestFactoryUtils.java b/src/test/org/apache/commons/collections/TestFactoryUtils.java
+index ab24a3aa..5d8ef9fb 100644
+--- a/src/test/org/apache/commons/collections/TestFactoryUtils.java
++++ b/src/test/org/apache/commons/collections/TestFactoryUtils.java
+@@ -27,7 +27,6 @@ import java.util.Date;
+ import java.util.TimeZone;
+ 
+ import org.apache.commons.collections.functors.ConstantFactory;
+-import org.apache.commons.collections.functors.ExceptionFactory;
+ import org.junit.Test;
+ 
+ /**
+@@ -76,10 +75,10 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+         }
+         fail();
+     }
+-
++    
+     // nullFactory
+     //------------------------------------------------------------------
+-
++    
+     public void testNullFactory() {
+         Factory<Object> factory = FactoryUtils.nullFactory();
+         assertNotNull(factory);
+@@ -89,7 +88,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+ 
+     // constantFactory
+     //------------------------------------------------------------------
+-
++    
+     public void testConstantFactoryNull() {
+         Factory<Object> factory = FactoryUtils.constantFactory(null);
+         assertNotNull(factory);
+@@ -107,7 +106,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+ 
+     // prototypeFactory
+     //------------------------------------------------------------------
+-
++    
+     public void testPrototypeFactoryNull() {
+         assertSame(ConstantFactory.NULL_INSTANCE, FactoryUtils.prototypeFactory(null));
+     }
+@@ -119,7 +118,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+         Date created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
+-
++        
+         // check serialisation works
+         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(buffer);
+@@ -137,7 +136,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+         Object created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
+-
++        
+         // check serialisation works
+         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(buffer);
+@@ -163,7 +162,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+         Integer created = factory.create();
+         assertTrue(proto != created);
+         assertEquals(proto, created);
+-
++        
+         // check serialisation works
+         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(buffer);
+@@ -214,7 +213,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+             return false;
+         }
+     }
+-
++    
+     @SuppressWarnings("serial")
+     public static class Mock2 implements Serializable {
+         private final Object iVal;
+@@ -230,7 +229,7 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+             return false;
+         }
+     }
+-
++    
+     public static class Mock3 {
+         private static int cCounter = 0;
+         private final int iVal;
+@@ -241,10 +240,10 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+             return iVal;
+         }
+     }
+-
++    
+     // instantiateFactory
+     //------------------------------------------------------------------
+-
++    
+     @Test(expected=IllegalArgumentException.class)
+     public void instantiateFactoryNull() {
+         FactoryUtils.instantiateFactory(null);
+@@ -283,24 +282,4 @@ public class TestFactoryUtils extends junit.framework.TestCase {
+         assertEquals(new Date(1000 * 60 * 60 * 24), created);
+     }
+ 
+-    // misc tests
+-    //------------------------------------------------------------------
+-
+-    /**
+-     * Test that all Factory singletones hold singleton pattern in
+-     * serialization/deserialization process.
+-     */
+-    public void testSingletonPatternInSerialization() {
+-        final Object[] singletones = new Object[] {
+-                ExceptionFactory.INSTANCE,
+-        };
+-
+-        for (final Object original : singletones) {
+-            TestUtils.assertSameAfterSerialization(
+-                    "Singletone patern broken for " + original.getClass(),
+-                    original
+-            );
+-        }
+-    }
+-
+ }
+diff --git a/src/test/org/apache/commons/collections/TestPredicateUtils.java b/src/test/org/apache/commons/collections/TestPredicateUtils.java
+index 1e2bc24f..e7b7b9ed 100644
+--- a/src/test/org/apache/commons/collections/TestPredicateUtils.java
++++ b/src/test/org/apache/commons/collections/TestPredicateUtils.java
+@@ -33,10 +33,7 @@ import java.util.Map;
+ import org.apache.commons.collections.functors.AllPredicate;
+ import org.apache.commons.collections.functors.BasicPredicateTestBase;
+ import org.apache.commons.collections.functors.EqualPredicate;
+-import org.apache.commons.collections.functors.ExceptionPredicate;
+ import org.apache.commons.collections.functors.FalsePredicate;
+-import org.apache.commons.collections.functors.NotNullPredicate;
+-import org.apache.commons.collections.functors.NullPredicate;
+ import org.apache.commons.collections.functors.TruePredicate;
+ import org.junit.Test;
+ 
+@@ -833,30 +830,6 @@ public class TestPredicateUtils extends BasicPredicateTestBase {
+         } catch (IllegalArgumentException ex) {}
+     }
+ 
+-    // misc tests
+-    //------------------------------------------------------------------
+-
+-    /**
+-     * Test that all Predicate singletones hold singleton pattern in
+-     * serialization/deserialization process.
+-     */
+-    @Test public void testSingletonPatternInSerialization() {
+-        final Object[] singletones = new Object[] {
+-                ExceptionPredicate.INSTANCE,
+-                FalsePredicate.INSTANCE,
+-                NotNullPredicate.INSTANCE,
+-                NullPredicate.INSTANCE,
+-                TruePredicate.INSTANCE
+-        };
+-
+-        for (final Object original : singletones) {
+-            TestUtils.assertSameAfterSerialization(
+-                    "Singletone patern broken for " + original.getClass(),
+-                    original
+-            );
+-        }
+-    }
+-
+     @Override
+     protected Predicate<?> generatePredicate() {
+         return truePredicate();  //Just return something to satisfy super class.
+diff --git a/src/test/org/apache/commons/collections/TestTransformerUtils.java b/src/test/org/apache/commons/collections/TestTransformerUtils.java
+index a26db9d2..0bc2e37c 100644
+--- a/src/test/org/apache/commons/collections/TestTransformerUtils.java
++++ b/src/test/org/apache/commons/collections/TestTransformerUtils.java
+@@ -28,13 +28,10 @@ import junit.framework.Test;
+ import junit.framework.TestSuite;
+ import junit.textui.TestRunner;
+ 
+-import org.apache.commons.collections.functors.CloneTransformer;
+ import org.apache.commons.collections.functors.ConstantTransformer;
+ import org.apache.commons.collections.functors.EqualPredicate;
+-import org.apache.commons.collections.functors.ExceptionTransformer;
+ import org.apache.commons.collections.functors.FalsePredicate;
+ import org.apache.commons.collections.functors.NOPTransformer;
+-import org.apache.commons.collections.functors.StringValueTransformer;
+ import org.apache.commons.collections.functors.TruePredicate;
+ 
+ /**
+@@ -448,27 +445,4 @@ public class TestTransformerUtils extends junit.framework.TestCase {
+         assertEquals(new Date(1000L), trans.transform(Date.class));
+     }
+ 
+-    // misc tests
+-    //------------------------------------------------------------------
+-
+-    /**
+-     * Test that all Transformer singletones hold singleton pattern in
+-     * serialization/deserialization process.
+-     */
+-    public void testSingletonPatternInSerialization() {
+-        final Object[] singletones = new Object[] {
+-                CloneTransformer.INSTANCE,
+-                ExceptionTransformer.INSTANCE,
+-                NOPTransformer.INSTANCE,
+-                StringValueTransformer.INSTANCE,
+-        };
+-
+-        for (final Object original : singletones) {
+-            TestUtils.assertSameAfterSerialization(
+-                    "Singletone patern broken for " + original.getClass(),
+-                    original
+-            );
+-        }
+-    }
+-
+ }
+diff --git a/src/test/org/apache/commons/collections/TestUtils.java b/src/test/org/apache/commons/collections/TestUtils.java
+deleted file mode 100644
+index bf9b1772..00000000
+--- a/src/test/org/apache/commons/collections/TestUtils.java
++++ /dev/null
+@@ -1,68 +0,0 @@
+-package org.apache.commons.collections;
+-
+-import static org.junit.Assert.assertSame;
+-
+-import java.io.ByteArrayInputStream;
+-import java.io.ByteArrayOutputStream;
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.ObjectInputStream;
+-import java.io.ObjectOutputStream;
+-
+-public final class TestUtils {
+-
+-    private TestUtils() {
+-    }
+-
+-    /**
+-     * Asserts that deserialization of the object returns the same object as the
+-     * one that was serialized. Object is first serialized, then deserialized
+-     * and finally check is preformed to see if original and deserialized
+-     * object references are the same.
+-     * <p>
+-     * This method is especially good for testing singletone pattern on classes
+-     * that support serialization.
+-     *
+-     * @param msg the identifying message for the <code>AssertionError</code>.
+-     * @param o object that will be tested.
+-     * @see #assertSameAfterSerialization(Object)
+-     */
+-    public static void assertSameAfterSerialization(String msg, Object o) {
+-        try {
+-            // write object to byte buffer
+-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+-            final ObjectOutputStream oos = new ObjectOutputStream(baos);
+-            oos.writeObject(o);
+-            oos.close();
+-
+-            // read same object from byte buffer
+-            final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+-            final ObjectInputStream ois = new ObjectInputStream(is);
+-            final Object object = ois.readObject();
+-            ois.close();
+-
+-            // assert that original object and deserialized objects are the same
+-            assertSame(msg, o, object);
+-        } catch (IOException e) {
+-            // should never happen
+-            throw new RuntimeException(e);
+-        } catch (ClassNotFoundException e) {
+-            // should never happen
+-            throw new RuntimeException(e);
+-        }
+-    }
+-
+-    /**
+-     * Asserts that deserialization of the object returns the same object as the
+-     * one that was serialized.
+-     * <p>
+-     * Effect of method call is the same as:
+-     * <code>assertSameAfterSerialization(null, o)</code>.
+-     *
+-     * @param o object that will be tested.
+-     * @see #assertSameAfterSerialization(String, Object)
+-     */
+-    public static void assertSameAfterSerialization(Object o) {
+-        assertSameAfterSerialization(null, o);
+-    }
+-}

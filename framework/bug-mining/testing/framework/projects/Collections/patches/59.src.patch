@@ -1,0 +1,132 @@
+diff --git a/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java b/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
+index d3a60dc5..d68ac830 100644
+--- a/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
++++ b/src/main/java/org/apache/commons/collections/set/ListOrderedSet.java
+@@ -65,10 +65,8 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+      * <p>
+      * The list and set must both be empty.
+      *
+-     * @param <E> the element type
+      * @param set  the set to decorate, must be empty and not null
+      * @param list  the list to decorate, must be empty and not null
+-     * @return a new ordered set
+      * @throws IllegalArgumentException if set or list is null
+      * @throws IllegalArgumentException if either the set or list is not empty
+      * @since Commons Collections 3.1
+@@ -91,9 +89,7 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+      * <p>
+      * An <code>ArrayList</code> is used to retain order.
+      *
+-     * @param <E> the element type
+      * @param set  the set to decorate, must not be null
+-     * @return a new ordered set
+      * @throws IllegalArgumentException if set is null
+      */
+     public static <E> ListOrderedSet<E> listOrderedSet(Set<E> set) {
+@@ -108,9 +104,7 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+      * NOTE: If the list contains duplicates, the duplicates are removed,
+      * altering the specified list.
+      *
+-     * @param <E> the element type
+      * @param list  the list to decorate, must not be null
+-     * @return a new ordered set
+      * @throws IllegalArgumentException if list is null
+      */
+     public static <E> ListOrderedSet<E> listOrderedSet(List<E> list) {
+@@ -250,41 +244,14 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+     }
+ 
+     //-----------------------------------------------------------------------
+-    // Additional methods that comply to the {@link List} interface
+-    //-----------------------------------------------------------------------
+-    
+-    /**
+-     * Returns the element at the specified position in this ordered set.
+-     *
+-     * @param index the position of the element in the ordered {@link Set}.
+-     * @return the element at position {@code index}
+-     * @see {@link List#get(int)}
+-     */
+     public E get(int index) {
+         return setOrder.get(index);
+     }
+ 
+-    /**
+-     * Returns the index of the first occurrence of the specified element in ordered set.
+-     * 
+-     * @param object the element to search for
+-     * @return the index of the first occurrence of the object, or {@code -1} if this
+-     * ordered set does not contain this object
+-     * @see {@link List#indexOf(Object)}
+-     */
+     public int indexOf(Object object) {
+         return setOrder.indexOf(object);
+     }
+ 
+-    /**
+-     * Inserts the specified element at the specified position if it is not yet contained in this
+-     * ordered set (optional operation). Shifts the element currently at this position and any
+-     * subsequent elements to the right.
+-     *
+-     * @param index the index at which the element is to be inserted
+-     * @param object the element to be inserted
+-     * @see {@link List#add(int, Object)}
+-     */
+     public void add(int index, E object) {
+         if (!contains(object)) {
+             collection.add(object);
+@@ -292,44 +259,19 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+         }
+     }
+ 
+-    /**
+-     * Inserts all elements in the specified collection not yet contained in the ordered set at the specified
+-     * position (optional operation). Shifts the element currently at the position and all subsequent
+-     * elements to the right.
+-     * 
+-     * @param index the position to insert the elements
+-     * @param coll the collection containing the elements to be inserted
+-     * @return {@code true} if this ordered set changed as a result of the call
+-     * @see {@link List#addAll(int, Collection)}
+-     */
+     public boolean addAll(int index, Collection<? extends E> coll) {
+         boolean changed = false;
+-        // collect all elements to be added for performance reasons
+-        final List<E> toAdd = new ArrayList<E>();
+         for (E e : coll) {
+             if (contains(e)) {
+                 continue;
+             }
+             collection.add(e);
+-            toAdd.add(e);
++            setOrder.add(index++, e);
+             changed = true;
+         }
+-        
+-        if (changed) {
+-            setOrder.addAll(index, toAdd);
+-        }
+-
+         return changed;
+     }
+ 
+-    /**
+-     * Removes the element at the specified position from the ordered set. Shifts any subsequent
+-     * elements to the left.
+-     * 
+-     * @param index the index of the element to be removed
+-     * @return the element that has been remove from the ordered set
+-     * @see {@link List#remove(int)}
+-     */
+     public Object remove(int index) {
+         Object obj = setOrder.remove(index);
+         remove(obj);
+@@ -340,8 +282,6 @@ public class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> imple
+      * Uses the underlying List's toString so that order is achieved.
+      * This means that the decorated Set's toString is not used, so
+      * any custom toStrings will be ignored.
+-     * 
+-     * @return a string representation of the ordered set
+      */
+     // Fortunately List.toString and Set.toString look the same
+     @Override

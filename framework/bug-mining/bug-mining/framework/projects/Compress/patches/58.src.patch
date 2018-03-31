@@ -1,0 +1,43 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 1185461d..09b00834 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -420,7 +420,7 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+ 
+             long inB;
+             if (current.getMethod() == ZipArchiveOutputStream.DEFLATED) {
+-                inB = inf.getBytesRead();
++                inB = inf.getTotalIn();
+             } else {
+                 inB = readBytesOfEntry;
+             }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 1371612f..16daf275 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -376,8 +376,8 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+                 deflate();
+             }
+ 
+-            entry.setSize(def.getBytesRead());
+-            entry.setCompressedSize(def.getBytesWritten());
++            entry.setSize(ZipUtil.adjustToLong(def.getTotalIn()));
++            entry.setCompressedSize(ZipUtil.adjustToLong(def.getTotalOut()));
+             entry.setCrc(realCrc);
+ 
+             def.reset();
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipUtil.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipUtil.java
+index a5e6cb2e..f8f769a9 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipUtil.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipUtil.java
+@@ -69,10 +69,6 @@ public abstract class ZipUtil {
+     /**
+      * Assumes a negative integer really is a positive integer that
+      * has wrapped around and re-creates the original value.
+-     *
+-     * <p>This methods is no longer used as of Apache Commons Compress
+-     * 1.3</p>
+-     *
+      * @param i the value to treat as unsigned int.
+      * @return the unsigned int as a long.
+      */

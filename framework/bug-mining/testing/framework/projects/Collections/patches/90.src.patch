@@ -1,0 +1,137 @@
+diff --git a/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java b/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
+index ca5c5f41..045a8064 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
++++ b/src/main/java/org/apache/commons/collections4/functors/ChainedTransformer.java
+@@ -84,7 +84,7 @@ public class ChainedTransformer<T> implements Transformer<T, T>, Serializable {
+      * Hidden constructor for the use by the static factory methods.
+      *
+      * @param clone  if {@code true} the input argument will be cloned
+-     * @param transformers  the transformers to chain, no nulls
++     * @param transformers  the transformers to chain, not copied, no nulls
+      */
+     private ChainedTransformer(final boolean clone, final Transformer<? super T, ? extends T>[] transformers) {
+         super();
+diff --git a/src/main/java/org/apache/commons/collections4/functors/SwitchClosure.java b/src/main/java/org/apache/commons/collections4/functors/SwitchClosure.java
+index 8c7edb0d..67dfb8a0 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/SwitchClosure.java
++++ b/src/main/java/org/apache/commons/collections4/functors/SwitchClosure.java
+@@ -64,7 +64,7 @@ public class SwitchClosure<E> implements Closure<E>, Serializable {
+         if (predicates.length == 0) {
+             return (Closure<E>) (defaultClosure == null ? NOPClosure.<E>nopClosure(): defaultClosure);
+         }
+-        return new SwitchClosure<E>(predicates, closures, defaultClosure);
++        return new SwitchClosure<E>(FunctorUtils.copy(predicates), FunctorUtils.copy(closures), defaultClosure);
+     }
+ 
+     /**
+@@ -104,37 +104,24 @@ public class SwitchClosure<E> implements Closure<E>, Serializable {
+             closures[i] = entry.getValue();
+             i++;
+         }
+-        return new SwitchClosure<E>(false, preds, closures, defaultClosure);
+-    }
+-
+-    /**
+-     * Hidden constructor for the use by the static factory methods.
+-     *
+-     * @param clone  if {@code true} the input arguments will be cloned
+-     * @param predicates  array of predicates, no nulls
+-     * @param closures  matching array of closures, no nulls
+-     * @param defaultClosure  the closure to use if no match, null means nop
+-     */
+-    @SuppressWarnings("unchecked")
+-    private SwitchClosure(final boolean clone, final Predicate<? super E>[] predicates,
+-                          final Closure<? super E>[] closures, final Closure<? super E> defaultClosure) {
+-        super();
+-        iPredicates = clone ? FunctorUtils.copy(predicates) : predicates;
+-        iClosures = clone ? FunctorUtils.copy(closures) : closures;
+-        iDefault = (Closure<? super E>) (defaultClosure == null ? NOPClosure.<E>nopClosure() : defaultClosure);
++        return new SwitchClosure<E>(preds, closures, defaultClosure);
+     }
+ 
+     /**
+      * Constructor that performs no validation.
+      * Use <code>switchClosure</code> if you want that.
+      *
+-     * @param predicates  array of predicates, cloned, no nulls
+-     * @param closures  matching array of closures, cloned, no nulls
++     * @param predicates  array of predicates, not cloned, no nulls
++     * @param closures  matching array of closures, not cloned, no nulls
+      * @param defaultClosure  the closure to use if no match, null means nop
+      */
++    @SuppressWarnings("unchecked")
+     public SwitchClosure(final Predicate<? super E>[] predicates, final Closure<? super E>[] closures,
+                          final Closure<? super E> defaultClosure) {
+-        this(true, predicates, closures, defaultClosure);
++        super();
++        iPredicates = predicates;
++        iClosures = closures;
++        iDefault = (Closure<? super E>) (defaultClosure == null ? NOPClosure.<E>nopClosure() : defaultClosure);
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/collections4/functors/SwitchTransformer.java b/src/main/java/org/apache/commons/collections4/functors/SwitchTransformer.java
+index d24f8757..ca6f6af5 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/SwitchTransformer.java
++++ b/src/main/java/org/apache/commons/collections4/functors/SwitchTransformer.java
+@@ -66,7 +66,9 @@ public class SwitchTransformer<I, O> implements Transformer<I, O>, Serializable
+             return (Transformer<I, O>) (defaultTransformer == null ? ConstantTransformer.<I, O>nullTransformer() :
+                                                                      defaultTransformer);
+         }
+-        return new SwitchTransformer<I, O>(predicates, transformers, defaultTransformer);
++        return new SwitchTransformer<I, O>(FunctorUtils.copy(predicates),
++                                           FunctorUtils.copy(transformers),
++                                           defaultTransformer);
+     }
+ 
+     /**
+@@ -114,40 +116,26 @@ public class SwitchTransformer<I, O> implements Transformer<I, O>, Serializable
+             transformers[i] = entry.getValue();
+             i++;
+         }
+-        return new SwitchTransformer<I, O>(false, preds, transformers, defaultTransformer);
+-    }
+-
+-    /**
+-     * Hidden constructor for the use by the static factory methods.
+-     *
+-     * @param clone  if {@code true} the input arguments will be cloned
+-     * @param predicates  array of predicates, no nulls
+-     * @param transformers  matching array of transformers, no nulls
+-     * @param defaultTransformer  the transformer to use if no match, null means return null
+-     */
+-    @SuppressWarnings("unchecked")
+-    private SwitchTransformer(final boolean clone, final Predicate<? super I>[] predicates,
+-                             final Transformer<? super I, ? extends O>[] transformers,
+-                             final Transformer<? super I, ? extends O> defaultTransformer) {
+-        super();
+-        iPredicates = clone ? FunctorUtils.copy(predicates) : predicates;
+-        iTransformers = clone ? FunctorUtils.copy(transformers) : transformers;
+-        iDefault = (Transformer<? super I, ? extends O>) (defaultTransformer == null ?
+-                ConstantTransformer.<I, O>nullTransformer() : defaultTransformer);
++        return new SwitchTransformer<I, O>(preds, transformers, defaultTransformer);
+     }
+ 
+     /**
+      * Constructor that performs no validation.
+      * Use <code>switchTransformer</code> if you want that.
+      *
+-     * @param predicates  array of predicates, cloned, no nulls
+-     * @param transformers  matching array of transformers, cloned, no nulls
++     * @param predicates  array of predicates, not cloned, no nulls
++     * @param transformers  matching array of transformers, not cloned, no nulls
+      * @param defaultTransformer  the transformer to use if no match, null means return null
+      */
++    @SuppressWarnings("unchecked")
+     public SwitchTransformer(final Predicate<? super I>[] predicates,
+             final Transformer<? super I, ? extends O>[] transformers,
+             final Transformer<? super I, ? extends O> defaultTransformer) {
+-        this(true, predicates, transformers, defaultTransformer);
++        super();
++        iPredicates = predicates;
++        iTransformers = transformers;
++        iDefault = (Transformer<? super I, ? extends O>) (defaultTransformer == null ?
++                ConstantTransformer.<I, O>nullTransformer() : defaultTransformer);
+     }
+ 
+     /**

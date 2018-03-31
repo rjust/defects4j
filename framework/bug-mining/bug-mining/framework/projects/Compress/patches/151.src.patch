@@ -1,0 +1,23 @@
+diff --git a/src/main/java/org/apache/commons/compress/changes/ChangeSet.java b/src/main/java/org/apache/commons/compress/changes/ChangeSet.java
+index a9be42d2..31155f62 100644
+--- a/src/main/java/org/apache/commons/compress/changes/ChangeSet.java
++++ b/src/main/java/org/apache/commons/compress/changes/ChangeSet.java
+@@ -133,17 +133,13 @@ public final class ChangeSet {
+         }
+         String source = pChange.targetFile();
+ 
+-        if (source != null && !changes.isEmpty()) {
++        if (!changes.isEmpty()) {
+             for (Iterator<Change> it = changes.iterator(); it.hasNext();) {
+                 Change change = it.next();
+                 if (change.type() == Change.TYPE_ADD
+                         && change.getEntry() != null) {
+                     String target = change.getEntry().getName();
+ 
+-                    if (target == null) {
+-                        continue;
+-                    }
+-
+                     if (Change.TYPE_DELETE == pChange.type() && source.equals(target)) {
+                         it.remove();
+                     } else if (Change.TYPE_DELETE_DIR == pChange.type() && 

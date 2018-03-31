@@ -1,0 +1,67 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java b/src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
+index f67acccb..fad904c6 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
++++ b/src/main/java/org/apache/commons/compress/archivers/sevenz/Coders.java
+@@ -154,59 +154,13 @@ class Coders {
+         InputStream decode(final String archiveName, final InputStream in, long uncompressedLength,
+                 final Coder coder, final byte[] password)
+             throws IOException {
+-            final Inflater inflater = new Inflater(true);
+-            final InflaterInputStream inflaterInputStream = new InflaterInputStream(new DummyByteAddingInputStream(in),
+-                    inflater);
+-            return new InputStream() {
+-                @Override
+-                public int read() throws IOException {
+-                    return inflaterInputStream.read();
+-                }
+-
+-                @Override
+-                public int read(byte[] b, int off, int len) throws IOException {
+-                    return inflaterInputStream.read(b, off, len);
+-                }
+-
+-                @Override
+-                public int read(byte[] b) throws IOException {
+-                    return inflaterInputStream.read(b);
+-                }
+-
+-                @Override
+-                public void close() throws IOException {
+-                    inflaterInputStream.close();
+-                    inflater.end();
+-                }
+-            };
++            return new InflaterInputStream(new DummyByteAddingInputStream(in),
++                                           new Inflater(true));
+         }
+         @Override
+         OutputStream encode(final OutputStream out, final Object options) {
+             int level = numberOptionOrDefault(options, 9);
+-            final Deflater deflater = new Deflater(level, true);
+-            final DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(out, deflater);
+-            return new OutputStream() {
+-                @Override
+-                public void write(int b) throws IOException {
+-                    deflaterOutputStream.write(b);
+-                }
+-
+-                @Override
+-                public void write(byte[] b) throws IOException {
+-                    deflaterOutputStream.write(b);
+-                }
+-
+-                @Override
+-                public void write(byte[] b, int off, int len) throws IOException {
+-                    deflaterOutputStream.write(b, off, len);
+-                }
+-
+-                @Override
+-                public void close() throws IOException {
+-                    deflaterOutputStream.close();
+-                    deflater.end();
+-                }
+-            };
++            return new DeflaterOutputStream(out, new Deflater(level, true));
+         }
+     }
+ 

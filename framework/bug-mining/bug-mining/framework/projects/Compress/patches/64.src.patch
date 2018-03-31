@@ -1,0 +1,362 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/gzip/GzipCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/gzip/GzipCompressorInputStream.java
+index 9c9b7b2a..aec1329f 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/gzip/GzipCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/gzip/GzipCompressorInputStream.java
+@@ -19,282 +19,71 @@
+ package org.apache.commons.compress.compressors.gzip;
+ 
+ import java.io.IOException;
+-import java.io.EOFException;
+ import java.io.InputStream;
+-import java.io.DataInputStream;
+-import java.io.BufferedInputStream;
+-import java.util.zip.DataFormatException;
+-import java.util.zip.Inflater;
+-import java.util.zip.CRC32;
++import java.util.zip.GZIPInputStream;
+ 
+ import org.apache.commons.compress.compressors.CompressorInputStream;
+ 
+ /**
+- * Input stream that decompresses .gz files.
+- * This supports decompressing concatenated .gz files which is important
+- * when decompressing standalone .gz files.
+- * <p>
+- * {@link java.util.zip.GZIPInputStream} doesn't decompress concatenated .gz
+- * files: it stops after the first member and silently ignores the rest.
+- * It doesn't leave the read position to point to the beginning of the next
+- * member, which makes it difficult workaround the lack of concatenation
+- * support.
+- * <p>
+- * Instead of using <code>GZIPInputStream</code>, this class has its own .gz
+- * container format decoder. The actual decompression is done with
+- * {@link java.util.zip.Inflater}.
++ * Implements the "gz" compression format as an input stream.
++ * This classes wraps the standard java classes for working with gz. 
+  */
+ public class GzipCompressorInputStream extends CompressorInputStream {
+-    // Header flags
+-    // private static final int FTEXT = 0x01; // Uninteresting for us
+-    private static final int FHCRC = 0x02;
+-    private static final int FEXTRA = 0x04;
+-    private static final int FNAME = 0x08;
+-    private static final int FCOMMENT = 0x10;
+-    private static final int FRESERVED = 0xE0;
+-
+-    // Compressed input stream, possibly wrapped in a BufferedInputStream
+-    private final InputStream in;
+-
+-    // True if decompressing multimember streams.
+-    private final boolean decompressConcatenated;
+-
+-    // Buffer to hold the input data
+-    private final byte[] buf = new byte[8192];
+-
+-    // Amount of data in buf.
+-    private int bufUsed = 0;
+-
+-    // Decompressor
+-    private Inflater inf = new Inflater(true);
+-
+-    // CRC32 from uncompressed data
+-    private CRC32 crc = new CRC32();
+-
+-    private int memberSize;
+-
+-    // True once everything has been decompressed
+-    private boolean endReached = false;
++    /* reference to the compressed stream */
++    private final GZIPInputStream in; 
+ 
+     /**
+-     * Constructs a new input stream that decompresses gzip-compressed data
+-     * from the specified input stream.
+-     * <p>
+-     * This is equivalent to
+-     * <code>GzipCompressorInputStream(inputStream, false)</code> and thus
+-     * will not decompress concatenated .gz files.
+-     *
+-     * @param inputStream  the InputStream from which this object should
+-     *                     be created of
+-     *
++     * Constructs a new GZip compressed input stream by the referenced
++     * InputStream.
++     * 
++     * @param inputStream the InputStream from which this object should be created of
+      * @throws IOException if the stream could not be created
+      */
+-    public GzipCompressorInputStream(InputStream inputStream)
+-            throws IOException {
+-        this(inputStream, false);
+-    }
+-
+-    /**
+-     * Constructs a new input stream that decompresses gzip-compressed data
+-     * from the specified input stream.
+-     * <p>
+-     * If <code>decompressConcatenated</code> is <code>false</code>:
+-     * This decompressor might read more input than it will actually use.
+-     * If <code>inputStream</code> supports <code>mark</code> and
+-     * <code>reset</code>, then the input position will be adjusted
+-     * so that it is right after the last byte of the compressed stream.
+-     * If <code>mark</code> isn't supported, the input position will be
+-     * undefined.
+-     *
+-     * @param inputStream  the InputStream from which this object should
+-     *                     be created of
+-     * @param decompressConcatenated
+-     *                     if true, decompress until the end of the input;
+-     *                     if false, stop after the first .gz member
+-     *
+-     * @throws IOException if the stream could not be created
+-     */
+-    public GzipCompressorInputStream(InputStream inputStream,
+-                                     boolean decompressConcatenated)
+-            throws IOException {
+-        // Mark support is strictly needed for concatenated files only,
+-        // but it's simpler if it is always available.
+-        if (inputStream.markSupported())
+-            in = inputStream;
+-        else
+-            in = new BufferedInputStream(inputStream);
+-
+-        this.decompressConcatenated = decompressConcatenated;
+-        init(true);
+-    }
+-
+-    private boolean init(boolean isFirstMember) throws IOException {
+-        assert isFirstMember || decompressConcatenated;
+-
+-        // Check the magic bytes without a possibility of EOFException.
+-        int magic0 = in.read();
+-        int magic1 = in.read();
+-
+-        // If end of input was reached after decompressing at least
+-        // one .gz member, we have reached the end of the file successfully.
+-        if (magic0 == -1 && !isFirstMember)
+-            return false;
+-
+-        if (magic0 != 31 || magic1 != 139)
+-            throw new IOException(isFirstMember
+-                                  ? "Input is not in the .gz format"
+-                                  : "Garbage after a valid .gz stream");
+-
+-        // Parsing the rest of the header may throw EOFException.
+-        DataInputStream inData = new DataInputStream(in);
+-        int method = inData.readUnsignedByte();
+-        if (method != 8)
+-            throw new IOException("Unsupported compression method "
+-                                  + method + " in the .gz header");
+-
+-        int flg = inData.readUnsignedByte();
+-        if ((flg & FRESERVED) != 0)
+-            throw new IOException(
+-                    "Reserved flags are set in the .gz header");
+-
+-        inData.readInt(); // mtime, ignored
+-        inData.readUnsignedByte(); // extra flags, ignored
+-        inData.readUnsignedByte(); // operating system, ignored
+-
+-        // Extra field, ignored
+-        if ((flg & FEXTRA) != 0) {
+-            int xlen = inData.readUnsignedByte();
+-            xlen |= inData.readUnsignedByte() << 8;
+-
+-            // This isn't as efficient as calling in.skip would be,
+-            // but it's lazier to handle unexpected end of input this way.
+-            // Most files don't have an extra field anyway.
+-            while (xlen-- > 0)
+-                inData.readUnsignedByte();
+-        }
+-
+-        // Original file name, ignored
+-        if ((flg & FNAME) != 0)
+-            while (inData.readUnsignedByte() != 0x00) ;
+-
+-        // Comment, ignored
+-        if ((flg & FCOMMENT) != 0)
+-            while (inData.readUnsignedByte() != 0x00) ;
+-
+-        // Header "CRC16" which is actually a truncated CRC32 (which isn't
+-        // as good as real CRC16). I don't know if any encoder implementation
+-        // sets this, so it's not worth trying to verify it. GNU gzip 1.4
+-        // doesn't support this field, but zlib seems to be able to at least
+-        // skip over it.
+-        if ((flg & FHCRC) != 0)
+-            inData.readShort();
+-
+-        // Reset
+-        inf.reset();
+-        crc.reset();
+-        memberSize = 0;
+-
+-        return true;
++    public GzipCompressorInputStream(InputStream inputStream) throws IOException {
++        in = new GZIPInputStream(inputStream);
+     }
+ 
+     /** {@inheritDoc} */
++    @Override
+     public int read() throws IOException {
+-        byte[] buf = new byte[1];
+-        return read(buf, 0, 1) == -1 ? -1 : (buf[0] & 0xFF);
++        int read = in.read();
++        this.count(read < 0 ? -1 : 1);
++        return read;
+     }
+ 
+     /**
+      * {@inheritDoc}
+-     *
++     * 
+      * @since Apache Commons Compress 1.1
+      */
+-    public int read(byte[] b, int off, int len) throws IOException {
+-        if (endReached)
+-            return -1;
+-
+-        int size = 0;
+-
+-        while (len > 0) {
+-            if (inf.needsInput()) {
+-                // Remember the current position because we may need to
+-                // rewind after reading too much input.
+-                in.mark(buf.length);
+-
+-                bufUsed = in.read(buf);
+-                if (bufUsed == -1)
+-                    throw new EOFException();
+-
+-                inf.setInput(buf, 0, bufUsed);
+-            }
+-
+-            int ret;
+-            try {
+-                ret = inf.inflate(b, off, len);
+-            } catch (DataFormatException e) {
+-                throw new IOException("Gzip-compressed data is corrupt");
+-            }
+-
+-            crc.update(b, off, ret);
+-            memberSize += ret;
+-            off += ret;
+-            len -= ret;
+-            size += ret;
+-            count(ret);
+-
+-            if (inf.finished()) {
+-                // We may have read too many bytes. Rewind the read
+-                // position to match the actual amount used.
+-                //
+-                // NOTE: The "if" is there just in case. Since we used
+-                // in.mark earler, it should always skip enough.
+-                in.reset();
+-
+-                int skipAmount = bufUsed - inf.getRemaining();
+-                if (in.skip(skipAmount) != skipAmount)
+-                    throw new IOException();
+-
+-                bufUsed = 0;
+-
+-                DataInputStream inData = new DataInputStream(in);
+-
+-                // CRC32
+-                long crcStored = 0;
+-                for (int i = 0; i < 4; ++i)
+-                    crcStored |= (long)inData.readUnsignedByte() << (i * 8);
+-
+-                if (crcStored != crc.getValue())
+-                    throw new IOException("Gzip-compressed data is corrupt "
+-                                          + "(CRC32 error)");
+-
+-                // Uncompressed size modulo 2^32 (ISIZE in the spec)
+-                int isize = 0;
+-                for (int i = 0; i < 4; ++i)
+-                    isize |= inData.readUnsignedByte() << (i * 8);
+-
+-                if (isize != memberSize)
+-                    throw new IOException("Gzip-compressed data is corrupt"
+-                                          + "(uncompressed size mismatch)");
+-
+-                // See if this is the end of the file.
+-                if (!decompressConcatenated || !init(false)) {
+-                    inf.end();
+-                    inf = null;
+-                    endReached = true;
+-                    return size == 0 ? -1 : size;
+-                }
+-            }
+-        }
++    @Override
++    public int read(byte[] b) throws IOException {
++        int read = in.read(b);
++        this.count(read);
++        return read;
++    }
+ 
+-        return size;
++    /**
++     * {@inheritDoc}
++     * 
++     * @since Apache Commons Compress 1.1
++     */
++    @Override
++    public int read(byte[] b, int from, int length) throws IOException {
++        int read = in.read(b, from, length);
++        this.count(read);
++        return read;
+     }
+ 
+     /**
+-     * Checks if the signature matches what is expected for a .gz file.
+-     *
+-     * @param signature the bytes to check
+-     * @param length    the number of bytes to check
+-     * @return          true if this is a .gz stream, false otherwise
+-     *
++     * Checks if the signature matches what is expected for a gzip file.
++     * 
++     * @param signature
++     *            the bytes to check
++     * @param length
++     *            the number of bytes to check
++     * @return true, if this stream is a gzipped compressed stream, false otherwise
++     * 
+      * @since Apache Commons Compress 1.1
+      */
+     public static boolean matches(byte[] signature, int length) {
+@@ -302,7 +91,7 @@ public class GzipCompressorInputStream extends CompressorInputStream {
+         if (length < 2) {
+             return false;
+         }
+-
++        
+         if (signature[0] != 31) {
+             return false;
+         }
+@@ -310,21 +99,17 @@ public class GzipCompressorInputStream extends CompressorInputStream {
+         if (signature[1] != -117) {
+             return false;
+         }
+-
++        
+         return true;
+     }
+-
++    
+     /**
+      * Closes the input stream (unless it is System.in).
+-     *
++     * 
+      * @since 1.2
+      */
++    @Override
+     public void close() throws IOException {
+-        if (inf != null) {
+-            inf.end();
+-            inf = null;
+-        }
+-
+         if (this.in != System.in) {
+             this.in.close();
+         }

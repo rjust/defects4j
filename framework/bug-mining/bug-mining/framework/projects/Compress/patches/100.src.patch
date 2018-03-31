@@ -1,0 +1,69 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipEightByteInteger.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipEightByteInteger.java
+index 0803e650..14bc0e14 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipEightByteInteger.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipEightByteInteger.java
+@@ -17,7 +17,6 @@
+  */
+ package org.apache.commons.compress.archivers.zip;
+ 
+-import java.io.Serializable;
+ import java.math.BigInteger;
+ 
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.BYTE_MASK;
+@@ -29,8 +28,7 @@ import static org.apache.commons.compress.archivers.zip.ZipConstants.BYTE_MASK;
+  *
+  * @since 1.2
+  */
+-public final class ZipEightByteInteger implements Serializable {
+-    private static final long serialVersionUID = 1L;
++public final class ZipEightByteInteger {
+ 
+     private static final int BYTE_1 = 1;
+     private static final int BYTE_1_MASK = 0xFF00;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+index 52fab0a0..0bbf7d36 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipLong.java
+@@ -17,8 +17,6 @@
+  */
+ package org.apache.commons.compress.archivers.zip;
+ 
+-import java.io.Serializable;
+-
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.BYTE_MASK;
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.WORD;
+ 
+@@ -27,8 +25,7 @@ import static org.apache.commons.compress.archivers.zip.ZipConstants.WORD;
+  * rules for the big endian byte order of ZIP files.
+  * @Immutable
+  */
+-public final class ZipLong implements Cloneable, Serializable {
+-    private static final long serialVersionUID = 1L;
++public final class ZipLong implements Cloneable {
+ 
+     //private static final int BYTE_BIT_SIZE = 8;
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipShort.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipShort.java
+index b74db86a..16f3104a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipShort.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipShort.java
+@@ -17,8 +17,6 @@
+  */
+ package org.apache.commons.compress.archivers.zip;
+ 
+-import java.io.Serializable;
+-
+ import static org.apache.commons.compress.archivers.zip.ZipConstants.BYTE_MASK;
+ 
+ /**
+@@ -26,9 +24,7 @@ import static org.apache.commons.compress.archivers.zip.ZipConstants.BYTE_MASK;
+  * rules for the big endian byte order of ZIP files.
+  * @Immutable
+  */
+-public final class ZipShort implements Cloneable, Serializable {
+-    private static final long serialVersionUID = 1L;
+-
++public final class ZipShort implements Cloneable {
+     private static final int BYTE_1_MASK = 0xFF00;
+     private static final int BYTE_1_SHIFT = 8;
+ 

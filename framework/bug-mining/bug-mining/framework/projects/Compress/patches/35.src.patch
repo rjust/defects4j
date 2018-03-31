@@ -1,0 +1,65 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index be7964c3..d05529c9 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -91,7 +91,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      *            The format of the stream
+      */
+     public CpioArchiveOutputStream(final OutputStream out, final short format) {
+-        this.out = new CountingStream(out);
++        this.out = new FilterOutputStream(out);
+         switch (format) {
+         case FORMAT_NEW:
+         case FORMAT_NEW_CRC:
+@@ -336,13 +336,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         this.entry.setNumberOfLinks(1);
+         writeHeader(this.entry);
+         closeArchiveEntry();
+-
+-        int lengthOfLastBlock =
+-            (int) (((CountingStream) out).getTotalWritten() % BLOCK_SIZE);
+-        if (lengthOfLastBlock != 0) {
+-            pad(BLOCK_SIZE - lengthOfLastBlock);
+-        }
+-
++        
+         finished = true;
+     }
+ 
+@@ -424,24 +418,4 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         return new CpioArchiveEntry(inputFile, entryName);
+     }
+ 
+-    private static class CountingStream extends FilterOutputStream {
+-        private long totalWritten = 0;
+-
+-        private CountingStream(final OutputStream out) {
+-            super(out);
+-        }
+-        public void write(byte[] b) throws IOException {
+-            write(b, 0, b.length);
+-        }
+-        public void write(int b) throws IOException {
+-            totalWritten++;
+-            out.write(b);
+-        }
+-        public void write(byte[] b, int off, int len)
+-            throws IOException {
+-            totalWritten += len;
+-            out.write(b, off, len);
+-        }
+-        private long getTotalWritten() { return totalWritten; }
+-    }
+ }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
+index 48cc2ce4..199215fc 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
+@@ -134,7 +134,4 @@ public interface CpioConstants {
+ 
+     /** The special trailer marker */
+     final String CPIO_TRAILER = "TRAILER!!!";
+-
+-    /** The default block size */
+-    final int BLOCK_SIZE = 512;
+ }

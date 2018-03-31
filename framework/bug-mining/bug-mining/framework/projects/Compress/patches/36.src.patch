@@ -1,0 +1,226 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
+index 362c6f8d..fbf1566a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
+@@ -425,7 +425,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @return Returns the mode.
+      */
+     public long getMode() {
+-        return mode == 0 && !CPIO_TRAILER.equals(name) ? C_ISREG : mode;
++        return this.mode;
+     }
+ 
+     /**
+@@ -443,9 +443,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @return Returns the number of links.
+      */
+     public long getNumberOfLinks() {
+-        return nlink == 0 ?
+-            (isDirectory() ? 2 : 1)
+-            : nlink;
++        return this.nlink;
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index d1ef4637..be7964c3 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -82,23 +82,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+ 
+     private final OutputStream out;
+ 
+-    private final int blockSize;
+-
+-    private long nextArtificalDeviceAndInode = 1;
+-
+-    /**
+-     * Construct the cpio output stream with a specified format and a
+-     * blocksize of {@link CpioConstants.BLOCK_SIZE BLOCK_SIZE}.
+-     * 
+-     * @param out
+-     *            The cpio stream
+-     * @param format
+-     *            The format of the stream
+-     */
+-    public CpioArchiveOutputStream(final OutputStream out, final short format) {
+-        this(out, format, BLOCK_SIZE);
+-    }
+-
+     /**
+      * Construct the cpio output stream with a specified format
+      * 
+@@ -106,11 +89,8 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      *            The cpio stream
+      * @param format
+      *            The format of the stream
+-     * @param blockSize
+-     *            The block size of the archive.
+      */
+-    public CpioArchiveOutputStream(final OutputStream out, final short format,
+-                                   final int blockSize) {
++    public CpioArchiveOutputStream(final OutputStream out, final short format) {
+         this.out = new CountingStream(out);
+         switch (format) {
+         case FORMAT_NEW:
+@@ -120,10 +100,9 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+             break;
+         default:
+             throw new IllegalArgumentException("Unknown format: "+format);
+-
++        
+         }
+         this.entryFormat = format;
+-        this.blockSize = blockSize;
+     }
+ 
+     /**
+@@ -167,7 +146,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         if(finished) {
+             throw new IOException("Stream has already been finished");
+         }
+-
++        
+         CpioArchiveEntry e = (CpioArchiveEntry) entry;
+         ensureOpen();
+         if (this.entry != null) {
+@@ -214,22 +193,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+     }
+ 
+     private void writeNewEntry(final CpioArchiveEntry entry) throws IOException {
+-        long inode = entry.getInode();
+-        long devMin = entry.getDeviceMin();
+-        if (CPIO_TRAILER.equals(entry.getName())) {
+-            inode = devMin = 0;
+-        } else {
+-            if (inode == 0 && devMin == 0) {
+-                inode = nextArtificalDeviceAndInode & 0xFFFFFFFF;
+-                devMin = (nextArtificalDeviceAndInode++ >> 32) & 0xFFFFFFFF;
+-            } else {
+-                nextArtificalDeviceAndInode =
+-                    Math.max(nextArtificalDeviceAndInode,
+-                             inode + 0x100000000L * devMin) + 1;
+-            }
+-        }
+-
+-        writeAsciiLong(inode, 8, 16);
++        writeAsciiLong(entry.getInode(), 8, 16);
+         writeAsciiLong(entry.getMode(), 8, 16);
+         writeAsciiLong(entry.getUID(), 8, 16);
+         writeAsciiLong(entry.getGID(), 8, 16);
+@@ -237,7 +201,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         writeAsciiLong(entry.getTime(), 8, 16);
+         writeAsciiLong(entry.getSize(), 8, 16);
+         writeAsciiLong(entry.getDeviceMaj(), 8, 16);
+-        writeAsciiLong(devMin, 8, 16);
++        writeAsciiLong(entry.getDeviceMin(), 8, 16);
+         writeAsciiLong(entry.getRemoteDeviceMaj(), 8, 16);
+         writeAsciiLong(entry.getRemoteDeviceMin(), 8, 16);
+         writeAsciiLong(entry.getName().length() + 1, 8, 16);
+@@ -248,23 +212,8 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+ 
+     private void writeOldAsciiEntry(final CpioArchiveEntry entry)
+             throws IOException {
+-        long inode = entry.getInode();
+-        long device = entry.getDevice();
+-        if (CPIO_TRAILER.equals(entry.getName())) {
+-            inode = device = 0;
+-        } else {
+-            if (inode == 0 && device == 0) {
+-                inode = nextArtificalDeviceAndInode & 0777777;
+-                device = (nextArtificalDeviceAndInode++ >> 18) & 0777777;
+-            } else {
+-                nextArtificalDeviceAndInode =
+-                    Math.max(nextArtificalDeviceAndInode,
+-                             inode + 01000000 * device) + 1;
+-            }
+-        }
+-
+-        writeAsciiLong(device, 6, 8);
+-        writeAsciiLong(inode, 6, 8);
++        writeAsciiLong(entry.getDevice(), 6, 8);
++        writeAsciiLong(entry.getInode(), 6, 8);
+         writeAsciiLong(entry.getMode(), 6, 8);
+         writeAsciiLong(entry.getUID(), 6, 8);
+         writeAsciiLong(entry.getGID(), 6, 8);
+@@ -278,23 +227,8 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+ 
+     private void writeOldBinaryEntry(final CpioArchiveEntry entry,
+             final boolean swapHalfWord) throws IOException {
+-        long inode = entry.getInode();
+-        long device = entry.getDevice();
+-        if (CPIO_TRAILER.equals(entry.getName())) {
+-            inode = device = 0;
+-        } else {
+-            if (inode == 0 && device == 0) {
+-                inode = nextArtificalDeviceAndInode & 0xFFFF;
+-                device = (nextArtificalDeviceAndInode++ >> 16) & 0xFFFF;
+-            } else {
+-                nextArtificalDeviceAndInode =
+-                    Math.max(nextArtificalDeviceAndInode,
+-                             inode + 0x10000 * device) + 1;
+-            }
+-        }
+-
+-        writeBinaryLong(device, 2, swapHalfWord);
+-        writeBinaryLong(inode, 2, swapHalfWord);
++        writeBinaryLong(entry.getDevice(), 2, swapHalfWord);
++        writeBinaryLong(entry.getInode(), 2, swapHalfWord);
+         writeBinaryLong(entry.getMode(), 2, swapHalfWord);
+         writeBinaryLong(entry.getUID(), 2, swapHalfWord);
+         writeBinaryLong(entry.getGID(), 2, swapHalfWord);
+@@ -317,7 +251,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         if(finished) {
+             throw new IOException("Stream has already been finished");
+         }
+-
++        
+         ensureOpen();
+ 
+         if (entry == null) {
+@@ -393,7 +327,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         if (finished) {
+             throw new IOException("This archive has already been finished");
+         }
+-
++        
+         if (this.entry != null) {
+             throw new IOException("This archive contains unclosed entries.");
+         }
+@@ -404,9 +338,9 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         closeArchiveEntry();
+ 
+         int lengthOfLastBlock =
+-            (int) (((CountingStream) out).getTotalWritten() % blockSize);
++            (int) (((CountingStream) out).getTotalWritten() % BLOCK_SIZE);
+         if (lengthOfLastBlock != 0) {
+-            pad(blockSize - lengthOfLastBlock);
++            pad(BLOCK_SIZE - lengthOfLastBlock);
+         }
+ 
+         finished = true;
+@@ -423,7 +357,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         if(!finished) {
+             finish();
+         }
+-
++        
+         if (!this.closed) {
+             out.close();
+             this.closed = true;
+@@ -500,13 +434,13 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+             write(b, 0, b.length);
+         }
+         public void write(int b) throws IOException {
+-            out.write(b);
+             totalWritten++;
++            out.write(b);
+         }
+         public void write(byte[] b, int off, int len)
+             throws IOException {
+-            out.write(b, off, len);
+             totalWritten += len;
++            out.write(b, off, len);
+         }
+         private long getTotalWritten() { return totalWritten; }
+     }

@@ -1,0 +1,41 @@
+diff --git a/src/test/org/apache/commons/collections/TestTreeBag.java b/src/test/org/apache/commons/collections/TestTreeBag.java
+index 5dcd5e60..59d83fb7 100644
+--- a/src/test/org/apache/commons/collections/TestTreeBag.java
++++ b/src/test/org/apache/commons/collections/TestTreeBag.java
+@@ -70,15 +70,4 @@ public class TestTreeBag extends AbstractTestBag {
+       assertEquals("Should get last key",
+                    "D", ((SortedBag)bag).last());
+    }
+-
+-   public void testCollections265() {
+-       Bag bag = new TreeBag();
+-       try {
+-           bag.add(new Object());
+-           fail("IllegalArgumentException expected");
+-       } catch(IllegalArgumentException iae) {
+-           // expected;
+-       }
+-   }
+-   
+ }
+diff --git a/src/test/org/apache/commons/collections/bag/TestTreeBag.java b/src/test/org/apache/commons/collections/bag/TestTreeBag.java
+index 7df16dc2..6a9e0429 100644
+--- a/src/test/org/apache/commons/collections/bag/TestTreeBag.java
++++ b/src/test/org/apache/commons/collections/bag/TestTreeBag.java
+@@ -71,16 +71,6 @@ public class TestTreeBag extends AbstractTestBag {
+       assertEquals("Should get last key",
+                    "D", ((SortedBag)bag).last());
+    }
+-
+-   public void testCollections265() {
+-       Bag bag = new TreeBag();
+-       try {
+-           bag.add(new Object());
+-           fail("IllegalArgumentException expected");
+-       } catch(IllegalArgumentException iae) {
+-           // expected;
+-       }
+-   }
+    
+    public String getCompatibilityVersion() {
+        return "3";

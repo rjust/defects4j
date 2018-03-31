@@ -1,0 +1,220 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
+index ef0fc1fc..e5675f00 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveEntry.java
+@@ -188,7 +188,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     private long uid = 0;
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified format.
++     * Creates a CPIOArchiveEntry with a specified format.
+      * 
+      * @param format
+      *            The cpio format for this entry.
+@@ -226,7 +226,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name. The format of
++     * Creates a CPIOArchiveEntry with a specified name. The format of
+      * this entry will be the new format.
+      * 
+      * @param name
+@@ -237,7 +237,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name.
++     * Creates a CPIOArchiveEntry with a specified name.
+      * 
+      * @param format
+      *            The cpio format for this entry.
+@@ -260,7 +260,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name. The format of
++     * Creates a CPIOArchiveEntry with a specified name. The format of
+      * this entry will be the new format.
+      * 
+      * @param name
+@@ -274,7 +274,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name.
++     * Creates a CPIOArchiveEntry with a specified name.
+      * 
+      * @param format
+      *            The cpio format for this entry.
+@@ -300,7 +300,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name for a
++     * Creates a CPIOArchiveEntry with a specified name for a
+      * specified file. The format of this entry will be the new
+      * format.
+      * 
+@@ -314,7 +314,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+     }
+ 
+     /**
+-     * Creates a CpioArchiveEntry with a specified name for a
++     * Creates a CPIOArchiveEntry with a specified name for a
+      * specified file.
+      * 
+      * @param format
+@@ -384,7 +384,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * 
+      * @return Returns the device id.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with a new
++     *             if this method is called for a CPIOArchiveEntry with a new
+      *             format.
+      */
+     public long getDevice() {
+@@ -397,7 +397,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * 
+      * @return Returns the major device id.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with an old
++     *             if this method is called for a CPIOArchiveEntry with an old
+      *             format.
+      */
+     public long getDeviceMaj() {
+@@ -540,7 +540,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * 
+      * @return Returns the remote device id.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with a new
++     *             if this method is called for a CPIOArchiveEntry with a new
+      *             format.
+      */
+     public long getRemoteDevice() {
+@@ -553,7 +553,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * 
+      * @return Returns the remote major device id.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with an old
++     *             if this method is called for a CPIOArchiveEntry with an old
+      *             format.
+      */
+     public long getRemoteDeviceMaj() {
+@@ -566,7 +566,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * 
+      * @return Returns the remote minor device id.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with an old
++     *             if this method is called for a CPIOArchiveEntry with an old
+      *             format.
+      */
+     public long getRemoteDeviceMin() {
+@@ -688,7 +688,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @param device
+      *            The device id to set.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with a new
++     *             if this method is called for a CPIOArchiveEntry with a new
+      *             format.
+      */
+     public void setDevice(final long device) {
+@@ -806,7 +806,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @param device
+      *            The remote device id to set.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with a new
++     *             if this method is called for a CPIOArchiveEntry with a new
+      *             format.
+      */
+     public void setRemoteDevice(final long device) {
+@@ -820,7 +820,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @param rmaj
+      *            The remote major device id to set.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with an old
++     *             if this method is called for a CPIOArchiveEntry with an old
+      *             format.
+      */
+     public void setRemoteDeviceMaj(final long rmaj) {
+@@ -834,7 +834,7 @@ public class CpioArchiveEntry implements CpioConstants, ArchiveEntry {
+      * @param rmin
+      *            The remote minor device id to set.
+      * @throws UnsupportedOperationException
+-     *             if this method is called for a CpioArchiveEntry with an old
++     *             if this method is called for a CPIOArchiveEntry with an old
+      *             format.
+      */
+     public void setRemoteDeviceMin(final long rmin) {
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+index 69bfc87b..7cf95fd0 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+@@ -31,7 +31,7 @@ import org.apache.commons.compress.utils.CharsetNames;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ /**
+- * CpioArchiveInputStream is a stream for reading cpio streams. All formats of
++ * CPIOArchiveInputStream is a stream for reading cpio streams. All formats of
+  * cpio are supported (old ascii, old binary, new portable format and the new
+  * portable format with crc).
+  *
+@@ -41,9 +41,9 @@ import org.apache.commons.compress.utils.IOUtils;
+  * specified by the entry.
+  * </p>
+  * <pre>
+- * CpioArchiveInputStream cpioIn = new CpioArchiveInputStream(
++ * CPIOArchiveInputStream cpioIn = new CPIOArchiveInputStream(
+  *         Files.newInputStream(Paths.get(&quot;test.cpio&quot;)));
+- * CpioArchiveEntry cpioEntry;
++ * CPIOArchiveEntry cpioEntry;
+  *
+  * while ((cpioEntry = cpioIn.getNextEntry()) != null) {
+  *     System.out.println(cpioEntry.getName());
+@@ -224,7 +224,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+      * Reads the next CPIO file entry and positions stream at the beginning of
+      * the entry data.
+      * 
+-     * @return the CpioArchiveEntry just read
++     * @return the CPIOArchiveEntry just read
+      * @throws IOException
+      *             if an I/O error has occurred or if a CPIO file error has
+      *             occurred
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index 6423b526..88ec07e2 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -32,7 +32,7 @@ import org.apache.commons.compress.utils.ArchiveUtils;
+ import org.apache.commons.compress.utils.CharsetNames;
+ 
+ /**
+- * CpioArchiveOutputStream is a stream for writing CPIO streams. All formats of
++ * CPIOArchiveOutputStream is a stream for writing CPIO streams. All formats of
+  * CPIO are supported (old ASCII, old binary, new portable format and the new
+  * portable format with CRC).
+  *
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
+index 398ace41..2c8dfb09 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioConstants.java
+@@ -39,16 +39,16 @@ public interface CpioConstants {
+ 
+     // These FORMAT_ constants are internal to the code
+ 
+-    /** write/read a CpioArchiveEntry in the new format */
++    /** write/read a CPIOArchiveEntry in the new format */
+     short FORMAT_NEW = 1;
+ 
+-    /** write/read a CpioArchiveEntry in the new format with crc */
++    /** write/read a CPIOArchiveEntry in the new format with crc */
+     short FORMAT_NEW_CRC = 2;
+ 
+-    /** write/read a CpioArchiveEntry in the old ascii format */
++    /** write/read a CPIOArchiveEntry in the old ascii format */
+     short FORMAT_OLD_ASCII = 4;
+ 
+-    /** write/read a CpioArchiveEntry in the old binary format */
++    /** write/read a CPIOArchiveEntry in the old binary format */
+     short FORMAT_OLD_BINARY = 8;
+ 
+     /** Mask for both new formats */

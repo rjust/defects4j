@@ -1,0 +1,52 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 118bf7a2..41acf2af 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -178,9 +178,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+      */
+     @Override
+     public int available() throws IOException {
+-        if (isDirectory()) {
+-            return 0;
+-        }
+         if (entrySize - entryOffset > Integer.MAX_VALUE) {
+             return Integer.MAX_VALUE;
+         }
+@@ -206,7 +203,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+      */
+     @Override
+     public long skip(final long n) throws IOException {
+-        if (n <= 0 || isDirectory()) {
++        if (n <= 0) {
+             return 0;
+         }
+ 
+@@ -332,7 +329,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+      * additional space used to fill a record after an entry
+      */
+     private void skipRecordPadding() throws IOException {
+-        if (!isDirectory() && this.entrySize > 0 && this.entrySize % this.recordSize != 0) {
++        if (this.entrySize > 0 && this.entrySize % this.recordSize != 0) {
+             long numRecords = (this.entrySize / this.recordSize) + 1;
+             long padding = (numRecords * this.recordSize) - this.entrySize;
+             long skipped = IOUtils.skip(is, padding);
+@@ -549,10 +546,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+         }
+     }
+ 
+-    private boolean isDirectory() {
+-        return currEntry != null && currEntry.isDirectory();
+-    }
+-
+     /**
+      * Returns the next Archive Entry in this Stream.
+      *
+@@ -608,7 +601,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+     public int read(byte[] buf, int offset, int numToRead) throws IOException {
+     	int totalRead = 0;
+ 
+-        if (hasHitEOF || isDirectory() || entryOffset >= entrySize) {
++        if (hasHitEOF || entryOffset >= entrySize) {
+             return -1;
+         }
+ 

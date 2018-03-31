@@ -1,0 +1,43 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 208862ec..db87d2bd 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -272,21 +272,9 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+                     // make sure GC doesn't close "this" before we are done
+                 }
+             };
+-        Map<String, String> headers = null;
+-        try {
+-            headers = parsePaxHeaders(br);
+-        } finally {
+-            // NO-OP but makes FindBugs happy
+-            br.close();
+-        }
+-
+-        getNextEntry(); // Get the actual file entry
+-        applyPaxHeadersToCurrentEntry(headers);
+-    }
+-
+-    Map<String, String> parsePaxHeaders(Reader br) throws IOException {
+         Map<String, String> headers = new HashMap<String, String>();
+         // Format is "length keyword=value\n";
++        try {
+             while(true){ // get length
+                 int ch;
+                 int len = 0;
+@@ -327,10 +315,12 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+                     break;
+                 }
+             }
+-        return headers;
+-    }
++        } finally {
++            // NO-OP but makes FindBugs happy
++            br.close();
++        }
+ 
+-    private void applyPaxHeadersToCurrentEntry(Map<String, String> headers) {
++        getNextEntry(); // Get the actual file entry
+         /*
+          * The following headers are defined for Pax.
+          * atime, ctime, mtime, charset: cannot use these without changing TarArchiveEntry fields

@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+index bc8a098e..860d0eb5 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveEntry.java
+@@ -230,7 +230,7 @@ public class TarArchiveEntry implements TarConstants, ArchiveEntry {
+             this.linkFlag = LF_DIR;
+ 
+             int nameLength = fileName.length();
+-            if (nameLength == 0 || fileName.charAt(nameLength - 1) != '/') {
++            if (nameLength == 0 || name.charAt(nameLength - 1) != '/') {
+                 this.name = fileName + "/";
+             } else {
+                 this.name = fileName;                

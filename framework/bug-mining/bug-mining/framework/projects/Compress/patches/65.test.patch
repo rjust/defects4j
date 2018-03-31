@@ -1,0 +1,159 @@
+diff --git a/src/test/java/org/apache/commons/compress/compressors/BZip2TestCase.java b/src/test/java/org/apache/commons/compress/compressors/BZip2TestCase.java
+index 9c58b783..aba8e153 100644
+--- a/src/test/java/org/apache/commons/compress/compressors/BZip2TestCase.java
++++ b/src/test/java/org/apache/commons/compress/compressors/BZip2TestCase.java
+@@ -25,7 +25,6 @@ import java.io.InputStream;
+ import java.io.OutputStream;
+ 
+ import org.apache.commons.compress.AbstractTestCase;
+-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ public final class BZip2TestCase extends AbstractTestCase {
+@@ -69,39 +68,4 @@ public final class BZip2TestCase extends AbstractTestCase {
+         os.close();
+     }
+ 
+-    public void testConcatenatedStreamsReadFirstOnly() throws Exception {
+-        final File input = getFile("multiple.bz2");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in = new CompressorStreamFactory()
+-                .createCompressorInputStream("bzip2", is);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+-    public void testConcatenatedStreamsReadFully() throws Exception {
+-        final File input = getFile("multiple.bz2");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in =
+-                new BZip2CompressorInputStream(is, true);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals('b', in.read());
+-                assertEquals(0, in.available());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+ }
+diff --git a/src/test/java/org/apache/commons/compress/compressors/GZipTestCase.java b/src/test/java/org/apache/commons/compress/compressors/GZipTestCase.java
+index a41dd2bb..d39ca736 100644
+--- a/src/test/java/org/apache/commons/compress/compressors/GZipTestCase.java
++++ b/src/test/java/org/apache/commons/compress/compressors/GZipTestCase.java
+@@ -28,7 +28,6 @@ import java.io.InputStream;
+ import java.io.OutputStream;
+ 
+ import org.apache.commons.compress.AbstractTestCase;
+-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ public final class GZipTestCase extends AbstractTestCase {
+@@ -72,42 +71,6 @@ public final class GZipTestCase extends AbstractTestCase {
+         }
+     }
+ 
+-    public void testConcatenatedStreamsReadFirstOnly() throws Exception {
+-        final File input = getFile("multiple.gz");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in = new CompressorStreamFactory()
+-                .createCompressorInputStream("gz", is);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+-    public void testConcatenatedStreamsReadFully() throws Exception {
+-        final File input = getFile("multiple.gz");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in =
+-                new GzipCompressorInputStream(is, true);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals('b', in.read());
+-                assertEquals(0, in.available());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+     /**
+      * @see "https://issues.apache.org/jira/browse/COMPRESS-84"
+      */
+diff --git a/src/test/java/org/apache/commons/compress/compressors/XZTestCase.java b/src/test/java/org/apache/commons/compress/compressors/XZTestCase.java
+index 23bc5cd1..ad20d5f1 100644
+--- a/src/test/java/org/apache/commons/compress/compressors/XZTestCase.java
++++ b/src/test/java/org/apache/commons/compress/compressors/XZTestCase.java
+@@ -25,7 +25,6 @@ import java.io.InputStream;
+ import java.io.OutputStream;
+ 
+ import org.apache.commons.compress.AbstractTestCase;
+-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+ import org.apache.commons.compress.utils.IOUtils;
+ 
+ public final class XZTestCase extends AbstractTestCase {
+@@ -69,39 +68,4 @@ public final class XZTestCase extends AbstractTestCase {
+         }
+     }
+ 
+-    public void testConcatenatedStreamsReadFirstOnly() throws Exception {
+-        final File input = getFile("multiple.xz");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in = new CompressorStreamFactory()
+-                .createCompressorInputStream("xz", is);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+-    public void testConcatenatedStreamsReadFully() throws Exception {
+-        final File input = getFile("multiple.xz");
+-        final InputStream is = new FileInputStream(input);
+-        try {
+-            final CompressorInputStream in =
+-                new XZCompressorInputStream(is, true);
+-            try {
+-                assertEquals('a', in.read());
+-                assertEquals('b', in.read());
+-                assertEquals(0, in.available());
+-                assertEquals(-1, in.read());
+-            } finally {
+-                in.close();
+-            }
+-        } finally {
+-            is.close();
+-        }
+-    }
+ }

@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/collections4/CollectionUtils.java b/src/main/java/org/apache/commons/collections4/CollectionUtils.java
+index 777fb2e2..3d80a7bf 100644
+--- a/src/main/java/org/apache/commons/collections4/CollectionUtils.java
++++ b/src/main/java/org/apache/commons/collections4/CollectionUtils.java
+@@ -43,10 +43,6 @@ import org.apache.commons.collections4.iterators.PermutationIterator;
+ /**
+  * Provides utility methods and decorators for {@link Collection} instances.
+  * <p>
+- * Various utility methods might put the input objects into a Set/Map/Bag. In case
+- * the input objects override {@link Object#equals(Object)}, it is mandatory that
+- * the general contract of the {@link Object#hashCode()} method is maintained.
+- * <p>
+  * NOTE: From 4.0, method parameters will take {@link Iterable} objects when possible.
+  *
+  * @since 1.0

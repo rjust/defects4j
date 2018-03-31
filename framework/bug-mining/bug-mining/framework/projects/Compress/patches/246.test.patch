@@ -1,0 +1,22 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportIT.java b/src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportIT.java
+index ba30c3f3..7d5a0360 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportIT.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/Zip64SupportIT.java
+@@ -2101,7 +2101,7 @@ public class Zip64SupportIT {
+                             // version made by
+                             20, 0,
+                             // version needed to extract
+-                            20, 0,
++                            10, 0,
+                             // GPB (EFS + *no* Data Descriptor)
+                             0, 8,
+                             // method
+@@ -2147,7 +2147,7 @@ public class Zip64SupportIT {
+                             // sig
+                             (byte) 0x50, (byte) 0x4b, 3, 4,
+                             // version needed to extract
+-                            20, 0,
++                            10, 0,
+                             // GPB (EFS bit, no DD)
+                             0, 8,
+                             // method

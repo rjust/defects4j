@@ -1,0 +1,49 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+index 33d0efce..c0abdcc5 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+@@ -22,14 +22,12 @@ import static org.apache.commons.compress.AbstractTestCase.getFile;
+ import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertTrue;
+-import static org.junit.Assert.fail;
+ 
+ import java.io.BufferedInputStream;
+-import java.io.EOFException;
+ import java.io.FileInputStream;
+-import java.io.IOException;
+ import java.io.InputStream;
+ import java.util.Arrays;
++import java.io.IOException;
+ 
+ import org.apache.commons.compress.utils.IOUtils;
+ import org.junit.Test;
+@@ -173,28 +171,6 @@ public class ZipArchiveInputStreamTest {
+         }
+     }
+ 
+-    /**
+-     * Test case for
+-     * <a href="https://issues.apache.org/jira/browse/COMPRESS-351"
+-     * >COMPRESS-351</a>.
+-     */
+-    @Test
+-    public void testMessageWithCorruptFileName() throws Exception {
+-        final ZipArchiveInputStream in = new ZipArchiveInputStream(new FileInputStream(getFile("COMPRESS-351.zip")));
+-        try {
+-            ZipArchiveEntry ze = in.getNextZipEntry();
+-            while (ze != null) {
+-                ze = in.getNextZipEntry();
+-            }
+-            fail("expected EOFException");
+-        } catch (EOFException ex) {
+-            String m = ex.getMessage();
+-            assertTrue(m.startsWith("Truncated ZIP entry: ?2016")); // the first character is not printable
+-        } finally {
+-            in.close();
+-        }
+-    }
+-
+     @Test
+     public void testUnzipBZip2CompressedEntry() throws Exception {
+         final ZipArchiveInputStream in = new ZipArchiveInputStream(new FileInputStream(getFile("bzip2-zip.zip")));

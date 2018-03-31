@@ -1,0 +1,14 @@
+diff --git a/src/test/java/org/apache/commons/collections/TestCollectionUtils.java b/src/test/java/org/apache/commons/collections/TestCollectionUtils.java
+index 570655f0..c8b81263 100644
+--- a/src/test/java/org/apache/commons/collections/TestCollectionUtils.java
++++ b/src/test/java/org/apache/commons/collections/TestCollectionUtils.java
+@@ -522,8 +522,7 @@ public class TestCollectionUtils extends MockTestCase {
+         Closure<List<? extends Number>> resultClosure = CollectionUtils.forAllDo(col, testClosure);
+         assertSame(testClosure, resultClosure);
+         assertTrue(collectionA.isEmpty() && collectionB.isEmpty());
+-        // this is a work-around for issue COLLECTIONS-414, casting should not be necessary
+-        resultClosure = CollectionUtils.forAllDo(col, (Closure<List<? extends Number>>) null);
++        resultClosure = CollectionUtils.forAllDo(col, null);
+         assertNull(resultClosure);
+         assertTrue(collectionA.isEmpty() && collectionB.isEmpty());
+         resultClosure = CollectionUtils.forAllDo(null, testClosure);

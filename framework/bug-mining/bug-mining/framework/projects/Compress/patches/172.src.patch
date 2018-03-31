@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipEncodingHelper.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipEncodingHelper.java
+index a4f0f801..c0f1cfae 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipEncodingHelper.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipEncodingHelper.java
+@@ -243,7 +243,7 @@ public abstract class ZipEncodingHelper {
+     static boolean isUTF8(String charsetName) {
+         if (charsetName == null) {
+             // check platform's default encoding
+-            charsetName = Charset.defaultCharset().name();
++            charsetName = System.getProperty("file.encoding");
+         }
+         if (Charsets.UTF_8.name().equalsIgnoreCase(charsetName)) {
+             return true;

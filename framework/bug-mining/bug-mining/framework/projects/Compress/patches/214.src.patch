@@ -1,0 +1,48 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorOutputStream.java b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorOutputStream.java
+index 034fbfc2..3bdee5aa 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorOutputStream.java
+@@ -321,7 +321,6 @@ public class BZip2CompressorOutputStream extends CompressorOutputStream
+     private Data data;
+     private BlockSort blockSorter;
+ 
+-    private final Object outLock = new Object();
+     private OutputStream out;
+ 
+     /**
+@@ -477,23 +476,21 @@ public class BZip2CompressorOutputStream extends CompressorOutputStream
+     }
+ 
+ 
+-    public void finish() throws IOException {
+-        synchronized(outLock) {
+-            if (out != null) {
+-                try {
+-                    if (this.runLength > 0) {
+-                        writeRun();
+-                    }
+-                    this.currentChar = -1;
+-                    endBlock();
+-                    endCompression();
+-                } finally {
+-                    this.out = null;
++    public synchronized void finish() throws IOException {
++        if (out != null) {
++            try {
++                if (this.runLength > 0) {
++                    writeRun();
+                 }
++                this.currentChar = -1;
++                endBlock();
++                endCompression();
++            } finally {
++                this.out = null;
++                this.data = null;
++                this.blockSorter = null;
+             }
+         }
+-        this.blockSorter = null;
+-        this.data = null;
+     }
+ 
+     @Override

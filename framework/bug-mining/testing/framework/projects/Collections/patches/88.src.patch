@@ -1,0 +1,72 @@
+diff --git a/src/main/java/org/apache/commons/collections4/functors/InstantiateTransformer.java b/src/main/java/org/apache/commons/collections4/functors/InstantiateTransformer.java
+index 4961f323..a1a93804 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/InstantiateTransformer.java
++++ b/src/main/java/org/apache/commons/collections4/functors/InstantiateTransformer.java
+@@ -60,8 +60,7 @@ public class InstantiateTransformer<T> implements Transformer<Class<? extends T>
+      * @param args  the constructor arguments
+      * @return an instantiate transformer
+      */
+-    public static <T> Transformer<Class<? extends T>, T> instantiateTransformer(final Class<?>[] paramTypes,
+-                                                                                final Object[] args) {
++    public static <T> Transformer<Class<? extends T>, T> instantiateTransformer(Class<?>[] paramTypes, Object[] args) {
+         if (((paramTypes == null) && (args != null))
+             || ((paramTypes != null) && (args == null))
+             || ((paramTypes != null) && (args != null) && (paramTypes.length != args.length))) {
+@@ -94,8 +93,8 @@ public class InstantiateTransformer<T> implements Transformer<Class<? extends T>
+      */
+     public InstantiateTransformer(final Class<?>[] paramTypes, final Object[] args) {
+         super();
+-        iParamTypes = paramTypes != null ? paramTypes.clone() : null;
+-        iArgs = args != null ? args.clone() : null;
++        iParamTypes = paramTypes.clone();
++        iArgs = args.clone();
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/collections4/functors/InvokerTransformer.java b/src/main/java/org/apache/commons/collections4/functors/InvokerTransformer.java
+index 2466ea91..49686d9c 100644
+--- a/src/main/java/org/apache/commons/collections4/functors/InvokerTransformer.java
++++ b/src/main/java/org/apache/commons/collections4/functors/InvokerTransformer.java
+@@ -67,8 +67,8 @@ public class InvokerTransformer<I, O> implements Transformer<I, O>, Serializable
+      * @param args  the arguments to pass to the method
+      * @return an invoker transformer
+      */
+-    public static <I, O> Transformer<I, O> invokerTransformer(final String methodName, final Class<?>[] paramTypes,
+-                                                              final Object[] args) {
++    public static <I, O> Transformer<I, O> invokerTransformer(final String methodName, Class<?>[] paramTypes,
++                                                              Object[] args) {
+         if (methodName == null) {
+             throw new IllegalArgumentException("The method to invoke must not be null");
+         }
+@@ -80,6 +80,8 @@ public class InvokerTransformer<I, O> implements Transformer<I, O>, Serializable
+         if (paramTypes == null || paramTypes.length == 0) {
+             return new InvokerTransformer<I, O>(methodName);
+         } else {
++            paramTypes = paramTypes.clone();
++            args = args.clone();
+             return new InvokerTransformer<I, O>(methodName, paramTypes, args);
+         }
+     }
+@@ -99,18 +101,16 @@ public class InvokerTransformer<I, O> implements Transformer<I, O>, Serializable
+     /**
+      * Constructor that performs no validation.
+      * Use <code>invokerTransformer</code> if you want that.
+-     * <p>
+-     * Note: from 4.0, the input parameters will be cloned
+      *
+      * @param methodName  the method to call
+-     * @param paramTypes  the constructor parameter types
+-     * @param args  the constructor arguments
++     * @param paramTypes  the constructor parameter types, not cloned
++     * @param args  the constructor arguments, not cloned
+      */
+     public InvokerTransformer(final String methodName, final Class<?>[] paramTypes, final Object[] args) {
+         super();
+         iMethodName = methodName;
+-        iParamTypes = paramTypes != null ? paramTypes.clone() : null;
+-        iArgs = args != null ? args.clone() : null;
++        iParamTypes = paramTypes;
++        iArgs = args;
+     }
+ 
+     /**

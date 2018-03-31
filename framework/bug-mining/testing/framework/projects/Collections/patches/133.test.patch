@@ -1,0 +1,46 @@
+diff --git a/src/test/java/org/apache/commons/collections4/bag/TreeBagTest.java b/src/test/java/org/apache/commons/collections4/bag/TreeBagTest.java
+index ff64bed0..963352ef 100644
+--- a/src/test/java/org/apache/commons/collections4/bag/TreeBagTest.java
++++ b/src/test/java/org/apache/commons/collections4/bag/TreeBagTest.java
+@@ -16,8 +16,6 @@
+  */
+ package org.apache.commons.collections4.bag;
+ 
+-import java.util.Comparator;
+-
+ import junit.framework.Test;
+ 
+ import org.apache.commons.collections4.Bag;
+@@ -67,32 +65,6 @@ public class TreeBagTest<T> extends AbstractSortedBagTest<T> {
+         }
+     }
+ 
+-    public void testCollections555() {
+-        final Bag<Object> bag = new TreeBag<Object>();
+-        try {
+-            bag.add(null);
+-            fail("NullPointerException expected");
+-        } catch(final NullPointerException npe) {
+-            // expected;
+-        }
+-        
+-        final Bag<String> bag2 = new TreeBag<String>(new Comparator<String>() {
+-            @Override
+-            public int compare(String o1, String o2) {
+-                return o1.compareTo(o2);
+-            }
+-        });
+-        try {
+-            // jdk bug: adding null to an empty TreeMap works
+-            // thus ensure that the bag is not empty before adding null
+-            bag2.add("a");
+-            bag2.add(null);
+-            fail("NullPointerException expected");
+-        } catch(final NullPointerException npe) {
+-            // expected;
+-        }
+-    }
+-
+     public void testOrdering() {
+         final Bag<T> bag = setupBag();
+         assertEquals("Should get elements in correct order", "A", bag.toArray()[0]);

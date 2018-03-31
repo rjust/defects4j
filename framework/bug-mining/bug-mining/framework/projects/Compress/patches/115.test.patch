@@ -1,0 +1,98 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/LongPathTest.java b/src/test/java/org/apache/commons/compress/archivers/LongPathTest.java
+index 930de9c9..1f951a69 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/LongPathTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/LongPathTest.java
+@@ -25,8 +25,6 @@ import java.io.FileInputStream;
+ import java.io.FileReader;
+ import java.io.IOException;
+ import java.util.ArrayList;
+-import java.util.Map;
+-import java.util.HashMap;
+ 
+ import junit.framework.AssertionFailedError;
+ import junit.framework.Test;
+@@ -35,7 +33,6 @@ import junit.framework.TestSuite;
+ import org.apache.commons.compress.AbstractTestCase;
+ import org.apache.commons.compress.archivers.ar.ArArchiveInputStream;
+ import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+ import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+ 
+@@ -47,37 +44,26 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+  */
+ public class LongPathTest extends AbstractTestCase {
+ 
+-    private String name;
+     private File file;
+ 
+-    private static final Map<String, ArrayList<String>> fileLists = new HashMap<String, ArrayList<String>>();
++    private static final ArrayList<String> fileList = new ArrayList<String>();
+ 
+     public LongPathTest(String name) {
+         super(name);
+     }
+ 
+-    private LongPathTest(String name, String function, File file) {
+-        super(function);
+-        this.name = name;
++    private LongPathTest(String name, File file){
++        super(name);
+         this.file = file;
+     }
+ 
+     public static TestSuite suite() throws IOException{
+         TestSuite suite = new TestSuite("LongPathTests");
+-        suite.addTest(createSuite("LongPathTest", "longpath"));
+-        suite.addTest(createSuite("LongSymlinkTest", "longsymlink"));
+-        return suite;
+-    }
+-
+-    public static TestSuite createSuite(String name, String dirname) throws IOException {
+-        TestSuite suite = new TestSuite(name);
+-        File arcdir = getFile(dirname);
++        File arcdir = getFile("longpath");
+         assertTrue(arcdir.exists());
+         File listing= new File(arcdir,"files.txt");
+         assertTrue("File listing is readable",listing.canRead());
+         BufferedReader br = new BufferedReader(new FileReader(listing));
+-
+-        ArrayList<String> fileList = new ArrayList<String>();
+         String line;
+         while ((line=br.readLine())!=null){
+             if (line.startsWith("#")){
+@@ -85,7 +71,6 @@ public class LongPathTest extends AbstractTestCase {
+             }
+             fileList.add(line);
+         }
+-        fileLists.put(name, fileList);
+         br.close();
+         File[]files=arcdir.listFiles();
+         for (final File file : files) {
+@@ -94,25 +79,14 @@ public class LongPathTest extends AbstractTestCase {
+             }
+             // Appears to be the only way to give the test a variable name
+             TestSuite namedSuite = new TestSuite(file.getName());
+-            Test test = new LongPathTest(name, "testArchive", file);
++            Test test = new LongPathTest("testArchive", file);
+             namedSuite.addTest(test);
+             suite.addTest(namedSuite);
+         }
+         return suite;
+     }
+ 
+-    protected String getExpectedString(ArchiveEntry entry) {
+-        if (entry instanceof TarArchiveEntry) {
+-            TarArchiveEntry tarEntry = (TarArchiveEntry) entry;
+-            if (tarEntry.isSymbolicLink()) {
+-                return tarEntry.getName() + " -> " + tarEntry.getLinkName();
+-            }
+-        }
+-        return entry.getName();
+-    }
+-
+     public void testArchive() throws Exception {
+-        ArrayList<String> fileList = fileLists.get(name);
+         @SuppressWarnings("unchecked") // fileList is of correct type
+         ArrayList<String> expected = (ArrayList<String>) fileList.clone();
+         String name = file.getName();

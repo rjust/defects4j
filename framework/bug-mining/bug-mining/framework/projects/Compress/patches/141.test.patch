@@ -1,0 +1,62 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java b/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
+index d7b47b1d..ef018b08 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
+@@ -18,13 +18,11 @@
+  */
+ package org.apache.commons.compress.archivers;
+ 
+-import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.fail;
+ 
+ import java.io.BufferedInputStream;
+ import java.io.ByteArrayInputStream;
+-import java.io.ByteArrayOutputStream;
+ import java.io.FileInputStream;
+ import java.io.InputStream;
+ 
+@@ -86,43 +84,6 @@ public class ArchiveStreamFactoryTest {
+     	}
+     }
+ 
+-    @Test(expected = StreamingNotSupportedException.class)
+-    public void cantRead7zFromStream() throws Exception {
+-        new ArchiveStreamFactory()
+-            .createArchiveInputStream(ArchiveStreamFactory.SEVEN_Z,
+-                                      new ByteArrayInputStream(new byte[0]));
+-    }
+-
+-    @Test(expected = StreamingNotSupportedException.class)
+-    public void cantWrite7zToStream() throws Exception {
+-        new ArchiveStreamFactory()
+-            .createArchiveOutputStream(ArchiveStreamFactory.SEVEN_Z,
+-                                       new ByteArrayOutputStream());
+-    }
+-
+-    /**
+-     * Test case for 
+-     * <a href="https://issues.apache.org/jira/browse/COMPRESS-267"
+-     * >COMPRESS-267</a>.
+-     */
+-    @Test
+-    public void detectsAndThrowsFor7z() throws Exception {
+-    	FileInputStream fis = new FileInputStream("src/test/resources/bla.7z");
+-    	try {
+-            InputStream bis = new BufferedInputStream(fis);
+-            try {
+-                new ArchiveStreamFactory().createArchiveInputStream(bis);
+-                fail("Expected a StreamingNotSupportedException");
+-            } catch (StreamingNotSupportedException ex) {
+-                assertEquals(ArchiveStreamFactory.SEVEN_Z, ex.getFormat());
+-            } finally {
+-                bis.close();
+-            }
+-    	} finally {
+-            fis.close();
+-    	}
+-    }
+-
+     /**
+      * Test case for 
+      * <a href="https://issues.apache.org/jira/browse/COMPRESS-208"

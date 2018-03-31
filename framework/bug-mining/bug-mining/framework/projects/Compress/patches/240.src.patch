@@ -1,0 +1,143 @@
+diff --git a/src/main/java/org/apache/commons/compress/MemoryLimitException.java b/src/main/java/org/apache/commons/compress/MemoryLimitException.java
+index 122edb16..8922ed2e 100644
+--- a/src/main/java/org/apache/commons/compress/MemoryLimitException.java
++++ b/src/main/java/org/apache/commons/compress/MemoryLimitException.java
+@@ -30,33 +30,11 @@ import java.io.IOException;
+  */
+ public class MemoryLimitException extends IOException {
+ 
+-    //long instead of int to account for overflow for corrupt files
+-    private final long memoryNeededInKb;
+-    private final int memoryLimitInKb;
+-
+-    public MemoryLimitException(long memoryNeededInKb, int memoryLimitInKb) {
+-        super(buildMessage(memoryNeededInKb, memoryLimitInKb));
+-        this.memoryNeededInKb = memoryNeededInKb;
+-        this.memoryLimitInKb = memoryLimitInKb;
+-    }
+-
+-    public MemoryLimitException(long memoryNeededInKb, int memoryLimitInKb, Exception e) {
+-        super(buildMessage(memoryNeededInKb, memoryLimitInKb), e);
+-        this.memoryNeededInKb = memoryNeededInKb;
+-        this.memoryLimitInKb = memoryLimitInKb;
+-    }
+-
+-    public long getMemoryNeededInKb() {
+-        return memoryNeededInKb;
+-    }
+-
+-    public int getMemoryLimitInKb() {
+-        return memoryLimitInKb;
++    public MemoryLimitException(String message) {
++        super(message);
+     }
+ 
+-    private static String buildMessage(long memoryNeededInKb, int memoryLimitInKb) {
+-        return "" + memoryNeededInKb + " kb of memory would be needed; limit was "
+-                + memoryLimitInKb + " kb. " +
+-                "If the file is not corrupt, consider increasing the memory limit.";
++    public MemoryLimitException(String message, Exception e) {
++        super(message, e);
+     }
+ }
+diff --git a/src/main/java/org/apache/commons/compress/compressors/lzma/LZMACompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/lzma/LZMACompressorInputStream.java
+index 5723b5c2..7782be81 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/lzma/LZMACompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/lzma/LZMACompressorInputStream.java
+@@ -61,7 +61,7 @@ public class LZMACompressorInputStream extends CompressorInputStream {
+             in = new LZMAInputStream(inputStream, memoryLimitInKb);
+         } catch (org.tukaani.xz.MemoryLimitException e) {
+             //convert to commons-compress exception
+-            throw new MemoryLimitException(e.getMemoryNeeded(), e.getMemoryLimit(), e);
++            throw new MemoryLimitException("exceeded calculated memory limit", e);
+         }
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/compressors/lzw/LZWInputStream.java b/src/main/java/org/apache/commons/compress/compressors/lzw/LZWInputStream.java
+index 2a6127db..350b4b01 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/lzw/LZWInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/lzw/LZWInputStream.java
+@@ -114,24 +114,16 @@ public abstract class LZWInputStream extends CompressorInputStream {
+ 
+     /**
+      * Initializes the arrays based on the maximum code size.
+-     * First checks that the estimated memory usage is below memoryLimitInKb
+-     *
+      * @param maxCodeSize maximum code size
+-     * @param memoryLimitInKb maximum allowed estimated memory usage in Kb
+-     * @throws MemoryLimitException if estimated memory usage is greater than memoryLimitInKb
++     * @param memoryLimitInKb maximum allowed table size in Kb
++     * @throws MemoryLimitException if maxTableSize is > memoryLimitInKb
+      */
+     protected void initializeTables(final int maxCodeSize, final int memoryLimitInKb)
+             throws MemoryLimitException {
+-
+-        if (memoryLimitInKb > -1) {
+-            final int maxTableSize = 1 << maxCodeSize;
+-            //account for potential overflow
+-            long memoryUsageInBytes = (long) maxTableSize * 6;//(4 (prefixes) + 1 (characters) +1 (outputStack))
+-            long memoryUsageInKb = memoryUsageInBytes >> 10;
+-
+-            if (memoryUsageInKb > (long)memoryLimitInKb) {
+-                throw new MemoryLimitException(memoryUsageInKb, memoryLimitInKb);
+-            }
++        final int maxTableSize = 1 << maxCodeSize;
++        if (memoryLimitInKb > -1 && maxTableSize > memoryLimitInKb*1024) {
++            throw new MemoryLimitException("Tried to allocate "+maxTableSize +
++                    " but memoryLimitInKb only allows "+(memoryLimitInKb*1024));
+         }
+         initializeTables(maxCodeSize);
+     }
+diff --git a/src/main/java/org/apache/commons/compress/compressors/xz/XZCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/xz/XZCompressorInputStream.java
+index fc0cbf52..b3782120 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/xz/XZCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/xz/XZCompressorInputStream.java
+@@ -120,7 +120,7 @@ public class XZCompressorInputStream extends CompressorInputStream {
+      * @since 1.14
+      */
+     public XZCompressorInputStream(InputStream inputStream,
+-                                   boolean decompressConcatenated, final int memoryLimitInKb)
++                                   boolean decompressConcatenated, int memoryLimitInKb)
+             throws IOException {
+         if (decompressConcatenated) {
+             in = new XZInputStream(inputStream, memoryLimitInKb);
+@@ -136,7 +136,7 @@ public class XZCompressorInputStream extends CompressorInputStream {
+             count(ret == -1 ? -1 : 1);
+             return ret;
+         } catch (org.tukaani.xz.MemoryLimitException e) {
+-            throw new MemoryLimitException(e.getMemoryNeeded(), e.getMemoryLimit(), e);
++            throw new MemoryLimitException("Exceeded memory limit", e);
+         }
+     }
+ 
+@@ -148,7 +148,7 @@ public class XZCompressorInputStream extends CompressorInputStream {
+             return ret;
+         } catch (org.tukaani.xz.MemoryLimitException e) {
+             //convert to commons-compress MemoryLimtException
+-            throw new MemoryLimitException(e.getMemoryNeeded(), e.getMemoryLimit(), e);
++            throw new MemoryLimitException("Exceeded memory limit", e);
+         }
+     }
+ 
+@@ -158,7 +158,7 @@ public class XZCompressorInputStream extends CompressorInputStream {
+             return in.skip(n);
+         } catch (org.tukaani.xz.MemoryLimitException e) {
+             //convert to commons-compress MemoryLimtException
+-            throw new MemoryLimitException(e.getMemoryNeeded(), e.getMemoryLimit(), e);
++            throw new MemoryLimitException("Excedded memory limit", e);
+         }
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
+index 994e102e..64387e3a 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/z/ZCompressorInputStream.java
+@@ -38,7 +38,7 @@ public class ZCompressorInputStream extends LZWInputStream {
+     private final int maxCodeSize;
+     private long totalCodesRead = 0;
+ 
+-    public ZCompressorInputStream(final InputStream inputStream, final int memoryLimitInKb)
++    public ZCompressorInputStream(final InputStream inputStream, int memoryLimitInKb)
+             throws IOException {
+         super(inputStream, ByteOrder.LITTLE_ENDIAN);
+         final int firstByte = (int) in.readBits(8);

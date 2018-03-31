@@ -1,0 +1,262 @@
+diff --git a/src/test/org/apache/commons/collections/map/TestLRUMap.java b/src/test/org/apache/commons/collections/map/TestLRUMap.java
+index 4bfaf37d..ef5edc69 100644
+--- a/src/test/org/apache/commons/collections/map/TestLRUMap.java
++++ b/src/test/org/apache/commons/collections/map/TestLRUMap.java
+@@ -17,7 +17,6 @@
+ package org.apache.commons.collections.map;
+ 
+ import java.util.ArrayList;
+-import java.util.HashMap;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
+@@ -454,249 +453,6 @@ public class TestLRUMap extends AbstractTestOrderedMap {
+             fail();
+         } catch (IndexOutOfBoundsException ex) {}
+     }
+-    
+-    public void testSynchronizedRemoveFromEntrySet() throws InterruptedException {
+-
+-        final Map map = new LRUMap(10000);
+-        
+-        final Map exceptions = new HashMap();
+-        final ThreadGroup tg = new ThreadGroup(getName()) {
+-            public void uncaughtException(Thread t, Throwable e) {
+-                exceptions.put(e, t.getName());
+-                super.uncaughtException(t, e);
+-            }
+-        };
+-
+-        final int[] counter = new int[1];
+-        counter[0] = 0;
+-        final Thread[] threads = new Thread[50];
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i] = new Thread(tg, "JUnit Thread " + i) {
+-
+-                public void run() {
+-                    int i = 0;
+-                    try {
+-                        synchronized (this) {
+-                            notifyAll();
+-                            wait();
+-                        }
+-                        Thread thread = Thread.currentThread();
+-                        while (i < 1000  && !interrupted()) {
+-                            synchronized (map) {
+-                                map.put(thread.getName() + "[" + ++i + "]", thread);
+-                            }
+-                        }
+-                        synchronized (map) {
+-                            for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
+-                                Map.Entry entry = (Map.Entry)iter.next();
+-                                if (entry.getValue() == this) {
+-                                    iter.remove();
+-                                }
+-                            }
+-                        }
+-                    } catch (InterruptedException e) {
+-                        fail("Unexpected InterruptedException");
+-                    }
+-                    if (i > 0) {
+-                        synchronized (counter) {
+-                            counter[0]++;
+-                        }
+-                    }
+-                }
+-
+-            };
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].start();
+-                threads[i].wait();
+-            }
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].notifyAll();
+-            }
+-        }
+-
+-        Thread.sleep(1000);
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i].interrupt();
+-        }
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].join();
+-            }
+-        }
+-
+-        assertEquals("Exceptions have been thrown: " + exceptions, 0, exceptions.size());
+-        assertTrue("Each thread should have put at least 1 element into the map, but only " 
+-                + counter[0] + " did succeed", counter[0] >= threads.length);
+-    }
+-    
+-    // TODO: COLLECTIONS-3
+-    public void todoTestSynchronizedRemoveFromKeySet() throws InterruptedException {
+-
+-        final Map map = new LRUMap(10000);
+-        
+-        final Map exceptions = new HashMap();
+-        final ThreadGroup tg = new ThreadGroup(getName()) {
+-            public void uncaughtException(Thread t, Throwable e) {
+-                exceptions.put(e, t.getName());
+-                super.uncaughtException(t, e);
+-            }
+-        };
+-
+-        final int[] counter = new int[1];
+-        counter[0] = 0;
+-        final Thread[] threads = new Thread[50];
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i] = new Thread(tg, "JUnit Thread " + i) {
+-
+-                public void run() {
+-                    int i = 0;
+-                    try {
+-                        synchronized (this) {
+-                            notifyAll();
+-                            wait();
+-                        }
+-                        Thread thread = Thread.currentThread();
+-                        while (i < 1000  && !interrupted()) {
+-                            synchronized (map) {
+-                                map.put(thread.getName() + "[" + ++i + "]", thread);
+-                            }
+-                        }
+-                        synchronized (map) {
+-                            for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
+-                                String name = (String)iter.next();
+-                                if (map.get(name) == this) {
+-                                    iter.remove();
+-                                }
+-                            }
+-                        }
+-                    } catch (InterruptedException e) {
+-                        fail("Unexpected InterruptedException");
+-                    }
+-                    if (i > 0) {
+-                        synchronized (counter) {
+-                            counter[0]++;
+-                        }
+-                    }
+-                }
+-
+-            };
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].start();
+-                threads[i].wait();
+-            }
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].notifyAll();
+-            }
+-        }
+-
+-        Thread.sleep(1000);
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i].interrupt();
+-        }
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].join();
+-            }
+-        }
+-
+-        assertEquals("Exceptions have been thrown: " + exceptions, 0, exceptions.size());
+-        assertTrue("Each thread should have put at least 1 element into the map, but only " 
+-                + counter[0] + " did succeed", counter[0] >= threads.length);
+-    }
+-    
+-    public void testSynchronizedRemoveFromValues() throws InterruptedException {
+-
+-        final Map map = new LRUMap(10000);
+-        
+-        final Map exceptions = new HashMap();
+-        final ThreadGroup tg = new ThreadGroup(getName()) {
+-            public void uncaughtException(Thread t, Throwable e) {
+-                exceptions.put(e, t.getName());
+-                super.uncaughtException(t, e);
+-            }
+-        };
+-
+-        final int[] counter = new int[1];
+-        counter[0] = 0;
+-        final Thread[] threads = new Thread[50];
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i] = new Thread(tg, "JUnit Thread " + i) {
+-
+-                public void run() {
+-                    int i = 0;
+-                    try {
+-                        synchronized (this) {
+-                            notifyAll();
+-                            wait();
+-                        }
+-                        Thread thread = Thread.currentThread();
+-                        while (i < 1000  && !interrupted()) {
+-                            synchronized (map) {
+-                                map.put(thread.getName() + "[" + ++i + "]", thread);
+-                            }
+-                        }
+-                        synchronized (map) {
+-                            for (Iterator iter = map.values().iterator(); iter.hasNext();) {
+-                                if (iter.next() == this) {
+-                                    iter.remove();
+-                                }
+-                            }
+-                        }
+-                    } catch (InterruptedException e) {
+-                        fail("Unexpected InterruptedException");
+-                    }
+-                    if (i > 0) {
+-                        synchronized (counter) {
+-                            counter[0]++;
+-                        }
+-                    }
+-                }
+-
+-            };
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].start();
+-                threads[i].wait();
+-            }
+-        }
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].notifyAll();
+-            }
+-        }
+-
+-        Thread.sleep(1000);
+-
+-        for (int i = 0; i < threads.length; ++i) {
+-            threads[i].interrupt();
+-        }
+-        for (int i = 0; i < threads.length; ++i) {
+-            synchronized (threads[i]) {
+-                threads[i].join();
+-            }
+-        }
+-
+-        assertEquals("Exceptions have been thrown: " + exceptions, 0, exceptions.size());
+-        assertTrue("Each thread should have put at least 1 element into the map, but only " 
+-                + counter[0] + " did succeed", counter[0] >= threads.length);
+-    }
+ 
+ //    public void testCreate() throws Exception {
+ //        resetEmpty();

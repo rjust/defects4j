@@ -1,0 +1,57 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index e66f58a9..e5067d1e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -149,7 +149,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+     public void putNextEntry(final CpioArchiveEntry e) throws IOException {
+         ensureOpen();
+         if (this.cpioEntry != null) {
+-            closeArchiveEntry(); // close previous entry
++            closeEntry(); // close previous entry
+         }
+         if (e.getTime() == -1) {
+             e.setTime(System.currentTimeMillis());
+@@ -247,7 +247,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      * org.apache.commons.compress.archivers.ArchiveOutputStream#closeArchiveEntry
+      * ()
+      */
+-    public void closeArchiveEntry() throws IOException {
++    public void closeEntry() throws IOException {
+         ensureOpen();
+ 
+         if (this.cpioEntry.getSize() != this.written) {
+@@ -324,14 +324,14 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+             return;
+         }
+         if (this.cpioEntry != null) {
+-            closeArchiveEntry();
++            closeEntry();
+         }
+         this.cpioEntry = new CpioArchiveEntry(this.entryFormat);
+         this.cpioEntry.setMode(0);
+         this.cpioEntry.setName("TRAILER!!!");
+         this.cpioEntry.setNumberOfLinks(1);
+         writeHeader(this.cpioEntry);
+-        closeArchiveEntry();
++        closeEntry();
+     }
+ 
+     /**
+@@ -343,7 +343,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      */
+     public void close() throws IOException {
+         if (!this.closed) {
+-            this.finish();
+             super.close();
+             this.closed = true;
+         }
+@@ -391,6 +390,9 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         out.write(str.getBytes());
+         out.write('\0');
+     }
++    public void closeArchiveEntry() throws IOException {
++        this.closeEntry();
++    }
+ 
+     /*
+      * (non-Javadoc)
