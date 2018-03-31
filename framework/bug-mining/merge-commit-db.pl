@@ -34,14 +34,15 @@ use Getopt::Std;
 use Pod::Usage;
 
 sub _usage {
-    die "usage: " . basename($0) . " -f filename -g git_dir";
+    die "usage: " . basename($0) . " -f filename -g git_dir -t tracker_id";
 }
 
 my %cmd_opts;
-getopt('f:g:', \%cmd_opts);
+getopt('f:g:t', \%cmd_opts);
 my $filename = $cmd_opts{'f'};
 my $git_dir = $cmd_opts{'g'};
-_usage() unless defined $filename and defined $git_dir;
+my $tracker_id = $cmd_opts{'t'};
+_usage() unless defined $filename and defined $git_dir and defined $tracker_id;
 
 my @existing_commits = (); # assume order of these is not cronological
 my $last_number = 0;
@@ -74,7 +75,7 @@ my $existing_commits_count = scalar @existing_commits;
 while (my $line = <STDIN>) {
     chomp $line;
     next unless $line;
-    $line =~ /(?:\d+,){0,1}(.+),(.+)/; # allows a bugid but will ignore it (this is just a quick adaptation in case you feed a commit-db into this script)
+    $line =~ /(?:\d+,){0,1}(.+),(.+)(?:,.+)*/; # allows a bugid and other random params but will ignore them (this is just a quick adaptation in case you feed a commit-db into this script)
     # check commits src dir if they are non empty before merging
     unless(`git --git-dir=$git_dir --no-pager diff --binary $2 $1 -- src/ src/` eq "") { # buggy to fixed
         unshift @new_commits, "$1,$2";  # unshift places line at the front
@@ -88,7 +89,7 @@ open FH, ">>$filename";
 foreach my $line (@new_commits) {
     unless(grep(/$line/,@existing_commits)) { # unless it's already in the file
         ++$last_number;
-        print FH "$last_number,$line\n";
+        print FH "$last_number,$line,$tracker_id\n";
         push @existing_commits, $line;
     }
 }
