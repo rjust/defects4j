@@ -200,7 +200,7 @@ sub _check_diff {
     my $patch_test = "$PATCH_DIR/$bid.test.patch";
     my $patch_src = "$PATCH_DIR/$bid.src.patch";
 
-    if (!(-e $patch_test) || (-z $patch_test)) {
+    if (-z $patch_test) {
         $data->{$DIFF_TEST} = 0;
     } else {
         my $diff = _read_file($patch_test);
