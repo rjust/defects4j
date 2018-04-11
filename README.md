@@ -174,6 +174,10 @@ The directory structure is as follows:
 
 Additional resources
 --------------------
+
+#### Defects4j Analysis
+  - [Defects4j dissection]: https://github.com/program-repair/defects4j-dissection [Website]: http://program-repair.org/defects4j-dissection/
+
 #### Fault localization (FL)
   - [Scripts and annotations for evaluating FL techniques][FL-eval]
 
