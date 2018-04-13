@@ -98,29 +98,18 @@ sub _post_checkout {
 # build files or other time-consuming tasks, whose results should be cached.
 #
 sub initialize_revision {
-  my ($self, $revision_id, $vid) = @_;
-  $self->SUPER::initialize_revision($revision_id);
-
+  my ($self, $rev_id, $vid) = @_;
+  $self->SUPER::initialize_revision($rev_id);
   my $work_dir = $self->{prog_root};
-  my $bid = $vid;
-  $a = chop($bid);
-  system("mkdir -p $ANALYZER_OUTPUT/$bid");
   # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
   if (-e "$work_dir/pom.xml"){
-    system("mkdir -p $GEN_BUILDFILE_DIR/$revision_id");
+    system("mkdir -p $GEN_BUILDFILE_DIR/$rev_id");
     my $cmd = " cd $work_dir" .
               " && mvn ant:ant -Doverwrite=true 2>&1" .
-              " && cp maven-build.* $GEN_BUILDFILE_DIR/$revision_id 2>&1" .
-              " && cp build.xml $GEN_BUILDFILE_DIR/$revision_id 2>&1" .
-              " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
-       Utils::exec_cmd($cmd, "Convert Maven to Ant build file ant run build-file analyzer on maven-build.xml.");
-
-       Utils::exec_cmd("cp $GEN_BUILDFILE_DIR/$revision_id/* $work_dir 2>&1",
+              " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+              " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
+       Utils::exec_cmd("cp $GEN_BUILDFILE_DIR/$rev_id/* $work_dir 2>&1",
                "Copy generated Ant build file" );
-    }else{
-      my $cmd = " cd $work_dir" .
-                " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
-         Utils::exec_cmd($cmd, "Running build-file analyzer on build.xml.");
     }
 }
 
