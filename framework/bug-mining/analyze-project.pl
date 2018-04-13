@@ -44,13 +44,6 @@ The id of the project for which the version pairs are analyzed.
 
 Use C<work_dir> as the working directory.
 
-=item B<-b C<bug_id>>
-
-Only analyze this bug id or interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
-provided, the interval boundaries are included in the analysis.
-Per default all bug ids, listed in the commit-db, are considered.
-
 =item B<-n C<tracker_name>>
 
 Source control tracker name
@@ -60,6 +53,13 @@ eg github, jira, etc
 =item B<-t C<tracker_id>>
 
 Source control tracker id
+
+=item B<-b C<bug_id>>
+
+Only analyze this bug id or interval of bug ids (optional).
+The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
+provided, the interval boundaries are included in the analysis.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =back
 
@@ -114,7 +114,7 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:b:w:n:t:', \%cmd_opts) or pod2usage(1);
+getopts('p:w:n:t:b:', \%cmd_opts) or pod2usage(1);
 
 print $cmd_opts{n};
 
