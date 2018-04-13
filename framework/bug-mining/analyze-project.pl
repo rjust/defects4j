@@ -30,7 +30,7 @@ analyze-project.pl -- Determine all suitable candidates listed in the commit-db.
 
 =head1 SYNOPSIS
 
-analyze-project.pl -p project_id -w work_dir -t tracker_id [ -b bug_id]
+analyze-project.pl -p project_id -w work_dir -t tracker_id -n tracker_name [ -b bug_id]
 
 =head1 OPTIONS
 
@@ -51,7 +51,13 @@ The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
 provided, the interval boundaries are included in the analysis.
 Per default all bug ids, listed in the commit-db, are considered.
 
-=item B<-b C<tracker_id>>
+=item B<-n C<tracker_name>>
+
+Source control tracker name
+eg github, jira, etc
+
+
+=item B<-t C<tracker_id>>
 
 Source control tracker id
 
@@ -108,16 +114,19 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:b:w:t:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:n:t:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR, $TRACKER_ID) =
+print $cmd_opts{n};
+
+my ($PID, $BID, $WORK_DIR, $TRACKER_ID, $TRACKER_NAME) =
     ($cmd_opts{p},
      $cmd_opts{b},
      $cmd_opts{w},
-     $cmd_opts{t}
+     $cmd_opts{t},
+     $cmd_opts{n}
     );
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR and defined $TRACKER_ID; # $BID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR and defined $TRACKER_ID and defined $TRACKER_NAME; # $BID can be undefined
 
 $WORK_DIR = abs_path($WORK_DIR);
 
@@ -182,7 +191,8 @@ foreach my $bid (@ids) {
     my %data;
     $data{$PROJECT} = $PID;
     $data{$ID} = $bid;
-    $data{$ISSUE_TRACKER} = $TRACKER_ID;
+    $data{$ISSUE_TRACKER_NAME} = $TRACKER_NAME;
+    $data{$ISSUE_TRACKER_ID} = $TRACKER_ID;
 
     _check_diff($project, $bid, \%data) and
     _check_t2v2($project, $bid, \%data) and
