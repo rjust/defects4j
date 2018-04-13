@@ -117,7 +117,7 @@ system("cp $WORK_DIR/framework/projects/$PID/$PID.build.xml ../projects/$PID");
 system("cp $WORK_DIR/framework/projects/$PID/dir-layout.csv ../projects/$PID");
 system("touch ../projects/$PID/commit-db");
 ############################### VARIABLE SETUP
-my $project = Project::create_project($PID);
+my $project = Project::create_project($PID); #, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
 my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
 my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $output_db_dir);
 my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);

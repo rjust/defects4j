@@ -30,7 +30,7 @@ analyze-project.pl -- Determine all suitable candidates listed in the commit-db.
 
 =head1 SYNOPSIS
 
-analyze-project.pl -p project_id -w work_dir [ -b bug_id]
+analyze-project.pl -p project_id -w work_dir -g tracker_name -t tracker_id [ -b bug_id]
 
 =head1 OPTIONS
 
@@ -43,6 +43,15 @@ The id of the project for which the version pairs are analyzed.
 =item B<-w C<work_dir>>
 
 Use C<work_dir> as the working directory.
+
+=item B<-g C<tracker_name>>
+
+Source control tracker name
+eg github, jira, etc
+
+=item B<-t C<tracker_id>>
+
+Source control tracker id
 
 =item B<-b C<bug_id>>
 
@@ -104,15 +113,17 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
+getopts('p:w:g:t:b:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR) =
+my ($PID, $BID, $WORK_DIR, $TRACKER_ID, $TRACKER_NAME) =
     ($cmd_opts{p},
      $cmd_opts{b},
-     $cmd_opts{w}
+     $cmd_opts{w},
+     $cmd_opts{t},
+     $cmd_opts{g}
     );
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
+pod2usage(1) unless defined $PID and defined $WORK_DIR and defined $TRACKER_ID and defined $TRACKER_NAME; # $BID can be undefined
 
 $WORK_DIR = abs_path($WORK_DIR);
 
@@ -177,6 +188,8 @@ foreach my $bid (@ids) {
     my %data;
     $data{$PROJECT} = $PID;
     $data{$ID} = $bid;
+    $data{$ISSUE_TRACKER_NAME} = $TRACKER_NAME;
+    $data{$ISSUE_TRACKER_ID} = $TRACKER_ID;
 
     _check_diff($project, $bid, \%data) and
     _check_t2v2($project, $bid, \%data) and
@@ -200,7 +213,7 @@ sub _check_diff {
     my $patch_test = "$PATCH_DIR/$bid.test.patch";
     my $patch_src = "$PATCH_DIR/$bid.src.patch";
 
-    if (-z $patch_test) {
+    if (!(-e $patch_test) || (-z $patch_test)) {
         $data->{$DIFF_TEST} = 0;
     } else {
         my $diff = _read_file($patch_test);
