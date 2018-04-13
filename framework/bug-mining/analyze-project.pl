@@ -30,7 +30,7 @@ analyze-project.pl -- Determine all suitable candidates listed in the commit-db.
 
 =head1 SYNOPSIS
 
-analyze-project.pl -p project_id -w work_dir -t tracker_id -n tracker_name [ -b bug_id]
+analyze-project.pl -p project_id -w work_dir -g tracker_name -t tracker_id [ -b bug_id]
 
 =head1 OPTIONS
 
@@ -44,11 +44,10 @@ The id of the project for which the version pairs are analyzed.
 
 Use C<work_dir> as the working directory.
 
-=item B<-n C<tracker_name>>
+=item B<-g C<tracker_name>>
 
 Source control tracker name
 eg github, jira, etc
-
 
 =item B<-t C<tracker_id>>
 
@@ -114,16 +113,14 @@ use Utils;
 
 ############################## ARGUMENT PARSING
 my %cmd_opts;
-getopts('p:w:n:t:b:', \%cmd_opts) or pod2usage(1);
-
-print $cmd_opts{n};
+getopts('p:w:g:t:b:', \%cmd_opts) or pod2usage(1);
 
 my ($PID, $BID, $WORK_DIR, $TRACKER_ID, $TRACKER_NAME) =
     ($cmd_opts{p},
      $cmd_opts{b},
      $cmd_opts{w},
      $cmd_opts{t},
-     $cmd_opts{n}
+     $cmd_opts{g}
     );
 
 pod2usage(1) unless defined $PID and defined $WORK_DIR and defined $TRACKER_ID and defined $TRACKER_NAME; # $BID can be undefined
