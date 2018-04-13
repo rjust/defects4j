@@ -140,7 +140,7 @@ our $PROJECT       = "project_id";
 our $ID            = "version_id";
 
 # Additional columns of TAB_REV_PAIRS
-our $TRACKER_ID    = "tracker_id";
+our $ISSUE_TRACKER = "tracker_id";
 our $DIFF_SRC      = "diff_size_src";
 our $DIFF_TEST     = "diff_size_test";
 our $COMP_V2       = "compile_v2";
@@ -190,7 +190,7 @@ our $NUM_FAILING_TESTS             = "num_failing_tests";
 # Table definitions
 my %tables = (
 # TAB_REV_PAIRS
-$TAB_REV_PAIRS => [$PROJECT, $ID, $TRACKER_ID, $DIFF_SRC, $DIFF_TEST, $COMP_V2, $COMP_T2V2, $FAIL_T2V2, $COMP_V1, $COMP_T2V1, $MIN_SRC, $REVIEW_TESTS],
+$TAB_REV_PAIRS => [$PROJECT, $ID, $ISSUE_TRACKER, $DIFF_SRC, $DIFF_TEST, $COMP_V2, $COMP_T2V2, $FAIL_T2V2, $COMP_V1, $COMP_T2V1, $MIN_SRC, $REVIEW_TESTS],
 # Table TAB_TRIGGER
 $TAB_TRIGGER => [$PROJECT, $ID, $FAIL_V2, $FAIL_C_V1, $FAIL_M_V1, $PASS_ISO_V2, $FAIL_ISO_V1],
 # Table TAB_BUG_DETECTION
@@ -230,6 +230,7 @@ $TAB_FIX
 
 $PROJECT
 $ID
+$ISSUE_TRACKER
 $DIFF_SRC
 $DIFF_TEST
 $COMP_V2
