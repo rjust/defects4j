@@ -140,6 +140,7 @@ our $PROJECT       = "project_id";
 our $ID            = "version_id";
 
 # Additional columns of TAB_REV_PAIRS
+our $TRACKER_ID    = "tracker_id";
 our $DIFF_SRC      = "diff_size_src";
 our $DIFF_TEST     = "diff_size_test";
 our $COMP_V2       = "compile_v2";
