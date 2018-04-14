@@ -68,7 +68,7 @@ Identifying candidate bugs (populating the `commit-db`)
    `merge-issue-numbers.pl` if a project has multiple trackers):
     - `./download-issues.pl jira -p lang -o bug-mining/issues |
       ./merge-issue-numbers.pl -f bug-mining/issues.txt`
-   Make sure the project id supplied to the download-issues script 
+   Make sure the project id supplied to the download-issues script
    is the project id and not the defects4j id.
 
 4. Obtain the development history (commit logs) for the project:
@@ -124,46 +124,46 @@ initialize-revisions step, and integrate it into the framework**
    candidates -- ones that compile and have a non-empty source diff:
     - `./analyze-project.pl -p Lang -w bug-mining`
 
-3. If any revisions fail to build, inspect the project build script and error 
+3. If any revisions fail to build, inspect the project build script and error
    message and attempt to diagnose the issue. Some common problems are:
     - Missing dependencies(may require specified directory structure for dependency files).
-    - Containing outdated build.xml file due to migration to using Maven(by default, we are 
+    - Containing outdated build.xml file due to migration to using Maven(by default, we are
       importing build.xml from   each revision).
-    - Missing build.xml: for Maven project, edit `MyProject.pm` to run maven-ant plugin with 
-      overwrite option enabled.  This will also solve the outdated build file issue stated above. 
+    - Missing build.xml: for Maven project, edit `MyProject.pm` to run maven-ant plugin with
+      overwrite option enabled.  This will also solve the outdated build file issue stated above.
       For Gradle project, manually adapt a wrapper build file for all versions.
     - Note: please rerun `initialize_revision.pl` if there are changes introduced to `MyProject.pm`.
 
 4. If a build fails due to an empty test step, this is a common indication that
    there is a missing dependency on the test classpath (all tests fail due to
-   the missing dependency). This can be confirmed by inspecting the corresponding 
+   the missing dependency). This can be confirmed by inspecting the corresponding
    file for the revision in the failing_tests folder. This file contains the stack
-   trace for all tests that fail when executed against the "fixed" version of a 
-   class. If all tests fail due to a NoClassDefFoundError (or similar exception), 
+   trace for all tests that fail when executed against the "fixed" version of a
+   class. If all tests fail due to a NoClassDefFoundError (or similar exception),
    then remove the failing_test file, ensure that the missing dependency is in place,
-   and reanalyze the specific revisions by deleting the corresponding entries in `rev_pairs` and 
+   and reanalyze the specific revisions by deleting the corresponding entries in `rev_pairs` and
    running `analyze-revisions.pl` with `-b <bid>`.
-   
+
 5. If a build fails due to running empty test set in "run.dev.tests" step, below is a list of
    common situations that need to be solved:
-    - The directory structure or the property keys that contain directory structure 
+    - The directory structure or the property keys that contain directory structure
       information have changed for this failing version(or most of the versions afterwards).  To solve
-      this, checkout the particular version, inspect its properties related to source/test directories, 
-      then adapt the changes in `MyProject.build.xml`.  Reanalyze the specific revision by deleting the 
+      this, checkout the particular version, inspect its properties related to source/test directories,
+      then adapt the changes in `MyProject.build.xml`.  Reanalyze the specific revision by deleting the
       corresponding entries in `rev_pairs` and running `analyze-revisions.pl` with `-b <bid>`.
     - Make sure the all.manual.tests fileset in `MyProject.build.xml` is covering the tests listed in
       project version-specific build files.
-    - Reanalyze the specific revisions by deleting the corresponding entries in `rev_pairs` and 
+    - Reanalyze the specific revisions by deleting the corresponding entries in `rev_pairs` and
       running `analyze-revisions.pl` with `-b <bid>`.
 
-6. If particular revisions cannot be built, often due to dependencies that no 
-   longer exist, then they may be removed from the commit-db. It is recommended 
+6. If particular revisions cannot be built, often due to dependencies that no
+   longer exist, then they may be removed from the commit-db. It is recommended
    to keep a backup of the commit-db until the entire bug mining process is
    complete.
 
-7. Upon completion of this stage, inspect all stack traces in the files that are 
-   generated in the failing_tests folder to ensure that tests failed for valid 
-   reasons, and not due to configuration errors. Failed assertions are generally 
+7. Upon completion of this stage, inspect all stack traces in the files that are
+   generated in the failing_tests folder to ensure that tests failed for valid
+   reasons, and not due to configuration errors. Failed assertions are generally
    valid test failures. Missing files or classes are generally due to a configuration
    issue.
 
@@ -187,11 +187,11 @@ Reproducing bugs
    reproduced fault:
     - `vim bug-mining/framework/projects/<project_id>/trigger_tests/*`
 
-4. If an invalid triggering test is encountered (e.g., due to a configuration 
-   issue), remove the corresponding line from the `trigger` file, fix the issue, 
+4. If an invalid triggering test is encountered (e.g., due to a configuration
+   issue), remove the corresponding line from the `trigger` file, fix the issue,
    and re-execute Step 1. If there is a corresponding file for the fixed revision
    in the failing_tests folder, then re-execute the analysis script(remember to delete
-   corresponding entry in `rev_pairs`) for this bug as well. 
+   corresponding entry in `rev_pairs`) for this bug as well.
 
 **TODO: Describe how to repeat steps 1-3 if an invalid triggering test is
 encountered. Also, describe whether analyze-project needs to be rerun in case a
@@ -211,6 +211,7 @@ Reviewing and isolating the bugs
      - `ls -l Lang/patches/*.src.patch`
      - `ls -l bug-mining/framework/projects/<project_id>/patches/*.src.patch`
      - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
+     - The default editor for patch minimization is meld. Link to meld: http://meldmerge.org/. However, you may use other editors if you prefer.
 
    Note that the patch is the *reverse* patch, i.e., patching the fixed version
    with this patch will reintroduce the fault.
