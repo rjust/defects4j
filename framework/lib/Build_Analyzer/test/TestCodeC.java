@@ -8,44 +8,44 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-public class TestCommonsLang {
+public class TestCodeC {
 
 	@Test
 	public void testMain() throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
-		Driver.main(new String[] {"test/projects/commons-lang","test/actual_output/commons-lang","maven-build.xml"});
+		Driver.main(new String[] {"test/projects/CodeC","test/actual_output/CodeC","build.xml"});
 	}
-
-	@Test
+  @Test
 	public void testTarget() throws IOException {
-		File expected = new File("test/expected_output/commons-lang/targets");
-		File actual = new File("test/actual_output/commons-lang/targets");
+		File expected = new File("test/expected_output/CodeC/targets");
+		File actual = new File("test/actual_output/CodeC/targets");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}
 
 	@Test
 	public void testIncludes() throws IOException {
-		File expected = new File("test/expected_output/commons-lang/includes");
-		File actual = new File("test/actual_output/commons-lang/includes");
+		File expected = new File("test/expected_output/CodeC/includes");
+		File actual = new File("test/actual_output/CodeC/includes");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}
 
 	@Test
 	public void testExcludes() throws IOException {
-		File expected = new File("test/expected_output/commons-lang/excludes");
-		File actual = new File("test/actual_output/commons-lang/excludes");
+		File expected = new File("test/expected_output/CodeC/excludes");
+		File actual = new File("test/actual_output/CodeC/excludes");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}
 
 	@Test
 	public void testTestList() throws IOException {
-		File expected = new File("test/expected_output/commons-lang/developer-included-tests");
-		File actual = new File("test/actual_output/commons-lang/developer-included-tests");
+		File expected = new File("test/expected_output/CodeC/developer-included-tests");
+		File actual = new File("test/actual_output/CodeC/developer-included-tests");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}
+
 
 }

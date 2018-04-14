@@ -73,6 +73,7 @@
                 <fileset dir="${dir.src.tests}">
                     <include name="TestCommonsLang.java"/>
                     <include name="TestConnectFour.java"/>
+                    <include name="TestCodeC.java"/>
                 </fileset>
             </batchtest>
         </junit>
