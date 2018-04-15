@@ -20,11 +20,12 @@ import util.TaskHelper;
 public class TestGetter {
 
 	private Target target;
-	private List<RuntimeConfigurable> batchTests, filesets, includes, excludes;
+	private List<RuntimeConfigurable> batchTests, tests, filesets, includes, excludes;
 
 	public TestGetter(Target target) {
 		this.target = target;
 		batchTests = new ArrayList<RuntimeConfigurable>();
+		tests = new ArrayList<RuntimeConfigurable>();
 		filesets = new ArrayList<RuntimeConfigurable>();
 		includes = new ArrayList<RuntimeConfigurable>();
 		excludes = new ArrayList<RuntimeConfigurable>();
@@ -34,21 +35,9 @@ public class TestGetter {
 	// Get includes pattern from all "includes" attribute
 	public String getIncludesPattern() {
 		String ret = "";
-
-		if(this.filesets != null) {
-			for(RuntimeConfigurable fileset:filesets) {
-				if(fileset.getAttributeMap().get("includes") != null)
-					ret = ret+fileset.getAttributeMap().get("includes")+"\n";
-			}
-		}
-
-		if(this.includes != null) {
-			for(RuntimeConfigurable include:includes) {
-				String temp = (String) include.getAttributeMap().get("name");
-				if(include.getAttributeMap().get("name") != null && !temp.contains("$"))
-					ret = ret+include.getAttributeMap().get("name")+"\n";
-			}
-		}
+		ret = ret + getValFromAttrMap(filesets, "includes");
+		ret = ret + getValFromAttrMap(includes, "name");
+		ret = ret + getValFromAttrMap(tests, "name");
 		Debugger.log("includes: "+ret);
 		return ret;
 	}
@@ -58,28 +47,8 @@ public class TestGetter {
 		String ret = "";
 		List <String> list = new ArrayList<String>();
 		Set<String> hs = new HashSet<>();
-		if(this.filesets != null) {
-			for(RuntimeConfigurable fileset:filesets) {
-				if(fileset.getAttributeMap().get("excludes") != null)
-					list.add((String) fileset.getAttributeMap().get("excludes"));
-			}
-		}
-
-		if(this.excludes != null) {
-			for(RuntimeConfigurable exclude:excludes) {
-				String temp = (String) exclude.getAttributeMap().get("name");
-				if(exclude.getAttributeMap().get("name") != null )
-					list.add((String) exclude.getAttributeMap().get("name"));
-			}
-		}
-//		list = list.stream().distinct().collect(Collectors.toList());
-		// Remove duplicates
-		hs.addAll(list);
-		list.clear();
-		list.addAll(hs);
-		for(int i=0; i<list.size(); i++) {
-			ret = ret + list.get(i) + '\n';
-		}
+		ret = ret + getValFromAttrMap(filesets, "excludes");
+		ret = ret + getValFromAttrMap(excludes, "name");
 		Debugger.log("excludes: "+ret);
 		return ret;
 	}
@@ -96,7 +65,27 @@ public class TestGetter {
 		return dir;
 	}
 
-	// Find fileset, includes, and excludes under junit batchtest.
+	// Given an attribute name, find all values from a RuntimeConfigurable list,
+	// and remove duplicates.
+	private String getValFromAttrMap(List<RuntimeConfigurable> ls, String attr){
+		String ret = "";
+		List <String> list = new ArrayList<String>();
+		Set<String> hs = new HashSet<>();
+		for(RuntimeConfigurable rt:ls) {
+			if(rt.getAttributeMap().get(attr) != null)
+				list.add((String)rt.getAttributeMap().get(attr));
+		}
+		hs.addAll(list);
+		list.clear();
+		list.addAll(hs);
+		for(int i=0; i<list.size(); i++) {
+			ret = ret + list.get(i) + '\n';
+		}
+		return ret;
+	}
+
+	// 1. Find fileset, includes, and excludes under junit batchtest.
+	// 2. If no batchtest exists, find <test> sub task instead.
 	// Then store them to the ArrayList.
 	private void getPatterns() {
 		List<Task> tasks = TaskHelper.getTasks("junit", target);
@@ -108,6 +97,8 @@ public class TestGetter {
 				this.getSubTask("include", batch.getChildren(), includes);
 				this.getSubTask("exclude", batch.getChildren(), excludes);
 			}
+			junitSubTasks = task.getRuntimeConfigurableWrapper().getChildren();
+			this.getSubTask("test", junitSubTasks, tests);
 		}
 	}
 
