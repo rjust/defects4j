@@ -71,9 +71,7 @@
             <formatter type="xml"/>
             <batchtest>
                 <fileset dir="${dir.src.tests}">
-                    <include name="TestCommonsLang.java"/>
-                    <include name="TestConnectFour.java"/>
-                    <include name="TestCodeC.java"/>
+                    <include name="Test*.java"/>
                 </fileset>
             </batchtest>
         </junit>
