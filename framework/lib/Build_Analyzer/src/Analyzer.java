@@ -10,6 +10,7 @@ import targetgetter.TargetGetter;
 import testgetter.TestGetter;
 import util.PathParser;
 import util.WildCardResolver;
+import util.DirectoryHelper;
 
 
 public class Analyzer {
@@ -18,6 +19,7 @@ public class Analyzer {
 	private TargetGetter targetGetter;
 	private TestGetter testGetter;
 	private PathParser pathParser;
+	private DirectoryHelper dirHelper;
 
 	public Analyzer(File buildFile) {
 
@@ -39,6 +41,8 @@ public class Analyzer {
 		//Initialize Path parser
 		pathParser = new PathParser(project);
 
+		//Initialize directory helper
+		dirHelper = new DirectoryHelper(pathParser);
 	}
 
 	public Target getCompileTarget() {
@@ -72,6 +76,22 @@ public class Analyzer {
 
 	public Target getJunitTarget() {
 		return targetGetter.getJunitTarget();
+	}
+
+	public String getTestDir() {
+		return testGetter.getTestDir();
+	}
+
+	public String getSrcDir() {
+		return dirHelper.getDirectory("javac", "srcdir", getCompileTarget());
+	}
+
+	public String getTestOutputDir() {
+		return dirHelper.getDirectory("javac", "destdir", getCompileTestTarget());
+	}
+
+	public String getOutputDir() {
+		return dirHelper.getDirectory("javac", "destdir", getCompileTestTarget());
 	}
 
 }
