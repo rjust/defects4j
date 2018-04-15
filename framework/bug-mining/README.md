@@ -116,7 +116,8 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
       Configuration for the analyzer may be needed(labeled TODO in initialize-revisions.pl).  
       Arguments: `<path to build file>, <path of generated output files>, <name of the build file>`.  
       In the case when analyzer produces incorrect result, please manually generalize patterns
-      for the test sets.
+      for the test sets.  Analyzer also provides quick insight on properties from project-specific build files
+      that are necessary for building `project.build.xml`.
 **TODO: Describe the build-file analyzer, which is called during the
 initialize-revisions step, and integrate it into the framework**
 
