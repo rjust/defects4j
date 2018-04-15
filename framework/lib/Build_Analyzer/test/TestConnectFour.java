@@ -17,8 +17,8 @@ public class TestConnectFour {
 
 	@Test
 	public void testTarget() throws IOException {
-		File expected = new File("test/expected_output/connect-four/targets");
-		File actual = new File("test/actual_output/connect-four/targets");
+		File expected = new File("test/expected_output/connect-four/info");
+		File actual = new File("test/actual_output/connect-four/info");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}

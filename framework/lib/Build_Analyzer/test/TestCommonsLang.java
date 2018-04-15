@@ -18,8 +18,8 @@ public class TestCommonsLang {
 
 	@Test
 	public void testTarget() throws IOException {
-		File expected = new File("test/expected_output/commons-lang/targets");
-		File actual = new File("test/actual_output/commons-lang/targets");
+		File expected = new File("test/expected_output/commons-lang/info");
+		File actual = new File("test/actual_output/commons-lang/info");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}

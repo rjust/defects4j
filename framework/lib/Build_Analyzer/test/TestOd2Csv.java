@@ -17,8 +17,8 @@ public class TestOd2Csv {
 
   @Test
 	public void testTarget() throws IOException {
-		File expected = new File("test/expected_output/od2csv/targets");
-		File actual = new File("test/actual_output/od2csv/targets");
+		File expected = new File("test/expected_output/od2csv/info");
+		File actual = new File("test/actual_output/od2csv/info");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}

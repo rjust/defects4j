@@ -17,8 +17,8 @@ public class TestCodeC {
 	}
   @Test
 	public void testTarget() throws IOException {
-		File expected = new File("test/expected_output/CodeC/targets");
-		File actual = new File("test/actual_output/CodeC/targets");
+		File expected = new File("test/expected_output/CodeC/info");
+		File actual = new File("test/actual_output/CodeC/info");
 		boolean isTwoEqual = FileUtils.contentEquals(expected, actual);
 		assertTrue(isTwoEqual);
 	}
