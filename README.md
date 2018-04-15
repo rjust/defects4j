@@ -36,6 +36,7 @@ Requirements
 ----------------
  - Java 1.7
  - Perl >= 5.0.10
+ - Perl modules: run `cpan install DBD::CSV`
  - Git >= 1.9
  - SVN >= 1.8
 
