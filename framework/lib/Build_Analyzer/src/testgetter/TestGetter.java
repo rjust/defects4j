@@ -35,9 +35,9 @@ public class TestGetter {
 	// Get includes pattern from all "includes" attribute
 	public String getIncludesPattern() {
 		String ret = "";
-		ret = ret + getValFromAttrMap(filesets, "includes");
-		ret = ret + getValFromAttrMap(includes, "name");
-		ret = ret + getValFromAttrMap(tests, "name");
+		ret = ret + TaskHelper.getValFromAttrMap(filesets, "includes");
+		ret = ret + TaskHelper.getValFromAttrMap(includes, "name");
+		ret = ret + TaskHelper.getValFromAttrMap(tests, "name");
 		Debugger.log("includes: "+ret);
 		return ret;
 	}
@@ -47,8 +47,8 @@ public class TestGetter {
 		String ret = "";
 		List <String> list = new ArrayList<String>();
 		Set<String> hs = new HashSet<>();
-		ret = ret + getValFromAttrMap(filesets, "excludes");
-		ret = ret + getValFromAttrMap(excludes, "name");
+		ret = ret + TaskHelper.getValFromAttrMap(filesets, "excludes");
+		ret = ret + TaskHelper.getValFromAttrMap(excludes, "name");
 		Debugger.log("excludes: "+ret);
 		return ret;
 	}
@@ -63,25 +63,6 @@ public class TestGetter {
 			}
 		}
 		return dir;
-	}
-
-	// Given an attribute name, find all values from a RuntimeConfigurable list,
-	// and remove duplicates.
-	private String getValFromAttrMap(List<RuntimeConfigurable> ls, String attr){
-		String ret = "";
-		List <String> list = new ArrayList<String>();
-		Set<String> hs = new HashSet<>();
-		for(RuntimeConfigurable rt:ls) {
-			if(rt.getAttributeMap().get(attr) != null)
-				list.add((String)rt.getAttributeMap().get(attr));
-		}
-		hs.addAll(list);
-		list.clear();
-		list.addAll(hs);
-		for(int i=0; i<list.size(); i++) {
-			ret = ret + list.get(i) + '\n';
-		}
-		return ret;
 	}
 
 	// 1. Find fileset, includes, and excludes under junit batchtest.
