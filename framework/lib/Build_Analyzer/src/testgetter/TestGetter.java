@@ -91,28 +91,14 @@ public class TestGetter {
 		List<Task> tasks = TaskHelper.getTasks("junit", target);
 		for(Task task:tasks) {
 			Enumeration<RuntimeConfigurable> junitSubTasks = task.getRuntimeConfigurableWrapper().getChildren();
-			this.getSubTask("batchtest", junitSubTasks, batchTests);
+			TaskHelper.getSubTask("batchtest", junitSubTasks, batchTests);
 			for(RuntimeConfigurable batch : batchTests) {
-				this.getSubTask("fileset", batch.getChildren(), filesets);
-				this.getSubTask("include", batch.getChildren(), includes);
-				this.getSubTask("exclude", batch.getChildren(), excludes);
+				TaskHelper.getSubTask("fileset", batch.getChildren(), filesets);
+				TaskHelper.getSubTask("include", batch.getChildren(), includes);
+				TaskHelper.getSubTask("exclude", batch.getChildren(), excludes);
 			}
 			junitSubTasks = task.getRuntimeConfigurableWrapper().getChildren();
-			this.getSubTask("test", junitSubTasks, tests);
+			TaskHelper.getSubTask("test", junitSubTasks, tests);
 		}
 	}
-
-	//Helper method to recursively get certain subtasks
-	private void getSubTask(String taskName, Enumeration<RuntimeConfigurable> subTasks, List<RuntimeConfigurable> list) {
-		if(!subTasks.hasMoreElements())
-			return;
-		while(subTasks.hasMoreElements()) {
-			RuntimeConfigurable temp = subTasks.nextElement();
-			if(temp.getElementTag().equalsIgnoreCase(taskName))
-				list.add(temp);
-			getSubTask(taskName, temp.getChildren(), list);
-		}
-
-	}
-
 }
