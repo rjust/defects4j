@@ -116,7 +116,8 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
       Configuration for the analyzer may be needed(labeled TODO in initialize-revisions.pl).  
       Arguments: `<path to build file>, <path of generated output files>, <name of the build file>`.  
       In the case when analyzer produces incorrect result, please manually generalize patterns
-      for the test sets.
+      for the test sets.  Analyzer also provides quick insight on properties from project-specific build files
+      that are necessary for building `project.build.xml`.
 **TODO: Describe the build-file analyzer, which is called during the
 initialize-revisions step, and integrate it into the framework**
 
@@ -210,6 +211,7 @@ Reviewing and isolating the bugs
    `patches` directory:
      - `ls -l bug-mining/<branch_id>/framework/projects/<project_id>/patches/*.src.patch`
      - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
+     - The default editor for patch minimization is meld. Link to meld: http://meldmerge.org/. However, you may use other editors if you prefer.
 
    Note that the patch is the *reverse* patch, i.e., patching the fixed version
    with this patch will reintroduce the fault.

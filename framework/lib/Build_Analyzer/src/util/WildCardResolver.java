@@ -9,7 +9,7 @@ import org.apache.tools.ant.DirectoryScanner;
  */
 public class WildCardResolver {
 	private static DirectoryScanner ds;
-	
+
 	public static String[] resolveWildCard(String[] includes, String[] excludes, String baseDir) {
 		ds = new DirectoryScanner();
 		ds.setIncludes(includes);
@@ -20,11 +20,11 @@ public class WildCardResolver {
 		try {
 			ds.scan();
 		}catch(IllegalStateException e){
-			System.out.println("Illegal State Exception found resolving wild cards, basedir does not exist.\n"
-					+ "Instead, a list of wildcards that matches test file pattern is written to build.properties.");
+			Debugger.log("Illegal State Exception found resolving wild cards, basedir does not exist.\n"
+					+ "A list of test file wildcard patterns are written to includes/excludes file.");
 		}
 		return ds.getIncludedFiles();
 	}
-	
+
 //	public static String[] getExcludedFiles
 }
