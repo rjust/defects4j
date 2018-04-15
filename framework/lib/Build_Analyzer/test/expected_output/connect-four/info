@@ -1,6 +1,6 @@
 compile target: compile
 compile test target: test
 source dir: src
-test dir: target/test-classes
-src output dir: target/test-classes
+test dir: test
+src output dir: target/classes
 test output dir: target/test-classes

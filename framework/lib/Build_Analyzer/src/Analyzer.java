@@ -79,7 +79,10 @@ public class Analyzer {
 	}
 
 	public String getTestDir() {
-		return testGetter.getTestDir();
+		
+		if(dirHelper.getDirectory("javac", "srcdir", getCompileTestTarget()).split("\n").length > 1)
+			return testGetter.getTestDir();
+		return dirHelper.getDirectory("javac", "srcdir", getCompileTestTarget());
 	}
 
 	public String getSrcDir() {
@@ -91,7 +94,7 @@ public class Analyzer {
 	}
 
 	public String getOutputDir() {
-		return dirHelper.getDirectory("javac", "destdir", getCompileTestTarget());
+		return dirHelper.getDirectory("javac", "destdir", getCompileTarget());
 	}
 
 }

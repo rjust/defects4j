@@ -26,13 +26,12 @@ public class DirectoryHelper {
 			if(t.getTaskType().equals(taskType)) {
 				String dir = (String)TaskHelper.getAttributes(t).get(dirType);
 				if(dir == null) {
-					Debugger.log("no "+dirType+" exists in "+target.getName());
           Enumeration<RuntimeConfigurable> javacSubTasks = t.getRuntimeConfigurableWrapper().getChildren();
           TaskHelper.getSubTask("pathelement", javacSubTasks, pathelement);
           dir = TaskHelper.getValFromAttrMap(pathelement, "location");
-          ret = ret + dir.substring(0, dir.length()-1);
+          ret = dir.substring(0, dir.length()-1);
 				}else {
-          ret = ret + dir;
+          ret = dir;
 				}
 			}
 		}

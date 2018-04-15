@@ -2,5 +2,5 @@ compile target: compile
 compile test target: compile.tests
 source dir: ${source.home}
 test dir: ${test.home}
-src output dir: ${build.home}/tests
+src output dir: ${build.home}/classes
 test output dir: ${build.home}/tests
