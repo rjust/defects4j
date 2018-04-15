@@ -20,7 +20,7 @@ public class WildCardResolver {
 		try {
 			ds.scan();
 		}catch(IllegalStateException e){
-			System.out.println("Illegal State Exception found resolving wild cards, basedir does not exist.\n"
+			Debugger.log("Illegal State Exception found resolving wild cards, basedir does not exist.\n"
 					+ "A list of test file wildcard patterns are written to includes/excludes file.");
 		}
 		return ds.getIncludedFiles();
