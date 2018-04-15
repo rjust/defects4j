@@ -1,0 +1,192 @@
+<!--
+Copyright 2002-2005 The Apache Software Foundation.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="Codec" default="compile" basedir=".">
+    <!--
+        "Codec" component of the Jakarta Commons Subproject
+        $Id$
+    -->
+    <!-- ========== Initialize Properties ===================================== -->
+    <property file="${user.home}/${component.name}.build.properties"/>
+    <property file="${user.home}/build.properties"/>
+    <property file="${basedir}/build.properties"/>
+    <property file="${basedir}/default.properties"/>
+    <!-- ========== Construct compile classpath =============================== -->
+    <path id="compile.classpath">
+        <pathelement location="${build.home}/classes"/>
+    </path>
+    <!-- ========== Construct unit test classpath ============================= -->
+    <path id="test.classpath">
+        <pathelement location="${build.home}/classes"/>
+        <pathelement location="${build.home}/tests"/>
+        <pathelement location="${junit.jar}"/>
+    </path>
+    <!-- ========== Executable Targets ======================================== -->
+    <target name="init" description="Initialize and evaluate conditionals">
+        <echo message="-------- ${component.name} ${component.version} --------"/>
+        <filter token="name" value="${component.name}"/>
+        <filter token="package" value="${component.package}"/>
+        <filter token="version" value="${component.version}"/>
+    </target>
+    <target name="prepare" depends="init" description="Prepare build directory">
+        <mkdir dir="${build.home}"/>
+        <mkdir dir="${build.home}/classes"/>
+        <mkdir dir="${build.home}/conf"/>
+        <mkdir dir="${build.home}/tests"/>
+        <mkdir dir="${build.home}/test-reports"/>
+    </target>
+    <target name="static" depends="prepare" description="Copy static files to build directory">
+        <tstamp/>
+        <copy todir="${build.home}/conf" filtering="on">
+            <fileset dir="${conf.home}" includes="*.MF"/>
+        </copy>
+    </target>
+    <target name="compile" depends="static" description="Compile shareable components">
+        <javac srcdir="${source.home}" destdir="${build.home}/classes" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+            <classpath refid="compile.classpath"/>
+        </javac>
+        <copy todir="${build.home}/classes" filtering="on">
+            <fileset dir="${source.home}" excludes="**/*.java"/>
+        </copy>
+    </target>
+    <target name="clean" description="Clean build and distribution directories">
+        <delete dir="${build.home}"/>
+        <delete dir="${dist.home}"/>
+        <delete dir="${pub.home}"/>
+    </target>
+    <target name="all" depends="clean,compile" description="Clean and compile all components"/>
+    <target name="javadoc" depends="compile" description="Create component Javadoc documentation">
+        <mkdir dir="${dist.home}"/>
+        <mkdir dir="${dist.home}/docs"/>
+        <mkdir dir="${dist.home}/docs/api"/>
+         <!-- The Sun 1.2 docs are no-longer on-line, point to 1.3. -->
+        <javadoc
+        	sourcepath="${source.home}"
+        	destdir="${dist.home}/docs/api"
+        	packagenames="org.apache.commons.*"
+	        overview="${source.home}/org/apache/commons/codec/overview.html"
+        	author="true"
+        	private="true"
+        	version="true"
+        	doctitle="&lt;h1&gt;${component.title}&lt;/h1&gt;"
+        	windowtitle="${component.title} (Version ${component.version})"
+        	bottom="${component.name} version ${component.version} - Copyright &amp;copy; 2002-2004 - Apache Software Foundation"
+        	use="true"
+        	link="http://java.sun.com/products/jdk/1.3/docs/api/">
+            <classpath refid="compile.classpath"/>
+        </javadoc>
+    </target>
+    <target name="dist" depends="compile,javadoc" description="Create binary distribution">
+        <mkdir dir="${dist.home}"/>
+        <copy file="${basedir}/LICENSE" todir="${dist.home}"/>
+        <copy file="${basedir}/RELEASE-NOTES.txt" todir="${dist.home}"/>
+        <antcall target="jar"/>
+    </target>
+    <target name="jar" depends="compile" description="Create jar">
+        <mkdir dir="${dist.home}"/>
+        <mkdir dir="${build.home}/classes/META-INF"/>
+        <copy file="${basedir}/LICENSE" tofile="${build.home}/classes/META-INF/LICENSE.txt"/>
+        <jar jarfile="${dist.home}/${final.name}.jar" basedir="${build.home}/classes" manifest="${build.home}/conf/MANIFEST.MF"/>
+    </target>
+    <target name="install-jar" depends="jar" description="--> Installs jar file in ${lib.repo}">
+        <copy todir="${lib.repo}" filtering="no">
+            <fileset dir="${dist.home}">
+                <include name="${final.name}.jar"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="pub-bin" depends="dist" description="Create binary distribution (compressed) ready for publication">
+        <mkdir dir="${pub.home}"/>
+        <!-- Binary properties -->
+        <property name="final.path" value="${pub.home}/${final.name}"/>
+        <property name="zip.path" value="${final.path}.zip"/>
+        <property name="tar.path" value="${final.path}.tar"/>
+        <property name="gz.path" value="${tar.path}.gz"/>
+        <!-- Zip binary dist -->
+        <zip destfile="${zip.path}">
+           <zipfileset dir="${dist.home}" prefix="${final.name}/"/>
+        </zip>
+        <checksum algorithm="md5" file="${zip.path}" fileext=".md5"/>
+        <checksum algorithm="sha" file="${zip.path}" fileext=".sha"/>
+        <!-- Tar & gzip binary dist -->
+        <tar tarfile="${tar.path}" basedir="${dist.home}"/>
+        <gzip zipfile="${gz.path}" src="${tar.path}"/>
+        <checksum algorithm="md5" file="${gz.path}" fileext=".md5"/>
+        <checksum algorithm="sha" file="${gz.path}" fileext=".sha"/>
+        <delete file="${tar.path}"/>
+        <!-- Delete old signatures -->
+        <delete file="${zip.path}.asc"/>
+        <delete file="${gz.path}.asc"/>
+    </target>
+    <target name="pub-src" depends="dist" description="Create source distribution (compressed) ready for publication based on your LOCAL CVS sources">
+        <mkdir dir="${pub.home}"/>
+        <echo>Warning: The source files used to create this source distribution come from your local copy of the source files.</echo>
+        <!-- Source properties -->
+        <property name="final-src.path" value="${pub.home}/${final.name}-src"/>
+        <property name="zip-src.path" value="${final-src.path}.zip"/>
+        <property name="tar-src.path" value="${final-src.path}.tar"/>
+        <property name="gz-src.path" value="${tar-src.path}.gz"/>
+        <property name="excludes" value="${pub.home}/**, ${dist.home}/**, target/**, xdocs/**"/>
+        <!-- Zip source dist -->
+        <zip destfile="${zip-src.path}">
+           <zipfileset dir="src" prefix="${final.name}/src/"/>
+           <zipfileset dir="." includes="build.xml" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="checkstyle.xml" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="default.properties" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="LICENSE.TXT" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="maven.xml" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="project.properties" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="project.xml" prefix="${final.name}/"/>
+           <zipfileset dir="." includes="RELEASE-NOTES.txt" prefix="${final.name}/"/>
+        </zip>
+        <checksum algorithm="md5" file="${zip-src.path}" fileext=".md5"/>
+        <checksum algorithm="sha" file="${zip-src.path}" fileext=".sha"/>
+        <!-- Tar & gzip source dist -->
+        <tar tarfile="${tar-src.path}" basedir="." excludes="${excludes}" excludesfile=".cvsignore"/>
+        <gzip zipfile="${gz-src.path}" src="${tar-src.path}"/>
+        <checksum algorithm="md5" file="${gz-src.path}" fileext=".md5"/>
+        <checksum algorithm="sha" file="${gz-src.path}" fileext=".sha"/>
+        <delete file="${tar-src.path}"/>
+        <!-- Delete old signatures -->
+        <delete file="${zip-src.path}.asc"/>
+        <delete file="${gz-src.path}.asc"/>
+    </target>
+    <target name="pub" depends="pub-bin, pub-src" description="Create binary and source distribution (compressed) ready for publication">
+    </target>
+    <!-- ========== Unit Test Targets ========================================= -->
+    <target name="compile.tests" depends="compile" description="Compile unit test cases">
+        <javac srcdir="${test.home}" destdir="${build.home}/tests" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+            <classpath refid="test.classpath"/>
+        </javac>
+        <copy todir="${build.home}/tests" filtering="on">
+            <fileset dir="${test.home}" excludes="**/*.java"/>
+        </copy>
+    </target>
+    <!-- Run all the JUnit Tests -->
+    <target name="test" depends="compile.tests" description="Compiles and runs unit test cases">
+        <record name="${build.home}/test-output.txt" append="no" action="start"/>
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath refid="test.classpath"/>
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="${build.home}/test-reports">
+                <fileset dir="${test.home}">
+                    <include name="**/*Test.java"/>
+                    <exclude name="**/*AbstractTest.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <record name="${build.home}/test-output.txt" action="stop"/>
+    </target>
+</project>

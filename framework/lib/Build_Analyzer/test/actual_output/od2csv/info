@@ -1,0 +1,6 @@
+compile target: compile
+compile test target: unittests
+source dir: ${javac.sourcedir}
+test dir: 
+src output dir: ${javac.targetdir}
+test output dir: ${javac.targetdir}

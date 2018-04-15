@@ -20,10 +20,16 @@ public class Driver {
 		if(args.length == 3) {
 			pathToProject = args[0];
 			pathToOutput = args[1];
-			buildFile = new File(pathToProject+"/"+args[2]);
+			buildFile = new File(pathToProject+Paths.get("/")+args[2]);
 
 			Analyzer analyzer = new Analyzer(buildFile);
-			FileWriter.write(pathToOutput+Paths.get("/")+"targets", analyzer.getCompileTarget().getName()+'\n'+analyzer.getCompileTestTarget());
+			FileWriter.write(pathToOutput+Paths.get("/")+"info",
+							"compile target: "+analyzer.getCompileTarget().getName()+'\n'
+							+"compile test target: "+analyzer.getCompileTestTarget()+'\n'
+							+"source dir: "+analyzer.getSrcDir()+'\n'
+							+"test dir: "+analyzer.getTestDir()+'\n'
+							+"src output dir: "+analyzer.getOutputDir()+'\n'
+							+"test output dir: "+analyzer.getTestOutputDir());
 			FileWriter.write(pathToOutput+Paths.get("/")+"includes", analyzer.getIncludes());
 			FileWriter.write(pathToOutput+Paths.get("/")+"excludes", analyzer.getExcludes());
 			FileWriter.write(pathToOutput+Paths.get("/")+"developer-included-tests", analyzer.getTests());

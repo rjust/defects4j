@@ -71,7 +71,7 @@
             <formatter type="xml"/>
             <batchtest>
                 <fileset dir="${dir.src.tests}">
-                    <include name="TestAll.java"/>
+                    <include name="Test*.java"/>
                 </fileset>
             </batchtest>
         </junit>

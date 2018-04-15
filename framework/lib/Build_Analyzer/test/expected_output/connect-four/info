@@ -1,0 +1,6 @@
+compile target: compile
+compile test target: test
+source dir: src
+test dir: target/test-classes
+src output dir: target/test-classes
+test output dir: target/test-classes
