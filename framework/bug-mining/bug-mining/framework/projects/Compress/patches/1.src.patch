@@ -1,8 +1,24 @@
 diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
-index e66f58a9..e5067d1e 100644
+index e66f58a9..fb3f3057 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
-@@ -149,7 +149,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+@@ -39,13 +39,14 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
+  * <p/>
+  * <code><pre>
+  * CpioArchiveOutputStream out = new CpioArchiveOutputStream(
+- *         new FileOutputStream(new File("test.cpio")));
++ *         new FileOutputStream(new File(&quot;test.cpio&quot;)));
+  * CpioArchiveEntry entry = new CpioArchiveEntry();
+  * entry.setName(&quot;testfile&quot;);
+  * String contents = &quot;12345&quot;;
+  * entry.setFileSize(contents.length());
+  * out.putNextEntry(entry);
+  * out.write(testContents.getBytes());
++ * out.finish();
+  * out.close();
+  * </pre></code>
+  * <p/>
+@@ -149,7 +150,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
      public void putNextEntry(final CpioArchiveEntry e) throws IOException {
          ensureOpen();
          if (this.cpioEntry != null) {
@@ -11,16 +27,28 @@ index e66f58a9..e5067d1e 100644
          }
          if (e.getTime() == -1) {
              e.setTime(System.currentTimeMillis());
-@@ -247,7 +247,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
-      * org.apache.commons.compress.archivers.ArchiveOutputStream#closeArchiveEntry
-      * ()
+@@ -241,13 +242,15 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         pad(entry.getHeaderSize() + entry.getName().length() + 1, 2);
+     }
+ 
+-    /*(non-Javadoc)
++    /**
++     * Closes the current CPIO entry and positions the stream for writing the
++     * next entry.
+      * 
+-     * @see
+-     * org.apache.commons.compress.archivers.ArchiveOutputStream#closeArchiveEntry
+-     * ()
++     * @throws IOException
++     *             if an I/O error has occurred or if a CPIO file error has
++     *             occurred
       */
 -    public void closeArchiveEntry() throws IOException {
 +    public void closeEntry() throws IOException {
          ensureOpen();
  
          if (this.cpioEntry.getSize() != this.written) {
-@@ -324,14 +324,14 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+@@ -324,14 +327,14 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
              return;
          }
          if (this.cpioEntry != null) {
@@ -37,7 +65,7 @@ index e66f58a9..e5067d1e 100644
      }
  
      /**
-@@ -343,7 +343,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+@@ -343,7 +346,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
       */
      public void close() throws IOException {
          if (!this.closed) {
@@ -45,13 +73,21 @@ index e66f58a9..e5067d1e 100644
              super.close();
              this.closed = true;
          }
-@@ -391,6 +390,9 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
-         out.write(str.getBytes());
-         out.write('\0');
-     }
+@@ -396,6 +398,17 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      * (non-Javadoc)
+      * 
+      * @see
++     * org.apache.commons.compress.archivers.ArchiveOutputStream#closeArchiveEntry
++     * ()
++     */
 +    public void closeArchiveEntry() throws IOException {
 +        this.closeEntry();
 +    }
- 
-     /*
-      * (non-Javadoc)
++
++    /*
++     * (non-Javadoc)
++     * 
++     * @see
+      * org.apache.commons.compress.archivers.ArchiveOutputStream#putArchiveEntry
+      * (org.apache.commons.compress.archivers.ArchiveEntry)
+      */
