@@ -22,16 +22,11 @@ Read corresponding stack trace under `trigger_tests` directory to get a rough id
 	* Tabs
 	* Comments
 	* Example: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
-	* Sementically equivalent changes
+	* Sementically equivalent changes should be removed
+	Fixed:
 	```diff
-	public class Hello1
-	{
-	   public static void Main()
-	   {
-	-      System.Console.WriteLine("Hello, World!");
-	+      System.Console.WriteLine("Rock all night long!");
-	   }
-	}
+	-      public int read(**byte b[]**, final int off, final int len) throws IOException
+	+      public int read(**byte[] b**, final int off, final int len) throws IOException
 	```
 2. Code changes that can be removed in most of the cases
 	* Import statements: if an import statement is added in the fixed version, remove the change.
