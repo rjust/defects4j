@@ -27,16 +27,20 @@ Read corresponding stack trace under `trigger_tests` directory to get a rough id
 	* Example: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
 	* **Sementically equivalent changes** should be removed
 		Example: byte b[] and byte[] b are the same
+		
 		```diff
 		-      public int read(byte b[], final int off, final int len) throws IOException
 		+      public int read(byte[] b, final int off, final int len) throws IOException
 		```
+		
 		Example: The two if statements are sementically equivalent
+		
 		```diff
 		-      if (getInclude() != null && key.equalsIgnoreCase(getInclude())) {
 		+      String includeProperty = getInclude();
 		+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) {
 		```
+		
 2. Code changes that can be removed in most of the cases
 	* **Import statements**: if an import statement is added in the fixed version, remove the change.
 	* **@Override statements**: if `@override` is added to a pre-existing method and there are no changes made to that specific method in fixed version, remove the change.
