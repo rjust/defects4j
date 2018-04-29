@@ -43,15 +43,7 @@ Commit messages, comments, and sometimes the messages included in exception can 
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
-		
-		* Example: The two if statements are sementically equivalent. In fact, this is also an 		example of refactoring.
-		
-			```diff
-			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude())) 
-			+      String includeProperty = getInclude();
-			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) 
-			```
-		
+			
 2. Code changes introduced to fixed version that may or __may not__ be removed
 	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
 		* Justification: Although removing changes involving import statements might create new 		warnings of “unused imports”, import 		statements would not communicate anything about the bug or the bug fix. It would only 		be necessary to support functions. It is also worth noting that these import statements 		could be completely removed by using the fully qualified function names. Hence, in some 		sense the import statements can be considered as a refactoring operation.
