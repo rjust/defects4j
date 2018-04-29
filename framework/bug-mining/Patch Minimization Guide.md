@@ -33,12 +33,13 @@ Commit messages, comments, and sometimes the messages included in exception can 
 	* New lines
 	* Comments
 		* Justification: Comments could be considered as part of the bug fix: a developer may 		want to associate a comment with a bug fix and therefore include it in the pure bug-		fixing patch; a researcher may want to ignore comments when reasoning about the 		complexity of a bug-fixing patch. Since here, we are interested in minimizing the code 		to create a minimal bug/ minimal fix, we can remove all the comments and documentation 		elements from the code
-	* Example: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
+	* Example 1: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
+	* Example 2: Some white space fixes are tricky because they involve indentation changes. This could be because a part of code was moved into or out of a branch. 
 
 	* Sementically equivalent changes should be removed 
 		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another. 
 		* Example: `byte b[]` and `byte[] b` are the same
-			```diff
+			```
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
