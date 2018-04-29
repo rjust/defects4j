@@ -1,3 +1,6 @@
+
+
+
 # Patch Minimization Guide
 
 This document includes:
@@ -29,32 +32,73 @@ Commit messages, comments, and sometimes the messages included in exception can 
 ### Common Types of Bug Fix and Proposed Rules to Disambiguate Results
 1. Non-functional changes introduced to fixed version that need to be removed:
 	* White spaces
+	    * Example: Some white space fixes are tricky because they involve indentation changes. This could be because a part of code was moved into or out of a branch. In this example, the only change to "result" is the tab.
+	    * Non-minimized:
+            ```diff
+            -    result = a/b;
+            +    if(b!=0)
+            +    {
+            +         result = a/b;
+            +    }
+            ```
+        * Minimized:
+            ```diff
+            +    if(b!=0)
+            +    {
+                      result = a/b;
+            +    }
+            ```
 	* Tabs
+	    * Example: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
 	* New lines
 	* Comments
 		* Justification: Comments could be considered as part of the bug fix: a developer may 		want to associate a comment with a bug fix and therefore include it in the pure bug-		fixing patch; a researcher may want to ignore comments when reasoning about the 		complexity of a bug-fixing patch. Since here, we are interested in minimizing the code 		to create a minimal bug/ minimal fix, we can remove all the comments and documentation 		elements from the code
-	* Example 1: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
-	* Example 2: Some white space fixes are tricky because they involve indentation changes. This could be because a part of code was moved into or out of a branch.
-
+	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
+		* Justification: Although removing changes involving import statements might create new 		warnings of “unused imports”, import 		statements would not communicate anything about the bug or the bug fix. It would only 		be necessary to support functions. It is also worth noting that these import statements 		could be completely removed by using the fully qualified function names. Hence, in some 		sense the import statements can be considered as a refactoring operation.
 	* Sementically equivalent changes should be removed
 		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another.
 		* Example: `byte b[]` and `byte[] b` are the same
-
 			```diff
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
-		* Example: The two if statements are sementically equivalent. In fact, this is also 		an 	example of refactoring.
-
-			```diff
-			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude()))
-			+      String includeProperty = getInclude();
-			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty))
-			```
 
 2. Code changes introduced to fixed version that may or __may not__ be removed
-	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
-		* Justification: Although removing changes involving import statements might create new 		warnings of “unused imports”, import 		statements would not communicate anything about the bug or the bug fix. It would only 		be necessary to support functions. It is also worth noting that these import statements 		could be completely removed by using the fully qualified function names. Hence, in some 		sense the import statements can be considered as a refactoring operation.
+
+	* Extracting code into an intermediate variable: Code that is extracted into a variable instead of immediate usage can be removed from the minimized patch in some circumstances. Recognizing when to do this may be tricky. It is not to be mistaken with a new variable declared only for the purpose of bug fix. If we move such variables, they would have no purpose in the buggy code. Although the bug will still be produced, a new warning, “Value of Local Variable not used” will be generated for the unused variable.
+
+        *  Example 1: The two if statements are sementically equivalent. In fact, this is also an example of refactoring. Since the change does not affect functionalities at all, the diff should be completely removed.
+
+		    ```diff
+		    -      if (getInclude() != null && key.equalsIgnoreCase(getInclude()))
+		    +      String includeProperty = getInclude();
+		    +      if (includeProperty != null && key.equalsIgnoreCase(includeProperty))
+		    ```
+
+        * Example 2: The example below shows two variables, ```key``` and `contains` which are newly introduced variables. The bug fix code is `[2]`, which uses the function `containsKey(key)`. Since the `contains` variable is used only for the bug fix and it has no other use, this change should be kept in the bug fix patch. However, we can remove the delaration and initialization of `key` `[1]` as we could find another use for the variable in the function `put()` `[3]`.
+
+            * Non-minimized
+             ```diff
+            -    final K key = entry.getKey(); [1]
+            -    final boolean contains = containsKey(key);[2]
+            -    put(index, entry.getKey(), entry.getValue());
+            -    if (!contains) {
+            -         final V old = put(index, key, entry.getValue()); [3]
+            +         final V old = put(index, entry.getKey(), entry.getValue()); [4]
+            +    if (old == null) {
+            ```  
+
+            * Minimized
+            ```diff
+                 final K key = entry.getKey(); [1]
+            -    final boolean contains = containsKey(key);
+            -    put(index, entry.getKey(), entry.getValue());
+            -    if (!contains) {
+                    final V old = put(index, key, entry.getValue()); [3]
+            +    if (old == null) {
+            ```
+
+
 	* @override statements: if `@override` is added to a pre-existing method and there are no 	changes made to that specific method in fixed version, remove the change.  Otherwise, __do 	not__ 	remove the statement.
 		* [TODO]: Justification, example of removable vs non-removable
 	* Unused variables/functions: removal of unused variables and definition of uncalled 	functions in fixed version should be removed from the patch.
