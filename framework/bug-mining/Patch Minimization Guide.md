@@ -3,7 +3,7 @@
 This document includes:
 
 1. instructions to run patch minimization related scripts
-2. instructions to perform patch minimization, along with justifications and code examples 
+2. instructions to perform patch minimization, along with justifications and code examples
 3. guidelines of ideal minimized patches
 
 
@@ -33,24 +33,25 @@ Commit messages, comments, and sometimes the messages included in exception can 
 	* New lines
 	* Comments
 		* Justification: Comments could be considered as part of the bug fix: a developer may 		want to associate a comment with a bug fix and therefore include it in the pure bug-		fixing patch; a researcher may want to ignore comments when reasoning about the 		complexity of a bug-fixing patch. Since here, we are interested in minimizing the code 		to create a minimal bug/ minimal fix, we can remove all the comments and documentation 		elements from the code
-	* Example: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
+	* Example 1: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
+	* Example 2: Some white space fixes are tricky because they involve indentation changes. This could be because a part of code was moved into or out of a branch.
 
-	* Sementically equivalent changes should be removed 
-		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another. 
+	* Sementically equivalent changes should be removed
+		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another.
 		* Example: `byte b[]` and `byte[] b` are the same
-		
+
 			```diff
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
 		* Example: The two if statements are sementically equivalent. In fact, this is also 		an 	example of refactoring.
-		
+
 			```diff
-			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude())) 
+			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude()))
 			+      String includeProperty = getInclude();
-			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) 
+			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty))
 			```
-			
+
 2. Code changes introduced to fixed version that may or __may not__ be removed
 	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
 		* Justification: Although removing changes involving import statements might create new 		warnings of “unused imports”, import 		statements would not communicate anything about the bug or the bug fix. It would only 		be necessary to support functions. It is also worth noting that these import statements 		could be completely removed by using the fully qualified function names. Hence, in some 		sense the import statements can be considered as a refactoring operation.
@@ -61,7 +62,7 @@ Commit messages, comments, and sometimes the messages included in exception can 
 	* New features introduced with the bug fix should be removed: tricky tricky
 		* [TODO]: Justification, example
 	* Similar or same functional changes over multiple hunks/diffs: __do not__ remove
-		* [TODO]: Complete the statement, justification, example 
+		* [TODO]: Complete the statement, justification, example
 3. Functions added in fixed version that may or __may not__ be removed
 	* Refactoring: if newly added helper function merely contains code refactored from another 	method, and the refactored code is not reused by any other method, remove the change. __Do 	not__ remove the addition of helper function if it is a refactoring and the function 	is used somewhere else.
 		* [TODO]: Justification, and example of removable vs non-removable
@@ -77,5 +78,3 @@ Commit messages, comments, and sometimes the messages included in exception can 
 5. Includes relevant changes that are being used by the part of the code which triggers the bug
 	* [TODO]: example, and add it as a rule
 6. Includes all similar (or same) fixes that is introduced over multiple parts of the program, even though there might only be one part of the fix that triggers the bug
-		
-	
