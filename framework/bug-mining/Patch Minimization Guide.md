@@ -38,35 +38,26 @@ Commit messages, comments, and sometimes the messages included in exception can 
 	* Sementically equivalent changes should be removed 
 		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another. 
 		* Example: `byte b[]` and `byte[] b` are the same
-		
 			```diff
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
-		
-		* Example: The two if statements are sementically equivalent. In fact, this is also an 		example of refactoring.
-		
-			```diff
-			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude())) 
-			+      String includeProperty = getInclude();
-			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) 
-			```
-		
-2. Code changes introduced to fixed version that may or may not be removed
+			
+2. Code changes introduced to fixed version that may or __may not__ be removed
 	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
 		* Justification: Although removing changes involving import statements might create new 		warnings of “unused imports”, import 		statements would not communicate anything about the bug or the bug fix. It would only 		be necessary to support functions. It is also worth noting that these import statements 		could be completely removed by using the fully qualified function names. Hence, in some 		sense the import statements can be considered as a refactoring operation.
-	* @override statements: if `@override` is added to a pre-existing method and there are no 	changes made to that specific method in fixed version, remove the change.  Otherwise, do 	not 	remove the statement.
+	* @override statements: if `@override` is added to a pre-existing method and there are no 	changes made to that specific method in fixed version, remove the change.  Otherwise, __do 	not__ 	remove the statement.
 		* [TODO]: Justification, example of removable vs non-removable
 	* Unused variables/functions: removal of unused variables and definition of uncalled 	functions in fixed version should be removed from the patch.
 		* [TODO]: Justification, example
 	* New features introduced with the bug fix should be removed: tricky tricky
 		* [TODO]: Justification, example
-	* Similar or same functional changes over multiple hunks/diffs: do not remove
+	* Similar or same functional changes over multiple hunks/diffs: __do not__ remove
 		* [TODO]: Complete the statement, justification, example 
-3. Functions added in fixed version that may or may not be removed
-	* Refactoring: if newly added helper function merely contains code refactored from another 	method, and the refactored code is not reused by any other method, remove the change. Do 	not remove the addition of helper function if it is a refactoring and the function 	is used somewhere else.
+3. Functions added in fixed version that may or __may not__ be removed
+	* Refactoring: if newly added helper function merely contains code refactored from another 	method, and the refactored code is not reused by any other method, remove the change. __Do 	not__ remove the addition of helper function if it is a refactoring and the function 	is used somewhere else.
 		* [TODO]: Justification, and example of removable vs non-removable
-	* Bug fix function: do not remove (remind to delete new features again)
+	* Bug fix function: __do not__ remove (remind to delete new features again)
 		* [TODO]: Complete the statement, add justification and example
 
 ## Guidelines of Ideal Minimized Patches
