@@ -42,6 +42,12 @@ Commit messages, comments, and sometimes the messages included in exception can 
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
 			```
+		* Example: The two if statements are sementically equivalent. In fact, this is also 		an 	example of refactoring.
+			```diff
+			-      if (getInclude() != null && key.equalsIgnoreCase(getInclude())) 
+			+      String includeProperty = getInclude();
+			+      if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) 
+			```
 			
 2. Code changes introduced to fixed version that may or __may not__ be removed
 	* Import statements: if an import statement is added/deleted in the fixed version, remove 	the change.
