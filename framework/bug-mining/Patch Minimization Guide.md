@@ -38,7 +38,6 @@ Commit messages, comments, and sometimes the messages included in exception can 
 	* Sementically equivalent changes should be removed 
 		* Justification: The only changes are in the style of programming or a programmer’s 		preference of writing them in one way as opposed to another. 
 		* Example: `byte b[]` and `byte[] b` are the same
-		
 			```diff
 			-      public int read(byte b[], final int off, final int len) throws IOException
 			+      public int read(byte[] b, final int off, final int len) throws IOException
