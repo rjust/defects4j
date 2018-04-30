@@ -140,15 +140,16 @@ Commit messages, comments, and sometimes the messages included in exception can 
 
         * Non-Minimized:
         ```diff
-		     totalRead = is.read(buf, offset, numToRead);
-        +    int temp = count(totalRead);
+	      totalRead = is.read(buf, offset, numToRead);
+        +     int temp = count(totalRead);
          
-             if (totalRead == -1) {
-        -        if (numToRead > 0) {
-        -             throw new IOException("Truncated TAR archive");
-        -    }
-             hasHitEOF = true;
+              if (totalRead == -1) {
+        -         if (numToRead > 0) {
+        -              throw new IOException("Truncated TAR archive");
+        -     }
+              hasHitEOF = true;
         ```
+	
         * Minimized
         ```diff
             totalRead = is.read(buf, offset, numToRead);
