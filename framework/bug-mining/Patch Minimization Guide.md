@@ -8,6 +8,7 @@ This document includes:
 1. instructions to run patch minimization related scripts
 2. instructions to perform patch minimization, along with justifications and code examples
 3. guidelines of ideal minimized patches
+4. comprehensive examples of non-minimized vs. minimized patches
 
 
 ## Instructions to Using the Framework
@@ -65,7 +66,8 @@ Commit messages, comments, and sometimes the messages included in exception can 
 
 2. Code changes introduced to fixed version that may or __may not__ be removed
 
-	* Extracting code into an intermediate variable: Code that is extracted into a variable instead of immediate usage can be removed from the minimized patch in some circumstances. Recognizing when to do this may be tricky. It is not to be mistaken with a new variable declared only for the purpose of bug fix. If we move such variables, they would have no purpose in the buggy code. Although the bug will still be produced, a new warning, “Value of Local Variable not used” will be generated for the unused variable.
+	* Code extracted into an intermediate variable:
+	    * Justification: Code that is extracted into a variable instead of immediate usage can be removed from the minimized patch in some circumstances. Recognizing when to do this may be tricky. It is not to be mistaken with a new variable declared only for the purpose of bug fix. If we move such variables, they would have no purpose in the buggy code. Although the bug will still be produced, a new warning, “Value of Local Variable not used” will be generated for the unused variable.
 
         *  Example 1: The two if statements are sementically equivalent. In fact, this is also an example of refactoring. Since the change does not affect functionalities at all, the diff should be completely removed.
 
@@ -99,14 +101,52 @@ Commit messages, comments, and sometimes the messages included in exception can 
             ```
 
 
-	* @override statements: if `@override` is added to a pre-existing method and there are no 	changes made to that specific method in fixed version, remove the change.  Otherwise, __do 	not__ 	remove the statement.
-		* [TODO]: Justification, example of removable vs non-removable
-	* Unused variables/functions: removal of unused variables and definition of uncalled 	functions in fixed version should be removed from the patch.
+	* @override statements: if `@override` is added to a pre-existing method and there are no changes made to that specific method in fixed version, remove the change.  Otherwise, __do 	not__ 	remove the statement.
+	    * Justification: In Java, `@override` notation forces compiler to double-check if such method is overriding the method in superclass(often used to check typos in method signature and return type).  Therefore, merely adding @override to existing method is not a functional change. If @override notation comes along with a new or modified method in fixed version, we can keep the addition so it is more obvious to researchers that a method is overriden.
+	    * Example 1: the addition of override notation in this case should be removed
+	      ```diff
+          +      @override
+                 public String toString(){
+                  ...
+                 }
+          ```
+        * Example 2: the addition of override notation in this case can be retained
+          ```diff
+          +      @override
+          +      public String toString(){
+          +          return this.name;
+          +      }
+          ```
+
+	* Unused variables/functions: removal of unused variables and definition of uncalled functions in fixed version should be removed from the patch.
+	    * Justification:  Removal of unused variables and definition of uncalled functions are technically non-functional changes.  
 		* [TODO]: Justification, example
-	* New features introduced with the bug fix should be removed: tricky tricky
-		* [TODO]: Justification, example
-	* Similar or same functional changes over multiple hunks/diffs: __do not__ remove
-		* [TODO]: Complete the statement, justification, example
+	* New features introduced with the bug fix should be removed:
+	    * Justification: New features added along with bug fix code are tricky to identify.  Functions/code involving new features and the function calls to the new features should be completely removed to obtain a minimized patch.
+	    * Example: In this case, a helper function "calculateMatchNumber" is added in order to fix the bug. The getMatch count is a new feature and it is not related to the bug fix at all.  Therefore, we can remove the addition regarding getMatchCount.
+	        * Non-minimized
+              ```diff
+              +      private int getMatchCount;
+
+              +      private int calculateMatchNumber(int index){...}    
+                     public int getMatchNumber(String matchName){
+              +         getMatchCount++;
+                        ...
+              -         return this.matchNumber;
+              +         return calculateMatchNumber(index);
+                     }
+              ```
+            * Minimized
+              ```diff
+              +      private int calculateMatchNumber(String matchName){...}
+                     public int getMatchNumber(String matchName){
+              -         return this.matchNumber;
+              +         return calculateMatchNumber(index);  
+              ```
+
+	* Similar or same functional changes over multiple hunks/diffs __should not__ be removed:
+	    * Justification: Although the bug may be triggered by only one part of the changes, retaining the other similar changes is important because the triggering test might not cover all the cases, but only the triggering part of the code.
+		* [TODO]:example Collections 6
 3. Functions added in fixed version that may or __may not__ be removed
 	* Refactoring: if newly added helper function merely contains code refactored from another 	method, and the refactored code is not reused by any other method, remove the change. __Do 	not__ remove the addition of helper function if it is a refactoring and the function 	is used somewhere else.
 		* [TODO]: Justification, and example of removable vs non-removable
@@ -119,6 +159,9 @@ Commit messages, comments, and sometimes the messages included in exception can 
 2. Excludes all sementically equivalent changes
 3. Excludes changes to import statements properly
 4. Excludes not reused refactorings properly
-5. Includes relevant changes that are being used by the part of the code which triggers the bug
-	* [TODO]: example, and add it as a rule
+5. Includes all relevant changes that are being used by the part of the code which triggers the bug
 6. Includes all similar (or same) fixes that is introduced over multiple parts of the program, even though there might only be one part of the fix that triggers the bug
+
+## Comprehensive Examples of Non-minimized vs Minimized Patches[TODO]
+1. Collections 19
+2. Compress 6
