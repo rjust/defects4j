@@ -42,7 +42,7 @@ public class Analyzer {
 		pathParser = new PathParser(project);
 
 		//Initialize directory helper
-		dirHelper = new DirectoryHelper(pathParser);
+		dirHelper = new DirectoryHelper();
 	}
 
 	public Target getCompileTarget() {
@@ -79,7 +79,7 @@ public class Analyzer {
 	}
 
 	public String getTestDir() {
-		
+
 		if(dirHelper.getDirectory("javac", "srcdir", getCompileTestTarget()).split("\n").length > 1)
 			return testGetter.getTestDir();
 		return dirHelper.getDirectory("javac", "srcdir", getCompileTestTarget());

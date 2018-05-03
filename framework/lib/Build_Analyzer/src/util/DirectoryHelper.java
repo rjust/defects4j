@@ -10,13 +10,14 @@ import org.apache.tools.ant.RuntimeConfigurable;
 
 import util.TaskHelper;
 
+/**
+ *  Contains methods helpful to finding directories.
+*/
 public class DirectoryHelper {
 
-  private PathParser pp;
   private List<RuntimeConfigurable> pathelement;
 
-	public DirectoryHelper(PathParser pp) {
-		this.pp = pp;
+	public DirectoryHelper() {
     pathelement = new ArrayList<RuntimeConfigurable>();
 	}
 
