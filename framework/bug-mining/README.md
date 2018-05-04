@@ -213,8 +213,17 @@ Reviewing and isolating the bugs
      - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
      - The default editor for patch minimization is meld. Link to meld: http://meldmerge.org/. However, you may use other editors if you prefer.
 
-   Note that the patch is the *reverse* patch, i.e., patching the fixed version
-   with this patch will reintroduce the fault.
+#### Meld
+By default, running `./minimize-patch.pl -p <project> -w <working-directory> -b <bug.id>` will automatically open up meld.  Meld is a user-friendly editor to visualize the changes introduced in the patch.  Visit [Meld](http://meldmerge.org/help/) for further instructions to download.
+
+#### Other Editors
+Feel free to use any other editors.  Reference [The Secret of Editing Hunks](http://joaquin.windmuller.ca/2011/11/16/selectively-select-changes-to-commit-with-git-or-imma-edit-your-hunk) at the bottom of the page to mannually edit patches.  REMINDER: some editors, such as Atom, will automatically remove the spaces at the end of the file, causing the patch file to be corrupted.
+
+#### Restoring Original Patch
+Delete corresponding patch under `patch` directory, and re-run `./initialize-revision.pl -p <project> -w <working-directory> -b <bug.id>`
+
+#### Patch Minimization Guide
+[Patch Minimization Guide.md]() contains fairly comprehensive information regarding situations that require/do not require minimization.  Please read the guide before you perform patch minimization.
 
 Promoting reproducible bugs to the main database
 ------------------
