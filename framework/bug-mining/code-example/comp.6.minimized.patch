@@ -1,0 +1,12 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+index 76e28666..22265b8d 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
+@@ -125,7 +125,6 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+             }
+         }
+ 
+-        entryOffset = offset;
+         currentEntry = new ArArchiveEntry(new String(name).trim(),
+                                           Long.parseLong(new String(length)
+                                                          .trim()));
