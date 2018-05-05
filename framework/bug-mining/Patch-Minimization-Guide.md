@@ -321,7 +321,8 @@ New features added along with bug fix code, that are not part of bug fix, are tr
 ## Do Not Remove the Changes in the Following Situations
 
 ### 1. Bug fix function: do not remove the changes to bug fix function from the patch
-Even though only leaving the statement that calls the bug fixing function in the patch is able to re-introduce the bug, that should not be done.
+Some bug-fix patches will require new features to be included. If a new feature is added to fix the bug, the entire function and the call should be kept in the patch. Althoough removing the function defenition and keeping the call works, this should not be done because the function defenition is what explains the bug fix code.
+
 * Example: In this case, do not remove the change in the bug-fixing function as it is an essential part of the bug fix.
     ```diff
     -      protected boolean isGameOver(){...}
