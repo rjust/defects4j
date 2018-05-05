@@ -430,3 +430,5 @@ Although the bug may be triggered by only one part of the changes, retaining the
                 -        }
                          final int ret = this.input.read(b, off, toRead);
                 ```
+
+    * After following the above steps, the patch will be minimized and it will look like [this one.](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/comp.6.minimized.patch)
