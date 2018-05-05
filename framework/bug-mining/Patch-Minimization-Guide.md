@@ -2,20 +2,20 @@
 
 This document includes:
 
-1. Guidelines of ideal minimized patches
-2. Instructions to perform patch minimization, along with justifications and code examples
-3. Situations that Do Not Require minimization
-4. Comprehensive examples of non-minimized vs. minimized patches
+1. [Guidelines of ideal minimized patches](#guidelines-of-ideal-minimized-patches)
+2. [Proposed rules to perform patch minimization, along with justifications and code examples](#common-types-of-bug-fix-and-proposed-rules-to-disambiguate-results)
+3. [Situations that Do Not Require minimization](#do-not-remove-the-changes-in-the-following-situations)
+4. [Comprehensive examples of non-minimized vs. minimized patches](#comprehensive-examples-of-non-minimized-vs-minimized-patchestodo)
 
 Note: Please refer to [Bug-Mining README: Instructions to Using the Framework](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/README.md) for information regarding instructions to using patch minimization framework(includes restoring original patch) and using patch minimization editor.
 
 ## Guidelines of Ideal Minimized Patches
 #### Overall, a minimized patch is expected to have the following properties:
-1. [Excludes all refactoring changes](#1-Code-of-Refctorings-Should-be-Removed)
-2. [Excludes Compiler Directives and Annotations properly](#2-Compiler-Directives-and-Annotations)
-3. [Excludes new features introduced with bug fix](#3-New-Features-Introduced-With-the-Bug-Fix-Should-be-Removed)
-4. [Includes all relevant changes that are being used by all parts of bug-triggering code](#1-Bug-fix-function-do-not-remove-the-changes-to-bug-fix-function-from-the-patch)
-5. [Includes all similar (or same) fixes that is introduced over multiple parts of the program](#2-Similar-or-same-functional-changes-over-multiple-hunksdiffs-should-not-be-removed)
+1. [Excludes all refactoring changes](#1-code-of-refctorings-should-be-removed)
+2. [Excludes Compiler Directives and Annotations properly](#2-compiler-directives-and-annotations)
+3. [Excludes new features introduced with bug fix](#3-new-features-introduced-with-the-bug-fix-should-be-removed)
+4. [Includes all relevant changes that are being used by all parts of bug-triggering code](#1-bug-fix-function-do-not-remove-the-changes-to-bug-fix-function-from-the-patch)
+5. [Includes all similar (or same) fixes that is introduced over multiple parts of the program](#2-similar-or-same-functional-changes-over-multiple-hunksdiffs-should-not-be-removed)
 
 ## Understanding the Bug and Narrowing Down the Scope
 
