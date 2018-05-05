@@ -266,7 +266,7 @@ Code refactoring is the process of restructuring existing code without changing 
 4. __Changes to variable modifiers should be tested and removed.__
     Modifiers enforce restrictions on the contents of a variable. These restrictions may or may not be relevant to the bug fix. If removing these changes from the patch does not cause compilation error or affect the bug, then it should be removed.
 
-    * Example: The `final` keyword is used in several contexts to define an entity that can only be assigned once.  It is also considered a good programming practice to make function parameters final. Below is an example of from Compress - 48. The bug in this is an exception that is thrown. The parameters that are made final do not affect the bug and hence can be removed.(The modifier `final` in `parseOctal` does not affect the bug, therefore the change involving the modifiers should be removed)
+    * Example: The `final` keyword is used in several contexts to define an entity that can only be assigned once.  It is also considered a good programming practice to make function parameters final. Below is an example from Compress - 48. The bug fix in this patch is in the `throw` statement. The modifier `final` in `parseOctal` does not affect the bug, therefore the change involving the `final` modifier should be removed.
 
         * Non-Minimized:
             ```diff
@@ -292,7 +292,7 @@ Code refactoring is the process of restructuring existing code without changing 
             ```
 
 ### 3. New Features Introduced With the Bug Fix Should be Removed:
-New features added along with bug fix code are tricky to identify since they are blended into the bug-fixing code.  Functions/code involving new features and the function calls to the new features should be completely removed to obtain a minimized patch.
+New features added along with bug fix code, that are not part of bug fix, are tricky to identify since they are usually blended into the bug-fixing code.  Functions/code involving new features and the function calls to the new features should be completely removed to obtain a minimized patch.
 
 1. __New functions__
     * Example: In the following example, a helper function `calculateMatchNumber` is added in order to fix the bug. The `getMatchCount` is a new feature and it is not related to the bug fix at all.  Therefore, we can remove the change regarding getMatchCount.
