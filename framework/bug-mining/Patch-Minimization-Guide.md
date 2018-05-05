@@ -12,18 +12,18 @@ Note: Please refer to [Bug-Mining README: Instructions to Using the Framework](h
 ## Guidelines of Ideal Minimized Patches
 #### Overall, a minimized patch is expected to have the following properties:
 1. [Excludes all refactoring changes](#1-code-of-refctorings-should-be-removed)
-2. [Excludes Compiler Directives and Annotations properly](#2-compiler-directives-and-annotations)
-3. [Excludes new features introduced with bug fix](#3-new-features-introduced-with-the-bug-fix-should-be-removed)
-4. [Includes all relevant changes that are being used by all parts of bug-triggering code](#1-bug-fix-function-do-not-remove-the-changes-to-bug-fix-function-from-the-patch)
-5. [Includes all similar (or same) fixes that is introduced over multiple parts of the program](#2-similar-or-same-functional-changes-over-multiple-hunksdiffs-should-not-be-removed)
+2. [Excludes compiler directives and annotations properly](#2-compiler-directives-and-annotations)
+3. [Excludes new features introduced with bug fixes](#3-new-features-introduced-with-the-bug-fix-should-be-removed)
+4. [Includes all relevant changes to bug-triggering code](#1-bug-fix-function-do-not-remove-the-changes-to-bug-fix-function-from-the-patch)
+5. [Includes all similar (or same) fixes that are introduced over multiple parts of the program](#2-similar-or-same-functional-changes-over-multiple-hunksdiffs-should-not-be-removed)
 
 ## Understanding the Bug and Narrowing Down the Scope
 
-Keep in mind that each patch is a reverse patch -- applying patch to fixed version will re-introduce the bug.
+Keep in mind that each patch is a reverse patch -- applying patch to fixed version of the program will reintroduce the bug.
 
-Read corresponding stack trace under `trigger_tests` directory to get a rough idea of how to re-introduce the bug. Determine the failed test (in `package.className::methodName`format). Delete irrelevant changes(diffs).
+Read corresponding stack trace under `trigger_tests` directory to get a rough idea of how to trigger the bug. Determine the failed tests (in `package.className::methodName`format). Delete irrelevant changes(diffs).
 
-Commit messages, comments, and sometimes the messages included in exception can also be helpful to gain more insight on the bugs.
+Note that commit messages, comments, and sometimes the messages included in exceptions are also be helpful to gain more insights on the bugs.
 ## Common Types of Bug Fix and Proposed Rules to Disambiguate Results
 ### 1. Code of Refctorings Should be Removed
 
@@ -367,7 +367,7 @@ Although the bug may be triggered by only one part of the changes, retaining the
 2. Compress 6 [Non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/comp.6.nonminimized.patch) vs. [Minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/comp.6.minimized.patch)
     * Steps and rules used to perform patch minimization:
         1. Remove changes to comments in line 9-12, 14-17, 25-31, and 38-39(Refactoring).
-        2. Read stack trace under `trigger` directory and determine bug-triggering code.  In this case, the bug is an assertion failure in deleting archived entries. The bug-fixing change is a new private variable `entryOffset` introduced to the fixed version.  This variable keeps track of where the current entry starts.
+        2. Read stack trace under `trigger_tests` directory and determine bug-triggering code.  In this case, the bug is an assertion failure in deleting archived entries. The bug-fixing change is a new private variable `entryOffset` introduced to the fixed version.  This variable keeps track of where the current entry starts.
         3. Remove irrelevant changes -- hunks that neither modify nor use `entryOffset`.  That only leaves us four hunks:
             1. Nothing to be minimized in this hunk.
                 ```diff
