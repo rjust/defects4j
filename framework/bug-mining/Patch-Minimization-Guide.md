@@ -168,8 +168,8 @@ Code refactoring is the process of restructuring existing code without changing 
             -	}  
             ```
 
-6. __Cleaning up or removing dead code__
-        Removing unused piece of code -- such as declaration of unused variable, unused import statements, unused functions, or evaluated expressions whose result is never used, can be removed from the patch.
+6. __Cleaning up and removing dead code__
+        Removing unused piece of code -- such as declaration of unused variable, unused import statements, unused functions, or results of expressions that is never used, should be removed from the patch.
 
     * Example: In the following example, `count(totalRead)` is removed in the fixed version as it is an expression that is evaluated but the return value(temp) is never used in the bug fix. In this case, we also made sure that `numToRead` in the bug-fix statement is not altered by `count(totalRead)`. Therefore, the change can be removed form the patch.
 
@@ -195,9 +195,8 @@ Code refactoring is the process of restructuring existing code without changing 
                 hasHitEOF = true;
             ```    
 
-7. __Breaking down of conjunctions should be tested and removed.__
+7. __Breaking down conjunctions into nested if blocks should be tested and removed.__
     Another common refactoring observed was a conjunction broken down into nested if statements. This is done to access cases where one of the conditions evaluate to true and the other to false. This breaking down can sometimes be seen as refactoring and should be tested before removing from the patch. If removing this change does not create any new compiler errors or warnings and do not affect the bug, it should be removed.
-
 
     * Example: The example below demonstrates a case like this. 2 conditons a and b were used with ga conjunction and bug fix was a case when a is true and b is false. To access this case, the conjunction has to be broken into nested if statements.    
 
