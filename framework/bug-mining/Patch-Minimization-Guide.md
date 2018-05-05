@@ -324,7 +324,7 @@ New features added along with bug fix code are tricky to identify since they are
 ### 1. Bug fix function: do not remove the changes to bug fix function from the patch
 Even though only leaving the statement that calls the bug fixing function in the patch is able to re-introduce the bug, that should not be done.
 * Example: In this case, do not remove the change in the bug-fixing function as it is an essential part of the bug fix.
-	```diff
+    ```diff
     -      protected boolean isGameOver(){...}
            public Player getWinner(){
                  ...
