@@ -5,7 +5,7 @@ This document includes:
 1. [Guidelines of ideal minimized patches](#guidelines-of-ideal-minimized-patches)
 2. [Proposed rules to perform patch minimization, along with justifications and code examples](#common-types-of-bug-fix-and-proposed-rules-to-disambiguate-results)
 3. [Situations that Do Not Require minimization](#do-not-remove-the-changes-in-the-following-situations)
-4. [Comprehensive examples of non-minimized vs. minimized patches](#comprehensive-examples-of-non-minimized-vs-minimized-patchestodo)
+4. [Comprehensive examples of non-minimized vs. minimized patches](#comprehensive-examples-of-non-minimized-vs-minimized-patches)
 
 Note: Please refer to [Bug-Mining README: Instructions to Using the Framework](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/README.md) for information regarding instructions to using patch minimization framework(includes restoring original patch) and using patch minimization editor.
 
@@ -25,11 +25,11 @@ Read corresponding stack trace under `trigger_tests` directory to get a rough id
 
 Note that commit messages, comments, and sometimes the messages included in exceptions are also be helpful to gain more insights on the bugs.
 ## Common Types of Bug Fix and Proposed Rules to Disambiguate Results
-### 1. Code of Refctorings Should be Removed
+### 1. Code of Refctorings Should be Removed   
 
 Code refactoring is the process of restructuring existing code without changing its external behavior. Since refactoring does not affect the behavior of the code, it is not a part of bug fix and the changes can be removed from the patch. Code refactoring may consist one or more of the following:
 
-1. __White/spaces/tabs/new lines__
+1. __White/spaces/tabs/new lines__  
 
 	* Example 1: Some white space fixes are tricky because they may involve indentation changes within bug-fix code blocks. This could include parts of code that was moved into or out of a condition branch. In this example, the only change to "result" is the tab.  Therefore, we only keep the changes of adding the "if" statement.
         * Non-minimized:
@@ -50,10 +50,10 @@ Code refactoring is the process of restructuring existing code without changing 
 
     * Example 2: Collections 71 contains tab changes that caused unnecessarily huge patch. [Collections 71 non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections 71 minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.71.minimized.patch)
 
-2. __Comments__
+2. __Comments__  
      Comments could be considered as part of the bug fix: a developer may want to associate a comment with a bug fix and therefore include it in the pure bug-fixing patch; a researcher may want to ignore comments when reasoning about the complexity of a bug-fixing patch. We are interested in minimizing the patch, therefore we can remove all the changes to comments or documentation elements from the patch.
 
-3. __Sementically equivalent changes__
+3. __Sementically equivalent changes__  
     If the only changes are in the style of programming, then those changes will be semantically equivalent. These changes will have no effect on the bug as they produce the same output before and after change. These changes should be removed from the patch.  
     * Example: `byte b[]` and `byte[] b` are the same
         ```diff
@@ -75,7 +75,7 @@ Code refactoring is the process of restructuring existing code without changing 
              }
         ```
 
-4. __Code extracted into a local variable.__
+4. __Code extracted into a local variable__  
     Code extracted into a local variable should be removed from the minimized patch __if and only if__ it does not generate any new compiler warnings.
 
     * Example: The two if statements are sementically equivalent. Since the change does not affect functionalities at all, the declaration and use of the variable `includeProperty` can be removed from the patch.
@@ -119,7 +119,7 @@ Code refactoring is the process of restructuring existing code without changing 
             +    if (old == null) {
             ```
 
-5. __Code extracted into a Function.__
+5. __Code extracted into a Function__  
     If a part of code is extracted into a new helper method without  any change, this operation could be considered as refactoring it can be removed from the patch. This is similar to case [4] explained above. Since we are moving a piece of code __without any changes__ into a function, the inline code will now be replaced with a function call to the helper method. This will not affect the outcome of the program and will not affect the bug.
 
     * Example: Below is an example from Collection - 19. In this example, a part of code that computes the hash code for a key has been moved into a seperate helper function. Since there is no change with respect to the lines of code that actually calculate the hash code, this can be seen as refactoring operation.  However, this newly created function is also called by the bug-fix method `readResolve`, therefore all changes to `readResolve` should remain in the patch.  
@@ -168,7 +168,7 @@ Code refactoring is the process of restructuring existing code without changing 
             -	}  
             ```
 
-6. __Cleaning up and removing dead code__
+6. __Cleaning up and removing dead code__  
         Removal of unused pieces of code -- such as declaration of unused variable, unused import statements, unused functions, or results of expressions that is never used, should be removed from the patch.
 
     * Example: In the following example, `count(totalRead)` is removed in the fixed version because it is an expression that is evaluated but is never being used in the bug fix. Also, since `numToRead` in the bug-fix statement is not altered by `count(totalRead)`, `count(totalRead)` does not affect the bug fix at all.  Therefore, this change can be removed from the patch.
@@ -195,7 +195,7 @@ Code refactoring is the process of restructuring existing code without changing 
                 hasHitEOF = true;
             ```    
 
-7. __Breaking down conjunctions into nested if blocks__
+7. __Breaking down conjunctions into nested if blocks__  
     Another common refactoring observed was a conjunction broken down into nested if statements. This is done to access cases where one of the conditions evaluate to true and the other to false. This operation can sometimes be seen as refactoring. Keep in mind that removing these kinds of changes may require several iterations of testing(between removing/altering the patch and restoring the original patch). If removing/altering this change neither affects the bug nor creates any new compiler errors or warnings, remove the change from the patch.
 
     * Example: The example below demonstrates a case like this. Two conditons(a and b) were used with conjunction. The bug fix was one of the cases where the condition a is true and b is false. To access this case, the conjunction has to be broken into nested if statements.  However, we can discard the changes regarding `if(a && b)` and `if(a) if(b)` as they are actually equivalent.
@@ -235,10 +235,10 @@ Code refactoring is the process of restructuring existing code without changing 
 
 ### 2. Compiler Directives and Annotations
 
-1. __Changes made to import statements should be removed.__
+1. __Changes made to import statements should be removed__  
     Although removing changes involving import statements might create new warnings of `unused import statements`, import statements would not communicate anything about the bug or the bug fix since they would only be necessary to support functions. It is also worth noting that these import statements could be completely removed by using the fully qualified function names.
 
-2. __Changes made to @override statements can be removed under some circumstances.__
+2. __Changes made to @override statements can be removed under some circumstances__  
     In Java, `@override` notation forces compiler to double-check if such method is overriding the method in superclass(this operation is often used to check typos in method signatures and return types).  Therefore, merely adding @override statements to existing methods is not a functional change. However, if `@override` notation comes along with a new or modified method in fixed version, we can keep the addition so it is more obvious to researchers that a method is overriden.
 
     1. if `@override` is added to a pre-existing method and there are no changes made to that specific method in fixed version, remove the change from patch.
@@ -260,10 +260,10 @@ Code refactoring is the process of restructuring existing code without changing 
             -          return this.name;
             -      }
             ```
-3. __Changes made to @suppressWarnings should be removed.__
+3. __Changes made to @suppressWarnings should be removed__  
     In Java, `@suppressWarnings` allows programmers to disable compilation warnings in certain part of the code.  Similar to `@override` notations, `@suppressWarnings` only mutes the warnings and it has no affect on the bug fix.  Therefore, we can remove all the changes of `@suppressWarnings`.
 
-4. __Changes to variable modifiers should be tested and removed.__
+4. __Changes to variable modifiers should be tested and removed__  
     Modifiers enforce restrictions on the contents of a variable. These restrictions may or may not be relevant to the bug fix. If removing these changes from the patch does not cause compilation error or affect the bug, then the change should be removed.
 
     * Example: The `final` keyword is used in several contexts to define an entity that can only be assigned once.  It is also considered a good programming practice to make function parameters final. Below is an example from Compress - 48. The bug fix in this patch is in the `throw` statement. The modifier `final` in `parseOctal` does not affect the bug, therefore the change involving the `final` modifier should be removed.
@@ -291,7 +291,7 @@ Code refactoring is the process of restructuring existing code without changing 
 
             ```
 
-### 3. New Features Introduced With the Bug Fix Should be Removed:
+### 3. New Features Introduced With the Bug Fix Should be Removed:  
 New features added along with bug fix code, that are not part of bug fix, are tricky to identify since they are usually blended into the bug-fixing code.  Functions/code involving new features and the function calls to the new features should be completely removed to obtain a minimized patch.
 
 1. __New functions__
@@ -320,7 +320,7 @@ New features added along with bug fix code, that are not part of bug fix, are tr
 
 ## Do Not Remove the Changes in the Following Situations
 
-### 1. Bug fix function: do not remove the changes to bug fix function from the patch
+### 1. Bug fix function: do not remove the changes to bug fix function from the patch  
 Some bug-fix patches will require new features to be included. If a new feature is added to fix the bug, the entire function and the call should be kept in the patch. Although removing the function definition and keeping the call will also reintroduce the bug, __do not__ remove the function definition because it explains the bug fix.
 
 * Example: In this case, do not remove the change in the bug-fixing function as it is an essential part of the bug fix.
@@ -331,7 +331,7 @@ Some bug-fix patches will require new features to be included. If a new feature 
     -      if(this.isGameOver()){...}
     ```
 
-* Example: In the patch shown below, the bug fix code is just the if block. Despite that, we cannot remove any other statements from this patch. The while loop contains only the if statement so it cannot be removed. The only two new local variables introduced in this function are both being used for the bug fix, so their declarations cannot be removed. The function `clear()` has no other statements other than the two variable declarations and the while loop. Hence, removing the function would mean creating an empty function in the buggy version which would not make any sense. Since the `@Override` is associated with the `clear()` function, even that cannot be removed. 
+* Example: In the patch shown below, the bug fix code is just the if block. Despite that, we cannot remove any other statements from this patch. The while loop contains only the if statement so it cannot be removed. The only two new local variables introduced in this function are both being used for the bug fix, so their declarations cannot be removed. The function `clear()` has no other statements other than the two variable declarations and the while loop. Hence, removing the function would mean creating an empty function in the buggy version which would not make any sense. Since the `@Override` is associated with the `clear()` function, even that cannot be removed.
     ```diff
              abstract class AbstractPatriciaTrie<K, V> extends AbstractBitwiseTrie<K, V> {
                     ...
@@ -348,7 +348,7 @@ Some bug-fix patches will require new features to be included. If a new feature 
     -        }
     ```
 
-### 2. Similar or same functional changes over multiple hunks/diffs __should not__ be removed:
+### 2. Similar or same functional changes over multiple hunks/diffs __should not__ be removed  
 Although the bug may be triggered by only one part of the changes, retaining the other similar changes is important -- the tests written by the developers might not cover all the cases introduced in the bug fix, but only covers the case that triggers the bug.  The entire artifact may contain important information to researchers.
 * Example: [Collections 6 non-minimized patch](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.6.nonminimized.patch) contains 6 similar changes over different parts of the program.  Although there is only one hunk that triggers the bug, we should keep all changes.
 

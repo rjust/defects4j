@@ -211,7 +211,6 @@ Reviewing and isolating the bugs
    `patches` directory:
      - `ls -l bug-mining/<branch_id>/framework/projects/<project_id>/patches/*.src.patch`
      - `./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining`
-     - The default editor for patch minimization is meld. Link to meld: http://meldmerge.org/. However, you may use other editors if you prefer.
 
 #### Meld
 By default, running `./minimize-patch.pl -p <project> -w <working-directory> -b <bug.id>` will automatically open up meld.  Meld is a user-friendly editor to visualize the changes introduced in the patch.  Visit [Meld](http://meldmerge.org/help/) for further instructions to download.
@@ -223,7 +222,7 @@ Feel free to use any other editors.  Reference [The Secret of Editing Hunks](htt
 Delete corresponding patch under `patch` directory, and re-run `./initialize-revision.pl -p <project> -w <working-directory> -b <bug.id>`
 
 #### Patch Minimization Guide
-[Patch Minimization Guide.md]() contains fairly comprehensive information regarding situations that require/do not require minimization.  Please read the guide before you perform patch minimization.
+[Patch Minimization Guide.md](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/Patch-Minimization-Guide.md) contains fairly comprehensive information regarding situations that require/do not require minimization.  Please read the guide before you perform patch minimization.
 
 Promoting reproducible bugs to the main database
 ------------------
