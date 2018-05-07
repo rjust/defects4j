@@ -36,7 +36,7 @@ Requirements
 ----------------
  - Java 1.7
  - Perl >= 5.0.10
- - Perl modules: run `cpan Bundle::CSV` or `sudo cpan Bundle::CSV`
+ - Perl modules: run `cpan Bundle::CSV DBI` or `sudo cpan Bundle::CSV DBI`
  - Git >= 1.9
  - SVN >= 1.8
 
