@@ -53,6 +53,7 @@ more details about the defects and requirements).
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
 
 5. Run the test generation and coverage analysis:
+    - `cd "path2defects4j"/framework/test`
     - `./randoop_coverage.sh`
 
     Currently, this does not generate tests for all the defects, just five in
