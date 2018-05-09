@@ -1,7 +1,10 @@
 Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
-----------------
+================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
+
+Contents of Defects4J
+================
 
 The projects
 ---------------
@@ -32,11 +35,14 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
+Using Defects
+================
+
 Requirements
 ----------------
  - Java 1.7
  - Perl >= 5.0.10
- - Perl modules: run `cpan Bundle::CSV DBI` or `sudo cpan Bundle::CSV DBI`
+ - Perl modules: run `cpan Bundle::CSV DBD::CSV DBI` or `sudo cpan Bundle::CSV DBD::CSV DBI`
  - Git >= 1.9
  - SVN >= 1.8
 
@@ -78,22 +84,12 @@ Getting started
     - `defects4j compile`
     - `defects4j test`
 
-8. More examples of how to use the framework are available in `framework/test`
+8. The scripts in [`framework/test/`](tree/master/framework/test/)
+are examples of how to use Defects4J, which you might find useful
+as inspiration when you are writing your own scripts that use Defects4J.
 
-Publications
-------------------
-* "Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs"
-    René Just, Darioush Jalali, and Michael D. Ernst,
-    ISSTA 2014 [[download]][issta14].
 
-* "Are Mutants a Valid Substitute for Real Faults in Software Testing?"
-    René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
-    FSE 2014 [[download]][fse14].
-
-[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
-[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
-
-Documentation
+Script documentation
 --------------------
 Detailed documentation for any script or module is available as
 [html documentation][htmldocs].
@@ -106,14 +102,14 @@ Use `framework/bin/defects4j` to execute any of the following commands:
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
-| info           | View configuration of a specific project or summary of a specific bug                             |
-| checkout       | Checkout a buggy or a fixed project version                                                       |
-| compile        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| test           | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| mutation       | Run mutation analysis on a buggy or a fixed project version                                       |
-| coverage       | Run code coverage analysis on a buggy or a fixed project version                                  |
-| monitor.test   | Monitor the class loader during the execution of a single test or a test suite                    |
-| export         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [info](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
+| [checkout](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
+| [compile](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| [test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
+| [mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
+| [coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| [monitor.test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
+| [export](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
 Export version-specific properties
@@ -140,12 +136,12 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| run_bug_detection | ^Determine the real fault detection rate                        |
-| run_mutation      | ^Determine the mutation score                                   |
-| run_coverage      | ^Determine code coverage ratios (statement and branch coverage) |
+| defects4j         | Main script, described above rate                        |
+| run_bug_detection | Determine the real fault detection rate                        |
+| run_mutation      | Determine the mutation score                                   |
+| run_coverage      | Determine code coverage ratios (statement and branch coverage) |
 | run_evosuite      | Generate test suites using EvoSuite                             |
 | run_randoop       | Generate test suites using Randoop                              |
-^Note that this script requires Perl DBI.
 
 Directory structure
 ----------------------
@@ -174,7 +170,11 @@ The directory structure is as follows:
            |--- test:          Scripts to test the framework.
 
 Additional resources
+================
+
+Scripts built on Defects4J
 --------------------
+
 #### Fault localization (FL)
   - [Scripts and annotations for evaluating FL techniques][FL-eval]
 
@@ -186,7 +186,21 @@ Additional resources
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
 
+Publications
+------------------
+* "Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs"
+    René Just, Darioush Jalali, and Michael D. Ernst,
+    ISSTA 2014 [[download]][issta14].
+
+* "Are Mutants a Valid Substitute for Real Faults in Software Testing?"
+    René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
+    FSE 2014 [[download]][fse14].
+
+[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+
+[More publications](https://scholar.google.com/scholar?q=defects4j)
+
 License
 ---------
-MIT License, see `license.txt` for more information.
-
+MIT License, see [`license.txt`](https://github.com/rjust/defects4j/blob/master/license.txt) for more information.
