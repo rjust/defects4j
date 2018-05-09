@@ -35,7 +35,7 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
-Using Defects
+Setting up Defects4J
 ================
 
 Requirements
@@ -56,9 +56,9 @@ Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, export the `TZ`
 environment variable accordingly.
 
-Getting started
+Steps to set up Defects4J
 ----------------
-#### Setting up Defects4J
+
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
@@ -69,36 +69,34 @@ Getting started
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
 
-#### Using Defects4J
-4. Check installation and get information for a specific project (commons lang):
+4. Check installation:
     - `defects4j info -p Lang`
 
-5. Get information for a specific bug (commons lang, bug 1):
+Using Defects4J
+================
+
+#### Example commands
+1. Get information for a specific project (commons lang):
+    - `defects4j info -p Lang`
+
+2. Get information for a specific bug (commons lang, bug 1):
     - `defects4j info -p Lang -b 1`
 
-6. Checkout a buggy source code version (commons lang, bug 1, buggy version):
+3. Checkout a buggy source code version (commons lang, bug 1, buggy version):
     - `defects4j checkout -p Lang -v 1b -w /tmp/lang_1_buggy`
 
-7. Change to the working directory, compile sources and tests, and run tests:
+4. Change to the working directory, compile sources and tests, and run tests:
     - `cd /tmp/lang_1_buggy`
     - `defects4j compile`
     - `defects4j test`
 
-8. The scripts in [`framework/test/`](tree/master/framework/test/)
+5. The scripts in [`framework/test/`](tree/master/framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
-
-Script documentation
---------------------
-Detailed documentation for any script or module is available as
-[html documentation][htmldocs].
-
-[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
-
-Command-line interface
+Command-line interface: defects4j command
 -----------------------
-Use `framework/bin/defects4j` to execute any of the following commands:
+Use [`framework/bin/defects4j`](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html) to execute any of the following commands:
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
@@ -136,38 +134,12 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| defects4j         | Main script, described above rate                        |
-| run_bug_detection | Determine the real fault detection rate                        |
-| run_mutation      | Determine the mutation score                                   |
-| run_coverage      | Determine code coverage ratios (statement and branch coverage) |
-| run_evosuite      | Generate test suites using EvoSuite                             |
-| run_randoop       | Generate test suites using Randoop                              |
-
-Directory structure
-----------------------
-This is the top-level directory of Defects4J.
-The directory structure is as follows:
-
-    defects4j
-       |
-       |--- project_repos:     The version control repositories of the provided projects.
-       |
-       |--- major:             The Major mutation framework.
-       |
-       |--- framework:         Libraries and executables of the database abstraction and
-           |                   test execution framework.
-           |
-           |--- bin:           Command line interface to Defects4J.
-           |
-           |--- core:          The modules of the core framework.
-           |
-           |--- lib:           Libraries used in the core framework.
-           |
-           |--- util:          Util scripts used by Defects4J.
-           |
-           |--- projects:      Project-specific resource files.
-           |
-           |--- test:          Scripts to test the framework.
+| [defects4j](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html)         | Main script, described above                        |
+| [run_bug_detection](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
+| [run_mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_mutation.html)      | Determine the mutation score                                   |
+| [run_coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
+| [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
+| [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
 Additional resources
 ================
@@ -200,6 +172,38 @@ Publications
 [fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 
 [More publications](https://scholar.google.com/scholar?q=defects4j)
+
+Implementation details
+----------------------
+
+Documentation for any script or module is available as
+[html documentation][htmldocs].
+
+[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
+
+The directory structure of Defects4J is as follows:
+
+    defects4j
+       |
+       |--- project_repos:     The version control repositories of the provided projects.
+       |
+       |--- major:             The Major mutation framework.
+       |
+       |--- framework:         Libraries and executables of the database abstraction and
+           |                   test execution framework.
+           |
+           |--- bin:           Command line interface to Defects4J.
+           |
+           |--- core:          The modules of the core framework.
+           |
+           |--- lib:           Libraries used in the core framework.
+           |
+           |--- util:          Util scripts used by Defects4J.
+           |
+           |--- projects:      Project-specific resource files.
+           |
+           |--- test:          Scripts to test the framework.
+
 
 License
 ---------
