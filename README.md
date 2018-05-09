@@ -25,8 +25,9 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit -- the Defects4J maintainers manually pruned out
-  irrelevant changes (e.g., refactorings or feature additions).
+- Fixed in a single commit
+- Minimized: the Defects4J maintainers manually pruned out
+  irrelevant changes in the commit (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
   documentation, or test files).
 - A triggering test exists that failed before the fix and passes after the fix
