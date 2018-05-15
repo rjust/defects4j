@@ -64,7 +64,7 @@ my $man = 0;
     # Check for too many filenames
     pod2usage("$0: Too many files given.\n")  if (@ARGV > 1);
 
-# if the number of tests to be run is mofified in randoop_coverage.sh,
+# if the number of tests to be run is modified in randoop_coverage.sh,
 # then the expected_test_count will need to be modified to match.
 my $expected_test_count = 30;
 my $test_count = 0;
