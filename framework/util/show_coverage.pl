@@ -64,14 +64,14 @@ my $man = 0;
     # Check for too many filenames
     pod2usage("$0: Too many files given.\n")  if (@ARGV > 1);
 
+# if the number of tests to be run is mofified in randoop_coverage.sh,
+# then the expected_test_count will need to be modified to match.
 my $expected_test_count = 30;
 my $test_count = 0;
 my $tot_line = 0;
 my $tot_exec = 0;
 my $tot_fail = 0;
-my @fields;
 my $filename = '/tmp/test_d4j/coverage';
-my @lines;
 
     print(strftime("\nToday's date: %Y-%m-%d %H:%M:%S", localtime), "\n");
 
@@ -91,11 +91,11 @@ my @lines;
 
     # read all input lines into an array and
     # sort it to get consistent output
-    @lines = <$fh>;
+    my @lines = <$fh>;
 
     foreach (sort(@lines)) {
         chomp;
-        @fields = split /,/;
+        my @fields = split /,/;
             if (@fields == 0) {
                 # do nothing for a blank line
             } elsif ($fields[0] eq "project_id") {
@@ -118,9 +118,9 @@ my @lines;
     if ($expected_test_count < $test_count) {
         die "More test results than expected!";
     }
-    $tot_fail = $expected_test_count - $test_count + $tot_fail;
+    $tot_fail += $expected_test_count - $test_count;
 
-    printf("\nNumber tests: %d, %d failed\n", $expected_test_count, $tot_fail);
+    printf("\nNumber of tests: %d, %d failed\n", $expected_test_count, $tot_fail);
     print "Total lines: ", $tot_line, "\n";
     print "Lines executed: ", $tot_exec, "\n";
     printf("Coverage: %.2f\n", $tot_exec/$tot_line);
