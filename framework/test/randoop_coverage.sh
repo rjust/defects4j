@@ -7,6 +7,10 @@
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
+if [ ! -f test.include ]; then
+    echo "File test.include not found!  Ran script from wrong directory?"
+    exit 1
+fi
 source test.include
 init
 
