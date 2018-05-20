@@ -32,41 +32,27 @@ defects (see the top-level
 [README](https://github.com/rjust/defects4j/blob/master/README.md) for
 more details about the defects and requirements).
 
-### Getting started
-1. Follow the instructions for setting up Defects4J in the top-level
-[README](https://github.com/rjust/defects4j/blob/master/README.md#setting-up-defects4j)
-
-2. Verify you have the perl package for DBI access to CSV files installed:
-    - `perldoc DBD/CSV.pm`
-    
-    If this produces the man page for DBM::CSV you are ok, if not
-    you must install the package, e.g., using cpan:
-    - `cpan DBD::CSV`
-
-### Running the coverage analysis
-3. Please note you must use Java 7; Java 8 will cause failures.
-
-4. Tell the tools which version of Randoop you wish to test:
-    By default, the system runs version 4.0.3 of Randoop.
-    (Located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar)
-    The randoop.jar you wish to test must be named randoop-current.jar.
+1. Optionally, indicate where to find the version of Randoop you wish to test.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
 
-5. Run the test generation and coverage analysis:
+    The randoop.jar you wish to test must be named randoop-current.jar.
+    By default, the system runs version 4.0.3 of Randoop,
+    located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
+
+2. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`
 
     Currently, this does not generate tests for all the defects, just five in
-    each projects for a total of 30 tests. It takes about 90 minutes to run.
+    each project for a total of 30 tests. It takes about 90 minutes to run.
     If you wish to override these defaults for `randoop_coverage.sh` you may
-    supply an optional project list argument followed by an optional bid list
-    argument.
+    supply an optional project list argument followed by an optional bid
+    (bug id) list argument.
     The test scripts set `TMP_DIR` to */tmp/test_d4j*. If you wish to change
     this, you will need to modify `./test.include`.
 
-6. Display the coverage data:
-    The raw coverage data will be found at *$TMP_DIR/test_d4j/coverage*.
-    You may display the coverage results by running the perl script:
+3. Display the coverage data:
     - `../util/show_coverage.pl`
 
+    The raw coverage data is found at *$TMP_DIR/test_d4j/coverage*.
     This script will accept an optional argument of an alternative file location.
-    Invoke the script with -help for a full list of options.
+    Invoke the script with `-help` for a full list of options.
