@@ -68,13 +68,18 @@ cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.0.3"
+RANDOOP_VERSION="4.0.4"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
+REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
                   && wget -nv "$RANDOOP_URL/$RANDOOP_JAR"
+cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
+                  && wget -nv "$RANDOOP_URL/$REPLACECALL_JAR"
 # Set symlink for the supported version of Randoop
 (cd "$DIR_LIB_GEN" && ln -sf "$RANDOOP_JAR" "randoop-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "$REPLACECALL_JAR" "replacecall-current.jar")
+(cd "$DIR_LIB_GEN" && jar -xf "$REPLACECALL_JAR" "default-replacements.txt")
 
 ################################################################################
 #
