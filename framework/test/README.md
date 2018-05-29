@@ -36,8 +36,12 @@ more details about the defects and requirements).
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
 
     The randoop.jar you wish to test must be named randoop-current.jar.
-    By default, the system runs version 4.0.3 of Randoop,
+    By default, the system runs version 4.0.4 of Randoop,
     located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
+    If you change the default version of randoop-current.jar you must also copy the
+    matching version of replacecall.jar to replacecall-current.jar in the same location as
+    randoop-current.jar.  Finally, you must extract the replacements file from replacecall-current.jar:
+    - `(cd "path2replacecall-current.jar" && jar -xf replacecall-current.jar default-replacements.txt)`
 
 2. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`
