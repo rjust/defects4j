@@ -34,14 +34,18 @@ use Getopt::Std;
 use Pod::Usage;
 
 sub _usage {
-    die "usage: " . basename($0) . " -f filename -g git_dir -t tracker_id";
+    die "usage: " . basename($0) . " -f filename -g git_dir -t tracker_id -s src_dir";
 }
 
 my %cmd_opts;
-getopt('f:g:t', \%cmd_opts);
+getopt('f:g:t:s', \%cmd_opts);
 my $filename = $cmd_opts{'f'};
 my $git_dir = $cmd_opts{'g'};
 my $tracker_id = $cmd_opts{'t'};
+my $src = $cmd_opts{'s'};
+
+$src = $src // 'src';
+
 _usage() unless defined $filename and defined $git_dir and defined $tracker_id;
 
 my @existing_commits = (); # assume order of these is not cronological
@@ -77,7 +81,7 @@ while (my $line = <STDIN>) {
     next unless $line;
     $line =~ /(?:\d+,){0,1}(.+),(.+)(?:,.+)*/; # allows a bugid and other random params but will ignore them (this is just a quick adaptation in case you feed a commit-db into this script)
     # check commits src dir if they are non empty before merging
-    unless(`git --git-dir=$git_dir --no-pager diff --binary $2 $1 -- src/ src/` eq "") { # buggy to fixed
+    unless(`git --git-dir=$git_dir --no-pager diff --binary $2 $1 -- $src $src` eq "") { # buggy to fixed
         unshift @new_commits, "$1,$2";  # unshift places line at the front
     } else {
         $filtered_commits++;
