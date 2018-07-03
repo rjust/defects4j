@@ -1,0 +1,8 @@
+org/joda/time/DateTimeZone.java#1167#        long instantBefore = convertUTCToLocal(instant - 3 * DateTimeConstants.MILLIS_PER_HOUR);
+org/joda/time/DateTimeZone.java#1168#        long instantAfter = convertUTCToLocal(instant + 3 * DateTimeConstants.MILLIS_PER_HOUR);
+org/joda/time/DateTimeZone.java#1169#        if (instantBefore == instantAfter) {
+org/joda/time/DateTimeZone.java#1174#        long local = convertUTCToLocal(instant);
+org/joda/time/DateTimeZone.java#1175#        return convertLocalToUTC(local, false, earlierOrLater ? instantAfter : instantBefore);
+org/joda/time/DateTimeZone.java#1178#FAULT_OF_OMISSION
+org/joda/time/DateTimeZone.java#1179#FAULT_OF_OMISSION
+org/joda/time/DateTimeZone.java#1180#FAULT_OF_OMISSION

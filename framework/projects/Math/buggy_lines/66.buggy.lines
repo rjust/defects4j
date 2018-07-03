@@ -1,0 +1,22 @@
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#44#        setMaxEvaluations(Integer.MAX_VALUE);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#46#        setAbsoluteAccuracy(1E-10);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#47#        setRelativeAccuracy(1.0e-14);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#57#        throw new UnsupportedOperationException();
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#58#    }
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#59#    public double optimize(final UnivariateRealFunction f, final GoalType goalType, final double min, final double max, final double startValue) throws MaxIterationsExceededException, FunctionEvaluationException {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#60#        clearResult();
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#62#                        f, goalType, min, startValue, max,
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#65#    public double optimize(final UnivariateRealFunction f, final GoalType goalType, final double min, final double max) throws MaxIterationsExceededException, FunctionEvaluationException {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#66#        return optimize(f, goalType, min, max, min + GOLDEN_SECTION * (max - min));
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#67#    }
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#94#                            UnivariateRealFunction f,
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#95#                            GoalType goalType,
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#119#        double fx = computeObjectiveValue(f, x);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#120#        if (goalType == GoalType.MAXIMIZE) {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#126#        int count = 0;
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#127#        while (count < maximalIterationCount) {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#200#                double fu = computeObjectiveValue(f, u);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#201#                if (goalType == GoalType.MAXIMIZE) {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#238#                setResult(x, (goalType == GoalType.MAXIMIZE) ? -fx : fx, count);
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#241#            ++count;
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#243#        throw new MaxIterationsExceededException(maximalIterationCount);

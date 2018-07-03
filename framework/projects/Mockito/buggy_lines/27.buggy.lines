@@ -1,0 +1,2 @@
+org/mockito/internal/util/MockUtil.java#64#        MockHandler<T> newMockHandler = new MockHandler<T>(oldMockHandler);
+org/mockito/internal/util/MockUtil.java#65#        MethodInterceptorFilter newFilter = new MethodInterceptorFilter(newMockHandler, (MockSettingsImpl) org.mockito.Mockito.withSettings().defaultAnswer(org.mockito.Mockito.RETURNS_DEFAULTS));

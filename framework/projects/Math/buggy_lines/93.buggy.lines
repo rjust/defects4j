@@ -1,0 +1,4 @@
+org/apache/commons/math/util/MathUtils.java#345#        long result = Math.round(factorialDouble(n));
+org/apache/commons/math/util/MathUtils.java#346#        if (result == Long.MAX_VALUE) {
+org/apache/commons/math/util/MathUtils.java#377#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#396#FAULT_OF_OMISSION

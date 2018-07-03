@@ -1,0 +1,6 @@
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#17#        return withOuterClass(cls);
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#20#    private <T> T withOuterClass(Class<T> cls) {
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#24#            Constructor<T> c = cls.getDeclaredConstructor(outerClassInstance.getClass());
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#25#            return c.newInstance(outerClassInstance);
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#29#FAULT_OF_OMISSION
+org/mockito/internal/creation/instance/ConstructorInstantiator.java#36#FAULT_OF_OMISSION

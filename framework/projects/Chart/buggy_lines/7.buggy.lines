@@ -1,0 +1,2 @@
+org/jfree/data/time/TimePeriodValues.java#300#            long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()
+org/jfree/data/time/TimePeriodValues.java#302#            long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()

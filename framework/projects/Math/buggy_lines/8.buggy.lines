@@ -1,0 +1,2 @@
+org/apache/commons/math3/distribution/DiscreteDistribution.java#181#    public T[] sample(int sampleSize) throws NotStrictlyPositiveException {
+org/apache/commons/math3/distribution/DiscreteDistribution.java#187#        final T[]out = (T[]) java.lang.reflect.Array.newInstance(singletons.get(0).getClass(), sampleSize);

@@ -1,0 +1,1 @@
+org/apache/commons/lang/StringUtils.java#1048#        return contains(str.toUpperCase(), searchStr.toUpperCase());

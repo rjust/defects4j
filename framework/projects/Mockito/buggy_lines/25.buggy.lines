@@ -1,0 +1,12 @@
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#53#        return getMock(invocation);
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#56#    private Object getMock(InvocationOnMock invocation) throws Throwable {
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#68#        return recordDeepStubMock(invocation, container);
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#81#    private Object recordDeepStubMock(InvocationOnMock invocation, InvocationContainerImpl container) {
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#82#        Class<?> clz = invocation.getMethod().getReturnType();
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#83#        final Object mock = org.mockito.Mockito.mock(clz, this);
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#7#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#19#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#77#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#78#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#79#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#80#FAULT_OF_OMISSION

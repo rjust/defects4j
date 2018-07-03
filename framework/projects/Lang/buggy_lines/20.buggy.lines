@@ -1,0 +1,2 @@
+org/apache/commons/lang3/StringUtils.java#3298#        StringBuilder buf = new StringBuilder((array[startIndex] == null ? 16 : array[startIndex].toString().length()) + 1);
+org/apache/commons/lang3/StringUtils.java#3383#        StringBuilder buf = new StringBuilder((array[startIndex] == null ? 16 : array[startIndex].toString().length()) + separator.length());

@@ -1,0 +1,20 @@
+org/apache/commons/lang3/StringUtils.java#1443#    public static boolean containsAny(CharSequence cs, char[] searchChars) {
+org/apache/commons/lang3/StringUtils.java#1455#                    if (i < csLast && j < searchLast && ch >= Character.MIN_HIGH_SURROGATE && ch <= Character.MAX_HIGH_SURROGATE) {
+org/apache/commons/lang3/StringUtils.java#1457#                        if (searchChars[j + 1] == cs.charAt(i + 1)) {
+org/apache/commons/lang3/StringUtils.java#1497#    public static boolean containsAny(CharSequence cs, String searchChars) {
+org/apache/commons/lang3/StringUtils.java#1576#            if (searchChars.indexOf(ch) < 0) {
+org/apache/commons/lang3/StringUtils.java#1376#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1377#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1381#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1382#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1383#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1533#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1534#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1539#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1540#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1578#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1678#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1679#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1683#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1684#FAULT_OF_OMISSION
+org/apache/commons/lang3/StringUtils.java#1686#FAULT_OF_OMISSION

@@ -1,0 +1,9 @@
+org/apache/commons/lang/StringEscapeUtils.java#86#        return escapeJavaStyleString(str, false);
+org/apache/commons/lang/StringEscapeUtils.java#102#        escapeJavaStyleString(out, str, false);
+org/apache/commons/lang/StringEscapeUtils.java#127#        return escapeJavaStyleString(str, true);
+org/apache/commons/lang/StringEscapeUtils.java#143#        escapeJavaStyleString(out, str, true);
+org/apache/commons/lang/StringEscapeUtils.java#154#    private static String escapeJavaStyleString(String str, boolean escapeSingleQuotes) {
+org/apache/commons/lang/StringEscapeUtils.java#160#            escapeJavaStyleString(writer, str, escapeSingleQuotes);
+org/apache/commons/lang/StringEscapeUtils.java#178#    private static void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {
+org/apache/commons/lang/StringEscapeUtils.java#244#FAULT_OF_OMISSION
+org/apache/commons/lang/StringEscapeUtils.java#245#FAULT_OF_OMISSION

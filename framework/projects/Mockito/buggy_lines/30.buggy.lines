@@ -1,0 +1,3 @@
+org/mockito/exceptions/Reporter.java#438#    public void smartNullPointerException(Location location) {
+org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java#56#            new Reporter().smartNullPointerException(location);
+org/mockito/exceptions/Reporter.java#442#FAULT_OF_OMISSION

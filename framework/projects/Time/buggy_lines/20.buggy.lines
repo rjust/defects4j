@@ -1,0 +1,4 @@
+org/joda/time/format/DateTimeFormatterBuilder.java#2544#                    bucket.setZone(DateTimeZone.forID(id));
+org/joda/time/format/DateTimeFormatterBuilder.java#2545#                    return position + id.length();
+org/joda/time/format/DateTimeFormatterBuilder.java#2542#FAULT_OF_OMISSION
+org/joda/time/format/DateTimeFormatterBuilder.java#2547#FAULT_OF_OMISSION

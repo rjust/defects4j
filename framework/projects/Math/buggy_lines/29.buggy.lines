@@ -1,0 +1,5 @@
+org/apache/commons/math3/linear/OpenMapRealVector.java#349#        Iterator iter = entries.iterator();
+org/apache/commons/math3/linear/OpenMapRealVector.java#350#        while (iter.hasNext()) {
+org/apache/commons/math3/linear/OpenMapRealVector.java#351#            iter.advance();
+org/apache/commons/math3/linear/OpenMapRealVector.java#352#            res.setEntry(iter.key(), iter.value() / v.getEntry(iter.key()));
+org/apache/commons/math3/linear/OpenMapRealVector.java#374#FAULT_OF_OMISSION

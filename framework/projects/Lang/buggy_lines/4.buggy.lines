@@ -1,0 +1,4 @@
+org/apache/commons/lang3/text/translate/LookupTranslator.java#31#    private final HashMap<CharSequence, CharSequence> lookupMap;
+org/apache/commons/lang3/text/translate/LookupTranslator.java#46#        lookupMap = new HashMap<CharSequence, CharSequence>();
+org/apache/commons/lang3/text/translate/LookupTranslator.java#51#                this.lookupMap.put(seq[0], seq[1]);
+org/apache/commons/lang3/text/translate/LookupTranslator.java#77#            final CharSequence result = lookupMap.get(subSeq);

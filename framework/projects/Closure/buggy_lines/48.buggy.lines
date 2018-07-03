@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/TypedScopeCreator.java#1521#      if (inferred) {
+com/google/javascript/jscomp/TypedScopeCreator.java#1523#        inferred = !(rhsValue != null &&
+com/google/javascript/jscomp/TypedScopeCreator.java#1524#            rhsValue.isFunction() &&
+com/google/javascript/jscomp/TypedScopeCreator.java#1525#            (info != null || !scope.isDeclared(qName, false)));

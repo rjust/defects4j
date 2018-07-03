@@ -1,0 +1,2 @@
+org/apache/commons/lang/StringEscapeUtils.java#154#MISSING_RANKING_STATEMENT    private static String escapeJavaStyleString(String str, boolean escapeSingleQuotes) {
+org/apache/commons/lang/StringEscapeUtils.java#178#MISSING_RANKING_STATEMENT    private static void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {

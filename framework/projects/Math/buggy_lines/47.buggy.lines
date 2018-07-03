@@ -1,0 +1,5 @@
+org/apache/commons/math/complex/Complex.java#256#        if (divisor.getReal() == 0.0 && divisor.getImaginary() == 0.0) {
+org/apache/commons/math/complex/Complex.java#257#            return NaN;
+org/apache/commons/math/complex/Complex.java#293#            return NaN;
+org/apache/commons/math/complex/Complex.java#82#FAULT_OF_OMISSION
+org/apache/commons/math/complex/Complex.java#105#FAULT_OF_OMISSION

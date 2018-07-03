@@ -1,0 +1,6 @@
+org/apache/commons/math3/optim/nonlinear/vector/Weight.java#43#        weightMatrix = org.apache.commons.math3.linear.MatrixUtils.createRealMatrix(dim, dim);
+org/apache/commons/math3/optim/nonlinear/vector/Weight.java#44#        for (int i = 0; i < dim; i++) {
+org/apache/commons/math3/optim/nonlinear/vector/Weight.java#45#            weightMatrix.setEntry(i, i, weight[i]);
+org/apache/commons/math3/optim/nonlinear/vector/Weight.java#46#        }
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java#267#FAULT_OF_OMISSION
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/AbstractLeastSquaresOptimizer.java#269#FAULT_OF_OMISSION

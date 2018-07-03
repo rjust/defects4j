@@ -1,0 +1,6 @@
+org/mockito/internal/creation/MockSettingsImpl.java#22#        return this.extraInterfaces(java.io.Serializable.class);
+org/mockito/internal/creation/MockSettingsImpl.java#74#        return extraInterfaces != null && java.util.Arrays.asList(extraInterfaces).contains(java.io.Serializable.class);
+org/mockito/internal/creation/MockSettingsImpl.java#20#FAULT_OF_OMISSION
+org/mockito/internal/util/MockUtil.java#19#FAULT_OF_OMISSION
+org/mockito/internal/util/MockUtil.java#45#FAULT_OF_OMISSION
+org/mockito/internal/util/MockUtil.java#46#FAULT_OF_OMISSION

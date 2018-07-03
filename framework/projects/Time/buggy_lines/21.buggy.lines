@@ -1,0 +1,8 @@
+org/joda/time/tz/DefaultNameProvider.java#72#              byNameKeyCache.put(setLoc[2], new String[] {setLoc[2], setLoc[1]});
+org/joda/time/tz/DefaultNameProvider.java#76#              if (setLoc[2].equals(setLoc[4])) {
+org/joda/time/tz/DefaultNameProvider.java#77#                  byNameKeyCache.put(setLoc[4] + "-Summer", new String[] {setLoc[4], setLoc[3]});
+org/joda/time/tz/DefaultNameProvider.java#79#                  byNameKeyCache.put(setLoc[4], new String[] {setLoc[4], setLoc[3]});
+org/joda/time/tz/DefaultNameProvider.java#80#              }
+org/joda/time/tz/DefaultNameProvider.java#81#                break;
+org/joda/time/tz/DefaultNameProvider.java#66#FAULT_OF_OMISSION
+org/joda/time/tz/DefaultNameProvider.java#71#FAULT_OF_OMISSION

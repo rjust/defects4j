@@ -1,0 +1,5 @@
+org/joda/time/DateTimeZone.java#263#            int hoursInMinutes = FieldUtils.safeMultiply(hoursOffset, 60);
+org/joda/time/DateTimeZone.java#265#                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, -minutesOffset);
+org/joda/time/DateTimeZone.java#267#                minutesOffset = FieldUtils.safeAdd(hoursInMinutes, minutesOffset);
+org/joda/time/DateTimeZone.java#258#FAULT_OF_OMISSION
+org/joda/time/DateTimeZone.java#283#FAULT_OF_OMISSION

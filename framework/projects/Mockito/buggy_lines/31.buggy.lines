@@ -1,0 +1,2 @@
+org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java#60#			return invocation.getMethod().getName() + "()";
+org/mockito/internal/stubbing/defaultanswers/ReturnsSmartNulls.java#9#FAULT_OF_OMISSION

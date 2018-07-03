@@ -1,0 +1,6 @@
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#315#            double valueDelta = dataset.getStdDevValue(row, column).doubleValue();
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#459#            double valueDelta = dataset.getStdDevValue(row, column).doubleValue();
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#259#FAULT_OF_OMISSION
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#344#FAULT_OF_OMISSION
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#403#FAULT_OF_OMISSION
+org/jfree/chart/renderer/category/StatisticalBarRenderer.java#487#FAULT_OF_OMISSION

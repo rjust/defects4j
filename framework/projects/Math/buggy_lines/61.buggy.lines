@@ -1,0 +1,2 @@
+org/apache/commons/math/distribution/PoissonDistributionImpl.java#22#import org.apache.commons.math.MathRuntimeException;
+org/apache/commons/math/distribution/PoissonDistributionImpl.java#94#            throw MathRuntimeException.createIllegalArgumentException(LocalizedFormats.NOT_POSITIVE_POISSON_MEAN, p);

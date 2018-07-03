@@ -1,0 +1,4 @@
+org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java#146#        return optimize(f, goal, min, max, 0);
+org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java#160#                final double bound1 = (i == 0) ? min : min + generator.nextDouble() * (max - min);
+org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java#161#                final double bound2 = (i == 0) ? max : min + generator.nextDouble() * (max - min);
+org/apache/commons/math/optimization/univariate/MultiStartUnivariateRealOptimizer.java#162#                optima[i] = optimizer.optimize(f, goal, FastMath.min(bound1, bound2), FastMath.max(bound1, bound2));

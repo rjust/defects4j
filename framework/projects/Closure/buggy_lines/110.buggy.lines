@@ -1,0 +1,13 @@
+com/google/javascript/jscomp/ScopedAliases.java#366#        } else if (isVar) {
+com/google/javascript/jscomp/ScopedAliases.java#368#          Node value = n.hasChildren() ?
+com/google/javascript/jscomp/ScopedAliases.java#369#              v.getInitialValue().detachFromParent() :
+com/google/javascript/jscomp/ScopedAliases.java#371#          Node varNode = parent;
+com/google/javascript/rhino/Node.java#554#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#358#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#383#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#384#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#392#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#393#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#395#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#408#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#409#FAULT_OF_OMISSION

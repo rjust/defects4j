@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/CommandLineRunner.java#433#    if (flags.process_closure_primitives) {
+com/google/javascript/jscomp/CommandLineRunner.java#434#      options.closurePass = true;
+com/google/javascript/jscomp/CommandLineRunner.java#435#    }
+com/google/javascript/jscomp/CommandLineRunner.java#437#FAULT_OF_OMISSION

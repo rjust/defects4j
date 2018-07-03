@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/MinimizeExitPoints.java#141#      if (NodeUtil.hasFinally(n)) {
+com/google/javascript/jscomp/MinimizeExitPoints.java#142#        Node finallyBlock = n.getLastChild();
+com/google/javascript/jscomp/MinimizeExitPoints.java#143#        tryMinimizeExits(finallyBlock, exitType, labelName);
+com/google/javascript/jscomp/MinimizeExitPoints.java#144#      }

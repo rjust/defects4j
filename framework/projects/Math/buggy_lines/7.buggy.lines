@@ -1,0 +1,9 @@
+org/apache/commons/math3/ode/AbstractIntegrator.java#346#                currentEvent.stepAccepted(eventT, eventY);
+org/apache/commons/math3/ode/AbstractIntegrator.java#347#                isLastStep = currentEvent.stop();
+org/apache/commons/math3/ode/AbstractIntegrator.java#357#                    for (final EventState remaining : occuringEvents) {
+org/apache/commons/math3/ode/AbstractIntegrator.java#358#                        remaining.stepAccepted(eventT, eventY);
+org/apache/commons/math3/ode/AbstractIntegrator.java#359#                    }
+org/apache/commons/math3/ode/AbstractIntegrator.java#363#                boolean needReset = currentEvent.reset(eventT, eventY);
+org/apache/commons/math3/ode/AbstractIntegrator.java#370#                    for (final EventState remaining : occuringEvents) {
+org/apache/commons/math3/ode/AbstractIntegrator.java#371#                        remaining.stepAccepted(eventT, eventY);
+org/apache/commons/math3/ode/AbstractIntegrator.java#372#                    }

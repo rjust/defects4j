@@ -1,0 +1,3 @@
+com/google/javascript/rhino/jstype/PrototypeObjectType.java#380#        sb.append(getPropertyType(property).toString());
+com/google/javascript/rhino/jstype/PrototypeObjectType.java#383#        if (i == MAX_PRETTY_PRINTED_PROPERTIES) {
+com/google/javascript/rhino/jstype/PrototypeObjectType.java#394#      return "{...}";

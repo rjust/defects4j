@@ -1,0 +1,6 @@
+org/mockito/Mockito.java#827#        return MOCKITO_CORE.mock(classToMock, mockSettings);
+org/mockito/Mockito.java#899#                .defaultAnswer(CALLS_REAL_METHODS)); 
+org/mockito/internal/MockitoCore.java#32#    public <T> T mock(Class<T> classToMock, MockSettings mockSettings, boolean shouldResetOngoingStubbing) { return mock(classToMock, mockSettings); }
+org/mockito/internal/MockitoCore.java#33#    public <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
+org/mockito/internal/MockitoCore.java#35#FAULT_OF_OMISSION
+org/mockito/internal/MockitoCore.java#36#FAULT_OF_OMISSION

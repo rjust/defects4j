@@ -1,0 +1,16 @@
+org/apache/commons/math/util/MathUtils.java#184#        long result = Math.round(binomialCoefficientDouble(n, k));
+org/apache/commons/math/util/MathUtils.java#185#        if (result == Long.MAX_VALUE) {
+org/apache/commons/math/util/MathUtils.java#186#            throw new ArithmeticException(
+org/apache/commons/math/util/MathUtils.java#187#                "result too large to represent in a long integer");
+org/apache/commons/math/util/MathUtils.java#188#        }
+org/apache/commons/math/util/MathUtils.java#236#        return Math.floor(Math.exp(binomialCoefficientLog(n, k)) + 0.5);
+org/apache/commons/math/util/MathUtils.java#190#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#196#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#197#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#199#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#205#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#208#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#234#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#235#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#277#FAULT_OF_OMISSION
+org/apache/commons/math/util/MathUtils.java#282#FAULT_OF_OMISSION

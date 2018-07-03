@@ -1,0 +1,3 @@
+org/joda/time/DateTimeZone.java#279#        if (minutesOffset < 0 || minutesOffset > 59) {
+org/joda/time/DateTimeZone.java#286#                minutesOffset = hoursInMinutes - minutesOffset;
+org/joda/time/DateTimeZone.java#282#FAULT_OF_OMISSION

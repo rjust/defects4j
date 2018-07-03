@@ -1,0 +1,9 @@
+org/apache/commons/lang3/builder/HashCodeBuilder.java#104#    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<Set<IDKey>>() {
+org/apache/commons/lang3/builder/HashCodeBuilder.java#105#        @Override
+org/apache/commons/lang3/builder/HashCodeBuilder.java#106#        protected Set<IDKey> initialValue() {
+org/apache/commons/lang3/builder/HashCodeBuilder.java#107#            return new HashSet<IDKey>();
+org/apache/commons/lang3/builder/HashCodeBuilder.java#108#        }
+org/apache/commons/lang3/builder/HashCodeBuilder.java#109#    };
+org/apache/commons/lang3/builder/HashCodeBuilder.java#152#        return getRegistry().contains(new IDKey(value));
+org/apache/commons/lang3/builder/HashCodeBuilder.java#538#        getRegistry().remove(new IDKey(value));
+org/apache/commons/lang3/builder/HashCodeBuilder.java#522#FAULT_OF_OMISSION

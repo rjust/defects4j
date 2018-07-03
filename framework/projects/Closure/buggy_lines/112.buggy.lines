@@ -1,0 +1,3 @@
+com/google/javascript/jscomp/TypeInference.java#1192#    Map<TemplateType, JSType> inferred = 
+com/google/javascript/jscomp/TypeInference.java#1193#        inferTemplateTypesFromParameters(fnType, n);
+com/google/javascript/jscomp/TypeInference.java#1195#FAULT_OF_OMISSION

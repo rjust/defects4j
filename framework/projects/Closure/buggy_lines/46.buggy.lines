@@ -1,0 +1,16 @@
+com/google/javascript/rhino/jstype/RecordType.java#140#  @Override
+com/google/javascript/rhino/jstype/RecordType.java#141#  public JSType getLeastSupertype(JSType that) {
+com/google/javascript/rhino/jstype/RecordType.java#142#    if (!that.isRecordType()) {
+com/google/javascript/rhino/jstype/RecordType.java#143#      return super.getLeastSupertype(that);
+com/google/javascript/rhino/jstype/RecordType.java#144#    }
+com/google/javascript/rhino/jstype/RecordType.java#145#    RecordTypeBuilder builder = new RecordTypeBuilder(registry);
+com/google/javascript/rhino/jstype/RecordType.java#146#    for (String property : properties.keySet()) {
+com/google/javascript/rhino/jstype/RecordType.java#147#      if (that.toMaybeRecordType().hasProperty(property) &&
+com/google/javascript/rhino/jstype/RecordType.java#148#          that.toMaybeRecordType().getPropertyType(property).isEquivalentTo(
+com/google/javascript/rhino/jstype/RecordType.java#149#              getPropertyType(property))) {
+com/google/javascript/rhino/jstype/RecordType.java#150#        builder.addProperty(property, getPropertyType(property),
+com/google/javascript/rhino/jstype/RecordType.java#151#            getPropertyNode(property));
+com/google/javascript/rhino/jstype/RecordType.java#152#      }
+com/google/javascript/rhino/jstype/RecordType.java#153#    }
+com/google/javascript/rhino/jstype/RecordType.java#154#    return builder.build();
+com/google/javascript/rhino/jstype/RecordType.java#155#  }

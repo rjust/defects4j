@@ -1,0 +1,11 @@
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#69#        int[] swap  = new int[order];
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#79#            swap[r] = r;
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#82#                int isi = index[swap[i]];
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#83#                if (c[ii][ii] > c[isi][isi]) {
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#84#                    swap[r] = i;
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#90#            if (swap[r] != r) {
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#91#                int tmp = index[r];
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#92#                index[r] = index[swap[r]];
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#93#                index[swap[r]] = tmp;
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#128#                    c[ii][ii] -= e * e;
+org/apache/commons/math3/linear/RectangularCholeskyDecomposition.java#124#FAULT_OF_OMISSION

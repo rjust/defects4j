@@ -1,0 +1,4 @@
+org/mockito/internal/invocation/InvocationMatcher.java#127#            for (int position = indexOfVararg; position < matchers.size(); position++) {
+org/mockito/internal/invocation/InvocationMatcher.java#128#                Matcher m = matchers.get(position);
+org/mockito/internal/invocation/InvocationMatcher.java#130#                    ((CapturesArguments) m).captureFrom(invocation.getRawArguments()[position - indexOfVararg]);
+org/mockito/internal/invocation/InvocationMatcher.java#143#FAULT_OF_OMISSION

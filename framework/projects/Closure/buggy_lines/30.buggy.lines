@@ -1,0 +1,6 @@
+com/google/javascript/jscomp/MustBeReachingVariableDef.java#396#        if (n.isName() && jsScope.isDeclared(n.getString(), true)) {
+com/google/javascript/jscomp/FlowSensitiveInlineVariables.java#157#    (new NodeTraversal(compiler, this)).traverse(root);
+com/google/javascript/jscomp/MustBeReachingVariableDef.java#71#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MustBeReachingVariableDef.java#398#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MustBeReachingVariableDef.java#399#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MustBeReachingVariableDef.java#430#FAULT_OF_OMISSION

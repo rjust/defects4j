@@ -1,0 +1,3 @@
+org/joda/time/Partial.java#218#                if (compare < 0 || (compare != 0 && loopUnitField.isSupported() == false)) {
+org/joda/time/Partial.java#449#FAULT_OF_OMISSION
+org/joda/time/field/UnsupportedDurationField.java#227#FAULT_OF_OMISSION

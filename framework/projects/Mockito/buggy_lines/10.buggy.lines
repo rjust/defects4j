@@ -1,0 +1,7 @@
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#71#                newDeepStubMock(returnTypeGenericMetadata),
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#87#    private Object newDeepStubMock(GenericMetadataSupport returnTypeGenericMetadata) {
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#90#                withSettingsUsing(returnTypeGenericMetadata)
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#94#    private MockSettings withSettingsUsing(GenericMetadataSupport returnTypeGenericMetadata) {
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#99#        return mockSettings.serializable()
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#17#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#103#FAULT_OF_OMISSION

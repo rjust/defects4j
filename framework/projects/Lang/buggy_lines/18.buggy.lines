@@ -1,0 +1,4 @@
+org/apache/commons/lang3/time/FastDateFormat.java#495#                if (tokenLen >= 4) {
+org/apache/commons/lang3/time/FastDateFormat.java#496#                    rule = selectNumberRule(Calendar.YEAR, tokenLen);
+org/apache/commons/lang3/time/FastDateFormat.java#497#                } else {
+org/apache/commons/lang3/time/FastDateFormat.java#499#FAULT_OF_OMISSION
