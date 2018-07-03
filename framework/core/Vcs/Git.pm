@@ -59,7 +59,7 @@ sub _diff_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
     $path = defined $path ? "-- $path $path" : "";
-    return "git --git-dir=$self->{repo} diff --binary ${rev1} ${rev2} $path";
+    return "git --git-dir=$self->{repo} diff --no-ext-diff --binary ${rev1} ${rev2} $path";
 }
 
 sub _rev_date_cmd {
