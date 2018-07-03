@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/Compiler.java#1432#        String code = toSource(root, sourceMap);
+com/google/javascript/jscomp/Compiler.java#1461#    return toSource(n, null);
+com/google/javascript/jscomp/Compiler.java#1467#  private String toSource(Node n, SourceMap sourceMap) {
+com/google/javascript/jscomp/Compiler.java#1473#    builder.setTagAsStrict(

@@ -1,0 +1,2 @@
+org/apache/commons/math/complex/Complex.java#260#            return isZero ? NaN : INF;
+org/apache/commons/math/complex/Complex.java#297#            return isZero ? NaN : INF;

@@ -1,0 +1,7 @@
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#240#        double criterion = 0;
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#241#        for (int i = 0; i < rows; ++i) {
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#242#            final double residual = residuals[i];
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#243#            criterion += residual * residual * residualsWeights[i];
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#244#        }
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#245#        return Math.sqrt(criterion / rows);
+org/apache/commons/math/optimization/general/AbstractLeastSquaresOptimizer.java#258#            chiSquare += residual * residual / residualsWeights[i];

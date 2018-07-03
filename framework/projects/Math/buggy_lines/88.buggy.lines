@@ -1,0 +1,9 @@
+org/apache/commons/math/optimization/linear/SimplexTableau.java#336#            if (basicRow != null) {
+org/apache/commons/math/optimization/linear/SimplexTableau.java#337#                for (int j = getNumObjectiveFunctions(); j < getNumObjectiveFunctions() + i; j++) {
+org/apache/commons/math/optimization/linear/SimplexTableau.java#338#                    if (tableau.getEntry(basicRow, j) == 1) {
+org/apache/commons/math/optimization/linear/SimplexTableau.java#339#                         coefficients[i] = 0;
+org/apache/commons/math/optimization/linear/SimplexTableau.java#340#                    }
+org/apache/commons/math/optimization/linear/SimplexTableau.java#341#                }
+org/apache/commons/math/optimization/linear/SimplexTableau.java#329#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/linear/SimplexTableau.java#331#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/linear/SimplexTableau.java#333#FAULT_OF_OMISSION

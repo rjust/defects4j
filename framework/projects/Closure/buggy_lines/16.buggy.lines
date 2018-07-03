@@ -1,0 +1,5 @@
+com/google/javascript/jscomp/ScopedAliases.java#172#    AliasedTypeNode(Node typeReference,
+com/google/javascript/jscomp/ScopedAliases.java#180#      typeReference.setString(aliasName);
+com/google/javascript/jscomp/ScopedAliases.java#468#          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode.getQualifiedName() + name.substring(endIndex)));
+com/google/javascript/jscomp/ScopedAliases.java#170#FAULT_OF_OMISSION
+com/google/javascript/jscomp/ScopedAliases.java#175#FAULT_OF_OMISSION

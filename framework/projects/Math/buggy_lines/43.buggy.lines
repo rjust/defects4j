@@ -1,0 +1,3 @@
+org/apache/commons/math/stat/descriptive/SummaryStatistics.java#158#        if (!(meanImpl instanceof Mean)) {
+org/apache/commons/math/stat/descriptive/SummaryStatistics.java#161#        if (!(varianceImpl instanceof Variance)) {
+org/apache/commons/math/stat/descriptive/SummaryStatistics.java#164#        if (!(geoMeanImpl instanceof GeometricMean)) {

@@ -1,0 +1,12 @@
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#162#                    eigenDecomposition.getV().getSubMatrix(0, p - 1, 0, p - 1);
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#166#                for (int i = 0; i < p - 1; ++i) {
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#176#                }
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#178#                            wData[p - 1][j] = ei1[j] * mainBidiagonal[p - 1] / singularValues[j];
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#248#                    eigenDecomposition.getV().getSubMatrix(0, p - 1, 0, p - 1);
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#252#                for (int i = 0; i < p - 1; ++i) {
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#261#                }
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#263#                            wData[p - 1][j] = ei1[j] * mainBidiagonal[p - 1] / singularValues[j];
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#171#FAULT_OF_OMISSION
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#180#FAULT_OF_OMISSION
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#256#FAULT_OF_OMISSION
+org/apache/commons/math/linear/SingularValueDecompositionImpl.java#265#FAULT_OF_OMISSION

@@ -1,0 +1,7 @@
+org/jfree/data/KeyedObjects2D.java#231#        if (row >= 0) {
+org/jfree/data/KeyedObjects2D.java#233#            return rowData.getObject(columnKey);
+org/jfree/data/KeyedObjects2D.java#378#                rowData.removeValue(columnKey);
+org/jfree/data/KeyedObjects2D.java#318#FAULT_OF_OMISSION
+org/jfree/data/KeyedObjects2D.java#319#FAULT_OF_OMISSION
+org/jfree/data/KeyedObjects2D.java#320#FAULT_OF_OMISSION
+org/jfree/data/KeyedObjects2D.java#345#FAULT_OF_OMISSION

@@ -1,0 +1,26 @@
+com/google/javascript/jscomp/CheckSideEffects.java#101#    if (parent.getType() == Token.COMMA) {
+com/google/javascript/jscomp/CheckSideEffects.java#102#      Node gramps = parent.getParent();
+com/google/javascript/jscomp/CheckSideEffects.java#103#      if (gramps.isCall() && parent == gramps.getFirstChild()) {
+com/google/javascript/jscomp/CheckSideEffects.java#104#        if (n == parent.getFirstChild() && parent.getChildCount() == 2 && n.getNext().isName() && "eval".equals(n.getNext().getString())) {
+com/google/javascript/jscomp/CheckSideEffects.java#106#        }
+com/google/javascript/jscomp/CheckSideEffects.java#111#      if (n == parent.getLastChild()) {
+com/google/javascript/jscomp/CheckSideEffects.java#112#        for (Node an : parent.getAncestors()) {
+com/google/javascript/jscomp/CheckSideEffects.java#113#          int ancestorType = an.getType();
+com/google/javascript/jscomp/CheckSideEffects.java#114#          if (ancestorType == Token.COMMA)
+com/google/javascript/jscomp/CheckSideEffects.java#115#            continue;
+com/google/javascript/jscomp/CheckSideEffects.java#116#          if (ancestorType != Token.EXPR_RESULT && ancestorType != Token.BLOCK)
+com/google/javascript/jscomp/CheckSideEffects.java#117#            return;
+com/google/javascript/jscomp/CheckSideEffects.java#118#          else
+com/google/javascript/jscomp/CheckSideEffects.java#119#            break;
+com/google/javascript/jscomp/CheckSideEffects.java#120#        }
+com/google/javascript/jscomp/CheckSideEffects.java#121#      }
+com/google/javascript/jscomp/CheckSideEffects.java#122#    } else if (parent.getType() != Token.EXPR_RESULT && parent.getType() != Token.BLOCK) {
+com/google/javascript/jscomp/CheckSideEffects.java#123#      if (parent.getType() == Token.FOR && parent.getChildCount() == 4 && (n == parent.getFirstChild() ||
+com/google/javascript/jscomp/CheckSideEffects.java#124#           n == parent.getFirstChild().getNext().getNext())) {
+com/google/javascript/jscomp/CheckSideEffects.java#125#      } else {
+com/google/javascript/jscomp/CheckSideEffects.java#127#      }
+com/google/javascript/jscomp/CheckSideEffects.java#134#      if (n.isQualifiedName() && n.getJSDocInfo() != null) {
+com/google/javascript/jscomp/CheckSideEffects.java#135#        return;
+com/google/javascript/jscomp/CheckSideEffects.java#136#      } else if (n.isExprResult()) {
+com/google/javascript/jscomp/CheckSideEffects.java#137#        return;
+com/google/javascript/jscomp/CheckSideEffects.java#138#      }

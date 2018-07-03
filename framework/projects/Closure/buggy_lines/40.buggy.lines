@@ -1,0 +1,3 @@
+com/google/javascript/jscomp/NameAnalyzer.java#635#          JsName name = getName(ns.name, false);
+com/google/javascript/jscomp/NameAnalyzer.java#636#          if (name != null) {
+com/google/javascript/jscomp/NameAnalyzer.java#639#          }

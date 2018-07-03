@@ -1,0 +1,15 @@
+com/google/javascript/jscomp/UnreachableCodeElimination.java#153#    if (n.getParent() == null) {
+com/google/javascript/jscomp/UnreachableCodeElimination.java#154#      List<DiGraphEdge<Node,Branch>> outEdges = gNode.getOutEdges();
+com/google/javascript/jscomp/UnreachableCodeElimination.java#155#      if (outEdges.size() == 1) {
+com/google/javascript/jscomp/UnreachableCodeElimination.java#156#        return tryRemoveUnconditionalBranching(outEdges.get(0).getDestination().getValue());
+com/google/javascript/jscomp/UnreachableCodeElimination.java#157#      }
+com/google/javascript/jscomp/UnreachableCodeElimination.java#158#    }
+com/google/javascript/jscomp/UnreachableCodeElimination.java#160#      case Token.BLOCK:
+com/google/javascript/jscomp/UnreachableCodeElimination.java#161#        if (n.hasChildren()) {
+com/google/javascript/jscomp/UnreachableCodeElimination.java#162#          Node first = n.getFirstChild();
+com/google/javascript/jscomp/UnreachableCodeElimination.java#163#          return tryRemoveUnconditionalBranching(first);
+com/google/javascript/jscomp/UnreachableCodeElimination.java#164#        } else {
+com/google/javascript/jscomp/UnreachableCodeElimination.java#165#          return tryRemoveUnconditionalBranching(ControlFlowAnalysis.computeFollowNode(n));
+com/google/javascript/jscomp/UnreachableCodeElimination.java#166#        }
+com/google/javascript/jscomp/UnreachableCodeElimination.java#183#          Node fallThrough = tryRemoveUnconditionalBranching(computeFollowing(n));
+com/google/javascript/jscomp/UnreachableCodeElimination.java#196#FAULT_OF_OMISSION

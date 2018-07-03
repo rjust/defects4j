@@ -1,0 +1,4 @@
+com/google/javascript/rhino/IR.java#224#    Preconditions.checkState(tryBody.isLabelName());
+com/google/javascript/rhino/IR.java#225#    Preconditions.checkState(finallyBody.isLabelName());
+com/google/javascript/rhino/IR.java#233#    Node catchBody = block(catchNode).copyInformationFrom(catchNode);
+com/google/javascript/rhino/IR.java#111#FAULT_OF_OMISSION

@@ -1,0 +1,1 @@
+org/apache/commons/lang3/math/NumberUtils.java#458#        if (str.startsWith("0x") || str.startsWith("-0x")) {

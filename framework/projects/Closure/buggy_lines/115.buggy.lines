@@ -1,0 +1,11 @@
+com/google/javascript/jscomp/FunctionInjector.java#697#    boolean hasSideEffects = false;
+com/google/javascript/jscomp/FunctionInjector.java#698#    if (block.hasChildren()) {
+com/google/javascript/jscomp/FunctionInjector.java#699#      Preconditions.checkState(block.hasOneChild());
+com/google/javascript/jscomp/FunctionInjector.java#700#      Node stmt = block.getFirstChild();
+com/google/javascript/jscomp/FunctionInjector.java#701#      if (stmt.isReturn()) {
+com/google/javascript/jscomp/FunctionInjector.java#702#        hasSideEffects = NodeUtil.mayHaveSideEffects(stmt.getFirstChild(), compiler);
+com/google/javascript/jscomp/FunctionInjector.java#703#      }
+com/google/javascript/jscomp/FunctionInjector.java#704#    }
+com/google/javascript/jscomp/FunctionInjector.java#730#          if (hasSideEffects && NodeUtil.canBeSideEffected(cArg)) {
+com/google/javascript/jscomp/FunctionInjector.java#731#            return CanInlineResult.NO;
+com/google/javascript/jscomp/FunctionInjector.java#732#          }

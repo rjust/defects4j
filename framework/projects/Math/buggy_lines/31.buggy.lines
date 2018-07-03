@@ -1,0 +1,33 @@
+org/apache/commons/math3/util/ContinuedFraction.java#134#        double p0 = 1.0;
+org/apache/commons/math3/util/ContinuedFraction.java#135#        double q1 = 1.0;
+org/apache/commons/math3/util/ContinuedFraction.java#143#            double cN = a * hPrev + b * p0;
+org/apache/commons/math3/util/ContinuedFraction.java#144#            double q2 = a * q1 + b * dPrev;
+org/apache/commons/math3/util/ContinuedFraction.java#145#            if (Double.isInfinite(cN) || Double.isInfinite(q2)) {
+org/apache/commons/math3/util/ContinuedFraction.java#146#                double scaleFactor = 1d;
+org/apache/commons/math3/util/ContinuedFraction.java#147#                double lastScaleFactor = 1d;
+org/apache/commons/math3/util/ContinuedFraction.java#148#                final int maxPower = 5;
+org/apache/commons/math3/util/ContinuedFraction.java#149#                final double scale = FastMath.max(a,b);
+org/apache/commons/math3/util/ContinuedFraction.java#150#                if (scale <= 0) {  // Can't scale
+org/apache/commons/math3/util/ContinuedFraction.java#151#                    throw new ConvergenceException(LocalizedFormats.CONTINUED_FRACTION_INFINITY_DIVERGENCE, x);
+org/apache/commons/math3/util/ContinuedFraction.java#152#                }
+org/apache/commons/math3/util/ContinuedFraction.java#153#                for (int i = 0; i < maxPower; i++) {
+org/apache/commons/math3/util/ContinuedFraction.java#154#                    lastScaleFactor = scaleFactor;
+org/apache/commons/math3/util/ContinuedFraction.java#155#                    scaleFactor *= scale;
+org/apache/commons/math3/util/ContinuedFraction.java#156#                    if (a != 0.0 && a > b) {
+org/apache/commons/math3/util/ContinuedFraction.java#157#                        cN = hPrev / lastScaleFactor + (b / scaleFactor * p0);
+org/apache/commons/math3/util/ContinuedFraction.java#158#                        q2 = q1 / lastScaleFactor + (b / scaleFactor * dPrev);
+org/apache/commons/math3/util/ContinuedFraction.java#159#                    } else if (b != 0) {
+org/apache/commons/math3/util/ContinuedFraction.java#160#                        cN = (a / scaleFactor * hPrev) + p0 / lastScaleFactor;
+org/apache/commons/math3/util/ContinuedFraction.java#161#                        q2 = (a / scaleFactor * q1) + dPrev / lastScaleFactor;
+org/apache/commons/math3/util/ContinuedFraction.java#162#                    }
+org/apache/commons/math3/util/ContinuedFraction.java#163#                    if (!(Double.isInfinite(cN) || Double.isInfinite(q2))) {
+org/apache/commons/math3/util/ContinuedFraction.java#164#                        break;
+org/apache/commons/math3/util/ContinuedFraction.java#165#                    }
+org/apache/commons/math3/util/ContinuedFraction.java#166#                }
+org/apache/commons/math3/util/ContinuedFraction.java#169#            final double deltaN = cN / q2 / cPrev;
+org/apache/commons/math3/util/ContinuedFraction.java#170#            hN = cPrev * deltaN;
+org/apache/commons/math3/util/ContinuedFraction.java#185#            dPrev = q1;
+org/apache/commons/math3/util/ContinuedFraction.java#186#            cPrev = cN / q2;
+org/apache/commons/math3/util/ContinuedFraction.java#187#            p0 = hPrev;
+org/apache/commons/math3/util/ContinuedFraction.java#188#            hPrev = cN;
+org/apache/commons/math3/util/ContinuedFraction.java#189#            q1 = q2;

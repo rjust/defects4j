@@ -1,0 +1,5 @@
+com/google/javascript/jscomp/FoldConstants.java#1477#    StringBuilder sb = new StringBuilder();
+com/google/javascript/jscomp/FoldConstants.java#1483#        if (sb.length() > 0) {
+com/google/javascript/jscomp/FoldConstants.java#1488#        if (sb.length() > 0) {
+com/google/javascript/jscomp/FoldConstants.java#1492#          sb = new StringBuilder();
+com/google/javascript/jscomp/FoldConstants.java#1500#    if (sb.length() > 0) {

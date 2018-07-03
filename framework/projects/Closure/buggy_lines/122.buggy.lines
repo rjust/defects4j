@@ -1,0 +1,1 @@
+com/google/javascript/jscomp/parsing/IRFactory.java#252#    if (comment.getValue().indexOf("/* @") != -1 || comment.getValue().indexOf("\n * @") != -1) {

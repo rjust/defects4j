@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/RemoveUnusedVars.java#741#          if (assignedToUnknownValue && hasPropertyAssign) {
+com/google/javascript/jscomp/RemoveUnusedVars.java#904#      this.maybeAliased = !assignNode.getParent().isExprResult();
+com/google/javascript/jscomp/RemoveUnusedVars.java#732#FAULT_OF_OMISSION
+com/google/javascript/jscomp/RemoveUnusedVars.java#739#FAULT_OF_OMISSION

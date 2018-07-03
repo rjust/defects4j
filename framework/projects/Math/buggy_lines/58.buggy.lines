@@ -1,0 +1,1 @@
+org/apache/commons/math/optimization/fitting/GaussianFitter.java#121#        return fit(new Gaussian.Parametric(), guess);

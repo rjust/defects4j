@@ -1,0 +1,2 @@
+org/apache/commons/math/linear/BigMatrixImpl.java#991#        final BigDecimal[] out = new BigDecimal[v.length];
+org/apache/commons/math/linear/RealMatrixImpl.java#779#        final double[] out = new double[v.length];

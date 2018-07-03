@@ -1,0 +1,2 @@
+org/joda/time/base/BaseSingleFieldPeriod.java#104#        int[] values = chrono.get(zeroInstance, chrono.set(start, 0L), chrono.set(end, 0L));
+org/joda/time/base/BaseSingleFieldPeriod.java#52#FAULT_OF_OMISSION

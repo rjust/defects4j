@@ -1,0 +1,8 @@
+com/google/javascript/jscomp/TypeValidator.java#366#      if ((leftType.isConstructor() || leftType.isEnumType()) && (rightType.isConstructor() || rightType.isEnumType())) {
+com/google/javascript/jscomp/TypeValidator.java#367#        registerMismatch(rightType, leftType, null);
+com/google/javascript/jscomp/TypeValidator.java#368#      } else {
+com/google/javascript/jscomp/TypeValidator.java#385#      }
+com/google/javascript/jscomp/TypeValidator.java#405#      if ((leftType.isConstructor() || leftType.isEnumType()) && (rightType.isConstructor() || rightType.isEnumType())) {
+com/google/javascript/jscomp/TypeValidator.java#406#        registerMismatch(rightType, leftType, null);
+com/google/javascript/jscomp/TypeValidator.java#407#      } else {
+com/google/javascript/jscomp/TypeValidator.java#409#      }

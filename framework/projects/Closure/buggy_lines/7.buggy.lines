@@ -1,0 +1,3 @@
+com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java#613#        return resultEqualsValue && ctorType.isSubtype(type) ? ctorType : null;
+com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java#615#FAULT_OF_OMISSION
+com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java#616#FAULT_OF_OMISSION

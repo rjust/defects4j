@@ -1,0 +1,3 @@
+org/mockito/internal/MockHandler.java#77#            if (verificationMode instanceof MockAwareVerificationMode && ((MockAwareVerificationMode) verificationMode).getMock() == invocation.getMock()) {                
+org/mockito/internal/MockHandler.java#81#FAULT_OF_OMISSION
+org/mockito/internal/MockHandler.java#83#FAULT_OF_OMISSION

@@ -1,0 +1,16 @@
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#278#            qTy(residuals);
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#316#                            sum += jacobian[i][pj] * residuals[i];
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#346#                determineLMParameter(oldRes, delta, diag, work1, work2, work3);
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#365#                current = new VectorialPointValuePair(point, objective);
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#442#                } else {
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#443#                    if (checker.converged(getIterations(), previous, current)) {
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#444#                        return current;
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#445#                    }
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#258#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#270#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#324#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#344#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#421#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#423#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#424#FAULT_OF_OMISSION
+org/apache/commons/math/optimization/general/LevenbergMarquardtOptimizer.java#434#FAULT_OF_OMISSION

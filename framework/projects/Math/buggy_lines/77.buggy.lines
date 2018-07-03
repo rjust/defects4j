@@ -1,0 +1,10 @@
+org/apache/commons/math/linear/ArrayRealVector.java#721#            max += Math.max(max, Math.abs(a));
+org/apache/commons/math/linear/OpenMapRealVector.java#498#    public double getLInfNorm() {
+org/apache/commons/math/linear/OpenMapRealVector.java#499#        double max = 0;
+org/apache/commons/math/linear/OpenMapRealVector.java#500#        Iterator iter = entries.iterator();
+org/apache/commons/math/linear/OpenMapRealVector.java#501#        while (iter.hasNext()) {
+org/apache/commons/math/linear/OpenMapRealVector.java#502#            iter.advance();
+org/apache/commons/math/linear/OpenMapRealVector.java#503#            max += iter.value();
+org/apache/commons/math/linear/OpenMapRealVector.java#504#        }
+org/apache/commons/math/linear/OpenMapRealVector.java#505#        return max;
+org/apache/commons/math/linear/OpenMapRealVector.java#506#    }

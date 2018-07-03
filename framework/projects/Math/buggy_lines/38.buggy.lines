@@ -1,0 +1,4 @@
+org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java#1660#                    throw new PathIsExploredException(); // XXX
+org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java#1662#                final int iptMinus1 = ipt;
+org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java#1663#                final int jptMinus1 = jpt;
+org/apache/commons/math/optimization/direct/BOBYQAOptimizer.java#1752#                throw new PathIsExploredException(); // XXX

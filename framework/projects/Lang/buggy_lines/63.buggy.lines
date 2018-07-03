@@ -1,0 +1,21 @@
+org/apache/commons/lang/time/DurationFormatUtils.java#306#            days += 31;
+org/apache/commons/lang/time/DurationFormatUtils.java#318#        milliseconds -= reduceAndCorrect(start, end, Calendar.MILLISECOND, milliseconds);
+org/apache/commons/lang/time/DurationFormatUtils.java#319#        seconds -= reduceAndCorrect(start, end, Calendar.SECOND, seconds);
+org/apache/commons/lang/time/DurationFormatUtils.java#320#        minutes -= reduceAndCorrect(start, end, Calendar.MINUTE, minutes);
+org/apache/commons/lang/time/DurationFormatUtils.java#321#        hours -= reduceAndCorrect(start, end, Calendar.HOUR_OF_DAY, hours);
+org/apache/commons/lang/time/DurationFormatUtils.java#322#        days -= reduceAndCorrect(start, end, Calendar.DAY_OF_MONTH, days);
+org/apache/commons/lang/time/DurationFormatUtils.java#323#        months -= reduceAndCorrect(start, end, Calendar.MONTH, months);
+org/apache/commons/lang/time/DurationFormatUtils.java#324#        years -= reduceAndCorrect(start, end, Calendar.YEAR, years);
+org/apache/commons/lang/time/DurationFormatUtils.java#431#    }
+org/apache/commons/lang/time/DurationFormatUtils.java#432#    static int reduceAndCorrect(Calendar start, Calendar end, int field, int difference) {
+org/apache/commons/lang/time/DurationFormatUtils.java#433#        end.add( field, -1 * difference );
+org/apache/commons/lang/time/DurationFormatUtils.java#434#        int endValue = end.get(field);
+org/apache/commons/lang/time/DurationFormatUtils.java#435#        int startValue = start.get(field);
+org/apache/commons/lang/time/DurationFormatUtils.java#436#        if (endValue < startValue) {
+org/apache/commons/lang/time/DurationFormatUtils.java#437#            int newdiff = startValue - endValue;
+org/apache/commons/lang/time/DurationFormatUtils.java#438#            end.add( field, newdiff );
+org/apache/commons/lang/time/DurationFormatUtils.java#439#            return newdiff;
+org/apache/commons/lang/time/DurationFormatUtils.java#440#        } else {
+org/apache/commons/lang/time/DurationFormatUtils.java#441#            return 0;
+org/apache/commons/lang/time/DurationFormatUtils.java#442#        }
+org/apache/commons/lang/time/DurationFormatUtils.java#313#FAULT_OF_OMISSION

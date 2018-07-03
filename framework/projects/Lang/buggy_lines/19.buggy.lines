@@ -1,0 +1,5 @@
+org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java#40#        if(input.charAt(index) == '&' && index < seqEnd - 1 && input.charAt(index + 1) == '#') {
+org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java#54#            while(input.charAt(end) != ';') 
+org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java#80#            return 2 + (end - start) + (isHex ? 1 : 0) + 1;
+org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java#50#FAULT_OF_OMISSION
+org/apache/commons/lang3/text/translate/NumericEntityUnescaper.java#79#FAULT_OF_OMISSION

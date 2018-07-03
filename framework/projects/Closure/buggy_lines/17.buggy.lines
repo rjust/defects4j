@@ -1,0 +1,2 @@
+com/google/javascript/jscomp/TypedScopeCreator.java#1291#              if (rValue.getJSType() != null && !rValue.getJSType().isUnknownType()) {
+com/google/javascript/jscomp/TypedScopeCreator.java#1293#FAULT_OF_OMISSION

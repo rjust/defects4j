@@ -1,0 +1,2 @@
+com/google/javascript/jscomp/TypeCheck.java#1314#    } else if (n.getJSType() != null && parent.isAssign()) {
+com/google/javascript/jscomp/TypeCheck.java#1315#      return;

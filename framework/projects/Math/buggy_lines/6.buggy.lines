@@ -1,0 +1,17 @@
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java#191#        int iter = 0;
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java#193#            ++iter;
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java#227#                    stop = checker.converged(iter, previous, current);
+org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java#214#        int iter = 0;
+org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java#217#            ++iter;
+org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java#223#                if (checker.converged(iter, previous, current)) {
+org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java#277#            if (iter % n == 0 ||
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java#158#            if (iteration > 0) {
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java#175#			++iteration;
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java#106#        int iter = 0;
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java#108#            ++iter;
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java#160#                converged = checker.converged(iter, previous, current);
+org/apache/commons/math3/optim/BaseOptimizer.java#51#        iterations = new Incrementor(0, new MaxIterCallback());
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java#322#        int iter = 0;
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java#325#            ++iter;
+org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java#489#                        if (checker.converged(iter, previous, current)) {
+org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java#388#FAULT_OF_OMISSION

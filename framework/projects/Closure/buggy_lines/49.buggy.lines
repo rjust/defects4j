@@ -1,0 +1,15 @@
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#91#    if (declarationRoot.getType() == Token.FUNCTION) {
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#92#      for (Node c = declarationRoot.getFirstChild().getNext().getFirstChild(); c != null; c = c.getNext()) {
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#93#        String name = c.getString();
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#94#        renamer.addDeclaredName(name);
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#95#      }
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#96#      Node functionBody = declarationRoot.getLastChild();
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#97#      findDeclaredNames(functionBody, null, renamer);
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#98#    }  else 
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#130#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#131#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#133#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#135#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#173#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#177#FAULT_OF_OMISSION
+com/google/javascript/jscomp/MakeDeclaredNamesUnique.java#180#FAULT_OF_OMISSION

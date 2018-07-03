@@ -1,0 +1,5 @@
+org/apache/commons/lang3/math/NumberUtils.java#452#        if (str.startsWith("--")) {
+org/apache/commons/lang3/math/NumberUtils.java#453#            return null;
+org/apache/commons/lang3/math/NumberUtils.java#454#        }
+org/apache/commons/lang3/math/NumberUtils.java#721#FAULT_OF_OMISSION
+org/apache/commons/lang3/math/NumberUtils.java#725#FAULT_OF_OMISSION

@@ -1,0 +1,9 @@
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#44#    private MockitoCore mockitoCore = new MockitoCore();
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#45#    private ReturnsEmptyValues delegate = new ReturnsEmptyValues();
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#114#        container.addAnswer(new Answer<Object>() {
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#52#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#59#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#60#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#100#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#123#FAULT_OF_OMISSION
+org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java#124#FAULT_OF_OMISSION

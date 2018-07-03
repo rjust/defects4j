@@ -1,0 +1,4 @@
+com/google/javascript/jscomp/SourceMap.java#141#        new FilePosition(node.getLineno(), node.getCharno()),
+com/google/debugging/sourcemap/SourceMapConsumerV3.java#489#        .setLineNumber(entry.getSourceLine())
+com/google/debugging/sourcemap/SourceMapConsumerV3.java#490#        .setColumnPosition(entry.getSourceColumn());
+com/google/javascript/jscomp/SourceMap.java#138#FAULT_OF_OMISSION

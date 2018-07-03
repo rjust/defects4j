@@ -1,0 +1,9 @@
+org/apache/commons/lang3/time/FastDateParser.java#304#        boolean wasWhite= false;
+org/apache/commons/lang3/time/FastDateParser.java#307#            if(Character.isWhitespace(c)) {
+org/apache/commons/lang3/time/FastDateParser.java#308#                if(!wasWhite) {
+org/apache/commons/lang3/time/FastDateParser.java#309#                    wasWhite= true;
+org/apache/commons/lang3/time/FastDateParser.java#310#                    regex.append("\\s*+");
+org/apache/commons/lang3/time/FastDateParser.java#311#                }
+org/apache/commons/lang3/time/FastDateParser.java#312#                continue;
+org/apache/commons/lang3/time/FastDateParser.java#313#            }
+org/apache/commons/lang3/time/FastDateParser.java#314#            wasWhite= false;

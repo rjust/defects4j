@@ -1,0 +1,4 @@
+org/joda/time/tz/ZoneInfoCompiler.java#68#    static ThreadLocal<Boolean> cVerbose = new ThreadLocal<Boolean>();
+org/joda/time/tz/ZoneInfoCompiler.java#69#    static {
+org/joda/time/tz/ZoneInfoCompiler.java#70#        cVerbose.set(Boolean.FALSE);
+org/joda/time/tz/ZoneInfoCompiler.java#71#    }

@@ -1,0 +1,15 @@
+com/google/javascript/jscomp/TypeInference.java#1121#    if (constraintObj != null && constraintObj.isRecordType()) {
+com/google/javascript/jscomp/TypeInference.java#1122#      ObjectType objType = ObjectType.cast(type.restrictByNotNullOrUndefined());
+com/google/javascript/jscomp/TypeInference.java#1123#      if (objType != null) {
+com/google/javascript/jscomp/TypeInference.java#1124#        for (String prop : constraintObj.getOwnPropertyNames()) {
+com/google/javascript/jscomp/TypeInference.java#1125#          JSType propType = constraintObj.getPropertyType(prop);
+com/google/javascript/jscomp/TypeInference.java#1126#          if (!objType.isPropertyTypeDeclared(prop)) {
+com/google/javascript/jscomp/TypeInference.java#1127#            JSType typeToInfer = propType;
+com/google/javascript/jscomp/TypeInference.java#1128#            if (!objType.hasProperty(prop)) {
+com/google/javascript/jscomp/TypeInference.java#1129#              typeToInfer =
+com/google/javascript/jscomp/TypeInference.java#1130#                  getNativeType(VOID_TYPE).getLeastSupertype(propType);
+com/google/javascript/jscomp/TypeInference.java#1131#            }
+com/google/javascript/jscomp/TypeInference.java#1132#            objType.defineInferredProperty(prop, typeToInfer, null);
+com/google/javascript/jscomp/TypeInference.java#1133#          }
+com/google/javascript/jscomp/TypeInference.java#1134#        }
+com/google/javascript/jscomp/TypeInference.java#1135#      }

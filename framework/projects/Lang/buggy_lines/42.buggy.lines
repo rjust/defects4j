@@ -1,0 +1,2 @@
+org/apache/commons/lang/Entities.java#828#            char c = str.charAt(i);
+org/apache/commons/lang/Entities.java#831#                if (c > 0x7F) {

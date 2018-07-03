@@ -1,0 +1,5 @@
+org/apache/commons/math/geometry/Vector3D.java#473#      return new Vector3D(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
+org/apache/commons/math/geometry/Vector3D.java#459#FAULT_OF_OMISSION
+org/apache/commons/math/geometry/Vector3D.java#462#FAULT_OF_OMISSION
+org/apache/commons/math/geometry/Vector3D.java#470#FAULT_OF_OMISSION
+org/apache/commons/math/geometry/Vector3D.java#471#FAULT_OF_OMISSION

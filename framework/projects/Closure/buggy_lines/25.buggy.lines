@@ -1,0 +1,6 @@
+com/google/javascript/jscomp/TypeInference.java#1038#    scope = traverse(constructor, scope);
+com/google/javascript/jscomp/TypeInference.java#1059#    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
+com/google/javascript/jscomp/TypeInference.java#1060#      scope = traverse(arg, scope);
+com/google/javascript/jscomp/TypeInference.java#1061#    }
+com/google/javascript/jscomp/TypeInference.java#1036#FAULT_OF_OMISSION
+com/google/javascript/jscomp/TypeInference.java#1055#FAULT_OF_OMISSION

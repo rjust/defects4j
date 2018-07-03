@@ -1,0 +1,11 @@
+org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java#114#            Object injected = mockCandidateFilter.filterCandidate(mocks, field, instance).thenInject();
+org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java#23#    public OngoingInjecter filterCandidate(final Collection<Object> mocks, final Field field, final Object fieldInstance) {
+org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java#15#            Object fieldInstance
+org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java#23#			Field field, Object fieldInstance) {
+org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java#31#			return next.filterCandidate(mockNameMatches, field,
+org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java#43#		return next.filterCandidate(mocks, field, fieldInstance);
+org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java#20#    public OngoingInjecter filterCandidate(Collection<Object> mocks, Field field, Object fieldInstance) {
+org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java#28#        return next.filterCandidate(mockTypeMatches, field, fieldInstance);
+org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java#13#FAULT_OF_OMISSION
+org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java#9#FAULT_OF_OMISSION
+org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java#42#FAULT_OF_OMISSION

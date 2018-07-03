@@ -1,0 +1,3 @@
+org/mockito/Matchers.java#362#        return reportMatcher(new InstanceOf(clazz)).<T>returnNull();
+org/mockito/Matchers.java#479#        return reportMatcher(new Equals(value)).<T>returnNull();
+org/mockito/Matchers.java#516#        return reportMatcher(new Same(value)).<T>returnNull();

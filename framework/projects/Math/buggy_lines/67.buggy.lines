@@ -1,0 +1,2 @@
+org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java#92#        return optimizer.getFunctionValue();
+org/apache/commons/math/optimization/MultiStartUnivariateRealOptimizer.java#97#        return optimizer.getResult();

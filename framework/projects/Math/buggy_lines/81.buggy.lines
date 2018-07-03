@@ -1,0 +1,4 @@
+org/apache/commons/math/linear/EigenDecompositionImpl.java#905#                    for (int i = 4 * i0; i < 4 * n0 - 11; i += 4) {
+org/apache/commons/math/linear/EigenDecompositionImpl.java#906#                        if ((work[i + 3] <= TOLERANCE_2 * work[i]) &&
+org/apache/commons/math/linear/EigenDecompositionImpl.java#1543#                if (end - start > 2) {
+org/apache/commons/math/linear/EigenDecompositionImpl.java#603#FAULT_OF_OMISSION

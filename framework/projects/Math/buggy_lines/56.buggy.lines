@@ -1,0 +1,7 @@
+org/apache/commons/math/util/MultidimensionalCounter.java#237#        int idx = 1;
+org/apache/commons/math/util/MultidimensionalCounter.java#238#        while (count < index) {
+org/apache/commons/math/util/MultidimensionalCounter.java#239#            count += idx;
+org/apache/commons/math/util/MultidimensionalCounter.java#240#            ++idx;
+org/apache/commons/math/util/MultidimensionalCounter.java#241#        }
+org/apache/commons/math/util/MultidimensionalCounter.java#242#        --idx;
+org/apache/commons/math/util/MultidimensionalCounter.java#243#        indices[last] = idx;

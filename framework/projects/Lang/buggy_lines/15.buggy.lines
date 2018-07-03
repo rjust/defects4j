@@ -1,0 +1,4 @@
+org/apache/commons/lang3/reflect/TypeUtils.java#219#        for (Map.Entry<TypeVariable<?>, Type> entry : toTypeVarAssigns.entrySet()) {
+org/apache/commons/lang3/reflect/TypeUtils.java#220#            Type toTypeArg = entry.getValue();
+org/apache/commons/lang3/reflect/TypeUtils.java#221#            Type fromTypeArg = fromTypeVarAssigns.get(entry.getKey());
+org/apache/commons/lang3/reflect/TypeUtils.java#675#        if (cls.getTypeParameters().length > 0 || toClass.equals(cls)) {

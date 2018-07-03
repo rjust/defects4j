@@ -1,0 +1,10 @@
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#83#        int len = Character.codePointCount(input, 0, input.length());
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#90#            else {
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#94#                    if (pos < len - 2) {
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#96#                    } else {
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#97#                        pos++;
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#98#                    }
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#99#                }
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#100#                pos--;
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#102#            pos++;
+org/apache/commons/lang3/text/translate/CharSequenceTranslator.java#89#FAULT_OF_OMISSION

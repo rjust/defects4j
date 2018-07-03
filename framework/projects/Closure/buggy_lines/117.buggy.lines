@@ -1,0 +1,14 @@
+com/google/javascript/jscomp/TypeValidator.java#756#    JSType type = getJSType(n);
+com/google/javascript/jscomp/TypeValidator.java#757#    if (dereference) {
+com/google/javascript/jscomp/TypeValidator.java#758#      ObjectType dereferenced = type.dereference();
+com/google/javascript/jscomp/TypeValidator.java#759#      if (dereferenced != null) {
+com/google/javascript/jscomp/TypeValidator.java#760#        type = dereferenced;
+com/google/javascript/jscomp/TypeValidator.java#761#      }
+com/google/javascript/jscomp/TypeValidator.java#762#    }
+com/google/javascript/jscomp/TypeValidator.java#763#    if (type.isFunctionPrototypeType() ||
+com/google/javascript/jscomp/TypeValidator.java#764#        (type.toObjectType() != null &&
+com/google/javascript/jscomp/TypeValidator.java#765#         type.toObjectType().getConstructor() != null)) {
+com/google/javascript/jscomp/TypeValidator.java#766#      return type.toString();
+com/google/javascript/jscomp/TypeValidator.java#767#    }
+com/google/javascript/jscomp/TypeValidator.java#725#FAULT_OF_OMISSION
+com/google/javascript/jscomp/TypeValidator.java#727#FAULT_OF_OMISSION

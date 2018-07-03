@@ -1,0 +1,1 @@
+com/google/javascript/jscomp/CollapseProperties.java#172#      if (name.globalSets == 1 && name.localSets == 0 &&

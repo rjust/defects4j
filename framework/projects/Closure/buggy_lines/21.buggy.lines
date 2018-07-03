@@ -1,0 +1,19 @@
+com/google/javascript/jscomp/CheckSideEffects.java#101#    if (n.isExprResult()) {
+com/google/javascript/jscomp/CheckSideEffects.java#113#    if (parent.getType() == Token.COMMA) {
+com/google/javascript/jscomp/CheckSideEffects.java#114#      if (isResultUsed) {
+com/google/javascript/jscomp/CheckSideEffects.java#115#        return;
+com/google/javascript/jscomp/CheckSideEffects.java#116#      }
+com/google/javascript/jscomp/CheckSideEffects.java#117#      if (n == parent.getLastChild()) {
+com/google/javascript/jscomp/CheckSideEffects.java#118#        for (Node an : parent.getAncestors()) {
+com/google/javascript/jscomp/CheckSideEffects.java#119#          int ancestorType = an.getType();
+com/google/javascript/jscomp/CheckSideEffects.java#120#          if (ancestorType == Token.COMMA) continue;
+com/google/javascript/jscomp/CheckSideEffects.java#121#          if (ancestorType != Token.EXPR_RESULT && ancestorType != Token.BLOCK) return;
+com/google/javascript/jscomp/CheckSideEffects.java#122#          else break;
+com/google/javascript/jscomp/CheckSideEffects.java#123#        }
+com/google/javascript/jscomp/CheckSideEffects.java#124#      }
+com/google/javascript/jscomp/CheckSideEffects.java#125#    } else if (parent.getType() != Token.EXPR_RESULT && parent.getType() != Token.BLOCK) {
+com/google/javascript/jscomp/CheckSideEffects.java#126#      if (! (parent.getType() == Token.FOR && parent.getChildCount() == 4 && (n == parent.getFirstChild() || n == parent.getFirstChild().getNext().getNext()))) {
+com/google/javascript/jscomp/CheckSideEffects.java#127#        return;
+com/google/javascript/jscomp/CheckSideEffects.java#128#      }
+com/google/javascript/jscomp/CheckSideEffects.java#129#    }
+com/google/javascript/jscomp/CheckSideEffects.java#130#    if (

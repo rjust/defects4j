@@ -1,0 +1,5 @@
+org/joda/time/Partial.java#221#                } else if (compare == 0) {
+org/joda/time/field/UnsupportedDurationField.java#227#        if (durationField.isSupported()) {
+org/joda/time/field/UnsupportedDurationField.java#228#            return 1;
+org/joda/time/field/UnsupportedDurationField.java#229#        }
+org/joda/time/Partial.java#217#FAULT_OF_OMISSION
