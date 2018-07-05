@@ -109,6 +109,9 @@ for pid in Chart Closure Lang Math Mockito Time; do
     bids=$(cut -f1 -d',' $dir_project/commit-db)
     for bid in $bids; do
         _compute_sloc "$pid" "$bid" || die "[ERROR] get_sloc.sh failed for $pid-$bid"
+        if [ $? -ne 0 ]; then
+          die "[ERROR] _compute_sloc failed for $pid-$bid!"
+        fi
     done
 done
 

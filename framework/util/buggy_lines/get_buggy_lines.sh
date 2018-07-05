@@ -192,6 +192,9 @@ for pid in Chart Closure Lang Math Mockito Time; do
     bids=$(cut -f1 -d',' $dir_project/commit-db)
     for bid in $bids; do
         _determine_buggy_lines "$pid" "$bid" || die "[ERROR] get_buggy_lines.sh failed for $pid-$bid"
+        if [ $? -ne 0 ]; then
+          die "[ERROR] _determine_buggy_lines failed for $pid-$bid!"
+        fi
     done
 done
 
