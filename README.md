@@ -117,6 +117,7 @@ Use [`framework/bin/defects4j`](http://people.cs.umass.edu/~rjust/defects4j/html
 | [coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
 | [export](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [fault-localization](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-fault-localization.html) | Run fault localization analysis on a buggy project version |
 
 
 Export version-specific properties
@@ -148,6 +149,7 @@ provides the following scripts:
 | [run_bug_detection](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
 | [run_mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_mutation.html)      | Determine the mutation score                                   |
 | [run_coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
+| [run_fault_localization](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_fault_localization.html) | Determine the fraction of source code that needs to be inspected before a buggy line is found |
 | [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
 | [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 

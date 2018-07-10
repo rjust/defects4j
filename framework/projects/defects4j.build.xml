@@ -27,7 +27,7 @@ build file that defines all export targets (defect4j.export.xml) and the
 project-specific build file ("project_id"/"project_id".build.xml) for the
 "project_id" (Lang, Math, etc.) of the checked-out project version.
 #############################################################################-->
-<project name="Defects4J" basedir="${basedir}">
+<project name="Defects4J" basedir="${basedir}" xmlns:gzoltar="antlib:com.gzoltar.ant">
     <!-- Ensure basedir is properly set -->
     <property name="d4j.workdir" value="${basedir}" />
     <property name="d4j.properties" value="defects4j.build.properties" />
@@ -45,6 +45,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <!-- Dependencies used by all projects -->
     <property name="junit.jar"  value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
     <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
+    <property name="gzoltar-ant.jar" value="${d4j.home}/framework/lib/fault_localization/gzoltar-ant-current.jar"/>
+    <property name="gzoltar-agent-rt.jar" value="${d4j.home}/framework/lib/fault_localization/gzoltar-agent-rt-current.jar"/>
+
+    <!-- Import GZoltar Ant tasks -->
+    <taskdef uri="antlib:com.gzoltar.ant" resource="antlib.xml">
+        <classpath path="${gzoltar-ant.jar}" />
+    </taskdef>
 
     <!-- Location of libraries of test generation tool-->
     <property name="d4j.dir.lib.testgen.gen" value="${d4j.home}/framework/lib/test_generation/generation"/>
@@ -65,6 +72,10 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <property name="d4j.dir.coverage.report" value="${d4j.workdir}" />
     <!-- Data file that holds coverage information-->
     <property name="d4j.file.cobertura.ser" value="cobertura.ser" />
+    <!-- Data file that holds coverage information for fault localization analysis -->
+    <property name="d4j.file.gzoltar.ser" value="gzoltar.ser" />
+    <!-- Directory of fault localization reports -->
+    <property name="d4j.dir.fl.report" value="${d4j.workdir}" />
 
     <!-- Additional properties such as tests to exclude.
          This property file is automatically generated. -->
@@ -107,10 +118,17 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${cobertura.jar}" />
                 <path refid="d4j.test.classpath"/>
+                <!-- Add dependencies to fault localization tools -->
+                <pathelement path="${gzoltar-ant.jar}" />
+                <pathelement path="${gzoltar-agent-rt.jar}" />
             </classpath>
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+
+            <sysproperty key="gzoltar-agent.destfile" file="${d4j.file.gzoltar.ser}"/>
+            <formatter classname="com.gzoltar.ant.listener.JUnitFormatter" usefile="false" />
+
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
             <batchtest unless="test.entry.class">
                 <fileset refid="all.manual.tests" />
@@ -292,10 +310,17 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <pathelement path="${cobertura.jar}" />
                 <!-- Add dependencies to runtime libraries of test generation tools -->
                 <path refid="d4j.lib.testgen.rt"/>
+                <!-- Add dependencies to fault localization tools -->
+                <pathelement path="${gzoltar-ant.jar}" />
+                <pathelement path="${gzoltar-agent-rt.jar}" />
             </classpath>
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+
+            <sysproperty key="gzoltar-agent.destfile" file="${d4j.file.gzoltar.ser}"/>
+            <formatter classname="com.gzoltar.ant.listener.JUnitFormatter" usefile="false" />
+
             <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
                 <batchtest unless="test.entry.class">
                     <fileset dir="${d4j.test.dir}">
@@ -384,6 +409,140 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <target name="reset.cobertura.ser" if="classes.instrumented.uptodate">
         <copy file="${d4j.dir.classes.instrumented}/${d4j.file.cobertura.ser}"
               todir="${d4j.workdir}" overwrite="true" />
+    </target>
+
+<!--
+    Collect coverage of manually-written test cases
+-->
+    <target name="fl.run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests and collect coverage for fault localization analysis">
+        <!-- Required properties -->
+        <fail message="Property classes.dir not set!" unless="classes.dir" />
+        <fail message="Property d4j.file.gzoltar.ser not set!" unless="d4j.file.gzoltar.ser" />
+        <fail message="Property fl.classes.file not set!" unless="fl.classes.file" />
+        <fail message="Property gzoltar-ant.jar not set!" unless="gzoltar-ant.jar" />
+
+        <!-- Debug messages -->
+        <echo message="classes.dir: ${classes.dir}" />
+        <echo message="d4j.file.gzoltar.ser: ${d4j.file.gzoltar.ser}" />
+        <echo message="fl.classes.file: ${fl.classes.file}" />
+        <echo message="gzoltar-ant.jar: ${gzoltar-ant.jar}" />
+
+        <delete file="${d4j.file.gzoltar.ser}"/>
+
+        <loadfile property="fl.classes.list" srcFile="${fl.classes.file}" />
+        <propertyregex property="fl.classes" input="${fl.classes.list}" regexp="[\n]+" replace=":" />
+        <propertyregex property="fl.innerclasses" input="${fl.classes.list}" regexp="[\n]+" replace="$*:" />
+        <echo message="fl.classes and fl.innerclasses: ${fl.classes}${fl.innerclasses}" />
+
+        <property name="gz_includes_file" value="${classes.dir}/_gz_includes.txt"/>
+        <echo file="${gz_includes_file}" append="false" message="${fl.classes}${fl.innerclasses}"/>
+
+        <!-- Wrap test execution with the GZoltar coverage task -->
+        <gzoltar:coverage destfile="${d4j.file.gzoltar.ser}"
+                          buildLocation="${classes.dir}"
+                          includes="${gz_includes_file}"
+                          excludes=""
+                          exclClassLoader="sun.reflect.DelegatingClassLoader"
+                          inclNoLocationClasses="false"
+                          output="file">
+            <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="yes" forkmode="perTest" showOutput="true">
+                <classpath>
+                    <pathelement location="${classes.dir}" />
+                    <path refid="d4j.test.classpath"/>
+                    <!-- Add dependencies to fault localization tools -->
+                    <pathelement path="${gzoltar-ant.jar}" />
+                </classpath>
+
+                <formatter classname="com.gzoltar.ant.listener.JUnitFormatter" usefile="false" />
+                <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+                <batchtest unless="test.entry.class">
+                    <fileset refid="all.manual.tests" />
+                </batchtest>
+            </junit>
+        </gzoltar:coverage>
+        <!-- fail build in case we are running all classes, but there are none in the fileset -->
+        <if> <not> <isset property="test.entry.class" /> </not> <then>
+            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
+            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+        </then> </if>
+    </target>
+
+<!--
+    Perform offline instrumentation for fault localization.
+    Note: automatically generated test cases with, for example, EvoSuite require this pre-step.
+-->
+    <target name="fl.instrument" depends="compile" description="Instrument all classes">
+        <!-- Required properties -->
+        <fail message="Property classes.dir not set!" unless="classes.dir" />
+        <fail message="Property d4j.dir.classes.instrumented not set!" unless="d4j.dir.classes.instrumented" />
+        <fail message="Property fl.classes.file not set!" unless="fl.classes.file" />
+        <fail message="Property gzoltar-agent-rt.jar not set!" unless="gzoltar-agent-rt.jar" />
+
+        <!-- Debug messages -->
+        <echo message="classes.dir: ${classes.dir}" />
+        <echo message="d4j.dir.classes.instrumented: ${d4j.dir.classes.instrumented}" />
+        <echo message="fl.classes.file: ${fl.classes.file}" />
+        <echo message="gzoltar-agent-rt.jar: ${gzoltar-agent-rt.jar}" />
+
+        <delete dir="${d4j.dir.classes.instrumented}"/>
+
+        <loadfile property="fl.classes.list" srcFile="${fl.classes.file}" />
+        <propertyregex property="fl.classes" input="${fl.classes.list}" regexp="[\n]+" replace=":" />
+        <propertyregex property="fl.innerclasses" input="${fl.classes.list}" regexp="[\n]+" replace="$*:" />
+        <echo message="fl.classes and fl.innerclasses: ${fl.classes}${fl.innerclasses}" />
+
+        <!-- Wrap instrument execution with the GZoltar instrument task -->
+        <gzoltar:instrument destdir="${d4j.dir.classes.instrumented}">
+            <classpath>
+                <pathelement path="${classes.dir}" />
+                <!--path refid="d4j.test.classpath" /-->
+                <path refid="compile.classpath" />
+                <pathelement path="${gzoltar-agent-rt.jar}" />
+            </classpath>
+
+            <!--fileset dir="${classes.dir}" includes="**/*.class"/-->
+            <fileset dir="${classes.dir}" includes="${fl.classes}${fl.innerclasses}" />
+        </gzoltar:instrument>
+    </target>
+
+<!--
+    Run fault localization analysis
+-->
+    <target name="fl.analysis" description="Run fault localization analysis">
+        <mkdir dir="${d4j.dir.fl.report}" />
+
+        <!-- Required properties -->
+        <fail message="Property classes.dir not set!" unless="classes.dir" />
+        <fail message="Property fl.granularity not set!" unless="fl.granularity" />
+
+        <!-- Debug messages -->
+        <echo message="classes.dir: ${classes.dir}" />
+        <echo message="fl.granularity: ${fl.granularity}" />
+
+        <gzoltar:fl-report buildLocation="${classes.dir}"
+                           granularity="${fl.granularity}"
+                           inclPublicMethods="true"
+                           inclStaticConstructors="true"
+                           inclDeprecatedMethods="true"
+                           dataFile="${d4j.file.gzoltar.ser}"
+                           outputDirectory="${d4j.dir.fl.report}">
+            <flFamilies>
+                <flFamily name="${fl.family}">
+                    <formulas>
+                        <formula name="${fl.formula}" />
+                    </formulas>
+                    <metrics>
+                        <metric name="rho" />
+                        <metric name="ambiguity" />
+                        <metric name="coverage" />
+                    </metrics>
+                    <formatters>
+                        <txt />
+                        <!--html views="sunburst:vertical_partition" /-->
+                    </formatters>
+                </flFamily>
+            </flFamilies>
+        </gzoltar:fl-report>
     </target>
 
 </project>

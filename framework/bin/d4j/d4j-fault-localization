@@ -1,0 +1,240 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-fault-localization -- run fault localization analysis for a checked-out project version.
+
+=head1 SYNOPSIS
+
+  d4j-fault-localization [-w work_dir] [-a | [-t single_test] [-s test_suite]] [-i instrument_classes] [-y family] [-e formulas] [-g granularity]
+
+=head1 DESCRIPTION
+
+This script performs fault localization analysis for a test or a test suite on a checked-out
+program version.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -w F<work_dir>
+
+The working directory of the checked-out project version (optional). Default is the
+current directory.
+
+=item -a
+
+Run all developer-written tests of the checked-out project version (optional). By default
+only relevant developer-written tests are executed.
+
+=item -t C<single_test>
+
+Only run this single test method (optional). By default all tests are executed.
+Format: <test_class>::<test_method>.
+
+=item -s F<test_suite>
+
+The archive file name of an external test suite (optional). The default test suite is the
+developer-written test suite of the checked-out project version.
+See L<Test suites|/"Test suites">.
+
+=item -i F<instrument_classes>
+
+Perform fault localization for all classes listed in F<instrument_classes> (optional). By
+default, fault localization is performed only for the classes loaded by all relevant test
+cases. The file F<instrument_classes> must contain fully-qualified class names -- one class
+per line.
+
+=item -y C<family>
+
+Define the fault localization technique. By default, the fault localization family
+technique is sfl.
+
+=item -e C<formulas>
+
+Define the fault localization formulas. More than one formula can be defined by using the
+separator ':'. By default, the fault localization formulas are
+tarantula:ochiai:opt:barinel:dstar.
+
+=item -g C<granularity>
+
+Define the level of instrumentation. Possible values are line (default), method, or class.
+
+=back
+
+=head1 Test suites
+
+An external test suite has to be provided as an archive that contains the test sources.
+Format of the archive file name:
+
+F<C<project_id>-C<version_id>-C<test_suite_src>.C<test_id>.tar.bz2>
+
+Examples:
+
+=over 4
+
+=item * F<Lang-11f-randoop.1.tar.bz2>
+
+=item * F<Lang-12b-evosuite-weakmutation.1.tar.bz2>
+
+=item * F<Lang-12f-evosuite-branch.1.tar.bz2>
+
+=back
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use DB;
+use Utils;
+use Project;
+use FaultLocalization;
+use Getopt::Std;
+use Pod::Usage;
+
+#
+# Process arguments and issue usage message if necessary.
+#
+my %cmd_opts;
+getopts('t:w:as:i:y:e:g:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
+
+my $WORK_DIR    = Utils::get_abs_path($cmd_opts{w} // ".");
+my $ALL_TESTS   = defined $cmd_opts{a} ? 1 : 0;
+my $SINGLE_TEST = $cmd_opts{t};
+my $TEST_SUITE  = $cmd_opts{s};
+if ((defined $SINGLE_TEST || defined $TEST_SUITE) && $ALL_TESTS == 1) {
+    pod2usage( { -verbose => 1, -input => __FILE__} );
+}
+my $INSTRUMENT = $cmd_opts{i};
+
+my $FAMILY = defined $cmd_opts{y} ? $cmd_opts{y} : "sfl";
+if (! grep(/^$FAMILY$/, @FaultLocalization::FL_FAMILIES)) {
+    die "Invalid fault localization family technique: $FAMILY! Expected one of the following options: " . join("|", @FaultLocalization::FL_FAMILIES) . ".";
+}
+
+my $FORMULAS = defined $cmd_opts{e} ? $cmd_opts{e} : "tarantula:ochiai:opt:barinel:dstar";
+for my $formula(split /:/, $FORMULAS) {
+    if (! grep(/^$formula$/, @FaultLocalization::FL_FORMULAS)) {
+        die "Invalid fault localization formula: $formula! Expected one (or a combination of several separated by ':') of the following options: " . join("|", @FaultLocalization::FL_FORMULAS) . ".";
+    }
+}
+
+my $GRANULARITY = defined $cmd_opts{g} ? $cmd_opts{g} : "line";
+if (! grep(/^$GRANULARITY$/, @FaultLocalization::GRANULARITY_LEVEL)) {
+    die "Invalid granularity level: $GRANULARITY! Expected one of the following options: " . join("|", @FaultLocalization::GRANULARITY_LEVEL) . ".";
+}
+
+my $config = Utils::read_config_file("$WORK_DIR/$CONFIG");
+unless(defined $config) {
+    print(STDERR "$WORK_DIR is not a valid working directory!\n");
+    exit 1;
+}
+my $pid = $config->{$CONFIG_PID};
+my $vid = $config->{$CONFIG_VID};
+my $res = Utils::check_vid($vid);
+my $bid = $res->{bid};
+my $type= $res->{type};
+
+if ($type eq "f") {
+    print(STDERR "Fault localization analysis should only be performed on a buggy program version, as on a fixed program version there is not any triggering test case and therefore no bug to localize!\n");
+    exit 1;
+}
+
+# Instantiate project and set working directory
+my $project = Project::create_project($pid);
+$project->{prog_root} = $WORK_DIR;
+
+# Classes to instrument for fault localization analysis -- default is all loaded classes
+my $classes_file = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/loaded_classes/$bid.src";
+
+my $log_file = "$WORK_DIR/.fault-localization.log";
+system("rm -f $log_file") if -e $log_file;
+
+#
+# Run the test suite, according to the provided flags.
+#
+my @fl_results = ();
+if (defined $TEST_SUITE) {
+    # Compile and run external test suite
+    my $test_dir = "$WORK_DIR/.test_suite";
+    Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
+    $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
+    # Single or all test cases?
+    my $single_test_opt = defined $SINGLE_TEST ? $SINGLE_TEST : undef;
+    @fl_results = FaultLocalization::diagnose_ext($project, $bid, $classes_file, $FAMILY, $FORMULAS, $GRANULARITY, $test_dir, "*.java", $log_file, $single_test_opt);
+} elsif (defined $SINGLE_TEST) {
+    $project->compile_tests() or die "Cannot compile test suite!";
+    # Run a single developer-written test
+    @fl_results = FaultLocalization::diagnose($project, $bid, $classes_file, $FAMILY, $FORMULAS, $GRANULARITY, $log_file, undef, $SINGLE_TEST);
+} else {
+    $project->compile_tests() or die "Cannot compile test suite!";
+    # Run all developer-written tests or only relevant developer-written tests
+    @fl_results = FaultLocalization::diagnose($project, $bid, $classes_file, $FAMILY, $FORMULAS, $GRANULARITY, $log_file, $ALL_TESTS);
+}
+
+if (scalar @fl_results == 0) {
+    system("cat $log_file");
+    exit 1;
+}
+
+#
+# Report results.
+#
+open(CSV, ">$WORK_DIR/fault_localization.csv") or die "Cannot write output csv file $!";
+
+# header
+print(CSV "Project,Bug,TestSuite,ScoringScheme,Family,Formula,ScoreAllClasses,ScoreLoadedClasses\n");
+
+# content
+my $test_suite_orig = defined $TEST_SUITE ? "external" : "developer";
+foreach my $fl_result(@fl_results) {
+    printf(CSV "%s,%d,%s,first,%s,%s,%.32f,%.32f\n",
+        $pid, $bid, $test_suite_orig, $fl_result->{$FL_FAMILY}, $fl_result->{$FL_FORMULA}, $fl_result->{$MIN_SCORE_ALL_CLASSES}, $fl_result->{$MIN_SCORE_LOADED_CLASSES});
+    printf(CSV "%s,%d,%s,last,%s,%s,%.32f,%.32f\n",
+        $pid, $bid, $test_suite_orig, $fl_result->{$FL_FAMILY}, $fl_result->{$FL_FORMULA}, $fl_result->{$MAX_SCORE_ALL_CLASSES}, $fl_result->{$MAX_SCORE_LOADED_CLASSES});
+    printf(CSV "%s,%d,%s,mean,%s,%s,%.32f,%.32f\n",
+        $pid, $bid, $test_suite_orig, $fl_result->{$FL_FAMILY}, $fl_result->{$FL_FORMULA}, $fl_result->{$MEAN_SCORE_ALL_CLASSES}, $fl_result->{$MEAN_SCORE_LOADED_CLASSES});
+    printf(CSV "%s,%d,%s,median,%s,%s,%.32f,%.32f\n",
+        $pid, $bid, $test_suite_orig, $fl_result->{$FL_FAMILY}, $fl_result->{$FL_FORMULA}, $fl_result->{$MEDIAN_SCORE_ALL_CLASSES}, $fl_result->{$MEDIAN_SCORE_LOADED_CLASSES});
+
+    printf("%30s: %s\n",    "Family",                        $fl_result->{$FL_FAMILY});
+    printf("%30s: %s\n",    "Formula",                       $fl_result->{$FL_FORMULA});
+    # only loaded classes
+    printf("%30s: %.32f\n", "Min score (loaded classes)",    $fl_result->{$MIN_SCORE_LOADED_CLASSES});
+    printf("%30s: %.32f\n", "Max score (loaded classes)",    $fl_result->{$MAX_SCORE_LOADED_CLASSES});
+    printf("%30s: %.32f\n", "Mean score (loaded classes)",   $fl_result->{$MEAN_SCORE_LOADED_CLASSES});
+    printf("%30s: %.32f\n", "Median score (loaded classes)", $fl_result->{$MEDIAN_SCORE_LOADED_CLASSES});
+    # all classes
+    printf("%30s: %.32f\n", "Min score (all classes)",       $fl_result->{$MIN_SCORE_ALL_CLASSES});
+    printf("%30s: %.32f\n", "Max score (all classes)",       $fl_result->{$MAX_SCORE_ALL_CLASSES});
+    printf("%30s: %.32f\n", "Mean score (all classes)",      $fl_result->{$MEAN_SCORE_ALL_CLASSES});
+    printf("%30s: %.32f\n", "Median score (all classes)",    $fl_result->{$MEDIAN_SCORE_ALL_CLASSES});
+}
+
+close(CSV);
+
+1;
