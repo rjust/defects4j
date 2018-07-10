@@ -64,3 +64,34 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b27..38
 ## Time
     - script: carton exec ./test_verify_bugs.sh -p Time
+    # Test fault localization command
+    - stage: fault-localization
+      script: carton exec ./test_fault_localization.sh -p Chart
+    - script: carton exec ./test_fault_localization.sh -p Closure -b1..10
+    - script: carton exec ./test_fault_localization.sh -p Closure -b11..15
+    - script: carton exec ./test_fault_localization.sh -p Closure -b16..20
+    - script: carton exec ./test_fault_localization.sh -p Closure -b21..30
+    - script: carton exec ./test_fault_localization.sh -p Closure -b31..40
+    - script: carton exec ./test_fault_localization.sh -p Closure -b41..50
+    - script: carton exec ./test_fault_localization.sh -p Closure -b51..60
+    - script: carton exec ./test_fault_localization.sh -p Closure -b61..70
+    - script: carton exec ./test_fault_localization.sh -p Closure -b71..80
+    - script: carton exec ./test_fault_localization.sh -p Closure -b81..90
+    - script: carton exec ./test_fault_localization.sh -p Closure -b91..100
+    - script: carton exec ./test_fault_localization.sh -p Closure -b101..111
+    - script: carton exec ./test_fault_localization.sh -p Closure -b112..122
+    - script: carton exec ./test_fault_localization.sh -p Closure -b123..133
+    - script: carton exec ./test_fault_localization.sh -p Lang -b1..32
+    - script: carton exec ./test_fault_localization.sh -p Lang -b33..65
+    - script: carton exec ./test_fault_localization.sh -p Math -b1..18
+    - script: carton exec ./test_fault_localization.sh -p Math -b19..36
+    - script: carton exec ./test_fault_localization.sh -p Math -b20..54
+    - script: carton exec ./test_fault_localization.sh -p Math -b55..80
+    - script: carton exec ./test_fault_localization.sh -p Math -b81..106
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b1..5
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b6..10
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b11..15
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b16..20
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b21..26
+    - script: carton exec ./test_fault_localization.sh -p Mockito -b27..38
+    - script: carton exec ./test_fault_localization.sh -p Time
