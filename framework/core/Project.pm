@@ -807,6 +807,105 @@ sub mutation_analysis_ext {
 
 =pod
 
+  $project->fl_instrument(instrument_classes, log_file)
+
+Instruments classes listed in the F<instrument_classes_file> for use with GZoltar.
+
+=cut
+sub fl_instrument {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $instrument_classes_file, $log_file) = @_;
+
+    return $self->_ant_call("fl.instrument", "-Dfl.classes.file=$instrument_classes_file ", $log_file);
+}
+
+=pod
+
+  $project->fl_collect_coverage(instrument_classes_file, log_file, [all_tests, single_test])
+
+Runs the developer-written test suite of the checked-out program version and collects its
+coverage.
+
+F<instrument_classes_file> contains the fully-qualified class names (one class per line) that
+should be instrumented.
+
+Test results are written to F<log_file>. The boolean parameter C<all_tests> indicates
+whether all test cases are executed. If not specified only relevant test cases are executed.
+If C<single_test> is specified, only that test is executed. Format of C<single_test>:
+<classname>::<methodname>.
+
+=cut
+sub fl_collect_coverage {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($self, $instrument_classes_file, $log_file, $all_tests, $single_test) = @_;
+
+    my $relevant_tests_opt = "-Dd4j.relevant.tests.only=true"; # by default, only relevant tests
+    my $single_test_opt = "";
+
+    if (defined $all_tests && $all_tests) {
+        $relevant_tests_opt = "-Dd4j.relevant.tests.only=false";
+    } elsif (defined $single_test) {
+        $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
+        $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
+    }
+
+    return $self->_ant_call("fl.run.dev.tests", "-Dfl.classes.file=$instrument_classes_file " .
+                                                "$relevant_tests_opt ".
+                                                "$single_test_opt", $log_file);
+}
+
+=pod
+
+  $project->fl_collect_coverage_ext(instrument_classes_file, test_dir, include, log_file, [single_test])
+
+Runs an external (e.g., generated) test suite in F<test_dir> that match the pattern
+C<test_include> and collects its coverage.
+
+F<instrument_classes_file> contains the fully-qualified class names (one class per line) that
+should be instrumented.
+
+Test results are written to F<log_file>. If C<single_test> is specified, only that test
+is executed. Format of C<single_test>: <classname>::<methodname>.
+
+=cut
+sub fl_collect_coverage_ext {
+    @_ >= 5 or die $ARG_ERROR;
+    my ($self, $instrument_classes_file, $test_dir, $include, $log_file, $single_test) = @_;
+
+    my $single_test_opt = "";
+    if (defined $single_test) {
+        $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
+        $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
+    }
+
+    return $self->_ant_call("fl.run.gen.tests", "-Dfl.classes.file=$instrument_classes_file " .
+                                                "-Dd4j.test.dir=$test_dir ".
+                                                "-Dd4j.test.include=$include " .
+                                                "$single_test_opt", $log_file);
+}
+
+=pod
+
+  $project->fl_analysis(granularity, family, formula, log_file)
+
+Performs fault localization analysis of a test suite.
+
+C<granularity> defines the level of instrumentation. C<family> defines the fault
+localization family technique, C<formula> defines the fault localization formula.
+The output of the fault localization analysis process is redirected to F<log_file>.
+
+=cut
+sub fl_analysis {
+    @_ == 5 or die $ARG_ERROR;
+    my ($self, $granularity, $family, $formula, $log_file) = @_;
+
+    return $self->_ant_call("fl.analysis", "-Dfl.granularity=$granularity " .
+                                           "-Dfl.family=$family " .
+                                           "-Dfl.formula=$formula", $log_file);
+}
+
+=pod
+
 =head2 Test generation related subroutines
 
   $project->run_evosuite(target_criterion, target_time, target_class, assertion_timeout, config_file [, log_file])

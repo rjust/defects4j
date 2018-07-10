@@ -111,6 +111,15 @@ $cmd_descr{"coverage"}="run code coverage analysis for a checked-out project ver
 
 =pod
 
+=item * L<B<fault-localization>|d4j::d4j-fault-localization/>
+
+run fault localization analysis for a checked-out project version.
+
+=cut
+$cmd_descr{"fault-localization"}="run fault localization analysis for a checked-out project version";
+
+=pod
+
 =item * L<B<info>|d4j::d4j-info/>
 
 print information for a specific project or bug.

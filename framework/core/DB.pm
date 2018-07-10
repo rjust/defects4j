@@ -106,6 +106,15 @@ our $TAB_COVERAGE = ($ENV{TAB_COVERAGE} or "coverage");
 
 =pod
 
+=item C<TAB_FAULT_LOCALIZATION>
+
+The name of the database table for the results of running fault localization analysis (I<fault_localization>)
+
+=cut
+our $TAB_FAULT_LOCALIZATION = ($ENV{TAB_FAULT_LOCALIZATION} or "fault_localization");
+
+=pod
+
 =item C<TAB_CODE_EVOLUTION>
 
 The name of the database table for the results of running code evolution analysis (I<code_evolution>)
@@ -157,7 +166,7 @@ our $FAIL_M_V1     = "num_fail_methods_t2v1";
 our $FAIL_ISO_V1   = "fail_iso_t2v1";
 our $PASS_ISO_V2   = "pass_iso_t2v2";
 
-# Additional columns of TAB_BUG_DETECTION, TAB_MUTATION, and TAB_FIX
+# Additional columns of TAB_BUG_DETECTION, TAB_MUTATION, TAB_FIX, and TAB_FAULT_LOCALIZATION
 our $TEST_SUITE = "test_suite_source";
 our $TEST_ID    = "test_id";
 
@@ -176,6 +185,18 @@ our $LINES_TOTAL      = "lines_total";
 our $LINES_COVERED    = "lines_covered";
 our $BRANCHES_TOTAL   = "branches_total";
 our $BRANCHES_COVERED = "branches_covered";
+
+# Additional columns of TAB_FAULT_LOCALIZATION
+our $FL_FAMILY                   = "fl_family";
+our $FL_FORMULA                  = "fl_formula";
+our $MIN_SCORE_LOADED_CLASSES    = "min_score_of_loaded_classes";
+our $MAX_SCORE_LOADED_CLASSES    = "max_score_of_loaded_classes";
+our $MEAN_SCORE_LOADED_CLASSES   = "mean_score_of_loaded_classes";
+our $MEDIAN_SCORE_LOADED_CLASSES = "median_score_of_loaded_classes";
+our $MIN_SCORE_ALL_CLASSES       = "min_score_of_all_classes";
+our $MAX_SCORE_ALL_CLASSES       = "max_score_of_all_classes";
+our $MEAN_SCORE_ALL_CLASSES      = "mean_score_of_all_classes";
+our $MEDIAN_SCORE_ALL_CLASSES    = "median_score_of_all_classes";
 
 # Additional columns of TAB_CODE_EVOLUTION
 our $NUM_COMMITS      = "num_commits";
@@ -198,6 +219,8 @@ $TAB_BUG_DETECTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $TEST_CLASS, $NUM_T
 $TAB_MUTATION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $MUT_GEN, $MUT_EXCL, $MUT_COV, $MUT_KILL],
 # Table TAB_COVERAGE
 $TAB_COVERAGE => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $LINES_TOTAL, $LINES_COVERED, $BRANCHES_TOTAL, $BRANCHES_COVERED],
+# Table TAB_FAULT_LOCALIZATION
+$TAB_FAULT_LOCALIZATION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $FL_FAMILY, $FL_FORMULA, $MIN_SCORE_LOADED_CLASSES, $MAX_SCORE_LOADED_CLASSES, $MEAN_SCORE_LOADED_CLASSES, $MEDIAN_SCORE_LOADED_CLASSES, $MIN_SCORE_ALL_CLASSES, $MAX_SCORE_ALL_CLASSES, $MEAN_SCORE_ALL_CLASSES, $MEDIAN_SCORE_ALL_CLASSES],
 # Table TAB_CODE_EVOLUTION
 $TAB_CODE_EVOLUTION => [$PROJECT, $ID, $TEST_SUITE, $TEST_ID, $NUM_COMMITS, $PASSED_COMMITS, $TEST_CLASS, $NUM_TRIGGER],
 # Table TAB_FIX
@@ -212,6 +235,7 @@ our %PRIMARY_KEYS = (
     $TAB_BUG_DETECTION => 4,
     $TAB_MUTATION => 4,
     $TAB_COVERAGE => 4,
+    $TAB_FAULT_LOCALIZATION => 6,
     $TAB_CODE_EVOLUTION => 4,
     $TAB_FIX => 4,
 );
@@ -224,6 +248,7 @@ $TAB_BUG_DETECTION
 $TAB_MUTATION
 $TAB_REVIEW
 $TAB_COVERAGE
+$TAB_FAULT_LOCALIZATION
 $TAB_CODE_EVOLUTION
 $TAB_FIX
 
@@ -255,6 +280,16 @@ $LINES_TOTAL
 $LINES_COVERED
 $BRANCHES_TOTAL
 $BRANCHES_COVERED
+$FL_FAMILY
+$FL_FORMULA
+$MIN_SCORE_LOADED_CLASSES
+$MAX_SCORE_LOADED_CLASSES
+$MEAN_SCORE_LOADED_CLASSES
+$MEDIAN_SCORE_LOADED_CLASSES
+$MIN_SCORE_ALL_CLASSES
+$MAX_SCORE_ALL_CLASSES
+$MEAN_SCORE_ALL_CLASSES
+$MEDIAN_SCORE_ALL_CLASSES
 $NUM_COMMITS
 $PASSED_COMMITS
 $NUM_UNCOMPILABLE_TESTS
