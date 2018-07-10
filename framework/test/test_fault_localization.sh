@@ -107,6 +107,7 @@ for bid in $(echo $BUGS); do
     num_triggering_test_cases_d4j=$(grep -a "^--- " "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid" | wc -l)
 
     if [ "$num_triggering_test_cases_gzoltar" -ne "$num_triggering_test_cases_d4j" ]; then
+        grep -a ",FAIL," "$tests_file" # debug
         die "Number of triggering test cases reported by GZoltar ($num_triggering_test_cases_gzoltar) is not the same as reported by D4J ($num_triggering_test_cases_d4j)"
     fi
 
