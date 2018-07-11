@@ -2,3 +2,5 @@
 --- org.apache.commons.lang.time.DateUtilsTest::testAddByField
 --- org.apache.commons.lang.time.DateUtilsTest::testAddMilliseconds
 --- org.apache.commons.lang.time.DurationFormatUtilsTest::testBugzilla38401
+--- org.apache.commons.lang.enums.ValuedEnumTest::testCompareTo_classloader_equal
+--- org.apache.commons.lang.enums.ValuedEnumTest::testCompareTo_classloader_different
