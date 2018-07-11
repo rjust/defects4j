@@ -487,8 +487,11 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <delete dir="${d4j.dir.classes.instrumented}"/>
 
         <loadfile property="fl.classes.list" srcFile="${fl.classes.file}" />
-        <propertyregex property="fl.classes" input="${fl.classes.list}" regexp="[\n]+" replace=":" />
-        <propertyregex property="fl.innerclasses" input="${fl.classes.list}" regexp="[\n]+" replace="$*:" />
+        <!-- replace '.' with '/' -->
+        <propertyregex property="fl.classes.dash" input="${fl.classes.list}" regexp="[\.]+" replace="/" />
+        <!-- replace new line with '.class ' -->
+        <propertyregex property="fl.classes" input="${fl.classes.dash}" regexp="[\n]+" replace=".class " />
+        <propertyregex property="fl.innerclasses" input="${fl.classes.dash}" regexp="[\n]+" replace="$*.class " />
         <echo message="fl.classes and fl.innerclasses: ${fl.classes}${fl.innerclasses}" />
 
         <!-- Wrap instrument execution with the GZoltar instrument task -->
