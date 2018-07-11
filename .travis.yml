@@ -67,18 +67,24 @@ jobs:
     # Test fault localization analysis
     - stage: fault-localization
       script: travis_wait 30 carton exec ./test_fault_localization.sh -p Chart -b1..5
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Chart -b6 -s resources/input/Chart-6f-evosuite-branch.0.tar.bz2
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b1
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b25
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b67
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b114
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b119
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Closure -b10 -s resources/input/Closure-10f-evosuite-branch.0.tar.bz2
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Lang -b1..3
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Lang -b29
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Lang -b56
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Lang -b7 -s resources/input/Lang-7f-evosuite-branch.0.tar.bz2
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Math -b50..53
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Math -b12
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Math -b104
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Math -b2 -s resources/input/Math-2f-evosuite-branch.0.tar.bz2
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Mockito -b8
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Mockito -b19
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Mockito -b36..38
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Mockito -b22 -s resources/input/Mockito-22f-evosuite-branch.0.tar.bz2
     - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Time -b1..5
+    - script: travis_wait 30 carton exec ./test_fault_localization.sh -p Time -b4 -s resources/input/Time-4f-evosuite-branch.0.tar.bz2

@@ -8,6 +8,7 @@
 #   * Fault localization analysis of bugs 1-10:        ./test_fault_localization.sh -pLang -b1..10
 #   * Fault localization analysis of bugs 1 and 3:     ./test_fault_localization.sh -pLang -b1 -b3
 #   * Fault localization analysis of bugs 1-10 and 20: ./test_fault_localization.sh -pLang -b1..10 -b20
+#   * Fault localization analysis of bug 1 with an external test suite: ./test_fault_localization.sh -pLang -b1 -sLang-1f-evosuite-branch.0.tar.bz2
 #
 ################################################################################
 
@@ -22,7 +23,7 @@ init
 # Print usage message and exit
 usage() {
     local known_pids=$(cd "$BASE_DIR/framework/core/Project" && ls *.pm | sed -e 's/\.pm//g')
-    echo "Usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
+    echo "Usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ] [-s <external test suite in a .tar.bz2 file>]"
     echo "Project IDs:"
     for pid in $known_pids; do
         echo "  * $pid"
@@ -31,7 +32,7 @@ usage() {
 }
 
 # Check arguments
-while getopts ":p:b:" opt; do
+while getopts ":p:b:s:" opt; do
     case $opt in
         p) PID="$OPTARG"
             ;;
@@ -40,6 +41,8 @@ while getopts ":p:b:" opt; do
            else
                 BUGS="$BUGS $OPTARG"
            fi
+            ;;
+        s) TEST_SUITE="$OPTARG"
             ;;
         \?)
             echo "Unknown option: -$OPTARG" >&2
@@ -66,6 +69,12 @@ if [ "$BUGS" == "" ]; then
     BUGS="$(seq 1 1 $num_bugs)"
 fi
 
+if [ "$TEST_SUITE" != "" ]; then
+    if [ ! -f "$TEST_SUITE" ]; then
+        die "$TEST_SUITE does not exist"
+    fi
+fi
+
 test_fault_localization_tmp_dir="$TMP_DIR/test_fault_localization_$$/$PID"
 mkdir -p "$test_fault_localization_tmp_dir"
 
@@ -79,7 +88,12 @@ for bid in $(echo $BUGS); do
     defects4j compile -w "$work_dir" || die "Compilation of $PID-$bid has failed"
 
     # run fault localization
-    defects4j fault-localization -w "$work_dir" -y sfl -e ochiai -g line || die "Execution of GZoltar on $PID-$bid has failed"
+    if [ "$TEST_SUITE" == "" ]; then
+        defects4j fault-localization -w "$work_dir" -y sfl -e ochiai -g line || die "Execution of GZoltar on $PID-$bid has failed"
+    else
+        modified_classes_file="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
+        defects4j fault-localization -w "$work_dir" -s "$TEST_SUITE" -i "$modified_classes_file" -y sfl -e ochiai -g line || die "Execution of GZoltar on $PID-$bid with an external test suite has failed"
+    fi
 
     ##
     # Sanity checks
@@ -104,29 +118,39 @@ for bid in $(echo $BUGS); do
     # 1. Do GZoltar and D4J agree on the number of triggering test cases?
 
     num_triggering_test_cases_gzoltar=$(grep -a ",FAIL," "$tests_file" | wc -l)
-    num_triggering_test_cases_d4j=$(grep -a "^--- " "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid" | wc -l)
+    if [ "$TEST_SUITE" == "" ]; then # do not perform this check for external test suites
+        num_triggering_test_cases_d4j=$(grep -a "^--- " "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid" | wc -l)
 
-    if [ "$num_triggering_test_cases_gzoltar" -ne "$num_triggering_test_cases_d4j" ]; then
-        grep -a ",FAIL," "$tests_file" # debug
-        die "Number of triggering test cases reported by GZoltar ($num_triggering_test_cases_gzoltar) is not the same as reported by D4J ($num_triggering_test_cases_d4j)"
+        if [ "$num_triggering_test_cases_gzoltar" -ne "$num_triggering_test_cases_d4j" ]; then
+            grep -a ",FAIL," "$tests_file" # debug
+            die "Number of triggering test cases reported by GZoltar ($num_triggering_test_cases_gzoltar) is not the same as reported by D4J ($num_triggering_test_cases_d4j)"
+        fi
+    else
+        # check whether there are triggering test cases at all, otherwise it is pointless to continue
+        if [ "$num_triggering_test_cases_gzoltar" -eq "0" ]; then
+          rm -rf "$test_fault_localization_tmp_dir"
+          die "As there are not any triggering test case in the external test suite is pointless to continue. Please provide an test suite with at least one triggering test case."
+        fi
     fi
 
     # 2. Does GZoltar and D4J agree on the list of triggering test cases?
 
-    agree=true
-    while read -r trigger_test; do
-        class_test_name=$(echo "$trigger_test" | cut -f2 -d' ' | cut -f1 -d':')
-        unit_test_name=$(echo "$trigger_test" | cut -f2 -d' ' | cut -f3 -d':')
+    if [ "$TEST_SUITE" == "" ]; then # do not perform this check for external test suites
+        agree=true
+        while read -r trigger_test; do
+            class_test_name=$(echo "$trigger_test" | cut -f2 -d' ' | cut -f1 -d':')
+            unit_test_name=$(echo "$trigger_test" | cut -f2 -d' ' | cut -f3 -d':')
 
-        # e.g., org.apache.commons.math.complex.ComplexTest#testMath221,FAIL,3111187,junit.framework.AssertionFailedError:...
-        if ! grep -a -q "^$class_test_name#$unit_test_name,FAIL," "$tests_file"; then
-            echo "Triggering test case '$class_test_name#$unit_test_name' has not been reported by GZoltar"
-            agree=false
+            # e.g., org.apache.commons.math.complex.ComplexTest#testMath221,FAIL,3111187,junit.framework.AssertionFailedError:...
+            if ! grep -a -q "^$class_test_name#$unit_test_name,FAIL," "$tests_file"; then
+                echo "Triggering test case '$class_test_name#$unit_test_name' has not been reported by GZoltar"
+                agree=false
+            fi
+        done < <(grep -a "^--- " "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
+
+        if [[ $agree == false ]]; then
+            die "GZoltar and D4J do not agree on the list of triggering test cases"
         fi
-    done < <(grep -a "^--- " "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
-
-    if [[ $agree == false ]]; then
-        die "GZoltar and D4J do not agree on the list of triggering test cases"
     fi
 
     # 3. Has the faulty class(es) been reported?
