@@ -61,6 +61,13 @@ pod2usage(-verbose => 2) if $man;
 pod2usage("$0: Too many arguments.\n")  if (@ARGV > 3);
 pod2usage("$0: Must supply Defects4j directory name; project-id; subtest-id.\n")  if (@ARGV < 3);
 
+# locate the java_count tool
+my $java_count = $ENV{'JAVA_COUNT_TOOL'};
+if (! defined($java_count)) {
+    print "JAVA_COUNT_TOOL environment variable not set\n";
+    exit 1;
+}
+
 my $curdir;
 my $filename;
 my $output;
@@ -118,8 +125,7 @@ while (my $path = <$fh>) {
     find(\&search_for_file, $srcdir);
 }
 
-# UNDONE: need better way to find java_count tool
-my $cmd = "/homes/gws/markro/sloccount-2.26/java_count -f $tfname";
+my $cmd = "$java_count -f $tfname";
 $output = `$cmd`;
 chomp $output;
 # remove the "Total:" line

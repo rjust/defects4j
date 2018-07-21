@@ -129,14 +129,17 @@ my $output;
 #my $x=$ENV{'PWD'};
 #print "PWD: ", $x, "\n";
 
-# run count_klocs.pl on the generated sources
+my $extcode;
+# run count-klocs.pl on the generated sources
 if (defined $cmd_opts{D}) {
     $output = `$SCRIPT_DIR/test/count_klocs.pl -d $TMP_DIR $PID $BID`;
+    $extcode = $?>>8;
 } else {
     $output = `$SCRIPT_DIR/test/count_klocs.pl $TMP_DIR $PID $BID`;
+    $extcode = $?>>8;
 }
 print "count klocs output:\n$output\n";
 
 # Remove temporary directory
-#system("rm -rf $TMP_DIR") unless $DEBUG;
 system("rm -rf $TMP_DIR") unless defined $cmd_opts{D};
+exit $extcode;

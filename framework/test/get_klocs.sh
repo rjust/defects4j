@@ -23,11 +23,12 @@ fi
 source test.include
 init
 
-# Don't exit on first error
-HALT_ON_ERROR=0
-
 # Directory for Randoop test suites
 randoop_dir=$TMP_DIR/randoop
+
+if [ -z "$JAVA_COUNT_TOOL" ] ; then
+    die "JAVA_COUNT_TOOL environment variable not set"
+fi
 
 if [ -z "$1" ] ; then
 # Generate tests for all projects
@@ -56,7 +57,7 @@ for pid in "${projects[@]}"; do
     for bid in "${bids[@]}"; do
         vid=${bid}$type
 
-        run_klocs.pl -p $pid -v $vid -n 1 -o $randoop_dir || die "run Randoop on $pid-$vid"
+        run_klocs.pl -p $pid -v $vid -n 1 -o $randoop_dir || die "run klocs on $pid-$vid"
     done
 done
 
