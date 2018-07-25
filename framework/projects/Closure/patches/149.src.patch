@@ -1,0 +1,149 @@
+diff --git a/src/com/google/javascript/jscomp/TypeCheck.java b/src/com/google/javascript/jscomp/TypeCheck.java
+index 41b94e0c..5760f79c 100644
+--- a/src/com/google/javascript/jscomp/TypeCheck.java
++++ b/src/com/google/javascript/jscomp/TypeCheck.java
+@@ -182,6 +182,14 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+           "original: {2}\n" +
+           "override: {3}");
+ 
++  static final DiagnosticType HIDDEN_INTERFACE_PROPERTY_MISMATCH =
++      DiagnosticType.warning(
++          "JSC_HIDDEN_INTERFACE_PROPERTY_MISMATCH",
++          "mismatch of the {0} property type and the type " +
++          "of the property it overrides from interface {1}\n" +
++          "original: {2}\n" +
++          "override: {3}");
++
+   static final DiagnosticType UNKNOWN_OVERRIDE =
+       DiagnosticType.warning(
+           "JSC_UNKNOWN_OVERRIDE",
+@@ -232,6 +240,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+       HIDDEN_SUPERCLASS_PROPERTY,
+       HIDDEN_INTERFACE_PROPERTY,
+       HIDDEN_SUPERCLASS_PROPERTY_MISMATCH,
++      HIDDEN_INTERFACE_PROPERTY_MISMATCH,
+       UNKNOWN_OVERRIDE,
+       INTERFACE_METHOD_OVERRIDE,
+       UNKNOWN_EXPR_TYPE,
+@@ -1038,6 +1047,17 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+               HIDDEN_INTERFACE_PROPERTY, propertyName,
+               interfaceType.getTopMostDefiningType(propertyName).toString()));
+         }
++        // Check that it is ok
++        if (interfaceHasProperty) {
++          JSType interfacePropType =
++              interfaceType.getPrototype().getPropertyType(propertyName);
++          if (!propertyType.canAssignTo(interfacePropType)) {
++            compiler.report(t.makeError(n,
++                HIDDEN_INTERFACE_PROPERTY_MISMATCH, propertyName,
++                interfaceType.getTopMostDefiningType(propertyName).toString(),
++                interfacePropType.toString(), propertyType.toString()));
++          }
++        }
+       }
+     }
+ 
+@@ -1421,7 +1441,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+         }
+       }
+       if (functionType.isConstructor()) {
+-        validator.expectAllInterfaceProperties(t, n, functionType);
++        validator.expectAllInterfacePropertiesImplemented(functionType);
+       }
+     }
+   }
+diff --git a/src/com/google/javascript/jscomp/TypeValidator.java b/src/com/google/javascript/jscomp/TypeValidator.java
+index 24bf792f..07041498 100644
+--- a/src/com/google/javascript/jscomp/TypeValidator.java
++++ b/src/com/google/javascript/jscomp/TypeValidator.java
+@@ -107,22 +107,13 @@ class TypeValidator {
+           "JSC_INTERFACE_METHOD_NOT_IMPLEMENTED",
+           "property {0} on interface {1} is not implemented by type {2}");
+ 
+-  static final DiagnosticType HIDDEN_INTERFACE_PROPERTY_MISMATCH =
+-      DiagnosticType.warning(
+-        "JSC_HIDDEN_INTERFACE_PROPERTY_MISMATCH",
+-        "mismatch of the {0} property type and the type " +
+-        "of the property it overrides from interface {1}\n" +
+-        "original: {2}\n" +
+-        "override: {3}");
+-
+   static final DiagnosticGroup ALL_DIAGNOSTICS = new DiagnosticGroup(
+       INVALID_CAST,
+       TYPE_MISMATCH_WARNING,
+       MISSING_EXTENDS_TAG_WARNING,
+       DUP_VAR_DECLARATION,
+       HIDDEN_PROPERTY_MISMATCH,
+-      INTERFACE_METHOD_NOT_IMPLEMENTED,
+-      HIDDEN_INTERFACE_PROPERTY_MISMATCH);
++      INTERFACE_METHOD_NOT_IMPLEMENTED);
+ 
+   TypeValidator(AbstractCompiler compiler) {
+     this.compiler = compiler;
+@@ -564,14 +555,24 @@ class TypeValidator {
+    * Expect that all properties on interfaces that this type implements are
+    * implemented and correctly typed.
+    */
+-  void expectAllInterfaceProperties(NodeTraversal t, Node n,
+-      FunctionType type) {
++  void expectAllInterfacePropertiesImplemented(FunctionType type) {
+     ObjectType instance = type.getInstanceType();
+     for (ObjectType implemented : type.getAllImplementedInterfaces()) {
+       if (implemented.getImplicitPrototype() != null) {
+         for (String prop :
+             implemented.getImplicitPrototype().getOwnPropertyNames()) {
+-          expectInterfaceProperty(t, n, instance, implemented, prop);
++          if (!instance.hasProperty(prop)) {
++            Node source = type.getSource();
++            Preconditions.checkNotNull(source);
++            String sourceName = (String) source.getProp(Node.SOURCENAME_PROP);
++            sourceName = sourceName == null ? "" : sourceName;
++            if (shouldReport) {
++              compiler.report(JSError.make(sourceName, source,
++                  INTERFACE_METHOD_NOT_IMPLEMENTED,
++                  prop, implemented.toString(), instance.toString()));
++            }
++            registerMismatch(instance, implemented);
++          }
+         }
+       }
+     }
+@@ -581,38 +582,6 @@ class TypeValidator {
+    * Expect that the peroperty in an interface that this type implements is
+    * implemented and correctly typed.
+    */
+-  private void expectInterfaceProperty(NodeTraversal t, Node n,
+-      ObjectType instance, ObjectType implementedInterface, String prop) {
+-    if (!instance.hasProperty(prop)) {
+-      // Not implemented
+-      String sourceName = (String) n.getProp(Node.SOURCENAME_PROP);
+-      sourceName = sourceName == null ? "" : sourceName;
+-      if (shouldReport) {
+-        compiler.report(JSError.make(sourceName, n,
+-            INTERFACE_METHOD_NOT_IMPLEMENTED,
+-            prop, implementedInterface.toString(), instance.toString()));
+-      }
+-      registerMismatch(instance, implementedInterface);
+-    } else {
+-      JSType found = instance.getPropertyType(prop);
+-      JSType required
+-        = implementedInterface.getImplicitPrototype().getPropertyType(prop);
+-      found = found.restrictByNotNullOrUndefined();
+-      required = required.restrictByNotNullOrUndefined();
+-      if (!found.canAssignTo(required)) {
+-        // Implemented, but not correctly typed
+-        if (shouldReport) {
+-          FunctionType constructor
+-            = implementedInterface.toObjectType().getConstructor();
+-          compiler.report(t.makeError(n,
+-              HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,
+-              constructor.getTopMostDefiningType(prop).toString(),
+-              required.toString(), found.toString()));
+-        }
+-        registerMismatch(found, required);
+-      }
+-    }
+-  }
+ 
+   /**
+    * Report a type mismatch

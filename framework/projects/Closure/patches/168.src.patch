@@ -1,0 +1,83 @@
+diff --git a/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java b/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
+index e7cfc6d9..f0cfb77c 100644
+--- a/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
++++ b/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
+@@ -358,9 +358,7 @@ class DevirtualizePrototypeMethods implements CompilerPass {
+ 
+     for (Node child : node.children()) {
+       if (NodeUtil.isThis(child)) {
+-        Node newName = Node.newString(Token.NAME, name);
+-        newName.setJSType(child.getJSType());
+-        node.replaceChild(child, newName);
++        node.replaceChild(child, Node.newString(Token.NAME, name));
+       } else {
+         replaceReferencesToThis(child, name);
+       }
+diff --git a/src/com/google/javascript/jscomp/DisambiguateProperties.java b/src/com/google/javascript/jscomp/DisambiguateProperties.java
+index 9d9de035..26a25d17 100644
+--- a/src/com/google/javascript/jscomp/DisambiguateProperties.java
++++ b/src/com/google/javascript/jscomp/DisambiguateProperties.java
+@@ -743,9 +743,6 @@ class DisambiguateProperties<T> implements CompilerPass {
+       }
+ 
+       // Ignore the prototype itself at all times.
+-      if ("prototype".equals(field)) {
+-        return null;
+-      }
+ 
+       // We look up the prototype chain to find the highest place (if any) that
+       // this appears.  This will make references to overriden properties look
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
+index 08a22c55..8247d97c 100644
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
+@@ -601,16 +601,16 @@ class TypeInference
+     String qName = getprop.getQualifiedName();
+     if (qName != null) {
+       Var var = syntacticScope.getVar(qName);
+-      if (var != null && !var.isTypeInferred()) {
++      if (var != null &&
++          !var.isTypeInferred() &&
++          !objectType.hasOwnProperty(propName) &&
++          (!objectType.isInstanceType() ||
++           (var.isExtern() && !objectType.isNativeObjectType()))) {
+         // Handle normal declarations that could not be addressed earlier.
+-        if (propName.equals("prototype") ||
+         // Handle prototype declarations that could not be addressed earlier.
+-            (!objectType.hasOwnProperty(propName) &&
+-             (!objectType.isInstanceType() ||
+-                 (var.isExtern() && !objectType.isNativeObjectType())))) {
+-          return objectType.defineDeclaredProperty(
+-              propName, var.getType(), var.isExtern());
+-        }
++        objectType.defineDeclaredProperty(
++            propName, var.getType(), var.isExtern());
++        return true;
+       }
+     }
+     return false;
+diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
+index b318d8a6..3e8ab079 100644
+--- a/src/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -409,10 +409,6 @@ public class FunctionType extends PrototypeObjectType {
+     return super.hasProperty(name) || "prototype".equals(name);
+   }
+ 
+-  @Override
+-  public boolean hasOwnProperty(String name) {
+-    return super.hasOwnProperty(name) || "prototype".equals(name);
+-  }
+ 
+   @Override
+   public JSType getPropertyType(String name) {
+@@ -473,9 +469,6 @@ public class FunctionType extends PrototypeObjectType {
+     if ("prototype".equals(name)) {
+       ObjectType objType = type.toObjectType();
+       if (objType != null) {
+-        if (objType.equals(prototype)) {
+-          return true;
+-        }
+         return setPrototype(
+             new FunctionPrototypeType(
+                 registry, this, objType, isNativeObjectType()));

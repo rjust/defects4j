@@ -1,0 +1,4 @@
+com.google.javascript.jscomp.AbstractCommandLineRunner
+com.google.javascript.jscomp.NodeUtil
+com.google.javascript.jscomp.RemoveConstantExpressions
+com.google.javascript.rhino.jstype.UnionTypeBuilder

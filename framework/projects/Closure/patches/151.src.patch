@@ -1,0 +1,77 @@
+diff --git a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
+index 2c836832..39e7183d 100644
+--- a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
++++ b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
+@@ -126,11 +126,6 @@ final class FunctionTypeBuilder {
+       "JSC_TEMPLATE_TYPE_EXPECTED",
+       "The template type must be a parameter type");
+ 
+-  static final DiagnosticType THIS_TYPE_NON_OBJECT =
+-      DiagnosticType.warning(
+-          "JSC_THIS_TYPE_NON_OBJECT",
+-          "@this type of a function must be an object\n" +
+-          "Actual type: {0}");
+ 
+   private class ExtendedTypeValidator implements Predicate<JSType> {
+     @Override
+@@ -172,22 +167,12 @@ final class FunctionTypeBuilder {
+     }
+   };
+ 
+-  private class ThisTypeValidator implements Predicate<JSType> {
+-    @Override
+-    public boolean apply(JSType type) {
+       // TODO(user): Doing an instanceof check here is too
+       // restrictive as (Date,Error) is, for instance, an object type
+       // even though its implementation is a UnionType. Would need to
+       // create interfaces JSType, ObjectType, FunctionType etc and have
+       // separate implementation instead of the class hierarchy, so that
+       // union types can also be object types, etc.
+-      if (!type.isSubtype(typeRegistry.getNativeType(OBJECT_TYPE))) {
+-        reportWarning(THIS_TYPE_NON_OBJECT, type.toString());
+-        return false;
+-      }
+-      return true;
+-    }
+-  };
+ 
+   /**
+    * @param fnName The function name.
+@@ -413,7 +398,6 @@ final class FunctionTypeBuilder {
+     }
+     if (maybeThisType != null) {
+       thisType = maybeThisType;
+-      thisType.setValidator(new ThisTypeValidator());
+     } else if (owner != null &&
+                (info == null || !info.hasType())) {
+       // If the function is of the form:
+diff --git a/src/com/google/javascript/jscomp/TypeCheck.java b/src/com/google/javascript/jscomp/TypeCheck.java
+index 7b5af11d..a28b476d 100644
+--- a/src/com/google/javascript/jscomp/TypeCheck.java
++++ b/src/com/google/javascript/jscomp/TypeCheck.java
+@@ -248,8 +248,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
+       WRONG_ARGUMENT_COUNT,
+       ILLEGAL_IMPLICIT_CAST,
+       TypedScopeCreator.UNKNOWN_LENDS,
+-      TypedScopeCreator.LENDS_ON_NON_OBJECT,
+-      FunctionTypeBuilder.THIS_TYPE_NON_OBJECT);
++      TypedScopeCreator.LENDS_ON_NON_OBJECT);
+ 
+   private final AbstractCompiler compiler;
+   private final TypeValidator validator;
+diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
+index cf2d3e86..fc2578d8 100644
+--- a/src/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -868,10 +868,7 @@ public class FunctionType extends PrototypeObjectType {
+     // Warning about typeOfThis if it doesn't resolve to an ObjectType
+     // is handled further upstream.
+     // TODO(nicksantos): Handle this correctly if we have a UnionType.
+-    JSType maybeTypeOfThis = safeResolve(typeOfThis, t, scope);
+-    if (maybeTypeOfThis instanceof ObjectType) {
+-      typeOfThis = (ObjectType) maybeTypeOfThis;
+-    }
++    typeOfThis = (ObjectType) safeResolve(typeOfThis, t, scope);
+ 
+     boolean changed = false;
+     ImmutableList.Builder<ObjectType> resolvedInterfaces =

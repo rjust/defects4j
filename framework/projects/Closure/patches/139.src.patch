@@ -1,0 +1,81 @@
+diff --git a/src/com/google/javascript/jscomp/TypeValidator.java b/src/com/google/javascript/jscomp/TypeValidator.java
+index 9c0c96b3..03d1d5b1 100644
+--- a/src/com/google/javascript/jscomp/TypeValidator.java
++++ b/src/com/google/javascript/jscomp/TypeValidator.java
+@@ -584,8 +584,7 @@ class TypeValidator {
+    */
+   private void expectInterfaceProperty(NodeTraversal t, Node n,
+       ObjectType instance, ObjectType implementedInterface, String prop) {
+-    StaticSlot<JSType> propSlot = instance.getSlot(prop);
+-    if (propSlot == null) {
++    if (!instance.hasProperty(prop)) {
+       // Not implemented
+       String sourceName = n.getSourceFileName();
+       sourceName = sourceName == null ? "" : sourceName;
+@@ -594,14 +593,11 @@ class TypeValidator {
+           INTERFACE_METHOD_NOT_IMPLEMENTED,
+           prop, implementedInterface.toString(), instance.toString())));
+     } else {
+-      Node propNode = propSlot.getDeclaration() == null ?
+-          null : propSlot.getDeclaration().getNode();
+ 
+       // Fall back on the constructor node if we can't find a node for the
+       // property.
+-      propNode = propNode == null ? n : propNode;
+ 
+-      JSType found = propSlot.getType();
++      JSType found = instance.getPropertyType(prop);
+       JSType required
+           = implementedInterface.getImplicitPrototype().getPropertyType(prop);
+       found = found.restrictByNotNullOrUndefined();
+@@ -610,7 +606,7 @@ class TypeValidator {
+         // Implemented, but not correctly typed
+         FunctionType constructor =
+             implementedInterface.toObjectType().getConstructor();
+-        registerMismatch(found, required, report(t.makeError(propNode,
++        registerMismatch(found, required, report(t.makeError(n,
+             HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,
+             constructor.getTopMostDefiningType(prop).toString(),
+             required.toString(), found.toString())));
+diff --git a/src/com/google/javascript/rhino/jstype/ArrowType.java b/src/com/google/javascript/rhino/jstype/ArrowType.java
+index 4b958377..1c900acd 100644
+--- a/src/com/google/javascript/rhino/jstype/ArrowType.java
++++ b/src/com/google/javascript/rhino/jstype/ArrowType.java
+@@ -125,25 +125,13 @@ final class ArrowType extends JSType {
+ 
+       boolean thisIsVarArgs = thisParam.isVarArgs();
+       boolean thatIsVarArgs = thatParam.isVarArgs();
+-      boolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();
+-      boolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();
+ 
+       // "that" can't be a supertype, because it's missing a required argument.
+-      if (!thisIsOptional && thatIsOptional) {
+         // NOTE(nicksantos): In our type system, we use {function(...?)} and
+         // {function(...NoType)} to to indicate that arity should not be
+         // checked. Strictly speaking, this is not a correct formulation,
+         // because now a sub-function can required arguments that are var_args
+         // in the super-function. So we special-case this.
+-        boolean isTopFunction =
+-            thatIsVarArgs &&
+-            (thatParamType == null ||
+-             thatParamType.isUnknownType() ||
+-             thatParamType.isNoType());
+-        if (!isTopFunction) {
+-          return false;
+-        }
+-      }
+ 
+       // don't advance if we have variable arguments
+       if (!thisIsVarArgs) {
+@@ -161,11 +149,6 @@ final class ArrowType extends JSType {
+     }
+ 
+     // "that" can't be a supertype, because it's missing a required arguement.
+-    if (thisParam != null
+-        && !thisParam.isOptionalArg() && !thisParam.isVarArgs()
+-        && thatParam == null) {
+-      return false;
+-    }
+ 
+     return true;
+   }

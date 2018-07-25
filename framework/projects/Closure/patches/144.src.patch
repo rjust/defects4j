@@ -1,0 +1,28 @@
+diff --git a/src/com/google/javascript/jscomp/InlineFunctions.java b/src/com/google/javascript/jscomp/InlineFunctions.java
+index 27caaf23..0a4581cf 100644
+--- a/src/com/google/javascript/jscomp/InlineFunctions.java
++++ b/src/com/google/javascript/jscomp/InlineFunctions.java
+@@ -763,7 +763,7 @@ class InlineFunctions implements SpecializationAwareCompilerPass {
+    */
+   private Set<String> findCalledFunctions(Node node) {
+     Set<String> changed = Sets.newHashSet();
+-    findCalledFunctions(NodeUtil.getFunctionBody(node), changed);
++    findCalledFunctions(node, changed);
+     return changed;
+   }
+ 
+@@ -774,9 +774,11 @@ class InlineFunctions implements SpecializationAwareCompilerPass {
+       Node node, Set<String> changed) {
+     Preconditions.checkArgument(changed != null);
+     // For each referenced function, add a new reference
+-    if (node.getType() == Token.NAME) {
+-      if (isCandidateUsage(node)) {
+-        changed.add(node.getString());
++    if (node.getType() == Token.CALL) {
++      Node child = node.getFirstChild();
++      if (child.getType() == Token.NAME) {
++        String name = child.getString();
++        changed.add(name);
+       }
+     }
+ 

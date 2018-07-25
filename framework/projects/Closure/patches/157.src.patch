@@ -1,0 +1,58 @@
+diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
+index 8e689027..c4ff7936 100644
+--- a/src/com/google/javascript/jscomp/Compiler.java
++++ b/src/com/google/javascript/jscomp/Compiler.java
+@@ -1111,8 +1111,7 @@ public class Compiler extends AbstractCompiler {
+           // Annotate the nodes in the tree with information from the
+           // input file. This information is used to construct the SourceMap.
+           SourceInformationAnnotator sia =
+-              new SourceInformationAnnotator(
+-                  input.getName(), options.devMode != DevMode.OFF);
++              new SourceInformationAnnotator(input.getName());
+           NodeTraversal.traverse(this, n, sia);
+         }
+ 
+diff --git a/src/com/google/javascript/jscomp/SourceInformationAnnotator.java b/src/com/google/javascript/jscomp/SourceInformationAnnotator.java
+index 87a5a685..b2759bc4 100644
+--- a/src/com/google/javascript/jscomp/SourceInformationAnnotator.java
++++ b/src/com/google/javascript/jscomp/SourceInformationAnnotator.java
+@@ -42,21 +42,17 @@ import com.google.javascript.rhino.Token;
+  */
+ class SourceInformationAnnotator extends
+   NodeTraversal.AbstractPostOrderCallback {
+-  private final String sourceFile;
+-  private final boolean doSanityChecks;
++  private String sourceFile = null;
+ 
+-  public SourceInformationAnnotator(
+-      String sourceFile, boolean doSanityChecks) {
++  public SourceInformationAnnotator(String sourceFile) {
+     this.sourceFile = sourceFile;
+-    this.doSanityChecks = doSanityChecks;
+   }
+ 
+   @Override
+   public void visit(NodeTraversal t, Node n, Node parent) {
+     // Verify the source file is annotated.
+-    if (doSanityChecks && sourceFile != null) {
+-      Preconditions.checkState(sourceFile.equals(
+-          n.getProp(Node.SOURCEFILE_PROP)));
++    if (sourceFile != null) {
++      n.putProp(Node.SOURCEFILE_PROP, sourceFile);
+     }
+ 
+     // Annotate the original name.
+diff --git a/src/com/google/javascript/rhino/jstype/JSType.java b/src/com/google/javascript/rhino/jstype/JSType.java
+index 1a7db7b0..aa8c7bc9 100644
+--- a/src/com/google/javascript/rhino/jstype/JSType.java
++++ b/src/com/google/javascript/rhino/jstype/JSType.java
+@@ -703,8 +703,7 @@ public abstract class JSType implements Serializable {
+     // other types
+     switch (this.testForEquality(that)) {
+       case TRUE:
+-        JSType noType = getNativeType(JSTypeNative.NO_TYPE);
+-        return new TypePair(noType, noType);
++        return new TypePair(null, null);
+ 
+       case FALSE:
+       case UNKNOWN:

@@ -1,0 +1,11 @@
+com.google.javascript.jscomp.AbstractCompilerRunner
+com.google.javascript.jscomp.AmbiguateProperties
+com.google.javascript.jscomp.CoalesceVariableNames
+com.google.javascript.jscomp.ConcreteType
+com.google.javascript.jscomp.NameAnalyzer
+com.google.javascript.jscomp.ReplaceCssNames
+com.google.javascript.jscomp.TypedScopeCreator
+com.google.javascript.rhino.jstype.FunctionPrototypeType
+com.google.javascript.rhino.jstype.InstanceObjectType
+com.google.javascript.rhino.jstype.ObjectType
+com.google.javascript.rhino.jstype.ProxyObjectType

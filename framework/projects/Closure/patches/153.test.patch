@@ -1,0 +1,51 @@
+diff --git a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+index 789c5464..7f0aa372 100644
+--- a/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
++++ b/test/com/google/javascript/jscomp/TypedScopeCreatorTest.java
+@@ -209,22 +209,6 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
+     assertFalse(x.isPropertyTypeInferred("foo"));
+   }
+ 
+-  public void testCollectedFunctionStubLocal() {
+-    testSame(
+-        "(function() {" +
+-        "/** @constructor */ function f() { " +
+-        "  /** @return {number} */ this.foo;" +
+-        "}" +
+-        "var x = new f();" +
+-        "});");
+-    ObjectType x = (ObjectType) findNameType("x", lastLocalScope);
+-    assertEquals("f", x.toString());
+-    assertTrue(x.hasProperty("foo"));
+-    assertEquals("function (this:f): number",
+-        x.getPropertyType("foo").toString());
+-    assertFalse(x.isPropertyTypeInferred("foo"));
+-  }
+-
+   public void testNamespacedFunctionStub() {
+     testSame(
+         "var goog = {};" +
+@@ -240,23 +224,6 @@ public class TypedScopeCreatorTest extends CompilerTestCase {
+         goog.getPropertyType("foo"));
+   }
+ 
+-  public void testNamespacedFunctionStubLocal() {
+-    testSame(
+-        "(function() {" +
+-        "var goog = {};" +
+-        "/** @param {number} x */ goog.foo;" +
+-        "});");
+-
+-    ObjectType goog = (ObjectType) findNameType("goog", lastLocalScope);
+-    assertTrue(goog.hasProperty("foo"));
+-    assertEquals("function (number): ?",
+-        goog.getPropertyType("foo").toString());
+-    assertTrue(goog.isPropertyTypeDeclared("foo"));
+-
+-    assertEquals(lastLocalScope.getVar("goog.foo").getType(),
+-        goog.getPropertyType("foo"));
+-  }
+-
+   public void testCollectedCtorProperty() {
+     testSame(
+         "/** @constructor */ function f() { " +

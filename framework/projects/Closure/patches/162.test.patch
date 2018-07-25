@@ -1,0 +1,305 @@
+diff --git a/test/com/google/javascript/jscomp/ExpresssionDecomposerTest.java b/test/com/google/javascript/jscomp/ExpresssionDecomposerTest.java
+index 9844be31..b1abe67f 100644
+--- a/test/com/google/javascript/jscomp/ExpresssionDecomposerTest.java
++++ b/test/com/google/javascript/jscomp/ExpresssionDecomposerTest.java
+@@ -25,8 +25,6 @@ import junit.framework.TestCase;
+ 
+ import java.util.Set;
+ 
+-import javax.annotation.Nullable;
+-
+ /**
+  * Unit tests for ExpressionDecomposer
+  * @author johnlenz@google.com (John Lenz)
+@@ -43,7 +41,7 @@ public class ExpresssionDecomposerTest extends TestCase {
+         DecompositionType.UNDECOMPOSABLE, "while(x = goo()&&foo()){}", "foo");
+     helperCanExposeExpression(
+         DecompositionType.UNDECOMPOSABLE, "while(x += goo()&&foo()){}", "foo");
+-
++    
+     helperCanExposeExpression(
+         DecompositionType.UNDECOMPOSABLE, "do{}while(foo());", "foo");
+     helperCanExposeExpression(
+@@ -82,8 +80,6 @@ public class ExpresssionDecomposerTest extends TestCase {
+         DecompositionType.MOVABLE, "x = foo() || 1", "foo");
+     helperCanExposeExpression(
+         DecompositionType.MOVABLE, "x = foo() ? 0 : 1", "foo");
+-    helperCanExposeExpression(
+-        DecompositionType.MOVABLE, "(function(a){b = a})(foo())", "foo");
+   }
+ 
+   public void testCanExposeExpression3() {
+@@ -118,34 +114,21 @@ public class ExpresssionDecomposerTest extends TestCase {
+   public void testCanExposeExpression4() {
+     // 'this' must be preserved in call.
+     helperCanExposeExpression(
+-        DecompositionType.UNDECOMPOSABLE, "if (goo.a(1, foo()));", "foo");
++        DecompositionType.UNDECOMPOSABLE, "if (goo.a(1, foo()));", "foo");    
+   }
+ 
+   public void testCanExposeExpression5() {
+     // 'this' must be preserved in call.
+     helperCanExposeExpression(
+-        DecompositionType.UNDECOMPOSABLE, "if (goo['a'](foo()));", "foo");
++        DecompositionType.UNDECOMPOSABLE, "if (goo['a'](foo()));", "foo");    
+   }
+ 
+   public void testCanExposeExpression6() {
+     // 'this' must be preserved in call.
+     helperCanExposeExpression(
+-        DecompositionType.UNDECOMPOSABLE, "z:if (goo.a(1, foo()));", "foo");
+-  }
+-
+-  public void testCanExposeExpression7() {
+-    // Verify calls to anonymous function are movable.
+-    helperCanExposeAnonymousFunctionExpression(
+-        DecompositionType.MOVABLE,
+-        "(function(map){descriptions_=map})(\n" +
+-            "function(){\n" +
+-                "var ret={};\n" +
+-                "ret[INIT]='a';\n" +
+-                "ret[MIGRATION_BANNER_DISMISS]='b';\n" +
+-                "return ret\n" +
+-            "}()\n" +
+-        ");", 2);
++        DecompositionType.UNDECOMPOSABLE, "z:if (goo.a(1, foo()));", "foo");    
+   }
++  
+ 
+   public void testMoveExpression1() {
+     // There isn't a reason to do this, but it works.
+@@ -308,7 +291,7 @@ public class ExpresssionDecomposerTest extends TestCase {
+         "if (1) temp_2 = foo(); else temp_2 = 0;" +
+         "if (temp_const_1(1, temp_const_0, temp_2));");
+   }
+-
++  
+   public void testExposePlusEquals() {
+     helperExposeExpression(
+         "var x = 0; x += foo() + 1",
+@@ -334,30 +317,6 @@ public class ExpresssionDecomposerTest extends TestCase {
+     helperCanExposeExpression(expectedResult, code, fnName, null);
+   }
+ 
+-  private void helperCanExposeAnonymousFunctionExpression(
+-      DecompositionType expectedResult, String code, int call) {
+-    Compiler compiler = new Compiler();
+-    Set<String> knownConstants = Sets.newHashSet();
+-    ExpressionDecomposer decomposer = new ExpressionDecomposer(
+-        compiler, compiler.getUniqueNameIdSupplier(), knownConstants);
+-    Node tree = parse(compiler, code);
+-    assertNotNull(tree);
+-
+-    Node externsRoot = parse(compiler,
+-        "function goo() {}" +
+-        "function foo() {}");
+-    assertNotNull(externsRoot);
+-    Node mainRoot = tree;
+-
+-    Node callSite = findCall(tree, null, 2);
+-    assertNotNull("Call " + call + " was not found.", callSite);
+-
+-    compiler.resetUniqueNameId();
+-    DecompositionType result = decomposer.canExposeExpression(
+-        callSite);
+-    assertEquals(expectedResult, result);
+-  }
+-
+   private void helperCanExposeExpression(
+       DecompositionType expectedResult,
+       String code,
+@@ -472,44 +431,24 @@ public class ExpresssionDecomposerTest extends TestCase {
+         "\n" + explanation, explanation);
+   }
+ 
++
+   private static Node findCall(Node n, String name) {
+-    return findCall(n, name, 1);
+-  }
+-
+-  /**
+-   * @param name The name to look for.
+-   * @param call The call to look for.
+-   * @return The return the Nth CALL node to name found in a pre-order 
+-   * traversal.
+-   */
+-  private static Node findCall(
+-      Node root, @Nullable final String name, final int call) {
+-    class Find {
+-      int found = 0;
+-      Node find(Node n) {
+-        if (n.getType() == Token.CALL) {
+-          Node callee = n.getFirstChild();
+-          if (name == null || (callee.getType() == Token.NAME
+-              && callee.getString().equals(name))) {
+-            found++;
+-            if (found == call) {
+-              return n;
+-            }
+-          }
+-        }
+-
+-        for (Node c : n.children()) {
+-          Node result = find(c);
+-          if (result != null) {
+-            return result;
+-          }
+-        }
+-
+-        return null;
++    if (n.getType() == Token.CALL) {
++      Node callee = n.getFirstChild();
++      if (callee.getType() == Token.NAME
++          && callee.getString().equals(name)) {
++        return n;
++      }
++    }
++
++    for (Node c : n.children()) {
++      Node result = findCall(c, name);
++      if (result != null) {
++        return result;
+       }
+     }
+ 
+-    return (new Find()).find(root);
++    return null;
+   }
+ 
+   private static Node parse(Compiler compiler, String js) {
+diff --git a/test/com/google/javascript/jscomp/InlineFunctionsTest.java b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
+index ddf7372d..aa5fe261 100644
+--- a/test/com/google/javascript/jscomp/InlineFunctionsTest.java
++++ b/test/com/google/javascript/jscomp/InlineFunctionsTest.java
+@@ -16,8 +16,6 @@
+ 
+ package com.google.javascript.jscomp;
+ 
+-import com.google.javascript.jscomp.ExpressionDecomposer.DecompositionType;
+-
+ /**
+  * Inline function tests.
+  * @author johnlenz@google.com (john lenz)
+@@ -1333,29 +1331,6 @@ public class InlineFunctionsTest extends CompilerTestCase {
+         "x = JSCompiler_temp_const_0");
+   }
+ 
+-  public void testDecomposeAnonymousInCall() {
+-    test(
+-        "(function(map){descriptions_=map})(\n" +
+-           "function(){\n" +
+-              "var ret={};\n" +
+-              "ret[ONE]='a';\n" +
+-              "ret[TWO]='b';\n" +
+-              "return ret\n" +
+-           "}()\n" +
+-        ");",
+-        "{" +
+-        "var JSCompiler_inline_result_0;" +
+-        "var ret$$inline_2={};\n" +
+-        "ret$$inline_2[ONE]='a';\n" +
+-        "ret$$inline_2[TWO]='b';\n" +
+-        "JSCompiler_inline_result_0 = ret$$inline_2;\n" +
+-        "}" +
+-        "{" +
+-        "descriptions_=JSCompiler_inline_result_0;" +
+-        "}"
+-        );
+-  }
+-
+   public void testInlineConstructor1() {
+     test("function f() {} function _g() {f.call(this)}",
+          "function _g() {void 0}");
+diff --git a/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java b/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
+index a35ec60d..fa1052a0 100644
+--- a/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
++++ b/test/com/google/javascript/jscomp/PureFunctionIdentifierTest.java
+@@ -600,60 +600,6 @@ public class PureFunctionIdentifierTest extends CompilerTestCase {
+     checkMarkedCalls(source, ImmutableList.<String>of("A", "A", "f"));
+   }
+ 
+-  public void testCallFunctionFOrG() throws Exception {
+-    String source = "function f(){}\n" +
+-        "function g(){}\n" +
+-        "function h(){ (f || g)() }\n" +
+-        "h()";
+-
+-    checkMarkedCalls(source, ImmutableList.<String>of("(f || g)", "h"));
+-  }
+-
+-  public void testCallFunctionFOrGViaHook() throws Exception {
+-    String source = "function f(){}\n" +
+-        "function g(){}\n" +
+-        "function h(){ (false ? f : g)() }\n" +
+-        "h()";
+-
+-    checkMarkedCalls(source, ImmutableList.<String>of("(f : g)", "h"));
+-  }
+-
+-  public void testCallFunctionForGorH() throws Exception {
+-    String source = "function f(){}\n" +
+-        "function g(){}\n" +
+-        "function h(){}\n" +
+-        "function i(){ (false ? f : (g || h))() }\n" +
+-        "i()";
+-
+-    checkMarkedCalls(source, ImmutableList.<String>of("(f : (g || h))", "i"));
+-  }
+-
+-  public void testCallFunctionFOrGWithSideEffects() throws Exception {
+-    String source = "var x = 0;\n" +
+-        "function f(){x = 10}\n" +
+-        "function g(){}\n" +
+-        "function h(){ (f || g)() }\n" +
+-        "function i(){ (g || f)() }\n" +
+-        "function j(){ (f || f)() }\n" +
+-        "function k(){ (g || g)() }\n" +
+-        "h(); i(); j(); k()";
+-
+-    checkMarkedCalls(source, ImmutableList.<String>of("(g || g)", "k"));
+-  }
+-
+-  public void testCallFunctionFOrGViaHookWithSideEffects() throws Exception {
+-    String source = "var x = 0;\n" +
+-        "function f(){x = 10}\n" +
+-        "function g(){}\n" +
+-        "function h(){ (false ? f : g)() }\n" +
+-        "function i(){ (false ? g : f)() }\n" +
+-        "function j(){ (false ? f : f)() }\n" +
+-        "function k(){ (false ? g : g)() }\n" +
+-        "h(); i(); j(); k()";
+-
+-    checkMarkedCalls(source, ImmutableList.<String>of("(g : g)", "k"));
+-  }
+-
+   public void testInvalidAnnotation1() throws Exception {
+     test("/** @nosideeffects */ function foo() {}",
+          null, INVALID_NO_SIDE_EFFECT_ANNOTATION);
+@@ -722,25 +668,13 @@ public class PureFunctionIdentifierTest extends CompilerTestCase {
+     public void visit(NodeTraversal t, Node n, Node parent) {
+       if (n.getType() == Token.NEW) {
+         if (!NodeUtil.constructorCallHasSideEffects(n)) {
+-          noSideEffectCalls.add(generateNameString(n.getFirstChild()));
++          noSideEffectCalls.add(n.getFirstChild().getQualifiedName());
+         }
+       } else if (n.getType() == Token.CALL) {
+         if (!NodeUtil.functionCallHasSideEffects(n)) {
+-          noSideEffectCalls.add(generateNameString(n.getFirstChild()));
++          noSideEffectCalls.add(n.getFirstChild().getQualifiedName());
+         }
+       }
+     }
+-
+-    private String generateNameString(Node node) {
+-      if (node.getType() == Token.OR) {
+-        return "(" + generateNameString(node.getFirstChild()) +
+-            " || " + generateNameString(node.getLastChild()) + ")";
+-      } else if (node.getType() == Token.HOOK) {
+-        return "(" + generateNameString(node.getFirstChild().getNext()) +
+-            " : " + generateNameString(node.getLastChild()) + ")";
+-      } else {
+-        return node.getQualifiedName();
+-      }
+-    }
+   }
+ }

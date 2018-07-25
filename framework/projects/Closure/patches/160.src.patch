@@ -1,0 +1,40 @@
+diff --git a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+index aa29e5f0..78e85645 100644
+--- a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
++++ b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+@@ -865,16 +865,14 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+           } else if (defValue.equals("false")) {
+             options.setDefineToBooleanLiteral(defName, false);
+             continue;
+-          } else if (defValue.length() > 1
+-              && ((defValue.charAt(0) == '\'' &&
+-                  defValue.charAt(defValue.length() - 1) == '\'')
+-                  || (defValue.charAt(0) == '\"' &&
+-                      defValue.charAt(defValue.length() - 1) == '\"'))) {
++          } else if (defValue.length() > 1 &&
++              defValue.charAt(0) == '\'' &&
++              defValue.charAt(defValue.length() - 1) == '\'') {
+             // If the value starts and ends with a single quote,
+             // we assume that it's a string.
+             String maybeStringVal =
+                 defValue.substring(1, defValue.length() - 1);
+-            if (maybeStringVal.indexOf(defValue.charAt(0)) == -1) {
++            if (maybeStringVal.indexOf('\'') == -1) {
+               options.setDefineToStringLiteral(defName, maybeStringVal);
+               continue;
+             }
+diff --git a/src/com/google/javascript/jscomp/RemoveConstantExpressions.java b/src/com/google/javascript/jscomp/RemoveConstantExpressions.java
+index 17d55c9f..aff1357c 100644
+--- a/src/com/google/javascript/jscomp/RemoveConstantExpressions.java
++++ b/src/com/google/javascript/jscomp/RemoveConstantExpressions.java
+@@ -87,9 +87,7 @@ final class RemoveConstantExpressions implements CompilerPass {
+       }
+ 
+       Node exprBody = node.getFirstChild();
+-      if (!NodeUtil.nodeTypeMayHaveSideEffects(exprBody)
+-          || exprBody.getType() == Token.NEW
+-          || exprBody.getType() == Token.CALL) {
++      if (!NodeUtil.nodeTypeMayHaveSideEffects(exprBody)) {
+         changeProxy.replaceWith(parent, node, getSideEffectNodes(exprBody));
+       }
+     }

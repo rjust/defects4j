@@ -1,0 +1,6 @@
+com.google.javascript.jscomp.CoalesceVariableNames
+com.google.javascript.jscomp.Compiler
+com.google.javascript.jscomp.CompilerInput
+com.google.javascript.jscomp.JSModuleGraph
+com.google.javascript.jscomp.LiveVariablesAnalysis
+com.google.javascript.jscomp.parsing.JsDocInfoParser

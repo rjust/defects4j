@@ -1,0 +1,77 @@
+diff --git a/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java b/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
+index 7bfbae52..3d8aadb8 100644
+--- a/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
++++ b/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
+@@ -174,9 +174,6 @@ class ClosureReverseAbstractInterpreter
+       })
+       .put("isArray", new Function<TypeRestriction, JSType>() {
+         public JSType apply(TypeRestriction p) {
+-          if (p.type == null) {
+-            return p.outcome ? getNativeType(ARRAY_TYPE) : null;
+-          }
+ 
+           Visitor<JSType> visitor = p.outcome ? restrictToArrayVisitor :
+               restrictToNotArrayVisitor;
+@@ -185,9 +182,6 @@ class ClosureReverseAbstractInterpreter
+       })
+       .put("isObject", new Function<TypeRestriction, JSType>() {
+         public JSType apply(TypeRestriction p) {
+-          if (p.type == null) {
+-            return p.outcome ? getNativeType(OBJECT_TYPE) : null;
+-          }
+ 
+           Visitor<JSType> visitor = p.outcome ? restrictToObjectVisitor :
+               restrictToNotObjectVisitor;
+@@ -205,6 +199,7 @@ class ClosureReverseAbstractInterpreter
+       Node param = condition.getLastChild();
+       if (callee.getType() == GETPROP && param.isQualifiedName()) {
+         JSType paramType =  getTypeIfRefinable(param, blindScope);
++        if (paramType != null) {
+         Node left = callee.getFirstChild();
+         Node right = callee.getLastChild();
+         if (left.getType() == NAME && "goog".equals(left.getString()) &&
+@@ -214,6 +209,7 @@ class ClosureReverseAbstractInterpreter
+           if (restricter != null) {
+             return restrictParameter(param, paramType, blindScope, restricter,
+                 outcome);
++            }
+           }
+         }
+       }
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
+index 749eb6d3..2631c3ff 100644
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
+@@ -629,29 +629,20 @@ class TypeInference
+       return scope;
+     } else {
+       StaticSlot<JSType> var = scope.getSlot(varName);
+-      if (var != null) {
++      if (var != null &&
++          !(var.isTypeInferred() && unflowableVarNames.contains(varName))) {
+         // There are two situations where we don't want to use type information
+         // from the scope, even if we have it.
+ 
+         // 1) The var is escaped in a weird way, e.g.,
+         // function f() { var x = 3; function g() { x = null } (x); }
+-        boolean isInferred = var.isTypeInferred();
+-        boolean unflowable =
+-            isInferred && unflowableVarNames.contains(varName);
+ 
+         // 2) We're reading type information from another scope for an
+         // inferred variable.
+         // var t = null; function f() { (t); }
+-        boolean nonLocalInferredSlot =
+-            isInferred &&
+-            syntacticScope.getParent() != null &&
+-            var == syntacticScope.getParent().getSlot(varName);
+-
+-        if (!unflowable && !nonLocalInferredSlot) {
+-          type = var.getType();
++        type = var.getType();
+           if (type == null) {
+             type = getNativeType(UNKNOWN_TYPE);
+-          }
+         }
+       }
+     }

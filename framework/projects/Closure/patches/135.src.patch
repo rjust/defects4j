@@ -1,0 +1,176 @@
+diff --git a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
+index ee00bb40..1cdc4db6 100644
+--- a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
++++ b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
+@@ -784,7 +784,6 @@ final class FunctionTypeBuilder {
+     Set<String> getEscapedQualifiedNames();
+ 
+     /** Gets the number of times each variable has been assigned. */
+-    Multiset<String> getAssignedNameCounts();
+   }
+ 
+   static class UnknownFunctionContents implements FunctionContents {
+@@ -825,10 +824,6 @@ final class FunctionTypeBuilder {
+       return ImmutableSet.of();
+     }
+ 
+-    @Override
+-    public Multiset<String> getAssignedNameCounts() {
+-      return ImmutableMultiset.of();
+-    }
+   }
+ 
+   static class AstFunctionContents implements FunctionContents {
+@@ -836,7 +831,6 @@ final class FunctionTypeBuilder {
+     private boolean hasNonEmptyReturns = false;
+     private Set<String> escapedVarNames;
+     private Set<String> escapedQualifiedNames;
+-    private final Multiset<String> assignedVarNames = HashMultiset.create();
+ 
+     AstFunctionContents(Node n) {
+       this.n = n;
+@@ -893,13 +887,6 @@ final class FunctionTypeBuilder {
+       escapedQualifiedNames.add(name);
+     }
+ 
+-    @Override
+-    public Multiset<String> getAssignedNameCounts() {
+-      return assignedVarNames;
+-    }
+ 
+-    void recordAssignedName(String name) {
+-      assignedVarNames.add(name);
+-    }
+   }
+ }
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
+index 8d784363..e3e06d80 100644
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
+@@ -1915,10 +1915,6 @@ public final class NodeUtil {
+    * Returns whether this is a bleeding function (an anonymous named function
+    * that bleeds into the inner scope).
+    */
+-  static boolean isBleedingFunctionName(Node n) {
+-    return n.isName() && !n.getString().isEmpty() &&
+-        isFunctionExpression(n.getParent());
+-  }
+ 
+   /**
+    * Determines if a node is a function expression that has an empty body.
+diff --git a/src/com/google/javascript/jscomp/Scope.java b/src/com/google/javascript/jscomp/Scope.java
+index 355315fa..cd15e3f6 100644
+--- a/src/com/google/javascript/jscomp/Scope.java
++++ b/src/com/google/javascript/jscomp/Scope.java
+@@ -124,7 +124,6 @@ public class Scope
+     private boolean markedEscaped = false;
+ 
+     /** @see isMarkedAssignedExactlyOnce */
+-    private boolean markedAssignedExactlyOnce = false;
+ 
+     /**
+      * Creates a variable.
+@@ -361,17 +360,11 @@ public class Scope
+      * In other words, it's assigned in an inner scope so that it's much harder
+      * to make assertions about its value at a given point.
+      */
+-    void markAssignedExactlyOnce() {
+-      markedAssignedExactlyOnce = true;
+-    }
+ 
+     /**
+      * Whether this is assigned exactly once.
+      * Notice that not all scope creators record this information.
+      */
+-    boolean isMarkedAssignedExactlyOnce() {
+-      return markedAssignedExactlyOnce;
+-    }
+   }
+ 
+   /**
+@@ -551,12 +544,12 @@ public class Scope
+   }
+ 
+   @Override
+-  public Var getSlot(String name) {
++  public StaticSlot<JSType> getSlot(String name) {
+     return getVar(name);
+   }
+ 
+   @Override
+-  public Var getOwnSlot(String name) {
++  public StaticSlot<JSType> getOwnSlot(String name) {
+     return vars.get(name);
+   }
+ 
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
+index b68c93d5..afde2098 100644
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
+@@ -628,14 +628,10 @@ class TypeInference
+         //
+         // In this case, we would infer the first reference to t as
+         // type {number}, even though it's undefined.
+-        boolean nonLocalInferredSlot = false;
+-        if (isInferred && syntacticScope.isLocal()) {
+-          Var maybeOuterVar = syntacticScope.getParent().getVar(varName);
+-          if (var == maybeOuterVar &&
+-              !maybeOuterVar.isMarkedAssignedExactlyOnce()) {
+-            nonLocalInferredSlot = true;
+-          }
+-        }
++        boolean nonLocalInferredSlot =
++            isInferred &&
++            syntacticScope.getParent() != null &&
++            var == syntacticScope.getParent().getSlot(varName);
+ 
+         if (!unflowable && !nonLocalInferredSlot) {
+           type = var.getType();
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 36f83466..fbbf916c 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1873,14 +1873,6 @@ final class TypedScopeCreator implements ScopeCreator {
+           v.markEscaped();
+         }
+ 
+-        for (Multiset.Entry<String> entry :
+-                 contents.getAssignedNameCounts().entrySet()) {
+-          Var v = scope.getVar(entry.getElement());
+-          Preconditions.checkState(v.getScope() == scope);
+-          if (entry.getCount() == 1) {
+-            v.markAssignedExactlyOnce();
+-          }
+-        }
+       }
+     }
+ 
+@@ -1993,7 +1985,7 @@ final class TypedScopeCreator implements ScopeCreator {
+         data.get(t.getScopeRoot()).recordNonEmptyReturn();
+       }
+ 
+-      if (t.getScopeDepth() <= 1) {
++      if (t.getScopeDepth() <= 2) {
+         // The first-order function analyzer looks at two types of variables:
+         //
+         // 1) Local variables that are assigned in inner scopes ("escaped vars")
+@@ -2005,18 +1997,14 @@ final class TypedScopeCreator implements ScopeCreator {
+         return;
+       }
+ 
+-      if (n.isName() && NodeUtil.isLValue(n) &&
++      if (n.isName() && NodeUtil.isLValue(n)) {
+           // Be careful of bleeding functions, which create variables
+           // in the inner scope, not the scope where the name appears.
+-          !NodeUtil.isBleedingFunctionName(n)) {
+         String name = n.getString();
+         Scope scope = t.getScope();
+         Var var = scope.getVar(name);
+         if (var != null) {
+           Scope ownerScope = var.getScope();
+-          if (ownerScope.isLocal()) {
+-            data.get(ownerScope.getRootNode()).recordAssignedName(name);
+-          }
+ 
+           if (scope != ownerScope && ownerScope.isLocal()) {
+             data.get(ownerScope.getRootNode()).recordEscapedVarName(name);
