@@ -45,11 +45,11 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b91..100
     - script: carton exec ./test_verify_bugs.sh -p Closure -b101..111
     - script: carton exec ./test_verify_bugs.sh -p Closure -b112..122
-    - script: carton exec ./test_verify_bugs.sh -p closure -b123..133
-    - script: carton exec ./test_verify_bugs.sh -p closure -b134..144
-    - script: carton exec ./test_verify_bugs.sh -p closure -b145..155
-    - script: carton exec ./test_verify_bugs.sh -p closure -b156..166
-    - script: carton exec ./test_verify_bugs.sh -p closure -b167..176
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b123..133
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b134..144
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b145..155
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b156..166
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b167..176
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
