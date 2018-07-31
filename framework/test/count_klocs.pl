@@ -35,7 +35,9 @@ Prints the manual page and exits.
 =head1 DESCRIPTION
 
 This perl script is intended for use by Randoop developers to go through
-the Defects4j corpus and count the KLOCS of each of the tests.
+the Defects4j corpus and output the KLOCS of each of the tests to standard
+output.  For more details on the KLOC process see:
+https://gitlab.cs.washington.edu/randoop/coverage-tools/blob/master/KLOCS-README.md
 
 =cut
 
