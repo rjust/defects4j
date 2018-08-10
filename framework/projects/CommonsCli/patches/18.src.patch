@@ -1,0 +1,50 @@
+diff --git a/src/java/org/apache/commons/cli/GnuParser.java b/src/java/org/apache/commons/cli/GnuParser.java
+index 1590fc3..b6ac077 100644
+--- a/src/java/org/apache/commons/cli/GnuParser.java
++++ b/src/java/org/apache/commons/cli/GnuParser.java
+@@ -70,25 +70,20 @@ public class GnuParser extends Parser {
+             }
+             else if (arg.startsWith("-"))
+             {
+-                String opt = Util.stripLeadingHyphens(arg);
++                Option option = options.getOption(arg);
+ 
+-                if (options.hasOption(opt))
++                String head = arg.substring(0, 2); // "--" if --foo, "-f" if -foo
++                String tail = arg.substring(2);    // "foo" if -foo, "oo" if -foo
++                if (option == null)
+                 {
+-                    tokens.add(arg);
+-                }
+-                else
+-                {
+-                    if (opt.indexOf('=') != -1 && options.hasOption(opt.substring(0, opt.indexOf('='))))
++                    Option specialOption = options.getOption(head);
++
++                    if (specialOption != null)
+                     {
+                         // the format is --foo=value or -foo=value
+-                        tokens.add(arg.substring(0, arg.indexOf('='))); // --foo
+-                        tokens.add(arg.substring(arg.indexOf('=') + 1)); // value
+-                    }
+-                    else if (options.hasOption(arg.substring(0, 2)))
+-                    {
+                         // the format is a special properties option (-Dproperty=value)
+-                        tokens.add(arg.substring(0, 2)); // -D
+-                        tokens.add(arg.substring(2)); // property=value
++                        tokens.add(head); // -D
++                        tokens.add(tail); // property=value
+                     }
+                     else
+                     {
+@@ -96,6 +91,10 @@ public class GnuParser extends Parser {
+                         tokens.add(arg);
+                     }
+                 }
++                else
++                {
++                    tokens.add(arg);
++                }
+             }
+             else
+             {

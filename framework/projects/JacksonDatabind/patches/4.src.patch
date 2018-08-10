@@ -1,0 +1,22 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/ResolvedRecursiveType.java b/src/main/java/com/fasterxml/jackson/databind/type/ResolvedRecursiveType.java
+index 53e061c69..3def737f8 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/ResolvedRecursiveType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/ResolvedRecursiveType.java
+@@ -111,7 +111,7 @@ public class ResolvedRecursiveType extends TypeBase
+     public boolean equals(Object o) {
+         if (o == this) return true;
+         if (o == null) return false;
+-        if (o.getClass() == getClass()) {
++        if (_referencedType == null) {
+             // 16-Jun-2017, tatu: as per [databind#1658], can not do recursive call since
+             //    there is likely to be a cycle...
+ 
+@@ -127,6 +127,7 @@ public class ResolvedRecursiveType extends TypeBase
+                     && _referencedType.equals(((ResolvedRecursiveType) o).getSelfReferencedType()));
+                     */
+         }
+-        return false;
++        return (o.getClass() == getClass()
++                && _referencedType.equals(((ResolvedRecursiveType) o).getSelfReferencedType()));
+     }
+ }

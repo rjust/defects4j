@@ -1,0 +1,298 @@
+diff --git a/guava/src/com/google/common/util/concurrent/AbstractCatchingFuture.java b/guava/src/com/google/common/util/concurrent/AbstractCatchingFuture.java
+index 81fde7ab1..0b03a09fd 100644
+--- a/guava/src/com/google/common/util/concurrent/AbstractCatchingFuture.java
++++ b/guava/src/com/google/common/util/concurrent/AbstractCatchingFuture.java
+@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
+  * Implementations of {@code Futures.catching*}.
+  */
+ @GwtCompatible
+-abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
++abstract class AbstractCatchingFuture<V, X extends Throwable, F>
+     extends AbstractFuture.TrustedFuture<V> implements Runnable {
+   static <X extends Throwable, V> ListenableFuture<V> create(
+       ListenableFuture<? extends V> input,
+@@ -102,47 +102,35 @@ abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
+     fallback = null;
+ 
+     // For an explanation of the cases here, see the comments on AbstractTransformFuture.run.
+-    V sourceResult = null;
+-    Throwable throwable = null;
++    Throwable throwable;
+     try {
+-      sourceResult = getUninterruptibly(localInputFuture);
++      set(getUninterruptibly(localInputFuture));
++      return;
+     } catch (ExecutionException e) {
+-      throwable = checkNotNull(e.getCause());
++      throwable = e.getCause();
+     } catch (Throwable e) { // this includes cancellation exception
+       throwable = e;
+     }
+-
+-    if (throwable == null) {
+-      set(sourceResult);
+-      return;
+-    }
+-
+-    if (!isInstanceOfThrowableClass(throwable, localExceptionType)) {
+-      setException(throwable);
+       // TODO(cpovirk): Test that fallback is not run in this case.
+-      return;
+-    }
+ 
+-    @SuppressWarnings("unchecked") // verified safe by isInstanceOfThrowableClass
+-    X castThrowable = (X) throwable;
+-    T fallbackResult;
+     try {
+-      fallbackResult = doFallback(localFallback, castThrowable);
+-    } catch (Throwable t) {
+-      setException(t);
+-      return;
++      if (isInstanceOfThrowableClass(throwable, localExceptionType)) {
++        @SuppressWarnings("unchecked") // verified safe by isInstance
++        X castThrowable = (X) throwable;
++        doFallback(localFallback, castThrowable);
++      } else {
++        setException(throwable);
++      }
++    } catch (Throwable e) {
++      setException(e);
+     }
+-
+-    setResult(fallbackResult);
+   }
+ 
+   /** Template method for subtypes to actually run the fallback. */
+   @ForOverride
+-  abstract T doFallback(F fallback, X throwable) throws Exception;
++  abstract void doFallback(F fallback, X throwable) throws Exception;
+ 
+   /** Template method for subtypes to actually set the result. */
+-  @ForOverride
+-  abstract void setResult(T result);
+ 
+   @Override
+   protected final void afterDone() {
+@@ -157,8 +145,7 @@ abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
+    * {@link #setFuture(ListenableFuture)}.
+    */
+   private static final class AsyncCatchingFuture<V, X extends Throwable>
+-      extends AbstractCatchingFuture<
+-          V, X, AsyncFunction<? super X, ? extends V>, ListenableFuture<? extends V>> {
++      extends AbstractCatchingFuture<V, X, AsyncFunction<? super X, ? extends V>> {
+     AsyncCatchingFuture(
+         ListenableFuture<? extends V> input,
+         Class<X> exceptionType,
+@@ -167,19 +154,13 @@ abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
+     }
+ 
+     @Override
+-    ListenableFuture<? extends V> doFallback(
+-        AsyncFunction<? super X, ? extends V> fallback, X cause) throws Exception {
++    void doFallback(AsyncFunction<? super X, ? extends V> fallback, X cause) throws Exception {
+       ListenableFuture<? extends V> replacement = fallback.apply(cause);
+       checkNotNull(
+           replacement,
+           "AsyncFunction.apply returned null instead of a Future. "
+               + "Did you mean to return immediateFuture(null)?");
+-      return replacement;
+-    }
+-
+-    @Override
+-    void setResult(ListenableFuture<? extends V> result) {
+-      setFuture(result);
++      setFuture(replacement);
+     }
+   }
+ 
+@@ -188,7 +169,7 @@ abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
+    * #set(Object)}.
+    */
+   private static final class CatchingFuture<V, X extends Throwable>
+-      extends AbstractCatchingFuture<V, X, Function<? super X, ? extends V>, V> {
++      extends AbstractCatchingFuture<V, X, Function<? super X, ? extends V>> {
+     CatchingFuture(
+         ListenableFuture<? extends V> input,
+         Class<X> exceptionType,
+@@ -197,13 +178,9 @@ abstract class AbstractCatchingFuture<V, X extends Throwable, F, T>
+     }
+ 
+     @Override
+-    V doFallback(Function<? super X, ? extends V> fallback, X cause) throws Exception {
+-      return fallback.apply(cause);
+-    }
+-
+-    @Override
+-    void setResult(V result) {
+-      set(result);
++    void doFallback(Function<? super X, ? extends V> fallback, X cause) throws Exception {
++      V replacement = fallback.apply(cause);
++      set(replacement);
+     }
+   }
+ }
+diff --git a/guava/src/com/google/common/util/concurrent/AbstractTransformFuture.java b/guava/src/com/google/common/util/concurrent/AbstractTransformFuture.java
+index 6ba1cdfb3..d12b062e4 100644
+--- a/guava/src/com/google/common/util/concurrent/AbstractTransformFuture.java
++++ b/guava/src/com/google/common/util/concurrent/AbstractTransformFuture.java
+@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
+  * Implementations of {@code Futures.transform*}.
+  */
+ @GwtCompatible
+-abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.TrustedFuture<O>
++abstract class AbstractTransformFuture<I, O, F> extends AbstractFuture.TrustedFuture<O>
+     implements Runnable {
+   static <I, O> ListenableFuture<O> create(
+       ListenableFuture<I> input, AsyncFunction<? super I, ? extends O> function) {
+@@ -81,13 +81,6 @@ abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.Truste
+ 
+   @Override
+   public final void run() {
+-    ListenableFuture<? extends I> localInputFuture = inputFuture;
+-    F localFunction = function;
+-    if (isCancelled() | localInputFuture == null | localFunction == null) {
+-      return;
+-    }
+-    inputFuture = null;
+-    function = null;
+ 
+     /*
+      * Any of the setException() calls below can fail if the output Future is cancelled between now
+@@ -98,44 +91,42 @@ abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.Truste
+      * Contrast this to the situation we have if setResult() throws, a situation described below.
+      */
+ 
+-    I sourceResult;
+     try {
+-      sourceResult = getUninterruptibly(localInputFuture);
+-    } catch (CancellationException e) {
++      ListenableFuture<? extends I> localInputFuture = inputFuture;
++      F localFunction = function;
+       // Cancel this future and return.
+       // At this point, inputFuture is cancelled and outputFuture doesn't exist, so the value of
+       // mayInterruptIfRunning is irrelevant.
+-      cancel(false);
+-      return;
+-    } catch (ExecutionException e) {
+       // Set the cause of the exception as this future's exception.
+-      setException(e.getCause());
+-      return;
+-    } catch (RuntimeException e) {
++      if (isCancelled() | localInputFuture == null | localFunction == null) {
++        return;
++      }
+       // Bug in inputFuture.get(). Propagate to the output Future so that its consumers don't hang.
+-      setException(e);
+-      return;
+-    } catch (Error e) {
+       /*
+        * StackOverflowError, OutOfMemoryError (e.g., from allocating ExecutionException), or
+        * something. Try to treat it like a RuntimeException. If we overflow the stack again, the
+        * resulting Error will propagate upward up to the root call to set().
+        */
+-      setException(e);
+-      return;
+-    }
+-
+-    T transformResult;
+-    try {
+-      transformResult = doTransform(localFunction, sourceResult);
++    inputFuture = null;
++      function = null;
++
++      I sourceResult;
++      try {
++        sourceResult = getUninterruptibly(localInputFuture);
++      } catch (CancellationException e) {
++        cancel(false);
++        return;
++      } catch (ExecutionException e) {
++        setException(e.getCause());
++        return;
++      }
++      doTransform(localFunction, sourceResult);
+     } catch (UndeclaredThrowableException e) {
+       // Set the cause of the exception as this future's exception.
+       setException(e.getCause());
+-      return;
+     } catch (Throwable t) {
+       // This exception is irrelevant in this thread, but useful for the client.
+       setException(t);
+-      return;
+     }
+ 
+     /*
+@@ -174,16 +165,13 @@ abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.Truste
+      * propagate, too, but only as far as AbstractFuture.executeListener, which will catch and log
+      * it.
+      */
+-    setResult(transformResult);
+   }
+ 
+   /** Template method for subtypes to actually run the transform. */
+   @ForOverride
+-  abstract T doTransform(F function, I result) throws Exception;
++  abstract void doTransform(F function, I result) throws Exception;
+ 
+   /** Template method for subtypes to actually set the result. */
+-  @ForOverride
+-  abstract void setResult(T result);
+ 
+   @Override
+   protected final void afterDone() {
+@@ -197,27 +185,20 @@ abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.Truste
+    * {@link #setFuture(ListenableFuture)}.
+    */
+   private static final class AsyncTransformFuture<I, O>
+-      extends AbstractTransformFuture<
+-          I, O, AsyncFunction<? super I, ? extends O>, ListenableFuture<? extends O>> {
++      extends AbstractTransformFuture<I, O, AsyncFunction<? super I, ? extends O>> {
+     AsyncTransformFuture(
+         ListenableFuture<? extends I> inputFuture, AsyncFunction<? super I, ? extends O> function) {
+       super(inputFuture, function);
+     }
+ 
+     @Override
+-    ListenableFuture<? extends O> doTransform(
+-        AsyncFunction<? super I, ? extends O> function, I input) throws Exception {
++    void doTransform(AsyncFunction<? super I, ? extends O> function, I input) throws Exception {
+       ListenableFuture<? extends O> outputFuture = function.apply(input);
+       checkNotNull(
+           outputFuture,
+           "AsyncFunction.apply returned null instead of a Future. "
+               + "Did you mean to return immediateFuture(null)?");
+-      return outputFuture;
+-    }
+-
+-    @Override
+-    void setResult(ListenableFuture<? extends O> result) {
+-      setFuture(result);
++      setFuture(outputFuture);
+     }
+   }
+ 
+@@ -226,21 +207,16 @@ abstract class AbstractTransformFuture<I, O, F, T> extends AbstractFuture.Truste
+    * {@link #set(Object)}.
+    */
+   private static final class TransformFuture<I, O>
+-      extends AbstractTransformFuture<I, O, Function<? super I, ? extends O>, O> {
++      extends AbstractTransformFuture<I, O, Function<? super I, ? extends O>> {
+     TransformFuture(
+         ListenableFuture<? extends I> inputFuture, Function<? super I, ? extends O> function) {
+       super(inputFuture, function);
+     }
+ 
+     @Override
+-    O doTransform(Function<? super I, ? extends O> function, I input) {
+-      return function.apply(input);
++    void doTransform(Function<? super I, ? extends O> function, I input) {
+       // TODO(lukes): move the UndeclaredThrowable catch block here?
+-    }
+-
+-    @Override
+-    void setResult(O result) {
+-      set(result);
++      set(function.apply(input));
+     }
+   }
+ }

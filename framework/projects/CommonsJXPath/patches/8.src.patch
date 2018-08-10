@@ -1,0 +1,12 @@
+diff --git a/src/java/org/apache/commons/jxpath/servlet/ServletRequestHandler.java b/src/java/org/apache/commons/jxpath/servlet/ServletRequestHandler.java
+index 6b32848..a2d676f 100644
+--- a/src/java/org/apache/commons/jxpath/servlet/ServletRequestHandler.java
++++ b/src/java/org/apache/commons/jxpath/servlet/ServletRequestHandler.java
+@@ -68,6 +68,6 @@ public class ServletRequestHandler extends HttpSessionHandler {
+     }
+ 
+     public void setProperty(Object request, String property, Object value) {
+-        ((ServletRequestAndContext) request).getServletRequest().setAttribute(property, value);
++        ((ServletRequest) request).setAttribute(property, value);
+     }
+ }

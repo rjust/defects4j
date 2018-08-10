@@ -1,0 +1,7 @@
+com.fasterxml.jackson.core.filter.BasicGeneratorFilteringTest
+com.fasterxml.jackson.core.filter.BasicParserFilteringTest
+com.fasterxml.jackson.core.filter.JsonPointerGeneratorFilteringTest
+com.fasterxml.jackson.core.filter.JsonPointerParserFilteringTest
+com.fasterxml.jackson.core.json.GeneratorFailTest
+com.fasterxml.jackson.core.json.JsonFactoryTest
+com.fasterxml.jackson.core.json.StringGenerationTest

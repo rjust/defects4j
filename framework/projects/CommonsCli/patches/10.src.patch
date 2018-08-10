@@ -1,0 +1,42 @@
+diff --git a/src/java/org/apache/commons/cli/OptionGroup.java b/src/java/org/apache/commons/cli/OptionGroup.java
+index 67cd5e2..e95a7d2 100644
+--- a/src/java/org/apache/commons/cli/OptionGroup.java
++++ b/src/java/org/apache/commons/cli/OptionGroup.java
+@@ -85,19 +85,14 @@ public class OptionGroup implements Serializable
+      */
+     public void setSelected(Option option) throws AlreadySelectedException
+     {
+-        if (option == null)
+-        {
+             // reset the option previously selected
+-            selected = null;
+-            return;
+-        }
+         
+         // if no option has already been selected or the 
+         // same option is being reselected then set the
+         // selected member variable
+-        if (selected == null || selected.equals(option.getKey()))
++        if (selected == null || selected.equals(option.getOpt()))
+         {
+-            selected = option.getKey();
++            selected = option.getOpt();
+         }
+         else
+         {
+diff --git a/src/java/org/apache/commons/cli/Parser.java b/src/java/org/apache/commons/cli/Parser.java
+index 2b99dd8..5b242c8 100644
+--- a/src/java/org/apache/commons/cli/Parser.java
++++ b/src/java/org/apache/commons/cli/Parser.java
+@@ -147,11 +147,6 @@ public abstract class Parser implements CommandLineParser
+         }
+         
+         // clear the data from the groups
+-        for (Iterator it = options.getOptionGroups().iterator(); it.hasNext();)
+-        {
+-            OptionGroup group = (OptionGroup) it.next();
+-            group.setSelected(null);
+-        }        
+ 
+         // initialise members
+         setOptions(options);

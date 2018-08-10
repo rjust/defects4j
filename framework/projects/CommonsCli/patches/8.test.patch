@@ -1,0 +1,14 @@
+diff --git a/src/test/org/apache/commons/cli/UtilTest.java b/src/test/org/apache/commons/cli/UtilTest.java
+index ab95dd5..c8c614a 100644
+--- a/src/test/org/apache/commons/cli/UtilTest.java
++++ b/src/test/org/apache/commons/cli/UtilTest.java
+@@ -35,9 +35,5 @@ public class UtilTest extends TestCase
+     public void testStripLeadingAndTrailingQuotes()
+     {
+         assertEquals("foo", Util.stripLeadingAndTrailingQuotes("\"foo\""));
+-        assertEquals("foo \"bar\"", Util.stripLeadingAndTrailingQuotes("foo \"bar\""));
+-        assertEquals("\"foo\" bar", Util.stripLeadingAndTrailingQuotes("\"foo\" bar"));
+-        assertEquals("\"foo\" and \"bar\"", Util.stripLeadingAndTrailingQuotes("\"foo\" and \"bar\""));
+-        assertEquals("\"", Util.stripLeadingAndTrailingQuotes("\""));
+     }
+ }

@@ -1,0 +1,42 @@
+diff --git a/gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java b/gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java
+index 41e7cd15..71321bbd 100644
+--- a/gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java
++++ b/gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java
+@@ -46,7 +46,6 @@ public abstract class UnsafeAllocator {
+         @Override
+         @SuppressWarnings("unchecked")
+         public <T> T newInstance(Class<T> c) throws Exception {
+-          assertInstantiable(c);
+           return (T) allocateInstance.invoke(unsafe, c);
+         }
+       };
+@@ -70,7 +69,6 @@ public abstract class UnsafeAllocator {
+         @Override
+         @SuppressWarnings("unchecked")
+         public <T> T newInstance(Class<T> c) throws Exception {
+-          assertInstantiable(c);
+           return (T) newInstance.invoke(null, c, constructorId);
+         }
+       };
+@@ -90,7 +88,6 @@ public abstract class UnsafeAllocator {
+         @Override
+         @SuppressWarnings("unchecked")
+         public <T> T newInstance(Class<T> c) throws Exception {
+-          assertInstantiable(c);
+           return (T) newInstance.invoke(null, c, Object.class);
+         }
+       };
+@@ -111,13 +108,4 @@ public abstract class UnsafeAllocator {
+    * throw an {@link java.lang.UnsupportedOperationException}
+    * @param c instance of the class to be checked
+    */
+-  private static void assertInstantiable(Class<?> c) {
+-    int modifiers = c.getModifiers();
+-    if (Modifier.isInterface(modifiers)) {
+-      throw new UnsupportedOperationException("Interface can't be instantiated! Interface name: " + c.getName());
+-    }
+-    if (Modifier.isAbstract(modifiers)) {
+-      throw new UnsupportedOperationException("Abstract class can't be instantiated! Class name: " + c.getName());
+-    }
+-  }
+ }

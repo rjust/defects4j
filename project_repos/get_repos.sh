@@ -10,6 +10,7 @@ clean() {
     commons-math.git \
     jfreechart \
     joda-time.git \
+    mockito.git \
     README 
 }
 
@@ -27,6 +28,7 @@ if [ -e $ARCHIVE ]; then
 else
     old=0
 fi
+
 # Only download repos if the server has a newer file
 wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
 new=$($cmd)

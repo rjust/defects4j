@@ -1,0 +1,36 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVFormat.java b/src/main/java/org/apache/commons/csv/CSVFormat.java
+index 5963edb..6a23b73 100644
+--- a/src/main/java/org/apache/commons/csv/CSVFormat.java
++++ b/src/main/java/org/apache/commons/csv/CSVFormat.java
+@@ -608,7 +608,7 @@ public final class CSVFormat implements Serializable {
+      * @throws IOException
+      *         thrown if the optional header cannot be printed.
+      */
+-    public CSVPrinter print(final Appendable out) throws IOException {
++    public CSVPrinter print(final Appendable out) {
+         return new CSVPrinter(out, this);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/csv/CSVPrinter.java b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+index d2968b5..491a46d 100644
+--- a/src/main/java/org/apache/commons/csv/CSVPrinter.java
++++ b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+@@ -58,7 +58,7 @@ public final class CSVPrinter implements Flushable, Closeable {
+      * @throws IllegalArgumentException
+      *         thrown if the parameters of the format are inconsistent or if either out or format are null.
+      */
+-    public CSVPrinter(final Appendable out, final CSVFormat format) throws IOException {
++    public CSVPrinter(final Appendable out, final CSVFormat format) {
+         Assertions.notNull(out, "out");
+         Assertions.notNull(format, "format");
+ 
+@@ -67,9 +67,6 @@ public final class CSVPrinter implements Flushable, Closeable {
+         this.format.validate();
+         // TODO: Is it a good idea to do this here instead of on the first call to a print method?
+         // It seems a pain to have to track whether the header has already been printed or not.
+-        if (format.getHeader() != null) {
+-            this.printRecord((Object[]) format.getHeader());
+-        }
+     }
+ 
+     // ======================================================

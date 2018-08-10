@@ -1,0 +1,19 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java
+index d1418eb0a..3bc4e9af1 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java
++++ b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java
+@@ -54,13 +54,8 @@ public class ClassNameIdResolver
+             // 17-Aug-2017, tatu: As per [databind#1735] need to ensure assignment
+             //    compatibility -- needed later anyway, and not doing so may open
+             //    security issues.
+-            JavaType t = tf.constructFromCanonical(id);
+-            if (!t.isTypeOrSubTypeOf(_baseType.getRawClass())) {
+                 // Probably cleaner to have a method in `TypeFactory` but can't add in patch
+-                throw new IllegalArgumentException(String.format(
+-                        "Class %s not subtype of %s", t.getRawClass().getName(), _baseType));
+-            }
+-            return t;
++            return tf.constructFromCanonical(id);
+         }
+         Class<?> cls;
+         try {

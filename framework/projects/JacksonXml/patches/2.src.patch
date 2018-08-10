@@ -1,0 +1,37 @@
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+index a69b6c4..328798e 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+@@ -88,16 +88,12 @@ public class XmlMapper extends ObjectMapper
+         _serializationConfig = _serializationConfig.withDefaultPrettyPrinter(DEFAULT_XML_PRETTY_PRINTER);
+     }
+ 
+-    protected XmlMapper(XmlMapper mapper) {
+-        super(mapper);
+-        this._xmlModule = mapper._xmlModule;
+-    }
+ 
+     @Override
+     public XmlMapper copy()
+     {
+         _checkInvalidCopy(XmlMapper.class);
+-        return new XmlMapper(this);
++        return new XmlMapper((XmlFactory) _jsonFactory.copy(), _xmlModule);
+     }
+ 
+     @Override
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+index fc15473..b666a95 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+@@ -54,10 +54,6 @@ public class XmlSerializerProvider extends DefaultSerializerProvider
+     /**********************************************************************
+      */
+ 
+-    @Override
+-    public DefaultSerializerProvider copy() {
+-        return this;
+-    }
+ 
+     @Override
+     public DefaultSerializerProvider createInstance(SerializationConfig config,

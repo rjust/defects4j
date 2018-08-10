@@ -29,6 +29,7 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 #
 echo "Setting up project repositories ... "
 cd "$DIR_REPOS" && ./get_repos.sh
+./get_repos_1.4.sh
 
 ################################################################################
 #

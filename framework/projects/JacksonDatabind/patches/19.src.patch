@@ -1,0 +1,29 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java b/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
+index 6363421ef..2bd24051f 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java
+@@ -149,22 +149,17 @@ public class PropertyBuilder
+             //    whereas for global defaults OR per-property overrides, we have more
+             //    static definition. Sigh.
+             // First: case of class/type specifying it; try to find POJO property defaults
+-            Object defaultBean;
+ 
+             // 16-Oct-2016, tatu: Note: if we can not for some reason create "default instance",
+             //    revert logic to the case of general/per-property handling, so both
+             //    type-default AND null are to be excluded.
+             //    (as per [databind#1417]
+-            if (_useRealPropertyDefaults && (defaultBean = getDefaultBean()) != null) {
++            if (_useRealPropertyDefaults) {
+                 // 07-Sep-2016, tatu: may also need to front-load access forcing now
+                 if (prov.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) {
+                     am.fixAccess(_config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS));
+                 }
+-                try {
+-                    valueToSuppress = am.getValue(defaultBean);
+-                } catch (Exception e) {
+-                    _throwWrapped(e, propDef.getName(), defaultBean);
+-                }
++                valueToSuppress = getPropertyDefaultValue(propDef.getName(), am, actualType);
+             } else {
+                 valueToSuppress = getDefaultValue(actualType);
+                 suppressNulls = true;

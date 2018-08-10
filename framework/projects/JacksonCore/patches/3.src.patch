@@ -1,0 +1,26 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+index 5274f33e..4a0ea52b 100644
+--- a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
++++ b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+@@ -235,18 +235,16 @@ public class FilteringParserDelegate extends JsonParserDelegate
+         // If all the conditions matches then check for scalar / non-scalar property
+         if (!_allowMultipleMatches && (_currToken != null) && (_exposedContext == null)) {
+             //if not scalar and ended successfully, and !includePath, then return null
+-            if (!_includePath) {
+                 if (_currToken.isStructEnd()) {
+                     if (_headContext.isStartHandled()) {
+                         return (_currToken = null);
+                     }
+-                } else if (_currToken.isScalarValue()) {
++                } 
+                     //else if scalar, and scalar not present in obj/array and !includePath and INCLUDE_ALL matched once
+                     // then return null 
+-                    if (!_headContext.isStartHandled() && (_itemFilter == TokenFilter.INCLUDE_ALL)) {
++    		else if(_currToken.isScalarValue() && !_headContext.isStartHandled() && !_includePath 
++    				&& _itemFilter == TokenFilter.INCLUDE_ALL) {
+                         return (_currToken = null);
+-                    }
+-                }
+             }
+         }
+         // Anything buffered?

@@ -1,0 +1,79 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVLexer.java b/src/main/java/org/apache/commons/csv/CSVLexer.java
+index 1201c49..cf5cb69 100644
+--- a/src/main/java/org/apache/commons/csv/CSVLexer.java
++++ b/src/main/java/org/apache/commons/csv/CSVLexer.java
+@@ -77,8 +77,7 @@ class CSVLexer extends Lexer {
+         }
+ 
+         if (isStartOfLine(lastChar) && isCommentStart(c)) {
+-            String comment = in.readLine().trim();
+-            tkn.content.append(comment);
++            in.readLine();
+             tkn.type = COMMENT;
+             return tkn;
+         }
+diff --git a/src/main/java/org/apache/commons/csv/CSVParser.java b/src/main/java/org/apache/commons/csv/CSVParser.java
+index 1d425dd..abadb20 100644
+--- a/src/main/java/org/apache/commons/csv/CSVParser.java
++++ b/src/main/java/org/apache/commons/csv/CSVParser.java
+@@ -133,9 +133,8 @@ public class CSVParser implements Iterable<CSVRecord> {
+      * @throws IOException on parse error or input read-failure
+      */
+     CSVRecord getRecord() throws IOException {
+-        CSVRecord result = new CSVRecord(null, headerMapping, null);
++        CSVRecord result = new CSVRecord(null, headerMapping);
+         record.clear();
+-        StringBuilder sb = null;
+         do {
+             reusableToken.reset();
+             lexer.nextToken(reusableToken);
+@@ -156,20 +155,13 @@ public class CSVParser implements Iterable<CSVRecord> {
+                 case INVALID:
+                     throw new IOException("(line " + getLineNumber() + ") invalid parse sequence");
+                 case COMMENT: // Ignored currently
+-                    if (sb == null) { // first comment for this record
+-                        sb = new StringBuilder();
+-                    } else {
+-                        sb.append("\n");
+-                    }
+-                    sb.append(reusableToken.content);
+                     reusableToken.type = TOKEN; // Read another token
+                     break;
+             }
+         } while (reusableToken.type == TOKEN);
+         
+         if (!record.isEmpty()) {
+-            result = new CSVRecord(record.toArray(new String[record.size()]), headerMapping, 
+-                    sb == null ? null : sb.toString());
++            result = new CSVRecord(record.toArray(new String[record.size()]), headerMapping);
+         }
+         return result;
+     }
+diff --git a/src/main/java/org/apache/commons/csv/CSVRecord.java b/src/main/java/org/apache/commons/csv/CSVRecord.java
+index 8fad43e..78d8577 100644
+--- a/src/main/java/org/apache/commons/csv/CSVRecord.java
++++ b/src/main/java/org/apache/commons/csv/CSVRecord.java
+@@ -36,12 +36,10 @@ public class CSVRecord implements Serializable, Iterable<String> {
+     private final Map<String, Integer> mapping;
+ 
+     /** The accumulated comments (if any) */
+-    private final String comment;
+ 
+-    CSVRecord(String[] values, Map<String, Integer> mapping, String comment) {
++    CSVRecord(String[] values, Map<String, Integer> mapping) {
+         this.values = values != null ? values : EMPTY_STRING_ARRAY;
+         this.mapping = mapping;
+-        this.comment = comment;
+     }
+ 
+     /**
+@@ -78,9 +76,6 @@ public class CSVRecord implements Serializable, Iterable<String> {
+         return values;
+     }
+ 
+-    public String getComment() {
+-        return comment;
+-    }
+     /**
+      * Returns the number of values in this record.
+      */

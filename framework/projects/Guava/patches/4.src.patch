@@ -1,0 +1,13 @@
+diff --git a/guava/src/com/google/common/collect/Range.java b/guava/src/com/google/common/collect/Range.java
+index f182e59..51351cf 100644
+--- a/guava/src/com/google/common/collect/Range.java
++++ b/guava/src/com/google/common/collect/Range.java
+@@ -649,7 +649,7 @@ public final class Range<C extends Comparable> implements Predicate<C>, Serializ
+   private static String toString(Cut<?> lowerBound, Cut<?> upperBound) {
+     StringBuilder sb = new StringBuilder(16);
+     lowerBound.describeAsLowerBound(sb);
+-    sb.append("..");
++    sb.append('\u2025');
+     upperBound.describeAsUpperBound(sb);
+     return sb.toString();
+   }

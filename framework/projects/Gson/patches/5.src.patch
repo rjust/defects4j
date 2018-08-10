@@ -1,0 +1,33 @@
+diff --git a/gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java b/gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java
+index 3801cfd4..77554e22 100644
+--- a/gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java
++++ b/gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java
+@@ -51,20 +51,18 @@ public final class JsonAdapterAnnotationTypeAdapterFactory implements TypeAdapte
+   static TypeAdapter<?> getTypeAdapter(ConstructorConstructor constructorConstructor, Gson gson,
+       TypeToken<?> fieldType, JsonAdapter annotation) {
+     Class<?> value = annotation.value();
+-    final TypeAdapter<?> typeAdapter;
+     if (TypeAdapter.class.isAssignableFrom(value)) {
+-      Class<TypeAdapter<?>> typeAdapterClass = (Class<TypeAdapter<?>>) value;
+-      typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterClass)).construct();
+-    } else if (TypeAdapterFactory.class.isAssignableFrom(value)) {
+-      Class<TypeAdapterFactory> typeAdapterFactory = (Class<TypeAdapterFactory>) value;
+-      typeAdapter = constructorConstructor.get(TypeToken.get(typeAdapterFactory))
++          Class<TypeAdapter<?>> typeAdapter = (Class<TypeAdapter<?>>) value;
++      return constructorConstructor.get(TypeToken.get(typeAdapter)).construct();
++    }
++    if (TypeAdapterFactory.class.isAssignableFrom(value)) {
++          Class<TypeAdapterFactory> typeAdapterFactory = (Class<TypeAdapterFactory>) value;
++      return constructorConstructor.get(TypeToken.get(typeAdapterFactory))
+           .construct()
+           .create(gson, fieldType);
+-    } else {
+-      throw new IllegalArgumentException(
+-          "@JsonAdapter value must be TypeAdapter or TypeAdapterFactory reference.");
+     }
+ 
+-    return typeAdapter.nullSafe();
++    throw new IllegalArgumentException(
++        "@JsonAdapter value must be TypeAdapter or TypeAdapterFactory reference.");
+   }
+ }

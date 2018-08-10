@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/jxpath/util/ValueUtils.java b/src/main/java/org/apache/commons/jxpath/util/ValueUtils.java
+index 11b3ba1..ea5ccb4 100644
+--- a/src/main/java/org/apache/commons/jxpath/util/ValueUtils.java
++++ b/src/main/java/org/apache/commons/jxpath/util/ValueUtils.java
+@@ -305,9 +305,6 @@ public class ValueUtils {
+                 value = ((List) collection).get(index);
+             }
+             else if (collection instanceof Collection) {
+-                if (index < 0 || index >= ((Collection) collection).size()) {
+-                    return null;
+-                }
+ 
+                 int i = 0;
+                 Iterator it = ((Collection) collection).iterator();

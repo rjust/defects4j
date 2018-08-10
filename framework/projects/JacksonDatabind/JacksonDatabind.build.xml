@@ -1,0 +1,59 @@
+<project name="JacksonDatabind" basedir="${basedir}">
+    <property environment="env"/>
+    <property name="build.home" value="${basedir}" />
+    <property name="test.src.home" value="${basedir}/src/test"/>
+    <property name="source.home" value="${basedir}/src/main"/> 
+    <property name="test.home" value="${basedir}/target/test-classes"/>
+    <property name="classes.dir" value="${basedir}/target/classes"/>
+
+    <path id="compile.classpath">
+        <pathelement path="${classes.dir}"/>
+        <fileset dir="${d4j.home}/framework/projects/JacksonDatabind/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="d4j.test.classpath">
+        <pathelement path="${junit.jar}" />
+        <pathelement path="${classes.dir}"/>
+        <pathelement path="${test.home}"/>		
+        <pathelement path="${test.src.home}"/>
+        <fileset dir="${d4j.home}/framework/projects/JacksonDatabind/lib/">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="major.classpath">
+        <path refid="d4j.test.classpath" />
+    </path>
+
+    <target name="compile" description="Compile the source code.">
+	<exec dir="${basedir}" executable="/bin/bash">			
+            <arg value="-c"/>		    
+            <arg value="export M2_HOME=${env.M2_HOME}; mvn compile -U"/>
+        </exec>  
+    </target>
+    
+    <target name="compile.tests" description="Compile the tests.">
+       <exec dir="${basedir}" executable="/bin/bash">
+            <arg value="-c"/>		    
+            <arg value="export M2_HOME=${env.M2_HOME}; mvn test-compile -U"/>
+        </exec>
+    </target>
+
+   <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
+        <include name="**/*Test.class"/>
+        <exclude name="**/*fail*/**/*.class"/>
+        <exclude name="**/*fail*.class"/>
+        <exclude name="**/BaseTest.class"/>
+        <exclude name="**/BaseMapTest.class"/>
+        <exclude name="**/TestCreators2$HashTest.class"/>
+        <exclude name="**/NoClassDefFoundWorkaroundTest.class"/>
+        <exclude name="**/ObjectReaderTest.class"/>
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+</project>

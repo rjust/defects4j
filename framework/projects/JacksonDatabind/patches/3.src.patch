@@ -1,0 +1,17 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
+index 369e65963..6f9e781bf 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
+@@ -208,12 +208,7 @@ public class StdKeySerializers
+                 Class<?> type, SerializerProvider provider) throws JsonMappingException
+         {
+             // 27-Jun-2017, tatu: [databind#1679] Need to avoid StackOverflowError...
+-            if (type == Object.class) {
+                 // basically just need to call `toString()`, easiest way:
+-                JsonSerializer<Object> ser = new Default(Default.TYPE_TO_STRING, type);
+-                _dynamicSerializers = map.newWith(type, ser);
+-                return ser;
+-            }
+             PropertySerializerMap.SerializerAndMapResult result =
+                     // null -> for now we won't keep ref or pass BeanProperty; could change
+                     map.findAndAddKeySerializer(type, provider, null);

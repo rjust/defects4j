@@ -1,0 +1,91 @@
+diff --git a/src/test/java/org/jsoup/nodes/EntitiesTest.java b/src/test/java/org/jsoup/nodes/EntitiesTest.java
+index e88b41c..392a9ef 100644
+--- a/src/test/java/org/jsoup/nodes/EntitiesTest.java
++++ b/src/test/java/org/jsoup/nodes/EntitiesTest.java
+@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
+ import org.junit.Test;
+ 
+ import static org.junit.Assert.*;
++import org.jsoup.nodes.Entities;
+ 
+ import java.nio.charset.Charset;
+ 
+@@ -23,17 +24,17 @@ public class EntitiesTest {
+     }
+ 
+     @Test public void unescape() {
+-        String text = "Hello &amp;&LT&gt; &reg &angst; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
+-        assertEquals("Hello &<> ® Å &angst π π 新 there &! ¾ © ©", Entities.unescape(text));
++        String text = "Hello &amp;&LT&gt; &angst &#960; &#960 &#x65B0; there &! &frac34; &copy; &COPY;";
++        assertEquals("Hello &<> Å π π 新 there &! ¾ © ©", Entities.unescape(text));
+ 
+         assertEquals("&0987654321; &unknown", Entities.unescape("&0987654321; &unknown"));
+     }
+ 
+     @Test public void strictUnescape() { // for attributes, enforce strict unescaping (must look like &xxx; , not just &xxx)
+-        String text = "Hello &amp= &amp;";
+-        assertEquals("Hello &amp= &", Entities.unescape(text, true));
+-        assertEquals("Hello &= &", Entities.unescape(text));
+-        assertEquals("Hello &= &", Entities.unescape(text, false));
++        String text = "Hello &mid &amp;";
++        assertEquals("Hello &mid &", Entities.unescape(text, true));
++        assertEquals("Hello ∣ &", Entities.unescape(text));
++        assertEquals("Hello ∣ &", Entities.unescape(text, false));
+     }
+ 
+     
+@@ -59,9 +60,4 @@ public class EntitiesTest {
+         assertEquals("&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;", p.html());
+         assertEquals("¹²³¼½¾", p.text());
+     }
+-
+-    @Test public void noSpuriousDecodes() {
+-        String string = "http://www.foo.com?a=1&num_rooms=1&children=0&int=VA&b=2";
+-        assertEquals(string, Entities.unescape(string));
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/parser/AttributeParseTest.java b/src/test/java/org/jsoup/parser/AttributeParseTest.java
+index eebd40c..6db6d1f 100644
+--- a/src/test/java/org/jsoup/parser/AttributeParseTest.java
++++ b/src/test/java/org/jsoup/parser/AttributeParseTest.java
+@@ -57,13 +57,13 @@ public class AttributeParseTest {
+     @Test public void strictAttributeUnescapes() {
+         String html = "<a id=1 href='?foo=bar&mid&lt=true'>One</a> <a id=2 href='?foo=bar&lt;qux&lg=1'>Two</a>";
+         Elements els = Jsoup.parse(html).select("a");
+-        assertEquals("?foo=bar&mid&lt=true", els.first().attr("href"));
++        assertEquals("?foo=bar∣&lt=true", els.first().attr("href")); // &mid gets to ∣ because not tailed by =; lt is so not unescaped
+         assertEquals("?foo=bar<qux&lg=1", els.last().attr("href"));
+     }
+ 
+     @Test public void moreAttributeUnescapes() {
+         String html = "<a href='&wr_id=123&mid-size=true&ok=&wr'>Check</a>";
+         Elements els = Jsoup.parse(html).select("a");
+-        assertEquals("&wr_id=123&mid-size=true&ok=&wr", els.first().attr("href"));
++        assertEquals("&wr_id=123&mid-size=true&ok=≀", els.first().attr("href"));
+     }
+ }
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 5cc5e92..046bc30 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -720,20 +720,4 @@ public class HtmlParserTest {
+         assertEquals("html", nodes.get(0).nodeName());
+         assertEquals("<html> <head></head> <body> <ol> <li>One</li> </ol> <p>Two</p> </body> </html>", StringUtil.normaliseWhitespace(nodes.get(0).outerHtml()));
+     }
+-
+-    @Test public void doesNotFindShortestMatchingEntity() {
+-        // previous behaviour was to identify a possible entity, then chomp down the string until a match was found.
+-        // (as defined in html5.) However in practise that lead to spurious matches against the author's intent.
+-        String html = "One &clubsuite; &clubsuit;";
+-        Document doc = Jsoup.parse(html);
+-        assertEquals(StringUtil.normaliseWhitespace("One &amp;clubsuite; ♣"), doc.body().html());
+-    }
+-
+-    @Test public void relaxedBaseEntityMatchAndStrictExtendedMatch() {
+-        // extended entities need a ; at the end to match, base does not
+-        String html = "&amp &quot &reg &icy &hopf &icy; &hopf;";
+-        Document doc = Jsoup.parse(html);
+-        doc.outputSettings().escapeMode(Entities.EscapeMode.extended); // modifies output only to clarify test
+-        assertEquals(StringUtil.normaliseWhitespace("&amp; &quot; &reg; &amp;icy &amp;hopf &icy; &hopf;"), doc.body().html());
+-    }
+ }

@@ -1,0 +1,14 @@
+diff --git a/guava/src/com/google/common/collect/Iterables.java b/guava/src/com/google/common/collect/Iterables.java
+index ccc5ce0..a338387 100644
+--- a/guava/src/com/google/common/collect/Iterables.java
++++ b/guava/src/com/google/common/collect/Iterables.java
+@@ -197,9 +195,6 @@ public final class Iterables {
+           } catch (UnsupportedOperationException e) {
+             slowRemoveIfForRemainingElements(list, predicate, to, from);
+             return true;
+-          } catch (IllegalArgumentException e) {
+-            slowRemoveIfForRemainingElements(list, predicate, to, from);
+-            return true;
+           }
+         }
+         to++;

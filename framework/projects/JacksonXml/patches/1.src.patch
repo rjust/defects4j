@@ -1,0 +1,48 @@
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+index 380714a..8b591d4 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/XmlMapper.java
+@@ -86,16 +86,12 @@ public class XmlMapper extends ObjectMapper
+         _serializationConfig = _serializationConfig.withDefaultPrettyPrinter(DEFAULT_XML_PRETTY_PRINTER);
+     }
+ 
+-    protected XmlMapper(XmlMapper mapper) {
+-        super(mapper);
+-        this._xmlModule = mapper._xmlModule;
+-    }
+ 
+     @Override
+     public XmlMapper copy()
+     {
+         _checkInvalidCopy(XmlMapper.class);
+-        return new XmlMapper(this);
++        return new XmlMapper((XmlFactory) _jsonFactory.copy(), _xmlModule);
+     }
+ 
+     @Override
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+index 179a331..2fbebfd 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/ser/XmlSerializerProvider.java
+@@ -49,10 +49,6 @@ public class XmlSerializerProvider extends DefaultSerializerProvider
+         _rootNameLookup  = src._rootNameLookup;
+     }
+ 
+-    protected XmlSerializerProvider(XmlSerializerProvider toCopy) {
+-        super(toCopy);
+-        this._rootNameLookup = toCopy._rootNameLookup;
+-    }
+ 
+     /*
+     /**********************************************************************
+@@ -60,10 +56,6 @@ public class XmlSerializerProvider extends DefaultSerializerProvider
+     /**********************************************************************
+      */
+ 
+-    @Override
+-    public DefaultSerializerProvider copy() {
+-        return new XmlSerializerProvider(this);
+-    }
+ 
+     @Override
+     public DefaultSerializerProvider createInstance(SerializationConfig config,

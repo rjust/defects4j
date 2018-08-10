@@ -1,0 +1,26 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+index 0d01e780a..a1823400b 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+@@ -116,7 +116,10 @@ public abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>
+                 // 19-May-2017, tatu: Used to require non-null result (assuming `null`
+                 //    indicated error; but that seems wrong. Should be able to return
+                 //    `null` as value.
+-                return _deserialize(text, ctxt);
++                T result = _deserialize(text, ctxt);
++                if (result != null) {
++                    return result;
++                }
+             } catch (IllegalArgumentException iae) {
+                 cause = iae;
+             } catch (MalformedURLException me) {
+@@ -278,8 +281,7 @@ public abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>
+             case STD_STRING_BUILDER:
+                 return new StringBuilder(value);
+             }
+-            VersionUtil.throwInternal();
+-            return null;
++            throw new IllegalArgumentException();
+         }
+ 
+         @Override

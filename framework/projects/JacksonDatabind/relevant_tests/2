@@ -1,0 +1,17 @@
+com.fasterxml.jackson.databind.creators.ArrayDelegatorCreatorForCollectionTest
+com.fasterxml.jackson.databind.creators.DelegatingExternalProperty1003Test
+com.fasterxml.jackson.databind.filter.ProblemHandlerTest
+com.fasterxml.jackson.databind.interop.IllegalTypesCheckTest
+com.fasterxml.jackson.databind.jsontype.DefaultTypingWithPrimitivesTest
+com.fasterxml.jackson.databind.jsontype.GenericTypeId1735Test
+com.fasterxml.jackson.databind.jsontype.PolymorphicList1451SerTest
+com.fasterxml.jackson.databind.jsontype.PolymorphicViaRefTypeTest
+com.fasterxml.jackson.databind.jsontype.TypeRefinementForMapTest
+com.fasterxml.jackson.databind.jsontype.UnknownSubClassTest
+com.fasterxml.jackson.databind.jsontype.ext.ExternalTypeIdTest
+com.fasterxml.jackson.databind.objectid.JSOGDeserialize622Test
+com.fasterxml.jackson.databind.objectid.ObjectId825BTest
+com.fasterxml.jackson.databind.objectid.ObjectId825Test
+com.fasterxml.jackson.databind.seq.PolyMapWriter827Test
+com.fasterxml.jackson.databind.struct.PojoAsArray646Test
+com.fasterxml.jackson.databind.type.RecursiveType1658Test

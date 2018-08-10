@@ -1,0 +1,1511 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+new file mode 100644
+index 0000000..e1f1877
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+@@ -0,0 +1,163 @@
++package com.fasterxml.jackson.databind.deser;
++
++import java.io.IOException;
++import java.util.*;
++
++import com.fasterxml.jackson.annotation.*;
++
++import com.fasterxml.jackson.databind.*;
++
++/**
++ * Unit tests for verifying that simple exceptions can be deserialized.
++ */
++public class TestExceptionDeserialization
++    extends BaseMapTest
++{
++    @SuppressWarnings("serial")
++    static class MyException extends Exception
++    {
++        protected int value;
++
++        protected String myMessage;
++        protected HashMap<String,Object> stuff = new HashMap<String, Object>();
++        
++        @JsonCreator
++        MyException(@JsonProperty("message") String msg, @JsonProperty("value") int v)
++        {
++            super(msg);
++            myMessage = msg;
++            value = v;
++        }
++
++        public int getValue() { return value; }
++        
++        public String getFoo() { return "bar"; }
++
++        @JsonAnySetter public void setter(String key, Object value)
++        {
++            stuff.put(key, value);
++        }
++    }
++
++    @SuppressWarnings("serial")
++    static class MyNoArgException extends Exception
++    {
++        @JsonCreator MyNoArgException() { }
++    }
++
++    /*
++    /**********************************************************
++    /* Tests
++    /**********************************************************
++     */
++
++    private final ObjectMapper MAPPER = new ObjectMapper();
++    
++    public void testIOException() throws IOException
++    {
++        IOException ioe = new IOException("TEST");
++        String json = MAPPER.writeValueAsString(ioe);
++        IOException result = MAPPER.readValue(json, IOException.class);
++        assertEquals(ioe.getMessage(), result.getMessage());
++    }
++
++    public void testWithCreator() throws IOException
++    {
++        final String MSG = "the message";
++        String json = MAPPER.writeValueAsString(new MyException(MSG, 3));
++
++        MyException result = MAPPER.readValue(json, MyException.class);
++        assertEquals(MSG, result.getMessage());
++        assertEquals(3, result.value);
++        assertEquals(1, result.stuff.size());
++        assertEquals(result.getFoo(), result.stuff.get("foo"));
++    }
++
++    public void testWithNullMessage() throws IOException
++    {
++        final ObjectMapper mapper = new ObjectMapper();
++        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
++        String json = mapper.writeValueAsString(new IOException((String) null));
++        IOException result = mapper.readValue(json, IOException.class);
++        assertNotNull(result);
++        assertNull(result.getMessage());
++    }
++
++    public void testNoArgsException() throws IOException
++    {
++        MyNoArgException exc = MAPPER.readValue("{}", MyNoArgException.class);
++        assertNotNull(exc);
++    }
++
++    // try simulating JDK 7 behavior
++    public void testJDK7SuppressionProperty() throws IOException
++    {
++        Exception exc = MAPPER.readValue("{\"suppressed\":[]}", IOException.class);
++        assertNotNull(exc);
++    }
++    
++    // [databind#381]
++    public void testSingleValueArrayDeserialization() throws Exception {
++        final ObjectMapper mapper = new ObjectMapper();
++        mapper.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
++        final IOException exp;
++        try {
++            throw new IOException("testing");
++        } catch (IOException internal) {
++            exp = internal;
++        }
++        final String value = "[" + mapper.writeValueAsString(exp) + "]";
++        
++        final IOException cloned = mapper.readValue(value, IOException.class);
++        assertEquals(exp.getMessage(), cloned.getMessage());    
++        
++        assertEquals(exp.getStackTrace().length, cloned.getStackTrace().length);
++        for (int i = 0; i < exp.getStackTrace().length; i ++) {
++            _assertEquality(i, exp.getStackTrace()[i], cloned.getStackTrace()[i]);
++        }
++    }
++
++    protected void _assertEquality(int ix, StackTraceElement exp, StackTraceElement act)
++    {
++        _assertEquality(ix, "className", exp.getClassName(), act.getClassName());
++        _assertEquality(ix, "methodName", exp.getMethodName(), act.getMethodName());
++        _assertEquality(ix, "fileName", exp.getFileName(), act.getFileName());
++        _assertEquality(ix, "lineNumber", exp.getLineNumber(), act.getLineNumber());
++    }
++
++    protected void _assertEquality(int ix, String prop,
++            Object exp, Object act)
++    {
++        if (exp == null) {
++            if (act == null) {
++                return;
++            }
++        } else {
++            if (exp.equals(act)) {
++                return;
++            }
++        }
++        fail(String.format("StackTraceElement #%d, property '%s' differs: expected %s, actual %s",
++                ix, prop, exp, act));
++    }
++
++    public void testSingleValueArrayDeserializationException() throws Exception {
++        final ObjectMapper mapper = new ObjectMapper();
++        mapper.disable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
++        
++        final IOException exp;
++        try {
++            throw new IOException("testing");
++        } catch (IOException internal) {
++            exp = internal;
++        }
++        final String value = "[" + mapper.writeValueAsString(exp) + "]";
++        
++        try {
++            mapper.readValue(value, IOException.class);
++            fail("Exception not thrown when attempting to deserialize an IOException wrapped in a single value array with UNWRAP_SINGLE_VALUE_ARRAYS disabled");
++        } catch (JsonMappingException exp2) {
++            //Exception thrown correctly
++        }
++    }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java
+new file mode 100644
+index 0000000..6f23517
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java
+@@ -0,0 +1,125 @@
++package com.fasterxml.jackson.databind.deser;
++
++import java.io.*;
++
++import com.fasterxml.jackson.core.*;
++import com.fasterxml.jackson.databind.*;
++import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
++
++/**
++ * Unit test for verifying that exceptions are properly handled (caught,
++ * re-thrown or wrapped, depending)
++ * with Object deserialization.
++ */
++public class TestExceptionHandling
++    extends BaseMapTest
++{
++    static class Bean {
++        public String propX;
++    }
++
++    /*
++    /**********************************************************
++    /* Test methods
++    /**********************************************************
++     */
++    
++    /**
++     * Verification of [JACKSON-301]
++     */
++    public void testHandlingOfUnrecognized() throws Exception
++    {
++        UnrecognizedPropertyException exc = null;
++        try {
++            new ObjectMapper().readValue("{\"bar\":3}", Bean.class);
++        } catch (UnrecognizedPropertyException e) {
++            exc = e;
++        }
++        if (exc == null) {
++            fail("Should have failed binding");
++        }
++        assertEquals("bar", exc.getPropertyName());
++        assertEquals(Bean.class, exc.getReferringClass());
++        // also: should get list of known properties
++        verifyException(exc, "propX");
++    }
++
++    /**
++     * Simple test to check behavior when end-of-stream is encountered
++     * without content. Used to expect EOFException (Jackson 1.x); but
++     * nowadays ought to be JsonMappingException
++     */
++    public void testExceptionWithEmpty() throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        try {
++            Object result = mapper.readValue("    ", Object.class);
++            fail("Expected an exception, but got result value: "+result);
++        } catch (Exception e) {
++            verifyException(e, JsonMappingException.class, "No content");
++        }
++    }
++
++    @SuppressWarnings("resource")
++    public void testExceptionWithIncomplete()
++        throws Exception
++    {
++        BrokenStringReader r = new BrokenStringReader("[ 1, ", "TEST");
++        JsonFactory f = new JsonFactory();
++        JsonParser jp = f.createParser(r);
++        ObjectMapper mapper = new ObjectMapper();
++        try {
++            @SuppressWarnings("unused")
++            Object ob = mapper.readValue(jp, Object.class);
++            fail("Should have gotten an exception");
++        } catch (IOException e) {
++            /* For "bona fide" IO problems (due to low-level problem,
++             * thrown by reader/stream), IOException must be thrown
++             */
++            verifyException(e, IOException.class, "TEST");
++        }
++    }
++
++    public void testExceptionWithEOF()
++        throws Exception
++    {
++        StringReader r = new StringReader("  3");
++        JsonFactory f = new JsonFactory();
++        JsonParser jp = f.createParser(r);
++        ObjectMapper mapper = new ObjectMapper();
++
++        Integer I = mapper.readValue(jp, Integer.class);
++        assertEquals(3, I.intValue());
++
++        // and then end-of-input...
++        try {
++            I = mapper.readValue(jp, Integer.class);
++            fail("Should have gotten an exception");
++        } catch (IOException e) {
++            verifyException(e, JsonMappingException.class, "No content");
++        }
++        // also: should have no current token after end-of-input
++        JsonToken t = jp.getCurrentToken();
++        if (t != null) {
++            fail("Expected current token to be null after end-of-stream, was: "+t);
++        }
++        jp.close();
++    }
++
++    /*
++    /**********************************************************
++    /* Helper methods
++    /**********************************************************
++     */
++
++    void verifyException(Exception e, Class<?> expType, String expMsg)
++        throws Exception
++    {
++        if (e.getClass() != expType) {
++            fail("Expected exception of type "+expType.getName()+", got "+e.getClass().getName());
++        }
++        if (expMsg != null) {
++            verifyException(e, expMsg);
++        }
++    }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java
+new file mode 100644
+index 0000000..1a75d94
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java
+@@ -0,0 +1,62 @@
++package com.fasterxml.jackson.databind.deser;
++
++import com.fasterxml.jackson.databind.BaseMapTest;
++import com.fasterxml.jackson.databind.JsonMappingException;
++import com.fasterxml.jackson.databind.ObjectMapper;
++
++import java.io.IOException;
++
++public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest {
++
++    static class Foo {
++
++        private Bar bar;
++
++        public Foo() {
++        }
++
++        public Bar getBar() {
++            return bar;
++        }
++    }
++
++    static class Bar {
++
++        private Baz baz;
++
++        public Bar() {
++        }
++
++        public Baz getBaz() {
++            return baz;
++        }
++    }
++
++    static class Baz {
++
++        private String qux;
++
++        public Baz() {
++        }
++
++        public String getQux() {
++            return qux;
++        }
++    }
++
++    public void testShouldThrowJsonMappingExceptionWithPathReference() throws IOException {
++        // given
++        ObjectMapper mapper = new ObjectMapper();
++        String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
++
++        // when
++        try {
++            mapper.readValue(input, Foo.class);
++            fail("Upsss! Exception has not been thrown.");
++        } catch (JsonMappingException ex) {
++            // then
++            assertEquals("com.fasterxml.jackson.databind.deser.Foo[\"bar\"]->com.fasterxml.jackson.databind.deser.Bar[\"baz\"]",
++                    ex.getPathReference());
++        }
++    }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java
+new file mode 100644
+index 0000000..f2da339
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java
+@@ -0,0 +1,67 @@
++package com.fasterxml.jackson.databind.deser;
++
++import com.fasterxml.jackson.annotation.JsonCreator;
++import com.fasterxml.jackson.annotation.JsonProperty;
++import com.fasterxml.jackson.databind.BaseMapTest;
++import com.fasterxml.jackson.databind.JsonMappingException;
++import com.fasterxml.jackson.databind.ObjectMapper;
++
++import java.io.IOException;
++
++public class TestExceptionHandlingWithJsonCreatorDeserialization extends BaseMapTest
++{
++    static class Foo {
++        private Bar bar;
++
++        @JsonCreator
++        public Foo(@JsonProperty("bar") Bar bar) {
++            this.bar = bar;
++        }
++
++        public Bar getBar() {
++            return bar;
++        }
++    }
++
++    static class Bar {
++        private Baz baz;
++
++        @JsonCreator
++        public Bar(@JsonProperty("baz") Baz baz) {
++            this.baz = baz;
++        }
++
++        public Baz getBaz() {
++            return baz;
++        }
++    }
++
++    static class Baz {
++        private String qux;
++
++        @JsonCreator
++        public Baz(@JsonProperty("qux") String qux) {
++            this.qux = qux;
++        }
++
++        public String getQux() {
++            return qux;
++        }
++    }
++
++    public void testShouldThrowJsonMappingExceptionWithPathReference() throws IOException {
++        // given
++        ObjectMapper mapper = new ObjectMapper();
++        String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
++
++        // when
++        try {
++            mapper.readValue(input, Foo.class);
++            fail("Upsss! Exception has not been thrown.");
++        } catch (JsonMappingException ex) {
++            // then
++            assertEquals("com.fasterxml.jackson.databind.deser.Foo[\"bar\"]->com.fasterxml.jackson.databind.deser.Bar[\"baz\"]",
++                    ex.getPathReference());
++        }
++    }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java
+deleted file mode 100644
+index c4a87bb..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java
++++ /dev/null
+@@ -1,46 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import com.fasterxml.jackson.annotation.*;
+-
+-import com.fasterxml.jackson.databind.*;
+-
+-public class ExceptionPathTest extends BaseMapTest
+-{
+-    static class Outer {
+-        public Inner inner = new Inner();
+-    }
+-
+-    static class Inner {
+-        public int x;
+-
+-        @JsonCreator public static Inner create(@JsonProperty("x") int x) {
+-            throw new RuntimeException("test-exception");
+-        }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Test methods
+-    /**********************************************************
+-     */
+-    
+-    private final ObjectMapper MAPPER = new ObjectMapper();
+-
+-    public void testReferenceChainForInnerClass() throws Exception
+-    {
+-        String json = MAPPER.writeValueAsString(new Outer());
+-        try {
+-            MAPPER.readValue(json, Outer.class);
+-            fail("Should not pass");
+-        } catch (JsonMappingException e) {
+-            JsonMappingException.Reference reference = e.getPath().get(0);
+-            assertEquals(getClass().getName()+"$Outer[\"inner\"]",
+-                    reference.toString());
+-        }
+-    }
+-
+-    public static void main(String[] args)
+-    {
+-        System.err.println("Int, full: "+Integer.TYPE.getName());
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
+deleted file mode 100644
+index b3fe433..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
++++ /dev/null
+@@ -1,163 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import java.io.IOException;
+-import java.util.*;
+-
+-import com.fasterxml.jackson.annotation.*;
+-
+-import com.fasterxml.jackson.databind.*;
+-
+-/**
+- * Unit tests for verifying that simple exceptions can be deserialized.
+- */
+-public class TestExceptionDeserialization
+-    extends BaseMapTest
+-{
+-    @SuppressWarnings("serial")
+-    static class MyException extends Exception
+-    {
+-        protected int value;
+-
+-        protected String myMessage;
+-        protected HashMap<String,Object> stuff = new HashMap<String, Object>();
+-        
+-        @JsonCreator
+-        MyException(@JsonProperty("message") String msg, @JsonProperty("value") int v)
+-        {
+-            super(msg);
+-            myMessage = msg;
+-            value = v;
+-        }
+-
+-        public int getValue() { return value; }
+-        
+-        public String getFoo() { return "bar"; }
+-
+-        @JsonAnySetter public void setter(String key, Object value)
+-        {
+-            stuff.put(key, value);
+-        }
+-    }
+-
+-    @SuppressWarnings("serial")
+-    static class MyNoArgException extends Exception
+-    {
+-        @JsonCreator MyNoArgException() { }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Tests
+-    /**********************************************************
+-     */
+-
+-    private final ObjectMapper MAPPER = new ObjectMapper();
+-    
+-    public void testIOException() throws IOException
+-    {
+-        IOException ioe = new IOException("TEST");
+-        String json = MAPPER.writeValueAsString(ioe);
+-        IOException result = MAPPER.readValue(json, IOException.class);
+-        assertEquals(ioe.getMessage(), result.getMessage());
+-    }
+-
+-    public void testWithCreator() throws IOException
+-    {
+-        final String MSG = "the message";
+-        String json = MAPPER.writeValueAsString(new MyException(MSG, 3));
+-
+-        MyException result = MAPPER.readValue(json, MyException.class);
+-        assertEquals(MSG, result.getMessage());
+-        assertEquals(3, result.value);
+-        assertEquals(1, result.stuff.size());
+-        assertEquals(result.getFoo(), result.stuff.get("foo"));
+-    }
+-
+-    public void testWithNullMessage() throws IOException
+-    {
+-        final ObjectMapper mapper = new ObjectMapper();
+-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+-        String json = mapper.writeValueAsString(new IOException((String) null));
+-        IOException result = mapper.readValue(json, IOException.class);
+-        assertNotNull(result);
+-        assertNull(result.getMessage());
+-    }
+-
+-    public void testNoArgsException() throws IOException
+-    {
+-        MyNoArgException exc = MAPPER.readValue("{}", MyNoArgException.class);
+-        assertNotNull(exc);
+-    }
+-
+-    // try simulating JDK 7 behavior
+-    public void testJDK7SuppressionProperty() throws IOException
+-    {
+-        Exception exc = MAPPER.readValue("{\"suppressed\":[]}", IOException.class);
+-        assertNotNull(exc);
+-    }
+-    
+-    // [databind#381]
+-    public void testSingleValueArrayDeserialization() throws Exception {
+-        final ObjectMapper mapper = new ObjectMapper();
+-        mapper.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+-        final IOException exp;
+-        try {
+-            throw new IOException("testing");
+-        } catch (IOException internal) {
+-            exp = internal;
+-        }
+-        final String value = "[" + mapper.writeValueAsString(exp) + "]";
+-        
+-        final IOException cloned = mapper.readValue(value, IOException.class);
+-        assertEquals(exp.getMessage(), cloned.getMessage());    
+-        
+-        assertEquals(exp.getStackTrace().length, cloned.getStackTrace().length);
+-        for (int i = 0; i < exp.getStackTrace().length; i ++) {
+-            _assertEquality(i, exp.getStackTrace()[i], cloned.getStackTrace()[i]);
+-        }
+-    }
+-
+-    protected void _assertEquality(int ix, StackTraceElement exp, StackTraceElement act)
+-    {
+-        _assertEquality(ix, "className", exp.getClassName(), act.getClassName());
+-        _assertEquality(ix, "methodName", exp.getMethodName(), act.getMethodName());
+-        _assertEquality(ix, "fileName", exp.getFileName(), act.getFileName());
+-        _assertEquality(ix, "lineNumber", exp.getLineNumber(), act.getLineNumber());
+-    }
+-
+-    protected void _assertEquality(int ix, String prop,
+-            Object exp, Object act)
+-    {
+-        if (exp == null) {
+-            if (act == null) {
+-                return;
+-            }
+-        } else {
+-            if (exp.equals(act)) {
+-                return;
+-            }
+-        }
+-        fail(String.format("StackTraceElement #%d, property '%s' differs: expected %s, actual %s",
+-                ix, prop, exp, act));
+-    }
+-
+-    public void testSingleValueArrayDeserializationException() throws Exception {
+-        final ObjectMapper mapper = new ObjectMapper();
+-        mapper.disable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+-        
+-        final IOException exp;
+-        try {
+-            throw new IOException("testing");
+-        } catch (IOException internal) {
+-            exp = internal;
+-        }
+-        final String value = "[" + mapper.writeValueAsString(exp) + "]";
+-        
+-        try {
+-            mapper.readValue(value, IOException.class);
+-            fail("Exception not thrown when attempting to deserialize an IOException wrapped in a single value array with UNWRAP_SINGLE_VALUE_ARRAYS disabled");
+-        } catch (JsonMappingException exp2) {
+-            //Exception thrown correctly
+-        }
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java
+deleted file mode 100644
+index 00c88ec..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java
++++ /dev/null
+@@ -1,122 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import java.io.*;
+-
+-import com.fasterxml.jackson.core.*;
+-import com.fasterxml.jackson.databind.*;
+-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+-
+-/**
+- * Unit test for verifying that exceptions are properly handled (caught,
+- * re-thrown or wrapped, depending)
+- * with Object deserialization.
+- */
+-public class TestExceptionHandling
+-    extends BaseMapTest
+-{
+-    static class Bean {
+-        public String propX;
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Test methods
+-    /**********************************************************
+-     */
+-
+-    public void testHandlingOfUnrecognized() throws Exception
+-    {
+-        UnrecognizedPropertyException exc = null;
+-        try {
+-            new ObjectMapper().readValue("{\"bar\":3}", Bean.class);
+-        } catch (UnrecognizedPropertyException e) {
+-            exc = e;
+-        }
+-        if (exc == null) {
+-            fail("Should have failed binding");
+-        }
+-        assertEquals("bar", exc.getPropertyName());
+-        assertEquals(Bean.class, exc.getReferringClass());
+-        // also: should get list of known properties
+-        verifyException(exc, "propX");
+-    }
+-
+-    /**
+-     * Simple test to check behavior when end-of-stream is encountered
+-     * without content. Used to expect EOFException (Jackson 1.x); but
+-     * nowadays ought to be JsonMappingException
+-     */
+-    public void testExceptionWithEmpty() throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        try {
+-            Object result = mapper.readValue("    ", Object.class);
+-            fail("Expected an exception, but got result value: "+result);
+-        } catch (Exception e) {
+-            verifyException(e, JsonMappingException.class, "No content");
+-        }
+-    }
+-
+-    @SuppressWarnings("resource")
+-    public void testExceptionWithIncomplete()
+-        throws Exception
+-    {
+-        BrokenStringReader r = new BrokenStringReader("[ 1, ", "TEST");
+-        JsonFactory f = new JsonFactory();
+-        JsonParser jp = f.createParser(r);
+-        ObjectMapper mapper = new ObjectMapper();
+-        try {
+-            @SuppressWarnings("unused")
+-            Object ob = mapper.readValue(jp, Object.class);
+-            fail("Should have gotten an exception");
+-        } catch (IOException e) {
+-            /* For "bona fide" IO problems (due to low-level problem,
+-             * thrown by reader/stream), IOException must be thrown
+-             */
+-            verifyException(e, IOException.class, "TEST");
+-        }
+-    }
+-
+-    public void testExceptionWithEOF()
+-        throws Exception
+-    {
+-        StringReader r = new StringReader("  3");
+-        JsonFactory f = new JsonFactory();
+-        JsonParser jp = f.createParser(r);
+-        ObjectMapper mapper = new ObjectMapper();
+-
+-        Integer I = mapper.readValue(jp, Integer.class);
+-        assertEquals(3, I.intValue());
+-
+-        // and then end-of-input...
+-        try {
+-            I = mapper.readValue(jp, Integer.class);
+-            fail("Should have gotten an exception");
+-        } catch (IOException e) {
+-            verifyException(e, JsonMappingException.class, "No content");
+-        }
+-        // also: should have no current token after end-of-input
+-        JsonToken t = jp.getCurrentToken();
+-        if (t != null) {
+-            fail("Expected current token to be null after end-of-stream, was: "+t);
+-        }
+-        jp.close();
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Helper methods
+-    /**********************************************************
+-     */
+-
+-    void verifyException(Exception e, Class<?> expType, String expMsg)
+-        throws Exception
+-    {
+-        if (e.getClass() != expType) {
+-            fail("Expected exception of type "+expType.getName()+", got "+e.getClass().getName());
+-        }
+-        if (expMsg != null) {
+-            verifyException(e, expMsg);
+-        }
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java
+deleted file mode 100644
+index 3888722..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java
++++ /dev/null
+@@ -1,57 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import com.fasterxml.jackson.databind.BaseMapTest;
+-import com.fasterxml.jackson.databind.JsonMappingException;
+-import com.fasterxml.jackson.databind.ObjectMapper;
+-
+-import java.io.IOException;
+-
+-public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+-{
+-    static class Foo {
+-        private Bar bar;
+-
+-        public Foo() { }
+-
+-        public Bar getBar() {
+-            return bar;
+-        }
+-    }
+-
+-    static class Bar {
+-        private Baz baz;
+-
+-        public Bar() { }
+-
+-        public Baz getBaz() {
+-            return baz;
+-        }
+-    }
+-
+-    static class Baz {
+-        private String qux;
+-
+-        public Baz() { }
+-
+-        public String getQux() {
+-            return qux;
+-        }
+-    }
+-
+-    public void testShouldThrowJsonMappingExceptionWithPathReference() throws IOException {
+-        // given
+-        ObjectMapper mapper = new ObjectMapper();
+-        String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
+-        final String THIS = getClass().getName();
+-
+-        // when
+-        try {
+-            mapper.readValue(input, Foo.class);
+-            fail("Upsss! Exception has not been thrown.");
+-        } catch (JsonMappingException ex) {
+-            // then
+-            assertEquals(THIS+"$Foo[\"bar\"]->"+THIS+"$Bar[\"baz\"]",
+-                    ex.getPathReference());
+-        }
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java
+deleted file mode 100644
+index 8065bc4..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java
++++ /dev/null
+@@ -1,68 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import com.fasterxml.jackson.annotation.JsonCreator;
+-import com.fasterxml.jackson.annotation.JsonProperty;
+-import com.fasterxml.jackson.databind.BaseMapTest;
+-import com.fasterxml.jackson.databind.JsonMappingException;
+-import com.fasterxml.jackson.databind.ObjectMapper;
+-
+-import java.io.IOException;
+-
+-public class TestExceptionHandlingWithJsonCreatorDeserialization extends BaseMapTest
+-{
+-    static class Foo {
+-        private Bar bar;
+-
+-        @JsonCreator
+-        public Foo(@JsonProperty("bar") Bar bar) {
+-            this.bar = bar;
+-        }
+-
+-        public Bar getBar() {
+-            return bar;
+-        }
+-    }
+-
+-    static class Bar {
+-        private Baz baz;
+-
+-        @JsonCreator
+-        public Bar(@JsonProperty("baz") Baz baz) {
+-            this.baz = baz;
+-        }
+-
+-        public Baz getBaz() {
+-            return baz;
+-        }
+-    }
+-
+-    static class Baz {
+-        private String qux;
+-
+-        @JsonCreator
+-        public Baz(@JsonProperty("qux") String qux) {
+-            this.qux = qux;
+-        }
+-
+-        public String getQux() {
+-            return qux;
+-        }
+-    }
+-
+-    public void testShouldThrowJsonMappingExceptionWithPathReference() throws IOException {
+-        // given
+-        ObjectMapper mapper = new ObjectMapper();
+-        String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
+-        final String THIS = getClass().getName();
+-
+-        // when
+-        try {
+-            mapper.readValue(input, Foo.class);
+-            fail("Upsss! Exception has not been thrown.");
+-        } catch (JsonMappingException ex) {
+-            // then
+-            assertEquals(THIS+"$Foo[\"bar\"]->"+THIS+"$Bar[\"baz\"]",
+-                    ex.getPathReference());
+-        }
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
+deleted file mode 100644
+index 07fc70a..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
++++ /dev/null
+@@ -1,124 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import java.io.IOException;
+-import java.util.*;
+-
+-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+-import com.fasterxml.jackson.databind.*;
+-
+-/**
+- * Unit tests for verifying that simple exceptions can be serialized.
+- */
+-public class TestExceptionSerialization
+-    extends BaseMapTest
+-{
+-    @SuppressWarnings("serial")
+-    @JsonIgnoreProperties({ "bogus1" })
+-    static class ExceptionWithIgnoral extends RuntimeException
+-    {
+-        public int bogus1 = 3;
+-
+-        public int bogus2 = 5;
+-
+-        protected ExceptionWithIgnoral() { }
+-        public ExceptionWithIgnoral(String msg) {
+-            super(msg);
+-        }
+-    }
+-
+-    // [databind#1368]
+-    static class NoSerdeConstructor {
+-        private String strVal;
+-        public String getVal() { return strVal; }
+-        public NoSerdeConstructor( String strVal ) {
+-            this.strVal = strVal;
+-        }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Tests
+-    /**********************************************************
+-     */
+-
+-    private final ObjectMapper MAPPER = new ObjectMapper();
+-    
+-    public void testSimple() throws Exception
+-    {
+-        String TEST = "test exception";
+-        Map<String,Object> result = writeAndMap(MAPPER, new Exception(TEST));
+-        // JDK 7 has introduced a new property 'suppressed' to Throwable
+-        Object ob = result.get("suppressed");
+-        if (ob != null) {
+-            assertEquals(5, result.size());
+-        } else {
+-            assertEquals(4, result.size());
+-        }
+-
+-        assertEquals(TEST, result.get("message"));
+-        assertNull(result.get("cause"));
+-        assertEquals(TEST, result.get("localizedMessage"));
+-
+-        // hmmh. what should we get for stack traces?
+-        Object traces = result.get("stackTrace");
+-        if (!(traces instanceof List<?>)) {
+-            fail("Expected a List for exception member 'stackTrace', got: "+traces);
+-        }
+-    }
+-
+-    // for [databind#877]
+-    @SuppressWarnings("unchecked")
+-    public void testIgnorals() throws Exception
+-    {
+-        ExceptionWithIgnoral input = new ExceptionWithIgnoral("foobar");
+-        input.initCause(new IOException("surprise!"));
+-
+-        // First, should ignore anything with class annotations
+-        String json = MAPPER
+-                .writerWithDefaultPrettyPrinter()
+-                .writeValueAsString(input);
+-
+-        Map<String,Object> result = MAPPER.readValue(json, Map.class);
+-        assertEquals("foobar", result.get("message"));
+-
+-        assertNull(result.get("bogus1"));
+-        assertNotNull(result.get("bogus2"));
+-
+-        // and then also remova second property with config overrides
+-        ObjectMapper mapper = new ObjectMapper();
+-        mapper.configOverride(ExceptionWithIgnoral.class)
+-            .setIgnorals(JsonIgnoreProperties.Value.forIgnoredProperties("bogus2"));
+-        String json2 = mapper
+-                .writeValueAsString(new ExceptionWithIgnoral("foobar"));
+-
+-        Map<String,Object> result2 = mapper.readValue(json2, Map.class);
+-        assertNull(result2.get("bogus1"));
+-        assertNull(result2.get("bogus2"));
+-
+-        // and try to deserialize as well
+-        ExceptionWithIgnoral output = mapper.readValue(json2, ExceptionWithIgnoral.class);
+-        assertNotNull(output);
+-        assertEquals("foobar", output.getMessage());
+-    }
+-
+-    // [databind#1368]
+-    public void testJsonMappingExceptionSerialization() throws IOException {
+-        Exception e = null;
+-        // cant deserialize due to unexpected constructor
+-        try {
+-            MAPPER.readValue( "{ \"val\": \"foo\" }", NoSerdeConstructor.class );
+-            fail("Should not pass");
+-        } catch (JsonMappingException e0) {
+-            verifyException(e0, "no suitable constructor");
+-            e = e0;
+-        }
+-        // but should be able to serialize new exception we got
+-        String json = MAPPER.writeValueAsString(e);
+-        JsonNode root = MAPPER.readTree(json);
+-        String msg = root.path("message").asText();
+-        String MATCH = "no suitable constructor";
+-        if (!msg.contains(MATCH)) {
+-            fail("Exception should contain '"+MATCH+"', does not: '"+msg+"'");
+-        }
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java
+deleted file mode 100644
+index df51963..0000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java
++++ /dev/null
+@@ -1,156 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import java.io.*;
+-import java.util.*;
+-
+-import com.fasterxml.jackson.core.*;
+-import com.fasterxml.jackson.databind.*;
+-import com.fasterxml.jackson.databind.module.SimpleModule;
+-
+-/**
+- * Unit test for verifying that exceptions are properly handled (caught,
+- * re-thrown or wrapped, depending)
+- * with Object serialization.
+- */
+-public class TestExceptionsDuringWriting
+-    extends BaseMapTest
+-{
+-    /*
+-    /**********************************************************
+-    /* Helper classes
+-    /**********************************************************
+-     */
+-
+-    static class Bean {
+-        // no methods, we'll use our custom serializer
+-    }
+-
+-    static class SerializerWithErrors
+-        extends JsonSerializer<Bean>
+-    {
+-        @Override
+-        public void serialize(Bean value, JsonGenerator jgen, SerializerProvider provider)
+-        {
+-            throw new IllegalArgumentException("test string");
+-        }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Tests
+-    /**********************************************************
+-     */
+-
+-    /**
+-     * Unit test that verifies that by default all exceptions except for
+-     * JsonMappingException are caught and wrapped.
+-     */
+-    public void testCatchAndRethrow()
+-        throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        SimpleModule module = new SimpleModule("test-exceptions", Version.unknownVersion());
+-        module.addSerializer(Bean.class, new SerializerWithErrors());
+-        mapper.registerModule(module);
+-        try {
+-            StringWriter sw = new StringWriter();
+-            /* And just to make things more interesting, let's create
+-             * a nested data struct...
+-             */
+-            Bean[] b = { new Bean() };
+-            List<Bean[]> l = new ArrayList<Bean[]>();
+-            l.add(b);
+-            mapper.writeValue(sw, l);
+-            fail("Should have gotten an exception");
+-        } catch (IOException e) {
+-            // should contain original message somewhere
+-            verifyException(e, "test string");
+-            Throwable root = e.getCause();
+-            assertNotNull(root);
+-
+-            if (!(root instanceof IllegalArgumentException)) {
+-                fail("Wrapped exception not IAE, but "+root.getClass());
+-            }
+-        }
+-    }
+-
+-    /**
+-     * Unit test for verifying that regular IOExceptions are not wrapped
+-     * but are passed through as is.
+-     */
+-    @SuppressWarnings("resource")
+-    public void testExceptionWithSimpleMapper()
+-        throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        try {
+-            BrokenStringWriter sw = new BrokenStringWriter("TEST");
+-            mapper.writeValue(sw, createLongObject());
+-            fail("Should have gotten an exception");
+-        } catch (IOException e) {
+-            verifyException(e, IOException.class, "TEST");
+-        }
+-    }
+-
+-    @SuppressWarnings("resource")
+-    public void testExceptionWithMapperAndGenerator()
+-        throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        JsonFactory f = new MappingJsonFactory();
+-        BrokenStringWriter sw = new BrokenStringWriter("TEST");
+-        JsonGenerator jg = f.createGenerator(sw);
+-
+-        try {
+-            mapper.writeValue(jg, createLongObject());
+-            fail("Should have gotten an exception");
+-        } catch (IOException e) {
+-            verifyException(e, IOException.class, "TEST");
+-        }
+-    }
+-
+-    @SuppressWarnings("resource")
+-    public void testExceptionWithGeneratorMapping()
+-        throws Exception
+-    {
+-        JsonFactory f = new MappingJsonFactory();
+-        JsonGenerator jg = f.createGenerator(new BrokenStringWriter("TEST"));
+-        try {
+-            jg.writeObject(createLongObject());
+-            fail("Should have gotten an exception");
+-        } catch (Exception e) {
+-            verifyException(e, IOException.class, "TEST");
+-        }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Helper methods
+-    /**********************************************************
+-     */
+-
+-    void verifyException(Exception e, Class<?> expType, String expMsg)
+-        throws Exception
+-    {
+-        if (e.getClass() != expType) {
+-            fail("Expected exception of type "+expType.getName()+", got "+e.getClass().getName());
+-        }
+-        if (expMsg != null) {
+-            verifyException(e, expMsg);
+-        }
+-    }
+-
+-    Object createLongObject()
+-    {
+-        List<Object> leaf = new ArrayList<Object>();
+-        for (int i = 0; i < 256; ++i) {
+-            leaf.add(Integer.valueOf(i));
+-        }
+-        List<Object> root = new ArrayList<Object>(256);
+-        for (int i = 0; i < 256; ++i) {
+-            root.add(leaf);
+-        }
+-        return root;
+-    }
+-}
+-
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java
+new file mode 100644
+index 0000000..cc1aec7
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java
+@@ -0,0 +1,156 @@
++package com.fasterxml.jackson.databind.ser;
++
++import java.io.*;
++import java.util.*;
++
++import com.fasterxml.jackson.core.*;
++import com.fasterxml.jackson.databind.*;
++import com.fasterxml.jackson.databind.module.SimpleModule;
++
++/**
++ * Unit test for verifying that exceptions are properly handled (caught,
++ * re-thrown or wrapped, depending)
++ * with Object serialization.
++ */
++public class TestExceptionHandling
++    extends BaseMapTest
++{
++    /*
++    /**********************************************************
++    /* Helper classes
++    /**********************************************************
++     */
++
++    static class Bean {
++        // no methods, we'll use our custom serializer
++    }
++
++    static class SerializerWithErrors
++        extends JsonSerializer<Bean>
++    {
++        @Override
++        public void serialize(Bean value, JsonGenerator jgen, SerializerProvider provider)
++        {
++            throw new IllegalArgumentException("test string");
++        }
++    }
++
++    /*
++    /**********************************************************
++    /* Tests
++    /**********************************************************
++     */
++
++    /**
++     * Unit test that verifies that by default all exceptions except for
++     * JsonMappingException are caught and wrapped.
++     */
++    public void testCatchAndRethrow()
++        throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        SimpleModule module = new SimpleModule("test-exceptions", Version.unknownVersion());
++        module.addSerializer(Bean.class, new SerializerWithErrors());
++        mapper.registerModule(module);
++        try {
++            StringWriter sw = new StringWriter();
++            /* And just to make things more interesting, let's create
++             * a nested data struct...
++             */
++            Bean[] b = { new Bean() };
++            List<Bean[]> l = new ArrayList<Bean[]>();
++            l.add(b);
++            mapper.writeValue(sw, l);
++            fail("Should have gotten an exception");
++        } catch (IOException e) {
++            // should contain original message somewhere
++            verifyException(e, "test string");
++            Throwable root = e.getCause();
++            assertNotNull(root);
++
++            if (!(root instanceof IllegalArgumentException)) {
++                fail("Wrapped exception not IAE, but "+root.getClass());
++            }
++        }
++    }
++
++    /**
++     * Unit test for verifying that regular IOExceptions are not wrapped
++     * but are passed through as is.
++     */
++    @SuppressWarnings("resource")
++    public void testExceptionWithSimpleMapper()
++        throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        try {
++            BrokenStringWriter sw = new BrokenStringWriter("TEST");
++            mapper.writeValue(sw, createLongObject());
++            fail("Should have gotten an exception");
++        } catch (IOException e) {
++            verifyException(e, IOException.class, "TEST");
++        }
++    }
++
++    @SuppressWarnings("resource")
++    public void testExceptionWithMapperAndGenerator()
++        throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        JsonFactory f = new MappingJsonFactory();
++        BrokenStringWriter sw = new BrokenStringWriter("TEST");
++        JsonGenerator jg = f.createGenerator(sw);
++
++        try {
++            mapper.writeValue(jg, createLongObject());
++            fail("Should have gotten an exception");
++        } catch (IOException e) {
++            verifyException(e, IOException.class, "TEST");
++        }
++    }
++
++    @SuppressWarnings("resource")
++    public void testExceptionWithGeneratorMapping()
++        throws Exception
++    {
++        JsonFactory f = new MappingJsonFactory();
++        JsonGenerator jg = f.createGenerator(new BrokenStringWriter("TEST"));
++        try {
++            jg.writeObject(createLongObject());
++            fail("Should have gotten an exception");
++        } catch (Exception e) {
++            verifyException(e, IOException.class, "TEST");
++        }
++    }
++
++    /*
++    /**********************************************************
++    /* Helper methods
++    /**********************************************************
++     */
++
++    void verifyException(Exception e, Class<?> expType, String expMsg)
++        throws Exception
++    {
++        if (e.getClass() != expType) {
++            fail("Expected exception of type "+expType.getName()+", got "+e.getClass().getName());
++        }
++        if (expMsg != null) {
++            verifyException(e, expMsg);
++        }
++    }
++
++    Object createLongObject()
++    {
++        List<Object> leaf = new ArrayList<Object>();
++        for (int i = 0; i < 256; ++i) {
++            leaf.add(Integer.valueOf(i));
++        }
++        List<Object> root = new ArrayList<Object>(256);
++        for (int i = 0; i < 256; ++i) {
++            root.add(leaf);
++        }
++        return root;
++    }
++}
++
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java
+new file mode 100644
+index 0000000..ee68983
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java
+@@ -0,0 +1,124 @@
++package com.fasterxml.jackson.databind.ser;
++
++import java.io.IOException;
++import java.util.*;
++
++import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
++import com.fasterxml.jackson.databind.*;
++
++/**
++ * Unit tests for verifying that simple exceptions can be serialized.
++ */
++public class TestExceptionSerialization
++    extends BaseMapTest
++{
++    @SuppressWarnings("serial")
++    @JsonIgnoreProperties({ "bogus1" })
++    static class ExceptionWithIgnoral extends RuntimeException
++    {
++        public int bogus1 = 3;
++
++        public int bogus2 = 5;
++
++        protected ExceptionWithIgnoral() { }
++        public ExceptionWithIgnoral(String msg) {
++            super(msg);
++        }
++    }
++
++    // [databind#1368]
++    static class NoSerdeConstructor {
++        private String strVal;
++        public String getVal() { return strVal; }
++        public NoSerdeConstructor( String strVal ) {
++            this.strVal = strVal;
++        }
++    }
++
++    /*
++    /**********************************************************
++    /* Tests
++    /**********************************************************
++     */
++
++    private final ObjectMapper MAPPER = new ObjectMapper();
++    
++    public void testSimple() throws Exception
++    {
++        String TEST = "test exception";
++        Map<String,Object> result = writeAndMap(MAPPER, new Exception(TEST));
++        // JDK 7 has introduced a new property 'suppressed' to Throwable
++        Object ob = result.get("suppressed");
++        if (ob != null) {
++            assertEquals(5, result.size());
++        } else {
++            assertEquals(4, result.size());
++        }
++
++        assertEquals(TEST, result.get("message"));
++        assertNull(result.get("cause"));
++        assertEquals(TEST, result.get("localizedMessage"));
++
++        // hmmh. what should we get for stack traces?
++        Object traces = result.get("stackTrace");
++        if (!(traces instanceof List<?>)) {
++            fail("Expected a List for exception member 'stackTrace', got: "+traces);
++        }
++    }
++
++    // for [databind#877]
++    @SuppressWarnings("unchecked")
++    public void testIgnorals() throws Exception
++    {
++        ExceptionWithIgnoral input = new ExceptionWithIgnoral("foobar");
++        input.initCause(new IOException("surprise!"));
++
++        // First, should ignore anything with class annotations
++        String json = MAPPER
++                .writerWithDefaultPrettyPrinter()
++                .writeValueAsString(input);
++
++        Map<String,Object> result = MAPPER.readValue(json, Map.class);
++        assertEquals("foobar", result.get("message"));
++
++        assertNull(result.get("bogus1"));
++        assertNotNull(result.get("bogus2"));
++
++        // and then also remova second property with config overrides
++        ObjectMapper mapper = new ObjectMapper();
++        mapper.configOverride(ExceptionWithIgnoral.class)
++            .setIgnorals(JsonIgnoreProperties.Value.forIgnoredProperties("bogus2"));
++        String json2 = mapper
++                .writeValueAsString(new ExceptionWithIgnoral("foobar"));
++
++        Map<String,Object> result2 = mapper.readValue(json2, Map.class);
++        assertNull(result2.get("bogus1"));
++        assertNull(result2.get("bogus2"));
++
++        // and try to deserialize as well
++        ExceptionWithIgnoral output = mapper.readValue(json2, ExceptionWithIgnoral.class);
++        assertNotNull(output);
++        assertEquals("foobar", output.getMessage());
++    }
++
++    // [databind#1368]
++    public void testJsonMappingExceptionSerialization() throws IOException {
++        Exception e = null;
++        // cant deserialize due to unexpected constructor
++        try {
++            MAPPER.readValue( "{ \"val\": \"foo\" }", NoSerdeConstructor.class );
++            fail("Should not pass");
++        } catch (JsonMappingException e0) {
++            verifyException(e0, "no suitable constructor");
++            e = e0;
++        }
++        // but should be able to serialize new exception we got
++        String json = MAPPER.writeValueAsString(e);
++        JsonNode root = MAPPER.readTree(json);
++        String msg = root.path("message").asText();
++        String MATCH = "no suitable constructor";
++        if (!msg.contains(MATCH)) {
++            fail("Exception should contain '"+MATCH+"', does not: '"+msg+"'");
++        }
++    }
++}

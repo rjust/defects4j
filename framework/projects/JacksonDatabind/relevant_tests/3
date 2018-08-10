@@ -1,0 +1,14 @@
+com.fasterxml.jackson.databind.filter.IgnorePropsForSerTest
+com.fasterxml.jackson.databind.filter.JsonIncludeTest
+com.fasterxml.jackson.databind.filter.MapInclusionTest
+com.fasterxml.jackson.databind.jsontype.DefaultTypingWithPrimitivesTest
+com.fasterxml.jackson.databind.objectid.ObjectWithCreator1261Test
+com.fasterxml.jackson.databind.seq.ObjectWriterTest
+com.fasterxml.jackson.databind.ser.AnyGetterTest
+com.fasterxml.jackson.databind.ser.DateSerializationTest
+com.fasterxml.jackson.databind.ser.KeySerializers1679Test
+com.fasterxml.jackson.databind.ser.RawValueTest
+com.fasterxml.jackson.databind.struct.FormatFeaturesTest
+com.fasterxml.jackson.databind.struct.PojoAsArray646Test
+com.fasterxml.jackson.databind.type.RecursiveType1658Test
+com.fasterxml.jackson.databind.type.RecursiveTypeTest

@@ -1,0 +1,53 @@
+diff --git a/guava/src/com/google/common/cache/LocalCache.java b/guava/src/com/google/common/cache/LocalCache.java
+index 7b044f568..3b455d9ee 100644
+--- a/guava/src/com/google/common/cache/LocalCache.java
++++ b/guava/src/com/google/common/cache/LocalCache.java
+@@ -2768,7 +2768,6 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+     @Nullable
+     V get(Object key, int hash) {
+       try {
+-        if (count != 0) { // read-volatile
+           long now = map.ticker.read();
+           ReferenceEntry<K, V> e = getLiveEntry(key, hash, now);
+           if (e == null) {
+@@ -2781,7 +2780,6 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             return scheduleRefresh(e, e.getKey(), hash, value, now, map.defaultLoader);
+           }
+           tryDrainReferenceQueues();
+-        }
+         return null;
+       } finally {
+         postReadCleanup();
+@@ -2790,16 +2788,12 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+ 
+     boolean containsKey(Object key, int hash) {
+       try {
+-        if (count != 0) { // read-volatile
+           long now = map.ticker.read();
+           ReferenceEntry<K, V> e = getLiveEntry(key, hash, now);
+           if (e == null) {
+             return false;
+           }
+           return e.getValueReference().get() != null;
+-        }
+-
+-        return false;
+       } finally {
+         postReadCleanup();
+       }
+@@ -2812,7 +2806,6 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+     @VisibleForTesting
+     boolean containsValue(Object value) {
+       try {
+-        if (count != 0) { // read-volatile
+           long now = map.ticker.read();
+           AtomicReferenceArray<ReferenceEntry<K, V>> table = this.table;
+           int length = table.length();
+@@ -2824,7 +2817,6 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+               }
+               if (map.valueEquivalence.equivalent(value, entryValue)) {
+                 return true;
+-              }
+             }
+           }
+         }

@@ -1,0 +1,287 @@
+diff --git a/src/main/java/org/apache/commons/codec/net/BCodec.java b/src/main/java/org/apache/commons/codec/net/BCodec.java
+index 1688adf..8589f33 100644
+--- a/src/main/java/org/apache/commons/codec/net/BCodec.java
++++ b/src/main/java/org/apache/commons/codec/net/BCodec.java
+@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
+ import java.nio.charset.Charset;
+ import java.nio.charset.UnsupportedCharsetException;
+ 
+-import org.apache.commons.codec.Charsets;
++import org.apache.commons.codec.CharEncoding;
+ import org.apache.commons.codec.DecoderException;
+ import org.apache.commons.codec.EncoderException;
+ import org.apache.commons.codec.StringDecoder;
+@@ -51,13 +51,13 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+     /**
+      * The default charset used for string decoding and encoding.
+      */
+-    private final Charset charset;
++    private final String charset;
+ 
+     /**
+      * Default constructor.
+      */
+     public BCodec() {
+-        this(Charsets.UTF_8);
++        this(CharEncoding.UTF_8);
+     }
+ 
+     /**
+@@ -68,24 +68,11 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+      * 
+      * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+      */
+-    public BCodec(final Charset charset) {
++    public BCodec(final String charset) {
++        super();
+         this.charset = charset;
+     }
+ 
+-    /**
+-     * Constructor which allows for the selection of a default charset
+-     * 
+-     * @param charsetName
+-     *                  the default charset to use.
+-     * @throws UnsupportedCharsetException
+-     *             If the named charset is unavailable
+-     * @since 1.7 throws UnsupportedCharsetException if the named charset is unavailable
+-     * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+-     */
+-    public BCodec(final String charsetName) {
+-        this(Charset.forName(charsetName));
+-    }
+-
+     @Override
+     protected String getEncoding() {
+         return "B";
+@@ -119,31 +106,12 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+      * @throws EncoderException
+      *                  thrown if a failure condition is encountered during the encoding process.
+      */
+-    public String encode(final String value, final Charset charset) throws EncoderException {
+-        if (value == null) {
+-            return null;
+-        }
+-        return encodeText(value, charset);
+-    }
+-
+-    /**
+-     * Encodes a string into its Base64 form using the specified charset. Unsafe characters are escaped.
+-     * 
+-     * @param value
+-     *                  string to convert to Base64 form
+-     * @param charset
+-     *                  the charset for <code>value</code>
+-     * @return Base64 string
+-     * 
+-     * @throws EncoderException
+-     *                  thrown if a failure condition is encountered during the encoding process.
+-     */
+     public String encode(final String value, final String charset) throws EncoderException {
+         if (value == null) {
+             return null;
+         }
+         try {
+-            return this.encodeText(value, charset);
++            return encodeText(value, charset);
+         } catch (UnsupportedEncodingException e) {
+             throw new EncoderException(e.getMessage(), e);
+         }
+@@ -163,7 +131,7 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+         if (value == null) {
+             return null;
+         }
+-        return encode(value, this.getCharset());
++        return encode(value, getDefaultCharset());
+     }
+ 
+     /**
+@@ -181,7 +149,7 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+             return null;
+         }
+         try {
+-            return this.decodeText(value);
++            return decodeText(value);
+         } catch (UnsupportedEncodingException e) {
+             throw new DecoderException(e.getMessage(), e);
+         }
+@@ -237,19 +205,9 @@ public class BCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+     /**
+      * Gets the default charset name used for string decoding and encoding.
+      * 
+-     * @return the default charset name
+-     * @since 1.7
+-     */
+-    public Charset getCharset() {
+-        return this.charset;
+-    }
+-
+-    /**
+-     * Gets the default charset name used for string decoding and encoding.
+-     * 
+-     * @return the default charset name
++     * @return the default string charset.
+      */
+     public String getDefaultCharset() {
+-        return this.charset.name();
++        return this.charset;
+     }
+ }
+diff --git a/src/main/java/org/apache/commons/codec/net/QCodec.java b/src/main/java/org/apache/commons/codec/net/QCodec.java
+index 3ee5b13..a8ca4c9 100644
+--- a/src/main/java/org/apache/commons/codec/net/QCodec.java
++++ b/src/main/java/org/apache/commons/codec/net/QCodec.java
+@@ -52,7 +52,7 @@ public class QCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+     /**
+      * The default charset used for string decoding and encoding.
+      */
+-    private final Charset charset;
++    private final String charset;
+ 
+     /**
+      * BitSet of printable characters as defined in RFC 1522.
+@@ -123,25 +123,11 @@ public class QCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+      * 
+      * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+      */
+-    public QCodec(final Charset charset) {
++    public QCodec(final String charset) {
+         super();
+         this.charset = charset;
+     }
+ 
+-    /**
+-     * Constructor which allows for the selection of a default charset
+-     * 
+-     * @param charsetName
+-     *                  the charset to use.
+-     * @throws UnsupportedCharsetException
+-     *             If the named charset is unavailable
+-     * @since 1.7 throws UnsupportedCharsetException if the named charset is unavailable
+-     * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+-     */
+-    public QCodec(final String charsetName) {
+-        this(Charset.forName(charsetName));
+-    }
+-
+     @Override
+     protected String getEncoding() {
+         return "Q";
+@@ -202,25 +188,6 @@ public class QCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+      * @throws EncoderException
+      *                  thrown if a failure condition is encountered during the encoding process.
+      */
+-    public String encode(final String pString, final Charset charset) throws EncoderException {
+-        if (pString == null) {
+-            return null;
+-        }
+-        return encodeText(pString, charset);
+-    }
+-
+-    /**
+-     * Encodes a string into its quoted-printable form using the specified charset. Unsafe characters are escaped.
+-     * 
+-     * @param pString
+-     *                  string to convert to quoted-printable form
+-     * @param charset
+-     *                  the charset for pString
+-     * @return quoted-printable string
+-     * 
+-     * @throws EncoderException
+-     *                  thrown if a failure condition is encountered during the encoding process.
+-     */
+     public String encode(final String pString, final String charset) throws EncoderException {
+         if (pString == null) {
+             return null;
+@@ -246,7 +213,7 @@ public class QCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+         if (pString == null) {
+             return null;
+         }
+-        return encode(pString, getCharset());
++        return encode(pString, getDefaultCharset());
+     }
+ 
+     /**
+@@ -322,20 +289,10 @@ public class QCodec extends RFC1522Codec implements StringEncoder, StringDecoder
+     /**
+      * Gets the default charset name used for string decoding and encoding.
+      * 
+-     * @return the default charset name
+-     * @since 1.7
+-     */
+-    public Charset getCharset() {
+-        return this.charset;
+-    }
+-
+-    /**
+-     * Gets the default charset name used for string decoding and encoding.
+-     * 
+-     * @return the default charset name
++     * @return the default string charset.
+      */
+     public String getDefaultCharset() {
+-        return this.charset.name();
++        return this.charset;
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/codec/net/RFC1522Codec.java b/src/main/java/org/apache/commons/codec/net/RFC1522Codec.java
+index b9ca9db..f468a99 100644
+--- a/src/main/java/org/apache/commons/codec/net/RFC1522Codec.java
++++ b/src/main/java/org/apache/commons/codec/net/RFC1522Codec.java
+@@ -77,8 +77,8 @@ abstract class RFC1522Codec {
+      *  process.
+      * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+      */
+-    protected String encodeText(final String text, final Charset charset)
+-     throws EncoderException  
++    protected String encodeText(final String text, final String charset)
++     throws EncoderException, UnsupportedEncodingException  
+     {
+         if (text == null) {
+             return null;
+@@ -87,41 +87,15 @@ abstract class RFC1522Codec {
+         buffer.append(PREFIX); 
+         buffer.append(charset);
+         buffer.append(SEP);
+-        buffer.append(this.getEncoding());
++        buffer.append(getEncoding());
+         buffer.append(SEP);
+-        byte [] rawData = this.doEncoding(text.getBytes(charset)); 
+-        buffer.append(StringUtils.newStringUsAscii(rawData));
++        byte [] rawdata = doEncoding(text.getBytes(charset)); 
++        buffer.append(StringUtils.newStringUsAscii(rawdata));
+         buffer.append(POSTFIX); 
+         return buffer.toString();
+     }
+     
+     /**
+-     * Applies an RFC 1522 compliant encoding scheme to the given string of text with the 
+-     * given charset. This method constructs the "encoded-word" header common to all the 
+-     * RFC 1522 codecs and then invokes {@link #doEncoding(byte [])} method of a concrete 
+-     * class to perform the specific encoding.
+-     * 
+-     * @param text a string to encode
+-     * @param charsetName the charset to use
+-     * 
+-     * @return RFC 1522 compliant "encoded-word"
+-     * 
+-     * @throws EncoderException thrown if there is an error condition during the Encoding 
+-     *  process.
+-     * @throws UnsupportedEncodingException if charset is not available 
+-     * 
+-     * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
+-     */
+-    protected String encodeText(final String text, final String charsetName)
+-     throws EncoderException, UnsupportedEncodingException  
+-    {
+-        if (text == null) {
+-            return null;
+-        }
+-        return this.encodeText(text, Charset.forName(charsetName));
+-    }
+-    
+-    /**
+      * Applies an RFC 1522 compliant decoding scheme to the given string of text. This method 
+      * processes the "encoded-word" header common to all the RFC 1522 codecs and then invokes 
+      * {@link #doEncoding(byte [])} method of a concrete class to perform the specific decoding.

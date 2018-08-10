@@ -1,0 +1,49 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+index bc1b54a91..9e2837bd7 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+@@ -372,20 +372,6 @@ public final class TypeFactory
+     /**
+      * @since 2.7
+      */
+-    public JavaType[] findTypeParameters(JavaType type, Class<?> expType, TypeBindings bindings)
+-    {
+-        if (expType == type.getParameterSource()) {
+-            int count = type.containedTypeCount();
+-            if (count == 0) return null;
+-            JavaType[] result = new JavaType[count];
+-            for (int i = 0; i < count; ++i) {
+-                result[i] = type.containedType(i);
+-            }
+-            return result;
+-        }
+-        Class<?> raw = type.getRawClass();
+-        return findTypeParameters(raw, expType, bindings);
+-    }
+ 
+     public JavaType[] findTypeParameters(Class<?> clz, Class<?> expType) {
+         return findTypeParameters(clz, expType, new TypeBindings(this, clz));
+@@ -1033,9 +1019,8 @@ public final class TypeFactory
+                     rt = pt[0];
+                 }
+             } else {
+-                JavaType subtype = constructSimpleType(rawType, rawType, pt);
+-                JavaType[] pts = findTypeParameters(subtype, AtomicReference.class, context);
+-                if (pts != null && pts.length == 1) {
++                JavaType[] pts = findTypeParameters(rawType, AtomicReference.class);
++                if (pts != null && pts.length != 1) {
+                     rt = pts[0];
+                 }
+             }
+@@ -1052,9 +1037,8 @@ public final class TypeFactory
+             } else {
+                 // 23-Sep-2015, tatu: Must be careful here; type resolution can NOT be done
+                 //    directly quite yet. Instead, need to do indirectly...
+-                JavaType subtype = constructSimpleType(rawType, rawType, pt);
+-                JavaType[] pts = findTypeParameters(subtype, Map.Entry.class, context);
+-                if (pts != null && pts.length == 2) {
++                JavaType[] pts = findTypeParameters(rawType, Map.Entry.class);
++                if (pts != null && pts.length != 2) {
+                     kt = pts[0];
+                     vt = pts[1];
+                 }

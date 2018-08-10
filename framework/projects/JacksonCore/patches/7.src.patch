@@ -1,0 +1,119 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
+index 5917f5d9..0048bda7 100644
+--- a/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
+@@ -1681,7 +1681,7 @@ public abstract class JsonGenerator
+      */
+     public void copyCurrentEvent(JsonParser p) throws IOException
+     {
+-        JsonToken t = p.currentToken();
++        JsonToken t = p.getCurrentToken();
+         // sanity check; what to do?
+         if (t == null) {
+             _reportError("No current event to copy");
+@@ -1784,7 +1784,7 @@ public abstract class JsonGenerator
+      */
+     public void copyCurrentStructure(JsonParser p) throws IOException
+     {
+-        JsonToken t = p.currentToken();
++        JsonToken t = p.getCurrentToken();
+         if (t == null) {
+             _reportError("No current event to copy");
+         }
+diff --git a/src/main/java/com/fasterxml/jackson/core/JsonParser.java b/src/main/java/com/fasterxml/jackson/core/JsonParser.java
+index 90aed56f..d2057ed6 100644
+--- a/src/main/java/com/fasterxml/jackson/core/JsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/JsonParser.java
+@@ -964,7 +964,7 @@ public abstract class JsonParser
+      *   start-array marker (such {@link JsonToken#START_ARRAY});
+      *   false if not.
+      */
+-    public boolean isExpectedStartArrayToken() { return currentToken() == JsonToken.START_ARRAY; }
++    public boolean isExpectedStartArrayToken() { return getCurrentToken() == JsonToken.START_ARRAY; }
+ 
+     /**
+      * Similar to {@link #isExpectedStartArrayToken()}, but checks whether stream
+@@ -972,7 +972,7 @@ public abstract class JsonParser
+      *
+      * @since 2.5
+      */
+-    public boolean isExpectedStartObjectToken() { return currentToken() == JsonToken.START_OBJECT; }
++    public boolean isExpectedStartObjectToken() { return getCurrentToken() == JsonToken.START_OBJECT; }
+     
+     /*
+     /**********************************************************
+@@ -1285,7 +1285,7 @@ public abstract class JsonParser
+      * may be thrown to indicate numeric overflow/underflow.
+      */
+     public boolean getBooleanValue() throws IOException {
+-        JsonToken t = currentToken();
++        JsonToken t = getCurrentToken();
+         if (t == JsonToken.VALUE_TRUE) return true;
+         if (t == JsonToken.VALUE_FALSE) return false;
+         throw new JsonParseException(this,
+diff --git a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+index 2bb0165c..bf68cd77 100644
+--- a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
++++ b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+@@ -146,16 +146,11 @@ public class FilteringParserDelegate extends JsonParserDelegate
+      */
+ 
+     @Override public JsonToken getCurrentToken() { return _currToken; }
+-    @Override public JsonToken currentToken() { return _currToken; }
+ 
+     @Override public final int getCurrentTokenId() {
+         final JsonToken t = _currToken;
+         return (t == null) ? JsonTokenId.ID_NO_TOKEN : t.id();
+     }
+-    @Override public final int currentTokenId() {
+-        final JsonToken t = _currToken;
+-        return (t == null) ? JsonTokenId.ID_NO_TOKEN : t.id();
+-    }
+ 
+     @Override public boolean hasCurrentToken() { return _currToken != null; }
+     @Override public boolean hasTokenId(int id) {
+diff --git a/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java b/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java
+index 0c9c4eb9..9949fb23 100644
+--- a/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java
++++ b/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java
+@@ -32,7 +32,6 @@ public class JsonParserSequence extends JsonParserDelegate
+      *
+      * @since 2.8
+      */
+-    protected boolean _suppressNextToken;
+     
+     /*
+      *******************************************************
+@@ -43,7 +42,6 @@ public class JsonParserSequence extends JsonParserDelegate
+     protected JsonParserSequence(JsonParser[] parsers)
+     {
+         super(parsers[0]);
+-        _suppressNextToken = delegate.hasCurrentToken();
+         _parsers = parsers;
+         _nextParser = 1;
+     }
+@@ -105,19 +103,13 @@ public class JsonParserSequence extends JsonParserDelegate
+     @Override
+     public JsonToken nextToken() throws IOException
+     {
+-        if (delegate == null) {
+-            return null;
+-        }
+-        if (_suppressNextToken) {
+-            _suppressNextToken = false;
+-            return delegate.currentToken();
+-        }
+         JsonToken t = delegate.nextToken();
+-        while ((t == null) && switchToNext()) {
+-            t = delegate.hasCurrentToken()
+-                    ? delegate.currentToken() : delegate.nextToken();
++        if (t != null) return t;
++        while (switchToNext()) {
++            t = delegate.nextToken();
++            if (t != null) return t;
+         }
+-        return t;
++        return null;
+     }
+ 
+     /*

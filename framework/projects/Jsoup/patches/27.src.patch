@@ -1,0 +1,21 @@
+diff --git a/src/main/java/org/jsoup/helper/DataUtil.java b/src/main/java/org/jsoup/helper/DataUtil.java
+index 44f85be..e33f6b4 100644
+--- a/src/main/java/org/jsoup/helper/DataUtil.java
++++ b/src/main/java/org/jsoup/helper/DataUtil.java
+@@ -111,14 +111,9 @@ public class DataUtil {
+             docData = Charset.forName(charsetName).decode(byteData).toString();
+         }
+         // UTF-8 BOM indicator. takes precedence over everything else. rarely used. re-decodes incase above decoded incorrectly
+-        if (docData.length() > 0 && docData.charAt(0) == 65279) {
+-            byteData.rewind();
+-            docData = Charset.forName(defaultCharset).decode(byteData).toString();
+-            docData = docData.substring(1);
+-            charsetName = defaultCharset;
+-            doc = null;
+-        }
+         if (doc == null) {
++            if (docData.length() > 0 && docData.charAt(0) == 65279)
++                docData = docData.substring(1);
+             doc = parser.parseInput(docData, baseUri);
+             doc.outputSettings().charset(charsetName);
+         }

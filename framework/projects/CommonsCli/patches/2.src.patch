@@ -1,0 +1,97 @@
+diff --git a/src/main/java/org/apache/commons/cli/CommandLine.java b/src/main/java/org/apache/commons/cli/CommandLine.java
+index 81d89dd..1965c02 100644
+--- a/src/main/java/org/apache/commons/cli/CommandLine.java
++++ b/src/main/java/org/apache/commons/cli/CommandLine.java
+@@ -115,12 +115,14 @@ public class CommandLine implements Serializable
+         String res = getOptionValue(opt);
+         Option option = resolveOption(opt);
+         
+-        if (option == null || res == null)
++        if (option == null)
+         {
+             return null;
+         }
+-        
+-        return TypeHandler.createValue(res, option.getType());
++
++        Object type = option.getType();
++
++        return (res == null) ? null : TypeHandler.createValue(res, type);
+     }
+ 
+     /**
+diff --git a/src/main/java/org/apache/commons/cli/Option.java b/src/main/java/org/apache/commons/cli/Option.java
+index 66c7ef9..c7d9ceb 100644
+--- a/src/main/java/org/apache/commons/cli/Option.java
++++ b/src/main/java/org/apache/commons/cli/Option.java
+@@ -69,7 +69,7 @@ public class Option implements Cloneable, Serializable
+     private int numberOfArgs = UNINITIALIZED;
+ 
+     /** the type of this Option */
+-    private Class type = String.class;
++    private Object type;
+ 
+     /** the list of argument values **/
+     private List values = new ArrayList();
+@@ -193,7 +193,7 @@ public class Option implements Cloneable, Serializable
+      *
+      * @param type the type of this Option
+      */
+-    public void setType(Class type)
++    public void setType(Object type)
+     {
+         this.type = type;
+     }
+diff --git a/src/main/java/org/apache/commons/cli/OptionBuilder.java b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+index 6fd1b43..5cae375 100644
+--- a/src/main/java/org/apache/commons/cli/OptionBuilder.java
++++ b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+@@ -48,7 +48,7 @@ public final class OptionBuilder
+     private static int numberOfArgs = Option.UNINITIALIZED;
+ 
+     /** option type */
+-    private static Class type;
++    private static Object type;
+ 
+     /** option can have an optional argument value */
+     private static boolean optionalArg;
+@@ -81,7 +81,7 @@ public final class OptionBuilder
+         description = null;
+         argName = null;
+         longopt = null;
+-        type = String.class;
++        type = null;
+         required = false;
+         numberOfArgs = Option.UNINITIALIZED;
+         optionalArg = false;
+@@ -287,7 +287,7 @@ public final class OptionBuilder
+      * @param newType the type of the Options argument value
+      * @return the OptionBuilder instance
+      */
+-    public static OptionBuilder withType(Class newType)
++    public static OptionBuilder withType(Object newType)
+     {
+         OptionBuilder.type = newType;
+ 
+diff --git a/src/main/java/org/apache/commons/cli/PatternOptionBuilder.java b/src/main/java/org/apache/commons/cli/PatternOptionBuilder.java
+index 200f986..a3f92e5 100644
+--- a/src/main/java/org/apache/commons/cli/PatternOptionBuilder.java
++++ b/src/main/java/org/apache/commons/cli/PatternOptionBuilder.java
+@@ -91,7 +91,7 @@ public class PatternOptionBuilder
+      * @param ch the specified character
+      * @return The class that <code>ch</code> represents
+      */
+-    public static Class getValueClass(char ch)
++    public static Object getValueClass(char ch)
+     {
+         switch (ch)
+         {
+@@ -149,7 +149,7 @@ public class PatternOptionBuilder
+     {
+         char opt = ' ';
+         boolean required = false;
+-        Class type = null;
++        Object type = null;
+ 
+         Options options = new Options();
+ 

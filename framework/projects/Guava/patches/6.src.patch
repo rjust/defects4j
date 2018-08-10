@@ -1,0 +1,225 @@
+diff --git a/guava/src/com/google/common/cache/LocalCache.java b/guava/src/com/google/common/cache/LocalCache.java
+index 442a3fe1c..5698f81ed 100644
+--- a/guava/src/com/google/common/cache/LocalCache.java
++++ b/guava/src/com/google/common/cache/LocalCache.java
+@@ -2239,13 +2239,11 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             } else {
+               V value = valueReference.get();
+               if (value == null) {
+-                enqueueNotification(entryKey, hash, value,
+-                    valueReference.getWeight(), RemovalCause.COLLECTED);
++                enqueueNotification(entryKey, hash, valueReference, RemovalCause.COLLECTED);
+               } else if (map.isExpired(e, now)) {
+                 // This is a duplicate check, as preWriteCleanup already purged expired
+                 // entries, but let's accomodate an incorrect expiration queue.
+-                enqueueNotification(entryKey, hash, value,
+-                    valueReference.getWeight(), RemovalCause.EXPIRED);
++                enqueueNotification(entryKey, hash, valueReference, RemovalCause.EXPIRED);
+               } else {
+                 recordLockedRead(e, now);
+                 statsCounter.recordHits(1);
+@@ -2333,7 +2331,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             @Override
+             public void run() {
+               try {
+-                getAndRecordStats(key, hash, loadingValueReference, loadingFuture);
++                V newValue = getAndRecordStats(key, hash, loadingValueReference, loadingFuture);
+               } catch (Throwable t) {
+                 logger.log(Level.WARNING, "Exception thrown during refresh", t);
+                 loadingValueReference.setException(t);
+@@ -2640,13 +2638,19 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+     // eviction
+ 
+     @GuardedBy("this")
+-    void enqueueNotification(@Nullable K key, int hash, @Nullable V value, int weight,
++    void enqueueNotification(ReferenceEntry<K, V> entry, RemovalCause cause) {
++      enqueueNotification(entry.getKey(), entry.getHash(), entry.getValueReference(), cause);
++    }
++
++    @GuardedBy("this")
++    void enqueueNotification(@Nullable K key, int hash, ValueReference<K, V> valueReference,
+         RemovalCause cause) {
+-      totalWeight -= weight;
++      totalWeight -= valueReference.getWeight();
+       if (cause.wasEvicted()) {
+         statsCounter.recordEviction();
+       }
+       if (map.removalNotificationQueue != DISCARDING_QUEUE) {
++        V value = valueReference.get();
+         RemovalNotification<K, V> notification = RemovalNotification.create(key, value, cause);
+         map.removalNotificationQueue.offer(notification);
+       }
+@@ -2860,8 +2864,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             if (entryValue == null) {
+               ++modCount;
+               if (valueReference.isActive()) {
+-                enqueueNotification(key, hash, entryValue,
+-                    valueReference.getWeight(), RemovalCause.COLLECTED);
++                enqueueNotification(key, hash, valueReference, RemovalCause.COLLECTED);
+                 setValue(e, key, value, now);
+                 newCount = this.count; // count remains unchanged
+               } else {
+@@ -2880,8 +2883,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             } else {
+               // clobber existing entry, count remains unchanged
+               ++modCount;
+-              enqueueNotification(key, hash, entryValue,
+-                  valueReference.getWeight(), RemovalCause.REPLACED);
++              enqueueNotification(key, hash, valueReference, RemovalCause.REPLACED);
+               setValue(e, key, value, now);
+               evictEntries(e);
+               return entryValue;
+@@ -2998,7 +3000,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+                 int newCount = this.count - 1;
+                 ++modCount;
+                 ReferenceEntry<K, V> newFirst = removeValueFromChain(
+-                    first, e, entryKey, hash, entryValue, valueReference, RemovalCause.COLLECTED);
++                    first, e, entryKey, hash, valueReference, RemovalCause.COLLECTED);
+                 newCount = this.count - 1;
+                 table.set(index, newFirst);
+                 this.count = newCount; // write-volatile
+@@ -3008,8 +3010,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+ 
+             if (map.valueEquivalence.equivalent(oldValue, entryValue)) {
+               ++modCount;
+-              enqueueNotification(key, hash, entryValue,
+-                  valueReference.getWeight(), RemovalCause.REPLACED);
++              enqueueNotification(key, hash, valueReference, RemovalCause.REPLACED);
+               setValue(e, key, newValue, now);
+               evictEntries(e);
+               return true;
+@@ -3052,7 +3053,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+                 int newCount = this.count - 1;
+                 ++modCount;
+                 ReferenceEntry<K, V> newFirst = removeValueFromChain(
+-                    first, e, entryKey, hash, entryValue, valueReference, RemovalCause.COLLECTED);
++                    first, e, entryKey, hash, valueReference, RemovalCause.COLLECTED);
+                 newCount = this.count - 1;
+                 table.set(index, newFirst);
+                 this.count = newCount; // write-volatile
+@@ -3061,8 +3062,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             }
+ 
+             ++modCount;
+-            enqueueNotification(key, hash, entryValue,
+-                valueReference.getWeight(), RemovalCause.REPLACED);
++            enqueueNotification(key, hash, valueReference, RemovalCause.REPLACED);
+             setValue(e, key, newValue, now);
+             evictEntries(e);
+             return entryValue;
+@@ -3107,7 +3107,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+ 
+             ++modCount;
+             ReferenceEntry<K, V> newFirst = removeValueFromChain(
+-                first, e, entryKey, hash, entryValue, valueReference, cause);
++                first, e, entryKey, hash, valueReference, cause);
+             newCount = this.count - 1;
+             table.set(index, newFirst);
+             this.count = newCount; // write-volatile
+@@ -3153,7 +3153,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+               if (oldValueReference.isActive()) {
+                 RemovalCause cause =
+                     (entryValue == null) ? RemovalCause.COLLECTED : RemovalCause.REPLACED;
+-                enqueueNotification(key, hash, entryValue, oldValueReference.getWeight(), cause);
++                enqueueNotification(key, hash, oldValueReference, cause);
+                 newCount--;
+               }
+               setValue(e, key, newValue, now);
+@@ -3163,7 +3163,8 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             }
+ 
+             // the loaded value was already clobbered
+-            enqueueNotification(key, hash, newValue, 0, RemovalCause.REPLACED);
++            valueReference = new WeightedStrongValueReference<K, V>(newValue, 0);
++            enqueueNotification(key, hash, valueReference, RemovalCause.REPLACED);
+             return false;
+           }
+         }
+@@ -3211,7 +3212,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+ 
+             ++modCount;
+             ReferenceEntry<K, V> newFirst = removeValueFromChain(
+-                first, e, entryKey, hash, entryValue, valueReference, cause);
++                first, e, entryKey, hash, valueReference, cause);
+             newCount = this.count - 1;
+             table.set(index, newFirst);
+             this.count = newCount; // write-volatile
+@@ -3230,21 +3231,13 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+       if (count != 0) { // read-volatile
+         lock();
+         try {
+-          long now = map.ticker.read();
+-          preWriteCleanup(now);
+ 
+           AtomicReferenceArray<ReferenceEntry<K, V>> table = this.table;
+           for (int i = 0; i < table.length(); ++i) {
+             for (ReferenceEntry<K, V> e = table.get(i); e != null; e = e.getNext()) {
+               // Loading references aren't actually in the map yet.
+               if (e.getValueReference().isActive()) {
+-                K key = e.getKey();
+-                V value = e.getValueReference().get();
+-                RemovalCause cause = (key == null || value == null)
+-                    ? RemovalCause.COLLECTED
+-                    : RemovalCause.EXPLICIT;
+-                enqueueNotification(key, e.getHash(), value,
+-                    e.getValueReference().getWeight(), cause);
++                enqueueNotification(e, RemovalCause.EXPLICIT);
+               }
+             }
+           }
+@@ -3268,9 +3261,9 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+     @GuardedBy("this")
+     @Nullable
+     ReferenceEntry<K, V> removeValueFromChain(ReferenceEntry<K, V> first,
+-        ReferenceEntry<K, V> entry, @Nullable K key, int hash, V value,
+-        ValueReference<K, V> valueReference, RemovalCause cause) {
+-      enqueueNotification(key, hash, value, valueReference.getWeight(), cause);
++        ReferenceEntry<K, V> entry, @Nullable K key, int hash, ValueReference<K, V> valueReference,
++        RemovalCause cause) {
++      enqueueNotification(key, hash, valueReference, cause);
+       writeQueue.remove(entry);
+       accessQueue.remove(entry);
+ 
+@@ -3303,8 +3296,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+ 
+     @GuardedBy("this")
+     void removeCollectedEntry(ReferenceEntry<K, V> entry) {
+-      enqueueNotification(entry.getKey(), entry.getHash(), entry.getValueReference().get(),
+-          entry.getValueReference().getWeight(), RemovalCause.COLLECTED);
++      enqueueNotification(entry, RemovalCause.COLLECTED);
+       writeQueue.remove(entry);
+       accessQueue.remove(entry);
+     }
+@@ -3323,8 +3315,8 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+         for (ReferenceEntry<K, V> e = first; e != null; e = e.getNext()) {
+           if (e == entry) {
+             ++modCount;
+-            ReferenceEntry<K, V> newFirst = removeValueFromChain(first, e, e.getKey(), hash,
+-                e.getValueReference().get(), e.getValueReference(), RemovalCause.COLLECTED);
++            ReferenceEntry<K, V> newFirst = removeValueFromChain(
++                first, e, e.getKey(), hash, e.getValueReference(), RemovalCause.COLLECTED);
+             newCount = this.count - 1;
+             table.set(index, newFirst);
+             this.count = newCount; // write-volatile
+@@ -3357,8 +3349,8 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+             ValueReference<K, V> v = e.getValueReference();
+             if (v == valueReference) {
+               ++modCount;
+-              ReferenceEntry<K, V> newFirst = removeValueFromChain(first, e, entryKey, hash,
+-                  valueReference.get(), valueReference, RemovalCause.COLLECTED);
++              ReferenceEntry<K, V> newFirst = removeValueFromChain(
++                  first, e, entryKey, hash, valueReference, RemovalCause.COLLECTED);
+               newCount = this.count - 1;
+               table.set(index, newFirst);
+               this.count = newCount; // write-volatile
+@@ -3420,8 +3412,8 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>
+       for (ReferenceEntry<K, V> e = first; e != null; e = e.getNext()) {
+         if (e == entry) {
+           ++modCount;
+-          ReferenceEntry<K, V> newFirst = removeValueFromChain(first, e, e.getKey(), hash,
+-              e.getValueReference().get(), e.getValueReference(), cause);
++          ReferenceEntry<K, V> newFirst = removeValueFromChain(
++              first, e, e.getKey(), hash, e.getValueReference(), cause);
+           newCount = this.count - 1;
+           table.set(index, newFirst);
+           this.count = newCount; // write-volatile

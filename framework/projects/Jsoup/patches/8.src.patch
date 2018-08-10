@@ -1,0 +1,93 @@
+diff --git a/src/main/java/org/jsoup/Jsoup.java b/src/main/java/org/jsoup/Jsoup.java
+index 84a5e34..4e4b7a3 100644
+--- a/src/main/java/org/jsoup/Jsoup.java
++++ b/src/main/java/org/jsoup/Jsoup.java
+@@ -247,7 +247,9 @@ public class Jsoup {
+      @see #clean(String, org.jsoup.safety.Whitelist) 
+      */
+     public static boolean isValid(String bodyHtml, Whitelist whitelist) {
+-        return new Cleaner(whitelist).isValidBodyHtml(bodyHtml);
++        Document dirty = parseBodyFragment(bodyHtml, "");
++        Cleaner cleaner = new Cleaner(whitelist);
++        return cleaner.isValid(dirty);
+     }
+     
+ }
+diff --git a/src/main/java/org/jsoup/parser/Parser.java b/src/main/java/org/jsoup/parser/Parser.java
+index 0751c22..197219b 100644
+--- a/src/main/java/org/jsoup/parser/Parser.java
++++ b/src/main/java/org/jsoup/parser/Parser.java
+@@ -126,10 +126,6 @@ public class Parser {
+      *
+      * @return list of nodes parsed from the input HTML. Note that the context element, if supplied, is not modified.
+      */
+-    public static List<Node> parseFragment(String fragmentHtml, Element context, String baseUri, ParseErrorList errorList) {
+-        HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
+-        return treeBuilder.parseFragment(fragmentHtml, context, baseUri, errorList, treeBuilder.defaultSettings());
+-    }
+ 
+     /**
+      * Parse a fragment of XML into a list of nodes.
+diff --git a/src/main/java/org/jsoup/safety/Cleaner.java b/src/main/java/org/jsoup/safety/Cleaner.java
+index 1223bbe..aeb5396 100644
+--- a/src/main/java/org/jsoup/safety/Cleaner.java
++++ b/src/main/java/org/jsoup/safety/Cleaner.java
+@@ -8,8 +8,6 @@ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+ import org.jsoup.nodes.Node;
+ import org.jsoup.nodes.TextNode;
+-import org.jsoup.parser.ParseErrorList;
+-import org.jsoup.parser.Parser;
+ import org.jsoup.parser.Tag;
+ import org.jsoup.select.NodeTraversor;
+ import org.jsoup.select.NodeVisitor;
+@@ -76,18 +74,7 @@ public class Cleaner {
+ 
+         Document clean = Document.createShell(dirtyDocument.baseUri());
+         int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
+-        return numDiscarded == 0
+-            && dirtyDocument.head().childNodes().size() == 0; // because we only look at the body, but we start from a shell, make sure there's nothing in the head
+-    }
+-
+-    public boolean isValidBodyHtml(String bodyHtml) {
+-        Document clean = Document.createShell("");
+-        Document dirty = Document.createShell("");
+-        ParseErrorList errorList = ParseErrorList.tracking(1);
+-        List<Node> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
+-        dirty.body().insertChildren(0, nodes);
+-        int numDiscarded = copySafeNodes(dirty.body(), clean.body());
+-        return numDiscarded == 0 && errorList.size() == 0;
++        return numDiscarded == 0;
+     }
+ 
+     /**
+diff --git a/src/main/java/org/jsoup/safety/Whitelist.java b/src/main/java/org/jsoup/safety/Whitelist.java
+index b8d0886..92546eb 100644
+--- a/src/main/java/org/jsoup/safety/Whitelist.java
++++ b/src/main/java/org/jsoup/safety/Whitelist.java
+@@ -497,8 +497,8 @@ public class Whitelist {
+         TagName tag = TagName.valueOf(tagName);
+         AttributeKey key = AttributeKey.valueOf(attr.getKey());
+ 
+-        Set<AttributeKey> okSet = attributes.get(tag);
+-        if (okSet != null && okSet.contains(key)) {
++        if (attributes.containsKey(tag)) {
++            if (attributes.get(tag).contains(key)) {
+             if (protocols.containsKey(tag)) {
+                 Map<AttributeKey, Set<Protocol>> attrProts = protocols.get(tag);
+                 // ok if not defined protocol; otherwise test
+@@ -506,14 +506,7 @@ public class Whitelist {
+             } else { // attribute found, no protocols defined, so OK
+                 return true;
+             }
+-        }
+         // might be an enforced attribute?
+-        Map<AttributeKey, AttributeValue> enforcedSet = enforcedAttributes.get(tag);
+-        if (enforcedSet != null) {
+-            Attributes expect = getEnforcedAttributes(tagName);
+-            String attrKey = attr.getKey();
+-            if (expect.hasKeyIgnoreCase(attrKey)) {
+-                return expect.getIgnoreCase(attrKey).equals(attr.getValue());
+             }
+         }
+         // no attributes defined for tag, try :all tag

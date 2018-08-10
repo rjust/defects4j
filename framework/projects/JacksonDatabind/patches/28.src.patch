@@ -1,0 +1,111 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+index 8360b5118..7bb649d48 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+@@ -385,7 +385,6 @@ public class BeanDeserializer
+         TokenBuffer unknown = null;
+ 
+         JsonToken t = p.getCurrentToken();
+-        List<BeanReferring> referrings = null;
+         for (; t == JsonToken.FIELD_NAME; t = p.nextToken()) {
+             String propName = p.getCurrentName();
+             p.nextToken(); // to point to value
+@@ -428,18 +427,10 @@ public class BeanDeserializer
+             // regular property? needs buffering
+             SettableBeanProperty prop = _beanProperties.find(propName);
+             if (prop != null) {
+-                try {
+-                    buffer.bufferProperty(prop, _deserializeWithErrorWrapping(p, ctxt, prop));
+-                } catch (UnresolvedForwardReference reference) {
++                buffer.bufferProperty(prop, _deserializeWithErrorWrapping(p, ctxt, prop));
+                     // 14-Jun-2016, tatu: As per [databind#1261], looks like we need additional
+                     //    handling of forward references here. Not exactly sure why existing
+                     //    facilities did not cover, but this does appear to solve the problem
+-                    BeanReferring referring = handleUnresolvedReference(p, prop, buffer, reference);
+-                    if (referrings == null) {
+-                        referrings = new ArrayList<BeanReferring>();
+-                    }
+-                    referrings.add(referring);
+-                }
+                 continue;
+             }
+             // Things marked as ignorable should not be passed to any setter
+@@ -472,11 +463,6 @@ public class BeanDeserializer
+             wrapInstantiationProblem(e, ctxt);
+             bean = null; // never gets here
+         }
+-        if (referrings != null) {
+-            for (BeanReferring referring : referrings) {
+-               referring.setBean(bean);
+-            }
+-        }
+         if (unknown != null) {
+             // polymorphic?
+             if (bean.getClass() != _beanType.getRawClass()) {
+@@ -491,16 +477,6 @@ public class BeanDeserializer
+     /**
+      * @since 2.8
+      */
+-    private BeanReferring handleUnresolvedReference(JsonParser p,
+-            SettableBeanProperty prop, PropertyValueBuffer buffer,
+-            UnresolvedForwardReference reference)
+-        throws JsonMappingException
+-    {
+-        BeanReferring referring = new BeanReferring(reference, prop.getType().getRawClass(),
+-                buffer, prop);
+-        reference.getRoid().appendReferring(referring);
+-        return referring;
+-    }
+ 
+     protected final Object _deserializeWithErrorWrapping(JsonParser p,
+             DeserializationContext ctxt, SettableBeanProperty prop)
+@@ -951,28 +927,4 @@ public class BeanDeserializer
+         }
+         return _nullFromCreator;
+     }
+-
+-    /**
+-     * @since 2.8
+-     */
+-    static class BeanReferring extends Referring {
+-        private final SettableBeanProperty _prop;
+-        private Object _bean;
+-
+-        public void setBean(Object bean) {
+-            _bean = bean;
+-        }
+-
+-        BeanReferring(UnresolvedForwardReference ref,
+-                Class<?> valueType, PropertyValueBuffer buffer, SettableBeanProperty prop)
+-        {
+-            super(ref, valueType);
+-            _prop = prop;
+-        }
+-
+-        @Override
+-        public void handleResolvedForwardReference(Object id, Object value) throws IOException {
+-            _prop.set(_bean, value);
+-        }
+-    }
+ }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java
+index 3dc7c4b06..d67150328 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java
+@@ -247,6 +247,7 @@ public class MapDeserializer
+             vd = findConvertingContentDeserializer(ctxt, property, vd);
+         }
+         final JavaType vt = _mapType.getContentType();
++System.err.println("Map deser for "+_mapType+":\n   vt == "+vt);
+         if (vd == null) {
+             vd = ctxt.findContextualValueDeserializer(vt, property);
+         } else { // if directly assigned, probably not yet contextual, so:
+@@ -667,7 +668,7 @@ public class MapDeserializer
+      * The resolved object associated with {@link #key} comes before the values in
+      * {@link #next}.
+      */
+-    static class MapReferring extends Referring {
++    final static class MapReferring extends Referring {
+         private final MapReferringAccumulator _parent;
+ 
+         public final Map<Object, Object> next = new LinkedHashMap<Object, Object>();

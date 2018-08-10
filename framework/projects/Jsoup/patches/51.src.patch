@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/jsoup/parser/TreeBuilderState.java b/src/main/java/org/jsoup/parser/TreeBuilderState.java
+index 4ae01e1..e82eed5 100644
+--- a/src/main/java/org/jsoup/parser/TreeBuilderState.java
++++ b/src/main/java/org/jsoup/parser/TreeBuilderState.java
+@@ -280,7 +280,7 @@ enum TreeBuilderState {
+                             if (!html.hasAttr(attribute.getKey()))
+                                 html.attributes().put(attribute);
+                         }
+-                    } else if (StringUtil.in(name, "base", "basefont", "bgsound", "command", "link", "meta", "noframes", "script", "style", "title")) {
++                    } else if (StringUtil.in(name, "base", "basefont", "bgsound", "command", "link", "meta", "noframes", "style", "title")) {
+                         return tb.process(t, InHead);
+                     } else if (name.equals("body")) {
+                         tb.error(this);

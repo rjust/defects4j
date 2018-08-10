@@ -1,0 +1,6 @@
+files=`ls .`
+
+for f in $files; do
+	echo $f
+	cat $f | grep "Found"
+done

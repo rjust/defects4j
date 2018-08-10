@@ -1,0 +1,14 @@
+com.fasterxml.jackson.databind.creators.DisablingCreatorsTest
+com.fasterxml.jackson.databind.creators.ImplicitParamsForCreatorTest
+com.fasterxml.jackson.databind.creators.SingleArgCreatorTest
+com.fasterxml.jackson.databind.introspect.BeanNamingTest
+com.fasterxml.jackson.databind.mixins.MixinsWithBundlesTest
+com.fasterxml.jackson.databind.seq.ObjectWriterTest
+com.fasterxml.jackson.databind.seq.ReadRecoveryTest
+com.fasterxml.jackson.databind.seq.ReadValuesTest
+com.fasterxml.jackson.databind.seq.SequenceWriterTest
+com.fasterxml.jackson.databind.struct.JSOGDeserialize622Test
+com.fasterxml.jackson.databind.struct.PojoAsArray646Test
+com.fasterxml.jackson.databind.util.ArrayBuildersTest
+com.fasterxml.jackson.databind.util.ISO8601DateFormatTest
+com.fasterxml.jackson.databind.util.ISO8601UtilsTest

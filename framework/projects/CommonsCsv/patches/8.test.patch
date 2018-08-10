@@ -1,0 +1,28 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVFormatTest.java b/src/test/java/org/apache/commons/csv/CSVFormatTest.java
+index 8b0bfac..07ffac6 100644
+--- a/src/test/java/org/apache/commons/csv/CSVFormatTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVFormatTest.java
+@@ -55,7 +55,7 @@ public class CSVFormatTest {
+     public void testDelimiterSameAsCommentStartThrowsException() {
+         CSVFormat.DEFAULT.withDelimiter('!').withCommentStart('!').validate();
+     }
+-    
++
+     @Test(expected = IllegalStateException.class)
+     public void testDelimiterSameAsEscapeThrowsException() {
+         CSVFormat.DEFAULT.withDelimiter('!').withEscape('!').validate();
+@@ -229,14 +229,6 @@ public class CSVFormatTest {
+         assertNotSame(formatWithHeader.getHeader(), headerCopy);
+     }
+ 
+-    @Test
+-    public void testNullRecordSeparatorCsv106() {
+-        final CSVFormat format = CSVFormat.newFormat(';').withSkipHeaderRecord(true).withHeader("H1", "H2");
+-        final String formatStr = format.format("A", "B");
+-        assertNotNull(formatStr);
+-        assertFalse(formatStr.endsWith("null"));
+-    }
+-
+     @Test(expected = IllegalStateException.class)
+     public void testQuoteCharSameAsCommentStartThrowsException() {
+         CSVFormat.DEFAULT.withQuoteChar('!').withCommentStart('!').validate();

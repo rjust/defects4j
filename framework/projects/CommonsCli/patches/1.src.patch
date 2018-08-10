@@ -1,0 +1,52 @@
+diff --git a/src/main/java/org/apache/commons/cli/HelpFormatter.java b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+index 4642f7c..cf8b393 100644
+--- a/src/main/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+@@ -347,7 +347,14 @@ public class HelpFormatter
+      */
+     public void setOptionComparator(Comparator<Option> comparator)
+     {
++        if (comparator == null)
++        {
++            this.optionComparator = new OptionComparator();
++        }
++        else
++        {
+         this.optionComparator = comparator;
++        }
+     }
+ 
+     /**
+@@ -540,10 +547,7 @@ public class HelpFormatter
+         final Collection<OptionGroup> processedGroups = new ArrayList<OptionGroup>();
+ 
+         List<Option> optList = new ArrayList<Option>(options.getOptions());
+-        if (getOptionComparator() != null)
+-        {
+             Collections.sort(optList, getOptionComparator());
+-        }
+         // iterate over the options
+         for (Iterator i = optList.iterator(); i.hasNext();)
+         {
+@@ -604,10 +608,7 @@ public class HelpFormatter
+         }
+ 
+         List<Option> optList = new ArrayList<Option>(group.getOptions());
+-        if (getOptionComparator() != null)
+-        {
+             Collections.sort(optList, getOptionComparator());
+-        }
+         // for each option in the OptionGroup
+         for (Iterator i = optList.iterator(); i.hasNext();)
+         {
+@@ -757,10 +758,7 @@ public class HelpFormatter
+         
+         List<Option> optList = options.helpOptions();
+         
+-        if (getOptionComparator() != null)
+-        {
+             Collections.sort(optList, getOptionComparator());
+-        }
+         
+         for (Option option : optList)
+         {
