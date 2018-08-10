@@ -9,10 +9,12 @@ addons:
   apt:
     packages:
       - openjdk-7-jdk
+      - maven
 
 install:
   - jdk_switcher use openjdk7
   - export PATH=$JAVA_HOME/bin:$PATH
+  - export M2_HOME=/usr/share/maven
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
@@ -46,6 +48,37 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b101..111
     - script: carton exec ./test_verify_bugs.sh -p Closure -b112..122
     - script: carton exec ./test_verify_bugs.sh -p Closure -b123..133
+## CommonsCli
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCli -b1..12
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCli -b13..24
+## CommonsCodec
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCodec -b1..11
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCodec -b12..22
+## CommonsCsv
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCsc -b1..12
+## CommonsJXPath
+    - script: carton exec ./test_verify_bugs.sh -p CommonsJXPath -b1..14
+## Gson 
+    - script: carton exec ./test_verify_bugs.sh -p Gson -b1..8
+    - script: carton exec ./test_verify_bugs.sh -p Gson -b9..16
+## Guava
+    - script: carton exec ./test_verify_bugs.sh -p Guava -b1..4
+    - script: carton exec ./test_verify_bugs.sh -p Guava -b5..9
+## JacksonCore
+    - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
+## JacksonDatabind
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..13
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b14..26
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b27..39
+## JacksonXml
+    - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..5
+## Jsoup
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b1..10
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b11..20
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b21..30
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b31..41
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b42..52
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b53..63
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
