@@ -55,7 +55,7 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p CommonsCodec -b1..11
     - script: carton exec ./test_verify_bugs.sh -p CommonsCodec -b12..22
 ## CommonsCsv
-    - script: carton exec ./test_verify_bugs.sh -p CommonsCsc -b1..12
+    - script: carton exec ./test_verify_bugs.sh -p CommonsCsv -b1..12
 ## CommonsJXPath
     - script: carton exec ./test_verify_bugs.sh -p CommonsJXPath -b1..14
 ## Gson 
