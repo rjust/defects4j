@@ -63,7 +63,7 @@
         <exclude name="**/AggregateFutureStateFallbackAtomicHelperTest.class"/>
         <exclude name="**/LongAdderTest.class"/>
 	<exclude name="**/AnnotatedSubscriberFinderTests*.class"/>
-       <exclude name="**/TypesTest.class"/>
+        <exclude name="**/TypesTest.class"/>
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
