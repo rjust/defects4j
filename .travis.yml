@@ -62,8 +62,9 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Gson -b1..8
     - script: carton exec ./test_verify_bugs.sh -p Gson -b9..16
 ## Guava
-    - script: carton exec ./test_verify_bugs.sh -p Guava -b1..4
-    - script: carton exec ./test_verify_bugs.sh -p Guava -b5..9
+## Guava-1 does not compile under Java 7
+    - script: carton exec ./test_verify_bugs.sh -p Guava -b2..5
+    - script: carton exec ./test_verify_bugs.sh -p Guava -b6..9
 ## JacksonCore
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
 ## JacksonDatabind

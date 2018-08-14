@@ -3,5 +3,4 @@ org.mockito.verification.TimeoutTest
 org.mockitointegration.NoJUnitDependenciesTest
 org.mockitousage.bugs.ConcurrentModificationExceptionOnMultiThreadedVerificationTest
 org.mockitousage.bugs.TimeoutWithAtMostOrNeverShouldBeDisabledTest
-org.mockitousage.verification.VerificationAfterDelayTest
 org.mockitousage.verification.VerificationWithTimeoutTest
