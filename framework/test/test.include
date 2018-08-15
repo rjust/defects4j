@@ -74,7 +74,7 @@ die() {
 # get_triggers <file_name>
 get_triggers() {
     [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <file_name>"
-    grep "\\---" $1 | cut -f2 -d' '
+    grep -a "\\---" $1 | cut -f2 -d' '
 }
 
 # Determine and print number of triggering tests listed in <file_name>
