@@ -68,9 +68,10 @@ jobs:
 ## JacksonCore
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
 ## JacksonDatabind
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..13
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b14..26
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b27..39
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..10
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b11..20
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b21..30
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b31..39
 ## JacksonXml
     - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..5
 ## Jsoup
