@@ -187,6 +187,21 @@ Publications
 
 [More publications](https://scholar.google.com/scholar?q=defects4j)
 
+The following publications detail specific projects added to Defects4J:
+* "Challenges in Using Search-Based Test Generation to Identify Real Faults in Mockito"
+    Gregory Gay, SSBSE 2016 [[download]][ssbse16] [[defect data]][mockito].
+* "Using Search-Based Test Generation to Discover Real Faults in Guava"
+    Hussein Almulla, Alireza Salahirad, and Gregory Gay, SSBSE 2017 [[download]][ssbse17] [[defect data]][guava].
+* "Detecting Real Faults in the Gson Library Through Search-Based Unit Test Generation"
+    Gregory Gay, SSBSE 2018 [[download]][ssbse18] [[defect data]][gson].
+
+[ssbse16]: http://greggay.com/pdf/16mockito.pdf
+[ssbse17]: http://greggay.com/pdf/17guava.pdf
+[ssbse18]: http://greggay.com/pdf/18gson.pdf
+[mockito]: http://greggay.com/data/mockito/mockitofaults.csv
+[guava]: http://greggay.com/data/guava/guavafaults.csv
+[gson]: http://greggay.com/data/gson/GsonFaults.csv
+
 Implementation details
 ----------------------
 
