@@ -1,0 +1,8 @@
+org.apache.commons.codec.Encoder
+org.apache.commons.codec.Decoder
+org.apache.commons.codec.net.BCodec
+org.apache.commons.codec.DecoderException
+org.apache.commons.codec.StringDecoder
+org.apache.commons.codec.EncoderException
+org.apache.commons.codec.net.RFC1522Codec
+org.apache.commons.codec.StringEncoder
