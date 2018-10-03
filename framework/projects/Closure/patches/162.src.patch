@@ -15,16 +15,15 @@ index aaf84703..044bdd93 100644
  
      for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
 diff --git a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
-index 894d65ba..cbf785dc 100644
+index 894d65ba..7063f67a 100644
 --- a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
 +++ b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
-@@ -174,46 +174,28 @@ class PureFunctionIdentifier implements CompilerPass {
+@@ -174,46 +174,27 @@ class PureFunctionIdentifier implements CompilerPass {
     */
    private static Collection<Definition> getCallableDefinitions(
        DefinitionProvider definitionProvider, Node name) {
 -    if (NodeUtil.isGetProp(name) || NodeUtil.isName(name)) {
--      List<Definition> result = Lists.newArrayList();
-+    List<Definition> result = Lists.newArrayList();
+       List<Definition> result = Lists.newArrayList();
  
 -      Collection<Definition> decls =
 -          definitionProvider.getDefinitionsReferencedAt(name);
@@ -43,8 +42,8 @@ index 894d65ba..cbf785dc 100644
 +    if (decls == null) {
            return null;
 -        }
--      }
--
+       }
+ 
 -      return result;
 -    } else if (name.getType() == Token.OR || name.getType() == Token.HOOK) {
 -      Node firstVal;
@@ -52,8 +51,8 @@ index 894d65ba..cbf785dc 100644
 -        firstVal = name.getFirstChild().getNext();
 -      } else {
 -        firstVal = name.getFirstChild();
-       }
- 
+-      }
+-
 -      Collection<Definition> defs1 = getCallableDefinitions(definitionProvider,
 -                                                            firstVal);
 -      Collection<Definition> defs2 = getCallableDefinitions(definitionProvider,
@@ -71,8 +70,7 @@ index 894d65ba..cbf785dc 100644
 -    } else {
 -      return null;
      }
-+
-+    return result;
++      return result;
    }
  
    /**
