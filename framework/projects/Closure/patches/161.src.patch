@@ -1,15 +1,11 @@
 diff --git a/src/com/google/javascript/jscomp/CoalesceVariableNames.java b/src/com/google/javascript/jscomp/CoalesceVariableNames.java
-index e990c82e..5f72ea88 100644
+index e990c82e..78c27b30 100644
 --- a/src/com/google/javascript/jscomp/CoalesceVariableNames.java
 +++ b/src/com/google/javascript/jscomp/CoalesceVariableNames.java
-@@ -101,13 +101,6 @@ class CoalesceVariableNames extends AbstractPostOrderCallback implements
- 
-     LiveVariablesAnalysis liveness =
-         new LiveVariablesAnalysis(cfg, scope, compiler);
--    // If the function has exactly 2 params, mark them as escaped. This is
--    // a work-around for an IE bug where it throws an exception if you
--    // write to the parameters of the callback in a sort(). See:
--    // http://code.google.com/p/closure-compiler/issues/detail?id=58
+@@ -105,9 +105,6 @@ class CoalesceVariableNames extends AbstractPostOrderCallback implements
+     // a work-around for an IE bug where it throws an exception if you
+     // write to the parameters of the callback in a sort(). See:
+     // http://code.google.com/p/closure-compiler/issues/detail?id=58
 -    if (scope.getRootNode().getFirstChild().getNext().getChildCount() == 2) {
 -      liveness.markAllParametersEscaped();
 -    }
@@ -17,61 +13,22 @@ index e990c82e..5f72ea88 100644
  
      UndiGraph<Var, Void> interferenceGraph =
 diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-index 216740b8..e67a78a5 100644
+index 216740b8..cdcd2ff4 100644
 --- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
 +++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
-@@ -1139,6 +1139,25 @@ public final class JsDocInfoParser {
- 
-     do {
-       switch (token) {
-+        case ANNOTATION:
-+        case EOC:
-+        case EOF:
-+          String multilineText = builder.toString();
-+
-+          if (option != WhitespaceOption.PRESERVE) {
-+            multilineText = multilineText.trim();
-+          }
-+
-+          int endLineno = stream.getLineno();
-+          int endCharno = stream.getCharno();
-+
-+          if (multilineText.length() > 0) {
-+            jsdocBuilder.markText(multilineText, startLineno, startCharno,
-+                                  endLineno, endCharno);
-+          }
-+
-+          return new ExtractionInfo(multilineText, token);
-+
-         case STAR:
-           if (!ignoreStar) {
-             if (builder.length() > 0) {
-@@ -1160,29 +1179,12 @@ public final class JsDocInfoParser {
-           token = next();
-           continue;
- 
--        case ANNOTATION:
--        case EOC:
--        case EOF:
+@@ -1165,8 +1165,6 @@ public final class JsDocInfoParser {
+         case EOF:
            // When we're capturing a license block, annotations
            // in the block are ok.
 -          if (!(option == WhitespaceOption.PRESERVE &&
 -                token == JsDocToken.ANNOTATION)) {
--            String multilineText = builder.toString();
+             String multilineText = builder.toString();
  
--            if (option != WhitespaceOption.PRESERVE) {
--              multilineText = multilineText.trim();
--            }
+             if (option != WhitespaceOption.PRESERVE) {
+@@ -1182,7 +1180,6 @@ public final class JsDocInfoParser {
+             }
  
--            int endLineno = stream.getLineno();
--            int endCharno = stream.getCharno();
- 
--            if (multilineText.length() > 0) {
--              jsdocBuilder.markText(multilineText, startLineno, startCharno,
--                  endLineno, endCharno);
--            }
- 
--            return new ExtractionInfo(multilineText, token);
+             return new ExtractionInfo(multilineText, token);
 -          }
  
            // FALL THROUGH
