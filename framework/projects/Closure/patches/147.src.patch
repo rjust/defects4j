@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/CollapseProperties.java b/src/com/google/javascript/jscomp/CollapseProperties.java
-index abe01595..b5083826 100644
+index abe01595..01295cd8 100644
 --- a/src/com/google/javascript/jscomp/CollapseProperties.java
 +++ b/src/com/google/javascript/jscomp/CollapseProperties.java
 @@ -452,8 +452,8 @@ class CollapseProperties implements CompilerPass {
@@ -13,24 +13,17 @@ index abe01595..b5083826 100644
      }
  
      if (n.props != null) {
-@@ -571,30 +571,21 @@ class CollapseProperties implements CompilerPass {
+@@ -571,8 +571,7 @@ class CollapseProperties implements CompilerPass {
     *     this name. (This is mostly passed for convenience; it's equivalent to
     *     n.canCollapseChildNames()).
     */
 -  private void updateObjLitOrFunctionDeclaration(
 -      Name n, String alias, boolean canCollapseChildNames) {
--    if (n.declaration == null) {
 +  private void updateObjLitOrFunctionDeclaration(Name n, String alias) {
+     if (n.declaration == null) {
        // Some names do not have declarations, because they
        // are only defined in local scopes.
--      return;
--    }
--
--    if (n.declaration.getTwin() != null) {
-       // Twin declarations will get handled when normal references
-       // are handled.
--      return;
--    }
+@@ -587,14 +586,13 @@ class CollapseProperties implements CompilerPass {
  
      switch (n.declaration.node.getParent().getType()) {
        case Token.ASSIGN:
@@ -48,7 +41,7 @@ index abe01595..b5083826 100644
          break;
      }
    }
-@@ -608,7 +599,7 @@ class CollapseProperties implements CompilerPass {
+@@ -608,7 +606,7 @@ class CollapseProperties implements CompilerPass {
     * @param alias The flattened name for {@code n} (e.g. "a", "a$b$c")
     */
    private void updateObjLitOrFunctionDeclarationAtAssignNode(
@@ -57,28 +50,8 @@ index abe01595..b5083826 100644
      // NOTE: It's important that we don't add additional nodes
      // (e.g. a var node before the exprstmt) because the exprstmt might be
      // the child of an if statement that's not inside a block).
-@@ -619,15 +610,13 @@ class CollapseProperties implements CompilerPass {
-     Node varParent = ref.node.getAncestor(3);
-     Node gramps = ref.node.getAncestor(2);
-     boolean isObjLit = rvalue.getType() == Token.OBJECTLIT;
--    boolean insertedVarNode = false;
- 
-     if (isObjLit && n.canEliminate()) {
-       // Eliminate the object literal altogether.
-       varParent.replaceChild(gramps, varNode);
-       ref.node = null;
--      insertedVarNode = true;
- 
--    } else if (!n.isSimpleName()) {
-+    } else {
-       // Create a VAR node to declare the name.
-       if (rvalue.getType() == Token.FUNCTION) {
-         checkForHosedThisReferences(rvalue, n.docInfo, n);
-@@ -649,25 +638,20 @@ class CollapseProperties implements CompilerPass {
- 
-       // Update the node ancestry stored in the reference.
-       ref.node = nameNode;
--      insertedVarNode = true;
+@@ -652,15 +650,13 @@ class CollapseProperties implements CompilerPass {
+       insertedVarNode = true;
      }
  
 -    if (canCollapseChildNames) {
@@ -88,23 +61,14 @@ index abe01595..b5083826 100644
              n, alias, rvalue,
              varNode, varParent.getChildBefore(varNode), varParent);
 -      }
--
+ 
 -      addStubsForUndeclaredProperties(n, alias, varParent, varNode);
      }
++      addStubsForUndeclaredProperties(n, alias, varParent, varNode);
  
--    if (insertedVarNode) {
-+    addStubsForUndeclaredProperties(n, alias, varParent, varNode);
+     if (insertedVarNode) {
        if (!varNode.hasChildren()) {
-         varParent.removeChild(varNode);
--      }
--      compiler.reportCodeChange();
-     }
-+
-+    compiler.reportCodeChange();
-   }
- 
-   /**
-@@ -700,12 +684,7 @@ class CollapseProperties implements CompilerPass {
+@@ -700,11 +696,7 @@ class CollapseProperties implements CompilerPass {
     *
     * @param n An object representing a global name (e.g. "a")
     */
@@ -113,12 +77,11 @@ index abe01595..b5083826 100644
 -    if (!canCollapseChildNames) {
 -      return;
 -    }
--
 +  private void updateObjLitOrFunctionDeclarationAtVarNode(Name n) {
+ 
      Ref ref = n.declaration;
      String name = ref.node.getString();
-     Node rvalue = ref.node.getFirstChild();
-@@ -747,12 +726,7 @@ class CollapseProperties implements CompilerPass {
+@@ -747,11 +739,7 @@ class CollapseProperties implements CompilerPass {
     *
     * @param n An object representing a global name (e.g. "a")
     */
@@ -127,16 +90,7 @@ index abe01595..b5083826 100644
 -    if (!canCollapseChildNames) {
 -      return;
 -    }
--
 +  private void updateFunctionDeclarationAtFunctionNode(Name n) {
+ 
      Ref ref = n.declaration;
      String fnName = ref.node.getString();
-     addStubsForUndeclaredProperties(
-@@ -872,7 +846,6 @@ class CollapseProperties implements CompilerPass {
-    */
-   private int addStubsForUndeclaredProperties(
-       Name n, String alias, Node parent, Node addAfter) {
--    Preconditions.checkState(n.canCollapseUnannotatedChildNames());
-     Preconditions.checkArgument(NodeUtil.isStatementBlock(parent));
-     Preconditions.checkNotNull(addAfter);
-     int numStubs = 0;
