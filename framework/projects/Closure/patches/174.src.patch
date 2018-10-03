@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index 4acb363a..18762c62 100644
+index 4acb363a..d5a59476 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -1667,13 +1667,7 @@ final class TypedScopeCreator implements ScopeCreator {
@@ -11,9 +11,8 @@ index 4acb363a..18762c62 100644
 -        JSType classType = slot == null ? null : slot.getType();
 -        if (classType != null
 -            && (classType.isConstructor() || classType.isInterface())) {
--          return false;
+           return false;
 -        }
-+        return false;
        }
  
        boolean inferred = true;
