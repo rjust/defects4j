@@ -1,12 +1,12 @@
 --- com.google.javascript.jscomp.TypeCheckTest::testBackwardsTypedefUse1
 java.lang.ClassCastException: com.google.javascript.rhino.jstype.StringType cannot be cast to com.google.javascript.rhino.jstype.ObjectType
-	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:867)
+	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:871)
 	at com.google.javascript.rhino.jstype.JSType.resolve(JSType.java:894)
 	at com.google.javascript.jscomp.TypedScopeCreator$DeferredSetType.resolve(TypedScopeCreator.java:146)
 	at com.google.javascript.jscomp.TypedScopeCreator$AbstractScopeBuilder.resolveTypes(TypedScopeCreator.java:367)
 	at com.google.javascript.jscomp.TypedScopeCreator.createScope(TypedScopeCreator.java:188)
 	at com.google.javascript.jscomp.MemoizedScopeCreator.createScope(MemoizedScopeCreator.java:53)
-	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:353)
+	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:354)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheckWithScope(TypeCheckTest.java:7676)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheck(TypeCheckTest.java:7649)
 	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7616)
@@ -49,13 +49,13 @@ java.lang.ClassCastException: com.google.javascript.rhino.jstype.StringType cann
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- com.google.javascript.jscomp.TypeCheckTest::testBackwardsTypedefUse2
 java.lang.ClassCastException: com.google.javascript.rhino.jstype.UnionType cannot be cast to com.google.javascript.rhino.jstype.ObjectType
-	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:867)
+	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:871)
 	at com.google.javascript.rhino.jstype.JSType.resolve(JSType.java:894)
 	at com.google.javascript.jscomp.TypedScopeCreator$DeferredSetType.resolve(TypedScopeCreator.java:146)
 	at com.google.javascript.jscomp.TypedScopeCreator$AbstractScopeBuilder.resolveTypes(TypedScopeCreator.java:367)
 	at com.google.javascript.jscomp.TypedScopeCreator.createScope(TypedScopeCreator.java:188)
 	at com.google.javascript.jscomp.MemoizedScopeCreator.createScope(MemoizedScopeCreator.java:53)
-	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:353)
+	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:354)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheckWithScope(TypeCheckTest.java:7676)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheck(TypeCheckTest.java:7649)
 	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7616)
@@ -99,13 +99,13 @@ java.lang.ClassCastException: com.google.javascript.rhino.jstype.UnionType canno
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- com.google.javascript.jscomp.TypeCheckTest::testBackwardsTypedefUse3
 java.lang.ClassCastException: com.google.javascript.rhino.jstype.UnionType cannot be cast to com.google.javascript.rhino.jstype.ObjectType
-	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:867)
+	at com.google.javascript.rhino.jstype.FunctionType.resolveInternal(FunctionType.java:871)
 	at com.google.javascript.rhino.jstype.JSType.resolve(JSType.java:894)
 	at com.google.javascript.jscomp.TypedScopeCreator$DeferredSetType.resolve(TypedScopeCreator.java:146)
 	at com.google.javascript.jscomp.TypedScopeCreator$AbstractScopeBuilder.resolveTypes(TypedScopeCreator.java:367)
 	at com.google.javascript.jscomp.TypedScopeCreator.createScope(TypedScopeCreator.java:188)
 	at com.google.javascript.jscomp.MemoizedScopeCreator.createScope(MemoizedScopeCreator.java:53)
-	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:353)
+	at com.google.javascript.jscomp.TypeCheck.processForTesting(TypeCheck.java:354)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheckWithScope(TypeCheckTest.java:7676)
 	at com.google.javascript.jscomp.TypeCheckTest.parseAndTypeCheck(TypeCheckTest.java:7649)
 	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:7616)
