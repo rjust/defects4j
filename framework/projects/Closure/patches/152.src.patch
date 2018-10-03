@@ -36,18 +36,3 @@ index 609df79d..ebf4b51b 100644
  
      if (!isConfigValid || flags.display_help) {
        isConfigValid = false;
-diff --git a/src/com/google/javascript/jscomp/parsing/ParserConfig.properties b/src/com/google/javascript/jscomp/parsing/ParserConfig.properties
-index 9285339d..a7493162 100644
---- a/src/com/google/javascript/jscomp/parsing/ParserConfig.properties
-+++ b/src/com/google/javascript/jscomp/parsing/ParserConfig.properties
-@@ -26,10 +26,8 @@
- // The version of the compiler that we're currently building.
- // Should be formatted as:
- // Version# (Revision XXX)
--compiler.version = HEAD
- 
- // The datestamp of the compiler that we're currently building.
--compiler.date = NOW
- 
- // A comma-delimited list.
- jsdoc.annotations =\
