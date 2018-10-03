@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/AmbiguateProperties.java b/src/com/google/javascript/jscomp/AmbiguateProperties.java
-index 14fe1c32..e15cf15b 100644
+index 14fe1c32..aad743ff 100644
 --- a/src/com/google/javascript/jscomp/AmbiguateProperties.java
 +++ b/src/com/google/javascript/jscomp/AmbiguateProperties.java
 @@ -207,6 +207,7 @@ class AmbiguateProperties implements CompilerPass {
@@ -10,24 +10,7 @@ index 14fe1c32..e15cf15b 100644
          propsByFreq.add(p);
        } else {
          ++numSkippedPropertyNames;
-@@ -247,16 +248,8 @@ class AmbiguateProperties implements CompilerPass {
-                 + numSkippedPropertyNames + " properties.");
-   }
- 
--  private BitSet getRelatedTypesOnNonUnion(JSType type) {
-     // All of the types we encounter should have been added to the
-     // relatedBitsets via computeRelatedTypes.
--    if (relatedBitsets.containsKey(type)) {
--      return relatedBitsets.get(type);
--    } else {
--      throw new RuntimeException("Related types should have been computed for"
--                                 + " type: " + type + " but have not been.");
--    }
--  }
- 
-   /** Add supertypes of the type to its JSTypeBitSet of related types. */
-   private void computeRelatedTypes(JSType type) {
-@@ -352,7 +345,7 @@ class AmbiguateProperties implements CompilerPass {
+@@ -352,7 +353,7 @@ class AmbiguateProperties implements CompilerPass {
        if (typesRelatedToSet.intersects(prop.typesSet)) {
          return false;
        }
@@ -36,7 +19,7 @@ index 14fe1c32..e15cf15b 100644
      }
  
      /**
-@@ -362,7 +355,7 @@ class AmbiguateProperties implements CompilerPass {
+@@ -362,7 +363,7 @@ class AmbiguateProperties implements CompilerPass {
       */
      public void addNode(Property prop) {
        typesInSet.or(prop.typesSet);
@@ -45,37 +28,7 @@ index 14fe1c32..e15cf15b 100644
      }
  
      /**
-@@ -373,10 +366,10 @@ class AmbiguateProperties implements CompilerPass {
-       JSTypeBitSet relatedTypes = new JSTypeBitSet(intForType.size());
-       if (type instanceof UnionType) {
-         for (JSType alt : ((UnionType) type).getAlternates()) {
--          intersectRelatedTypesOnNonUnion(alt, relatedTypes);
-+          getRelatedTypesOnNonUnion(alt, relatedTypes);
-         }
-       } else {
--        intersectRelatedTypesOnNonUnion(type, relatedTypes);
-+        getRelatedTypesOnNonUnion(type, relatedTypes);
-       }
-       return relatedTypes;
-     }
-@@ -385,9 +378,14 @@ class AmbiguateProperties implements CompilerPass {
-      * Finds all types related to the provided type and intersects them with
-      * the given BitSet. Expects a non-union type.
-      */
--    private void intersectRelatedTypesOnNonUnion(
-+    private void getRelatedTypesOnNonUnion(
-         JSType type, JSTypeBitSet relatedTypes) {
--      relatedTypes.or(getRelatedTypesOnNonUnion(type));
-+      if (relatedBitsets.containsKey(type)) {
-+        relatedTypes.or(relatedBitsets.get(type));
-+      } else {
-+        throw new RuntimeException("Related types should have been computed for"
-+                                   + "type: " + type + " but have not been.");
-+      }
-     }
-   }
- 
-@@ -549,11 +547,11 @@ class AmbiguateProperties implements CompilerPass {
+@@ -549,11 +550,11 @@ class AmbiguateProperties implements CompilerPass {
    /** Encapsulates the information needed for renaming a property. */
    private class Property {
      final String oldName;
@@ -88,7 +41,7 @@ index 14fe1c32..e15cf15b 100644
  
      Property(String name) {
        this.oldName = name;
-@@ -590,12 +588,13 @@ class AmbiguateProperties implements CompilerPass {
+@@ -590,12 +591,12 @@ class AmbiguateProperties implements CompilerPass {
          return;
        }
  
@@ -102,54 +55,20 @@ index 14fe1c32..e15cf15b 100644
 +      } else {
 +        type = type.getLeastSupertype(newType);
        }
-+
 +      typesSet.set(getIntForType(newType));
      }
    }
  
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index 9d2f7dda..034ced44 100644
+index 9d2f7dda..5fdec75e 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-@@ -505,20 +505,19 @@ final class TypedScopeCreator implements ScopeCreator {
-                 lvalueNode.getFirstChild().getQualifiedName());
-             if (var != null) {
-               ObjectType ownerType = ObjectType.cast(var.getType());
--              FunctionType propType = null;
-               if (ownerType != null) {
--                propType = findOverriddenFunction(
--                    ownerType, lvalueNode.getLastChild().getString());
--              }
--
--              if (propType != null) {
-+                String propName = lvalueNode.getLastChild().getString();
-+                JSType propType = ownerType.getPropertyType(propName);
-+                if (propType instanceof FunctionType) {
-                 functionType =
-                     new FunctionTypeBuilder(
-                         name, compiler, errorRoot, sourceName, scope)
-                     .setSourceNode(fnRoot)
--                    .inferFromOverriddenFunction(propType, parametersNode)
-+                    .inferFromOverriddenFunction(
-+                          (FunctionType) propType, parametersNode)
-                     .inferThisType(info, owner)
-                     .buildAndRegister();
-+                }
-               }
-             }
-           }
-@@ -550,27 +549,11 @@ final class TypedScopeCreator implements ScopeCreator {
-     /**
-      * Find the function that's being overridden on this type, if any.
-      */
--    private FunctionType findOverriddenFunction(
--        ObjectType ownerType, String propName) {
-       // First, check to see if the property is implemented
-       // on a superclass.
--      JSType propType = ownerType.getPropertyType(propName);
--      if (propType instanceof FunctionType) {
--        return (FunctionType) propType;
+@@ -557,17 +557,9 @@ final class TypedScopeCreator implements ScopeCreator {
+       JSType propType = ownerType.getPropertyType(propName);
+       if (propType instanceof FunctionType) {
+         return (FunctionType) propType;
 -      } else {
++      }
          // If it's not, then check to see if it's implemented
          // on an implemented interface.
 -        for (ObjectType iface :
@@ -161,8 +80,5 @@ index 9d2f7dda..034ced44 100644
 -        }
 -      }
  
--      return null;
--    }
- 
-     /**
-      * Gets an enum type. If the definition is correct, the object literal used
+       return null;
+     }
