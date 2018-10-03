@@ -51,9 +51,9 @@ VarCheck should have caught this undefined function
   Parent(GETPROP): testcode:1:1
 [source unknown]
 
-	at com.google.javascript.jscomp.MethodCompilerPass.addPossibleSignature(MethodCompilerPass.java:118)
+	at com.google.javascript.jscomp.MethodCompilerPass.addPossibleSignature(MethodCompilerPass.java:114)
 	at com.google.javascript.jscomp.MethodCompilerPass.access$300(MethodCompilerPass.java:38)
-	at com.google.javascript.jscomp.MethodCompilerPass$GatherSignatures.visit(MethodCompilerPass.java:242)
+	at com.google.javascript.jscomp.MethodCompilerPass$GatherSignatures.visit(MethodCompilerPass.java:236)
 	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:477)
 	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:470)
 	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:470)
