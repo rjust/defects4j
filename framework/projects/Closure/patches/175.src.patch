@@ -1,8 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
-index 4a03b1e3..76af71c4 100644
+index 4a03b1e3..9367b32f 100644
 --- a/src/com/google/javascript/jscomp/TypeInference.java
 +++ b/src/com/google/javascript/jscomp/TypeInference.java
-@@ -728,7 +728,13 @@ class TypeInference
+@@ -728,7 +728,12 @@ class TypeInference
      // See CodingConvention#getObjectLiteralCase and goog.object.reflect.
      // Ignore these types of literals.
      ObjectType objectType = ObjectType.cast(type);
@@ -10,7 +10,6 @@ index 4a03b1e3..76af71c4 100644
 +    if (objectType == null) {
 +      return scope;
 +    }
-+
 +    boolean hasLendsName = n.getJSDocInfo() != null &&
 +        n.getJSDocInfo().getLendsName() != null;
 +    if (objectType.hasReferenceName() && !hasLendsName) {
@@ -18,76 +17,16 @@ index 4a03b1e3..76af71c4 100644
      }
  
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index ef02b9c1..222fcf1e 100644
+index ef02b9c1..e9e8486f 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-@@ -1459,8 +1459,6 @@ final class TypedScopeCreator implements ScopeCreator {
-               typeRegistry.getType(objectLiteralCast.typeName));
-           if (type != null && type.getConstructor() != null) {
-             setDeferredType(objectLiteralCast.objectNode, type);
--            objectLiteralCast.objectNode.putBooleanProp(
--                Node.REFLECTED_OBJECT, true);
-           } else {
-             compiler.report(JSError.make(t.getSourceName(), n,
-                     CONSTRUCTOR_EXPECTED));
-@@ -1578,8 +1576,9 @@ final class TypedScopeCreator implements ScopeCreator {
-             // what props are going to be on that prototype.
-             return;
-           }
--
--          qVar.getScope().undeclare(qVar);
-+          if (qVar.getScope() == scope) {
-+            scope.undeclare(qVar);
-+          }
-         }
+@@ -1666,9 +1666,6 @@ final class TypedScopeCreator implements ScopeCreator {
        }
  
-@@ -1616,10 +1615,10 @@ final class TypedScopeCreator implements ScopeCreator {
-         defineSlot(n, parent, valueType, inferred);
-       } else if (rhsValue != null && rhsValue.isTrue()) {
-         // We declare these for delegate proxy method properties.
--        ObjectType ownerType = getObjectSlot(ownerName);
--        FunctionType ownerFnType = JSType.toMaybeFunctionType(ownerType);
--        if (ownerFnType != null) {
--          JSType ownerTypeOfThis = ownerFnType.getTypeOfThis();
-+        FunctionType ownerType =
-+            JSType.toMaybeFunctionType(getObjectSlot(ownerName));
-+        if (ownerType != null) {
-+          JSType ownerTypeOfThis = ownerType.getTypeOfThis();
-           String delegateName = codingConvention.getDelegateSuperclassName();
-           JSType delegateType = delegateName == null ?
-               null : typeRegistry.getType(delegateName);
-@@ -1665,11 +1664,6 @@ final class TypedScopeCreator implements ScopeCreator {
-         return true;
-       }
- 
--      // Prototype sets are always declared.
+       // Prototype sets are always declared.
 -      if (qName != null && qName.endsWith(".prototype")) {
 -        return false;
 -      }
--
+ 
        boolean inferred = true;
        if (info != null) {
-         inferred = !(info.hasType()
-diff --git a/src/com/google/javascript/rhino/Node.java b/src/com/google/javascript/rhino/Node.java
-index 146ed39d..c92f2050 100644
---- a/src/com/google/javascript/rhino/Node.java
-+++ b/src/com/google/javascript/rhino/Node.java
-@@ -103,8 +103,7 @@ public class Node implements Cloneable, Serializable {
-       INFERRED_FUNCTION  = 55,    // Marks a function whose parameter types
-                                   // have been inferred.
-       CHANGE_TIME        = 56,    // For passes that work only on changed funs.
--      REFLECTED_OBJECT   = 57,    // An object that's used for goog.object.reflect-style reflection.
--      LAST_PROP          = 57;    // Unused in the compiler, but keep for Rhino.
-+      LAST_PROP          = 56;    // Unused in the compiler, but keep for Rhino.
- 
-   public static final int   // flags for INCRDECR_PROP
-       DECR_FLAG = 0x1,
-@@ -137,7 +136,6 @@ public class Node implements Cloneable, Serializable {
-         case SLASH_V:   return "slash_v";
-         case INFERRED_FUNCTION:   return "inferred";
-         case CHANGE_TIME: return "change_time";
--        case REFLECTED_OBJECT: return "reflected_object";
-         default:
-           throw new IllegalStateException("unexpected prop id " + propType);
-       }
