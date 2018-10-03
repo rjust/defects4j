@@ -1,6 +1,6 @@
 --- com.google.javascript.jscomp.CommandLineRunnerTest::testDefineFlag3
 java.lang.RuntimeException: --define flag syntax invalid: FOO="x'"
-	at com.google.javascript.jscomp.AbstractCommandLineRunner.createDefineReplacements(AbstractCommandLineRunner.java:891)
+	at com.google.javascript.jscomp.AbstractCommandLineRunner.createDefineReplacements(AbstractCommandLineRunner.java:892)
 	at com.google.javascript.jscomp.AbstractCommandLineRunner.initOptionsFromFlags(AbstractCommandLineRunner.java:138)
 	at com.google.javascript.jscomp.CommandLineRunner.createOptions(CommandLineRunner.java:437)
 	at com.google.javascript.jscomp.CommandLineRunnerTest.compile(CommandLineRunnerTest.java:309)
