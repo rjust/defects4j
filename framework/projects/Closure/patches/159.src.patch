@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
-index 01fa8bad..b19e8a6e 100644
+index 01fa8bad..8ac4f113 100644
 --- a/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
 +++ b/src/com/google/javascript/jscomp/FunctionTypeBuilder.java
 @@ -71,7 +71,6 @@ final class FunctionTypeBuilder {
@@ -60,20 +60,7 @@ index 01fa8bad..b19e8a6e 100644
  
    /**
     * Infer the role of the function (whether it's a constructor or interface)
-@@ -501,11 +470,7 @@ final class FunctionTypeBuilder {
-    * Builds the function type, and puts it in the registry.
-    */
-   FunctionType buildAndRegister() {
--    if (returnType == null) {
--      returnType = typeRegistry.getNativeType(UNKNOWN_TYPE);
--    }
--
--    if (parametersNode == null) {
-+    if (returnType == null || parametersNode == null) {
-       throw new IllegalStateException(
-           "All Function types must have params and a return type");
-     }
-@@ -524,7 +489,7 @@ final class FunctionTypeBuilder {
+@@ -524,7 +493,7 @@ final class FunctionTypeBuilder {
            .withName(fnName)
            .withSourceNode(sourceNode)
            .withParamsNode(parametersNode)
@@ -83,24 +70,10 @@ index 01fa8bad..b19e8a6e 100644
            .withTemplateName(templateTypeName)
            .build();
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index 4be3b8d3..38d13ef7 100644
+index 4be3b8d3..8bf22fc0 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-@@ -508,12 +508,7 @@ final class TypedScopeCreator implements ScopeCreator {
-         String functionName = name.getString();
-         FunctionType functionType =
-             getFunctionType(functionName, value, info, null);
--        if (functionType.isReturnTypeInferred() &&
--            scope.isLocal()) {
--          defineSlot(name, var, null);
--        } else {
--          defineSlot(name, var, functionType);
--        }
-+        defineSlot(name, var, functionType);
-       } else {
-         // variable's type
-         JSType type = null;
-@@ -574,7 +569,6 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -574,7 +574,6 @@ final class TypedScopeCreator implements ScopeCreator {
        Node fnRoot = isFnLiteral ? rValue : null;
        Node parametersNode = isFnLiteral ?
            rValue.getFirstChild().getNext() : null;
@@ -108,7 +81,7 @@ index 4be3b8d3..38d13ef7 100644
  
        if (functionType == null && info != null && info.hasType()) {
          JSType type = info.getType().evaluate(scope, typeRegistry);
-@@ -615,7 +609,6 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -615,7 +614,6 @@ final class TypedScopeCreator implements ScopeCreator {
                      .setSourceNode(fnRoot)
                      .inferFromOverriddenFunction(propType, parametersNode)
                      .inferThisType(info, owner)
@@ -116,7 +89,7 @@ index 4be3b8d3..38d13ef7 100644
                      .buildAndRegister();
                }
              }
-@@ -633,7 +626,6 @@ final class TypedScopeCreator implements ScopeCreator {
+@@ -633,7 +631,6 @@ final class TypedScopeCreator implements ScopeCreator {
              .inferInheritance(info)
              .inferThisType(info, owner)
              .inferParameterTypes(parametersNode, info)
@@ -141,37 +114,15 @@ index 902f2e6d..4a6596e3 100644
    /** Sets an inferred return type. */
    public FunctionBuilder withInferredReturnType(JSType returnType) {
 diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
-index 6a4d2f46..f36d49cc 100644
+index 6a4d2f46..0cae0e3a 100644
 --- a/src/com/google/javascript/rhino/jstype/FunctionType.java
 +++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
-@@ -488,9 +488,13 @@ public class FunctionType extends PrototypeObjectType {
-           JSType newReturnType = leastSuper ?
-               call.returnType.getLeastSupertype(other.call.returnType) :
-               call.returnType.getGreatestSubtype(other.call.returnType);
--          return cloneWithNewReturnType(
--              newReturnType,
--              call.returnTypeInferred || other.call.returnTypeInferred);
-+          return new FunctionType(
-+              registry, null, null,
-+              new ArrowType(
-+                  registry, call.parameters, newReturnType,
-+                  call.returnTypeInferred ||
-+                  other.call.returnTypeInferred),
-+              typeOfThis, null, false, false);
-         }
-       }
+@@ -514,7 +514,7 @@ public class FunctionType extends PrototypeObjectType {
  
-@@ -512,13 +516,6 @@ public class FunctionType extends PrototypeObjectType {
-         super.getGreatestSubtype(that);
-   }
- 
--  FunctionType cloneWithNewReturnType(JSType newReturnType, boolean inferred) {
--    return new FunctionType(
+   FunctionType cloneWithNewReturnType(JSType newReturnType, boolean inferred) {
+     return new FunctionType(
 -        registry, null, source,
--        new ArrowType(
--            registry, call.parameters, newReturnType, inferred),
--        typeOfThis, null, false, false);
--  }
- 
-   /**
-    * Given a constructor or an interface type, get its superclass constructor
++        registry, null, null,
+         new ArrowType(
+             registry, call.parameters, newReturnType, inferred),
+         typeOfThis, null, false, false);
