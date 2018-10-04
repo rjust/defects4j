@@ -32,8 +32,8 @@ of the checked-out project version.
            - build.home         ->  Root directory for compiled (test) classes
            - test.classpath     ->  Classpath to compile tests
            - compile.classpath  ->  Classpath to compile sources
-    --> 
- 
+    -->
+
     <!-- Include existing project build file -->
     <import file="${d4j.workdir}/build.xml"/>
 
@@ -49,14 +49,15 @@ of the checked-out project version.
 
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
-    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
-        <include name="**/*Test.java"/>
-        <exclude name="**/*Abstract*Test.java"/>
-    </fileset>
+    <!-- TODO: Manually generalize test patterns if analyzer produces incorrect outputs -->
+    <fileset id="all.manual.tests" dir="${test.home}"
+      includesfile="${d4j.dir.projects}/${d4j.project.id}/analyzer_output/${d4j.bug.id}/includes"
+      excludesfile="${d4j.dir.projects}/${d4j.project.id}/analyzer_output/${d4j.bug.id}/excludes"
+      excludes="${d4j.tests.exclude}" />
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
     <fileset id="rel.manual.tests" dir="${test.home}"
-        includesfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+        includesfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
 
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">

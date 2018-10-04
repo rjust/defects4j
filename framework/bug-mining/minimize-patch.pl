@@ -123,7 +123,7 @@ system("$EDITOR $TMP_DIR");
 # Check whether patch could be successfully minimized
 print "Patch minimized? [y/n] >";
 my $input = <STDIN>; chomp $input;
-exit 0 unless $input eq "y";
+exit 0 unless lc $input eq "y";
 
 my $orig=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
 chomp $orig;
@@ -135,7 +135,7 @@ chomp $min;
 system("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path");
 print "Patch correct? [y/n] >";
 $input = <STDIN>; chomp $input;
-exit 0 unless $input eq "y";
+exit 0 unless lc $input eq "y";
 
 # Store minimized patch
 Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $PATCH_DIR/$src_patch",

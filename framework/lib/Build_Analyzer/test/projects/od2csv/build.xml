@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ods2csv" default="all">
+
+	<target name="-init" description="Common initialization">
+		<property name="outputdir"           value="build" />
+		<property name="javac.deprecation"   value="true"   />
+		<property name="javac.compilerargs"  value="-Xlint" />
+		<property name="javac.listfiles"     value="true"   />
+		<property name="javac.encoding"      value="utf-8" />
+		<property name="javac.targetvm"      value="1.5"   />
+		<property name="javac.debug"         value="true"  />
+		<property name="javac.optimize"      value="false" />
+		<property name="javac.sourcedir"     value="src" />
+		<property name="javac.targetdir"     value="${outputdir}/classes" />
+		<property name="jar.filename"        value="${outputdir}/${ant.project.name}.jar" />
+		<property name="project.description" value="ODS-to-CSV Converter" />
+		<property name="project.mainclass"   value="com.pensioenpage.jynx.ods2csv.Main" />
+		<property name="project.vendor"      value="PensioenPage B.V." />
+		<loadfile property="project.version" srcfile="VERSION">
+			<filterchain>
+				<striplinebreaks/>
+			</filterchain>
+		</loadfile>
+		<property name="unittests.classes.dir" value="com/pensioenpage/jynx/ods2csv/tests" />
+		<property name="unittests.runclass"    value="com.pensioenpage.jynx.ods2csv.tests.AllTests" />
+
+		<echo level="verbose" message="${ant.project.name} (&quot;${project.description}&quot;) version ${project.version}" />
+	</target>
+
+	<target name="compile" depends="-init" description="Compiles all library classes and builds the ods2csv.jar file">
+		<mkdir dir="${javac.targetdir}" />
+
+		<javac encoding="${javac.encoding}"
+		        destdir="${javac.targetdir}"
+		          debug="${javac.debug}"
+		    deprecation="${javac.deprecation}"
+		       optimize="${javac.optimize}"
+		         target="${javac.targetvm}"
+		      listfiles="${javac.listfiles}"
+		         srcdir="${javac.sourcedir}"
+		       excludes="${unittests.classes.dir}/*.java">
+			<compilerarg value="${javac.compilerargs}" />
+		</javac>
+	</target>
+
+	<target name="unittests" depends="compile" description="Compiles and runs all unit tests (requires JUnit libraries)">
+
+		<javac encoding="${javac.encoding}"
+		        destdir="${javac.targetdir}"
+		          debug="true"
+		    deprecation="${javac.deprecation}"
+		       optimize="${javac.optimize}"
+		         target="${javac.targetvm}"
+		      listfiles="${javac.listfiles}"
+		         srcdir="${javac.sourcedir}"
+		       includes="${unittests.classes.dir}/*.java">
+			<compilerarg value="${javac.compilerargs}" />
+		</javac>
+
+		<copy todir="${javac.targetdir}">
+			<fileset dir="${javac.sourcedir}">
+				<include name="**/*.csv" />
+				<include name="**/*.ods" />
+			</fileset>
+		</copy>
+
+		<junit printsummary="yes" showoutput="yes">
+			<classpath>
+				<pathelement path="${javac.targetdir}" />
+			</classpath>
+
+			<formatter type="xml"                   />
+			<formatter type="plain" usefile="false" />
+			<test name="${unittests.runclass}" todir="${outputdir}" outfile="testresults" />
+		</junit>
+
+	</target>
+
+	<target name="jar" depends="compile" description="Builds the ods2csv.jar file">
+		<jar jarfile="${jar.filename}" basedir="${javac.targetdir}" excludes="${unittests.classes.dir}/*.class">
+			<manifest>
+				<attribute name="Main-Class"             value="${project.mainclass}"/>
+				<attribute name="Specification-Title"    value="${project.description}"/>
+				<attribute name="Specification-Version"  value="${project.version}"/>
+				<attribute name="Specification-Vendor"   value="${project.vendor}"/>
+				<attribute name="Implementation-Title"   value="${project.description}"/>
+				<attribute name="Implementation-Version" value="${project.version}"/>
+				<attribute name="Implementation-Vendor"  value="${project.vendor}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="all" depends="compile,unittests,jar" description="Compiles, runs all unit tests and builds the JAR" />
+
+	<target name="clean" depends="-init">
+		<delete dir="${outputdir}" />
+	</target>
+</project>
