@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
-index e2e102c6..aac4aecf 100644
+index e2e102c6..3a7f427f 100644
 --- a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
 +++ b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
 @@ -194,11 +194,12 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
@@ -20,7 +20,7 @@ index e2e102c6..aac4aecf 100644
  
      createDefineOrTweakReplacements(config.define, options, false);
  
-@@ -1493,13 +1494,30 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+@@ -1493,13 +1494,26 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
        return this;
      }
  
@@ -37,24 +37,20 @@ index e2e102c6..aac4aecf 100644
 +      this.jscompError.addAll(jscompError);
 +      return this;
 +    }
-+
 +    private final List<String> jscompWarning = Lists.newArrayList();
-+
 +    CommandLineConfig setJscompWarning(List<String> jscompWarning) {
 +      this.jscompWarning.clear();
 +      this.jscompWarning.addAll(jscompWarning);
 +      return this;
 +    }
-+
 +    private final List<String> jscompOff = Lists.newArrayList();
-+
 +    CommandLineConfig setJscompOff(List<String> jscompOff) {
 +      this.jscompOff.clear();
 +      this.jscompOff.addAll(jscompOff);
        return this;
      }
  
-@@ -1611,26 +1629,9 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+@@ -1611,26 +1625,9 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
     * A little helper class to make it easier to collect warning types
     * from --jscomp_error, --jscomp_warning, and --jscomp_off.
     */
