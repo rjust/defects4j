@@ -13,7 +13,7 @@ index f3d95836..1df9098b 100644
          // We assume here that programs don't change the value of the
          // keyword undefined to something other than the value undefined.
 diff --git a/src/com/google/javascript/jscomp/SourceMap.java b/src/com/google/javascript/jscomp/SourceMap.java
-index 698dfdec..1a6c9236 100644
+index 698dfdec..ff61bddf 100644
 --- a/src/com/google/javascript/jscomp/SourceMap.java
 +++ b/src/com/google/javascript/jscomp/SourceMap.java
 @@ -38,7 +38,6 @@ import java.util.List;
@@ -327,7 +327,7 @@ index 698dfdec..1a6c9236 100644
      /**
       * @param m The mapping for the current code segment. null if the segment
       *     is unmapped.
-@@ -485,25 +402,14 @@ public class SourceMap {
+@@ -485,25 +402,15 @@ public class SourceMap {
       * @param endCol The ending column
       * @throws IOException
       */
@@ -340,7 +340,7 @@ index 698dfdec..1a6c9236 100644
     * segments are visited with a null mapping, unused mapping are not visited.
     */
 -  private class MappingTraversal {
--    // The last line and column written
+     // The last line and column written
 -    private int line;
 -    private int col;
  
@@ -353,7 +353,7 @@ index 698dfdec..1a6c9236 100644
  
        // The mapping list is ordered as a pre-order traversal.  The mapping
        // positions give us enough information to rebuild the stack and this
-@@ -516,13 +422,13 @@ public class SourceMap {
+@@ -516,13 +423,13 @@ public class SourceMap {
          // closed in the reverse order of when they encountered.
          while (!stack.isEmpty() && !isOverlapped(stack.peek(), m)) {
            Mapping previous = stack.pop();
@@ -369,7 +369,7 @@ index 698dfdec..1a6c9236 100644
  
          stack.push(m);
        }
-@@ -531,8 +437,24 @@ public class SourceMap {
+@@ -531,8 +438,24 @@ public class SourceMap {
        // mappings in the reverse order of when they encountered.
        while (!stack.isEmpty()) {
          Mapping m = stack.pop();
@@ -395,7 +395,7 @@ index 698dfdec..1a6c9236 100644
      }
  
      /**
-@@ -570,47 +492,54 @@ public class SourceMap {
+@@ -570,47 +493,54 @@ public class SourceMap {
       * Write any needed entries from the current position to the end of the
       * provided mapping.
       */
