@@ -1,59 +1,3 @@
-diff --git a/src/com/google/javascript/jscomp/AliasExternals.java b/src/com/google/javascript/jscomp/AliasExternals.java
-index 195a0ccc..e3256b13 100644
---- a/src/com/google/javascript/jscomp/AliasExternals.java
-+++ b/src/com/google/javascript/jscomp/AliasExternals.java
-@@ -112,6 +112,9 @@ class AliasExternals implements CompilerPass {
-   /** Map of all globals that we may alias */
-   private final Map<String, Symbol> globals = Maps.newHashMap();
- 
-+  /** Holds all of the globals that can be aliased to GLOBAL_ */
-+  private final List<Node> globalUses = Lists.newArrayList();
-+
-   /** Reference to JS Compiler */
-   private final AbstractCompiler compiler;
- 
-@@ -587,10 +590,10 @@ class AliasExternals implements CompilerPass {
-     }
- 
-     // Change the references to the globals
-+    for (Node globalUse : globalUses) {
-+      replaceGlobalUse(globalUse);
-+    }
-     for (Symbol global : globals.values()) {
--      for (Node globalUse : global.uses) {
--        replaceGlobalUse(globalUse);
--      }
-       if (global.aliasAccessor) {
-         addGlobalAliasNode(global,
-                            getAddingRoot(global.deepestModuleAccess));
-@@ -657,10 +660,6 @@ class AliasExternals implements CompilerPass {
-         if (global != null) {
-           // If a variable is declared in both externs and normal source,
-           // don't alias it.
--          if (n.getParent().getType() == Token.VAR ||
--              n.getParent().getType() == Token.FUNCTION) {
--            globals.remove(name);
--          }
- 
-           boolean isFirst = parent.getFirstChild() == n;
-           // If a global is being assigned to or otherwise modified, then we
-@@ -677,7 +676,7 @@ class AliasExternals implements CompilerPass {
-             global.recordAccessor(t);
-           }
- 
--          global.uses.add(n);
-+          globalUses.add(n);
-         }
-       }
-     }
-@@ -751,7 +750,6 @@ class AliasExternals implements CompilerPass {
-     JSModule deepestModuleAccess = null;
-     JSModule deepestModuleMutate = null;
- 
--    List<Node> uses = Lists.newArrayList();
- 
-     private Symbol(String name, boolean isConstant) {
-       this.name = name;
 diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
 index c14ac8f1..4c99858e 100644
 --- a/src/com/google/javascript/jscomp/Normalize.java
@@ -110,7 +54,7 @@ index c14ac8f1..4c99858e 100644
      }
  
 diff --git a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
-index eb6e1eab..47ca1762 100644
+index eb6e1eab..04bafcf0 100644
 --- a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
 @@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
@@ -139,19 +83,18 @@ index eb6e1eab..47ca1762 100644
        }
  
        // Body
-@@ -121,7 +122,10 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -121,7 +122,9 @@ class SyntacticScopeCreator implements ScopeCreator {
          for (Node child = n.getFirstChild();
               child != null;) {
            Node next = child.getNext();
 -          declareVar(child);
 +          Preconditions.checkState(child.getType() == Token.NAME);
-+
 +          String name = child.getString();
 +          declareVar(name, child, n, parent, null, n);
            child = next;
          }
          return;
-@@ -136,7 +140,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -136,7 +139,7 @@ class SyntacticScopeCreator implements ScopeCreator {
            // This is invalid, but allow it so the checks can catch it.
            return;
          }
@@ -160,7 +103,7 @@ index eb6e1eab..47ca1762 100644
          return;   // should not examine function's children
  
        case Token.CATCH:
-@@ -148,7 +152,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -148,7 +151,7 @@ class SyntacticScopeCreator implements ScopeCreator {
          final Node var = n.getFirstChild();
          final Node block = var.getNext();
  
@@ -169,7 +112,7 @@ index eb6e1eab..47ca1762 100644
          scanVars(block, n);
          return;  // only one child to scan
  
-@@ -174,7 +178,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -174,7 +177,8 @@ class SyntacticScopeCreator implements ScopeCreator {
     */
    interface RedeclarationHandler {
      void onRedeclaration(
@@ -179,30 +122,29 @@ index eb6e1eab..47ca1762 100644
    }
  
    /**
-@@ -182,9 +187,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -182,8 +186,8 @@ class SyntacticScopeCreator implements ScopeCreator {
     */
    private class DefaultRedeclarationHandler implements RedeclarationHandler {
      public void onRedeclaration(
 -        Scope s, String name, Node n, CompilerInput input) {
 -      Node parent = n.getParent();
--
 +        Scope s, String name,
 +        Node n, Node parent, Node gramps, Node nodeWithLineNumber) {
+ 
        // Don't allow multiple variables to be declared at the top level scope
        if (scope.isGlobal()) {
-         Scope.Var origVar = scope.getVar(name);
-@@ -228,17 +232,15 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -228,17 +232,16 @@ class SyntacticScopeCreator implements ScopeCreator {
     * @param n The node corresponding to the variable name.
     * @param declaredType The variable's type, according to JSDoc
     */
 -  private void declareVar(Node n) {
 -    Preconditions.checkState(n.getType() == Token.NAME);
--
--    CompilerInput input = compiler.getInput(sourceName);
--    String name = n.getString();
 +  private void declareVar(String name, Node n, Node parent,
 +                          Node gramps, JSType declaredType,
 +                          Node nodeWithLineNumber) {
+ 
+-    CompilerInput input = compiler.getInput(sourceName);
+-    String name = n.getString();
      if (scope.isDeclared(name, false)
          || (scope.isLocal() && name.equals(ARGUMENTS))) {
        redeclarationHandler.onRedeclaration(
