@@ -212,8 +212,8 @@ GET 1 [sourcename: testcode] is not a string node
   Parent(OBJECTLIT): testcode:1:16
 [source unknown]
 
-	at com.google.javascript.rhino.Node.getString(Node.java:892)
-	at com.google.javascript.jscomp.NodeUtil.isConstantByConvention(NodeUtil.java:2788)
+	at com.google.javascript.rhino.Node.getString(Node.java:891)
+	at com.google.javascript.jscomp.NodeUtil.isConstantByConvention(NodeUtil.java:2792)
 	at com.google.javascript.jscomp.Normalize$NormalizeStatements.annotateConstantsByConvention(Normalize.java:366)
 	at com.google.javascript.jscomp.Normalize$NormalizeStatements.visit(Normalize.java:341)
 	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:464)
@@ -278,8 +278,8 @@ SET 1 [sourcename: testcode] is not a string node
   Parent(OBJECTLIT): testcode:1:16
 [source unknown]
 
-	at com.google.javascript.rhino.Node.getString(Node.java:892)
-	at com.google.javascript.jscomp.NodeUtil.isConstantByConvention(NodeUtil.java:2788)
+	at com.google.javascript.rhino.Node.getString(Node.java:891)
+	at com.google.javascript.jscomp.NodeUtil.isConstantByConvention(NodeUtil.java:2792)
 	at com.google.javascript.jscomp.Normalize$NormalizeStatements.annotateConstantsByConvention(Normalize.java:366)
 	at com.google.javascript.jscomp.Normalize$NormalizeStatements.visit(Normalize.java:341)
 	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:464)
