@@ -15,10 +15,10 @@ index aaf84703..044bdd93 100644
  
      for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
 diff --git a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
-index 894d65ba..7063f67a 100644
+index 894d65ba..6fe28adb 100644
 --- a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
 +++ b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
-@@ -174,46 +174,27 @@ class PureFunctionIdentifier implements CompilerPass {
+@@ -174,46 +174,28 @@ class PureFunctionIdentifier implements CompilerPass {
     */
    private static Collection<Definition> getCallableDefinitions(
        DefinitionProvider definitionProvider, Node name) {
@@ -52,7 +52,11 @@ index 894d65ba..7063f67a 100644
 -      } else {
 -        firstVal = name.getFirstChild();
 -      }
--
++    for (Definition current : decls) {
++      Node rValue = current.getRValue();
++      if ((rValue != null) && NodeUtil.isFunction(rValue)) {
++        result.add(current);
+ 
 -      Collection<Definition> defs1 = getCallableDefinitions(definitionProvider,
 -                                                            firstVal);
 -      Collection<Definition> defs2 = getCallableDefinitions(definitionProvider,
@@ -60,10 +64,6 @@ index 894d65ba..7063f67a 100644
 -      if (defs1 != null && defs2 != null) {
 -        defs1.addAll(defs2);
 -        return defs1;
-+    for (Definition current : decls) {
-+      Node rValue = current.getRValue();
-+      if ((rValue != null) && NodeUtil.isFunction(rValue)) {
-+        result.add(current);
        } else {
          return null;
        }
