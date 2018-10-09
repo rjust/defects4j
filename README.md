@@ -42,20 +42,28 @@ Setting up Defects4J
 Requirements
 ----------------
  - Java 1.7
- - Perl >= 5.0.10
- - Perl modules: run `cpan Bundle::CSV DBD::CSV DBI` or `sudo cpan Bundle::CSV DBD::CSV DBI`
  - Git >= 1.9
  - SVN >= 1.8
+ - Perl >= 5.0.10
 
+#### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
 Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
+#### Perl dependencies
+All required Perl modules are listed in `cpanfile`. On many Unix platforms,
+these required Perl modules are installed by default. If this is not the case,
+you can use cpan (or a cpan wrapper) to install them. For example, if you have
+cpanm installed, you can automatically install all modules by running:
+`cpanm --installdeps .`
+
+#### Timezone
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
-If you are using the bugs outside of the Defects4J framework, export the `TZ`
-environment variable accordingly.
+If you are using the bugs outside of the Defects4J framework, set the `TZ`
+environment variable to `America/Los_Angeles` and export it.
 
 Steps to set up Defects4J
 ----------------
