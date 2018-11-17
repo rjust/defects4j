@@ -97,6 +97,9 @@ sub _post_checkout {
     if (-e "$work_dir/gradle.properties") {
         system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
     }
+
+    # Enable local repository
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$SCRIPT_DIR/lib/build_systems/gradle/deps\" }\\n jcenter()\\n|g' {} \\;");
 }
 
 #
@@ -183,7 +186,7 @@ sub _ant_call {
     #
     # TODO: Extract all exported environment variables into a user-visible
     # config file.
-    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
+    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/$GRADLE_LOCAL_HOME_DIR";
     return $self->SUPER::_ant_call($target, $option_str, $log_file);
 }
 

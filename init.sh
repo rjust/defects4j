@@ -25,6 +25,34 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 
 ################################################################################
 #
+# Utility functions
+#
+
+# Get time of last data modification of a file
+get_time_of_last_data_modification() {
+    local USAGE="Usage: get_status <file>"
+    if [ "$#" != 1 ]; then
+        echo "$USAGE" >&2
+        return 1
+    fi
+
+    local f="$1"
+
+    # The BSD version of stat does not support --version or -c
+    if stat --version &> /dev/null; then
+        # GNU version
+        cmd="stat -c %Y $f"
+    else
+        # BSD version
+        cmd="stat -f %m $f"
+    fi
+
+    echo "$cmd"
+    return 0
+}
+
+################################################################################
+#
 # Download project repositories if necessary
 #
 echo "Setting up project repositories ... "
@@ -87,28 +115,34 @@ cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
 #
 echo
 echo "Setting up Gradle dependencies ... "
-GRADLE_ZIP=defects4j-gradle.zip
-# The BSD version of stat does not support --version or -c
-if stat --version &> /dev/null; then
-    # GNU version
-    cmd="stat -c %Y $GRADLE_ZIP"
-else
-    # BSD version
-    cmd="stat -f %m $GRADLE_ZIP"
-fi
+
+GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
+GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
+
+dists_ts_cmd=$(get_time_of_last_data_modification $GRADLE_DISTS_ZIP)
+deps_ts_cmd=$(get_time_of_last_data_modification $GRADLE_DEPS_ZIP)
 
 cd "$DIR_LIB_GRADLE"
-if [ -e $GRADLE_ZIP ]; then
-    old_ts=$($cmd)
-else
-    old_ts=0
-fi
-# Only download archive if the server has a newer file
-wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_ZIP
-new=$($cmd)
 
-# Update gradle versions if a newer archive was available
-[ "$old" != "$new" ] && unzip -q -u $GRADLE_ZIP
+old_dists_ts=0
+old_deps_ts=0
+
+if [ -e $GRADLE_DISTS_ZIP ]; then
+    old_dists_ts=$($dists_ts_cmd)
+fi
+if [ -e $GRADLE_DEPS_ZIP ]; then
+    old_deps_ts=$($deps_ts_cmd)
+fi
+
+# Only download archive if the server has a newer file
+wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DISTS_ZIP
+wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DEPS_ZIP
+new_dists_ts=$($dists_ts_cmd)
+new_deps_ts=$($deps_ts_cmd)
+
+# Update gradle distributions/dependencies if a newer archive was available
+[ "$old_dists_ts" != "$new_dists_ts" ] && unzip -q -u $GRADLE_DISTS_ZIP
+[ "$old_deps_ts" != "$new_deps_ts" ] && unzip -q -u $GRADLE_DEPS_ZIP
 
 cd "$BASE"
 echo
