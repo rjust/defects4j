@@ -1,4 +1,4 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
@@ -22,10 +22,41 @@
 # THE SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# This is a small auxilary script that merges commit-dbs by adding
-# the appropriate numbers to the beginning. The output is specified
-# by -f filename, and the input is read from STDIN.
+=pod
 
+=head1 NAME
+
+merge-commit-db.pl -- Merge commit-dbs by adding the appropriate numbers to the
+beginning. The output is specified by -f F<output_file>, and the input is read
+from STDIN. # FIXME it should not be from STDIN
+
+=head1 SYNOPSIS
+
+merge-commit-db.pl -g git_dir -t tracker_project_id -f output_file [-s src_dir]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-g F<git_dir>>
+
+# TODO
+
+=item B<-t C<tracker_project_id>>
+
+# TODO
+
+=item B<-f F<output_file>>
+
+# TODO
+
+=item B<-s F<source_dir>>
+
+# TODO
+
+=back
+
+=cut
 use strict;
 use warnings;
 
@@ -33,32 +64,27 @@ use File::Basename;
 use Getopt::Std;
 use Pod::Usage;
 
-sub _usage {
-    die "usage: " . basename($0) . " -f filename -g git_dir -t tracker_id -s src_dir";
-}
-
 my %cmd_opts;
-getopt('f:g:t:s', \%cmd_opts);
-my $filename = $cmd_opts{'f'};
-my $git_dir = $cmd_opts{'g'};
-my $tracker_id = $cmd_opts{'t'};
-my $src = $cmd_opts{'s'};
+getopts('g:t:f:s:', \%cmd_opts) or pod2usage(1);
 
-$src = $src // 'src';
+pod2usage(1) unless defined $cmd_opts{g} and defined $cmd_opts{t} and defined $cmd_opts{f};
 
-_usage() unless defined $filename and defined $git_dir and defined $tracker_id;
+my $GIT_DIR = $cmd_opts{g};
+my $TRACKER_ID = $cmd_opts{t}; # TODO why do we need a tracker id in this script?
+my $OUTPUT_FILE = $cmd_opts{f};
+my $SRC = defined $cmd_opts{s} ? $cmd_opts{s} : 'src';
 
 my @existing_commits = (); # assume order of these is not cronological
 my $last_number = 0;
-if (-e $filename) {
-    open FH, $filename;
+if (-e $FILE) { # FIXME $FILE should be the current 'commit-db'
+    open(FH, $FILE);
     while (my $line = <FH>) {
         chomp $line;
         $line =~ /^(\d+),(.*,.*)$/;
         $last_number = $1 if $1 > $last_number; # last number isnt necessary the highest
         push @existing_commits, $2;
     }
-    close FH;
+    close(FH);
 }
 
 # existing bugs must keep bug id the same
@@ -76,7 +102,7 @@ if (-e $filename) {
 my @new_commits = (); # likely will be duplicates in @existing_commits
 my $filtered_commits = 0;
 my $existing_commits_count = scalar @existing_commits;
-while (my $line = <STDIN>) {
+while (my $line = <STDIN>) { # FIXME <STDIN> should be a new 'commit-db'
     chomp $line;
     next unless $line;
     $line =~ /(?:\d+,){0,1}(.+),(.+)(?:,.+)*/; # allows a bugid and other random params but will ignore them (this is just a quick adaptation in case you feed a commit-db into this script)
@@ -89,7 +115,7 @@ while (my $line = <STDIN>) {
 }
 
 # append new bugs to output file
-open FH, ">>$filename";
+open(FH, ">>$filename"); # FIXME append to the current commit-db
 foreach my $line (@new_commits) {
     unless(grep(/$line/,@existing_commits)) { # unless it's already in the file
         ++$last_number;
@@ -97,7 +123,7 @@ foreach my $line (@new_commits) {
         push @existing_commits, $line;
     }
 }
-close FH;
+close(FH);
 
 print "Bugs filtered (empty src diff): $filtered_commits\n";
 my $total_commits = scalar @existing_commits;

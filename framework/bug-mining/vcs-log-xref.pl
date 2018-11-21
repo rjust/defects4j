@@ -1,4 +1,4 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
@@ -26,31 +26,45 @@
 
 =head1 NAME
 
-vcs-log-xref.pl -- Parses the development history log for a project screening it with a
-                      regular expression, and validates that they pass
-                      a test provided by a script that can verify they are bugs (as opposed to
-                      improvements, pull requests, etc.)
+vcs-log-xref.pl -- Parses the development history log for a project screening it
+with a regular expression, and validates that they pass a test provided by a
+script that can verify they are bugs (as opposed to improvements, pull requests,
+etc.)
 
 =head1 SYNOPSIS
 
-vcs-log-xref.pl vcs-type -b bug-matching-perl-regexp -l commit-log -r repository -c command-to-verify
+vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify
 
-=head1 DESCRIPTION
+=head1 OPTIONS
 
-C<vcs-type> is one of C<git> or C<svn>.
+=over 4
 
-C<commit-log> is the part of the development history that you wish to cross-reference with an issue tracker.
-This file may be obtained for example by running C<git log>.
+=item B<-t C<vcs_type>>
 
-C<bug-matching-perl-regexp> is the perl regular expression that will match the issue (e.g., /LANG-(\d+)/mi),
-and the C<repository> is the path to the git repo for this project (this argument is ignored for SVN).
+The version control system, i.e., git or svn.
 
-C<command-to-verify> is a command to run that will verify whether a given issue ID is a bug.
-The framework currently supplies two auxillary scripts (C<verify-bug-file.sh> and C<verify-bug-sf-tracker.sh>)
-that help with this task. You may also supply your own.
+=item B<-e C<bug_matching_perl_regexp>>
+
+The perl regular expression that will match the issue, e.g., /LANG-(\d+)/mi.
+
+=item B<-l C<commit_log>>
+
+The part of the development history that you wish to cross-reference with an
+issue tracker. This file may be obtained for example by running C<git log>.
+
+=item B<-r C<repository_dir>>
+
+The path to the git repo for this project (this argument is ignored for SVN
+repositories).
+
+=item B<-c C<command_to_verify>>
+
+The command to run that will verify whether a given issue ID is a bug. The
+bug-mining framework currently supplies two auxillary scripts
+(C<verify-bug-file.sh> and C<verify-bug-sf-tracker.sh>) that help with this
+task. You may also supply your own.
 
 =cut
-
 use strict;
 use warnings;
 
@@ -58,6 +72,9 @@ use File::Basename;
 use Getopt::Std;
 use List::Util qw(all pairmap);
 use Pod::Usage;
+
+# List of all supported vcs
+our @SUPPORTED_VCSs = ("git", "svn");
 
 my %supported_vcs = (
     'git' => {
@@ -118,39 +135,30 @@ my %supported_vcs = (
         }
 );
 
-my $vcs_name = shift @ARGV;
-die "usage: " . basename($0) . " vcs_type \n" .
-    "\t supported vcs types: " . join (' ', sort keys (%supported_vcs))
-        unless defined $vcs_name and
-               defined $supported_vcs{$vcs_name};
-my %vcs = %{$supported_vcs{$vcs_name}};
-
-sub _usage {
-    die "usage: " . basename($0) . "\n"
-                . "\t -b bug-matching-perl-regexp \n"
-                . "\t -l commit-log\n"
-                . "\t -r repository\n"
-                . "\t -c command-to-verify\n"
-                ;
-}
 my %cmd_opts;
-getopts('b:l:r:c:', \%cmd_opts) or _usage();
+getopts('v:e:l:r:c:', \%cmd_opts) or pod2usage(1);
 
-my ($regexp, $logfile, $repo, $command) =
-        ($cmd_opts{b},
-         $cmd_opts{l},
-         $cmd_opts{r},
-         $cmd_opts{c},
- );
+pod2usage(1) unless defined $cmd_opts{v} and defined $cmd_opts{e}
+                    and defined $cmd_opts{l} and defined $cmd_opts{c};
 
-_usage() unless all {defined $_} ($regexp, $logfile, $repo, $command);
+my $VCS_NAME = $cmd_opts{v};
+if (! grep(/^$VCS_NAME$/, @SUPPORTED_VCSs)) {
+    die "Invalid vcs-type! Expected one of the following options: " . join("|", @SUPPORTED_VCSs) . ".";
+}
+my %VCS = %{$SUPPORTED_VCSs{$VCS_NAME}};
+my $REGEXP = $cmd_opts{e};
+my $LOG_FILE = $cmd_opts{l};
+my $REPOSITORY_DIR = $cmd_opts{r};
+my $COMMAND = $cmd_opts{c};
 
-open my $fh, $logfile or die "could not open commit-log $logfile";
-my @commits = @{$vcs{'get_commits'}($fh, $command, $regexp)};
+open my $fh, $LOG_FILE or die "Could not open commit-log $LOG_FILE";
+my @commits = @{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP)};
 close $fh;
-print join ('', (pairmap {"$a,$b\n"} @commits));
+if (scalar @commits eq 0) {
+    print("Warning, no commit that matches the regex expression provided has been found\n");
+}
+print join ('', (pairmap {"$a,$b\n"} @commits)); # TODO redirect the output to commit-db
 
-###########################
 sub _git_get_parent {
     my $commit = shift;
     die unless $commit;
@@ -163,7 +171,7 @@ sub _git_get_parent_revisions {
     my $revision_no = shift;
     die unless $revision_no;
     # returns a string <revision-no> <parent1> <parent2> <parent3> ...
-    my $result = `git --git-dir=${repo} rev-list --parents -n 1 ${revision_no}`;
+    my $result = `git --git-dir=${$REPOSITORY_DIR} rev-list --parents -n 1 ${revision_no}`;
     die unless $? == 0;
     chomp $result;
     die "Could not run git" unless $? == 0;

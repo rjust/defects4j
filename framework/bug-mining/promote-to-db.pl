@@ -1,4 +1,4 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
@@ -26,8 +26,8 @@
 
 =head1 NAME
 
-promote-to-db.pl -- promote reproducible and minimized bugs with all meta data
-                    to the main Defects4J database.
+promote-to-db.pl -- Promote reproducible and minimized bugs with all meta data
+to the main Defects4J database.
 
 =head1 SYNOPSIS
 
@@ -43,22 +43,21 @@ The id of the project for which the revision pairs are to be promoted.
 
 =item B<-b C<bug_id>>
 
-Only promote this bug id or an interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
-the interval boundaries are included in the analysis.
-Per default all bug ids are considered.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =item B<-w C<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
 
 =item B<-o C<output_dir>>
 
-Use C<output_dir> as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
+The output directory as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
 
 =item B<-d C<output_db_dir>>
 
 Use C<output_db_dir> as the C<result_db> directory. Defaults to F<$DB_DIR>.
+# TODO clarify this
 
 =back
 
@@ -78,45 +77,31 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
-# Issue usage message and quit
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id " .
-        "-w WORK_DIR";
-        "[-b bug_range] " .
-        "[-o output_dir] " .
-        "[-d output_db_dir] ";
-}
+promote-to-db.pl -p project_id -w work_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
 
 my %cmd_opts;
-getopts('p:w:b:o:d:', \%cmd_opts) or _usage();
+getopts('p:w:b:o:d:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $WORK_DIR, $BID, $output_dir, $output_db_dir) =
-    ($cmd_opts{p},
-     $cmd_opts{w},
-     $cmd_opts{b},
-     $cmd_opts{o} // "$SCRIPT_DIR/projects",
-     $cmd_opts{d} // $DB_DIR);
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
-# ok for BID to be undef
-_usage() unless all {defined} ($PID, $WORK_DIR, $output_dir, $output_db_dir);
+my $PID = $cmd_opts{p};
+my $WORK_DIR = abs_path($cmd_opts{w});
+my $BID = $cmd_opts{b};
+my $OUTPUT_DIR = $cmd_opts{o} // "$SCRIPT_DIR/projects";
+my $OUTPUT_DB_DIR = $cmd_opts{d} // $DB_DIR;
 
 # Check format of target version id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong bug id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-$WORK_DIR = abs_path("$WORK_DIR");
+system("mkdir -p $OUTPUT_DIR/$PID $OUTPUT_DB_DIR");
 
-system("mkdir -p $output_dir/$PID");
-system("mkdir -p $output_db_dir");
-
-############################### VARIABLE SETUP
-my $project = Project::create_project($PID); #, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
+my $project = Project::create_project($PID);
 my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
-my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $output_db_dir);
+my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $OUTPUT_DB_DIR);
 my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
-my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $output_db_dir);
+my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $OUTPUT_DB_DIR);
 
 my @rev_specific_files = ("failing_tests/<rev>",);
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
@@ -125,16 +110,16 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "trigger_tests/<id>");
 my @generic_files = ("dependent_tests");
 
-############################### MAIN LOOP
-# figure out which IDs to run script for
 my @ids = _get_version_ids($BID);
 foreach my $id (@ids) {
     printf ("%4d: $project->{prog_name}\n", $id);
+
     my $v1 = $project->lookup("${id}b");
     my $v2 = $project->lookup("${id}f");
+
     # find number
     my $max_number = 0;
-    my $output_commit_db = "$output_dir/$PID/commit-db";
+    my $output_commit_db = "$OUTPUT_DIR/$PID/commit-db";
     if (-e $output_commit_db) {
         open FH, $output_commit_db or die "could not open output commit-db";
         my $exists_line = 0;
@@ -156,7 +141,6 @@ foreach my $id (@ids) {
     ++$max_number;
     print "\t... adding as new commit-id $max_number\n";
 
-
     open FH, ">>$output_commit_db" or die "could not open output commit-db for writing";
     print FH "$max_number,$v1,$v2\n";
     close FH;
@@ -164,7 +148,7 @@ foreach my $id (@ids) {
         for my $fn (@rev_specific_files) {
             $fn =~ s/<rev>/$rev/;
             my $src = "$WORK_DIR/$PID/$fn";
-            my $dst = "$output_dir/$PID/$fn";
+            my $dst = "$OUTPUT_DIR/$PID/$fn";
             _cp($src, $dst);
         }
     }
@@ -172,7 +156,7 @@ foreach my $id (@ids) {
         my $fn_src = $fn; $fn_src =~ s/<id>/$id/;
         my $fn_dst = $fn; $fn_dst =~ s/<id>/$max_number/;
         my $src = "$WORK_DIR/$PID/$fn_src";
-        my $dst = "$output_dir/$PID/$fn_dst";
+        my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
         _cp($src, $dst);
     }
 
@@ -183,8 +167,8 @@ foreach my $id (@ids) {
 
 for my $fn (@generic_files) {
     my $src = "$WORK_DIR/$PID/$fn";
-    my $dst = "$output_dir/$PID/$fn";
-    my $tmp = "$output_dir/$PID/${fn}_tmp";
+    my $dst = "$OUTPUT_DIR/$PID/$fn";
+    my $tmp = "$OUTPUT_DIR/$PID/${fn}_tmp";
     if (-e $src) {
         `cat $src >> $dst && cp $dst $tmp && sort -u $tmp > $dst`;
         die unless ($? == 0);
@@ -192,9 +176,9 @@ for my $fn (@generic_files) {
     }
 }
 
-
-############################### SUBROUTINES
+#
 # Get version ids from TAB_TRIGGER
+#
 sub _get_version_ids {
     my $target_vid = shift;
 

@@ -27,7 +27,7 @@
 =head1 NAME
 
 initialize-revisions.pl -- Initialize all revisions: identify the directory
-                           layout and perform a sanity check for each revision.
+layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
@@ -39,23 +39,20 @@ initialize-revisions.pl -p project_id -w work_dir [ -b bug_id]
 
 =item B<-p C<project_id>>
 
-The id of the project for which the revisions are initialized.
+The id of the project for which the meta data should be generated.
 
-=item B<-w C<work_dir>>
+=item B<-w F<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
 
 =item B<-b C<bug_id>>
 
-Only analyze this bug id or interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
-provided, the interval boundaries are included in the analysis.
-Per default all bug ids listed in the commit-db are considered.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =back
 
 =cut
-
 use warnings;
 use strict;
 use File::Basename;
@@ -69,54 +66,44 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
 my %cmd_opts;
 getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR) =
-    ($cmd_opts{p},
-     $cmd_opts{b},
-     $cmd_opts{w}
-    );
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
+my $PID = $cmd_opts{p};
+my $BID = $cmd_opts{b};
+my $WORK_DIR = abs_path($cmd_opts{w});
 
-# Check format of target version id
+# Check format of target bug id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-# if work dir is relative make it absolute, this will prevent problems as the current directory suddenly changes
-$WORK_DIR = abs_path($WORK_DIR);
-
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
-# Set the projects and repository directories to the current working directory.
-$PROJECTS_DIR = "$WORK_DIR/framework/projects";
-$REPO_DIR = "$WORK_DIR/project_repos";
-
 # Create necessary directories
-my $project_dir = "$WORK_DIR/framework/projects/$PID";
-
-my $PATCH_DIR   = "$project_dir/patches";
-my $FAILING_DIR = "$project_dir/failing_tests";
-my $TRIGGER_DIR = "$project_dir/trigger_tests";
-my $MOD_CLASSES = "$project_dir/modified_classes";
-my $ANALYZER_OUTPUT = "$project_dir/analyzer_output";
+my $PROJECT_DIR = "$WORK_DIR/framework/projects/$PID";
+my $PATCH_DIR   = "$PROJECT_DIR/patches";
+my $FAILING_DIR = "$PROJECT_DIR/failing_tests";
+my $TRIGGER_DIR = "$PROJECT_DIR/trigger_tests";
+my $MOD_CLASSES = "$PROJECT_DIR/modified_classes";
+my $ANALYZER_OUTPUT = "$PROJECT_DIR/analyzer_output";
 
 system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
 
-############################### VARIABLE SETUP
+# Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir(); # Temporary directory
 system("mkdir -p $TMP_DIR");
+
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
 #
-# The Defects4J core framework requires certain metadata for each defect.
-# This routine creates these artifacts, if necessary.
+# The Defects4J core framework requires certain metadata for each defect. This
+# routine creates these artifacts, if necessary.
 #
 sub _bootstrap {
     my ($project, $bid) = @_;
@@ -139,7 +126,7 @@ sub _bootstrap {
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
     # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-    if (-e "$TMP_DIR/pom.xml"){
+    if (-e "$TMP_DIR/pom.xml") {
       my $cmd = " cd $TMP_DIR" .
                 " && mvn ant:ant -Doverwrite=true 2>&1" .
                 #TODO: Configure your input to analyzer here
@@ -147,9 +134,9 @@ sub _bootstrap {
          Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.");
       # Get dependencies if it is maven-ant project
       my $download_dep = "cd $TMP_DIR" .
-                  "&& ant -Dmaven.repo.local=\"$project_dir/lib\" get-deps";
+                  "&& ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
       Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
-      }else{
+      } else {
         my $cmd = " cd $TMP_DIR" .
                   #TODO: Configure your input to analyzer here
                   " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid build.xml 2>&1";
@@ -165,8 +152,6 @@ sub _bootstrap {
     $project->export_diff($v2, $v1,"$PATCH_DIR/$bid.test.patch", "$test_f");
 }
 
-################################################################################
-# figure out which IDs to run script for
 my @ids = $project->get_version_ids();
 if (defined $BID) {
     if ($BID =~ /(\d+):(\d+)/) {
@@ -176,7 +161,6 @@ if (defined $BID) {
         @ids = grep { ($BID == $_) } @ids;
     }
 }
-
 foreach my $bid (@ids) {
     printf ("%4d: $project->{prog_name}\n", $bid);
 

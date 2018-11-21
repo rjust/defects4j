@@ -85,7 +85,10 @@ getopts('p:n:w:r:', \%cmd_opts) or pod2usage(1);
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n}
                     and defined $cmd_opts{w} and defined $cmd_opts{r};
 
-my ($PID, $NAME, $WORK_DIR, $URL) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w}, $cmd_opts{r});
+my $PID = $cmd_opts{p};
+my $NAME = $cmd_opts{n};
+my $WORK_DIR = $cmd_opts{w};
+my $URL = $cmd_opts{r};
 
 # TODO: Copy existing project module and build file to working directory
 -e "$CORE_DIR/Project/$PID.pm" and die "Project $PID already exists!";
@@ -93,8 +96,8 @@ my ($PID, $NAME, $WORK_DIR, $URL) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w}, $
 my $module_template = "$CORE_DIR/Project/template";
 my $build_template  = "$SCRIPT_DIR/projects/template.build.xml";
 
-my $module_file  = "$WORK_DIR/framework/core/Project/$PID.pm";
-my $build_file   = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
+my $module_file = "$WORK_DIR/framework/core/Project/$PID.pm";
+my $build_file  = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
 
 # Directory to which the remote repository is cloned.
 my $repo_dir    = "$WORK_DIR/project_repos";

@@ -77,9 +77,14 @@ mkdir bug-mining/issues
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
 ```
-perl download-issues.pl jira -p <tracker_project_id>, e.g., LANG for the Apache Commons-Lang project> -o bug-mining/issues
+perl download-issues.pl -g <tracker_name, e.g., jira> \
+                        -t <tracker_project_id, e.g., LANG for the Apache Commons-Lang project> \
+                        -o bug-mining/issues \
+                        -f bug-mining/issues.txt
 perl merge-issue-numbers.pl -f bug-mining/issues.txt
 ```
+**merge-issue-numbers.pl required some __manual_input__**
+
 
 4. Obtain the development history (commit logs) for the project:
 ```
@@ -92,18 +97,20 @@ git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitl
    script requires a Perl regular expression that matches bug-fixing commits
    (e.g., issue numbers, keywords, etc.), e.g., `/(LANG-\d+)/mi` matches all
    bug-fixing commits of the Apache Commons-Lang project. Note that the regular
-   expression has to capture the issue number,  The script `merge-commit-db.pl`
+   expression has to capture the issue number. The script `merge-commit-db.pl`
    enumerates the output of `vcs-log-xref.pl` and outputs or updates the
    `commit-db` file:
 ```
-perl vcs-log-xref.pl git -b '<regular_expression>' \
-                         -l bug-mining/gitlog \
-                         -r bug-mining/project_repos/<project_name>.git \
-                         -c 'verify-bug-file.sh bug-mining/issues.txt'
+perl vcs-log-xref.pl -v <vcs name, i.e., git or svn> \
+                     -e '<regular_expression>' \
+                     -l bug-mining/gitlog \
+                     -r bug-mining/project_repos/<project_name>.git \
+                     -c 'bash verify-bug-file.sh bug-mining/issues.txt'
 perl merge-commit-db.pl -f bug-mining/framework/projects/<project_id>/commit-db \
                         -g bug-mining/project_repos/<project_name>.git \
                         -t <tracker id, e.g., google, jira, github>
 ```
+**vcs-log-xref.pl sends output to STDOUT instead of to bug-mining/framework/projects/<project_id>/commit-db**
 
 These are the issue trackers, issue tracker project IDs, and regular expressions
 previously used (Note that we manually built the `commit-db` for Chart):
@@ -153,7 +160,10 @@ initialize-revisions step, and integrate it into the framework**
 2. Analyze all candidate revisions with `analyze-project.pl`. This will identify
    suitable candidates -- ones that compile and have a non-empty source diff:
 ```
-perl analyze-project.pl -p <project_id> -w bug-mining
+perl analyze-project.pl -p <project_id> \
+                        -w bug-mining \
+                        -g <tracker_name, e.g., jira, github, google, or sourceforge> \
+                        -t <tracker_project_id, e.g., LANG>
 ```
 
 3. If any revisions fail to build, inspect the project build script and error
@@ -305,3 +315,21 @@ Terms commonly used in Defects4J
 - `Rev ID`: A VCS-specific revision id (e.g., a git commit hash).
 - `commit-db`: A csv file, per project, that maps each BID to the revision ids
                of the pre-fix and post-fix revision.
+
+# TODO incorporate the following options
+- `-p <project_id>`, e.g., `-p Codec`
+- `-n <project_name>`, e.g., `-n commons-codec`
+- `-b <bug_id>`, e.g., `-b 1`
+- `-w <work_dir>`, e.g., `-w bug-mining`
+- `-g <tracker_name>`, e.g., `-g jira`
+- `-t <tracker_project_id>`, e.g., `-t CODEC`
+- `-r <repository_url>`, e.g., `-r https://github.com/apache/commons-codec` or `-r bug-mining/project_repos/commons-codec.git`
+- `-z <organization_id>`, e.g., `-z apache`
+- `-q <query>`, e.g., `-q ___`
+- `-u <tracker_uri>`, e.g., `-u https://issues.apache.org/jira/`
+- `-l <fetching_limit>`, .e.g., `-l 50`
+- `-f <issues_file>`, .e.g., `-f bug-mining/issues.txt`
+- `-d <output_db_dir>`, .e.g., `-d ____`
+- `-v <vcs_type>`, .e.g., `-v git`
+- `-e <bug_matching_perl_regexp>`, .e.g., `-e /(LANG-\d+)/mi`
+- `-c <command_to_verify>`, .e.g., `-c ____`

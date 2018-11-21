@@ -1,4 +1,4 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
@@ -22,10 +22,29 @@
 # THE SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# This is a small auxilary script that merges issue numbers by adding
-# only ones that are new. The output is specified
-# by -f filename, and the input is read from STDIN.
+=pod
 
+=head1 NAME
+
+merge-issue-numbers.pl -- Merge issue numbers by adding only ones that are new.
+The output is specified by -f filename, and the input is read from STDIN.
+# TODO it should not be from STDIN.
+
+=head1 SYNOPSIS
+
+merge-issue-numbers.pl -f issues_file
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-f F<issues_file>>
+
+The file with all issues ids.
+
+=back
+
+=cut
 use strict;
 use warnings;
 
@@ -33,18 +52,16 @@ use File::Basename;
 use Getopt::Std;
 use Pod::Usage;
 
-sub _usage {
-    die "usage: " . basename($0) . " -f filename";
-}
-
 my %cmd_opts;
-getopt('f:', \%cmd_opts);
-my $filename = $cmd_opts{'f'};
-_usage() unless defined $filename;
+getopts('f:', \%cmd_opts) or pod2usage(1);
+
+pod2usage(1) unless defined $cmd_opts{f};
+
+my $FILENAME = $cmd_opts{f};
 
 my %existing_issues = ();
-if (-e $filename) {
-    open FH, $filename;
+if (-e $FILENAME) {
+    open FH, $FILENAME;
     while (my $line = <FH>) {
         chomp $line;
         $existing_issues{$line} = 1;
@@ -52,8 +69,8 @@ if (-e $filename) {
     close FH;
 }
 
-open FH, ">>$filename";
-while (my $line = <STDIN>) {
+open FH, ">>$FILENAME";
+while (my $line = <STDIN>) { # FIXME it should not be from STDIN
     chomp $line;
     next unless $line;
     print FH "$line\n" unless $existing_issues{$line};
