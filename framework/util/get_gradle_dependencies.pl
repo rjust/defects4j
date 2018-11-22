@@ -130,18 +130,8 @@ foreach my $bid (@ids) {
     $project->{prog_root} = "$TMP_DIR/$PID-$vid";
     $project->checkout_vid($vid) or die "Could not checkout $PID-${vid}";
 
-    # Compile the project using the gradle wrapper, if it exits (this step
-    # should force the download of all dependencies to a local gradle directory)
-#    if (! -e "$project->{prog_root}/gradlew") {
-#        next;
-#    }
-#    my $log = "";
-#    my $cmd = "export GRADLE_USER_HOME=$project->{prog_root}/$GRADLE_LOCAL_HOME_DIR && \
-#               cd $project->{prog_root} && \
-#               ./gradlew -xtestClasses -xtest classes && \
-#               ./gradlew -xtest testClasses && \
-#               ./gradlew --stop";
-#    Utils::exec_cmd($cmd, "Compiling the project with gradle", \$log);
+    # Compile the project using the D4J API (this step should force the download
+    # of all dependencies to a local gradle directory)
     $project->compile() or die "Could not compile source code";
     $project->compile_tests() or die "Could not compile test suites";
 
