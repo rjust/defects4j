@@ -73,7 +73,7 @@ sub _post_checkout {
 
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
-    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle";
+    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";
 
     # Read existing Gradle properties file, if it exists
     open(PROP, "<$prop") or return;
