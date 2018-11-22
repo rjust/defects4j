@@ -73,7 +73,7 @@ sub _post_checkout {
 
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
-    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle";
 
     # Read existing Gradle properties file, if it exists
     open(PROP, "<$prop") or return;
@@ -99,7 +99,7 @@ sub _post_checkout {
     }
 
     # Enable local repository
-    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$SCRIPT_DIR/lib/build_systems/gradle/deps\" }\\n jcenter()\\n|g' {} \\;");
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\n jcenter()\\n|g' {} \\;");
 }
 
 #

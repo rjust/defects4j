@@ -104,7 +104,7 @@ if (system("mkdir -p $TMP_DIR") != 0) {
 }
 
 my $GRADLE_DEPS_DIR = "$TMP_DIR/deps";
-my $GRADLE_DEPS_ZIP = "$SCRIPT_DIR/lib/build_systems/gradle/defects4j-gradle-deps.zip";
+my $GRADLE_DEPS_ZIP = "$BUILD_SYSTEMS_LIB_DIR/gradle/defects4j-gradle-deps.zip";
 if (-e "$GRADLE_DEPS_ZIP") {
     # Unzip existing cache so that can be updated with new dependencies
     if (system("unzip -q -u $GRADLE_DEPS_ZIP -d $TMP_DIR") != 0) {
