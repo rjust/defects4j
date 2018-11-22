@@ -87,6 +87,11 @@ my @l_time = localtime(time);
 my $month = 1 + $l_time[4]; # the month, i.e., [4] is in the range 0..11 , with 0 indicating January and 11 indicating December
 my $year = 1900 + $l_time[5]; # $year, i.e., [5] contains the number of years since 1900
 
+my $GRADLE_BUILD_SYSTEMS_LIB_DIR = "$BUILD_SYSTEMS_LIB_DIR/gradle";
+if (system("mkdir -p $GRADLE_BUILD_SYSTEMS_LIB_DIR") != 0) {
+    die "Could not create $GRADLE_BUILD_SYSTEMS_LIB_DIR";
+}
+
 #
 # Collect all gradle distributions required to compile all bugs of a particular
 # project
@@ -94,7 +99,7 @@ my $year = 1900 + $l_time[5]; # $year, i.e., [5] contains the number of years si
 
 my $GRADLE_DISTS_DIR = "$TMP_DIR/dists";
 my $GRADLE_DISTS_README = "$GRADLE_DISTS_DIR/README.md";
-my $GRADLE_DISTS_ZIP = "$BUILD_SYSTEMS_LIB_DIR/gradle/defects4j-gradle-dists.zip";
+my $GRADLE_DISTS_ZIP = "$GRADLE_BUILD_SYSTEMS_LIB_DIR/defects4j-gradle-dists.zip";
 
 if (-e "$GRADLE_DISTS_ZIP") {
     # Unzip existing zip so that can be updated with new distributions
@@ -159,13 +164,22 @@ system("rm -rf $TMP_DIR");
 # project
 #
 
+# Make sure that all required gradle distribution versions are available to
+# compile each project version
+if (! -e "$GRADLE_DISTS_ZIP") {
+    die "Could not find '$GRADLE_DISTS_ZIP' therefore no gradle distribution is available";
+}
+if (system("unzip -q -u $GRADLE_DISTS_ZIP -d $GRADLE_BUILD_SYSTEMS_LIB_DIR") != 0) {
+    die "Could not unzip $GRADLE_DISTS_ZIP to $GRADLE_BUILD_SYSTEMS_LIB_DIR";
+}
+
 if (system("mkdir -p $TMP_DIR") != 0) {
     die "Could not create $TMP_DIR directory";
 }
 
 my $GRADLE_DEPS_DIR = "$TMP_DIR/deps";
 my $GRADLE_DEPS_README = "$GRADLE_DEPS_DIR/README.md";
-my $GRADLE_DEPS_ZIP = "$BUILD_SYSTEMS_LIB_DIR/gradle/defects4j-gradle-deps.zip";
+my $GRADLE_DEPS_ZIP = "$GRADLE_BUILD_SYSTEMS_LIB_DIR/defects4j-gradle-deps.zip";
 
 if (-e "$GRADLE_DEPS_ZIP") {
     # Unzip existing cache so that can be updated with new dependencies
@@ -234,3 +248,12 @@ if (system("cd $TMP_DIR && zip -q -r $GRADLE_DEPS_ZIP deps") != 0) {
 
 # Clean up
 system("rm -rf $TMP_DIR");
+
+# Make sure that all (new) gradle dependencies will be available to allow the
+# user to compile any project version that is gradle-based
+if (! -e "$GRADLE_DEPS_ZIP") {
+    die "Could not find '$GRADLE_DEPS_ZIP' therefore no gradle distribution is available";
+}
+if (system("unzip -q -u $GRADLE_DEPS_ZIP -d $GRADLE_BUILD_SYSTEMS_LIB_DIR") != 0) {
+    die "Could not unzip $GRADLE_DEPS_ZIP to $GRADLE_BUILD_SYSTEMS_LIB_DIR";
+}
