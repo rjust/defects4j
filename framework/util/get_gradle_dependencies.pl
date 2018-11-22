@@ -104,7 +104,9 @@ if (system("mkdir -p $TMP_DIR") != 0) {
 }
 
 my $GRADLE_DEPS_DIR = "$TMP_DIR/deps";
+my $GRADLE_DEPS_README = "$TMP_DIR/deps/README.md";
 my $GRADLE_DEPS_ZIP = "$BUILD_SYSTEMS_LIB_DIR/gradle/defects4j-gradle-deps.zip";
+
 if (-e "$GRADLE_DEPS_ZIP") {
     # Unzip existing cache so that can be updated with new dependencies
     if (system("unzip -q -u $GRADLE_DEPS_ZIP -d $TMP_DIR") != 0) {
@@ -115,6 +117,11 @@ if (-e "$GRADLE_DEPS_ZIP") {
         die "Could not create $GRADLE_DEPS_DIR directory";
     }
 }
+
+my @l_time = localtime(time);
+my $month = 1 + $l_time[4]; # the month, i.e., [4] is in the range 0..11 , with 0 indicating January and 11 indicating December
+my $year = 1900 + $l_time[5]; # $year, i.e., [5] contains the number of years since 1900
+system("echo \"Gradle dependencies updated: ${month}/${year}\\n\" > $GRADLE_DEPS_README");
 
 my @ids = $project->get_version_ids();
 foreach my $bid (@ids) {
@@ -169,6 +176,9 @@ foreach my $bid (@ids) {
         die "Could not remove $project->{prog_root}";
     }
 }
+
+# Updated README file with all dependencies
+system("cd $GRADLE_DEPS_DIR && find * -type f ! -name 'README.md' -exec echo {} >> $GRADLE_DEPS_README \\;");
 
 # Zip gradle dependencies
 if (system("cd $TMP_DIR && zip -q -r $GRADLE_DEPS_ZIP deps") != 0) {
