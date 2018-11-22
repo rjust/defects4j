@@ -242,7 +242,7 @@ foreach my $bid (@ids) {
 system("cd $GRADLE_DEPS_DIR && find * -type f ! -name 'README.md' -exec echo {} >> $GRADLE_DEPS_README \\;");
 
 # Zip gradle dependencies
-if (system("cd $TMP_DIR && zip -q -r $GRADLE_DEPS_ZIP deps") != 0) {
+if (system("cd $TMP_DIR && find deps -type d -empty -delete && zip -q -r $GRADLE_DEPS_ZIP deps") != 0) {
     die "Could not zip $TMP_DIR/deps";
 }
 
