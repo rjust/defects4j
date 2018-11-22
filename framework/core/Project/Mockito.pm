@@ -79,11 +79,11 @@ sub _post_checkout {
     open(PROP, "<$prop") or return;
     my @tmp;
     while (<PROP>) {
-        if (/(distributionUrl=).*\/(gradle-2.*)/) {
-            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-2.2.1-all.zip/g;
-        } else {
-            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-1.12-bin.zip/g;
-        }
+        # Replace the online url, e.g.,
+        # https\://services.gradle.org/distributions/gradle-2.4-all.zip
+        # with a local one, e.g.,
+        # file\\:Constants::$BUILD_SYSTEMS_LIB_DIR/gradle/dists/gradle-2.4-all.zip
+        s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/$2/g;
         push(@tmp, $_);
     }
     close(PROP);
