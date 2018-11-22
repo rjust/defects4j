@@ -897,15 +897,23 @@ sub run_randoop {
     # and set appropriate arguments.
     my $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main`;
     if (($log =~ /minimize/) == 1) {
+      if (($log =~ /4.0/) == 1) {
 #       print "new version \n";
         $config = "$config --time-limit=$timeout --flaky-test-behavior=output";
+      } else {
+#       print "middle version \n";
+        $config = "$config --time-limit=$timeout --ignore-flaky-tests=true";
+      }
     } else {
 #       print "old version \n";
         $config = "$config --timelimit=$timeout  --ignore-flaky-tests=true";
     }
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
+              " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
+                "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
+                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar=--replacement-file=$TESTGEN_LIB_DIR/default-replacements.txt " .
+                "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--usethreads " .
