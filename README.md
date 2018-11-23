@@ -1,7 +1,10 @@
 Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
-----------------
+================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
+
+Contents of Defects4J
+================
 
 The projects
 ---------------
@@ -22,8 +25,9 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit -- the Defects4J maintainers manually pruned out
-  irrelevant changes (e.g., refactorings or feature additions).
+- Fixed in a single commit
+- Minimized: the Defects4J maintainers manually pruned out
+  irrelevant changes in the commit (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
   documentation, or test files).
 - A triggering test exists that failed before the fix and passes after the fix
@@ -32,26 +36,38 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
+Setting up Defects4J
+================
+
 Requirements
 ----------------
  - Java 1.7
- - Perl >= 5.0.10
  - Git >= 1.9
  - SVN >= 1.8
+ - Perl >= 5.0.10
 
+#### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
 Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
-Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
-If you are using the bugs outside of the Defects4J framework, export the `TZ`
-environment variable accordingly.
+#### Perl dependencies
+All required Perl modules are listed in `cpanfile`. On many Unix platforms,
+these required Perl modules are installed by default. If this is not the case,
+you can use cpan (or a cpan wrapper) to install them. For example, if you have
+cpanm installed, you can automatically install all modules by running:
+`cpanm --installdeps .`
 
-Getting started
+#### Timezone
+Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
+If you are using the bugs outside of the Defects4J framework, set the `TZ`
+environment variable to `America/Los_Angeles` and export it.
+
+Steps to set up Defects4J
 ----------------
-#### Setting up Defects4J
+
 1. Clone Defects4J:
     - `git clone https://github.com/rjust/defects4j`
 
@@ -62,57 +78,45 @@ Getting started
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
 
-#### Using Defects4J
-4. Check installation and get information for a specific project (commons lang):
+4. Check installation:
     - `defects4j info -p Lang`
 
-5. Get information for a specific bug (commons lang, bug 1):
+Using Defects4J
+================
+
+#### Example commands
+1. Get information for a specific project (commons lang):
+    - `defects4j info -p Lang`
+
+2. Get information for a specific bug (commons lang, bug 1):
     - `defects4j info -p Lang -b 1`
 
-6. Checkout a buggy source code version (commons lang, bug 1, buggy version):
+3. Checkout a buggy source code version (commons lang, bug 1, buggy version):
     - `defects4j checkout -p Lang -v 1b -w /tmp/lang_1_buggy`
 
-7. Change to the working directory, compile sources and tests, and run tests:
+4. Change to the working directory, compile sources and tests, and run tests:
     - `cd /tmp/lang_1_buggy`
     - `defects4j compile`
     - `defects4j test`
 
-8. More examples of how to use the framework are available in `framework/test`
+5. The scripts in [`framework/test/`](tree/master/framework/test/)
+are examples of how to use Defects4J, which you might find useful
+as inspiration when you are writing your own scripts that use Defects4J.
 
-Publications
-------------------
-* "Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs"
-    René Just, Darioush Jalali, and Michael D. Ernst,
-    ISSTA 2014 [[download]][issta14].
-
-* "Are Mutants a Valid Substitute for Real Faults in Software Testing?"
-    René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
-    FSE 2014 [[download]][fse14].
-
-[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
-[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
-
-Documentation
---------------------
-Detailed documentation for any script or module is available as
-[html documentation][htmldocs].
-
-[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
-
-Command-line interface
+Command-line interface: defects4j command
 -----------------------
-Use `framework/bin/defects4j` to execute any of the following commands:
+Use [`framework/bin/defects4j`](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html) to execute any of the following commands:
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
-| info           | View configuration of a specific project or summary of a specific bug                             |
-| checkout       | Checkout a buggy or a fixed project version                                                       |
-| compile        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| test           | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| mutation       | Run mutation analysis on a buggy or a fixed project version                                       |
-| coverage       | Run code coverage analysis on a buggy or a fixed project version                                  |
-| monitor.test   | Monitor the class loader during the execution of a single test or a test suite                    |
-| export         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [info](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
+| [checkout](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
+| [compile](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| [test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
+| [mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
+| [coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| [monitor.test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
+| [export](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
 Export version-specific properties
@@ -139,17 +143,56 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| run_bug_detection | ^Determine the real fault detection rate                        |
-| run_mutation      | ^Determine the mutation score                                   |
-| run_coverage      | ^Determine code coverage ratios (statement and branch coverage) |
-| run_evosuite      | Generate test suites using EvoSuite                             |
-| run_randoop       | Generate test suites using Randoop                              |
-^Note that this script requires Perl DBI.
+| [defects4j](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html)         | Main script, described above                        |
+| [run_bug_detection](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
+| [run_mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_mutation.html)      | Determine the mutation score                                   |
+| [run_coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
+| [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
+| [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
-Directory structure
+Additional resources
+================
+
+Scripts built on Defects4J
+--------------------
+
+#### Fault localization (FL)
+  - [Scripts and annotations for evaluating FL techniques][FL-eval]
+
+#### Automated program repair (APR)
+  - [Scripts and annotations for evaluating APR techniques][APR-eval]
+  - [Patches generated with the Nopol, jGenProg, and jKali APR systems][APR-patches-spirals]
+  - [Repair actions and patterns for Defects4J v1.2.0][D4J-dissection]
+
+[fl-eval]: https://bitbucket.org/rjust/fault-localization-data
+[APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
+[APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
+[D4J-dissection]: http://program-repair.org/defects4j-dissection/
+
+Publications
+------------------
+* "Defects4J: A Database of Existing Faults to Enable Controlled Testing Studies for Java Programs"
+    René Just, Darioush Jalali, and Michael D. Ernst,
+    ISSTA 2014 [[download]][issta14].
+
+* "Are Mutants a Valid Substitute for Real Faults in Software Testing?"
+    René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
+    FSE 2014 [[download]][fse14].
+
+[issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
+[fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+
+[More publications](https://scholar.google.com/scholar?q=defects4j)
+
+Implementation details
 ----------------------
-This is the top-level directory of Defects4J.
-The directory structure is as follows:
+
+Documentation for any script or module is available as
+[html documentation][htmldocs].
+
+[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
+
+The directory structure of Defects4J is as follows:
 
     defects4j
        |
@@ -171,25 +214,8 @@ The directory structure is as follows:
            |--- projects:      Project-specific resource files.
            |
            |--- test:          Scripts to test the framework.
-
-Additional resources
---------------------
-
-#### Defects4j Analysis
-  - [Defects4j dissection]: https://github.com/program-repair/defects4j-dissection [Website]: http://program-repair.org/defects4j-dissection/
-
-#### Fault localization (FL)
-  - [Scripts and annotations for evaluating FL techniques][FL-eval]
-
-#### Automated program repair (APR)
-  - [Scripts and annotations for evaluating APR techniques][APR-eval]
-  - [Patches generated with the Nopol, jGenProg, and jKali APR systems][APR-patches-spirals]
-
-[fl-eval]: https://bitbucket.org/rjust/fault-localization-data
-[APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
-[APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
+           
 
 License
 ---------
-MIT License, see `license.txt` for more information.
-
+MIT License, see [`license.txt`](https://github.com/rjust/defects4j/blob/master/license.txt) for more information.

@@ -36,7 +36,7 @@ cd "$DIR_REPOS" && ./get_repos.sh
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="1.3.2"
+MAJOR_VERSION="1.3.4"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
@@ -59,8 +59,8 @@ cd "$DIR_LIB_GEN" && [ ! -f "$EVOSUITE_JAR" ] \
 cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
                   && wget -nv "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
-ln -sf "$DIR_LIB_GEN/$EVOSUITE_JAR" "$DIR_LIB_GEN/evosuite-current.jar"
-ln -sf "$DIR_LIB_RT/$EVOSUITE_RT_JAR" "$DIR_LIB_RT/evosuite-rt.jar"
+(cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
+(cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
 
 ################################################################################
 #
@@ -68,13 +68,18 @@ ln -sf "$DIR_LIB_RT/$EVOSUITE_RT_JAR" "$DIR_LIB_RT/evosuite-rt.jar"
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.0.0"
+RANDOOP_VERSION="4.0.4"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
+REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
                   && wget -nv "$RANDOOP_URL/$RANDOOP_JAR"
+cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
+                  && wget -nv "$RANDOOP_URL/$REPLACECALL_JAR"
 # Set symlink for the supported version of Randoop
-ln -sf "$DIR_LIB_GEN/$RANDOOP_JAR" "$DIR_LIB_GEN/randoop-current.jar"
+(cd "$DIR_LIB_GEN" && ln -sf "$RANDOOP_JAR" "randoop-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "$REPLACECALL_JAR" "replacecall-current.jar")
+(cd "$DIR_LIB_GEN" && jar -xf "$REPLACECALL_JAR" "default-replacements.txt")
 
 ################################################################################
 #

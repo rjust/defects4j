@@ -238,7 +238,7 @@ sub _remove_test_method {
             foreach (@tmp) {
                 # This captures String literals -- accounting for escaped quotes
                 # (\") and non-escaped quotes (" and \\")
-                s/([\"'])(?:(?<!\\)\\\1|.)*?\1/$1$1/g;
+                s/([\"'])(?:\\(\\\\)*\1|.)*?\1/$1$1/g;
                 s/\/\/.*/\/\//;
             }
 
