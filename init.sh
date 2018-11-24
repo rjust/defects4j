@@ -142,7 +142,7 @@ new_dists_ts=$($dists_ts)
 new_deps_ts=$($deps_ts)
 
 # Update gradle distributions/dependencies if a newer archive was available
-[ "$old_dists_ts" != "$new_dists_ts" ] && unzip -q -u $GRADLE_DISTS_ZIP
+[ "$old_dists_ts" != "$new_dists_ts" ] && mkdir "dists" && unzip -q -u $GRADLE_DISTS_ZIP -d "dists"
 [ "$old_deps_ts" != "$new_deps_ts" ] && unzip -q -u $GRADLE_DEPS_ZIP
 
 cd "$BASE"

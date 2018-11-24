@@ -26,8 +26,9 @@
 
 =head1 NAME
 
-get_gradle_dependencies.pl -- collect all gradle distribution versions and all
-gradle dependencies required to compile all bugs of the provided project.
+get_gradle_dependencies.pl -- obtain a list of all gradle versions used in the
+entire history of a particular project and collect all gradle dependencies
+required to compile all bugs of the provided project.
 
 =head1 SYNOPSIS
 
@@ -35,9 +36,11 @@ gradle dependencies required to compile all bugs of the provided project.
 
 =head1 DESCRIPTION
 
-Extract the reference to gradle distribution from a checkout version and collect
-all gradle distribution versions and all gradle dependencies required to compile
-all bugs of the provided project.
+Extract all references to gradle distributions from the project's version
+control history and collect all gradle dependencies required to compile all bugs
+of the provided project.
+
+B<TODO: This script currently expects the repository to be a git repository!>
 
 =head1 OPTIONS
 
@@ -45,8 +48,8 @@ all bugs of the provided project.
 
 =item -p C<project_id>
 
-The id of the project for which all gradle distribution versions and
-dependencies are collected.
+The id of the project for which the list of gradle dependencies is extracted and
+all gradle dependencies are collected.
 
 =back
 
@@ -76,6 +79,29 @@ my $PID = $cmd_opts{p};
 
 # Set up project
 my $project = Project::create_project($PID);
+my $repo = $project->{_vcs}->{repo};
+my $cmd = "git -C $repo log -p -- gradle/wrapper/gradle-wrapper.properties | grep distributionUrl";
+
+# Parse the vcs history and grep for distribution urls
+my $log;
+Utils::exec_cmd($cmd, "Obtaining all gradle dependencies", \$log);
+
+# Process the list and remove duplicates
+my %all_deps;
+foreach (split(/\n/, $log)) {
+    /[+-]distributionUrl=(.+)/ or die "Unexpected line extracted: $_!";
+    my $url = $1;
+    $url =~ s/\\:/:/g;
+    $all_deps{$url} = 1;
+}
+
+# Print the ordered list of dependencies to STDOUT
+print(join("\n", sort(keys(%all_deps))), "\n");
+
+#
+# Collect all gradle dependencies required to compile all bugs of a particular
+# project
+#
 
 # Set up temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
@@ -90,91 +116,6 @@ my $year = 1900 + $l_time[5]; # $year, i.e., [5] contains the number of years si
 my $GRADLE_BUILD_SYSTEMS_LIB_DIR = "$BUILD_SYSTEMS_LIB_DIR/gradle";
 if (system("mkdir -p $GRADLE_BUILD_SYSTEMS_LIB_DIR") != 0) {
     die "Could not create $GRADLE_BUILD_SYSTEMS_LIB_DIR";
-}
-
-#
-# Collect all gradle distributions required to compile all bugs of a particular
-# project
-#
-
-my $GRADLE_DISTS_DIR = "$TMP_DIR/dists";
-my $GRADLE_DISTS_README = "$GRADLE_DISTS_DIR/README.md";
-my $GRADLE_DISTS_ZIP = "$GRADLE_BUILD_SYSTEMS_LIB_DIR/defects4j-gradle-dists.zip";
-
-if (-e "$GRADLE_DISTS_ZIP") {
-    # Unzip existing zip so that can be updated with new distributions
-    if (system("unzip -q -u $GRADLE_DISTS_ZIP -d $TMP_DIR") != 0) {
-        die "Could not unzip $GRADLE_DISTS_ZIP";
-    }
-} else {
-    if (system("mkdir -p $GRADLE_DISTS_DIR") != 0) {
-        die "Could not create $GRADLE_DISTS_DIR directory";
-    }
-}
-
-system("echo \"Gradle distributions updated: ${month}/${year}\\n\" > $GRADLE_DISTS_README");
-
-my $COMMIT_DB = "$SCRIPT_DIR/projects/$PID/commit-db";
-open(my $commits_data, '<', $COMMIT_DB) or die "Could not open '$COMMIT_DB'";
-while (my $row = <$commits_data>) {
-    chomp $row;
-
-    my @columns = split "," , $row;
-    my $revision_id = $columns[2]; # Checkout the official fix commit
-    my $work_dir = "$TMP_DIR/$revision_id";
-
-    my $checkout_cmd = $project->{_vcs}->_checkout_cmd("$revision_id", "$work_dir");
-    Utils::exec_cmd($checkout_cmd, "Check out $revision_id to $work_dir") or die "Could not checkout '$revision_id'";
-
-    my $gradle_properties_file = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
-    if (-e $gradle_properties_file) {
-        my $gradle_properties = Utils::read_config_file("$gradle_properties_file");
-
-        my $url = $gradle_properties->{'distributionUrl'};
-        $url =~ s/\\:/:/g;
-        my $dist_file = $url;
-        $dist_file =~ /.*\/(.*)/;
-        $dist_file = $1;
-
-        # Only download archive if the server has a newer file (in case it does,
-        # overwrite the existing one)
-        if (system("cd $GRADLE_DISTS_DIR && wget -O $dist_file -N -q -nv $url") != 0) {
-            die "Could not download $url";
-        }
-    }
-
-    if (system("rm -rf $work_dir") != 0) {
-        die "Could not remove $work_dir";
-    }
-}
-
-# Updated README file with all distributions
-system("cd $GRADLE_DISTS_DIR && find * -type f ! -name 'README.md' -exec echo {} >> $GRADLE_DISTS_README \\;");
-
-# Zip gradle distributions
-if (system("cd $TMP_DIR && zip -q -r $GRADLE_DISTS_ZIP dists") != 0) {
-    die "Could not zip $TMP_DIR/dists";
-}
-
-# Clean up
-system("rm -rf $TMP_DIR");
-
-#
-# Collect all gradle dependencies required to compile all bugs of a particular
-# project
-#
-
-# Make sure that all required gradle distribution versions are available to
-# compile each project version
-if (! -e "$GRADLE_DISTS_ZIP") {
-    die "Could not find '$GRADLE_DISTS_ZIP' therefore no gradle distribution is available";
-}
-if (system("unzip -q -u $GRADLE_DISTS_ZIP -d $GRADLE_BUILD_SYSTEMS_LIB_DIR") != 0) {
-    die "Could not unzip $GRADLE_DISTS_ZIP to $GRADLE_BUILD_SYSTEMS_LIB_DIR";
-}
-
-if (system("mkdir -p $TMP_DIR") != 0) {
-    die "Could not create $TMP_DIR directory";
 }
 
 my $GRADLE_DEPS_DIR = "$TMP_DIR/deps";
