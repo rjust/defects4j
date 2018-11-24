@@ -29,8 +29,8 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 #
 
 # Get time of last data modification of a file
-get_time_of_last_data_modification() {
-    local USAGE="Usage: get_status <file>"
+get_modification_timestamp() {
+    local USAGE="Usage: get_modification_timestamp <file>"
     if [ "$#" != 1 ]; then
         echo "$USAGE" >&2
         exit 1
@@ -47,7 +47,8 @@ get_time_of_last_data_modification() {
         cmd="stat -f %m $f"
     fi
 
-    echo "$cmd"
+    local ts=$($cmd)
+    echo "$ts"
 }
 
 ################################################################################
@@ -118,8 +119,8 @@ echo "Setting up Gradle dependencies ... "
 GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
 GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
 
-dists_ts_cmd=$(get_time_of_last_data_modification $GRADLE_DISTS_ZIP)
-deps_ts_cmd=$(get_time_of_last_data_modification $GRADLE_DEPS_ZIP)
+dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
+deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
 cd "$DIR_LIB_GRADLE"
 
@@ -127,17 +128,17 @@ old_dists_ts=0
 old_deps_ts=0
 
 if [ -e $GRADLE_DISTS_ZIP ]; then
-    old_dists_ts=$($dists_ts_cmd)
+    old_dists_ts=$($dists_ts)
 fi
 if [ -e $GRADLE_DEPS_ZIP ]; then
-    old_deps_ts=$($deps_ts_cmd)
+    old_deps_ts=$($deps_ts)
 fi
 
 # Only download archive if the server has a newer file
 wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DISTS_ZIP
 wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DEPS_ZIP
-new_dists_ts=$($dists_ts_cmd)
-new_deps_ts=$($deps_ts_cmd)
+new_dists_ts=$($dists_ts)
+new_deps_ts=$($deps_ts)
 
 # Update gradle distributions/dependencies if a newer archive was available
 [ "$old_dists_ts" != "$new_dists_ts" ] && unzip -q -u $GRADLE_DISTS_ZIP
