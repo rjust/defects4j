@@ -15,6 +15,8 @@ if ! wget --version > /dev/null 2>&1; then
     exit 1
 fi
 
+HOST_URL="http://people.cs.umass.edu/~rjust/defects4j/download"
+
 # Directories for project repositories and external libraries
 BASE="$(cd $(dirname $0); pwd)"
 DIR_REPOS="$BASE/project_repos"
@@ -79,13 +81,12 @@ cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
 echo
 echo "Setting up EvoSuite ... "
 EVOSUITE_VERSION="0.2.0"
-EVOSUITE_URL="http://people.cs.umass.edu/~rjust/defects4j/download"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$EVOSUITE_JAR" ] \
-                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_JAR"
+                  && wget -nv "$HOST_URL/$EVOSUITE_JAR"
 cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
-                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
+                  && wget -nv "$HOST_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
 (cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
 (cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
@@ -135,8 +136,8 @@ if [ -e $GRADLE_DEPS_ZIP ]; then
 fi
 
 # Only download archive if the server has a newer file
-wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DISTS_ZIP
-wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$GRADLE_DEPS_ZIP
+wget -N $HOST_URL/$GRADLE_DISTS_ZIP
+wget -N $HOST_URL/$GRADLE_DEPS_ZIP
 new_dists_ts=$($dists_ts)
 new_deps_ts=$($deps_ts)
 
