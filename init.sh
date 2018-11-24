@@ -33,7 +33,7 @@ get_time_of_last_data_modification() {
     local USAGE="Usage: get_status <file>"
     if [ "$#" != 1 ]; then
         echo "$USAGE" >&2
-        return 1
+        exit 1
     fi
 
     local f="$1"
@@ -48,7 +48,6 @@ get_time_of_last_data_modification() {
     fi
 
     echo "$cmd"
-    return 0
 }
 
 ################################################################################
