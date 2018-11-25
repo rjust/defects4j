@@ -117,29 +117,26 @@ cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
 echo
 echo "Setting up Gradle dependencies ... "
 
+cd "$DIR_LIB_GRADLE"
+
 GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
 GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
-
-dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
-deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
-
-cd "$DIR_LIB_GRADLE"
 
 old_dists_ts=0
 old_deps_ts=0
 
 if [ -e $GRADLE_DISTS_ZIP ]; then
-    old_dists_ts=$($dists_ts)
+    old_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
 fi
 if [ -e $GRADLE_DEPS_ZIP ]; then
-    old_deps_ts=$($deps_ts)
+    old_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 fi
 
 # Only download archive if the server has a newer file
 wget -N $HOST_URL/$GRADLE_DISTS_ZIP
 wget -N $HOST_URL/$GRADLE_DEPS_ZIP
-new_dists_ts=$($dists_ts)
-new_deps_ts=$($deps_ts)
+new_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
+new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
 # Update gradle distributions/dependencies if a newer archive was available
 [ "$old_dists_ts" != "$new_dists_ts" ] && mkdir "dists" && unzip -q -u $GRADLE_DISTS_ZIP -d "dists"
