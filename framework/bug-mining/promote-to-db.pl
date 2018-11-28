@@ -77,8 +77,6 @@ use Project;
 use DB;
 use Utils;
 
-promote-to-db.pl -p project_id -w work_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
-
 my %cmd_opts;
 getopts('p:w:b:o:d:', \%cmd_opts) or pod2usage(1);
 
