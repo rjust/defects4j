@@ -195,6 +195,10 @@ our $GRADLE_LOCAL_HOME_DIR = ".gradle_local_home";
         or die("Couldn't find test generation tools! Did you (re)run 'defects4j/init.sh'?\n\n");
 -d "$BUILD_SYSTEMS_LIB_DIR"
         or die("Couldn't find build system tools! Did you (re)run 'defects4j/init.sh'?\n\n");
+-d "$BUILD_SYSTEMS_LIB_DIR/gradle/dists"
+        or die("Couldn't find gradle distributions! Did you (re)run 'defects4j/init.sh'?\n\n");
+-d "$BUILD_SYSTEMS_LIB_DIR/gradle/deps"
+        or die("Couldn't find gradle dependencies! Did you (re)run 'defects4j/init.sh'?\n\n");
 
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
