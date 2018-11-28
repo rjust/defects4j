@@ -119,6 +119,10 @@ my $db_dir = $WORK_DIR;
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 # Set the projects and repository directories to the current working directory.
 my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
@@ -184,18 +188,18 @@ foreach my $bid (@bids) {
         die "Duplicate test case failure: $_. Build is probably broken" unless ++$seen{$_} < 2;
     }
 
-    print "List of methods: \n" . join ("\n",  @$list) . "\n";
+    print "List of test methods: \n" . join ("\n",  @$list) . "\n";
     # Run triggering test(s) in isolation on v2 -> tests should pass. Any test not
     # passing is excluded from further processing.
     $list = _run_tests_isolation("$TMP_DIR/v2", $list, $EXPECT_PASS);
     $data{$PASS_ISO_V2} = scalar(@$list);
-    print "List of methods: (passed in isolation on v2)\n" . join ("\n", @$list) . "\n";
+    print "List of test methods: (passed in isolation on v2)\n" . join ("\n", @$list) . "\n";
 
     # Run triggering test(s) in isolation on v1 -> tests should fail. Any test not
     # failing is excluded from further processing.
     $list = _run_tests_isolation("$TMP_DIR/v1", $list, $EXPECT_FAIL);
     $data{$FAIL_ISO_V1} = scalar(@$list);
-    print "List of methods: (failed in isolation on v1)\n" . join ("\n", @$list) . "\n";
+    print "List of test methods: (failed in isolation on v1)\n" . join ("\n", @$list) . "\n";
 
      # Save non-dependent triggering tests to $OUT_DIR/$bid
     if (scalar(@{$list}) > 0) {
@@ -230,6 +234,7 @@ sub _get_bug_ids {
         $max_id = $3 if defined $3;
     }
 
+    # TODO before giving up check whether it finished successfully
     my $sth_exists = $dbh_trigger->prepare("SELECT * FROM $TAB_TRIGGER WHERE $PROJECT=? AND $ID=?") or die $dbh_trigger->errstr;
 
     # Select all version ids from previous step in workflow
@@ -268,10 +273,6 @@ sub _get_failing_tests {
 
     # Compile src and test
     $project->compile() or die;
-
-    # Fix tests if there are any broken ones
-    # TODO: Doesn't Defects4J automatically call fix_tests during checkout_vid?
-    $project->fix_tests($vid);
     $project->compile_tests() or die;
 
     # Run tests and get number of failing tests
@@ -328,7 +329,6 @@ sub _add_row {
 
 Previous step in workflow is F<analyze-project.pl>.
 
-Next step in workflow is running F<get-class-list.pl>. # TODO get-class-list.pl
-# does not exist
+Next step in workflow is running F<get-metadata.pl>.
 
 =cut

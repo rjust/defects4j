@@ -83,23 +83,74 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 # Create necessary directories
-my $PROJECT_DIR = "$WORK_DIR/framework/projects/$PID";
+my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
 my $PATCH_DIR   = "$PROJECT_DIR/patches";
 my $FAILING_DIR = "$PROJECT_DIR/failing_tests";
 my $TRIGGER_DIR = "$PROJECT_DIR/trigger_tests";
 my $MOD_CLASSES = "$PROJECT_DIR/modified_classes";
 my $ANALYZER_OUTPUT = "$PROJECT_DIR/analyzer_output";
+my $GEN_BUILDFILE_DIR = "$PROJECT_DIR/build_files";
 
-system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES");
+system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES $ANALYZER_OUTPUT $GEN_BUILDFILE_DIR");
+
+# Clean up previously generated data
+system("rm -rf $ANALYZER_OUTPUT/${BID} $PATCH_DIR/${BID}.src.patch $PATCH_DIR/${BID}.test.patch");
 
 # Temporary directory
-my $TMP_DIR = Utils::get_tmp_dir(); # Temporary directory
+my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
 # Set up project
 my $project = Project::create_project($PID);
-$project->{prog_root} = $TMP_DIR;
+
+#
+# Initialize a specific version id.
+#
+sub _init_version {
+    my ($project, $bid, $vid) = @_;
+
+    my $work_dir = "${TMP_DIR}/${vid}";
+    $project->{prog_root} = $work_dir;
+
+    my $rev_id = $project->lookup("${vid}");
+
+    # Use the VCS checkout routine, which does not apply the cached, possibly
+    # minimized patch to obtain the buggy version.
+    $project->{_vcs}->checkout_vid("${vid}", $work_dir) or die "Cannot checkout $vid version";
+
+    system("mkdir -p $ANALYZER_OUTPUT/$bid");
+    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
+    if (-e "$work_dir/pom.xml") {
+        my $cmd = " cd $work_dir" .
+                  " && mvn ant:ant -Doverwrite=true 2>&1" .
+                  " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
+                  " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+                  " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+                  " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
+        Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id) or die;
+
+        $cmd = " cd $work_dir" .
+               " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+        Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
+
+        # Get dependencies if it is maven-ant project
+        my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
+        Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
+    } else {
+        my $cmd = " cd $work_dir" .
+                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+        Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+    }
+
+    $project->initialize_revision($rev_id, "${vid}");
+
+    return ($rev_id, $project->src_dir("${vid}"), $project->test_dir("${vid}"));
+}
 
 #
 # The Defects4J core framework requires certain metadata for each defect. This
@@ -108,48 +159,16 @@ $project->{prog_root} = $TMP_DIR;
 sub _bootstrap {
     my ($project, $bid) = @_;
 
-    # This defect is already initialized
-    -e "$PATCH_DIR/$bid.src.patch" and return;
-
-    my $v1 = $project->lookup("${bid}b");
-    my $v2 = $project->lookup("${bid}f");
-
-    # Use the VCS checkout routine, which does not apply the cached, possibly
-    # minimized patch to obtain the buggy version.
-    $project->{_vcs}->checkout_vid("${bid}b", $TMP_DIR) or die "Cannot checkout pre-fix version";
-    $project->initialize_revision($v1, "${bid}b");
-    my ($src_b, $test_b) = ($project->src_dir("${bid}b"), $project->test_dir("${bid}b"));
-
-    $project->{_vcs}->checkout_vid("${bid}f", $TMP_DIR) or die "Cannot checkout post-fix version";
-    $project->initialize_revision($v2, "${bid}f");
-    my ($src_f, $test_f) = ($project->src_dir("${bid}f"), $project->test_dir("${bid}f"));
-
-    system("mkdir -p $ANALYZER_OUTPUT/$bid");
-    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-    if (-e "$TMP_DIR/pom.xml") {
-      my $cmd = " cd $TMP_DIR" .
-                " && mvn ant:ant -Doverwrite=true 2>&1" .
-                #TODO: Configure your input to analyzer here
-                " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
-         Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.");
-      # Get dependencies if it is maven-ant project
-      my $download_dep = "cd $TMP_DIR" .
-                  "&& ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
-      Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
-      } else {
-        my $cmd = " cd $TMP_DIR" .
-                  #TODO: Configure your input to analyzer here
-                  " && java -jar $LIB_DIR/analyzer.jar $TMP_DIR $ANALYZER_OUTPUT/$bid build.xml 2>&1";
-           Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
-      }
+    my ($v1, $src_b, $test_b) = _init_version($project, $bid, "${bid}b");
+    my ($v2, $src_f, $test_f) = _init_version($project, $bid, "${bid}f");
 
     die "Source directories don't match for buggy and fixed revisions of $bid" unless $src_b eq $src_f;
     die "Test directories don't match for buggy and fixed revisions of $bid" unless $test_b eq $test_f;
 
     # Create local patch so that we can use the D4J core framework.
     # Minimization doesn't matter here, which has to be done manually.
-    $project->export_diff($v2, $v1,"$PATCH_DIR/$bid.src.patch", "$src_f");
-    $project->export_diff($v2, $v1,"$PATCH_DIR/$bid.test.patch", "$test_f");
+    $project->export_diff($v2, $v1, "$PATCH_DIR/$bid.src.patch", "$src_f");
+    $project->export_diff($v2, $v1, "$PATCH_DIR/$bid.test.patch", "$test_f");
 }
 
 my @ids = $project->get_version_ids();
@@ -177,6 +196,7 @@ foreach my $bid (@ids) {
     # Clean the temporary directory
     Utils::exec_cmd("rm -rf $TMP_DIR && mkdir -p $TMP_DIR", "Cleaning working directory")
             or die "Cannot clean working directory";
+    $project->{prog_root} = $TMP_DIR;
     $project->checkout_vid("${bid}f", $TMP_DIR, 1) or die "Cannot checkout fixed version";
     $project->sanity_check();
 }

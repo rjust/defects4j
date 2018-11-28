@@ -128,8 +128,11 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 # Set the projects and repository directories to the current working directory
-my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PATCHES_DIR = "$PROJECTS_DIR/$PID/patches";
 my $FAILING_DIR = "$PROJECTS_DIR/$PID/failing_tests";
 
@@ -236,6 +239,9 @@ sub _check_t2v2 {
     my $v1 = $project->lookup("${bid}b");
     my $v2 = $project->lookup("${bid}f");
 
+    # Clean previous results
+    `>$FAILING_DIR/$v2` if -e "$FAILING_DIR/$v2";
+
     # Checkout v2
     $project->checkout_vid("${bid}f", $TMP_DIR, 1) == 1 or die;
 
@@ -245,8 +251,6 @@ sub _check_t2v2 {
     $ret = $project->compile_tests();
     _add_bool_result($data, $COMP_T2V2, $ret) or return 0;
 
-    # Clean previous results
-    `>$FAILING_DIR/$v2` if -e "$FAILING_DIR/$v2";
     my $successful_runs = 0;
     my $run = 1;
     while ($successful_runs < $TEST_RUNS && $run <= $MAX_TEST_RUNS) {

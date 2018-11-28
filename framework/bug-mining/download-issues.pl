@@ -93,7 +93,7 @@ use URI::Escape;
 use List::Util qw(all);
 use JSON::Parse qw(json_file_to_perl);
 
-my $SUPPORTED_TRACKERS = (
+my %SUPPORTED_TRACKERS = (
     'google' => {
                     'default_tracker_uri' => 'http://code.google.com/p/',
                     'default_query' => 'label:type-defect',
@@ -221,22 +221,23 @@ my $TRACKER_NAME = $cmd_opts{g};
 if (! defined $SUPPORTED_TRACKERS{$TRACKER_NAME}) {
     die "Invalid tracker-name! Expected one of the following options: " . join ('|', sort keys (%SUPPORTED_TRACKERS)) . ".";
 }
+my %TRACKER = %{$SUPPORTED_TRACKERS{$TRACKER_NAME}};
 
 my $TRACKER_ID = $cmd_opts{t};
 my $OUTPUT_DIR = $cmd_opts{o};
 my $ISSUES_FILE = $cmd_opts{f};
 my $ORGANIZATION_ID = $cmd_opts{z};
-my $QUERY = $cmd_opts{q};
-my $TRACKER_URI = $cmd_opts{u};
-my $FETCHING_LIMIT = $cmd_opts{l};
+my $QUERY = $cmd_opts{q} // $TRACKER{'default_query'};
+my $TRACKER_URI = $cmd_opts{u} // $TRACKER{'default_tracker_uri'};
+my $FETCHING_LIMIT = $cmd_opts{l} // $TRACKER{'default_limit'};
 # Enable debugging if flag is set
-$DEBUG = 1 if defined $cmd_opts{D};
+my $DEBUG = 1 if defined $cmd_opts{D};
 
 for (my $start = 0; ; $start += $FETCHING_LIMIT) {
-    my $uri = $tracker{'build_uri'}($TRACKER_URI, $TRACKER_ID, $QUERY, $start, $FETCHING_LIMIT, $ORGANIZATION_ID);
+    my $uri = $TRACKER{'build_uri'}($TRACKER_URI, $TRACKER_ID, $QUERY, $start, $FETCHING_LIMIT, $ORGANIZATION_ID);
     my $project_in_file = $TRACKER_ID;
     $project_in_file =~ tr*/*-*;
-    my $out_file = "${output_dir}/${project_in_file}-issues-${start}.txt";
+    my $out_file = "${OUTPUT_DIR}/${project_in_file}-issues-${start}.txt";
 
     if (!-e $out_file) {
         print "Downloading ${uri} to ${out_file}\n" if $DEBUG;
@@ -244,11 +245,11 @@ for (my $start = 0; ; $start += $FETCHING_LIMIT) {
     } else {
         print "Skipping download of ${out_file}\n" if $DEBUG;
     }
-    my @results = @{$tracker{'results'}($out_file)};
+    my @results = @{$TRACKER{'results'}($out_file)};
     if (@results) {
-        open(FH, ">>$ISSUES_FILE") or die "Cannot write to ${ISSUES_FILE}!";
-        print join ("", map {$_ . "\n"} @results);
-        close(FH);
+        open(my $fh, ">>$ISSUES_FILE") or die "Cannot write to ${ISSUES_FILE}!";
+        print $fh join ("", map {$_ . "\n"} @results);
+        close($fh);
         # continue going because there may be more results
     } else {
         last;

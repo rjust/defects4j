@@ -33,7 +33,7 @@ etc.)
 
 =head1 SYNOPSIS
 
-vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify
+vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify -f output_file
 
 =head1 OPTIONS
 
@@ -73,16 +73,14 @@ use Getopt::Std;
 use List::Util qw(all pairmap);
 use Pod::Usage;
 
-# List of all supported vcs
-our @SUPPORTED_VCSs = ("git", "svn");
-
-my %supported_vcs = (
+my %SUPPORTED_VCSs = (
     'git' => {
             'get_commits' => sub {
                             my ($fh, $command, $regexp) = @_;
                             die unless all {defined $_} ($fh, $command, $regexp);
-                            my @results = ();
+                            my %results;
                             my $commit = '';
+                            my $version_id = 1;
                             while (<$fh>) {
                                 chomp ;
                                 if (/^commit (.*)/) {
@@ -100,19 +98,23 @@ my %supported_vcs = (
                                     next unless $parent; # skip revisions without parent:
                                                          # this can be the first revision or
                                                          # due to bad history rewriting
-                                    push @results, ($parent, $commit);
+                                    $results{$version_id}{'p'} = $parent;
+                                    $results{$version_id}{'c'} = $commit;
                                     $commit = '';        # unset to skip lines until next commit
+
+                                    $version_id += 1; # increase version id
                                 }
                             }
-                            return \@results;
+                            return \%results;
                 }
         },
     'svn' => {
             'get_commits' => sub {
                                 my ($fh, $command, $regexp) = @_;
                                 die unless all {defined $_} ($fh, $command, $regexp);
-                                my @results = ();
+                                my %results;
                                 my $commit = '';
+                                my $version_id = 1;
                                 while (<$fh>) {
                                     chomp;
                                     if (/^r(\d+) \| .* \| \d+ line/) {
@@ -126,38 +128,47 @@ my %supported_vcs = (
 
                                         my $parent = $commit - 1;
                                         next unless $parent > 0; # skip first revision
-                                        push @results, ($parent, $commit);
+                                        $results{$version_id}{'p'} = $parent;
+                                        $results{$version_id}{'c'} = $commit;
                                         $commit = '';        # unset to skip lines until next commit
+
+                                        $version_id += 1; # increase version id
                                     }
                                 }
-                                return \@results;
+                                return \%results;
                     }
         }
 );
 
 my %cmd_opts;
-getopts('v:e:l:r:c:', \%cmd_opts) or pod2usage(1);
+getopts('v:e:l:r:c:f:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{v} and defined $cmd_opts{e}
                     and defined $cmd_opts{l} and defined $cmd_opts{c};
 
 my $VCS_NAME = $cmd_opts{v};
-if (! grep(/^$VCS_NAME$/, @SUPPORTED_VCSs)) {
-    die "Invalid vcs-type! Expected one of the following options: " . join("|", @SUPPORTED_VCSs) . ".";
+if (! defined $SUPPORTED_VCSs{$VCS_NAME}) {
+    die "Invalid vcs-name! Expected one of the following options: " . join ('|', sort keys (%SUPPORTED_VCSs)) . ".";
 }
 my %VCS = %{$SUPPORTED_VCSs{$VCS_NAME}};
+
 my $REGEXP = $cmd_opts{e};
 my $LOG_FILE = $cmd_opts{l};
 my $REPOSITORY_DIR = $cmd_opts{r};
 my $COMMAND = $cmd_opts{c};
+my $OUTPUT_FILE = $cmd_opts{f};
 
 open my $fh, $LOG_FILE or die "Could not open commit-log $LOG_FILE";
-my @commits = @{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP)};
+my %commits = %{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP)};
 close $fh;
-if (scalar @commits eq 0) {
+if (scalar keys %commits eq 0) {
     print("Warning, no commit that matches the regex expression provided has been found\n");
 }
-print join ('', (pairmap {"$a,$b\n"} @commits)); # TODO redirect the output to commit-db
+open $fh, ">$OUTPUT_FILE" or die "Cannot open ${OUTPUT_FILE}!";
+for my $commit_id (sort { $a <=> $b} keys %commits) {
+    print $fh "$commit_id,$commits{$commit_id}{'p'},$commits{$commit_id}{'c'}\n";
+}
+close($fh);
 
 sub _git_get_parent {
     my $commit = shift;
@@ -171,7 +182,7 @@ sub _git_get_parent_revisions {
     my $revision_no = shift;
     die unless $revision_no;
     # returns a string <revision-no> <parent1> <parent2> <parent3> ...
-    my $result = `git --git-dir=${$REPOSITORY_DIR} rev-list --parents -n 1 ${revision_no}`;
+    my $result = `git --git-dir=${REPOSITORY_DIR} rev-list --parents -n 1 ${revision_no}`;
     die unless $? == 0;
     chomp $result;
     die "Could not run git" unless $? == 0;

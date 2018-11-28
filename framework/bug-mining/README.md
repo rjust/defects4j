@@ -83,8 +83,9 @@ perl download-issues.pl -g <tracker_name, e.g., jira> \
                         -f bug-mining/issues.txt
 perl merge-issue-numbers.pl -f bug-mining/issues.txt
 ```
-**merge-issue-numbers.pl required some __manual_input__**
-
+**TODO: for like 99% of the case we don't need to run merge-issue-numbers.pl, as
+usually only one issue-tracker is used, so it can moved to a note or something
+like that. Nevertheless, it should be fixed as it requires some __manual_input__**
 
 4. Obtain the development history (commit logs) for the project:
 ```
@@ -105,12 +106,14 @@ perl vcs-log-xref.pl -v <vcs name, i.e., git or svn> \
                      -e '<regular_expression>' \
                      -l bug-mining/gitlog \
                      -r bug-mining/project_repos/<project_name>.git \
-                     -c 'bash verify-bug-file.sh bug-mining/issues.txt'
+                     -c './verify-bug-file.sh bug-mining/issues.txt' \
+                     -f bug-mining/framework/projects/<project_id>/commit-db
 perl merge-commit-db.pl -f bug-mining/framework/projects/<project_id>/commit-db \
                         -g bug-mining/project_repos/<project_name>.git \
                         -t <tracker id, e.g., google, jira, github>
 ```
-**vcs-log-xref.pl sends output to STDOUT instead of to bug-mining/framework/projects/<project_id>/commit-db**
+**TODO: merge-commit-db should only be required if someone is mining an existing
+project ...**
 
 These are the issue trackers, issue tracker project IDs, and regular expressions
 previously used (Note that we manually built the `commit-db` for Chart):
@@ -190,9 +193,8 @@ perl analyze-project.pl -p <project_id> \
    "fixed" version of a class. If all tests fail due to a NoClassDefFoundError
    (or similar exception), then remove the `failing_test` file, ensure that the
    missing dependency is in place, and reanalyze the specific revisions by
-   deleting the corresponding entries in `rev_pairs` and running
-   `analyze-revisions.pl` with `-b <bid>`. **TODO: where is that `rev_pairs`?
-   and what's `<bid>` at this point?**
+   deleting the corresponding entries in `bug-mining/rev_pairs` and running
+   `initialize-revisions.pl` with `-b <bug_id>`.
 
 5. If a build fails due to running empty test set in "run.dev.tests" step, below
    is a list of common situations that might need to be addressed:
@@ -201,12 +203,13 @@ perl analyze-project.pl -p <project_id> \
       the versions afterwards). To address this, checkout the particular
       version, inspect its properties related to source/test directories, then
       adapt the changes in `<project_id>.build.xml`. Reanalyze the specific
-      revision by deleting the corresponding entries in `rev_pairs` and running
-      `analyze-revisions.pl` with `-b <bid>`.
+      revision by deleting the corresponding entries in `bug-mining/rev_pairs`
+      and running `initialize-revisions.pl` with `-b <bug_id>`.
     - Make sure the `all.manual.tests` fileset in `<project_id>.build.xml` is
       covering the tests listed in project version-specific build files.
     - Reanalyze the specific revisions by deleting the corresponding entries in
-      `rev_pairs` and running `analyze-revisions.pl` with `-b <bid>`.
+      `bug-mining/rev_pairs` and running `initialize-revisions.pl` with
+      `-b <bug_id>`.
 
 6. If particular revisions cannot be built, often due to dependencies that no
    longer exist, then they may be removed from the `commit-db`. It is

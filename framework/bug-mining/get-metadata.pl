@@ -123,6 +123,10 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 # Set the projects and repository directories to the current working directory.
 my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PROJECTS_REPOS_DIR = "$WORK_DIR/project_repos";
@@ -159,10 +163,6 @@ foreach my $bid (@bids) {
     my $file = "$TRIGGER/$bid";
     -e $file or die "Triggering test does not exist: $file!";
 
-    # TODO: Skip if file already exists
-    # TODO: Check whether triggering test file has been modified
-    # next if -e "$LOADED/$bid.src";
-
     my @list = @{Utils::get_failing_tests($file)->{methods}};
     # There has to be a triggering test
     scalar(@list) > 0 or die "No triggering test: $v2";
@@ -174,15 +174,16 @@ foreach my $bid (@bids) {
 
     # Compile sources and tests
     $project->compile() or die;
-    $project->fix_tests("${bid}f");
     $project->compile_tests() or die;
 
     my %src;
     my %test;
     foreach my $test (@list) {
         my $log_file = "$TMP_DIR/tests.fail";
+
         # Run triggering test and verify that it passes
         $project->run_tests($log_file, $test) or die;
+
         # Get number of failing tests -> has to be 0
         my $fail = Utils::get_failing_tests($log_file);
         (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die;
@@ -213,11 +214,6 @@ foreach my $bid (@bids) {
     }
     close(OUT);
 
-    # Export variables to make sure the get_modified_classes script picks up the right directories.
-    $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
-    $ENV{'REPO_DIR'} = abs_path($PROJECTS_REPOS_DIR);
-    # TODO: This should also be configurable in Constants.pm
-    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
     # Determine modified files
     #
     # Note:
