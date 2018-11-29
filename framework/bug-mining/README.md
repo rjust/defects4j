@@ -26,7 +26,7 @@ script exist that ease the configuration process.
    URL is `https://github.com/my-awesome-project`, and the short, descriptive
    *project id* is `MyProject`, then configure the project for bug mining with:
 ```
-perl create-project.pl -p MyProject -n my-awesome-project -w bug-mining -r https://github.com/my-awesome-project
+./create-project.pl -p MyProject -n my-awesome-project -w bug-mining -r https://github.com/my-awesome-project
 ```
 
 This command initializes the *bug-mining* working directory and creates the
@@ -77,11 +77,11 @@ mkdir bug-mining/issues
    `download-issues.pl` to download the issues (additionally, use
    `merge-issue-numbers.pl` if a project has multiple trackers):
 ```
-perl download-issues.pl -g <tracker_name, e.g., jira> \
+./download-issues.pl -g <tracker_name, e.g., jira> \
                         -t <tracker_project_id, e.g., LANG for the Apache Commons-Lang project> \
                         -o bug-mining/issues \
                         -f bug-mining/issues.txt
-perl merge-issue-numbers.pl -f bug-mining/issues.txt
+./merge-issue-numbers.pl -f bug-mining/issues.txt
 ```
 **TODO: for like 99% of the case we don't need to run merge-issue-numbers.pl, as
 usually only one issue-tracker is used, so it can moved to a note or something
@@ -102,13 +102,13 @@ git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitl
    enumerates the output of `vcs-log-xref.pl` and outputs or updates the
    `commit-db` file:
 ```
-perl vcs-log-xref.pl -v <vcs name, i.e., git or svn> \
+./vcs-log-xref.pl -v <vcs name, i.e., git or svn> \
                      -e '<regular_expression>' \
                      -l bug-mining/gitlog \
                      -r bug-mining/project_repos/<project_name>.git \
                      -c './verify-bug-file.sh bug-mining/issues.txt' \
                      -f bug-mining/framework/projects/<project_id>/commit-db
-perl merge-commit-db.pl -f bug-mining/framework/projects/<project_id>/commit-db \
+./merge-commit-db.pl -f bug-mining/framework/projects/<project_id>/commit-db \
                         -g bug-mining/project_repos/<project_name>.git \
                         -t <tracker id, e.g., google, jira, github>
 ```
@@ -143,7 +143,7 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
    will identify the various directory layouts and run a sanity check on each
    candidate revision in `commit-db`:
 ```
-perl initialize-revisions.pl -p <project_id> -w bug-mining
+./initialize-revisions.pl -p <project_id> -w bug-mining
 ```
 Note: This step uses build-file analyzer to identify developer included &
 excluded test sets.
@@ -163,7 +163,7 @@ initialize-revisions step, and integrate it into the framework**
 2. Analyze all candidate revisions with `analyze-project.pl`. This will identify
    suitable candidates -- ones that compile and have a non-empty source diff:
 ```
-perl analyze-project.pl -p <project_id> \
+./analyze-project.pl -p <project_id> \
                         -w bug-mining \
                         -g <tracker_name, e.g., jira, github, google, or sourceforge> \
                         -t <tracker_project_id, e.g., LANG>
@@ -232,7 +232,7 @@ Reproducing bugs
 1. Determine triggering tests with `get-trigger.pl`. This will determine the
    revisions in `commit-db` that have a test that can reproduce a fault:
 ```
-perl get-trigger.pl -p <project_id> -w bug-mining
+./get-trigger.pl -p <project_id> -w bug-mining
 ```
 
 2. Each reproducible fault has an entry in the `trigger_tests` directory:
@@ -266,7 +266,7 @@ configuration issue is fixed.**
    script determines the metadata, which will be promoted to the main database
    together with that bug:
 ```
-perl get-metadata.pl -p <project_id> -w bug-mining
+./get-metadata.pl -p <project_id> -w bug-mining
 ```
 
 Reviewing and isolating the bugs
@@ -276,7 +276,7 @@ Reviewing and isolating the bugs
    `patches` directory:
 ```
 ls -l bug-mining/framework/projects/<project_id>/patches/*.src.patch
-perl minimize-patch.pl -p <project_id> -b <bid> -w bug-mining
+./minimize-patch.pl -p <project_id> -b <bid> -w bug-mining
 ```
 The default editor for patch minimization is [meld](https://meldmerge.org).
 However, you may use other editors if you prefer.
@@ -289,7 +289,7 @@ Promoting reproducible bugs to the main database
 1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
 ```
-perl promote-to-db.pl -p <project_id> -b <bid> -w bug-mining
+./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining
 ```
 
 **TODO: Augment the promote script: 1) reinvoke get-metadata.pl for all bugs for
