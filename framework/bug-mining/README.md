@@ -1,20 +1,22 @@
 Overview of the bug-mining process
 ----------------------------
-1. Initializing the bug-mining working directory and configuring the project.
+1. Initialize a bug-mining working directory and configuring a project for bug mining.
 
-2. Identifying candidate bugs by cross-referencing the project's version control
+2. Identify candidate bugs by cross-referencing the project's version control
    history with the project's bug tracker.
 
-3. Analyzing the pre-fix and post-fix revisions of the candidate bugs:
-   Making sure that the revisions are compilable and testable.
+3. Analyze the pre-fix and post-fix revisions of the candidate bugs:
+   Identify all bugs whose pre-fix and post-fix revisions are compilable and
+   testable.
 
-4. Reproducing bugs: Running tests to verify that the bug can be reliably
-   reproduced with a test that fails before the fix and passes afterwards.
+4. Reproduce bugs: Run the project's tests to verify that each bug can be reliably
+   reproduced with at least one bug-triggering test that fails on the pre-fix
+   and passes on the post-fix revision.
 
-5. Reviewing and isolating bugs: Manually minimize the bug if necessary (i.e.,
+5. Review and isolate bugs: Manually minimize the bug if necessary (i.e.,
    eliminate features or refactorings).
 
-6. Promoting all reproducible minimized bugs to the main `Defects4J` database!
+6. Promote all reproducible minimized bugs to the main `Defects4J` database!
 
 Initializing the bug-mining working directory and configuring the project
 -------------------------
@@ -38,7 +40,7 @@ following files:
 The **project id** should **start with an upper-case letter** and should be
 **short yet descriptive** (keep in mind that this id is used for commands such
 as `defects4j checkout -p <project_id>`). The **project name** must not include
-spaces, but it can be hyphenated. For example, the project name for the Apache
+spaces, but can be hyphenated. For example, the project name for the Apache
 Commons-Lang project, already included in Defects4J, is *commons-lang*, and its
 project id is *Lang*.
 
@@ -49,7 +51,7 @@ project id is *Lang*.
     - Project layout (source and test directories)
 
 **TODO: What exactly may need to be adapted (i.e., which functions) and how
-should be adapted? Maybe we could add some TODOS to identify which bits may need
+should they be adapted? Maybe we could add some TODOS to identify which bits may need
 to be checked/adapted, e.g., an example on how to adapt the perl module to SVN
 and how to configure a different source/test directory.**
 
@@ -74,24 +76,27 @@ mkdir bug-mining/issues
 ```
 
 3. For trackers jira, github, google, but not sourceforge, use
-   `download-issues.pl` to download the issues (additionally, use
-   `merge-issue-numbers.pl` if a project has multiple trackers):
+   `download-issues.pl` to download all issues:
 ```
 ./download-issues.pl -g <tracker_name, e.g., jira> \
                         -t <tracker_project_id, e.g., LANG for the Apache Commons-Lang project> \
                         -o bug-mining/issues \
                         -f bug-mining/issues.txt
+```
+
+If a project has multiple bug trackers, use `merge-issue-numbers.pl` to combine
+all issues:
+```
 ./merge-issue-numbers.pl -f bug-mining/issues.txt
 ```
-**TODO: for like 99% of the case we don't need to run merge-issue-numbers.pl, as
-usually only one issue-tracker is used, so it can moved to a note or something
-like that. Nevertheless, it should be fixed as it requires some __manual_input__**
+**TODO: in almost all cases we don't need merge-issue-numbers.pl.
+Nevertheless, it should be fixed as it currently requires some __manual_input__**
 
 4. Obtain the development history (commit logs) for the project:
 ```
 git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitlog
 ```
-**TODO: do we want to support other VCS, e.g., SVN?**
+**TODO: How to obtain the history for other VCS, e.g., SVN?**
 
 5. Cross-reference the commit log with the issue numbers known to be bugs
    (saved in *issues.txt* in this example) by using `vcs-log-xref.pl`. The
@@ -148,6 +153,8 @@ Analyzing the pre-fix and post-fix revisions of the candidate bugs
 Note: This step uses build-file analyzer to identify developer included &
 excluded test sets.
 
+**TODO: Is the build-file analyzer already integrated?**
+
 Configuration for the analyzer may be needed (labeled TODO in
 `initialize-revisions.pl`, arguments: `<path to build file>`,
 `<path of generated output files>`, `<name of the build file>`). In the case
@@ -160,8 +167,8 @@ project-specific build files that are necessary for building
 **TODO: Describe the build-file analyzer, which is called during the
 initialize-revisions step, and integrate it into the framework**
 
-2. Analyze all candidate revisions with `analyze-project.pl`. This will identify
-   suitable candidates -- ones that compile and have a non-empty source diff:
+2. Analyze all revisions with `analyze-project.pl`. This will identify
+   suitable candidate bugs -- ones that compile and have a non-empty source diff:
 ```
 ./analyze-project.pl -p <project_id> \
                         -w bug-mining \
@@ -172,10 +179,10 @@ initialize-revisions step, and integrate it into the framework**
 3. If any revisions fail to build, inspect the project build script and error
    message and attempt to diagnose the issue. Some common problems are:
     - Missing dependencies (may require specified directory structure for
-      dependency files). **TODO: in this case what one should do?**
+      dependency files). **TODO: what to do in this case?**
     - Containing outdated `build.xml` file due to migration to Maven (by
-      default, Defects4J imports `build.xml` from each revision). **TODO what
-      to do to address this?**
+      default, Defects4J imports `build.xml` from each revision). **TODO how to
+      identify the most recent build file?**
     - Missing `build.xml`: for Maven-based projects, edit `<project_id>.pm`
       (e.g., `MyProject.pm`) to run maven-ant plugin with overwrite option
       enabled. This will also solve the outdated build file issue stated above.
