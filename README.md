@@ -41,7 +41,6 @@ Setting up Defects4J
 
 Requirements
 ----------------
-#### System requirements
  - Java 1.7
  - Git >= 1.9
  - SVN >= 1.8
