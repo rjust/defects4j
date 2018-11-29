@@ -1,0 +1,17 @@
+org.joda.time.TestBaseSingleFieldPeriod
+org.joda.time.TestDateTimeUtils
+org.joda.time.TestLocalDateTime_Basics
+org.joda.time.TestLocalDate_Basics
+org.joda.time.TestLocalTime_Basics
+org.joda.time.TestMonthDay_Basics
+org.joda.time.TestPartial_Basics
+org.joda.time.TestPartial_Constructors
+org.joda.time.TestPartial_Match
+org.joda.time.TestPartial_Properties
+org.joda.time.TestPeriod_Constructors
+org.joda.time.TestTimeOfDay_Basics
+org.joda.time.TestYearMonthDay_Basics
+org.joda.time.TestYearMonth_Basics
+org.joda.time.chrono.TestISOChronology
+org.joda.time.format.TestISODateTimeFormat
+org.joda.time.format.TestISODateTimeFormat_Fields
