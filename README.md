@@ -133,6 +133,7 @@ directory to export a version-specific property:
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
 | dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
+| dir.bin.tests    | Target directory of test classes (relative to working directory)                    |
 | tests.all        | List of all developer-written test classes                                          |
 | tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
 | tests.trigger    | List of test methods that trigger (expose) the bug                                  |
