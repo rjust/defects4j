@@ -1,4 +1,4 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
 # Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
@@ -30,46 +30,55 @@ download-issues.pl -- Determine the layout and obtain paths for each revision.
 
 =head1 SYNOPSIS
 
-download-issues.pl tracker-type -p tracker_project_id [-g organization_id] [-q query] [-t tracker-uri] [-l fetching_limit] [-o output_dir] [-v (verbose)]
+download-issues.pl -g tracker_name -t tracker_project_id -o output_dir -f issues_file [-z organization_id] [-q query] [-u tracker_uri] [-l fetching_limit] [-D]
 
 =head1 OPTIONS
 
 =over 4
 
-=item B<C<tracker_type>>
+=item B<-g C<tracker_name>>
 
-C<tracker_type> should be one of C<google>, C<jira>, C<sourceforge>, or C<github>
+The source control tracker name, e.g., jira, github, google, or sourceforge.
 
-=item B<-g C<organization_id>>
+=item B<-t C<tracker_project_id>>
 
-C<organization_id> is an param required for the github issue tracker, it specifies the organization the repo is under
+The name used on the issue tracker to identify the project. Note that this might
+not be the same as the Defects4j project name / id, for instance, for the
+commons-lang project is LANG.
 
-=item B<-p C<tracker_project_id>>
+=item B<-o F<output_dir>>
 
-C<tracker_project_id> is the name used on the issue tracker to identify the project. This is not the same as the defects4j id
+The output directory for the fetched issues.
+
+=item B<-f F<issues_file>>
+
+The output file to write all issues id.
+
+=item B<-z C<organization_id>>
+
+The organization id required for the github issue tracker, it specifies the
+organization the repo is under, e.g., apache.
 
 =item B<-q C<query>>
 
-C<query> is the query sent to the issue tracker. Suitable defaults for supported trackers
+The query sent to the issue tracker. Suitable defaults for supported trackers
 are chosen so they identify only bugs.
 
-=item B<-t C<tracker-uri>>
+=item B<-u C<tracker-uri>>
 
-C<tracker-uri> is the URI used to locate the issue tracker. Suitable defaults have been chosen
-for supported trackers, but you may change it e.g., point it to a corporate github URI.
+The URI used to locate the issue tracker. Suitable defaults have been chosen for
+supported trackers, but you may change it, e.g., point it to a corporate GitHub
+URI.
 
 =item B<-l C<fetching_limit>>
 
-The script will fetch C<fetching_limit> issues at a time. Most issue trackers will limit the number
-of results returned by the query, and suitable defaults have been chosen for each supported tracker.
+The maximum number of issues to fetch at a time. Most issue trackers will limit
+the number of results returned by the query, and suitable defaults have been
+chosen for each supported tracker.
 
-=item B<-o C<output_dir>>
+=item B<-D>
 
-The results will be saved in .txt files in the C<output_dir> directory. Defaults to the current directory.
-
-=item B<-v>
-
-If specified, the script will be verbose.
+Debug: Enable verbose logging. Per default script is not verbose.
 
 =back
 
@@ -84,7 +93,7 @@ use URI::Escape;
 use List::Util qw(all);
 use JSON::Parse qw(json_file_to_perl);
 
-my %supported_trackers = (
+my %SUPPORTED_TRACKERS = (
     'google' => {
                     'default_tracker_uri' => 'http://code.google.com/p/',
                     'default_query' => 'label:type-defect',
@@ -203,53 +212,44 @@ my %supported_trackers = (
                 }
 );
 
-my $tracker_name = shift @ARGV;
-die "usage: " . basename($0) . " tracker_name \n" .
-    "\t supported trackers: " . join (' ', sort keys (%supported_trackers))
-        unless defined $tracker_name and
-               defined $supported_trackers{$tracker_name};
-
-my %tracker = %{$supported_trackers{$tracker_name}};
-sub _usage {
-    die "usage: " . basename($0) . " -p project-id \n"
-                . "\t[-g (organization_id)]\n"
-                . "\t[-q query=${tracker{'default_query'}}]\n"
-                . "\t[-t tracker_uri=${tracker{'default_tracker_uri'}}]\n"
-                . "\t[-o output_directory=.]\n"
-                . "\t[-l fetching_limit=${tracker{'default_limit'}}]\n"
-                . "\t[-v (verbose)]"
-                ;
-}
 my %cmd_opts;
-getopts('p:g:q:t:o:l:v', \%cmd_opts) or _usage();
+getopts('g:t:o:f:z:q:u:l:D', \%cmd_opts) or pod2usage(1);
 
-my ($project,  $organization_id, $query, $tracker_uri, $output_dir, $limit, $verbose) =
-        ($cmd_opts{p},
-         $cmd_opts{g} // '',
-         $cmd_opts{q} // $tracker{'default_query'},
-         $cmd_opts{t} // $tracker{'default_tracker_uri'},
-         $cmd_opts{o} // '.',
-         $cmd_opts{l} // $tracker{'default_limit'},
-         $cmd_opts{v} // 0,
-         );
+pod2usage(1) unless defined $cmd_opts{g} and defined $cmd_opts{t} and defined $cmd_opts{o} and defined $cmd_opts{f};
 
-_usage() unless all {defined $_} ($project, $organization_id, $query, $tracker_uri, $output_dir, $limit, $verbose);
+my $TRACKER_NAME = $cmd_opts{g};
+if (! defined $SUPPORTED_TRACKERS{$TRACKER_NAME}) {
+    die "Invalid tracker-name! Expected one of the following options: " . join ('|', sort keys (%SUPPORTED_TRACKERS)) . ".";
+}
+my %TRACKER = %{$SUPPORTED_TRACKERS{$TRACKER_NAME}};
 
-for (my $start = 0; ; $start += $limit) {
-    my $uri = $tracker{'build_uri'}($tracker_uri, $project, $query, $start, $limit, $organization_id);
-    my $project_in_file = $project;
+my $TRACKER_ID = $cmd_opts{t};
+my $OUTPUT_DIR = $cmd_opts{o};
+my $ISSUES_FILE = $cmd_opts{f};
+my $ORGANIZATION_ID = $cmd_opts{z};
+my $QUERY = $cmd_opts{q} // $TRACKER{'default_query'};
+my $TRACKER_URI = $cmd_opts{u} // $TRACKER{'default_tracker_uri'};
+my $FETCHING_LIMIT = $cmd_opts{l} // $TRACKER{'default_limit'};
+# Enable debugging if flag is set
+my $DEBUG = 1 if defined $cmd_opts{D};
+
+for (my $start = 0; ; $start += $FETCHING_LIMIT) {
+    my $uri = $TRACKER{'build_uri'}($TRACKER_URI, $TRACKER_ID, $QUERY, $start, $FETCHING_LIMIT, $ORGANIZATION_ID);
+    my $project_in_file = $TRACKER_ID;
     $project_in_file =~ tr*/*-*;
-    my $out_file = "${output_dir}/${project_in_file}-issues-${start}.txt";
+    my $out_file = "${OUTPUT_DIR}/${project_in_file}-issues-${start}.txt";
 
     if (!-e $out_file) {
-        print "Downloading ${uri} to ${out_file}\n" if $verbose;
+        print "Downloading ${uri} to ${out_file}\n" if $DEBUG;
         die "Could not download ${uri} to ${out_file}" unless get_file($uri, $out_file);
     } else {
-        print "Skipping download of ${out_file}\n" if $verbose;
+        print "Skipping download of ${out_file}\n" if $DEBUG;
     }
-    my @results = @{$tracker{'results'}($out_file)};
+    my @results = @{$TRACKER{'results'}($out_file)};
     if (@results) {
-        print join ("", map {$_ . "\n"} @results);
+        open(my $fh, ">>$ISSUES_FILE") or die "Cannot write to ${ISSUES_FILE}!";
+        print $fh join ("", map {$_ . "\n"} @results);
+        close($fh);
         # continue going because there may be more results
     } else {
         last;

@@ -26,11 +26,11 @@
 
 =head1 NAME
 
-minimize-patch.pl -- View and minimize patch in a merge editor.
+minimize-patch.pl -- View and minimize patch in a visual diff editor.
 
 =head1 SYNOPSIS
 
-minimize-patch.pl -p project_id -w work_dir -b bug_id
+minimize-patch.pl -p project_id -b bug_id -w work_dir
 
 =head1 OPTIONS
 
@@ -38,20 +38,19 @@ minimize-patch.pl -p project_id -w work_dir -b bug_id
 
 =item B<-p C<project_id>>
 
-The id of the project for which a patch should be minimized.
-
-=item B<-w C<work_dir>>
-
-Use C<work_dir> as the working directory.
+The id of the project for which the patch should be displayed.
 
 =item B<-b C<bug_id>>
 
-The id of the bug for which a patch should be minimized.
+The id of the bug for which the patch should be displayed.
+
+=item B<-w F<work_dir>>
+
+The working directory used for the bug-mining process.
 
 =back
 
 =cut
-
 use warnings;
 use strict;
 use FindBin;
@@ -64,40 +63,36 @@ use lib abs_path("$FindBin::Bin/../core");
 use Constants;
 use Project;
 
-#
-# Process arguments and issue usage message if necessary.
-#
 my %cmd_opts;
-getopts('p:w:b:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w} and defined $cmd_opts{b};
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{b} and defined $cmd_opts{w};
 
 =pod
 
 =head1 EDITOR
 
-The default editor (merge tool) used to minimize patches is meld.
-A different editor can be set via the environment variable D4J_EDITOR.
+The default editor (merge tool) used to visualize patches is meld. A different
+editor can be set via the environment variable D4J_EDITOR.
 
 =cut
 my $EDITOR = $ENV{"D4J_EDITOR"} // "meld";
 
-my $PID      = $cmd_opts{p};
-my $WORK_DIR = $cmd_opts{w};
-my $BID      = $cmd_opts{b};
+my $PID = $cmd_opts{p};
+my $BID = $cmd_opts{b};
+my $WORK_DIR = abs_path($cmd_opts{w});
+
 # Check format of target version id
 $BID =~ /^(\d+)$/ or die "Wrong version id format: $BID -- expected: (\\d+)!";
-
-$WORK_DIR = abs_path("$WORK_DIR");
 
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
 # Set the projects and repository directories to the current working directory.
-$PROJECTS_DIR = "$WORK_DIR/framework/projects";
-$REPO_DIR = "$WORK_DIR/project_repos";
+my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
+my $PROJECTS_REPOS_DIR = "$WORK_DIR/project_repos";
 
-my $PATCH_DIR   = "$PROJECTS_DIR/$PID/patches";
+my $PATCH_DIR = "$PROJECTS_DIR/$PID/patches";
 -d $PATCH_DIR or die "Cannot read patch directory: $PATCH_DIR";
 
 my $TMP_DIR = Utils::get_tmp_dir();
@@ -144,7 +139,7 @@ Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $PATC
 # Run sanity check
 # Export variables to make sure the sanity check script picks up the right directories.
 $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
-$ENV{'REPO_DIR'} = abs_path($REPO_DIR);
+$ENV{'REPO_DIR'} = abs_path($PROJECTS_REPOS_DIR);
 # TODO: This should also be configurable in Constants.pm
 $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
 if (!Utils::exec_cmd("$UTIL_DIR/sanity_check.pl -p$PID -b$BID", "Run sanity check")) {
@@ -153,4 +148,4 @@ if (!Utils::exec_cmd("$UTIL_DIR/sanity_check.pl -p$PID -b$BID", "Run sanity chec
 }
 
 # Remove temporary directory
- system("rm -rf $TMP_DIR");
+system("rm -rf $TMP_DIR");

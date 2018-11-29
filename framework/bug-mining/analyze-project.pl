@@ -30,7 +30,7 @@ analyze-project.pl -- Determine all suitable candidates listed in the commit-db.
 
 =head1 SYNOPSIS
 
-analyze-project.pl -p project_id -w work_dir -g tracker_name -t tracker_id [ -b bug_id]
+analyze-project.pl -p project_id -w work_dir -g tracker_name -t tracker_project_id [-b bug_id]
 
 =head1 OPTIONS
 
@@ -42,61 +42,58 @@ The id of the project for which the version pairs are analyzed.
 
 =item B<-w C<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
 
 =item B<-g C<tracker_name>>
 
-Source control tracker name
-eg github, jira, etc
+The source control tracker name, e.g., jira, github, google, or sourceforge.
 
-=item B<-t C<tracker_id>>
+=item B<-t C<tracker_project_id>>
 
-Source control tracker id
+The name used on the issue tracker to identify the project. Note that this might
+not be the same as the Defects4j project name / id, for instance, for the
+commons-lang project is LANG.
 
 =item B<-b C<bug_id>>
 
-Only analyze this bug id or interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
-provided, the interval boundaries are included in the analysis.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
 Per default all bug ids, listed in the commit-db, are considered.
 
 =back
 
 =head1 DESCRIPTION
 
-Runs the following worflow for all candidate bugs in the project's
-C<commit-db>, or (if -b is specified) for a subset of candidates:
-
+Runs the following worflow for all candidate bugs in the project's C<commit-db>,
+or (if -b is specified) for a subset of candidates:
 
 =over 4
 
 =item 1) Verify that src diff (between pre-fix and post-fix) is not empty.
 
-=item 3) Checkout fixed revision
+=item 3) Checkout fixed revision.
 
-=item 4) Compile src and test
+=item 4) Compile src and test.
 
-=item 5) Run tests and log failing tests to F<C<PROJECTS_DIR>/<PID>/failing_tests>
+=item 5) Run tests and log failing tests to F<C<PROJECTS_DIR>/<PID>/failing_tests>.
 
-=item 6) Exclude failing tests, recompile and rerun. This will be repeated until there are
-         no more failing tests in F<$TEST_RUNS> consecutive executions.
-         (Maximum limit of looping in this phase is specified by F<$MAX_TEST_RUNS>)
+=item 6) Exclude failing tests, recompile and rerun. This is repeated until
+         there are no more failing tests in F<$TEST_RUNS> consecutive
+         executions. (Maximum limit of looping in this phase is specified by
+         F<$MAX_TEST_RUNS>).
 
-=item 6) Checkout fixed version
+=item 7) Checkout fixed version.
 
-=item 7) Apply src patch (fixed -> buggy)
+=item 8) Apply src patch (fixed -> buggy).
 
-=item 8) Compile src and test
+=item 9) Compile src and test.
 
 =back
 
-The result for each individual step is stored in F<C<work_dir>/$TAB_REV_PAIRS>
-
+The result for each individual step is stored in F<C<work_dir>/$TAB_REV_PAIRS>.
 For each steps the output table contains a column, indicating the result of the
 the step or '-' if the step was not applicable.
 
 =cut
-
 use warnings;
 use strict;
 use File::Basename;
@@ -111,49 +108,46 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
 my %cmd_opts;
 getopts('p:w:g:t:b:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR, $TRACKER_ID, $TRACKER_NAME) =
-    ($cmd_opts{p},
-     $cmd_opts{b},
-     $cmd_opts{w},
-     $cmd_opts{t},
-     $cmd_opts{g}
-    );
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w}
+                    and defined $cmd_opts{g} and defined $cmd_opts{t};
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR and defined $TRACKER_ID and defined $TRACKER_NAME; # $BID can be undefined
-
-$WORK_DIR = abs_path($WORK_DIR);
-
-# Add script and core directory to @INC
-unshift(@INC, "$WORK_DIR/framework/core");
-
-# Set the projects and repository directories to the current working directory.
-$PROJECTS_DIR = "$WORK_DIR/framework/projects";
-$REPO_DIR = "$WORK_DIR/project_repos";
-
-my $PATCH_DIR   = "$PROJECTS_DIR/$PID/patches";
-my $FAILING_DIR = "$PROJECTS_DIR/$PID/failing_tests";
-
-# TODO make output dir more flexible; maybe organize the csv-based db differently
-my $db_dir = $WORK_DIR;
+my $PID = $cmd_opts{p};
+my $BID = $cmd_opts{b};
+my $WORK_DIR = abs_path($cmd_opts{w});
+my $TRACKER_ID = $cmd_opts{t};
+my $TRACKER_NAME = $cmd_opts{g};
 
 # Check format of target version id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-############################### VARIABLE SETUP
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
+# Set the projects and repository directories to the current working directory
+my $PATCHES_DIR = "$PROJECTS_DIR/$PID/patches";
+my $FAILING_DIR = "$PROJECTS_DIR/$PID/failing_tests";
+
+# TODO make output dir more flexible; maybe organize the csv-based db differently
+my $db_dir = $WORK_DIR;
+
 # Number of successful test runs in a row required
-my $TEST_RUNS=2;
+my $TEST_RUNS = 2;
 # Number of maximum test runs (give up point)
-my $MAX_TEST_RUNS=10;
+my $MAX_TEST_RUNS = 10;
 
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
+
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
@@ -162,8 +156,7 @@ $project->{prog_root} = $TMP_DIR;
 my $dbh = DB::get_db_handle($TAB_REV_PAIRS, $db_dir);
 my @COLS = DB::get_tab_columns($TAB_REV_PAIRS) or die;
 
-############################### MAIN LOOP
-# figure out which IDs to run script for
+# Figure out which IDs to run script for
 my @ids = $project->get_version_ids();
 if (defined $BID) {
     if ($BID =~ /(\d+):(\d+)/) {
@@ -180,7 +173,7 @@ foreach my $bid (@ids) {
 
     # Skip existing entries
     $sth->execute($PID, $bid);
-    if($sth->rows !=0) {
+    if ($sth->rows !=0) {
         printf("      -> Skipping (existing entry in $TAB_REV_PAIRS)\n");
         next;
     }
@@ -201,17 +194,18 @@ foreach my $bid (@ids) {
 $dbh->disconnect();
 system("rm -rf $TMP_DIR");
 
-############################### SUBROUTINES
-# Check size of src diff, which is created by initialize-revisions.pl, for a
-# given candidate bug (bid).
+#
+# Check size of src diff, which is created by initialize-revisions.pl script,
+# for a given candidate bug (bid).
 #
 # Returns 1 on success, 0 otherwise
+#
 sub _check_diff {
     my ($project, $bid, $data) = @_;
 
     # Determine patch size for src and test patches (rev2 -> rev1)
-    my $patch_test = "$PATCH_DIR/$bid.test.patch";
-    my $patch_src = "$PATCH_DIR/$bid.src.patch";
+    my $patch_test = "$PATCHES_DIR/$bid.test.patch";
+    my $patch_src = "$PATCHES_DIR/$bid.src.patch";
 
     if (!(-e $patch_test) || (-z $patch_test)) {
         $data->{$DIFF_TEST} = 0;
@@ -237,12 +231,16 @@ sub _check_diff {
 # Check whether v2 and t2 can be compiled and export failing tests.
 #
 # Returns 1 on success, 0 otherwise
+#
 sub _check_t2v2 {
     my ($project, $bid, $data) = @_;
 
     # Lookup revision ids
-    my $v1  = $project->lookup("${bid}b");
-    my $v2  = $project->lookup("${bid}f");
+    my $v1 = $project->lookup("${bid}b");
+    my $v2 = $project->lookup("${bid}f");
+
+    # Clean previous results
+    `>$FAILING_DIR/$v2` if -e "$FAILING_DIR/$v2";
 
     # Checkout v2
     $project->checkout_vid("${bid}f", $TMP_DIR, 1) == 1 or die;
@@ -253,8 +251,6 @@ sub _check_t2v2 {
     $ret = $project->compile_tests();
     _add_bool_result($data, $COMP_T2V2, $ret) or return 0;
 
-    # Clean previous results
-    ` >$FAILING_DIR/$v2` if -e "$FAILING_DIR/$v2";
     my $successful_runs = 0;
     my $run = 1;
     while ($successful_runs < $TEST_RUNS && $run <= $MAX_TEST_RUNS) {
@@ -290,7 +286,9 @@ sub _check_t2v2 {
     return 1;
 }
 
+#
 # Check whether t2 and v1 can be compiled
+#
 sub _check_t2v1 {
     my ($project, $bid, $data) = @_;
 
@@ -346,8 +344,10 @@ sub _add_row {
 
 =head1 SEE ALSO
 
-Previous step in workflow: Manually verify that all test failures (failing_tests)
-are valid and not spurious, broken, random, or due to classpath issues.
+Previous step in workflow: Manually verify that all test failures
+(failing_tests) are valid and not spurious, broken, random, or due to classpath
+issues.
 
-Next step in workflow: F<get-trigger.pl>
+Next step in workflow: F<get-trigger.pl>.
+
 =cut
