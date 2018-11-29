@@ -168,10 +168,12 @@ Scripts built on Defects4J
 #### Automated program repair (APR)
   - [Scripts and annotations for evaluating APR techniques][APR-eval]
   - [Patches generated with the Nopol, jGenProg, and jKali APR systems][APR-patches-spirals]
+  - [Repair actions and patterns for Defects4J v1.2.0][D4J-dissection]
 
 [fl-eval]: https://bitbucket.org/rjust/fault-localization-data
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
+[D4J-dissection]: http://program-repair.org/defects4j-dissection/
 
 Publications
 ------------------
@@ -218,7 +220,7 @@ The directory structure of Defects4J is as follows:
            |--- projects:      Project-specific resource files.
            |
            |--- test:          Scripts to test the framework.
-
+           
 
 License
 ---------
