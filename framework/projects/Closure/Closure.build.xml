@@ -51,6 +51,7 @@ of the checked-out project version.
     <!-- Values necessary for mutation scripting to work -->
     <property name="test.home" value="${testClasses.dir}" />
     <property name="build.home" value="${build.dir}" />
+    <property name="test.classes.dir" value="${test.home}" />
 
     <target name="compile.tests" depends="compile-tests" />
 

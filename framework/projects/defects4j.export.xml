@@ -56,6 +56,16 @@ be used stand-alone.
         <echo message="${dir.rel.src.tests}" file="${file.export}"/>
     </target>
 
+<!-- Target directory of test classes -->
+    <target name="export.dir.bin.tests"
+            description="Target directory of test classes"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+        <property name="dir.rel.bin.tests" value="${test.classes.dir}" relative="yes" />
+
+        <echo message="${dir.rel.bin.tests}" file="${file.export}"/>
+    </target>
+
 <!-- Compile classpath -->
     <target name="export.cp.compile"
             description="Classpath to compile the project"

@@ -32,6 +32,7 @@ of the checked-out project version.
     <!-- build.home is not set in old repository layout -->
     <property name="build.home" value="${classesdir}/.." />
     <property name="classes.dir" value="${build.home}/classes" />
+    <property name="test.classes.dir" value="${build.home}/test-classes" />
 
     <!-- Directory of the test sources, the default is the directory of the
          existing tests -->

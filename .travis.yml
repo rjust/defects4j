@@ -34,6 +34,7 @@ jobs:
     - script: carton exec ./test_mutation_analysis.sh
     - script: carton exec ./test_randoop.sh
     - script: carton exec ./test_fix_test_suite.sh
+    - script: carton exec ./test_export_command.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
 # take a long time to finish).
     - stage: verify-bugs
