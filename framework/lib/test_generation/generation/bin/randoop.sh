@@ -33,6 +33,13 @@ num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
 budget=$(echo "$num_classes * $D4J_CLASS_BUDGET" | bc)
 project_cp=$(get_project_cp)
 
+# Print Randoop version
+version=$(java -cp $D4J_DIR_TESTGEN_LIB/randoop-current.jar randoop.main.Main | head -1)
+printf "\n(%s)" "$version" >&2
+printf ".%.0s" {1..42} >&2
+printf " " >&2
+
+# Build the test-generation command
 cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
           -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
           -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
