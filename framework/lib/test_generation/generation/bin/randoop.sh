@@ -25,26 +25,34 @@ fi
 # General helper functions
 source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
 
+# Name of the wrapper regression test suite
+BASE_NAME=RegressionTest
+
 # Overall budget is #classes * class_budget
 num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
 budget=$(echo "$num_classes * $D4J_CLASS_BUDGET" | bc)
 project_cp=$(get_project_cp)
 
-cmd="java -ea -javaagent:$D4J_DIR_TESTGEN_LIB/randoop-agent-current.jar \
--classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
-randoop.main.Main gentests \
---classlist=$D4J_FILE_ALL_CLASSES \
---junit-output-dir=$D4J_DIR_OUTPUT \
---timelimit=$budget \
---randomseed=$D4J_SEED \
---clear=10000 \
---string-maxlen=5000 \
---forbid-null=false \
---null-ratio=0.1 \
---no-error-revealing-tests=true \
---ignore-flaky-tests=true \
---only-test-public-members=false \
---include-if-class-exercised=$D4J_FILE_TARGET_CLASSES"
+cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
+          -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar\
+          -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+          -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
+    randoop.main.Main gentests \
+          --classlist=$D4J_FILE_ALL_CLASSES \
+          --junit-output-dir=$D4J_DIR_OUTPUT \
+          --flaky-test-behavior=output \
+          --usethreads \
+          --randomseed=$D4J_SEED \
+          --time-limit=$budget \
+          --clear=10000 \
+          --string-maxlen=5000 \
+          --forbid-null=false \
+          --null-ratio=0.1 \
+          --no-error-revealing-tests=true \
+          --only-test-public-members=false \
+          --omitmethods=HashCodeAndEqualsSafeSet.of \
+          --regression-test-basename=$BASE_NAME \
+          --require-covered-classes=$D4J_FILE_TARGET_CLASSES"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then
@@ -54,6 +62,4 @@ if ! $cmd; then
 fi
 
 # Remove the wrapper test suite, which isn't used by Defects4J.
-if [ -e "$D4J_DIR_OUTPUT/RegressionTest.java" ]; then
-    rm "$D4J_DIR_OUTPUT/RegressionTest.java"
-fi
+rm "$D4J_DIR_OUTPUT/${BASE_NAME}.java"
