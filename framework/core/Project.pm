@@ -903,7 +903,7 @@ sub run_randoop {
     my $cmd = "cd $self->{prog_root}" .
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
                 "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
-                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar=--replacement-file=$TESTGEN_LIB_DIR/default-replacements.txt " .
+                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar " .
                 "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
