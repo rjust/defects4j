@@ -161,17 +161,25 @@ The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_sys
 =cut
 our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_systems");
 
-
 =pod
 
 =item C<D4J_BUILD_FILE>
 
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
+=cut
+our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
+
+=pod
+
+=item C<GRADLE_LOCAL_HOME_DIR>
+
+The directory name of the local gradle repository (.gradle_local_home).
+
 =back
 
 =cut
-our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
+our $GRADLE_LOCAL_HOME_DIR = ".gradle_local_home";
 
 #
 # Check whether Defects4J has been properly initialized:
@@ -187,6 +195,10 @@ our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j
         or die("Couldn't find test generation tools! Did you (re)run 'defects4j/init.sh'?\n\n");
 -d "$BUILD_SYSTEMS_LIB_DIR"
         or die("Couldn't find build system tools! Did you (re)run 'defects4j/init.sh'?\n\n");
+-d "$BUILD_SYSTEMS_LIB_DIR/gradle/dists"
+        or die("Couldn't find gradle distributions! Did you (re)run 'defects4j/init.sh'?\n\n");
+-d "$BUILD_SYSTEMS_LIB_DIR/gradle/deps"
+        or die("Couldn't find gradle dependencies! Did you (re)run 'defects4j/init.sh'?\n\n");
 
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
@@ -238,6 +250,8 @@ $REPO_DIR
 $D4J_TMP_DIR
 
 $D4J_BUILD_FILE
+
+$GRADLE_LOCAL_HOME_DIR
 
 $ARG_ERROR
 $ABSTRACT_METHOD
