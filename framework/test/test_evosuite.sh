@@ -15,7 +15,7 @@ pid=Lang
 bid_mod=2
 bid_all=62
 # Test suite source and number
-suite_src=evosuite-branch
+suite_src=evosuite
 suite_num=1
 suite_dir=$evo_dir/$pid/$suite_src/$suite_num
 
@@ -29,7 +29,7 @@ check_target_classes() {
 
     for class in $(cat "$BASE_DIR/framework/projects/$pid/$classes_dir/${bid}.src"); do
         file=$(echo $class | tr '.' '/')
-        bzgrep -q "$file" "$suite_dir/${pid}-${vid}-evosuite-branch.${suite_num}.tar.bz2" || die "verify target classes ($class not found)"
+        bzgrep -q "$file" "$suite_dir/${pid}-${vid}-${suite_src}.${suite_num}.tar.bz2" || die "verify target classes ($class not found)"
     done
 }
 
@@ -37,13 +37,15 @@ check_target_classes() {
 for type in f b; do
     # Run EvoSuite for all modified classes and check whether all target classes are tested
     vid=${bid_mod}$type
-    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -b 30 -a 10 || die "run EvoSuite (modified classes) on $pid-$vid"
+    gen_tests.pl -g evosuite -p $pid -v $vid -n $suite_num -o $evo_dir -b 30 || die "run EvoSuite (modified classes) on $pid-$vid"
     check_target_classes $vid $bid_mod "modified_classes"
 
+    # TODO: Add a parameter to the generic test-generation script to specify the
+    # set of classes to be tested.
     # Run EvoSuite for all loaded classes and check whether all target classes are tested
-    vid=${bid_all}$type
-    run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -A -b 30 -a 10 || die "run EvoSuite (loaded classes) on $pid-$vid"
-    check_target_classes $vid $bid_all "loaded_classes"
+    #vid=${bid_all}$type
+    #run_evosuite.pl -p $pid -v $vid -n $suite_num -o $evo_dir -cbranch -A -b 30 -a 10 || die "run EvoSuite (loaded classes) on $pid-$vid"
+    #check_target_classes $vid $bid_all "loaded_classes"
 done
 
 # Fix all test suites
