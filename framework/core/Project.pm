@@ -904,6 +904,7 @@ sub run_randoop {
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
                 "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
                 "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar " .
+                "-javaagent:$TESTGEN_LIB_DIR/covered-class-current.jar " .
                 "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .

@@ -22,7 +22,7 @@ for type in f b; do
     vid=${bid}$type
 
     # Run Randoop and fix test suite
-    gen_tests.pl -g randoop -p $pid -v $vid -n 1 -o $randoop_dir -b 10 || die "run Randoop on $pid-$vid"
+    run_randoop.pl -g randoop -p $pid -v $vid -n 1 -o $randoop_dir -b 10 || die "run Randoop on $pid-$vid"
     fix_test_suite.pl -p $pid -d $suite_dir || die "fix test suite"
 
     # Run test suite and determine bug detection
