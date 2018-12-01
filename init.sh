@@ -80,7 +80,7 @@ cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
 #
 echo
 echo "Setting up EvoSuite ... "
-EVOSUITE_VERSION="1.0.5"
+EVOSUITE_VERSION="1.0.6"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
