@@ -23,7 +23,7 @@ if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
+source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
 
 for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     cmd="java -cp $D4J_DIR_TESTGEN_LIB/evosuite-current.jar org.evosuite.EvoSuite \

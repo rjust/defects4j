@@ -23,7 +23,7 @@ if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
+source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
 
 # Name of the wrapper regression test suite
 BASE_NAME=RegressionTest

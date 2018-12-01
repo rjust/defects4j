@@ -17,7 +17,7 @@
 # D4J_SEED:                The random seed.
 
 # General helper functions
-source $D4J_DIR_TESTGEN_LIB/bin/_tool.util
+source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
 
 # The command that invokes the test generator
 cmd="..."

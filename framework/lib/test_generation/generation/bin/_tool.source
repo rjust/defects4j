@@ -1,7 +1,7 @@
 #
 # This file provides helper functions for the wrapper shell scripts of the test
 # generation tools. This file should be included in each wrapper shell script:
-# "source _tool.util" or ". _tool.util"
+# "source _tool.source" or ". _tool.source"
 #
 # General coding conventions:
 # - function names: lower case, with underscores to separate words.
