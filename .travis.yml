@@ -32,7 +32,7 @@ jobs:
     # Test the tutorial and basic commands
     - script: carton exec ./test_tutorial.sh
     - script: carton exec ./test_mutation_analysis.sh
-    - script: carton exec ./test_randoop.sh
+    - script: carton exec ./test_gen_tests.sh
     - script: carton exec ./test_fix_test_suite.sh
     - script: carton exec ./test_export_command.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
