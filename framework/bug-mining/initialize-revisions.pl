@@ -124,8 +124,12 @@ sub _init_version {
     $project->{_vcs}->checkout_vid("${vid}", $work_dir) or die "Cannot checkout $vid version";
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
-    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-    if (-e "$work_dir/pom.xml") {
+    if (-e "$work_dir/build.xml") {
+        my $cmd = " cd $work_dir" .
+                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+        Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+    } elsif (-e "$work_dir/pom.xml") {
+        # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
         my $cmd = " cd $work_dir" .
                   " && mvn ant:ant -Doverwrite=true 2>&1" .
                   " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
@@ -142,9 +146,8 @@ sub _init_version {
         my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
         Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
     } else {
-        my $cmd = " cd $work_dir" .
-                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
-        Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+        # TODO add support for other build systems
+        die "Unsupported build system";
     }
 
     $project->initialize_revision($rev_id, "${vid}");
