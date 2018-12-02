@@ -769,7 +769,7 @@ sub mutation_analysis {
     my $basedir = $self->{prog_root};
 
     return $self->_call_major("mutation.test",
-                            "-Dmajor.kill.log=$basedir$Mutation::KILL_FILE " .
+                            "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$relevant $log $exclude $single_test_opt");
 }
 
