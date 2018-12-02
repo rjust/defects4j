@@ -114,7 +114,8 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>");
-my @generic_files = ("dependent_tests");
+my @generic_files = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
+                     "dir-layout.csv");
 
 my @ids = _get_version_ids($BID);
 foreach my $id (@ids) {
