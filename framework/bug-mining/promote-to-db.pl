@@ -178,12 +178,7 @@ foreach my $id (@ids) {
 for my $fn (@generic_files) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
-    my $tmp = "$OUTPUT_DIR/$PID/${fn}_tmp";
-    if (-e $src) {
-        `cat $src >> $dst && cp $dst $tmp && sort -u $tmp > $dst`;
-        die unless ($? == 0);
-        `rm -rf $tmp`;
-    }
+    _cp($src, $dst);
 }
 
 #
