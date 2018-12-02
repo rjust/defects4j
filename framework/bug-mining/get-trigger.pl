@@ -165,6 +165,7 @@ foreach my $bid (@bids) {
     # V2 must not have any failing tests
     my $list = _get_failing_tests($project, "$TMP_DIR/v2", "${bid}f");
     if (($data{$FAIL_V2} = (scalar(@{$list->{"classes"}}) + scalar(@{$list->{"methods"}}))) != 0) {
+        print("Non expected failing test classes/methods on ${PID}-${bid}\n");
         _add_row(\%data);
         next;
     }
@@ -174,6 +175,7 @@ foreach my $bid (@bids) {
     my $fail_c = scalar(@{$list->{"classes"}}); $data{$FAIL_C_V1} = $fail_c;
     my $fail_m = scalar(@{$list->{"methods"}}); $data{$FAIL_M_V1} = $fail_m;
     if ($fail_c !=0 or $fail_m == 0) {
+        print("Expected at least one failing test method on ${PID}-${bid}b\n");
         _add_row(\%data);
         next;
     }
@@ -204,6 +206,10 @@ foreach my $bid (@bids) {
      # Save non-dependent triggering tests to $OUT_DIR/$bid
     if (scalar(@{$list}) > 0) {
         system("cp $FAILED_TESTS_FILE $OUT_DIR/$bid");
+    } else {
+        print("No triggering test case has been found. This could either mean that no test" .
+              " has been executed or that all test cases pass (e.g., a javadoc change could" .
+              " be considered bugfix however it might not be captured by any unit test case)\n");
     }
 
     # Save dependent tests to $DEP_TEST_FILE
