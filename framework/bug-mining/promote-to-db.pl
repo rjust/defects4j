@@ -109,7 +109,7 @@ my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $OUTPUT_DB_DIR);
 my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
 my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $OUTPUT_DB_DIR);
 
-my @rev_specific_files = ("failing_tests/<rev>");
+my @rev_specific_files = ("failing_tests/<rev>", "build_files/<rev>");
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
@@ -219,7 +219,7 @@ sub _cp {
     $dst =~ m[^(.*)/.*$];
     system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
     if (-e $src) {
-        system("cp $src $dst") == 0 or die "could not copy $src: $!";
+        system("cp -R $src $dst") == 0 or die "could not copy $src: $!";
         print "\t... OK\n";
     }
 }
