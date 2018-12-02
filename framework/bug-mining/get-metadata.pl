@@ -123,13 +123,10 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
-# Override global constants
+# Override global constants, i.e., set the projects and repository directories
+# to the current working directory.
 $REPO_DIR = "$WORK_DIR/project_repos";
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
-
-# Set the projects and repository directories to the current working directory.
-my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
-my $PROJECTS_REPOS_DIR = "$WORK_DIR/project_repos";
 
 my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
 # Directories for loaded and modified classes
@@ -214,6 +211,11 @@ foreach my $bid (@bids) {
     }
     close(OUT);
 
+    # Export variables to make sure the get_modified_classes script picks up the right directories.
+    $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
+    $ENV{'REPO_DIR'} = abs_path($REPO_DIR);
+    # TODO: This should also be configurable in Constants.pm
+    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
     # Determine modified files
     #
     # Note:
