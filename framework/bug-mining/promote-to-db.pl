@@ -93,6 +93,14 @@ if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong bug id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Override global constants, i.e., set the projects and repository directories
+# to the current working directory.
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 system("mkdir -p $OUTPUT_DIR/$PID $OUTPUT_DB_DIR");
 
 my $project = Project::create_project($PID);
@@ -101,7 +109,7 @@ my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $OUTPUT_DB_DIR);
 my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
 my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $OUTPUT_DB_DIR);
 
-my @rev_specific_files = ("failing_tests/<rev>",);
+my @rev_specific_files = ("failing_tests/<rev>");
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
@@ -144,16 +152,19 @@ foreach my $id (@ids) {
     close FH;
     for my $rev ($v1, $v2) {
         for my $fn (@rev_specific_files) {
-            $fn =~ s/<rev>/$rev/;
-            my $src = "$WORK_DIR/$PID/$fn";
-            my $dst = "$OUTPUT_DIR/$PID/$fn";
+            my $fn_rev = $fn;
+            $fn_rev =~ s/<rev>/$rev/;
+            my $src = "$PROJECTS_DIR/$PID/$fn_rev";
+            my $dst = "$OUTPUT_DIR/$PID/$fn_rev";
             _cp($src, $dst);
         }
     }
     for my $fn (@id_specific_files) {
-        my $fn_src = $fn; $fn_src =~ s/<id>/$id/;
-        my $fn_dst = $fn; $fn_dst =~ s/<id>/$max_number/;
-        my $src = "$WORK_DIR/$PID/$fn_src";
+        my $fn_src = $fn;
+        $fn_src =~ s/<id>/$id/;
+        my $fn_dst = $fn;
+        $fn_dst =~ s/<id>/$max_number/;
+        my $src = "$PROJECTS_DIR/$PID/$fn_src";
         my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
         _cp($src, $dst);
     }
@@ -164,7 +175,7 @@ foreach my $id (@ids) {
 }
 
 for my $fn (@generic_files) {
-    my $src = "$WORK_DIR/$PID/$fn";
+    my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
     my $tmp = "$OUTPUT_DIR/$PID/${fn}_tmp";
     if (-e $src) {
@@ -213,6 +224,7 @@ sub _cp {
     system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
     if (-e $src) {
         system("cp $src $dst") == 0 or die "could not copy $src: $!";
+        print "\t... OK\n";
     }
 }
 
@@ -223,8 +235,10 @@ sub _db_cp {
     $stmnt->execute($PID, $id);
     my @vals = $stmnt->fetchrow_array;
     $stmnt->finish();
-    $vals[0] = "'" . $vals[0] . "'";
     $vals[1] = $new_id;
+    for (my $i=0; $i < scalar(@vals); $i++) {
+        $vals[$i] = "'" . $vals[$i] . "'";
+    }
     my $row = join(',', @vals);
     $db_out->do("INSERT INTO $tab VALUES ($row)") or die $db_out->errstr;
 }
