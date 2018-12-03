@@ -90,39 +90,35 @@ use Pod::Usage;
 use File::Basename;
 use Getopt::Std;
 use URI::Escape;
-use List::Util qw(all);
+use List::Util qw(all pairmap);
 use JSON::Parse qw(json_file_to_perl);
 
 my %SUPPORTED_TRACKERS = (
     'google' => {
-                    'default_tracker_uri' => 'http://code.google.com/p/',
+                    'default_tracker_uri' => 'https://storage.googleapis.com/google-code-archive/v2/code.google.com/',
                     'default_query' => 'label:type-defect',
-                    'default_limit' => 100,
+                    'default_limit' => 1, # Google Code archive only returns one page at time
                     'build_uri'   => sub {
                                             my ($tracker, $project, $query, $start, $limit) = @_;
                                             die unless all {defined $_} ($tracker, $project, $query, $start, $limit);
+                                            $start = $start + 1;
                                             my $uri = $tracker
                                                          . uri_escape($project)
-                                                         . "/issues/csv?can=1&q="
-                                                         . uri_escape($query)
-                                                         . "&start=${start}&num=${limit}";
+                                                         . "/issues-page-$start.json";
                                             return $uri;
                                         },
                     'results' => sub {
-                                        my ($path,) = @_;
-                                        die unless all {defined $_} ($path,);
-
-                                        open FH, $path or die;
-                                        <FH>; # skip first line
+                                        my ($path, $project,) = @_;
+                                        die unless all {defined $_} ($path, $project,);
                                         my @results = ();
-                                        while (my $line = <FH>) {
-                                            chomp $line;
-                                            next unless $line;                          # skip empty lines
-                                            next if $line =~ /^This file is truncated/; # skip line that says there are more
-                                                                                        # results
-                                            $line =~ /^"(\d+)",/ or die "invalid line encountered in google project "
-                                                                      . "hosting .csv file";
-                                            push @results, $1;
+                                        my $p = json_file_to_perl($path) or return \@results;
+                                        for my $issue (@{$$p{'issues'}}) {
+                                            for my $label (@{$$issue{'labels'}}) {
+                                                $label =~ /^Type-Defect.*/ or next;
+                                                my $url = "https://code.google.com/archive/p/" . uri_escape($project) . "/issues/" . $$issue{'id'};
+                                                push @results, ($$issue{'id'}, $url);
+                                                last;
+                                            }
                                         }
                                         return \@results;
                                     }
@@ -150,8 +146,9 @@ my %SUPPORTED_TRACKERS = (
                                         while (my $line = <FH>) {
                                             chomp $line;
                                             $line =~ m[^\s*<key.*?>(.*?)</key>] or next;
-                                            push @results, $1;
+                                            push @results, ($1, "https://issues.apache.org/jira/browse/$1");
                                         }
+                                        close FH or die;
                                         return \@results;
                                 },
                 },
@@ -179,7 +176,7 @@ my %SUPPORTED_TRACKERS = (
                                         my @results = ();
                                         my $p = json_file_to_perl($path) or return \@results;
                                         for my $issue (@{$p}) {
-                                            push @results, $$issue{'number'};
+                                            push @results, ($$issue{'number'}, $$issue{'html_url'});
                                         }
                                         return \@results;
                                 }
@@ -203,10 +200,20 @@ my %SUPPORTED_TRACKERS = (
                                         my ($path,) = @_;
                                         die unless all {defined $_} ($path,);
                                         my @results = ();
+
+                                        # Collect tickets numbers
+                                        my @ticket_nums = ();
                                         my $p = json_file_to_perl($path) or return \@results;
                                         for my $issue (@{$$p{'tickets'}}) {
-                                            push @results, $$issue{'ticket_num'};
+                                            push @ticket_nums, $$issue{'ticket_num'};
                                         }
+                                        # Collect tickets urls
+                                        foreach my $ticket_num (@ticket_nums) {
+                                            # E.g., https://sourceforge.net/p/<project_name>/bugs/<ticket_id>/
+                                            my $url = "https://sourceforge.net" . $$p{'tracker_config'}{'options'}{'url'} . $ticket_num;
+                                            push @results, ($ticket_num, $url);
+                                        }
+
                                         return \@results;
                                 }
                 }
@@ -233,26 +240,42 @@ my $FETCHING_LIMIT = $cmd_opts{l} // $TRACKER{'default_limit'};
 # Enable debugging if flag is set
 my $DEBUG = 1 if defined $cmd_opts{D};
 
+my $GIVE_UP = 0; # no
 for (my $start = 0; ; $start += $FETCHING_LIMIT) {
     my $uri = $TRACKER{'build_uri'}($TRACKER_URI, $TRACKER_ID, $QUERY, $start, $FETCHING_LIMIT, $ORGANIZATION_ID);
     my $project_in_file = $TRACKER_ID;
     $project_in_file =~ tr*/*-*;
     my $out_file = "${OUTPUT_DIR}/${project_in_file}-issues-${start}.txt";
 
-    if (!-e $out_file) {
+    if (! -s $out_file) {
         print "Downloading ${uri} to ${out_file}\n" if $DEBUG;
-        die "Could not download ${uri} to ${out_file}" unless get_file($uri, $out_file);
+
+        my $ret_val = get_file($uri, $out_file);
+        if ($ret_val == 0) {
+          if ($GIVE_UP == 0) {
+            die "Could not download ${uri} to ${out_file}";
+          } else {
+            last;
+          }
+        }
     } else {
         print "Skipping download of ${out_file}\n" if $DEBUG;
     }
-    my @results = @{$TRACKER{'results'}($out_file)};
+
+    my @results = @{$TRACKER{'results'}($out_file,$TRACKER_ID)};
     if (@results) {
         open(my $fh, ">>$ISSUES_FILE") or die "Cannot write to ${ISSUES_FILE}!";
-        print $fh join ("", map {$_ . "\n"} @results);
+        print $fh join ('', (pairmap {"$a,$b\n"} @results));
         close($fh);
         # continue going because there may be more results
     } else {
         last;
+    }
+
+    if ($TRACKER_NAME eq "google") {
+        $GIVE_UP = 1; # from now on, if there is an error at downloading Google
+        # Code issues data, the script can give up as some data has already been
+        # collected
     }
 }
 
