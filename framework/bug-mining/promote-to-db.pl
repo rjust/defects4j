@@ -187,8 +187,8 @@ for my $fn (@generic_files_and_directories) {
 
 # Copy repository directory
 my $dir_name = $REPOSITORY_DIR;
-$dir_name =~ m[^(.*)/.*$];
-system ("rm -rf $1") == 0 or die "Could not remove $1: $!";
+$dir_name =~ m[^.*/(.*)$];
+system ("rm -rf $REPO_DIR/$1") == 0 or die "Could not remove $REPO_DIR/$1: $!";
 _cp($REPOSITORY_DIR, $REPO_DIR);
 
 #
