@@ -31,7 +31,7 @@ to the main Defects4J database.
 
 =head1 SYNOPSIS
 
-promote-to-db.pl -p project_id -w work_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
+promote-to-db.pl -p project_id -w work_dir -r repository_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
 
 =head1 OPTIONS
 
@@ -49,6 +49,10 @@ Per default all bug ids, listed in the commit-db, are considered.
 =item B<-w C<work_dir>>
 
 The working directory used for the bug-mining process.
+
+=item B<-r C<repository_dir>>
+
+The path to the repository of this project.
 
 =item B<-o C<output_dir>>
 
@@ -78,12 +82,13 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:w:b:o:d:', \%cmd_opts) or pod2usage(1);
+getopts('p:w:r:b:o:d:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
 my $PID = $cmd_opts{p};
 my $WORK_DIR = abs_path($cmd_opts{w});
+my $REPOSITORY_DIR = abs_path($cmd_opts{r});
 my $BID = $cmd_opts{b};
 my $OUTPUT_DIR = $cmd_opts{o} // "$SCRIPT_DIR/projects";
 my $OUTPUT_DB_DIR = $cmd_opts{d} // $DB_DIR;
@@ -98,7 +103,6 @@ unshift(@INC, "$WORK_DIR/framework/core");
 
 # Override global constants, i.e., set the projects and repository directories
 # to the current working directory.
-$REPO_DIR = "$WORK_DIR/project_repos";
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
 system("mkdir -p $OUTPUT_DIR/$PID $OUTPUT_DB_DIR");
@@ -180,6 +184,12 @@ for my $fn (@generic_files_and_directories) {
     my $dst = "$OUTPUT_DIR/$PID/$fn";
     _cp($src, $dst);
 }
+
+# Copy repository directory
+my $dir_name = $REPOSITORY_DIR;
+$dir_name =~ m[^(.*)/.*$];
+system ("rm -rf $1") == 0 or die "Could not remove $1: $!";
+_cp($REPOSITORY_DIR, $REPO_DIR);
 
 #
 # Get version ids from TAB_TRIGGER

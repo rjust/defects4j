@@ -54,7 +54,7 @@ issue tracker. This file may be obtained for example by running C<git log>.
 
 =item B<-r C<repository_dir>>
 
-The path to the git repo for this project (this argument is ignored for SVN
+The path to the git repository for this project (this argument is ignored for SVN
 repositories).
 
 =item B<-c C<command_to_verify>>

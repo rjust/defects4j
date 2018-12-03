@@ -296,7 +296,7 @@ Promoting reproducible bugs to the main database
 1. For each fault, if the diff is minimal (i.e., does not include features or
    refactorings), promote the fault to the main `Defects4J` database:
 ```
-./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining
+./promote-to-db.pl -p <project_id> -b <bid> -w bug-mining -r bug-mining/project_repos/<project_name>.git
 ```
 
 **TODO: Augment the promote script: 1) reinvoke get-metadata.pl for all bugs for
