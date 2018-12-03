@@ -191,6 +191,21 @@ $dir_name =~ m[^.*/(.*)$];
 system ("rm -rf $REPO_DIR/$1") == 0 or die "Could not remove $REPO_DIR/$1: $!";
 _cp($REPOSITORY_DIR, $REPO_DIR);
 
+# Update README file
+my $bug_miniming_repos_readme_file = "$WORK_DIR/project_repos/README";
+my $d4j_repos_readme_file = "$REPO_DIR/README";
+if (-e $bug_miniming_repos_readme_file) {
+    if (-e $d4j_repos_readme_file) {
+        system("cat $bug_miniming_repos_readme_file | while read -r row; do \
+                    if ! grep -Eq \"\$row\" $d4j_repos_readme_file; then \
+                        echo \"\$row\" >> $d4j_repos_readme_file; \
+                    fi; \
+                done") == 0 or die;
+    } else {
+        system("cat $bug_miniming_repos_readme_file > $d4j_repos_readme_file") == 0 or die;
+    }
+}
+
 #
 # Get version ids from TAB_TRIGGER
 #
