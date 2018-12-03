@@ -114,8 +114,8 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>");
-my @generic_files = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
-                     "dir-layout.csv");
+my @generic_files_and_directories = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
+                                     "dir-layout.csv", "lib");
 
 my @ids = _get_version_ids($BID);
 foreach my $id (@ids) {
@@ -175,7 +175,7 @@ foreach my $id (@ids) {
     _db_cp($dbh_revs_in, $dbh_revs_out, $TAB_REV_PAIRS, $id, $max_number);
 }
 
-for my $fn (@generic_files) {
+for my $fn (@generic_files_and_directories) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
     _cp($src, $dst);
