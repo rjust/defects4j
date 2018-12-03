@@ -185,6 +185,11 @@ for my $fn (@generic_files_and_directories) {
     _cp($src, $dst);
 }
 
+# Copy project submodule
+my $src = "$WORK_DIR/framework/core/Project/${PID}.pm";
+my $dst = "$CORE_DIR/Project/${PID}.pm";
+_cp($src, $dst);
+
 # Copy repository directory
 my $dir_name = $REPOSITORY_DIR;
 $dir_name =~ m[^.*/(.*)$];
