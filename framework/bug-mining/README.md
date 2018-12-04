@@ -94,7 +94,7 @@ Nevertheless, it should be fixed as it currently requires some __manual_input__*
 
 4. Obtain the development history (commit logs) for the project:
 ```
-git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitlog
+git --git-dir=bug-mining/project_repos/<project_name>.git/ log --reverse > bug-mining/gitlog
 ```
 **TODO: How to obtain the history for other VCS, e.g., SVN?**
 
