@@ -342,7 +342,7 @@ sub _score_ranking {
             # Determine the minimum rank for all candidate ranks
             $current_rank = _get_min_rank(@cand_ranks);
             # Ranking does not contain any candidate line
-            if ($current_rank < 0) {
+            if (scalar(@cand_ranks) > 0 && $current_rank < 0) {
                 print(STDERR "WARNING: Fault of omission ($key) not found in ranking! None of the candidate lines matches!\n");
             }
         } else {
@@ -358,7 +358,7 @@ sub _score_ranking {
                 # Determine the minimum rank for all candidate ranks
                 $current_rank = _get_min_rank(@cand_ranks);
                 # Ranking does not contain any candidate line -> print error message and continue
-                if ($current_rank < 0) {
+                if (scalar(@cand_ranks) > 0 && $current_rank < 0) {
                     print(STDERR "WARNING: Fault ($key) not found in ranking! None of the candidate lines matches!\n");
                 }
             }
