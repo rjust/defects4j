@@ -84,7 +84,7 @@ use Utils;
 my %cmd_opts;
 getopts('p:w:r:b:o:d:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w} and defined $cmd_opts{r};
 
 my $PID = $cmd_opts{p};
 my $WORK_DIR = abs_path($cmd_opts{w});
