@@ -112,6 +112,7 @@ git --git-dir=bug-mining/project_repos/<project_name>.git/ log > bug-mining/gitl
                      -l bug-mining/gitlog \
                      -r bug-mining/project_repos/<project_name>.git \
                      -c './verify-bug-file.sh bug-mining/issues.txt' \
+                     -i bug-mining/issues.txt \
                      -f bug-mining/framework/projects/<project_id>/commit-db
 ./merge-commit-db.pl -f bug-mining/framework/projects/<project_id>/commit-db \
                         -g bug-mining/project_repos/<project_name>.git \

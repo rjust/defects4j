@@ -33,7 +33,7 @@ etc.)
 
 =head1 SYNOPSIS
 
-vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify -f output_file
+vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify -i issues_file -f output_file
 
 =head1 OPTIONS
 
@@ -64,20 +64,32 @@ bug-mining framework currently supplies two auxillary scripts
 (C<verify-bug-file.sh> and C<verify-bug-sf-tracker.sh>) that help with this
 task. You may also supply your own.
 
+=item B<-i C<issues_file>>
+
+# TODO add documentation
+
+=item B<-f C<output_file>>
+
+# TODO add documentation
+
 =cut
 use strict;
 use warnings;
 
 use File::Basename;
+use Cwd qw(abs_path);
 use Getopt::Std;
 use List::Util qw(all pairmap);
 use Pod::Usage;
 
+use lib (dirname(abs_path(__FILE__)) . "/../core/");
+use Utils;
+
 my %SUPPORTED_VCSs = (
     'git' => {
             'get_commits' => sub {
-                            my ($fh, $command, $regexp) = @_;
-                            die unless all {defined $_} ($fh, $command, $regexp);
+                            my ($fh, $command, $regexp, $issues_db) = @_;
+                            die unless all {defined $_} ($fh, $command, $regexp, $issues_db);
                             my %results;
                             my $commit = '';
                             my $version_id = 1;
@@ -100,8 +112,10 @@ my %SUPPORTED_VCSs = (
                                                          # due to bad history rewriting
                                     $results{$version_id}{'p'} = $parent;
                                     $results{$version_id}{'c'} = $commit;
-                                    $commit = '';        # unset to skip lines until next commit
+                                    $results{$version_id}{'issue_id'} = $bug_number;
+                                    $results{$version_id}{'issue_url'} = $issues_db->{lc($bug_number)} // undef;
 
+                                    $commit = '';        # unset to skip lines until next commit
                                     $version_id += 1; # increase version id
                                 }
                             }
@@ -110,8 +124,8 @@ my %SUPPORTED_VCSs = (
         },
     'svn' => {
             'get_commits' => sub {
-                                my ($fh, $command, $regexp) = @_;
-                                die unless all {defined $_} ($fh, $command, $regexp);
+                                my ($fh, $command, $regexp, $issues_db) = @_;
+                                die unless all {defined $_} ($fh, $command, $regexp, $issues_db);
                                 my %results;
                                 my $commit = '';
                                 my $version_id = 1;
@@ -130,8 +144,10 @@ my %SUPPORTED_VCSs = (
                                         next unless $parent > 0; # skip first revision
                                         $results{$version_id}{'p'} = $parent;
                                         $results{$version_id}{'c'} = $commit;
-                                        $commit = '';        # unset to skip lines until next commit
+                                        $results{$version_id}{'issue_id'} = $bug_number;
+                                        $results{$version_id}{'issue_url'} = $issues_db->{lc($bug_number)} // undef;
 
+                                        $commit = '';        # unset to skip lines until next commit
                                         $version_id += 1; # increase version id
                                     }
                                 }
@@ -141,10 +157,12 @@ my %SUPPORTED_VCSs = (
 );
 
 my %cmd_opts;
-getopts('v:e:l:r:c:f:', \%cmd_opts) or pod2usage(1);
+getopts('v:e:l:r:c:i:f:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{v} and defined $cmd_opts{e}
-                    and defined $cmd_opts{l} and defined $cmd_opts{c};
+                    and defined $cmd_opts{l} and defined $cmd_opts{r}
+                    and defined $cmd_opts{c} and defined $cmd_opts{i}
+                    and defined $cmd_opts{f};
 
 my $VCS_NAME = $cmd_opts{v};
 if (! defined $SUPPORTED_VCSs{$VCS_NAME}) {
@@ -156,17 +174,28 @@ my $REGEXP = $cmd_opts{e};
 my $LOG_FILE = $cmd_opts{l};
 my $REPOSITORY_DIR = $cmd_opts{r};
 my $COMMAND = $cmd_opts{c};
+my $ISSUES_FILE = abs_path($cmd_opts{i});
 my $OUTPUT_FILE = $cmd_opts{f};
 
+# Issues file must exist and it can be empty
+if (! -s $ISSUES_FILE) {
+    die "$ISSUES_FILE does not exist or it is empty";
+}
+# Cache content of issues.txt file
+my $ISSUES_DB = Utils::read_config_file($ISSUES_FILE, ",") or die "Failed to read the content of $ISSUES_FILE";
+# Lowercase keys as different variations might exist in different commit messages
+%$ISSUES_DB = map { lc($_) => $ISSUES_DB->{$_} } keys %$ISSUES_DB;
+
 open my $fh, $LOG_FILE or die "Could not open commit-log $LOG_FILE";
-my %commits = %{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP)};
+my %commits = %{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP, $ISSUES_DB)};
 close $fh;
 if (scalar keys %commits eq 0) {
     print("Warning, no commit that matches the regex expression provided has been found\n");
 }
 open $fh, ">$OUTPUT_FILE" or die "Cannot open ${OUTPUT_FILE}!";
 for my $commit_id (sort { $a <=> $b} keys %commits) {
-    print $fh "$commit_id,$commits{$commit_id}{'p'},$commits{$commit_id}{'c'}\n";
+    my $row = $commits{$commit_id};
+    print $fh "$commit_id,$row->{'p'},$row->{'c'},$row->{'issue_id'},$row->{'issue_url'}\n";
 }
 close($fh);
 

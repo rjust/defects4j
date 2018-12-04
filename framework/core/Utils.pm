@@ -212,7 +212,7 @@ sub write_config_file {
 
 =pod
 
-  Utils::read_config_file(filename)
+  Utils::read_config_file(filename [, key_separator])
 
 Read all key-value pairs of the config file named F<filename>. Format:
 C<key=value>.  Returns a hash containing all key-value pairs on success,
@@ -220,8 +220,9 @@ C<undef> otherwise.
 
 =cut
 sub read_config_file {
-    @_ == 1 or die $ARG_ERROR;
+    @_ >= 1 or die $ARG_ERROR;
     my $file = shift;
+    my $key_separator = shift // '=';
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
         return undef;
@@ -233,7 +234,7 @@ sub read_config_file {
         next if /^\s*$/;
         chomp;
         # Read key value pair and remove white spaces
-        my ($key, $val) = split /=/;
+        my ($key, $val) = split /${key_separator}/;
         $key =~ s/ //;
         $val =~ s/ //;
         $hash->{$key} = $val;
