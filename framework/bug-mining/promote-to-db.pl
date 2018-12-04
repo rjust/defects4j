@@ -128,6 +128,9 @@ foreach my $id (@ids) {
     my $v1 = $project->lookup("${id}b");
     my $v2 = $project->lookup("${id}f");
 
+    my $issue_id  = $project->_issue_id("${id}");
+    my $issue_url = $project->_issue_url("${id}");
+
     # find number
     my $max_number = 0;
     my $output_commit_db = "$OUTPUT_DIR/$PID/commit-db";
@@ -136,9 +139,9 @@ foreach my $id (@ids) {
         my $exists_line = 0;
         while (my $line = <FH>) {
             chomp $line;
-            $line =~ /^(\d+),(.*),(.*)$/ or die "could not parse line";
+            $line =~ /^(\d+),(.*),(.*),(.*),(.*)$/ or die "could not parse line";
             $max_number = max($max_number, $1);
-            if ("$2,$3" eq "$v1,$v2") {
+            if ("$2,$3,$4,$5" eq "$v1,$v2,$issue_id,$issue_url") {
                 $exists_line = $1;
                 last;
             }
@@ -153,7 +156,7 @@ foreach my $id (@ids) {
     print "\t... adding as new commit-id $max_number\n";
 
     open FH, ">>$output_commit_db" or die "could not open output commit-db for writing";
-    print FH "$max_number,$v1,$v2\n";
+    print FH "$max_number,$v1,$v2,$issue_id,$issue_url\n";
     close FH;
     for my $rev ($v1, $v2) {
         for my $fn (@rev_specific_files) {

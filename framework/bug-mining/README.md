@@ -301,8 +301,7 @@ Promoting reproducible bugs to the main database
 ```
 
 **TODO: Augment the promote script: 1) reinvoke get-metadata.pl for all bugs for
-which the patch was manually minimized and 2) store the issue tracker IDs in
-Defects4J: add issue-tracker ID and URL as two new columns to the commit-db**
+which the patch was manually minimized.**
 
 Note: Make sure to specify the `-b` option as the default is to promote all
 bugs!

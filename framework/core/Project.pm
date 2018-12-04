@@ -1125,6 +1125,46 @@ sub _modified_classes {
 }
 
 #
+# Helper subroutine that returns the issue tracker id
+#
+sub _issue_id {
+    my ($self, $bid) = @_;
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+
+    my $issue_id;
+    open(my $fh, "<${project_dir}/commit-db") or die "Cannot read commit-db";
+    while (my $row = <$fh>) {
+        my $data = $row;
+        $data =~ /^$bid,.*,.*,(.*),.*$/ or next;
+        $issue_id = $1;
+        last;
+    }
+    close($fh);
+
+    return $issue_id;
+}
+
+#
+# Helper subroutine that returns the issue tracker url
+#
+sub _issue_url {
+    my ($self, $bid) = @_;
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+
+    my $issue_url;
+    open(my $fh, "<${project_dir}/commit-db") or die "Cannot read commit-db";
+    while (my $row = <$fh>) {
+        my $data = $row;
+        $data =~ /^$bid,.*,.*,.*,(.*)$/ or next;
+        $issue_url = $1;
+        last;
+    }
+    close($fh);
+
+    return $issue_url;
+}
+
+#
 # Write all version-specific properties to file
 #
 sub _write_props {
