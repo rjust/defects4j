@@ -136,7 +136,10 @@ $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PATCHES_DIR = "$PROJECTS_DIR/$PID/patches";
 my $FAILING_DIR = "$PROJECTS_DIR/$PID/failing_tests";
 
-# TODO make output dir more flexible; maybe organize the csv-based db differently
+-d $PATCHES_DIR or die "$PATCHES_DIR does not exist: $!";
+-d $FAILING_DIR or die "$FAILING_DIR does not exist: $!";
+
+# DB_CSVs directory
 my $db_dir = $WORK_DIR;
 
 # Number of successful test runs in a row required

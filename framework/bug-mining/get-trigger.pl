@@ -113,7 +113,7 @@ if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-# TODO make output dir more flexible; maybe organize the csv-based db differently
+# DB_CSVs directory
 my $db_dir = $WORK_DIR;
 
 # Add script and core directory to @INC
@@ -240,7 +240,6 @@ sub _get_bug_ids {
         $max_id = $3 if defined $3;
     }
 
-    # TODO before giving up check whether it finished successfully
     my $sth_exists = $dbh_trigger->prepare("SELECT * FROM $TAB_TRIGGER WHERE $PROJECT=? AND $ID=?") or die $dbh_trigger->errstr;
 
     # Select all version ids from previous step in workflow

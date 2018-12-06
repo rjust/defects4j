@@ -26,12 +26,28 @@
 
 =head1 NAME
 
-promote-to-db.pl -- Promote reproducible and minimized bugs with all meta data
-to the main Defects4J database.
+promote-to-db.pl -- Promote reproducible and minimized bugs and their metadata
+to the main Defects4J database. In detail, this script copies over the following
+metadata:
+  - framework/core/Project/<PROJECT_ID>.pm
+  - framework/projects/<PROJECT_ID>/build_files
+  - framework/projects/<PROJECT_ID>/failing_tests
+  - framework/projects/<PROJECT_ID>/lib
+  - framework/projects/<PROJECT_ID>/loaded_classes
+  - framework/projects/<PROJECT_ID>/modified_classes
+  - framework/projects/<PROJECT_ID>/patches
+  - framework/projects/<PROJECT_ID>/trigger_tests
+  - framework/projects/<PROJECT_ID>/build.xml.patch
+  - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
+  - framework/projects/<PROJECT_ID>/commit-db
+  - framework/projects/<PROJECT_ID>/dir-layout.csv
+  - project_repos/<PROJECT_NAME>.git
+and updates the project_repos/README file with information of when the project
+repository was cloned.
 
 =head1 SYNOPSIS
 
-promote-to-db.pl -p project_id -w work_dir -r repository_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
+promote-to-db.pl -p project_id -w work_dir -r repository_dir [-b bug_id] [-o output_dir]
 
 =head1 OPTIONS
 
@@ -57,11 +73,6 @@ The path to the repository of this project.
 =item B<-o C<output_dir>>
 
 The output directory as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
-
-=item B<-d C<output_db_dir>>
-
-Use C<output_db_dir> as the C<result_db> directory. Defaults to F<$DB_DIR>.
-# TODO clarify this
 
 =back
 
@@ -91,7 +102,6 @@ my $WORK_DIR = abs_path($cmd_opts{w});
 my $REPOSITORY_DIR = abs_path($cmd_opts{r});
 my $BID = $cmd_opts{b};
 my $OUTPUT_DIR = $cmd_opts{o} // "$SCRIPT_DIR/projects";
-my $OUTPUT_DB_DIR = $cmd_opts{d} // $DB_DIR;
 
 # Check format of target version id
 if (defined $BID) {
@@ -101,17 +111,13 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
-# Override global constants, i.e., set the projects and repository directories
-# to the current working directory.
+# Override global constants
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
-system("mkdir -p $OUTPUT_DIR/$PID $OUTPUT_DB_DIR");
+system("mkdir -p $OUTPUT_DIR/$PID");
 
 my $project = Project::create_project($PID);
-my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
-my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $OUTPUT_DB_DIR);
-my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
-my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $OUTPUT_DB_DIR);
+my $dbh_trigger = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
 
 my @rev_specific_files = ("failing_tests/<rev>", "build_files/<rev>");
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
@@ -121,7 +127,7 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
 my @generic_files_and_directories = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
                                      "dir-layout.csv", "lib");
 
-my @ids = _get_version_ids($BID);
+my @ids = _get_bug_ids($BID);
 foreach my $id (@ids) {
     printf ("%4d: $project->{prog_name}\n", $id);
 
@@ -176,10 +182,6 @@ foreach my $id (@ids) {
         my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
         _cp($src, $dst);
     }
-
-    # write to dbs
-    _db_cp($dbh_trigger_in, $dbh_trigger_out, $TAB_TRIGGER, $id, $max_number);
-    _db_cp($dbh_revs_in, $dbh_revs_out, $TAB_REV_PAIRS, $id, $max_number);
 }
 
 for my $fn (@generic_files_and_directories) {
@@ -215,9 +217,9 @@ if (-e $bug_miniming_repos_readme_file) {
 }
 
 #
-# Get version ids from TAB_TRIGGER
+# Get bug ids from TAB_TRIGGER
 #
-sub _get_version_ids {
+sub _get_bug_ids {
     my $target_vid = shift;
 
     my $min_id;
@@ -228,9 +230,9 @@ sub _get_version_ids {
     }
 
     # Select all version ids from previous step in workflow
-    my $sth = $dbh_trigger_in->prepare("SELECT $ID FROM $TAB_TRIGGER WHERE $PROJECT=? "
-                . "AND $FAIL_ISO_V1>0") or die $dbh_trigger_in->errstr;
-    $sth->execute($PID) or die "Cannot query database: $dbh_trigger_in->errstr";
+    my $sth = $dbh_trigger->prepare("SELECT $ID FROM $TAB_TRIGGER WHERE $PROJECT=? "
+                . "AND $FAIL_ISO_V1>0") or die $dbh_trigger->errstr;
+    $sth->execute($PID) or die "Cannot query database: $dbh_trigger->errstr";
     my @ids = ();
     foreach (@{$sth->fetchall_arrayref}) {
         my $vid = $_->[0];

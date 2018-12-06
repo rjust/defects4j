@@ -26,7 +26,9 @@
 
 =head1 NAME
 
-minimize-patch.pl -- View and minimize patch in a visual diff editor.
+minimize-patch.pl -- View and minimize patch in a visual diff editor. If a patch
+is minimized, the script recomputes all metadata by rerunning the
+get-metadata.pl.
 
 =head1 SYNOPSIS
 
@@ -88,6 +90,10 @@ $BID =~ /^(\d+)$/ or die "Wrong version id format: $BID -- expected: (\\d+)!";
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
 # Set the projects and repository directories to the current working directory.
 my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PROJECTS_REPOS_DIR = "$WORK_DIR/project_repos";
@@ -143,6 +149,12 @@ $ENV{'REPO_DIR'} = abs_path($PROJECTS_REPOS_DIR);
 # TODO: This should also be configurable in Constants.pm
 $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
 if (!Utils::exec_cmd("$UTIL_DIR/sanity_check.pl -p$PID -b$BID", "Run sanity check")) {
+    Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
+            or die "Cannot restore patch";
+}
+
+# Re-run get-metadata script as metadata might have changed
+if (!Utils::exec_cmd("./get-metadata.pl -p $PID -w $WORK_DIR -b $BID", "Re-running get-metadata script as metadata might have changed")) {
     Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
             or die "Cannot restore patch";
 }

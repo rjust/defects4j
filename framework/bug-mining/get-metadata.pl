@@ -123,9 +123,7 @@ if (defined $BID) {
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
-# Override global constants, i.e., set the projects and repository directories
-# to the current working directory.
-$REPO_DIR = "$WORK_DIR/project_repos";
+# Override global constants
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
 my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
@@ -137,15 +135,17 @@ my $MODIFIED = "$PROJECT_DIR/modified_classes";
 my $TRIGGER = "$PROJECT_DIR/trigger_tests";
 my $RELEVANT= "$PROJECT_DIR/relevant_tests";
 
-# TODO make output dir more flexible; maybe organize the csv-based db differently
+# DB_CSVs directory
 my $db_dir = $WORK_DIR;
 
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
-# Set up output directories
-system("mkdir -p $LOADED $MODIFIED $RELEVANT");
+# Check if output directories exit
+-d $LOADED or die "$LOADED does not exist: $!";
+-d $MODIFIED or die "$MODIFIED does not exist: $!";
+-d $RELEVANT or die "$RELEVANT does not exist: $!";
 
 # Set up project
 my $project = Project::create_project($PID);
@@ -317,9 +317,8 @@ sub _export_relevant_tests {
 =head1 SEE ALSO
 
 This script should be executed after getting the list of trigger tests by
-running the F<get-trigger.pl> script. After running this script, you can
-determine the revisions that have minimized patches. Then you can use
-F<promote-to-db.pl> script to merge desired revisions with the main
-database.
+running the F<get-trigger.pl> script. After running this script, you can inspect
+whether the patch of each revision is indeed minimal. Then you can use
+F<promote-to-db.pl> script to merge desired revisions with the main database.
 
 =cut

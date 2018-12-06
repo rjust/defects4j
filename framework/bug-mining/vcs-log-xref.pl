@@ -27,21 +27,16 @@
 =head1 NAME
 
 vcs-log-xref.pl -- Parses the development history log for a project screening it
-with a regular expression, and validates that they pass a test provided by a
-script that can verify they are bugs (as opposed to improvements, pull requests,
-etc.)
+with a regular expression, and validates that bug-fixing commits have been
+reported in the project issue tracker.
 
 =head1 SYNOPSIS
 
-vcs-log-xref.pl -v vcs_type -e bug_matching_perl_regexp -l commit_log -r repository_dir -c command_to_verify -i issues_file -f output_file
+vcs-log-xref.pl -e bug_matching_perl_regexp -l commit_log -r repository_dir -i issues_file -f output_file [-v vcs_type] [-n project_name]
 
 =head1 OPTIONS
 
 =over 4
-
-=item B<-t C<vcs_type>>
-
-The version control system, i.e., git or svn.
 
 =item B<-e C<bug_matching_perl_regexp>>
 
@@ -57,20 +52,24 @@ issue tracker. This file may be obtained for example by running C<git log>.
 The path to the git repository for this project (this argument is ignored for SVN
 repositories).
 
-=item B<-c C<command_to_verify>>
-
-The command to run that will verify whether a given issue ID is a bug. The
-bug-mining framework currently supplies two auxillary scripts
-(C<verify-bug-file.sh> and C<verify-bug-sf-tracker.sh>) that help with this
-task. You may also supply your own.
-
 =item B<-i C<issues_file>>
 
-# TODO add documentation
+The file with all issues that have been reported in the project issue tracker.
+Each row of the file has two values separated by ',': <issue id>,<issue url>.
 
 =item B<-f C<output_file>>
 
-# TODO add documentation
+The file to which all revision ids of the pre-fix and post-fix revision are written.
+Each row of the file is composed by 5 values:
+  <d4j_bug_id, bug_commit_hash, fix_commit_hash, issue_id, issue_url>
+
+=item B<-v C<vcs_type>>
+
+The version control system: git (default) or svn.
+
+=item B<-n C<project_name>>
+
+The (descriptive) name of the new project (e.g., commons-lang).
 
 =cut
 use strict;
@@ -88,8 +87,8 @@ use Utils;
 my %SUPPORTED_VCSs = (
     'git' => {
             'get_commits' => sub {
-                            my ($fh, $command, $regexp, $issues_db) = @_;
-                            die unless all {defined $_} ($fh, $command, $regexp, $issues_db);
+                            my ($fh, $project_name, $regexp, $issues_file, $issues_db) = @_;
+                            die unless all {defined $_} ($fh, $regexp, $issues_file, $issues_db);
                             my %results;
                             my $commit = '';
                             my $version_id = 1;
@@ -103,9 +102,8 @@ my %SUPPORTED_VCSs = (
                                 }
                                 next unless $commit; # skip lines before first commit info.
                                 if (my $bug_number = eval('$_ =~' . "$regexp" . '; $1')) {
-                                    next unless system("${command} ${bug_number}") == 0; # skip bug ids that do not
-                                                                                         # pass the test
-
+                                    # skip bug ids that have not been reported in the issue tracker
+                                    next unless system("grep -qi \"^${bug_number},\" $issues_file") == 0;
                                     my $parent = _git_get_parent($commit);
                                     next unless $parent; # skip revisions without parent:
                                                          # this can be the first revision or
@@ -124,8 +122,8 @@ my %SUPPORTED_VCSs = (
         },
     'svn' => {
             'get_commits' => sub {
-                                my ($fh, $command, $regexp, $issues_db) = @_;
-                                die unless all {defined $_} ($fh, $command, $regexp, $issues_db);
+                                my ($fh, $project_name, $regexp, $issues_file, $issues_db) = @_;
+                                die unless all {defined $_} ($fh, $project_name, $regexp, $issues_file, $issues_db);
                                 my %results;
                                 my $commit = '';
                                 my $version_id = 1;
@@ -137,9 +135,8 @@ my %SUPPORTED_VCSs = (
                                     }
                                     next unless $commit; # skip lines before first commit info.
                                     if (my $bug_number = eval('$_ =~' . "$regexp" . '; $1')) {
-                                        next unless system("${command} ${bug_number}") == 0; # skip bug ids that do not
-                                                                                             # pass the test
-
+                                        # skip bug ids that have not been reported in the issue tracker
+                                        next unless system("wget -q -O /dev/null \"https://sourceforge.net/p/$project_name/bugs/$bug_number\"") == 0;
                                         my $parent = $commit - 1;
                                         next unless $parent > 0; # skip first revision
                                         $results{$version_id}{'p'} = $parent;
@@ -157,14 +154,13 @@ my %SUPPORTED_VCSs = (
 );
 
 my %cmd_opts;
-getopts('v:e:l:r:c:i:f:', \%cmd_opts) or pod2usage(1);
+getopts('e:l:r:i:f:v:n:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{v} and defined $cmd_opts{e}
-                    and defined $cmd_opts{l} and defined $cmd_opts{r}
-                    and defined $cmd_opts{c} and defined $cmd_opts{i}
+pod2usage(1) unless defined $cmd_opts{e} and defined $cmd_opts{l}
+                    and defined $cmd_opts{r} and defined $cmd_opts{i}
                     and defined $cmd_opts{f};
 
-my $VCS_NAME = $cmd_opts{v};
+my $VCS_NAME = $cmd_opts{v} // "git";
 if (! defined $SUPPORTED_VCSs{$VCS_NAME}) {
     die "Invalid vcs-name! Expected one of the following options: " . join ('|', sort keys (%SUPPORTED_VCSs)) . ".";
 }
@@ -173,9 +169,9 @@ my %VCS = %{$SUPPORTED_VCSs{$VCS_NAME}};
 my $REGEXP = $cmd_opts{e};
 my $LOG_FILE = $cmd_opts{l};
 my $REPOSITORY_DIR = $cmd_opts{r};
-my $COMMAND = $cmd_opts{c};
 my $ISSUES_FILE = abs_path($cmd_opts{i});
 my $OUTPUT_FILE = $cmd_opts{f};
+my $PROJECT_NAME = $cmd_opts{n};
 
 # Issues file must exist and it can be empty
 if (! -s $ISSUES_FILE) {
@@ -187,7 +183,7 @@ my $ISSUES_DB = Utils::read_config_file($ISSUES_FILE, ",") or die "Failed to rea
 %$ISSUES_DB = map { lc($_) => $ISSUES_DB->{$_} } keys %$ISSUES_DB;
 
 open my $fh, $LOG_FILE or die "Could not open commit-log $LOG_FILE";
-my %commits = %{$VCS{'get_commits'}($fh, $COMMAND, $REGEXP, $ISSUES_DB)};
+my %commits = %{$VCS{'get_commits'}($fh, $PROJECT_NAME, $REGEXP, $ISSUES_FILE, $ISSUES_DB)};
 close $fh;
 if (scalar keys %commits eq 0) {
     print("Warning, no commit that matches the regex expression provided has been found\n");

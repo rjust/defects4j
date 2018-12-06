@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-download-issues.pl -- Determine the layout and obtain paths for each revision.
+download-issues.pl -- Collect all issues from the project issue tracker.
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,7 @@ The output directory for the fetched issues.
 
 =item B<-f F<issues_file>>
 
-The output file to write all issues id.
+The output file to write all issues ids and issues urls.
 
 =item B<-z C<organization_id>>
 
@@ -209,7 +209,7 @@ my %SUPPORTED_TRACKERS = (
                                         }
                                         # Collect tickets urls
                                         foreach my $ticket_num (@ticket_nums) {
-                                            # E.g., https://sourceforge.net/p/<project_name>/bugs/<ticket_id>/
+                                            # E.g., https://sourceforge.net/p/<project_name>/bugs/<ticket_id>
                                             my $url = "https://sourceforge.net" . $$p{'tracker_config'}{'options'}{'url'} . $ticket_num;
                                             push @results, ($ticket_num, $url);
                                         }
@@ -239,6 +239,8 @@ my $TRACKER_URI = $cmd_opts{u} // $TRACKER{'default_tracker_uri'};
 my $FETCHING_LIMIT = $cmd_opts{l} // $TRACKER{'default_limit'};
 # Enable debugging if flag is set
 my $DEBUG = 1 if defined $cmd_opts{D};
+
+system("mkdir -p $OUTPUT_DIR");
 
 my $GIVE_UP = 0; # no
 for (my $start = 0; ; $start += $FETCHING_LIMIT) {

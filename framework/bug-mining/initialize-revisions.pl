@@ -90,16 +90,13 @@ $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 # Create necessary directories
 my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
 my $PATCH_DIR   = "$PROJECT_DIR/patches";
-my $FAILING_DIR = "$PROJECT_DIR/failing_tests";
-my $TRIGGER_DIR = "$PROJECT_DIR/trigger_tests";
-my $MOD_CLASSES = "$PROJECT_DIR/modified_classes";
 my $ANALYZER_OUTPUT = "$PROJECT_DIR/analyzer_output";
 my $GEN_BUILDFILE_DIR = "$PROJECT_DIR/build_files";
 
-system("mkdir -p $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES $ANALYZER_OUTPUT $GEN_BUILDFILE_DIR");
+-d $PROJECT_DIR or die "$PROJECT_DIR does not exist: $!";
+-d $PATCH_DIR or die "$PATCH_DIR does not exist: $!";
 
-# Clean up previously generated data
-system("rm -rf $ANALYZER_OUTPUT/${BID} $PATCH_DIR/${BID}.src.patch $PATCH_DIR/${BID}.test.patch");
+system("mkdir -p $ANALYZER_OUTPUT $GEN_BUILDFILE_DIR");
 
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
@@ -186,6 +183,9 @@ if (defined $BID) {
 foreach my $bid (@ids) {
     printf ("%4d: $project->{prog_name}\n", $bid);
 
+    # Clean up previously generated data
+    system("rm -rf $ANALYZER_OUTPUT/${bid} $PATCH_DIR/${bid}.src.patch $PATCH_DIR/${bid}.test.patch");
+
     # Populate the layout map and patches directory
     _bootstrap($project, $bid);
 
@@ -203,5 +203,9 @@ foreach my $bid (@ids) {
     $project->checkout_vid("${bid}f", $TMP_DIR, 1) or die "Cannot checkout fixed version";
     $project->sanity_check();
 }
+
+print("\n--- Add the following to the <fileset> tag identified by the id 'all.manual.tests' in the <PROJECT_ID.build.xml> file ---\n");
+system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name=\"\$include\" />\"; done");
+system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name=\"\$exclude\" />\"; done");
 
 system("rm -rf $TMP_DIR");
