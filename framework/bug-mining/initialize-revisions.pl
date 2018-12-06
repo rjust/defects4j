@@ -205,7 +205,7 @@ foreach my $bid (@ids) {
 }
 
 print("\n--- Add the following to the <fileset> tag identified by the id 'all.manual.tests' in the <PROJECT_ID.build.xml> file ---\n");
-system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name=\"\$include\" />\"; done");
-system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name=\"\$exclude\" />\"; done");
+system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done");
+system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done");
 
 system("rm -rf $TMP_DIR");
