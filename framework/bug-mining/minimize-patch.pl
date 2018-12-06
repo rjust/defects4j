@@ -27,8 +27,10 @@
 =head1 NAME
 
 minimize-patch.pl -- View and minimize patch in a visual diff editor. If a patch
-is minimized, the script recomputes all metadata by rerunning the
-get-metadata.pl.
+is minimized, the script performs a few sanity checks: (1) whether the source
+code and the test cases still compile and (2) whether the list of triggering
+test cases is still the same. The script also recomputes all metadata by
+rerunning the `get-metadata.pl` script if a patch has been minimized.
 
 =head1 SYNOPSIS
 
@@ -57,6 +59,7 @@ use warnings;
 use strict;
 use FindBin;
 use File::Basename;
+use File::Compare;
 use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Usage;
@@ -98,65 +101,102 @@ $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 my $PROJECTS_REPOS_DIR = "$WORK_DIR/project_repos";
 
+# Patch
 my $PATCH_DIR = "$PROJECTS_DIR/$PID/patches";
 -d $PATCH_DIR or die "Cannot read patch directory: $PATCH_DIR";
+my $src_patch = "$BID.src.patch";
+-s "$PATCH_DIR/$src_patch" or die "Cannot read patch file or the file is empty: $PATCH_DIR/$src_patch";
+
+# Triggering test cases
+my $TRIGGER_TESTS_DIR = "$PROJECTS_DIR/$PID/trigger_tests";
+-e $TRIGGER_TESTS_DIR or die "Cannot read trigger_tests directory: $TRIGGER_TESTS_DIR";
+my $trigger_tests = "$TRIGGER_TESTS_DIR/${BID}";
+-s "$trigger_tests" or die "Cannot read triggering tests file or the file is empty: $trigger_tests";
 
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
-my $src_patch = "$BID.src.patch";
+my $CHECKOUT_DIR = "$TMP_DIR/$PID-${BID}f";
 
 # Set up project
 my $project = Project::create_project($PID);
-$project->{prog_root} = $TMP_DIR;
+$project->{prog_root} = $CHECKOUT_DIR;
 
-my $src_path = $project->src_dir("${BID}f");
-$project->checkout_vid("${BID}f", $TMP_DIR, 1);
-$project->apply_patch($TMP_DIR, "$PATCH_DIR/$src_patch") or die "Cannot apply patch";
+while (1) {
+    # Remove temporary checkout directory create a new one
+    system("rm -rf $CHECKOUT_DIR && mkdir -p $CHECKOUT_DIR");
 
-# Copy the non-minimized patch
-Utils::exec_cmd("cp $PATCH_DIR/$src_patch $TMP_DIR", "Back up original patch")
-        or die "Cannot backup patch file";
+    my $src_path = $project->src_dir("${BID}f");
+    $project->checkout_vid("${BID}f", $CHECKOUT_DIR, 1);
+    $project->apply_patch($CHECKOUT_DIR, "$PATCH_DIR/$src_patch") or die "Cannot apply patch";
 
-# Minimize patch with configured editor
-system("$EDITOR $TMP_DIR");
+    # Copy the non-minimized patch
+    Utils::exec_cmd("cp $PATCH_DIR/$src_patch $TMP_DIR", "Back up original patch")
+            or die "Cannot backup patch file";
 
-# Check whether patch could be successfully minimized
-print "Patch minimized? [y/n] >";
-my $input = <STDIN>; chomp $input;
-exit 0 unless lc $input eq "y";
+    # Minimize patch with configured editor
+    system("$EDITOR $CHECKOUT_DIR");
 
-my $orig=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
-chomp $orig;
-system("cd $TMP_DIR; git commit -a -m \"minimized patch\"");
-my $min=`cd $TMP_DIR; git log | head -1 | cut -f2 -d' '`;
-chomp $min;
+    # Check whether patch could be successfully minimized
+    print "Has the patch been minimized? [y/n] > ";
+    my $input = <STDIN>; chomp $input;
+    last unless lc $input eq "y";
 
-# Last chance to reject patch
-system("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path");
-print "Patch correct? [y/n] >";
-$input = <STDIN>; chomp $input;
-exit 0 unless lc $input eq "y";
+    my $orig=`cd $CHECKOUT_DIR; git log | head -1 | cut -f2 -d' '`;
+    chomp $orig;
+    system("cd $CHECKOUT_DIR; git commit -a -m \"minimized patch\"");
+    my $min=`cd $CHECKOUT_DIR; git log | head -1 | cut -f2 -d' '`;
+    chomp $min;
 
-# Store minimized patch
-Utils::exec_cmd("cd $TMP_DIR; git diff $orig $min -- $src_path $src_path > $PATCH_DIR/$src_patch",
-        "Export minimized patch") or die "Cannot export patch";
+    # Last chance to reject patch
+    system("cd $CHECKOUT_DIR; git diff $orig $min -- $src_path $src_path");
+    print "Has the patch been successfully minimized? [y/n] > ";
+    $input = <STDIN>; chomp $input;
+    last unless lc $input eq "y";
 
-# Run sanity check
-# Export variables to make sure the sanity check script picks up the right directories.
-$ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
-$ENV{'REPO_DIR'} = abs_path($PROJECTS_REPOS_DIR);
-# TODO: This should also be configurable in Constants.pm
-$ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
-if (!Utils::exec_cmd("$UTIL_DIR/sanity_check.pl -p$PID -b$BID", "Run sanity check")) {
-    Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
-            or die "Cannot restore patch";
-}
+    # Does it still compile?
+    my $compile_log_file = "$TMP_DIR/compile-log.txt";
+    system(">$compile_log_file");
+    unless ($project->compile($compile_log_file)) {
+        system("cat $compile_log_file");
+        next;
+    }
+    my $compile_tests_log_file = "$TMP_DIR/compile_tests-log.txt";
+    system(">$compile_tests_log_file");
+    unless ($project->compile_tests($compile_tests_log_file)) {
+        system("cat $compile_tests_log_file");
+        next;
+    }
 
-# Re-run get-metadata script as metadata might have changed
-if (!Utils::exec_cmd("./get-metadata.pl -p $PID -w $WORK_DIR -b $BID", "Re-running get-metadata script as metadata might have changed")) {
-    Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
-            or die "Cannot restore patch";
+    # Is the list of triggering test still the same?
+    my $local_trigger_tests = "$TMP_DIR/trigger_tests";
+    system(">$local_trigger_tests");
+    $project->run_tests($local_trigger_tests);
+
+    system("grep \"^--- \" $trigger_tests | sort > $local_trigger_tests.sorted.original");
+    system("grep \"^--- \" $local_trigger_tests | sort > $local_trigger_tests.sorted.minimal");
+
+    if (compare("$local_trigger_tests.sorted.original", "$local_trigger_tests.sorted.minimal") == 1) {
+        print("The list of triggering test cases has changed to:\n");
+        system("cat $local_trigger_tests");
+        next;
+    }
+    # Stack trace might have changed (e.g., line numbers), update it
+    system("cat $local_trigger_tests > $trigger_tests");
+
+    # Store minimized patch
+    Utils::exec_cmd("cd $CHECKOUT_DIR; git diff $orig $min -- $src_path $src_path > $PATCH_DIR/$src_patch",
+            "Export minimized patch") or die "Cannot export patch";
+
+    # Re-run get-metadata script as metadata might have changed
+    if (!Utils::exec_cmd("./get-metadata.pl -p $PID -w $WORK_DIR -b $BID", "Re-running get-metadata script as metadata might have changed")) {
+        Utils::exec_cmd("cp $TMP_DIR/$src_patch $PATCH_DIR", "Restore original patch")
+                or die "Cannot restore patch";
+    }
+
+    print "Can the patch be further minimized? [y/n] > ";
+    $input = <STDIN>; chomp $input;
+    last unless lc $input eq "y";
 }
 
 # Remove temporary directory

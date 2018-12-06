@@ -271,8 +271,11 @@ However, you may use other editors if you prefer.
 Note that the patch is the *reverse* patch, i.e., patching the fixed version
 with this patch will reintroduce the fault.
 
-The script recomputes all metadata by rerunning the `get-metadata.pl` script if
-the patch is manually minimized.
+Once a patch is manually minimized, the script performs a few sanity checks: (1)
+whether the source code and the test cases still compile and (2) whether the
+list of triggering test cases is still the same. The script also recomputes all
+metadata by rerunning the `get-metadata.pl` script if the patch has been
+minimized.
 
 ## Promoting reproducible bugs to the main database
 
