@@ -84,25 +84,6 @@ of the checked-out project version.
         -->
     </path>
 
-    <!-- DEBUG START -->
-    <echo message="d4j.home: ${d4j.home}"/>
-    <echo message="d4j.workdir: ${d4j.workdir}"/>
-    <echo message="d4j.project.id: ${d4j.project.id}"/>
-    <echo message="d4j.bug.id: ${d4j.bug.id}"/>
-    <echo message="d4j.dir.src.classes: ${d4j.dir.src.classes}"/>
-    <echo message="d4j.dir.src.tests: ${d4j.dir.src.tests}"/>
-    <echo message="d4j.classes.modified: ${d4j.classes.modified}"/>
-    <echo message="test.home: ${test.home}"/>
-    <echo message="test.dir: ${test.dir}"/>
-    <echo message="build.home: ${build.home}"/>
-    <!--pathconvert property="D4JTestClasspath" refid="d4j.test.classpath"/>
-    <pathconvert property="BuildClasspath" refid="build.classpath"/>
-    <pathconvert property="BuildTestClasspath" refid="build.test.classpath"/>
-    <echo message="D4JTestClasspath: ${D4JTestClasspath}"/>
-    <echo message="BuildClasspath: ${BuildClasspath}"/>
-    <echo message="BuildTestClasspath: ${BuildTestClasspath}"/-->
-    <!-- DEBUG END -->
-
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <!-- Manually generalize test patterns if analyzer produces incorrect outputs -->
     <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
