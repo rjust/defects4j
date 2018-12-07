@@ -248,7 +248,10 @@ this directory contains the stack trace for a reproduced fault.
 2. Determine relevant metadata (i.e., modified classes, loaded classes, and
    relevant tests) with the `get-metadata.pl` script. For each reproducible bug,
    this script determines the metadata, which will be promoted to the main
-   database together with that bug:
+   database together with that bug. (Note that this script calls
+   [diffstat](https://invisible-island.net/diffstat/) tool to determine the list
+   of modified files in patch. Please make sure `diffstat` is installed and in
+   your `PATH`.)
 
 ```bash
 ./get-metadata.pl -p $PROJECT_ID -w $WORK_DIR
