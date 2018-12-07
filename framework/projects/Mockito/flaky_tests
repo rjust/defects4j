@@ -7,4 +7,5 @@
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOnlyWithTimeoutAndFail
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldVerifyWithTimeout
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldFailVerificationWithTimeout
+--- org.mockitousage.verification.VerificationWithTimeoutTest::canIgnoreInvocationsWithJunit
 --- org.concurrentmockito.ThreadsRunAllTestsHalfManualTest::shouldRunInMultipleThreads
