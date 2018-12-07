@@ -4,6 +4,11 @@ perl:
 
 os: linux
 
+addons:
+  apt:
+    packages:
+      - maven
+
 cache:
   directories:
     - /home/travis/.java/
