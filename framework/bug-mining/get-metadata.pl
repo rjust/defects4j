@@ -122,6 +122,7 @@ if (defined $BID) {
 
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
+foreach (@INC) { print "$_\n"; }
 
 # Override global constants
 $REPO_DIR = "$WORK_DIR/project_repos";

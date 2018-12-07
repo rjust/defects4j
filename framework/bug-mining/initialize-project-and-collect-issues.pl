@@ -107,6 +107,8 @@ use Pod::Usage;
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Utils;
 
+foreach (@INC) { print "$_\n"; }
+
 my %cmd_opts;
 getopts('p:n:w:r:g:t:e:', \%cmd_opts) or pod2usage(1);
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n}
