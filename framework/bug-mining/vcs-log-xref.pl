@@ -153,8 +153,6 @@ my %SUPPORTED_VCSs = (
         }
 );
 
-foreach (@INC) { print "$_\n"; }
-
 my %cmd_opts;
 getopts('e:l:r:i:f:v:n:', \%cmd_opts) or pod2usage(1);
 

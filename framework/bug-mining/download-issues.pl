@@ -219,8 +219,6 @@ my %SUPPORTED_TRACKERS = (
                 }
 );
 
-foreach (@INC) { print "$_\n"; }
-
 my %cmd_opts;
 getopts('g:t:o:f:z:q:u:l:D', \%cmd_opts) or pod2usage(1);
 
