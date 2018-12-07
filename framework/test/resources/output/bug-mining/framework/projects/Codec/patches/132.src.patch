@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/codec/binary/StringUtils.java b/src/main/java/org/apache/commons/codec/binary/StringUtils.java
+index e5fb7187..bef55f70 100644
+--- a/src/main/java/org/apache/commons/codec/binary/StringUtils.java
++++ b/src/main/java/org/apache/commons/codec/binary/StringUtils.java
+@@ -78,7 +78,7 @@ public class StringUtils {
+         if (cs1 instanceof String && cs2 instanceof String) {
+             return cs1.equals(cs2);
+         }
+-        return cs1.length() == cs2.length() && CharSequenceUtils.regionMatches(cs1, false, 0, cs2, 0, cs1.length());
++        return CharSequenceUtils.regionMatches(cs1, false, 0, cs2, 0, Math.max(cs1.length(), cs2.length()));
+     }
+ 
+     /**
