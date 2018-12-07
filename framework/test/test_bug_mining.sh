@@ -212,7 +212,16 @@ test_analyze_project() {
     local rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
     local failing_tests="framework/projects/$project_id/failing_tests/$rev_v2"
     [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
-    _check_output "$work_dir/$failing_tests" "$RESOURCES_OUTPUT_DIR/$failing_tests"
+
+    # Same number of failing tests
+    local actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
+    local expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
+    [ "$actual_num_failing_tests" -eq "$expected_num_failing_tests" ] || die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+
+    # Same failing tests
+    while read -r failing_test; do
+        grep -q "^$failing_test$" "$RESOURCES_OUTPUT_DIR/$failing_tests" || die "Unexpected failing test case: '$failing_test'"
+    done < <(grep -a "^--- " "$work_dir/$failing_tests")
 }
 
 #
@@ -232,7 +241,16 @@ test_get_trigger() {
 
     local trigger_tests="framework/projects/$project_id/trigger_tests/$bug_id"
     [ -s "$work_dir/$trigger_tests" ] || die "List of triggering test cases is empty or does not exist"
-    _check_output "$work_dir/$trigger_tests" "$RESOURCES_OUTPUT_DIR/$trigger_tests"
+
+    # Same number of trigger tests
+    local actual_num_trigger_tests=$(grep -a "^--- " "$work_dir/$trigger_tests" | wc -l)
+    local expected_num_trigger_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$trigger_tests" | wc -l)
+    [ "$actual_num_trigger_tests" -eq "$expected_num_trigger_tests" ] || die "Expected $expected_num_trigger_tests trigger tests and got $actual_num_trigger_tests"
+
+    # Same trigger tests
+    while read -r trigger_test; do
+        grep -q "^$trigger_test$" "$RESOURCES_OUTPUT_DIR/$trigger_tests" || die "Unexpected trigger test case: '$trigger_test'"
+    done < <(grep -a "^--- " "$work_dir/$trigger_tests")
 }
 
 #
