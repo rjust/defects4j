@@ -124,6 +124,7 @@ if (defined $BID) {
 unshift(@INC, "$WORK_DIR/framework/core");
 
 # Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
 $PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
 my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
