@@ -36,6 +36,7 @@ metadata:
   - framework/projects/<PROJECT_ID>/loaded_classes
   - framework/projects/<PROJECT_ID>/modified_classes
   - framework/projects/<PROJECT_ID>/patches
+  - framework/projects/<PROJECT_ID>/relevant_tests
   - framework/projects/<PROJECT_ID>/trigger_tests
   - framework/projects/<PROJECT_ID>/build.xml.patch
   - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
@@ -123,7 +124,7 @@ my @rev_specific_files = ("failing_tests/<rev>", "build_files/<rev>");
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
-                            "trigger_tests/<id>");
+                            "trigger_tests/<id>", "relevant_tests/<id>");
 my @generic_files_and_directories = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
                                      "dir-layout.csv", "lib");
 
