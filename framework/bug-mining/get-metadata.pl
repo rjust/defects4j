@@ -217,7 +217,8 @@ foreach my $bid (@bids) {
     $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
     $ENV{'REPO_DIR'} = abs_path($REPO_DIR);
     # TODO: This should also be configurable in Constants.pm
-    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
+    my $perl_lib = $ENV{'PERL5LIB'} // "";
+    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core:$perl_lib";
     # Determine modified files
     #
     # Note:
