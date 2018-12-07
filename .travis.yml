@@ -8,6 +8,7 @@ addons:
   apt:
     packages:
       - maven
+      - diffstat
 
 cache:
   directories:
