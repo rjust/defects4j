@@ -108,7 +108,7 @@ use lib (dirname(abs_path(__FILE__)) . "/../core/");
 use Utils;
 
 my %cmd_opts;
-getopts('p:n:w:r:g:t:e:', \%cmd_opts) or pod2usage(1);
+getopts('p:n:w:r:g:t:e:q:z:u:l:v:', \%cmd_opts) or pod2usage(1);
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n}
                     and defined $cmd_opts{w} and defined $cmd_opts{r}
                     and defined $cmd_opts{g} and defined $cmd_opts{t}
@@ -124,7 +124,7 @@ my $ISSUE_TRACKER_PROJECT_ID = $cmd_opts{t};
 my $ISSUES_DIR = "$WORK_DIR/issues";
 my $ISSUES_FILE = "$WORK_DIR/issues.txt";
 my $ORGANIZATION_ID = $cmd_opts{z};
-my $QUERY = $cmd_opts{q};
+my $QUERY = $cmd_opts{q} // "labels=Bug";
 my $TRACKER_URI = $cmd_opts{u};
 my $FETCHING_LIMIT = $cmd_opts{l};
 
@@ -145,7 +145,8 @@ Utils::exec_cmd("./create-project.pl -p $PID"
 Utils::exec_cmd("./download-issues.pl -g $ISSUE_TRACKER_NAME"
                                   . " -t $ISSUE_TRACKER_PROJECT_ID"
                                   . " -o $ISSUES_DIR"
-                                  . " -f $ISSUES_FILE",
+                                  . " -f $ISSUES_FILE"
+				  . " -q $QUERY",
                 "Collecting all issues from the project issue tracker") or die "Cannot collect all issues from the project issue tracker!";
 
 # Collect git log
