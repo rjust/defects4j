@@ -8,4 +8,6 @@
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldVerifyWithTimeout
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldFailVerificationWithTimeout
 --- org.mockitousage.verification.VerificationWithTimeoutTest::canIgnoreInvocationsWithJunit
+--- org.mockitousage.verification.VerificationAfterDelayTest::shouldVerifyNormallyWithSpecificTimes
+--- org.mockito.verification.TimeoutTest::should_pass_even_if_first_verification_fails
 --- org.concurrentmockito.ThreadsRunAllTestsHalfManualTest::shouldRunInMultipleThreads
