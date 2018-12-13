@@ -117,8 +117,8 @@ cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
 #
 echo
 echo "Setting up GZoltar and utility program(s) for fault localization ... "
-GZOLTAR_VERSION="1.7.0"
-GZOLTAR_FULL_VERSION="${GZOLTAR_VERSION}.201807090550"
+GZOLTAR_VERSION="1.7.1"
+GZOLTAR_FULL_VERSION="${GZOLTAR_VERSION}.201812131007"
 GZOLTAR_URL="https://github.com/GZoltar/gzoltar/releases/download/v${GZOLTAR_VERSION}"
 GZOLTAR_ZIP="gzoltar-${GZOLTAR_FULL_VERSION}.zip"
 GZOLTAR_TMP_DIR="gzoltar_tmp_dir"
