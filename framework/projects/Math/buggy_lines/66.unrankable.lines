@@ -1,0 +1,5 @@
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#65#MISSING_RANKING_STATEMENT    public double optimize(final UnivariateRealFunction f, final GoalType goalType, final double min, final double max) throws MaxIterationsExceededException, FunctionEvaluationException {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#67#MISSING_RANKING_STATEMENT    }
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#59#MISSING_RANKING_STATEMENT    public double optimize(final UnivariateRealFunction f, final GoalType goalType, final double min, final double max, final double startValue) throws MaxIterationsExceededException, FunctionEvaluationException {
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#94#                            UnivariateRealFunction f,
+org/apache/commons/math/optimization/univariate/BrentOptimizer.java#95#                            GoalType goalType,
