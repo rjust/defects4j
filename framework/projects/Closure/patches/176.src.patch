@@ -1,35 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
-index d58f80cb..ecee923d 100644
+index d58f80cb..ecba09b1 100644
 --- a/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
 +++ b/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java
-@@ -257,7 +257,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
-     private final Node useCfgNode;
- 
-     // Number of uses of the variable within the current CFG node.
--    private int numUsesWithinCfgNode;
-+    private int numUseWithinUseCfgNode;
- 
-     Candidate(String varName, Definition defMetadata,
-         Node use, Node useCfgNode) {
-@@ -327,7 +327,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
-       // Finally we have to make sure that there are no more than one use
-       // in the program and in the CFG node. Even when it is semantically
-       // correctly inlining twice increases code size.
--      if (numUsesWithinCfgNode != 1) {
-+      if (numUseWithinUseCfgNode != 1) {
-         return false;
-       }
- 
-@@ -471,41 +471,29 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
-      * Computes the number of uses of the variable varName and store it in
-      * numUseWithinUseCfgNode.
-      */
--    private void getNumUseInUseCfgNode(final Node cfgNode) {
-+    private void getNumUseInUseCfgNode(Node n) {
- 
--      numUsesWithinCfgNode = 0;
-       AbstractCfgNodeTraversalCallback gatherCb =
-           new AbstractCfgNodeTraversalCallback() {
+@@ -479,30 +479,19 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
  
          @Override
          public void visit(NodeTraversal t, Node n, Node parent) {
@@ -47,9 +20,8 @@ index d58f80cb..ecee923d 100644
                // Don't count lhs of top-level assignment chain
 -              return;
 -            } else {
--              numUsesWithinCfgNode++;
+               numUsesWithinCfgNode++;
 -            }
-+            numUseWithinUseCfgNode++;
            }
          }
  
@@ -63,17 +35,4 @@ index d58f80cb..ecee923d 100644
 -        }
        };
  
--      NodeTraversal.traverse(compiler, cfgNode, gatherCb);
-+      NodeTraversal.traverse(compiler, n, gatherCb);
-     }
-   }
- 
-@@ -539,7 +527,7 @@ class FlowSensitiveInlineVariables extends AbstractPostOrderCallback
-    */
-   private static boolean checkLeftOf(
-       Node n, Node expressionRoot, Predicate<Node> predicate) {
--    for (Node p = n; p != expressionRoot; p = p.getParent()) {
-+    for (Node p = n.getParent(); p != expressionRoot; p = p.getParent()) {
-       for (Node cur = p.getParent().getFirstChild(); cur != p;
-           cur = cur.getNext()) {
-         if (predicate.apply(cur)) {
+       NodeTraversal.traverse(compiler, cfgNode, gatherCb);

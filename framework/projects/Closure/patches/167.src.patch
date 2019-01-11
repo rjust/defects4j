@@ -1,56 +1,8 @@
-diff --git a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-index 24800731..318d747a 100644
---- a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-+++ b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-@@ -241,25 +241,6 @@ class MakeDeclaredNamesUnique
-       NodeTraversal.traverse(compiler, js, this);
-     }
- 
--    public static String getOrginalName(String name) {
--      int index = indexOfSeparator(name);
--      return (index == -1) ? name : name.substring(0, index);
--    }
--
--    private static int indexOfSeparator(String name) {
--      return name.lastIndexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR);
--    }
--
--    private static String getOrginalNameInternal(String name, int index) {
--      return name.substring(0, index);
--    }
--
--    private static String getNameSuffix(String name, int index) {
--      return name.substring(
--          index + ContextualRenamer.UNIQUE_ID_SEPARATOR.length(),
--          name.length());
--    }
--
-     @Override
-     public void visit(NodeTraversal t, Node node, Node parent) {
-       if (node.getType() == Token.NAME) {
-@@ -274,10 +255,13 @@ class MakeDeclaredNamesUnique
-           if (nameMap.containsKey(var)) {
-             node.setString(nameMap.get(var));
-           } else {
--            int index = indexOfSeparator(oldName);
--            String newName = getOrginalNameInternal(oldName, index);
--            String suffix = getNameSuffix(oldName, index);
--
-+            String newName = oldName.substring(
-+                0, oldName.lastIndexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR));
-+            String suffix = oldName.substring(
-+                oldName.lastIndexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR)
-+                    + ContextualRenamer.UNIQUE_ID_SEPARATOR.length(),
-+                oldName.length());
-+            
-             // The convention we are using here is that names of the form:
-             //    a$$1  ($$ followed by a digit are allowed to mask a global)
-             //    a$$inline_1 ($$ followed by anything that isn't a digit isn't
 diff --git a/src/com/google/javascript/jscomp/MethodCompilerPass.java b/src/com/google/javascript/jscomp/MethodCompilerPass.java
-index 5e0268f9..dc7d8735 100644
+index 5e0268f9..cd39b6ee 100644
 --- a/src/com/google/javascript/jscomp/MethodCompilerPass.java
 +++ b/src/com/google/javascript/jscomp/MethodCompilerPass.java
-@@ -99,10 +99,33 @@ abstract class MethodCompilerPass implements CompilerPass {
+@@ -99,10 +99,30 @@ abstract class MethodCompilerPass implements CompilerPass {
     * itself or the name of a function).
     */
    private void addPossibleSignature(String name, Node node, NodeTraversal t) {
@@ -63,7 +15,6 @@ index 5e0268f9..dc7d8735 100644
 +    } else if (node.getType() == Token.NAME) {
 +      String functionName = node.getString();
 +      Scope.Var v = t.getScope().getVar(functionName);
-+
 +      if (v == null) {
 +        if (compiler.isIdeMode()) {
 +          return;
@@ -72,7 +23,6 @@ index 5e0268f9..dc7d8735 100644
 +              "VarCheck should have caught this undefined function");
 +        }
 +      }
-+
 +      Node function = v.getInitialValue();
 +      if (function != null &&
 +          function.getType() == Token.FUNCTION) {
@@ -80,7 +30,6 @@ index 5e0268f9..dc7d8735 100644
 +        signatureAdded = true;
 +      }
 +    }
-+
 +    if (!signatureAdded) {
        nonMethodProperties.add(name);
      }

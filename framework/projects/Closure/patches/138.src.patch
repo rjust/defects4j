@@ -1,14 +1,9 @@
 diff --git a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
-index edce9bfd..2c6f22fe 100644
+index edce9bfd..6c6fcd45 100644
 --- a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
 +++ b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
-@@ -691,14 +691,9 @@ public class JSTypeRegistry implements Serializable {
-     if (typesIndexedByProperty.containsKey(propertyName)) {
-       for (JSType alt :
-                typesIndexedByProperty.get(propertyName).getAlternates()) {
--        JSType greatestSubtype = alt.getGreatestSubtype(type);
--        if (!greatestSubtype.isEmptyType()) {
-+        if (!alt.getGreatestSubtype(type).isEmptyType()) {
+@@ -695,10 +695,6 @@ public class JSTypeRegistry implements Serializable {
+         if (!greatestSubtype.isEmptyType()) {
            // We've found a type with this property. Now we just have to make
            // sure it's not a type used for internal bookkeeping.
 -          RecordType maybeRecordType = greatestSubtype.toMaybeRecordType();
@@ -34,10 +29,10 @@ index 37bd4870..82d229de 100644
    /**
     * Defines a property whose type is inferred.
 diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
-index 8ff279cb..a1295d11 100755
+index 8ff279cb..7cc48901 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordType.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordType.java
-@@ -65,13 +65,8 @@ class RecordType extends PrototypeObjectType {
+@@ -65,12 +65,8 @@ class RecordType extends PrototypeObjectType {
    private static final long serialVersionUID = 1L;
  
    private final SortedMap<String, JSType> properties = Maps.newTreeMap();
@@ -47,11 +42,10 @@ index 8ff279cb..a1295d11 100755
 -  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties) {
 -    this(registry, properties, true);
 -  }
--
+ 
    /**
     * Creates a record type.
-    *
-@@ -84,11 +79,9 @@ class RecordType extends PrototypeObjectType {
+@@ -84,11 +80,9 @@ class RecordType extends PrototypeObjectType {
     * @throws IllegalStateException if the {@code RecordProperty} associated
     *         with a property is null.
     */
@@ -64,22 +58,21 @@ index 8ff279cb..a1295d11 100755
  
      for (String property : properties.keySet()) {
        RecordProperty prop = properties.get(property);
-@@ -96,13 +89,7 @@ class RecordType extends PrototypeObjectType {
+@@ -96,13 +90,8 @@ class RecordType extends PrototypeObjectType {
          throw new IllegalStateException(
              "RecordProperty associated with a property should not be null!");
        }
 -      if (declared) {
--        defineDeclaredProperty(
--            property, prop.getType(), prop.getPropertyNode());
+         defineDeclaredProperty(
+             property, prop.getType(), prop.getPropertyNode());
 -      } else {
 -        defineSynthesizedProperty(
 -            property, prop.getType(), prop.getPropertyNode());
 -      }
-+      defineDeclaredProperty(property, prop.getType(), prop.getPropertyNode());
      }
  
      // Freeze the record type.
-@@ -110,9 +97,6 @@ class RecordType extends PrototypeObjectType {
+@@ -110,9 +99,6 @@ class RecordType extends PrototypeObjectType {
    }
  
    /** @return Is this synthesized for internal bookkeeping? */
@@ -89,7 +82,7 @@ index 8ff279cb..a1295d11 100755
  
    @Override
    public boolean isEquivalentTo(JSType other) {
-@@ -163,7 +147,6 @@ class RecordType extends PrototypeObjectType {
+@@ -163,7 +149,6 @@ class RecordType extends PrototypeObjectType {
      if (that.isRecordType()) {
        RecordType thatRecord = that.toMaybeRecordType();
        RecordTypeBuilder builder = new RecordTypeBuilder(registry);
@@ -98,7 +91,7 @@ index 8ff279cb..a1295d11 100755
        // The greatest subtype consists of those *unique* properties of both
        // record types. If any property conflicts, then the NO_TYPE type
 diff --git a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
-index 60d1e103..f5998c72 100755
+index 60d1e103..345795b5 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
 @@ -51,7 +51,6 @@ import java.util.HashMap;
@@ -119,13 +112,12 @@ index 60d1e103..f5998c72 100755
  
    /**
     * Adds a property with the given name and type to the record type.
-@@ -92,8 +88,7 @@ public class RecordTypeBuilder {
-        return registry.getNativeObjectType(JSTypeNative.OBJECT_TYPE);
+@@ -93,7 +89,7 @@ public class RecordTypeBuilder {
      }
  
--    return new RecordType(
+     return new RecordType(
 -        registry, Collections.unmodifiableMap(properties), isDeclared);
-+    return registry.createRecordType(Collections.unmodifiableMap(properties));
++        registry, Collections.unmodifiableMap(properties));
    }
  
    static class RecordProperty {

@@ -13,7 +13,7 @@ index f3d95836..1df9098b 100644
          // We assume here that programs don't change the value of the
          // keyword undefined to something other than the value undefined.
 diff --git a/src/com/google/javascript/jscomp/SourceMap.java b/src/com/google/javascript/jscomp/SourceMap.java
-index 698dfdec..9edb0181 100644
+index 698dfdec..ff61bddf 100644
 --- a/src/com/google/javascript/jscomp/SourceMap.java
 +++ b/src/com/google/javascript/jscomp/SourceMap.java
 @@ -38,7 +38,6 @@ import java.util.List;
@@ -33,7 +33,7 @@ index 698dfdec..9edb0181 100644
  
      /**
       * The input source file.
-@@ -83,66 +82,36 @@ public class SourceMap {
+@@ -83,67 +82,38 @@ public class SourceMap {
      /**
       * Whether the mapping is actually used by the source map.
       */
@@ -69,13 +69,13 @@ index 698dfdec..9edb0181 100644
  
 -      out.append(escapedSourceFile);
        out.append(",");
--
+ 
 -      int line = m.originalPosition.getLineNumber();
 -      if (line != lastLine) {
 -        lastLineString = String.valueOf(line);
 -      }
 -      String lineValue = lastLineString;
--
+ 
 -      out.append(lineValue);
 +      out.append(String.valueOf(originalPosition.getLineNumber()));
  
@@ -92,9 +92,9 @@ index 698dfdec..9edb0181 100644
        }
  
 -      out.append("]\n");
--    }
 +      out.append("]");
- 
+     }
+-
      /**
       * Add used mappings to the supplied Appendable.
       */
@@ -104,34 +104,29 @@ index 698dfdec..9edb0181 100644
 -          appendMappingTo(m, out);
 -        }
 -      }
-     }
+-    }
    }
  
-@@ -171,6 +140,12 @@ public class SourceMap {
+   /**
+@@ -170,6 +140,8 @@ public class SourceMap {
+   private static String escapeString(String value) {
      return CodeGenerator.escapeToDoubleQuotedJsString(value);
    }
- 
-+  /**
-+   * Cache of escaped source file name.
-+   */
 +  private String lastSourceFile = null;
 +  private String lastSourceFileEscaped = null;
-+
+ 
    /**
     * Adds a mapping for the given node.  Mappings must be added in order.
-    *
-@@ -188,21 +163,25 @@ public class SourceMap {
+@@ -188,21 +160,23 @@ public class SourceMap {
        return;
      }
  
-+    // The source file rarely changes, so cache the escaped string.
 +    String escapedSourceFile;
 +    if (lastSourceFile != sourceFile) {  // yes, "s1 != s2" not "!s1.equals(s2)"
 +      lastSourceFile = sourceFile;
 +      lastSourceFileEscaped = escapeString(sourceFile);
 +    }
 +    escapedSourceFile = lastSourceFileEscaped;
-+
      // Create the new mapping.
      Mapping mapping = new Mapping();
 -    mapping.sourceFile = sourceFile;
@@ -153,7 +148,7 @@ index 698dfdec..9edb0181 100644
        // If the mapping is found on the first line, we need to offset
        // its character position by the number of characters found on
        // the *last* line of the source file to which the code is
-@@ -226,7 +205,6 @@ public class SourceMap {
+@@ -226,7 +200,6 @@ public class SourceMap {
        mapping.endPosition =
            new Position(endPosition.getLineNumber() + offsetLine,
                         endPosition.getCharacterIndex() + endOffsetPosition);
@@ -161,7 +156,7 @@ index 698dfdec..9edb0181 100644
  
      mappings.add(mapping);
    }
-@@ -281,6 +259,16 @@ public class SourceMap {
+@@ -281,6 +254,14 @@ public class SourceMap {
      prefixPosition = new Position(0, 0);
    }
  
@@ -171,14 +166,12 @@ index 698dfdec..9edb0181 100644
 +      int endPositionLine = mapping.endPosition.getLineNumber();
 +      maxLine = Math.max(maxLine, endPositionLine);
 +    }
-+    // Adjust for the prefix.
 +    return maxLine + prefixPosition.getLineNumber();
 +  }
-+
    /**
     * Appends the source map in LavaBug format to the given buffer.
     *
-@@ -320,7 +308,7 @@ public class SourceMap {
+@@ -320,7 +301,7 @@ public class SourceMap {
      // 11) ["c.js", 1, 4]
      // 12) ["d.js", 3, 78, "foo"]
  
@@ -187,7 +180,7 @@ index 698dfdec..9edb0181 100644
  
      // Add the line character maps.
      out.append("/** Begin line maps. **/{ \"file\" : ");
-@@ -342,42 +330,33 @@ public class SourceMap {
+@@ -342,42 +323,32 @@ public class SourceMap {
      // Add the mappings themselves.
      out.append("/** Begin mapping definitions. **/\n");
  
@@ -225,21 +218,20 @@ index 698dfdec..9edb0181 100644
      // The destination.
      private final Appendable out;
 -
-+    // The last line and column written
 +    private int line;
 +    private int col;
      // Whether the current line has had a value written yet.
      private boolean firstChar = true;
  
-+    private final static int UNMAPPED = -1;
      private final static String UNMAPPED_STRING = "-1";
  
 -    private int lastId = UNMAPPED;
 -    private String lastIdString = UNMAPPED_STRING;
++    private final static int UNMAPPED = -1;
  
      LineMapper(Appendable out) {
        this.out = out;
-@@ -386,30 +365,11 @@ public class SourceMap {
+@@ -386,30 +357,11 @@ public class SourceMap {
      /**
       * As each segment is visited write out the appropriate line mapping.
       */
@@ -270,7 +262,7 @@ index 698dfdec..9edb0181 100644
  
      // Append the line mapping entries.
      void appendLineMappings() throws IOException {
-@@ -418,64 +378,23 @@ public class SourceMap {
+@@ -418,64 +370,29 @@ public class SourceMap {
        // Start the first line.
        openLine();
  
@@ -279,7 +271,6 @@ index 698dfdec..9edb0181 100644
        // And close the final line.
 -      closeLine();
 -    }
-+
  
      /**
       * Begin the entry for a new line.
@@ -315,14 +306,14 @@ index 698dfdec..9edb0181 100644
 -      }
 -    }
 -  }
--
--  /**
--   * Mark any visited mapping as "used".
--   */
+ 
+   /**
+    * Mark any visited mapping as "used".
+    */
 -  private class UsedMappingCheck implements MappingVisitor {
--    /**
--     * @throws IOException
--     */
+     /**
+      * @throws IOException
+      */
 -    @Override
 -    public void visit(Mapping m, int line, int col, int nextLine, int nextCol)
 -        throws IOException {
@@ -336,7 +327,7 @@ index 698dfdec..9edb0181 100644
      /**
       * @param m The mapping for the current code segment. null if the segment
       *     is unmapped.
-@@ -485,25 +404,14 @@ public class SourceMap {
+@@ -485,25 +402,15 @@ public class SourceMap {
       * @param endCol The ending column
       * @throws IOException
       */
@@ -349,7 +340,7 @@ index 698dfdec..9edb0181 100644
     * segments are visited with a null mapping, unused mapping are not visited.
     */
 -  private class MappingTraversal {
--    // The last line and column written
+     // The last line and column written
 -    private int line;
 -    private int col;
  
@@ -362,7 +353,7 @@ index 698dfdec..9edb0181 100644
  
        // The mapping list is ordered as a pre-order traversal.  The mapping
        // positions give us enough information to rebuild the stack and this
-@@ -516,13 +424,13 @@ public class SourceMap {
+@@ -516,13 +423,13 @@ public class SourceMap {
          // closed in the reverse order of when they encountered.
          while (!stack.isEmpty() && !isOverlapped(stack.peek(), m)) {
            Mapping previous = stack.pop();
@@ -378,7 +369,7 @@ index 698dfdec..9edb0181 100644
  
          stack.push(m);
        }
-@@ -531,8 +439,27 @@ public class SourceMap {
+@@ -531,8 +438,24 @@ public class SourceMap {
        // mappings in the reverse order of when they encountered.
        while (!stack.isEmpty()) {
          Mapping m = stack.pop();
@@ -387,16 +378,13 @@ index 698dfdec..9edb0181 100644
 +      }
 +      closeLine();
 +    }
-+
 +    private void openLine() throws IOException {
 +      out.append("[");
 +      this.firstChar = true;
 +    }
-+
 +    private void closeLine() throws IOException {
 +      out.append("]\n");
 +    }
-+
 +    private void addCharEntry(String id) throws IOException {
 +      if (firstChar) {
 +        firstChar = false;
@@ -407,7 +395,7 @@ index 698dfdec..9edb0181 100644
      }
  
      /**
-@@ -570,47 +497,55 @@ public class SourceMap {
+@@ -570,47 +493,54 @@ public class SourceMap {
       * Write any needed entries from the current position to the end of the
       * provided mapping.
       */
@@ -431,14 +419,13 @@ index 698dfdec..9edb0181 100644
          throws IOException {
 -      int nextLine = getAdjustedLine(m.startPosition);
 -      int nextCol = getAdjustedCol(m.startPosition);
--      // If the previous value is null, no mapping exists.
++      int nextLine = getAdjustedLine(next.startPosition);
++      int nextCol = getAdjustedCol(next.startPosition);
+       // If the previous value is null, no mapping exists.
 -      Preconditions.checkState(line < nextLine || col <= nextCol);
 -      if (line < nextLine || (line == nextLine && col < nextCol)) {
 -        visit(v, parent, nextLine, nextCol);
 -      }
-+      int nextLine = getAdjustedLine(next.startPosition);
-+      int nextCol = getAdjustedCol(next.startPosition);
-+      // If the previous value is null, no mapping exists
 +      int id = (prev != null) ? prev.id : UNMAPPED;
 +      writeCharsUpTo(nextLine, nextCol, id);
      }
@@ -472,7 +459,6 @@ index 698dfdec..9edb0181 100644
 +          }
 +          break;
 +        }
-+
 +        closeLine();
 +        openLine();
 +      }

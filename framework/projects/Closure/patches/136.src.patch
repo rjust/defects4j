@@ -1,108 +1,56 @@
 diff --git a/src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java b/src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java
-index 8165840a..33c50a95 100644
+index 8165840a..9e702797 100644
 --- a/src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java
 +++ b/src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java
-@@ -295,11 +295,17 @@ public class SemanticReverseAbstractInterpreter
-     TypePair merged = merging.apply(new TypePair(leftType, rightType));
- 
-     // creating new scope
--    if (merged != null) {
--      return maybeRestrictTwoNames(
--          blindScope,
+@@ -298,8 +298,8 @@ public class SemanticReverseAbstractInterpreter
+     if (merged != null) {
+       return maybeRestrictTwoNames(
+           blindScope,
 -          left, leftType, leftIsRefineable ? merged.typeA : null,
 -          right, rightType, rightIsRefineable ? merged.typeB : null);
-+    if (merged != null &&
-+        ((leftIsRefineable && merged.typeA != null) ||
-+         (rightIsRefineable && merged.typeB != null))) {
-+      FlowScope informed = blindScope.createChildFlowScope();
-+      if (leftIsRefineable && merged.typeA != null) {
-+        declareNameInScope(informed, left, merged.typeA);
-+      }
-+      if (rightIsRefineable && merged.typeB != null) {
-+        declareNameInScope(informed, right, merged.typeB);
-+      }
-+      return informed;
++          left, leftIsRefineable, merged.typeA,
++          right, rightIsRefineable, merged.typeB);
      }
      return blindScope;
    }
-@@ -319,9 +325,9 @@ public class SemanticReverseAbstractInterpreter
-     }
- 
-     // restricting left type
--    JSType restrictedLeftType = (leftType == null) ? null :
-+    leftType = (leftType == null) ? null :
-         leftType.getRestrictedTypeGivenToBooleanOutcome(condition);
--    if (restrictedLeftType == null) {
-+    if (leftType == null) {
-       return firstPreciserScopeKnowingConditionOutcome(
-           right, blindScope, condition);
-     }
-@@ -339,14 +345,21 @@ public class SemanticReverseAbstractInterpreter
-     }
- 
-     if (condition) {
--      JSType restrictedRightType = (rightType == null) ? null :
-+      rightType = (rightType == null) ? null :
-           rightType.getRestrictedTypeGivenToBooleanOutcome(condition);
- 
+@@ -345,8 +345,8 @@ public class SemanticReverseAbstractInterpreter
        // creating new scope
--      return maybeRestrictTwoNames(
--          blindScope,
+       return maybeRestrictTwoNames(
+           blindScope,
 -          left, leftType, leftIsRefineable ? restrictedLeftType : null,
 -          right, rightType, rightIsRefineable ? restrictedRightType : null);
-+      if ((leftType != null && leftIsRefineable) ||
-+          (rightType != null && rightIsRefineable)) {
-+        FlowScope informed = blindScope.createChildFlowScope();
-+        if (leftIsRefineable && leftType != null) {
-+          declareNameInScope(informed, left, leftType);
-+        }
-+        if (rightIsRefineable && rightType != null) {
-+          declareNameInScope(informed, right, rightType);
-+        }
-+        return informed;
-+      }
++          left, leftIsRefineable, restrictedLeftType,
++          right, rightIsRefineable, restrictedRightType);
      }
      return blindScope;
    }
-@@ -389,56 +402,34 @@ public class SemanticReverseAbstractInterpreter
-    * It is OK to pass non-name nodes into this method, as long as you pass
-    * in {@code null} for a restricted type.
+@@ -391,7 +391,7 @@ public class SemanticReverseAbstractInterpreter
     */
--  private FlowScope maybeRestrictName(
--      FlowScope blindScope, Node node, JSType originalType, JSType restrictedType) {
+   private FlowScope maybeRestrictName(
+       FlowScope blindScope, Node node, JSType originalType, JSType restrictedType) {
 -    if (restrictedType != null && restrictedType != originalType) {
--      FlowScope informed = blindScope.createChildFlowScope();
--      declareNameInScope(informed, node, restrictedType);
--      return informed;
--    }
--    return blindScope;
--  }
- 
-   /**
-    * @see maybeRestrictName
++    if (restrictedType != null && !restrictedType.equals(originalType)) {
+       FlowScope informed = blindScope.createChildFlowScope();
+       declareNameInScope(informed, node, restrictedType);
+       return informed;
+@@ -404,12 +404,12 @@ public class SemanticReverseAbstractInterpreter
     */
--  private FlowScope maybeRestrictTwoNames(
--      FlowScope blindScope,
+   private FlowScope maybeRestrictTwoNames(
+       FlowScope blindScope,
 -      Node left, JSType originalLeftType, JSType restrictedLeftType,
 -      Node right, JSType originalRightType, JSType restrictedRightType) {
--    boolean shouldRefineLeft =
++      Node left, boolean leftIsRefineable, JSType restrictedLeftType,
++      Node right, boolean rightIsRefineable, JSType restrictedRightType) {
+     boolean shouldRefineLeft =
 -        restrictedLeftType != null && restrictedLeftType != originalLeftType;
--    boolean shouldRefineRight =
++        leftIsRefineable && restrictedLeftType != null;
+     boolean shouldRefineRight =
 -        restrictedRightType != null && restrictedRightType != originalRightType;
--    if (shouldRefineLeft || shouldRefineRight) {
--      FlowScope informed = blindScope.createChildFlowScope();
--      if (shouldRefineLeft) {
--        declareNameInScope(informed, left, restrictedLeftType);
--      }
--      if (shouldRefineRight) {
--        declareNameInScope(informed, right, restrictedRightType);
--      }
--      return informed;
--    }
--    return blindScope;
--  }
- 
-   private FlowScope caseNameOrGetProp(Node name, FlowScope blindScope,
++        rightIsRefineable && restrictedRightType != null;
+     if (shouldRefineLeft || shouldRefineRight) {
+       FlowScope informed = blindScope.createChildFlowScope();
+       if (shouldRefineLeft) {
+@@ -427,9 +427,11 @@ public class SemanticReverseAbstractInterpreter
        boolean outcome) {
      JSType type = getTypeIfRefinable(name, blindScope);
      if (type != null) {
@@ -117,39 +65,6 @@ index 8165840a..33c50a95 100644
      }
      return blindScope;
    }
- 
-   private FlowScope caseTypeOf(Node node, JSType type, String value,
-         boolean resultEqualsValue, FlowScope blindScope) {
--    return maybeRestrictName(
--        blindScope, node, type,
--        getRestrictedByTypeOfResult(type, value, resultEqualsValue));
-+    JSType restrictedType =
-+        getRestrictedByTypeOfResult(type, value, resultEqualsValue);
-+    if (restrictedType == null) {
-+      return blindScope;
-+    }
-+    FlowScope informed = blindScope.createChildFlowScope();
-+    declareNameInScope(informed, node, restrictedType);
-+    return informed;
-   }
- 
-   private FlowScope caseInstanceOf(Node left, Node right, FlowScope blindScope,
-@@ -459,8 +450,13 @@ public class SemanticReverseAbstractInterpreter
-     } else {
-       visitor = new RestrictByFalseInstanceOfResultVisitor(targetType);
-     }
--    return maybeRestrictName(
--        blindScope, left, leftType, leftType.visit(visitor));
-+    JSType restrictedLeftType = leftType.visit(visitor);
-+    if (restrictedLeftType != null && !restrictedLeftType.equals(leftType)) {
-+      FlowScope informed = blindScope.createChildFlowScope();
-+      declareNameInScope(informed, left, restrictedLeftType);
-+      return informed;
-+    }
-+    return blindScope;
-   }
- 
-   /**
 diff --git a/src/com/google/javascript/rhino/jstype/JSType.java b/src/com/google/javascript/rhino/jstype/JSType.java
 index 44d1e93b..8f0a1f69 100644
 --- a/src/com/google/javascript/rhino/jstype/JSType.java

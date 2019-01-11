@@ -169,30 +169,28 @@ index 4c62e156..e354e564 100644
  
    /**
 diff --git a/src/com/google/javascript/rhino/jstype/JSType.java b/src/com/google/javascript/rhino/jstype/JSType.java
-index 9c8e9897..3f1360e3 100644
+index 9c8e9897..7906bfef 100644
 --- a/src/com/google/javascript/rhino/jstype/JSType.java
 +++ b/src/com/google/javascript/rhino/jstype/JSType.java
-@@ -488,17 +488,14 @@ public abstract class JSType implements Serializable {
-   /**
+@@ -489,7 +489,7 @@ public abstract class JSType implements Serializable {
     * Checks if two types are equivalent.
     */
--  public final boolean isEquivalentTo(JSType that) {
+   public final boolean isEquivalentTo(JSType that) {
 -    return checkEquivalenceHelper(that, EquivalenceMethod.IDENTITY);
-+  public final boolean isEquivalentTo(JSType jsType) {
-+    return checkEquivalenceHelper(jsType, false);
++    return checkEquivalenceHelper(that, false);
    }
  
    /**
-    * Checks if two types are invariant.
+@@ -497,7 +497,7 @@ public abstract class JSType implements Serializable {
     * @see EquivalenceMethod
     */
--  public final boolean isInvariant(JSType that) {
+   public final boolean isInvariant(JSType that) {
 -    return checkEquivalenceHelper(that, EquivalenceMethod.INVARIANT);
--  }
++    return checkEquivalenceHelper(that, false);
+   }
  
    /**
-    * Whether this type is meaningfully different from {@code that} type for
-@@ -511,25 +508,23 @@ public abstract class JSType implements Serializable {
+@@ -511,25 +511,23 @@ public abstract class JSType implements Serializable {
     *     unknowns</a>
     */
    public final boolean differsFrom(JSType that) {
@@ -213,7 +211,7 @@ index 9c8e9897..3f1360e3 100644
      boolean thatUnknown = that.isUnknownType();
 -    if (thisUnknown || thatUnknown) {
 -      if (eqMethod == EquivalenceMethod.INVARIANT) {
-+   if (isUnknownType() || that.isUnknownType()) {
++   if (thisUnknown || thatUnknown) {
 +      if (tolerateUnknowns) {
          // If we're checking for invariance, the unknown type is invariant
          // with everyone.
@@ -222,7 +220,7 @@ index 9c8e9897..3f1360e3 100644
          // If we're checking data flow, then two types are the same if they're
          // both unknown.
          return thisUnknown && thatUnknown;
-@@ -544,17 +539,17 @@ public abstract class JSType implements Serializable {
+@@ -544,17 +542,17 @@ public abstract class JSType implements Serializable {
  
      if (isUnionType() && that.isUnionType()) {
        return this.toMaybeUnionType().checkUnionEquivalenceHelper(
@@ -243,7 +241,7 @@ index 9c8e9897..3f1360e3 100644
      }
  
      ParameterizedType thisParamType = toMaybeParameterizedType();
-@@ -564,14 +559,14 @@ public abstract class JSType implements Serializable {
+@@ -564,14 +562,14 @@ public abstract class JSType implements Serializable {
        boolean paramsMatch = false;
        if (thisParamType != null && thatParamType != null) {
          paramsMatch = thisParamType.getParameterType().checkEquivalenceHelper(
@@ -262,7 +260,7 @@ index 9c8e9897..3f1360e3 100644
        }
  
        JSType thisRootType = thisParamType == null ?
-@@ -579,7 +574,7 @@ public abstract class JSType implements Serializable {
+@@ -579,7 +577,7 @@ public abstract class JSType implements Serializable {
        JSType thatRootType = thatParamType == null ?
            that : thatParamType.getReferencedTypeInternal();
        return paramsMatch &&
@@ -271,7 +269,7 @@ index 9c8e9897..3f1360e3 100644
      }
  
      if (isNominalType() && that.isNominalType()) {
-@@ -591,13 +586,13 @@ public abstract class JSType implements Serializable {
+@@ -591,13 +589,13 @@ public abstract class JSType implements Serializable {
      if (this instanceof ProxyObjectType) {
        return ((ProxyObjectType) this)
            .getReferencedTypeInternal().checkEquivalenceHelper(
@@ -288,7 +286,7 @@ index 9c8e9897..3f1360e3 100644
  
      // Relies on the fact that for the base {@link JSType}, only one
 diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
-index d70db704..446670cc 100755
+index d70db704..50423d5b 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordType.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordType.java
 @@ -115,7 +115,7 @@ class RecordType extends PrototypeObjectType {
@@ -309,15 +307,6 @@ index d70db704..446670cc 100755
          return false;
        }
      }
-@@ -161,7 +161,7 @@ class RecordType extends PrototypeObjectType {
-       // is returned.
-       for (String property : properties.keySet()) {
-         if (thatRecord.hasProperty(property) &&
--            !thatRecord.getPropertyType(property).isInvariant(
-+            !thatRecord.getPropertyType(property).isEquivalentTo(
-                 getPropertyType(property))) {
-           return registry.getNativeObjectType(JSTypeNative.NO_TYPE);
-         }
 @@ -201,7 +201,8 @@ class RecordType extends PrototypeObjectType {
            JSType altPropType = alt.getPropertyType(propName);
            if (altPropType != null && !alt.isEquivalentTo(this) &&
@@ -328,20 +317,14 @@ index d70db704..446670cc 100755
              builder.addAlternate(alt);
            }
          }
-@@ -264,10 +265,11 @@ class RecordType extends PrototypeObjectType {
+@@ -264,6 +265,7 @@ class RecordType extends PrototypeObjectType {
  
        JSType propA = typeA.getPropertyType(property);
        JSType propB = typeB.getPropertyType(property);
--      if (typeA.isPropertyTypeDeclared(property)) {
 +      if (!propA.isUnknownType() && !propB.isUnknownType()) {
-+        if (typeA.isPropertyTypeDeclared(property)) {
+       if (typeA.isPropertyTypeDeclared(property)) {
          // If one declared property isn't invariant,
          // then the whole record isn't covariant.
--        if (!propA.isInvariant(propB)) {
-+          if (!propA.isEquivalentTo(propB)) {
-           return false;
-         }
-       } else {
 @@ -275,6 +277,7 @@ class RecordType extends PrototypeObjectType {
          // then the whole record isn't covariant.
          if (!propA.isSubtype(propB)) {

@@ -85,45 +85,6 @@ index 593ec05d..142e8202 100644
  
    /**
     * @return Whether the name is an indirect eval.
-diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
-index 28222def..bc02bb78 100644
---- a/src/com/google/javascript/jscomp/NodeUtil.java
-+++ b/src/com/google/javascript/jscomp/NodeUtil.java
-@@ -179,7 +179,15 @@ public final class NodeUtil {
-         break;
- 
-       case Token.NUMBER:
--        return getStringValue(n.getDouble());
-+        double value = n.getDouble();
-+        long longValue = (long) value;
-+
-+        // Return "1" instead of "1.0"
-+        if (longValue == value) {
-+          return Long.toString(longValue);
-+        } else {
-+          return Double.toString(n.getDouble());
-+        }
- 
-       case Token.FALSE:
-       case Token.TRUE:
-@@ -205,17 +213,6 @@ public final class NodeUtil {
-     return null;
-   }
- 
--  static String getStringValue(double value) {
--    long longValue = (long) value;
--
--    // Return "1" instead of "1.0"
--    if (longValue == value) {
--      return Long.toString(longValue);
--    } else {
--      return Double.toString(value);
--    }
--  }
--
-   /**
-    * When converting arrays to string using Array.prototype.toString or
-    * Array.prototype.join, the rules for conversion to String are different
 diff --git a/src/com/google/javascript/jscomp/RenamePrototypes.java b/src/com/google/javascript/jscomp/RenamePrototypes.java
 index d7558d00..304c0e1e 100644
 --- a/src/com/google/javascript/jscomp/RenamePrototypes.java
@@ -147,10 +108,10 @@ index d7558d00..304c0e1e 100644
                  markPrototypePropertyCandidate(key, input);
                }
 diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-index 3d1db67d..b9e30e71 100644
+index 3d1db67d..dcc3def6 100644
 --- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
 +++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
-@@ -252,26 +252,7 @@ public class IRFactory {
+@@ -252,26 +252,9 @@ public class IRFactory {
      return irNode;
    }
  
@@ -166,8 +127,8 @@ index 3d1db67d..b9e30e71 100644
  
 -  private static String getStringValue(double value) {
 -    long longValue = (long) value;
--
--    // Return "1" instead of "1.0"
+ 
+     // Return "1" instead of "1.0"
 -    if (longValue == value) {
 -      return Long.toString(longValue);
 -    } else {
@@ -177,7 +138,7 @@ index 3d1db67d..b9e30e71 100644
  
    private void setSourceInfo(Node irNode, AstNode node) {
      // If we have a named function, set the position to that of the name.
-@@ -361,14 +342,14 @@ public class IRFactory {
+@@ -361,14 +344,14 @@ public class IRFactory {
        Node ret;
        if (n instanceof Name) {
          ret = transformNameAsString((Name)n);
@@ -186,11 +147,10 @@ index 3d1db67d..b9e30e71 100644
 -        ret.putBooleanProp(Node.QUOTED_PROP, true);
        } else {
          ret = transform(n);
--        ret.putBooleanProp(Node.QUOTED_PROP, true);
 +        Preconditions.checkState(ret.getType() == Token.NUMBER
 +            || ret.getType() == Token.STRING);
 +        if (ret.getType() == Token.STRING) {
-+          ret.putBooleanProp(Node.QUOTED_PROP, true);
+         ret.putBooleanProp(Node.QUOTED_PROP, true);
 +        }
        }
 -      Preconditions.checkState(ret.getType() == Token.STRING);

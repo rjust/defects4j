@@ -438,7 +438,7 @@ sub _rm_classes {
             ++$num_uncompilable_test_classes;
         } else {
             # e.g., '--- org.foo.BarTest::test09'
-            my $test_canonical_name = "--- $class::$test_name";
+            my $test_canonical_name = "--- ${class}::${test_name}";
             # Skip already selected (to be removed) test cases
             if (! grep{/^$test_canonical_name$/} @uncompilable_tests) {
                 push(@uncompilable_tests, $test_canonical_name);

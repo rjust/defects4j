@@ -17,10 +17,10 @@ index d9ac0199..35a93af9 100644
          addExpr(first, p, context);
          cc.addOp(opstr, true);
 diff --git a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-index 2015f050..ce341fba 100644
+index 2015f050..2c137245 100644
 --- a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
 +++ b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
-@@ -99,40 +99,11 @@ class PeepholeSubstituteAlternateSyntax
+@@ -99,40 +99,12 @@ class PeepholeSubstituteAlternateSyntax
        case Token.ARRAYLIT:
          return tryMinimizeArrayLiteral(node);
  
@@ -31,7 +31,7 @@ index 2015f050..ce341fba 100644
 -      case Token.BITXOR:
 -      case Token.BITAND:
 -        return tryRotateAssociativeOperator(node);
--
+ 
        default:
          return node; //Nothing changed
      }

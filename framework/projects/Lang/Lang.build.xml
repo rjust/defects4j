@@ -46,6 +46,9 @@ of the checked-out project version.
          existing tests -->
     <property name="d4j.test.dir" value="${test.home}"/>
     <property name="classes.dir" value="${build.home}/classes"/>
+    <condition property="test.classes.dir" value="${maven.build.testOutputDir}" else="${build.home}/tests">
+        <isset property="maven.build.testOutputDir" />
+    </condition>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">

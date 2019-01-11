@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/InlineVariables.java b/src/com/google/javascript/jscomp/InlineVariables.java
-index 7d99778c..89e7c9e0 100644
+index 7d99778c..18c9fbe2 100644
 --- a/src/com/google/javascript/jscomp/InlineVariables.java
 +++ b/src/com/google/javascript/jscomp/InlineVariables.java
 @@ -196,8 +196,6 @@ class InlineVariables implements CompilerPass {
@@ -58,16 +58,15 @@ index 7d99778c..89e7c9e0 100644
        int refCount = referenceInfo.references.size();
        Reference declaration = referenceInfo.references.get(0);
        Reference init = referenceInfo.getInitializingReference();
-@@ -301,8 +272,7 @@ class InlineVariables implements CompilerPass {
+@@ -301,7 +272,7 @@ class InlineVariables implements CompilerPass {
        // inline an alias of it. (If the variable was inlined, then the
        // reference data is out of sync. We're better off just waiting for
        // the next pass.)
 -      if (!maybeModifiedArguments &&
--          !staleVars.contains(v) && referenceInfo.isWellDefined() &&
-+      if (!staleVars.contains(v) && referenceInfo.isWellDefined() &&
++      if (
+           !staleVars.contains(v) && referenceInfo.isWellDefined() &&
            referenceInfo.isAssignedOnceInLifetime()) {
          List<Reference> refs = referenceInfo.references;
-         for (int i = 1 /* start from a read */; i < refs.size(); i++) {
 diff --git a/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java b/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java
 index 4c00d60e..e3edbb4d 100644
 --- a/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java

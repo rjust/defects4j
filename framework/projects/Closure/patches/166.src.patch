@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
-index d88520cb..e4f1c205 100644
+index d88520cb..51f440c2 100644
 --- a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
 +++ b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
 @@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
@@ -41,15 +41,13 @@ index d88520cb..e4f1c205 100644
  
      private ContextualRenameInverter(AbstractCompiler compiler) {
        this.compiler = compiler;
-@@ -263,108 +260,83 @@ class MakeDeclaredNamesUnique
-       return name.lastIndexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR);
+@@ -266,105 +263,86 @@ class MakeDeclaredNamesUnique
+     private boolean containsSeparator(String name) {
+       return name.indexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR) != -1;
      }
- 
--    private boolean containsSeparator(String name) {
--      return name.indexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR) != -1;
 +    private static String getOrginalNameInternal(String name, int index) {
 +      return name.substring(0, index);
-     }
++    }
  
      /**
       * Prepare a set for the new scope.
@@ -73,18 +71,16 @@ index d88520cb..e4f1c205 100644
       */
 -    public void exitScope(NodeTraversal t) {
 -      if (t.inGlobalScope()) {
--        return;
--      }
 +    @Override
 +    public void visit(NodeTraversal t, Node node, Node parent) {
 +      if (node.getType() == Token.NAME) {
 +        String oldName = node.getString();
-+        if (oldName.indexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR) != -1) {
++        if (containsSeparator(oldName)) {
 +          Scope scope = t.getScope();
 +          Var var = t.getScope().getVar(oldName);
 +          if (var == null || var.isGlobal()) {
-+            return;
-+          }
+         return;
+       }
  
 -      for (Iterator<Var> it = t.getScope().getVars(); it.hasNext();) {
 -        Var v = it.next();
@@ -110,7 +106,6 @@ index d88520cb..e4f1c205 100644
 -    }
 +            boolean recurseScopes = false;
 +            if (!suffix.matches("\\d+")) {
-+              // Non-contextual renamed value.
 +              recurseScopes = true;
 +            }
  
@@ -142,22 +137,6 @@ index d88520cb..e4f1c205 100644
 -            Preconditions.checkState(n.getType() == Token.NAME);
 -            n.setString(newName);
 -          }
--          compiler.reportCodeChange();
--        }
--        nameMap.remove(name);
--      }
--    }
--
--    @Override
--    public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {
--      return true;
--    }
--
--    @Override
--    public void visit(NodeTraversal t, Node node, Node parent) {
--      if (t.inGlobalScope()) {
--        return;
--      }
 +              Node parentNode = var.getParentNode();
 +              if (parentNode.getType() == Token.FUNCTION &&
 +                  parentNode == var.scope.getRootNode()) {
@@ -165,23 +144,36 @@ index d88520cb..e4f1c205 100644
 +              }
 +
 +              node.setString(newName);
-+              compiler.reportCodeChange();
-+            }
+           compiler.reportCodeChange();
+         }
+-        nameMap.remove(name);
+-      }
+-    }
+ 
+-    @Override
+-    public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {
+-      return true;
+-    }
++            nameMap.put(var, newName);
+ 
+-    @Override
+-    public void visit(NodeTraversal t, Node node, Node parent) {
+-      if (t.inGlobalScope()) {
+-        return;
+       }
  
 -      if (NodeUtil.isReferenceName(node)) {
 -        String name = node.getString();
-+            nameMap.put(var, newName);
-+          }
          // Add all referenced names to the set so it is possible to check for
          // conflicts.
 -        referencedNames.add(name);
--        // Store only references to candidate names in the node map.
+         // Store only references to candidate names in the node map.
 -        if (containsSeparator(name)) {
 -          addCandidateNameReference(name, node);
          }
        }
      }
--
+ 
 -    private void addCandidateNameReference(String name, Node n) {
 -      List<Node> nodes = nameMap.get(name);
 -      if (null == nodes) {
@@ -193,7 +185,7 @@ index d88520cb..e4f1c205 100644
    }
  
    /**
-@@ -411,7 +383,6 @@ class MakeDeclaredNamesUnique
+@@ -411,7 +389,6 @@ class MakeDeclaredNamesUnique
       */
      @Override
      public void addDeclaredName(String name) {
@@ -201,7 +193,7 @@ index d88520cb..e4f1c205 100644
          if (global) {
            reserveName(name);
          } else {
-@@ -421,9 +392,8 @@ class MakeDeclaredNamesUnique
+@@ -421,9 +398,8 @@ class MakeDeclaredNamesUnique
              String newName = null;
              if (id != 0) {
                newName = getUniqueName(name, id);
@@ -212,7 +204,7 @@ index d88520cb..e4f1c205 100644
          }
        }
      }
-@@ -483,7 +453,6 @@ class MakeDeclaredNamesUnique
+@@ -483,7 +459,6 @@ class MakeDeclaredNamesUnique
  
      @Override
      public void addDeclaredName(String name) {

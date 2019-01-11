@@ -1,32 +1,11 @@
 diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
-index cce82f48..3a050246 100644
+index cce82f48..42c9ab38 100644
 --- a/src/com/google/javascript/jscomp/CodeGenerator.java
 +++ b/src/com/google/javascript/jscomp/CodeGenerator.java
-@@ -658,7 +658,7 @@ class CodeGenerator {
-     // Strip unneeded blocks, that is blocks with <2 children unless
-     // the CodePrinter specifically wants to keep them.
-     if (n.getType() == Token.BLOCK ) {
--      int count = getNonEmptyChildCount(n, 2);
-+      int count = getNonEmptyChildCount(n);
-       if (count == 0) {
-         if (cc.shouldPreserveExtraBlocks()) {
-           cc.beginBlock();
-@@ -675,7 +675,9 @@ class CodeGenerator {
-         //   IE6/7 needs a block around DOs.
-         Node firstAndOnlyChild = getFirstNonEmptyChild(n);
-         boolean alwaysWrapInBlock = cc.shouldPreserveExtraBlocks();
--        if (alwaysWrapInBlock || isOneExactlyFunctionOrDo(firstAndOnlyChild)) {
-+        if (alwaysWrapInBlock ||
-+            firstAndOnlyChild.getType() == Token.FUNCTION ||
-+            firstAndOnlyChild.getType() == Token.DO) {
-           cc.beginBlock();
-           add(firstAndOnlyChild, Context.STATEMENT);
-           cc.maybeLineBreak();
-@@ -705,27 +707,11 @@ class CodeGenerator {
-    * @return Whether the Node is a DO or FUNCTION (with or without
+@@ -706,25 +706,12 @@ class CodeGenerator {
     * labels).
     */
--  private boolean isOneExactlyFunctionOrDo(Node n) {
+   private boolean isOneExactlyFunctionOrDo(Node n) {
 -    if (n.getType() == Token.LABEL) {
 -      Node labeledStatement = n.getLastChild();
 -      if (labeledStatement.getType() != Token.BLOCK) {
@@ -44,22 +23,8 @@ index cce82f48..3a050246 100644
 -        }
 -      }
 -    } else {
--      return (n.getType() == Token.FUNCTION || n.getType() == Token.DO);
+       return (n.getType() == Token.FUNCTION || n.getType() == Token.DO);
 -    }
--  }
+   }
  
    /**
-    * Adds a node at the left-hand side of an expression. Unlike
-@@ -959,10 +945,9 @@ class CodeGenerator {
-    * @return The number of children of this node that are non empty up to
-    * maxCount.
-    */
--  private static int getNonEmptyChildCount(Node n, int maxCount) {
-+  private static int getNonEmptyChildCount(Node n) {
-     int i = 0;
--    Node c = n.getFirstChild();
--    for (; c != null && i < maxCount; c = c.getNext()) {
-+    for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
-       if (c.getType() != Token.EMPTY) {
-         i++;
-       }

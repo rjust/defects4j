@@ -73,7 +73,7 @@ sub _post_checkout {
 
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
-    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";
 
     # Read existing Gradle properties file, if it exists
     open(PROP, "<$prop") or return;
@@ -97,6 +97,9 @@ sub _post_checkout {
     if (-e "$work_dir/gradle.properties") {
         system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
     }
+
+    # Enable local repository
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\n jcenter()\\n|g' {} \\;");
 }
 
 #
@@ -183,7 +186,7 @@ sub _ant_call {
     #
     # TODO: Extract all exported environment variables into a user-visible
     # config file.
-    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
+    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/$GRADLE_LOCAL_HOME_DIR";
     return $self->SUPER::_ant_call($target, $option_str, $log_file);
 }
 

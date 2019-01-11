@@ -70,13 +70,11 @@ com.google.javascript.jscomp.InlineVariablesTest
 com.google.javascript.jscomp.InstrumentFunctionsTest
 com.google.javascript.jscomp.JsMessageExtractorTest
 com.google.javascript.jscomp.JsMessageVisitorTest
-com.google.javascript.jscomp.LinkedFlowScopeTest
 com.google.javascript.jscomp.LiveVariableAnalysisTest
 com.google.javascript.jscomp.LooseTypeCheckTest
 com.google.javascript.jscomp.MakeDeclaredNamesUniqueTest
 com.google.javascript.jscomp.MarkNoSideEffectCallsTest
 com.google.javascript.jscomp.MaybeReachingVariableUseTest
-com.google.javascript.jscomp.MemoizedScopeCreatorTest
 com.google.javascript.jscomp.MinimizeExitPointsTest
 com.google.javascript.jscomp.MoveFunctionDeclarationsTest
 com.google.javascript.jscomp.MustBeReachingVariableDefTest
@@ -124,7 +122,6 @@ com.google.javascript.jscomp.RhinoErrorReporterTest
 com.google.javascript.jscomp.RuntimeTypeCheckTest
 com.google.javascript.jscomp.SanityCheckTest
 com.google.javascript.jscomp.ScopedAliasesTest
-com.google.javascript.jscomp.SemanticReverseAbstractInterpreterTest
 com.google.javascript.jscomp.ShadowVariablesTest
 com.google.javascript.jscomp.SideEffectsAnalysisTest
 com.google.javascript.jscomp.SimpleDefinitionFinderTest
@@ -149,6 +146,5 @@ com.google.javascript.jscomp.VariableReferenceCheckTest
 com.google.javascript.jscomp.VariableShadowDeclarationCheckTest
 com.google.javascript.jscomp.VariableVisibilityAnalysisTest
 com.google.javascript.jscomp.jsonml.JsonMLConversionTest
-com.google.javascript.jscomp.jsonml.SecureCompilerTest
 com.google.javascript.jscomp.parsing.IRFactoryTest
 com.google.javascript.jscomp.parsing.ParserTest
