@@ -372,4 +372,34 @@ sub extract_test_suite {
     return 1;
 }
 
+=pod
+
+  Utils::bug_report_info(pid, vid)
+
+Returns the bug report ID and URL of a given project id C<pid> and version id
+C<vid>. In case there is not any bug report ID/URL available for a specific
+project id C<pid> and version id, it returns "NA".
+
+=cut
+sub bug_report_info {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $vid) = @_;
+
+    my $bug_report_info = {id=>"NA", url=>"NA"};
+
+    my $commit_db = "$SCRIPT_DIR/projects/$pid/commit-db";
+    open (IN, "<$commit_db") or die "Cannot open $commit_db file: $!";
+    while (<IN>) {
+        chomp;
+        /([^,]+),[^,]+,[^,]+,(.+),(.+)/ or next;
+        if ($vid == $1) {
+            $bug_report_info = {id=>$2, url=>$3};
+            last;
+        }
+    }
+    close IN;
+
+    return $bug_report_info;
+}
+
 1;
