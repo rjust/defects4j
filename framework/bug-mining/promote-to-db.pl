@@ -135,8 +135,8 @@ foreach my $id (@ids) {
     my $v1 = $project->lookup("${id}b");
     my $v2 = $project->lookup("${id}f");
 
-    my $issue_id  = $project->_issue_id("${id}");
-    my $issue_url = $project->_issue_url("${id}");
+    my $issue_id  = $project->bug_report_id("${id}");
+    my $issue_url = $project->bug_report_url("${id}");
 
     # find number
     my $max_number = 0;

@@ -86,8 +86,8 @@ if (defined $BID) {
     $revision_id = $project->lookup("${BID}f");
     $revision_date = $project->{_vcs}->rev_date($revision_id);
     # Obtain bug report ID and url
-    $bug_report_id = $project->bug_report_id($PID, $BID);
-    $bug_report_url = $project->bug_report_url($PID, $BID);
+    $bug_report_id = $project->bug_report_id($BID);
+    $bug_report_url = $project->bug_report_url($BID);
 }
 
 

@@ -188,13 +188,13 @@ sub print_info {
 
   $project->bug_report_id()
 
-Returns the bug report ID of a given project id C<pid> and version id C<vid>.
+Returns the bug report ID of a given version id C<vid>.
 
 =cut
 sub bug_report_id {
-    @_ == 3 or die $ARG_ERROR;
-    my ($self, $pid, $vid) = @_;
-    my $bug_report_info = Utils::bug_report_info($pid, $vid);
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
     return $bug_report_info->{id};
 }
 
@@ -202,13 +202,13 @@ sub bug_report_id {
 
   $project->bug_report_url()
 
-Returns the bug report URL of a given project id C<pid> and version id C<vid>.
+Returns the bug report URL of a given version id C<vid>.
 
 =cut
 sub bug_report_url {
-    @_ == 3 or die $ARG_ERROR;
-    my ($self, $pid, $vid) = @_;
-    my $bug_report_info = Utils::bug_report_info($pid, $vid);
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
     return $bug_report_info->{url};
 }
 
@@ -1150,46 +1150,6 @@ sub _modified_classes {
         $mod_classes .= ",$_";
     }
     return $mod_classes;
-}
-
-#
-# Helper subroutine that returns the issue tracker id
-#
-sub _issue_id {
-    my ($self, $bid) = @_;
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
-
-    my $issue_id;
-    open(my $fh, "<${project_dir}/commit-db") or die "Cannot read commit-db";
-    while (my $row = <$fh>) {
-        my $data = $row;
-        $data =~ /^$bid,.*,.*,(.*),.*$/ or next;
-        $issue_id = $1;
-        last;
-    }
-    close($fh);
-
-    return $issue_id;
-}
-
-#
-# Helper subroutine that returns the issue tracker url
-#
-sub _issue_url {
-    my ($self, $bid) = @_;
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
-
-    my $issue_url;
-    open(my $fh, "<${project_dir}/commit-db") or die "Cannot read commit-db";
-    while (my $row = <$fh>) {
-        my $data = $row;
-        $data =~ /^$bid,.*,.*,.*,(.*)$/ or next;
-        $issue_url = $1;
-        last;
-    }
-    close($fh);
-
-    return $issue_url;
 }
 
 #
