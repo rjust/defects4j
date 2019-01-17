@@ -186,6 +186,34 @@ sub print_info {
 
 =pod
 
+  $project->bug_report_id()
+
+Returns the bug report ID of a given project id C<pid> and version id C<vid>.
+
+=cut
+sub bug_report_id {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $pid, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($pid, $vid);
+    return $bug_report_info->{id};
+}
+
+=pod
+
+  $project->bug_report_url()
+
+Returns the bug report URL of a given project id C<pid> and version id C<vid>.
+
+=cut
+sub bug_report_url {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $pid, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($pid, $vid);
+    return $bug_report_info->{url};
+}
+
+=pod
+
   $project->src_dir(vid)
 
 Returns the path to the directory of the source files for a given version id C<vid>.
