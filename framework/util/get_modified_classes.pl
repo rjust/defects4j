@@ -82,13 +82,15 @@ my $project = Project::create_project($PID);
 my $src_dir = $project->src_dir("${BID}f");
 
 # Directory that holds all patches for the given project ID
-my $patch = "$SCRIPT_DIR/projects/$PID/patches/$BID.src.patch";
+my $patch = "$PROJECTS_DIR/$PID/patches/$BID.src.patch";
 -e $patch or die "Cannot read patch: $patch";
 
 my $classes;
 
 # Run diffstat to determine the modified files
 Utils::exec_cmd("diffstat -l -p1 $patch", "Analyzing patch", \$classes);
+
+$classes = "" unless defined $classes and length $classes;
 
 # Translate Java file name into class name
 $classes =~ s/$src_dir\/?//g;

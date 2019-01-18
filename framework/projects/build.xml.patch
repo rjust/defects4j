@@ -1,0 +1,12 @@
+diff --git a/build.xml b/build.xml
+index f8de60b..3583d72 100644
+--- a/build.xml
++++ b/build.xml
+@@ -20,4 +20,7 @@
+     <echo message="Please run: $ant -projecthelp"/>
+   </target>
+ 
++  <target name="compile" depends="<PROJECT_NAME>-from-maven.compile"> </target>
++  <target name="compile.tests" depends="<PROJECT_NAME>-from-maven.compile-tests"> </target>
++
+ </project>

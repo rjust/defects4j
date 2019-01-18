@@ -77,12 +77,17 @@ my $BID = $cmd_opts{b};
 my $project = Project::create_project($PID);
 my $revision_id;
 my $revision_date;
+my $bug_report_id;
+my $bug_report_url;
 # Check version id
 if (defined $BID) {
     $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
     # Obtain revison ID and date
     $revision_id = $project->lookup("${BID}f");
     $revision_date = $project->{_vcs}->rev_date($revision_id);
+    # Obtain bug report ID and url
+    $bug_report_id = $project->bug_report_id($BID);
+    $bug_report_url = $project->bug_report_url($BID);
 }
 
 
@@ -111,6 +116,12 @@ if (defined $BID) {
     print($sep);
     print("Revision date (fixed version):\n");
     print("$revision_date\n");
+    print($sep);
+    print("Bug report id:\n");
+    print("$bug_report_id\n");
+    print($sep);
+    print("Bug report url:\n");
+    print("$bug_report_url\n");
     print($sep);
     print("Root cause in triggering tests:\n");
     foreach my $i (0..$#trigger) {

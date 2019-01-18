@@ -43,58 +43,127 @@ use Vcs::Git;
 our @ISA = qw(Project);
 my $PID  = "Time";
 
+# The location of all generated build files
+my $GEN_BUILDFILE_DIR = "$PROJECTS_DIR/$PID/build_files";
+
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "joda-time";
-    my $src  = "src/main/java";
-    my $test = "src/test/java";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$PROJECTS_DIR/$PID/commit-db",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
-
 
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $rev_id, $work_dir) = @_;
 
+    # remove the JodaTime super directory (move things one dir up)
     if (-e "$work_dir/JodaTime") {
         system("mv $work_dir/JodaTime/* $work_dir");
     }
 
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
+        Utils::exec_cmd("cp $GEN_BUILDFILE_DIR/$rev_id/* $work_dir",
+                "Copy generated Ant build file") or die;
     }
 
     # Check for a broken-build-revision
-    my $id = $self->lookup_revision_id($revision_id); # TODO: very ugly.
-    my $filename = "${SCRIPT_DIR}/projects/${PID}/broken-builds/build-${id}.xml";
+    my $filename = "$project_dir/broken-builds/build-${rev_id}.xml";
     if (-e $filename) {
-        system ("cp $filename $work_dir/build.xml");
+        Utils::exec_cmd("cp $filename $work_dir/build.xml",
+                "Fix broken build") or die;
+    }
+}
+
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    my $work_dir = $self->{prog_root};
+    if (-e "$work_dir/src/main/java") {
+        return {src=>"src/main/java", test=>"src/test/java"};
+    } elsif(-e "$work_dir/src/java") {
+        return {src=>"src/java", test=>"src/test"};
+    } else {
+        die "Unknown directory layout";
+    }
+}
+
+#
+# Create Ant build files, if necessary
+#
+sub initialize_revision {
+    my ($self, $rev_id, $vid) = @_;
+    $self->SUPER::initialize_revision($rev_id);
+
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    my $work_dir = $self->{prog_root};
+    # Create ant build file if necessary
+    unless (-e "$work_dir/build.xml") {
+        unless (-e "$GEN_BUILDFILE_DIR/$rev_id/build.xml") {
+            # Patch maven build file before converting it
+            `cd $work_dir && patch --dry-run pom.xml $project_dir/pom.xml.patch`;
+            if ($? == 0) {
+                Utils::exec_cmd("cd $work_dir && patch pom.xml $project_dir/pom.xml.patch",
+                        "Patch Maven build file: " . _trunc_rev_id($rev_id))
+                        or die;
+            }
+            my $cmd = "cd $work_dir && mvn ant:ant 2>&1" .
+                      " && patch build.xml $project_dir/build.xml.patch 2>&1" .
+                      " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+                      " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
+            Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " .  _trunc_rev_id($rev_id)) or die;
+        }
+        Utils::exec_cmd("cp $GEN_BUILDFILE_DIR/* $work_dir",
+                "Copy generated Ant build file") or die;
+    }
+}
+
+# special path for diff based on the file structure in those commits
+sub get_base_diff_path {
+    my ($self, $rev1, $rev2) = @_;
+
+    # TODO use Utils::files_in_commit
+    # look at the diff and check the paths of the files
+    my $cmd = "cd $self->{'_vcs'}->{'repo'}; git diff-tree --no-commit-id --name-only -r"; # partial command
+
+    # will output errors automatically
+    my $rev1_files = `$cmd $rev1`;
+    my $rev2_files = `$cmd $rev2`;
+    if ((! $rev1_files) || (! $rev2_files)) {
+        return ""; # no files in one of the commits
+    }
+
+    # if they are both JodaTime/ then we adapt, if they are different, we cant really recover reliably
+    my $rev1_matches = ($rev1_files =~ /^JodaTime.*/m);
+    my $rev2_matches = ($rev2_files =~ /^JodaTime.*/m);
+    if ($rev1_matches && $rev2_matches) {
+        return "JodaTime/";
+    } elsif ($rev1_matches ^ $rev2_matches) {
+        # cant reliably recover better throw and error
+        die "Diff needs manual adjustment for paths, revision_id $rev1, $rev2";
+    } else {
+        return "";
     }
 }
 
 sub export_diff {
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
-    if ($self->lookup_revision_id($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    $path = $self->get_base_diff_path($rev1,$rev2) . ($path//"");
     return $self->{_vcs}->export_diff($rev1, $rev2, $out_file, $path);
 }
 
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_;
-    if ($self->lookup_revision_id($rev2) >= 22) {
-        # path is an optional argument
-        $path = "JodaTime/" . ($path//"");
-    }
+    $path = $self->get_base_diff_path($rev1,$rev2) . ($path//"");
     return $self->{_vcs}->diff($rev1, $rev2, $path);
 }
-
 
 1;

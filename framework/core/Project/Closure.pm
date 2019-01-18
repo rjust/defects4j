@@ -44,21 +44,30 @@ our @ISA = qw(Project);
 my $PID  = "Closure";
 
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "closure-compiler";
-    my $src  = "src";
-    my $test = "test";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$PROJECTS_DIR/$PID/commit-db",
                     \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
+}
+
+#
+# Determines the directory layout for sources and tests
+#
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    return {src=>'src', test=>'test'};
 }
 
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
-    my ($self, $revision_id, $work_dir) = @_;
+    my ($self, $rev_id, $work_dir) = @_;
 
     open FH, "$work_dir/build.xml" or die $!;
     my $build_file = do { local $/; <FH> };

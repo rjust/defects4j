@@ -89,8 +89,8 @@ my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
-my $project_dir = "$SCRIPT_DIR/projects/$PID";
-my $out_dir = $cmd_opts{o} // "$SCRIPT_DIR/projects/$PID/relevant_tests";
+my $project_dir = "$PROJECTS_DIR/projects/$PID";
+my $out_dir = $cmd_opts{o} // "$project_dir/relevant_tests";
 
 my @ids;
 if (defined $BID) {

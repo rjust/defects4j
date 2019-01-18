@@ -40,6 +40,7 @@ use File::Basename;
 use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
+use Fcntl qw< LOCK_EX SEEK_END >;
 
 use Constants;
 
@@ -211,7 +212,7 @@ sub write_config_file {
 
 =pod
 
-  Utils::read_config_file(filename)
+  Utils::read_config_file(filename [, key_separator])
 
 Read all key-value pairs of the config file named F<filename>. Format:
 C<key=value>.  Returns a hash containing all key-value pairs on success,
@@ -219,8 +220,9 @@ C<undef> otherwise.
 
 =cut
 sub read_config_file {
-    @_ == 1 or die $ARG_ERROR;
+    @_ >= 1 or die $ARG_ERROR;
     my $file = shift;
+    my $key_separator = shift // '=';
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
         return undef;
@@ -232,7 +234,7 @@ sub read_config_file {
         next if /^\s*$/;
         chomp;
         # Read key value pair and remove white spaces
-        my ($key, $val) = split /=/;
+        my ($key, $val) = split /${key_separator}/;
         $key =~ s/ //;
         $val =~ s/ //;
         $hash->{$key} = $val;
@@ -370,6 +372,84 @@ sub extract_test_suite {
     exec_cmd("mkdir -p $test_dir && rm -rf $test_dir/* && tar -xjf $test_suite -C $test_dir",
             "Extract test suite") or return 0;
     return 1;
+}
+
+=pod
+
+=item B<append_to_file_unless_matches> C<append_to_file_unless_matches(file, string, regexp)>
+
+This utility method appends C<string> to C<file>, unless C<file>
+contains a line that matches C<regexp>.
+
+This is done in a way that is safe for multiple processes accessing
+C<file> by acquiring flocks.
+
+=cut
+sub append_to_file_unless_matches {
+    my ($file, $string, $includes) = @_;
+    @_ == 3 or die $ARG_ERROR;
+
+    open my $fh, ">>$file" or die "Cannot open file for appending $file: $!";
+    flock ($fh, LOCK_EX) or die "Cannot exclusively lock  $file: $!";
+    open my $fh_in, "<$file" or die "Cannot open file for reading $file: $!";
+    my $seen = 0;
+    while (my $line = <$fh_in>) {
+        if ($line =~ /$includes/) {
+            $seen = 1;
+            last;
+        }
+    }
+    close $fh_in;
+    unless ($seen) {
+        seek ($fh, 0, SEEK_END) or die "Cannot seek: $!"; # seek if someone appended while we were waiting
+        print $fh $string;
+    }
+    close $fh;
+    return $seen == 1 ? 0 : 1;
+}
+
+=pod
+
+=item B<files_in_commit> C<files_in_commit(repo_dir,commit)>
+
+This utility method takes C<commit> and get the files it changes
+
+=cut
+sub files_in_commit {
+    my ($repo_dir, $commit) = @_;
+    my @files = "cd $repo_dir; git diff-tree --no-commit-id --name-only -r $commit";
+    chomp @files;
+    return @files;
+}
+
+=pod
+
+  Utils::bug_report_info(pid, vid)
+
+Returns the bug report ID and URL of a given project id C<pid> and version id
+C<vid>. In case there is not any bug report ID/URL available for a specific
+project id C<pid> and version id, it returns "NA".
+
+=cut
+sub bug_report_info {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $vid) = @_;
+
+    my $bug_report_info = {id=>"NA", url=>"NA"};
+
+    my $commit_db = "$PROJECTS_DIR/$pid/commit-db";
+    open (IN, "<$commit_db") or die "Cannot open $commit_db file: $!";
+    while (<IN>) {
+        chomp;
+        /([^,]+),[^,]+,[^,]+,(.+),(.+)/ or next;
+        if ($vid == $1) {
+            $bug_report_info = {id=>$2, url=>$3};
+            last;
+        }
+    }
+    close IN;
+
+    return $bug_report_info;
 }
 
 1;
