@@ -99,7 +99,7 @@ sub _post_checkout {
     }
 
     # Enable local repository
-    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\n jcenter()\\n|g' {} \\;");
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n jcenter()\\\n|g' {} \\;");
 }
 
 #

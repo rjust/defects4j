@@ -1,4 +1,4 @@
-Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 1.3.1 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -216,6 +216,15 @@ The directory structure of Defects4J is as follows:
            |
            |--- test:          Scripts to test the framework.
            
+Versioning information
+----------------------
+Defects4J uses a semantic versioning scheme (`major`.`minor`.`patch`):
+
+| Change                                  | `major` | `minor` | `patch` |
+|-----------------------------------------|:-------:|:-------:|:-------:|
+| Addition/Deletion of bugs               |    X    |         |         |
+| New/upgraded internal or external tools |         |    X    |         |
+| Fixes and documentation changes         |         |         |    X    |
 
 License
 ---------
