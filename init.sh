@@ -97,7 +97,7 @@ cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.0.4"
+RANDOOP_VERSION="4.1.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
