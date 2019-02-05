@@ -146,7 +146,7 @@ Utils::exec_cmd("./download-issues.pl -g $ISSUE_TRACKER_NAME"
                                   . " -t $ISSUE_TRACKER_PROJECT_ID"
                                   . " -o $ISSUES_DIR"
                                   . " -f $ISSUES_FILE"
-				  . " -q $QUERY",
+                                  . " -q $QUERY",
                 "Collecting all issues from the project issue tracker") or die "Cannot collect all issues from the project issue tracker!";
 
 # Collect git log
