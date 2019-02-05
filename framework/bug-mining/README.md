@@ -78,7 +78,7 @@ the `commit-db` for Chart):
 | Project ID | Issue tracker | Issue tracker project ID | Regexp                    |
 |------------|---------------|--------------------------|---------------------------|
 | Chart      |               |                          |                           |
-| Closure    | google        | closure-compiler         | `/issue.*(\d+)/mi`        |
+| Closure    | google        | closure-compiler         | `/issue.*[^\d](\d+)/mi`   |
 | Lang       | jira          | LANG                     | `/(LANG-\d+)/mi`          |
 | Math       | jira          | MATH                     | `/(MATH-\d+)/mi`          |
 | Mockito    | github        | mockito/mockito          | `/Fix(?:es)?\s*#(\d+)/mi` |
