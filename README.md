@@ -1,4 +1,4 @@
-Defects4J -- version 1.3.1 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 1.4.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -150,6 +150,11 @@ provides the following scripts:
 | [run_coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
 | [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
 | [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
+
+Mining and contributing additional bugs to Defects4J
+================
+The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
+
 
 Additional resources
 ================

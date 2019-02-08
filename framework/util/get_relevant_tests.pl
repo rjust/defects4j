@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -89,8 +89,8 @@ my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
-my $project_dir = "$SCRIPT_DIR/projects/$PID";
-my $out_dir = $cmd_opts{o} // "$SCRIPT_DIR/projects/$PID/relevant_tests";
+my $project_dir = "$PROJECTS_DIR/projects/$PID";
+my $out_dir = $cmd_opts{o} // "$project_dir/relevant_tests";
 
 my @ids;
 if (defined $BID) {
