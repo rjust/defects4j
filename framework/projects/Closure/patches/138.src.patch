@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
-index edce9bfd..6c6fcd45 100644
+index edce9bfd0..6c6fcd45e 100644
 --- a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
 +++ b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
 @@ -695,10 +695,6 @@ public class JSTypeRegistry implements Serializable {
@@ -14,7 +14,7 @@ index edce9bfd..6c6fcd45 100644
            return true;
          }
 diff --git a/src/com/google/javascript/rhino/jstype/ObjectType.java b/src/com/google/javascript/rhino/jstype/ObjectType.java
-index 37bd4870..82d229de 100644
+index 37bd48701..82d229de5 100644
 --- a/src/com/google/javascript/rhino/jstype/ObjectType.java
 +++ b/src/com/google/javascript/rhino/jstype/ObjectType.java
 @@ -287,10 +287,6 @@ public abstract class ObjectType extends JSType implements StaticScope<JSType> {
@@ -29,7 +29,7 @@ index 37bd4870..82d229de 100644
    /**
     * Defines a property whose type is inferred.
 diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
-index 8ff279cb..7cc48901 100755
+index 8ff279cbd..7cc48901c 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordType.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordType.java
 @@ -65,12 +65,8 @@ class RecordType extends PrototypeObjectType {
@@ -91,7 +91,7 @@ index 8ff279cb..7cc48901 100755
        // The greatest subtype consists of those *unique* properties of both
        // record types. If any property conflicts, then the NO_TYPE type
 diff --git a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
-index 60d1e103..345795b5 100755
+index 60d1e103d..345795b55 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
 @@ -51,7 +51,6 @@ import java.util.HashMap;

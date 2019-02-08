@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/rhino/jstype/ArrowType.java b/src/com/google/javascript/rhino/jstype/ArrowType.java
-index 8919efa1..c4109b08 100644
+index 8919efa1a..c4109b08f 100644
 --- a/src/com/google/javascript/rhino/jstype/ArrowType.java
 +++ b/src/com/google/javascript/rhino/jstype/ArrowType.java
 @@ -174,7 +174,7 @@ final class ArrowType extends JSType {
@@ -38,7 +38,7 @@ index 8919efa1..c4109b08 100644
    @Override
 diff --git a/src/com/google/javascript/rhino/jstype/EquivalenceMethod.java b/src/com/google/javascript/rhino/jstype/EquivalenceMethod.java
 deleted file mode 100644
-index b6c37445..00000000
+index b6c374457..000000000
 --- a/src/com/google/javascript/rhino/jstype/EquivalenceMethod.java
 +++ /dev/null
 @@ -1,83 +0,0 @@
@@ -126,7 +126,7 @@ index b6c37445..00000000
 -  INVARIANT
 -}
 diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
-index 4c62e156..e354e564 100644
+index 4c62e156c..e354e564d 100644
 --- a/src/com/google/javascript/rhino/jstype/FunctionType.java
 +++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
 @@ -789,7 +789,7 @@ public class FunctionType extends PrototypeObjectType {
@@ -169,7 +169,7 @@ index 4c62e156..e354e564 100644
  
    /**
 diff --git a/src/com/google/javascript/rhino/jstype/JSType.java b/src/com/google/javascript/rhino/jstype/JSType.java
-index 9c8e9897..7906bfef 100644
+index 9c8e98979..081a3d768 100644
 --- a/src/com/google/javascript/rhino/jstype/JSType.java
 +++ b/src/com/google/javascript/rhino/jstype/JSType.java
 @@ -489,7 +489,7 @@ public abstract class JSType implements Serializable {
@@ -190,7 +190,7 @@ index 9c8e9897..7906bfef 100644
    }
  
    /**
-@@ -511,25 +511,23 @@ public abstract class JSType implements Serializable {
+@@ -511,13 +511,13 @@ public abstract class JSType implements Serializable {
     *     unknowns</a>
     */
    public final boolean differsFrom(JSType that) {
@@ -206,12 +206,11 @@ index 9c8e9897..7906bfef 100644
      if (this == that) {
        return true;
      }
- 
+@@ -525,11 +525,9 @@ public abstract class JSType implements Serializable {
      boolean thisUnknown = isUnknownType();
      boolean thatUnknown = that.isUnknownType();
--    if (thisUnknown || thatUnknown) {
+     if (thisUnknown || thatUnknown) {
 -      if (eqMethod == EquivalenceMethod.INVARIANT) {
-+   if (thisUnknown || thatUnknown) {
 +      if (tolerateUnknowns) {
          // If we're checking for invariance, the unknown type is invariant
          // with everyone.
@@ -286,7 +285,7 @@ index 9c8e9897..7906bfef 100644
  
      // Relies on the fact that for the base {@link JSType}, only one
 diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
-index d70db704..50423d5b 100755
+index d70db704f..50423d5b1 100755
 --- a/src/com/google/javascript/rhino/jstype/RecordType.java
 +++ b/src/com/google/javascript/rhino/jstype/RecordType.java
 @@ -115,7 +115,7 @@ class RecordType extends PrototypeObjectType {
@@ -334,18 +333,18 @@ index d70db704..50423d5b 100755
        }
      }
 diff --git a/src/com/google/javascript/rhino/jstype/UnionType.java b/src/com/google/javascript/rhino/jstype/UnionType.java
-index 0fd8b247..9c3795da 100644
+index 0fd8b2470..5a816988d 100644
 --- a/src/com/google/javascript/rhino/jstype/UnionType.java
 +++ b/src/com/google/javascript/rhino/jstype/UnionType.java
-@@ -331,22 +331,21 @@ public class UnionType extends JSType {
+@@ -331,22 +331,22 @@ public class UnionType extends JSType {
     * and all alternates are equal.
     */
    boolean checkUnionEquivalenceHelper(
 -      UnionType that, EquivalenceMethod eqMethod) {
 -    if (eqMethod == EquivalenceMethod.IDENTITY
--        && alternates.size() != that.alternates.size()) {
 +      UnionType that, boolean tolerateUnknowns) {
-+    if (!tolerateUnknowns && alternates.size() != that.alternates.size()) {
++    if (!tolerateUnknowns
+         && alternates.size() != that.alternates.size()) {
        return false;
      }
      for (JSType alternate : that.alternates) {

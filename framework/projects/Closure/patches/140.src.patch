@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
-index 1eca61cc..a79cd59a 100644
+index 1eca61cc5..89a39bc7f 100644
 --- a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
 +++ b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
 @@ -198,50 +198,37 @@ class AnalyzePrototypeProperties implements CompilerPass {
@@ -252,28 +252,23 @@ index 1eca61cc..a79cd59a 100644
        switch (n.getType()) {
          // Foo.prototype.getBar = function() { ... }
          case Token.GETPROP:
-@@ -466,12 +422,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
-               NodeUtil.isExprAssign(grandParent) &&
-               NodeUtil.isVarOrSimpleAssignLhs(n, parent)) {
+@@ -468,10 +424,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
              String name = dest.getString();
--            Property prop = new AssignmentProperty(
--                grandParent,
+             Property prop = new AssignmentProperty(
+                 grandParent,
 -                t.getScope().getVar(root.getString()),
--                t.getModule());
-+            Property prop = new AssignmentProperty(grandParent, t.getModule());
+                 t.getModule());
              getNameInfoForName(name, PROPERTY).getDeclarations().add(prop);
 -            return true;
            }
            break;
  
-@@ -484,16 +436,12 @@ class AnalyzePrototypeProperties implements CompilerPass {
-               // May be STRING, GET, or SET,
+@@ -485,15 +439,12 @@ class AnalyzePrototypeProperties implements CompilerPass {
                String name = key.getString();
                Property prop = new LiteralProperty(
--                  key, key.getFirstChild(), map, n,
+                   key, key.getFirstChild(), map, n,
 -                  t.getScope().getVar(root.getString()),
--                  t.getModule());
-+                  key, key.getFirstChild(), map, n, t.getModule());
+                   t.getModule());
                getNameInfoForName(name, PROPERTY).getDeclarations().add(prop);
              }
 -            return true;
@@ -284,7 +279,7 @@ index 1eca61cc..a79cd59a 100644
      }
  
      private void addGlobalUseOfSymbol(String name, JSModule module,
-@@ -545,7 +493,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -545,7 +496,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
      /**
       * The variable for the root of this symbol.
       */
@@ -292,7 +287,7 @@ index 1eca61cc..a79cd59a 100644
  
      /**
       * Returns the module where this appears.
-@@ -563,25 +510,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -563,25 +513,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
     */
    class GlobalFunction implements Symbol {
      private final Node nameNode;
@@ -319,7 +314,7 @@ index 1eca61cc..a79cd59a 100644
      public void remove() {
        Node parent = nameNode.getParent();
        if (parent.isFunction() || parent.hasOneChild()) {
-@@ -630,24 +570,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -630,24 +573,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
     */
    static class AssignmentProperty implements Property {
      private final Node exprNode;
@@ -345,7 +340,7 @@ index 1eca61cc..a79cd59a 100644
      public void remove() {
        NodeUtil.removeChild(exprNode.getParent(), exprNode);
      }
-@@ -683,25 +617,19 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -683,25 +620,19 @@ class AnalyzePrototypeProperties implements CompilerPass {
      private final Node value;
      private final Node map;
      private final Node assign;
@@ -372,7 +367,7 @@ index 1eca61cc..a79cd59a 100644
      public void remove() {
        map.removeChild(key);
      }
-@@ -731,11 +659,10 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -731,11 +662,10 @@ class AnalyzePrototypeProperties implements CompilerPass {
  
      // If this is a function context, then scope will be the scope of the
      // corresponding function. Otherwise, it will be null.
@@ -387,7 +382,7 @@ index 1eca61cc..a79cd59a 100644
    }
  
 diff --git a/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java b/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
-index d52a3903..1bd14b3a 100644
+index d52a3903c..1bd14b3af 100644
 --- a/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
 +++ b/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
 @@ -138,9 +138,6 @@ class CrossModuleMethodMotion implements CompilerPass {

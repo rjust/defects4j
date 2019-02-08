@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
-index 41cddd55..3df8216d 100644
+index 41cddd55d..3df8216d2 100644
 --- a/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 +++ b/src/com/google/javascript/rhino/jstype/PrototypeObjectType.java
 @@ -570,12 +570,6 @@ class PrototypeObjectType extends ObjectType {

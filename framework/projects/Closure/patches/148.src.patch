@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/InlineVariables.java b/src/com/google/javascript/jscomp/InlineVariables.java
-index 7d99778c..18c9fbe2 100644
+index 7d99778c8..18c9fbe2c 100644
 --- a/src/com/google/javascript/jscomp/InlineVariables.java
 +++ b/src/com/google/javascript/jscomp/InlineVariables.java
 @@ -196,8 +196,6 @@ class InlineVariables implements CompilerPass {
@@ -68,7 +68,7 @@ index 7d99778c..18c9fbe2 100644
            referenceInfo.isAssignedOnceInLifetime()) {
          List<Reference> refs = referenceInfo.references;
 diff --git a/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java b/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java
-index 4c00d60e..e3edbb4d 100644
+index 4c00d60e6..e3edbb4d6 100644
 --- a/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java
 +++ b/src/com/google/javascript/jscomp/ReferenceCollectingCallback.java
 @@ -120,12 +120,7 @@ class ReferenceCollectingCallback implements ScopedCallback, CompilerPass {
@@ -86,7 +86,7 @@ index 4c00d60e..e3edbb4d 100644
          addReference(t, v,
              new Reference(n, parent, t, blockStack.peek()));
 diff --git a/src/com/google/javascript/jscomp/Scope.java b/src/com/google/javascript/jscomp/Scope.java
-index 19ac9d2b..5ec18cab 100644
+index 19ac9d2bc..806ca2742 100644
 --- a/src/com/google/javascript/jscomp/Scope.java
 +++ b/src/com/google/javascript/jscomp/Scope.java
 @@ -60,7 +60,6 @@ public class Scope implements StaticScope<JSType> {
@@ -97,7 +97,7 @@ index 19ac9d2b..5ec18cab 100644
  
    /** Stores info about a variable */
    public static class Var implements StaticSlot<JSType> {
-@@ -288,35 +287,9 @@ public class Scope implements StaticScope<JSType> {
+@@ -288,35 +287,10 @@ public class Scope implements StaticScope<JSType> {
     * scope.
     */
    // TODO(johnlenz): Include this the list of Vars for the scope.
@@ -107,7 +107,7 @@ index 19ac9d2b..5ec18cab 100644
 -        false, // no inferred
 -        "arguments", // always arguments
 -        null,  // no declaration node
--        // TODO(johnlenz): provide the type of "Arguments".
+         // TODO(johnlenz): provide the type of "Arguments".
 -        null,  // no type info
 -        scope,
 -        -1,    // no variable index
@@ -133,7 +133,7 @@ index 19ac9d2b..5ec18cab 100644
  
    /**
     * Creates a Scope given the parent Scope and the root node of the scope.
-@@ -482,12 +455,6 @@ public class Scope implements StaticScope<JSType> {
+@@ -482,12 +456,6 @@ public class Scope implements StaticScope<JSType> {
    /**
     * Get a unique VAR object to represents "arguments" within this scope
     */

@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
-index 36f83466..cf87eaaf 100644
+index 36f83466e..cf87eaaf0 100644
 --- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
 @@ -1993,7 +1993,7 @@ final class TypedScopeCreator implements ScopeCreator {
