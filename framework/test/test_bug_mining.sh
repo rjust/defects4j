@@ -123,7 +123,7 @@ test_crossref_commmit_issue() {
 
     pushd . > /dev/null 2>&1
     cd $BUG_MINING_FRAMEWORK_DIR
-    ./vcs-log-xref.pl -e $regex -l $git_log_file -r $repository_dir -i $issues_file -f $commit_db_file || die "Crossreference of commits and issues ids has failed"
+    ./vcs-log-xref.pl -p $project_id -e $regex -l $git_log_file -r $repository_dir -i $issues_file -f $commit_db_file || die "Crossreference of commits and issues ids has failed"
     popd > /dev/null 2>&1
 
     # Check whether expected files exist
