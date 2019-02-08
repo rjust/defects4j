@@ -125,8 +125,8 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>", "relevant_tests/<id>");
-my @generic_files_and_directories = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
-                                     "dir-layout.csv", "lib");
+my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib");
+my @generic_files_to_append = ("dependent_tests", "dir-layout.csv");
 
 my @ids = _get_bug_ids($BID);
 foreach my $id (@ids) {
@@ -185,10 +185,16 @@ foreach my $id (@ids) {
     }
 }
 
-for my $fn (@generic_files_and_directories) {
+for my $fn (@generic_files_and_directories_to_replace) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
     _cp($src, $dst);
+}
+
+for my $fn (@generic_files_to_append) {
+    my $src = "$PROJECTS_DIR/$PID/$fn";
+    my $dst = "$OUTPUT_DIR/$PID/$fn";
+    _ap($src, $dst);
 }
 
 # Copy project submodule
@@ -256,6 +262,17 @@ sub _cp {
     system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
     if (-e $src) {
         system("cp -R $src $dst") == 0 or die "could not copy $src: $!";
+        print "\t... OK\n";
+    }
+}
+
+sub _ap {
+    my ($src, $dst) = @_;
+    print "\t... appending $src -> $dst\n";
+    $dst =~ m[^(.*)/.*$];
+    system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
+    if (-e $src) {
+        system("cat $src >> $dst") == 0 or die "could not append $src: $!";
         print "\t... OK\n";
     }
 }

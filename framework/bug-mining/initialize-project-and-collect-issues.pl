@@ -153,7 +153,8 @@ Utils::exec_cmd("./download-issues.pl -g $ISSUE_TRACKER_NAME"
 Utils::exec_cmd("git --git-dir=$REPOSITORY_DIR log --reverse > $GIT_LOG_FILE",
                 "Collecting repository log") or die "Cannot collect git history!";
 # Cross-reference the commit log with the issue numbers known to be bugs
-Utils::exec_cmd("./vcs-log-xref.pl -e '$REGEXP'"
+Utils::exec_cmd("./vcs-log-xref.pl -p $PID"
+                               . " -e '$REGEXP'"
                                . " -l $GIT_LOG_FILE"
                                . " -r $REPOSITORY_DIR"
                                . " -i $ISSUES_FILE"

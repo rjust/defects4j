@@ -317,8 +317,6 @@ Terms commonly used in Defects4J
 
 ## Limitations of the bug-mining framework
 
-- At the moment the bug-mining framework does not mine existing projects in the
-  `Defects4J` database.
 - Although some scripts in the bug-mining framework are agnostic to the version
   control system used by a project and even support different version control
   systems, there are some other scripts that are Git dependent.
