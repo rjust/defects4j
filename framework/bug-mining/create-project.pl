@@ -120,17 +120,14 @@ my $core_dir = "$WORK_DIR/framework/core/Project";
 system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $RELEVANT_DIR $MOD_CLASSES $REL_CLASSES");
 system("touch $project_dir/commit-db");
 
+# Mine an existing project if the project module exists in the framework
 if (-e "$CORE_DIR/Project/$PID.pm") {
-    # Mine an existing project
-
     # Copy project module
     system("cp $CORE_DIR/Project/$PID.pm $module_file");
 
     # Copy project build file
     system("cp $PROJECTS_DIR/$PID/$PID.build.xml $build_file");
 } else {
-    # Mine a new project
-
     # Copy module template and set project id and name
     open(IN, "<$module_template") or die "Cannot open template file: $!";
     open(OUT, ">$module_file") or die "Cannot open module file: $!";
