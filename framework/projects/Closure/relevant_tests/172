@@ -68,6 +68,7 @@ com.google.javascript.jscomp.GatherCharacterEncodingBiasTest
 com.google.javascript.jscomp.GatherRawExportsTest
 com.google.javascript.jscomp.GatherSideEffectSubexpressionsCallbackTest
 com.google.javascript.jscomp.GenerateExportsTest
+com.google.javascript.jscomp.GlobalVarReferenceMapTest
 com.google.javascript.jscomp.GoogleCodingConventionTest
 com.google.javascript.jscomp.GroupVariableDeclarationsTest
 com.google.javascript.jscomp.IgnoreCajaPropertiesTest
@@ -82,6 +83,9 @@ com.google.javascript.jscomp.InlineVariablesTest
 com.google.javascript.jscomp.InstrumentFunctionsTest
 com.google.javascript.jscomp.InstrumentMemoryAllocPassTest
 com.google.javascript.jscomp.IntegrationTest
+com.google.javascript.jscomp.JSCompilerSourceExcerptProviderTest
+com.google.javascript.jscomp.JSModuleGraphTest
+com.google.javascript.jscomp.JSModuleTest
 com.google.javascript.jscomp.JsMessageExtractorTest
 com.google.javascript.jscomp.JsMessageVisitorTest
 com.google.javascript.jscomp.LiveVariableAnalysisTest
