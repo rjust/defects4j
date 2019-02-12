@@ -276,18 +276,3 @@ sub _append {
         print "\t... OK\n";
     }
 }
-
-sub _db_cp {
-    my ($db_in, $db_out, $tab, $id, $new_id) = @_;
-    my $stmnt = $db_in->prepare("SELECT * FROM $tab WHERE $PROJECT=? AND $ID=?")
-        or die $db_in->errstr;
-    $stmnt->execute($PID, $id);
-    my @vals = $stmnt->fetchrow_array;
-    $stmnt->finish();
-    $vals[1] = $new_id;
-    for (my $i=0; $i < scalar(@vals); $i++) {
-        $vals[$i] = "'" . $vals[$i] . "'";
-    }
-    my $row = join(',', @vals);
-    $db_out->do("INSERT INTO $tab VALUES ($row)") or die $db_out->errstr;
-}
