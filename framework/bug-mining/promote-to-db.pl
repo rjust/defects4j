@@ -171,7 +171,7 @@ foreach my $id (@ids) {
             $fn_rev =~ s/<rev>/$rev/;
             my $src = "$PROJECTS_DIR/$PID/$fn_rev";
             my $dst = "$OUTPUT_DIR/$PID/$fn_rev";
-            _cp($src, $dst);
+            _copy($src, $dst);
         }
     }
     for my $fn (@id_specific_files) {
@@ -181,32 +181,32 @@ foreach my $id (@ids) {
         $fn_dst =~ s/<id>/$max_number/;
         my $src = "$PROJECTS_DIR/$PID/$fn_src";
         my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
-        _cp($src, $dst);
+        _copy($src, $dst);
     }
 }
 
 for my $fn (@generic_files_and_directories_to_replace) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
-    _cp($src, $dst);
+    _copy($src, $dst);
 }
 
 for my $fn (@generic_files_to_append) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
-    _ap($src, $dst);
+    _append($src, $dst);
 }
 
 # Copy project submodule
 my $src = "$WORK_DIR/framework/core/Project/${PID}.pm";
 my $dst = "$CORE_DIR/Project/${PID}.pm";
-_cp($src, $dst);
+_copy($src, $dst);
 
 # Copy repository directory
 my $dir_name = $REPOSITORY_DIR;
 $dir_name =~ m[^.*/(.*)$];
 system ("rm -rf $REPO_DIR/$1") == 0 or die "Could not remove $REPO_DIR/$1: $!";
-_cp($REPOSITORY_DIR, $REPO_DIR);
+_copy($REPOSITORY_DIR, $REPO_DIR);
 
 # Update README file
 my $bug_miniming_repos_readme_file = "$WORK_DIR/project_repos/README";
@@ -255,7 +255,7 @@ sub _get_bug_ids {
     return @ids;
 }
 
-sub _cp {
+sub _copy {
     my ($src, $dst) = @_;
     print "\t... copying $src -> $dst\n";
     $dst =~ m[^(.*)/.*$];
@@ -266,7 +266,7 @@ sub _cp {
     }
 }
 
-sub _ap {
+sub _append {
     my ($src, $dst) = @_;
     print "\t... appending $src -> $dst\n";
     $dst =~ m[^(.*)/.*$];
