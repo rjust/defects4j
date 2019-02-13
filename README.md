@@ -1,4 +1,4 @@
-Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 1.4.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -42,20 +42,28 @@ Setting up Defects4J
 Requirements
 ----------------
  - Java 1.7
- - Perl >= 5.0.10
- - Perl modules: run `cpan Bundle::CSV DBD::CSV DBI` or `sudo cpan Bundle::CSV DBD::CSV DBI`
  - Git >= 1.9
  - SVN >= 1.8
+ - Perl >= 5.0.10
 
+#### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.7.
 Note that using Java 1.8+ might result in unexpected failing tests on a fixed
 program version. The next major release of Defects4J will be compatible with
 Java 8.
 
+#### Perl dependencies
+All required Perl modules are listed in `cpanfile`. On many Unix platforms,
+these required Perl modules are installed by default. If this is not the case,
+you can use cpan (or a cpan wrapper) to install them. For example, if you have
+cpanm installed, you can automatically install all modules by running:
+`cpanm --installdeps .`
+
+#### Timezone
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
-If you are using the bugs outside of the Defects4J framework, export the `TZ`
-environment variable accordingly.
+If you are using the bugs outside of the Defects4J framework, set the `TZ`
+environment variable to `America/Los_Angeles` and export it.
 
 Steps to set up Defects4J
 ----------------
@@ -124,6 +132,7 @@ directory to export a version-specific property:
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
 | dir.bin.classes  | Target directory of classes (relative to working directory)                         |
 | dir.src.tests    | Source directory of tests (relative to working directory)                           |
+| dir.bin.tests    | Target directory of test classes (relative to working directory)                    |
 | tests.all        | List of all developer-written test classes                                          |
 | tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
 | tests.trigger    | List of test methods that trigger (expose) the bug                                  |
@@ -142,6 +151,11 @@ provides the following scripts:
 | [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
 | [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
+Mining and contributing additional bugs to Defects4J
+================
+The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
+
+
 Additional resources
 ================
 
@@ -154,10 +168,12 @@ Scripts built on Defects4J
 #### Automated program repair (APR)
   - [Scripts and annotations for evaluating APR techniques][APR-eval]
   - [Patches generated with the Nopol, jGenProg, and jKali APR systems][APR-patches-spirals]
+  - [Repair actions and patterns for Defects4J v1.2.0][D4J-dissection]
 
 [fl-eval]: https://bitbucket.org/rjust/fault-localization-data
 [APR-eval]: https://github.com/LASER-UMASS/AutomatedRepairApplicabilityData
 [APR-patches-spirals]: https://github.com/Spirals-Team/defects4j-repair
+[D4J-dissection]: http://program-repair.org/defects4j-dissection/
 
 Publications
 ------------------
@@ -204,7 +220,16 @@ The directory structure of Defects4J is as follows:
            |--- projects:      Project-specific resource files.
            |
            |--- test:          Scripts to test the framework.
+           
+Versioning information
+----------------------
+Defects4J uses a semantic versioning scheme (`major`.`minor`.`patch`):
 
+| Change                                  | `major` | `minor` | `patch` |
+|-----------------------------------------|:-------:|:-------:|:-------:|
+| Addition/Deletion of bugs               |    X    |         |         |
+| New/upgraded internal or external tools |         |    X    |         |
+| Fixes and documentation changes         |         |         |    X    |
 
 License
 ---------

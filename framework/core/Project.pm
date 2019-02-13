@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -49,13 +49,11 @@ A specific project instance can be created with C<create_project(project_id)>.
   sub new {
     my $class = shift;
     my $name  = "my-project-name";
-    my $src   = "src/main/java";
-    my $test  = "src/test/java";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
-                              "$SCRIPT_DIR/projects/$PID/commit-db");
+                              "$PROJECTS_DIR/$PID/commit-db");
 
-    return $class->SUPER::new($name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 =head1 DESCRIPTION
@@ -103,6 +101,8 @@ use Utils;
 use Mutation;
 use Carp qw(confess);
 
+our $DIR_LAYOUT_CSV = "dir-layout.csv";
+
 =pod
 
 =head2 Create an instance of a Project
@@ -139,21 +139,17 @@ The root (working) directory for a checked-out program version of this project.
 
 =cut
 sub new {
-    @_ >= 6 or die $ARG_ERROR;
-    my ($class, $pid, $prog, $vcs, $src, $test, $build_file) = @_;
-    my $prog_root = $ENV{PROG_ROOT}; $prog_root = "/tmp/${pid}_".time unless defined $prog_root;
-    $build_file = "$SCRIPT_DIR/projects/$pid/$pid.build.xml" unless defined $build_file;
+    @_ == 4 or die $ARG_ERROR;
+    my ($class, $pid, $prog, $vcs) = @_;
 
     my $self = {
         pid        => $pid,
         prog_name  => $prog,
-        prog_root  => $prog_root,
+        prog_root  => $ENV{PROG_ROOT} // "/tmp/${pid}_".time,
         _vcs       => $vcs,
-        _src_dir   => $src,
-        _test_dir  => $test,
-        _build_file =>$build_file,
     };
     bless $self, $class;
+    $self->_cache_layout_map();
     return $self;
 }
 
@@ -168,16 +164,17 @@ Prints all general and project-specific properties to STDOUT.
 =cut
 sub print_info {
     my $self = shift;
-    print "Summary of configuration for Project: $self->{pid}\n";
+    my $pid = $self->{pid};
+    print "Summary of configuration for Project: $pid\n";
     print "-"x80 . "\n";
     printf ("%14s: %s\n", "Script dir", $SCRIPT_DIR);
     printf ("%14s: %s\n", "Base dir", $BASE_DIR);
     printf ("%14s: %s\n", "Major root", $MAJOR_ROOT);
     printf ("%14s: %s\n", "Repo dir", $REPO_DIR);
     print "-"x80 . "\n";
-    printf ("%14s: %s\n", "Project ID", $self->{pid});
+    printf ("%14s: %s\n", "Project ID", $pid);
     printf ("%14s: %s\n", "Program", $self->{prog_name});
-    printf ("%14s: %s\n", "Build file", $self->{_build_file});
+    printf ("%14s: %s\n", "Build file", "$PROJECTS_DIR/$pid/$pid.build.xml");
     print "-"x80 . "\n";
     printf ("%14s: %s\n", "Vcs", ref $self->{_vcs});
     printf ("%14s: %s\n", "Repository", $self->{_vcs}->{repo});
@@ -185,6 +182,34 @@ sub print_info {
     my @ids = $self->get_version_ids();
     printf ("%14s: %s\n", "Number of bugs", scalar(@ids));
     print "-"x80 . "\n";
+}
+
+=pod
+
+  $project->bug_report_id()
+
+Returns the bug report ID of a given version id C<vid>.
+
+=cut
+sub bug_report_id {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
+    return $bug_report_info->{id};
+}
+
+=pod
+
+  $project->bug_report_url()
+
+Returns the bug report URL of a given version id C<vid>.
+
+=cut
+sub bug_report_url {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
+    return $bug_report_info->{url};
 }
 
 =pod
@@ -198,7 +223,8 @@ The returned path is relative to the working directory.
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
-    return $self->{_src_dir};
+    my $revision_id = $self->lookup($vid);
+    return $self->_determine_layout($revision_id)->{src};
 }
 
 =pod
@@ -212,7 +238,8 @@ The returned path is relative to the working directory.
 sub test_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
-    return $self->{_test_dir};
+    my $revision_id = $self->lookup($vid);
+    return $self->_determine_layout($revision_id)->{test};
 }
 
 =pod
@@ -241,7 +268,8 @@ sub exclude_tests_in_file {
     my $work_dir = $self->{prog_root};
 
     # Remove broken test methods
-    system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$tests_dir") == 0 or die;
+    Utils::exec_cmd("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$tests_dir",
+            "Excluding broken/flaky tests") or die;
 
     # Check whether broken test classes should be excluded
     my $failed = Utils::get_failing_tests($file);
@@ -278,15 +306,17 @@ sub sanity_check {
 
 =pod
 
-  $project->checkout_vid(vid [, work_dir])
+  $project->checkout_vid(vid [, work_dir, is_bugmine])
 
 Checks out the provided version id (C<vid>) to F<work_dir>, and tags the the buggy AND
 the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
-The working directory (C<work_dir>) is optional, the default is C<prog_root>.
+The temporary working directory (C<work_dir>) is optional, the default is C<prog_root> from the instance of this class.
+The is_bugmine flag (C<is_bugmine>) is optional and indicates whether the
+framework is used for bug mining, the default is false.
 
 =cut
 sub checkout_vid {
-    my ($self, $vid, $work_dir) = @_; shift;
+    my ($self, $vid, $work_dir, $is_bugmine) = @_;
     my $tmp = Utils::check_vid($vid);
     my $bid = $tmp->{bid};
     my $version_type = $tmp->{type};
@@ -370,11 +400,11 @@ sub checkout_vid {
         }
     }
 
+    # Note: will skip both of these for bug mining, for two reasons, 1: it isnt necessary, 2: dont have depdencies yet
     # Fix test suite if necessary
     $self->fix_tests("${bid}f");
-
     # Write version-specific properties
-    $self->_write_props($vid, $work_dir);
+    $self->_write_props($vid, $is_bugmine);
 
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;
@@ -386,7 +416,7 @@ sub checkout_vid {
             or confess("Couldn't tag fixed program version!");
 
     # Apply patch to obtain buggy version
-    my $patch_dir = "$SCRIPT_DIR/projects/$pid/patches";
+    my $patch_dir =  "$PROJECTS_DIR/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
     $self->apply_patch($work_dir, $src_patch) or return 0;
 
@@ -544,7 +574,7 @@ sub run_ext_tests {
 
 Removes all broken tests in the checked-out program version. Which tests are broken and
 removed is determined based on the provided version id C<vid>:
-all tests listed in F<$SCRIPT_DIR/projects/$PID/failing_tests/rev-id> are removed.
+all tests listed in F<$PROJECTS_DIR/$PID/failing_tests/rev-id> are removed.
 
 =cut
 sub fix_tests {
@@ -556,17 +586,24 @@ sub fix_tests {
     my $dir = $self->test_dir($vid);
 
     # TODO: Exclusively use version ids rather than revision ids
+    # -> The bug-mining script that populates the database should deal with any
+    # ID conversions.
     my $revision_id = $self->lookup($vid);
-    my $file = "$SCRIPT_DIR/projects/$pid/failing_tests/$revision_id";
-
-    if (-e $file) {
-        $self->exclude_tests_in_file($file, $dir);
+    my $failing_tests_file = "$PROJECTS_DIR/$pid/failing_tests/$revision_id";
+    if (-e $failing_tests_file) {
+        $self->exclude_tests_in_file($failing_tests_file, $dir);
     }
 
-    # This code added to exclude test dependencies
-    my $dependent_test_file = "$SCRIPT_DIR/projects/$pid/dependent_tests";
+    # Remove flaky/dependent tests, if any
+    my $dependent_test_file = "$PROJECTS_DIR/$pid/dependent_tests";
     if (-e $dependent_test_file) {
         $self->exclude_tests_in_file($dependent_test_file, $dir);
+    }
+
+    # Remove randomly failing tests, if any
+    my $random_tests_file = "$PROJECTS_DIR/$pid/random_tests";
+    if (-e $random_tests_file) {
+        $self->exclude_tests_in_file($random_tests_file, $dir);
     }
 }
 
@@ -778,9 +815,9 @@ sub mutation_analysis {
   $project->mutation_analysis_ext(test_dir, test_include, log_file [, exclude_file, single_test])
 
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
-C<test_include>. 
+C<test_include>.
 The output of the mutation analysis process is redirected to F<log_file>. If
-C<single_test> is specified, only that test is run. 
+C<single_test> is specified, only that test is run.
 
 B<Note that C<mutate> is not called implicitly>.
 
@@ -903,7 +940,7 @@ sub run_randoop {
     my $cmd = "cd $self->{prog_root}" .
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
                 "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
-                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar=--replacement-file=$TESTGEN_LIB_DIR/default-replacements.txt " .
+                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar " .
                 "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
@@ -944,14 +981,14 @@ sub lookup {
 
 =pod
 
-  $project->lookup_revision_id(revision)
+  $project->lookup_vid(revision_id)
 
 Delegate to the L<VCS> backend.
 
 =cut
-sub lookup_revision_id {
-    my ($self, $revision) = @_;
-    return $self->{_vcs}->lookup_revision_id($revision);
+sub lookup_vid {
+    my ($self, $rev_id) = @_;
+    return $self->{_vcs}->lookup_vid($rev_id);
 }
 
 =pod
@@ -1025,6 +1062,12 @@ sub apply_patch {
     return $self->{_vcs}->apply_patch(@_);
 }
 
+# TODO: Document the purpose of this subroutine and indicate that it needs to be
+# implemented in an inheriting module.
+sub initialize_revision {
+    my ($self, $rev_id, $vid) = @_;
+}
+
 ##########################################################################################
 # Helper subroutines
 # TODO: Move to Util module
@@ -1072,15 +1115,13 @@ sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file) =  @_;
     $option_str = "" unless defined $option_str;
-    my $file = $self->{_build_file};
-    # TODO: Check also whether target is provided by the build file
-    -f $file or die "Build file does not exist: $file";
 
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
               " && ant" .
                 " -f $D4J_BUILD_FILE" .
                 " -Dd4j.home=$BASE_DIR" .
+                " -Dd4j.dir.projects=$PROJECTS_DIR" .
                 " -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1";
     my $log;
     my $ret = Utils::exec_cmd($cmd, "Running ant ($target)", \$log);
@@ -1094,27 +1135,41 @@ sub _ant_call {
 }
 
 #
-# Write all version-specific properties to file
+# Helper subroutine that returns a list of modified classes
 #
-sub _write_props {
-    @_ == 3 or die $ARG_ERROR;
-    my ($self, $vid, $work_dir) = @_;
-    my $bid = Utils::check_vid($vid)->{bid};
-
-    # TODO: Provide a helper subroutine that returns a list of modified classes
-    my $project_dir = "$SCRIPT_DIR/projects/$self->{pid}";
-    open(IN, "<${project_dir}/modified_classes/${bid}.src") or die "Cannot read modified classes";
+sub _modified_classes {
+    my ($self, $bid) = @_;
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    open(IN, "<${project_dir}/modified_classes/${bid}.src") or warn "Cannot read modified classes, perhaps they have not been created yet?";
     my @classes = <IN>;
     close(IN);
     my $mod_classes = shift(@classes); chomp($mod_classes);
-    defined $mod_classes or die "Set of modified classes is empty!";
+    defined $mod_classes or warn "Set of modified classes is empty!";
     foreach (@classes) {
         chomp;
         $mod_classes .= ",$_";
     }
+    return $mod_classes;
+}
 
-    my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
-    my $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
+#
+# Write all version-specific properties to file
+#
+sub _write_props {
+    @_ == 3 or die $ARG_ERROR;
+    my ($self, $vid, $is_bugmine) = @_;
+    my $bid = Utils::check_vid($vid)->{bid};
+
+    # will skip writing mod classes and trigger tests if we are bug mining because they are not defined yet
+    my $mod_classes = "";
+    my $trigger_tests = "";
+    if(! $is_bugmine) {
+        $mod_classes = $self->_modified_classes($bid);
+
+        my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+        my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
+        $trigger_tests = join(',', (@{$triggers->{classes}}, @{$triggers->{methods}}));
+    }
 
     my $config = {
         $PROP_PID             => $self->{pid},
@@ -1125,7 +1180,57 @@ sub _write_props {
         $PROP_CLASSES_MODIFIED=> $mod_classes,
         $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
-    Utils::write_config_file("$work_dir/$PROP_FILE", $config);
+    Utils::write_config_file("$self->{prog_root}/$PROP_FILE", $config);
+}
+
+#
+# Cache the directory-layout map from the project directory, if it exists.
+#
+sub _cache_layout_map {
+    my $self = shift;
+    my $pid = $self->{pid};
+    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    return unless -e $map_file;
+
+    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
+    my $cache = {};
+    while (<IN>) {
+        chomp;
+        /^([^,]+),([^,]+),(.+)$/ or die;
+        $cache->{$1} = {src=>$2, test=>$3};
+    }
+    close IN;
+    $self->{_layout_cache} = $cache;
+}
+
+#
+# Add a missing mapping to the directory-layout map
+#
+sub _add_to_layout_map {
+    @_ == 4 or die $ARG_ERROR;
+    my ($self, $rev_id, $src_dir, $test_dir) = @_;
+
+    my $pid = $self->{pid};
+    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    Utils::append_to_file_unless_matches($map_file, "${rev_id},${src_dir},${test_dir}\n", qr/^${rev_id}/);
+}
+
+#
+# Determines directory layout for a given revision. It returns the cached
+# layout, if it exists, or invokes determine_layout (has to be defined in each
+# Project module) to determine and cache the layout.
+#
+sub _determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    unless (defined $self->{_layout_cache}->{$rev_id}) {
+        $self->{_layout_cache}->{$rev_id} = $self->determine_layout($rev_id);
+        $self->_add_to_layout_map($rev_id,
+            $self->{_layout_cache}->{$rev_id}->{src},
+            $self->{_layout_cache}->{$rev_id}->{test}
+        );
+    }
+    return $self->{_layout_cache}->{$rev_id};
 }
 
 1;

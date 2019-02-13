@@ -7,6 +7,9 @@ Test and analysis scripts
    generated test suites are compatible with the coverage, mutation, and bug
    detection analyses.
 
+* `test_export_command.sh`: Tests the
+  [export](https://github.com/rjust/defects4j/blob/master/framework/bin/d4j/d4j-export) command.
+
 * `test_fix_test_suite.sh`: Tests the
   [fix_test_suite.pl](https://github.com/rjust/defects4j/blob/master/framework/util/fix_test_suite.pl) script.
 
@@ -40,8 +43,7 @@ more details about the defects and requirements).
     located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
     If you change the default version of randoop-current.jar you must also copy the
     matching version of replacecall.jar to replacecall-current.jar in the same location as
-    randoop-current.jar.  Finally, you must extract the replacements file from replacecall-current.jar:
-    - `(cd "path2replacecall-current.jar" && jar -xf replacecall-current.jar default-replacements.txt)`
+    randoop-current.jar.
 
 2. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`

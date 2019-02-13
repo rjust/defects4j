@@ -30,7 +30,7 @@ public class Formatter implements JUnitResultFormatter {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
 	public void endTestSuite(JUnitTest arg0) throws BuildException {
 	}
@@ -40,7 +40,7 @@ public class Formatter implements JUnitResultFormatter {
 	}
 
 	@Override
-	public void setSystemError(String arg0) {	
+	public void setSystemError(String arg0) {
 	}
 
 	@Override
@@ -49,13 +49,13 @@ public class Formatter implements JUnitResultFormatter {
 
 	String className ;
 	boolean alreadyPrinted = true;
-	
+
 	@Override
 	public void startTestSuite(JUnitTest junitTest) throws BuildException {
 		className = junitTest.getName();
 		alreadyPrinted = false;
 	}
-	
+
 
 	@Override
 	public void addError(Test test, Throwable t) {
@@ -66,34 +66,38 @@ public class Formatter implements JUnitResultFormatter {
 	public void addFailure(Test test, AssertionFailedError t) {
 		handle(test,t);
 	}
-	
+
 	private void handle(Test test, Throwable t) {
 		String prefix = "--- " ;
 		String className = null;
 		String methodName = null;
 
 		if (test == null) { // if test is null it indicates an initialization error for the class
-			failClass(t, prefix);  
+			failClass(t, prefix);
 			return;
 		}
-		
+
+		className = test.getClass().getName();
 		{
-			Pattern regexp = Pattern.compile("(.*)\\((.*)\\)");
+			Pattern regexp = Pattern.compile("(.*)\\((.*)\\)\\s*");
 			Matcher match  = regexp.matcher(test.toString());
 			if (match.matches()) {
-				className = match.group(2);
+				// Class name will equal to junit.framework.Junit4TestCaseFacade if Junit4
+				// style tests are ran with Junit3 style test runner.
+				if(className.equals("junit.framework.JUnit4TestCaseFacade"))
+					className = match.group(2);
 				methodName = match.group(1);
 			}
 		}
 		{
-			Pattern regexp = Pattern.compile("(.*):(.*)"); // for some weird reson this format is used for Timeout in Junit4
+			Pattern regexp = Pattern.compile("(.*):(.*)\\s*"); // for some weird reson this format is used for Timeout in Junit4
 			Matcher match  = regexp.matcher(test.toString());
 			if (match.matches()) {
 				className = match.group(1);
 				methodName = match.group(2);
 			}
 		}
-		
+
 		if ("warning".equals(methodName) || "initializationError".equals(methodName)) {
 			failClass(t, prefix); // there is an issue with the class, not the method.
 		} else if (null != methodName && null != className) {
@@ -107,7 +111,7 @@ public class Formatter implements JUnitResultFormatter {
 			ps.print(prefix + "broken test input " + test.toString());
 			t.printStackTrace(ps);
 		}
-		
+
 	}
 
 	private void failClass(Throwable t, String prefix) {

@@ -57,6 +57,10 @@ of the checked-out project version.
     <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
         <isset property="maven.build.outputDir" />
     </condition>
+    <condition property="test.classes.dir" value="${maven.build.testOutputDir}" else="${build.tests}">
+        <isset property="maven.build.testOutputDir" />
+    </condition>
+
     <property name="build.home" value="${classes.dir}/.." />
 
     <target name="compile.tests" depends="joda-time.compile.tests"> </target>
