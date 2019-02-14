@@ -120,46 +120,37 @@ my $core_dir = "$WORK_DIR/framework/core/Project";
 system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $RELEVANT_DIR $MOD_CLASSES $REL_CLASSES");
 system("touch $project_dir/commit-db");
 
-# Mine an existing project if the project module exists in the framework
-if (-e "$CORE_DIR/Project/$PID.pm") {
-    # Copy project module
-    system("cp $CORE_DIR/Project/$PID.pm $module_file");
-
-    # Copy project build file
-    system("cp $PROJECTS_DIR/$PID/$PID.build.xml $build_file");
-} else {
-    # Copy module template and set project id and name
-    open(IN, "<$module_template") or die "Cannot open template file: $!";
-    open(OUT, ">$module_file") or die "Cannot open module file: $!";
-    while(<IN>) {
-        s/<PID>/$PID/g;
-        s/<PROJECT_NAME>/$NAME/g;
-        print(OUT $_);
-    }
-    close(IN);
-    close(OUT);
-
-    # Copy wrapper build file template and set project id
-    open(IN, "<$build_template") or die "Cannot open template file: $!";
-    open(OUT, ">$build_file") or die "Cannot open build file: $!";
-    while(<IN>) {
-        s/<PID>/$PID/g;
-        s/<PROJECT_NAME>/$NAME/g;
-        print(OUT $_);
-    }
-    close(IN);
-    close(OUT);
-
-    # Copy patch build file and set project id
-    open(IN, "<$build_patch") or die "Cannot open build patch file: $!";
-    open(OUT, ">$build_patch_file") or die "Cannot open build patch file: $!";
-    while(<IN>) {
-        s/<PROJECT_NAME>/$NAME/g;
-        print(OUT $_);
-    }
-    close(IN);
-    close(OUT);
+# Copy module template and set project id and name
+open(IN, "<$module_template") or die "Cannot open template file: $!";
+open(OUT, ">$module_file") or die "Cannot open module file: $!";
+while(<IN>) {
+    s/<PID>/$PID/g;
+    s/<PROJECT_NAME>/$NAME/g;
+    print(OUT $_);
 }
+close(IN);
+close(OUT);
+
+# Copy wrapper build file template and set project id
+open(IN, "<$build_template") or die "Cannot open template file: $!";
+open(OUT, ">$build_file") or die "Cannot open build file: $!";
+while(<IN>) {
+    s/<PID>/$PID/g;
+    s/<PROJECT_NAME>/$NAME/g;
+    print(OUT $_);
+}
+close(IN);
+close(OUT);
+
+# Copy patch build file and set project id
+open(IN, "<$build_patch") or die "Cannot open build patch file: $!";
+open(OUT, ">$build_patch_file") or die "Cannot open build patch file: $!";
+while(<IN>) {
+    s/<PROJECT_NAME>/$NAME/g;
+    print(OUT $_);
+}
+close(IN);
+close(OUT);
 
 # Clone the repository
 system("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git 2>&1"

@@ -32,15 +32,11 @@ reported in the project issue tracker.
 
 =head1 SYNOPSIS
 
-vcs-log-xref.pl -p project_id -e bug_matching_perl_regexp -l commit_log -r repository_dir -i issues_file -f output_file [-v vcs_type] [-n project_name]
+vcs-log-xref.pl -e bug_matching_perl_regexp -l commit_log -r repository_dir -i issues_file -f output_file [-v vcs_type] [-n project_name]
 
 =head1 OPTIONS
 
 =over 4
-
-=item B<-p C<project_id>>
-
-The id of the new project (e.g., Lang).
 
 =item B<-e C<bug_matching_perl_regexp>>
 
@@ -83,20 +79,19 @@ use File::Basename;
 use Cwd qw(abs_path);
 use Getopt::Std;
 use List::Util qw(all pairmap);
-use List::Util qw(max);
 use Pod::Usage;
 
 use lib (dirname(abs_path(__FILE__)) . "/../core/");
-use Constants;
 use Utils;
 
 my %SUPPORTED_VCSs = (
     'git' => {
             'get_commits' => sub {
-                            my ($fh, $project_name, $regexp, $issues_file, $issues_db, $version_id) = @_;
-                            die unless all {defined $_} ($fh, $regexp, $issues_file, $issues_db, $version_id);
+                            my ($fh, $project_name, $regexp, $issues_file, $issues_db) = @_;
+                            die unless all {defined $_} ($fh, $regexp, $issues_file, $issues_db);
                             my %results;
                             my $commit = '';
+                            my $version_id = 1;
                             while (<$fh>) {
                                 chomp ;
                                 if (/^commit (.*)/) {
@@ -105,7 +100,6 @@ my %SUPPORTED_VCSs = (
                                     $commit = $1;
                                     next;
                                 }
-
                                 next unless $commit; # skip lines before first commit info.
                                 if (my $bug_number = eval('$_ =~' . "$regexp" . '; $1')) {
                                     # skip bug ids that have not been reported in the issue tracker
@@ -114,12 +108,6 @@ my %SUPPORTED_VCSs = (
                                     next unless $parent; # skip revisions without parent:
                                                          # this can be the first revision or
                                                          # due to bad history rewriting
-
-                                    if (_is_it_an_existing_d4j_bug($parent, $commit) eq 0) {
-                                        $commit = ''; # unset to skip lines until next commit
-                                        next;
-                                    }
-
                                     $results{$version_id}{'p'} = $parent;
                                     $results{$version_id}{'c'} = $commit;
                                     $results{$version_id}{'issue_id'} = $bug_number;
@@ -134,10 +122,11 @@ my %SUPPORTED_VCSs = (
         },
     'svn' => {
             'get_commits' => sub {
-                                my ($fh, $project_name, $regexp, $issues_file, $issues_db, $version_id) = @_;
-                                die unless all {defined $_} ($fh, $project_name, $regexp, $issues_file, $issues_db, $version_id);
+                                my ($fh, $project_name, $regexp, $issues_file, $issues_db) = @_;
+                                die unless all {defined $_} ($fh, $project_name, $regexp, $issues_file, $issues_db);
                                 my %results;
                                 my $commit = '';
+                                my $version_id = 1;
                                 while (<$fh>) {
                                     chomp;
                                     if (/^r(\d+) \| .* \| \d+ line/) {
@@ -150,12 +139,6 @@ my %SUPPORTED_VCSs = (
                                         next unless system("wget -q -O /dev/null \"https://sourceforge.net/p/$project_name/bugs/$bug_number\"") == 0;
                                         my $parent = $commit - 1;
                                         next unless $parent > 0; # skip first revision
-
-                                        if (_is_it_an_existing_d4j_bug($parent, $commit) eq 0) {
-                                            $commit = ''; # unset to skip lines until next commit
-                                            next;
-                                        }
-
                                         $results{$version_id}{'p'} = $parent;
                                         $results{$version_id}{'c'} = $commit;
                                         $results{$version_id}{'issue_id'} = $bug_number;
@@ -171,11 +154,11 @@ my %SUPPORTED_VCSs = (
 );
 
 my %cmd_opts;
-getopts('p:e:l:r:i:f:v:n:', \%cmd_opts) or pod2usage(1);
+getopts('e:l:r:i:f:v:n:', \%cmd_opts) or pod2usage(1);
 
-pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{e}
-                    and defined $cmd_opts{l} and defined $cmd_opts{r}
-                    and defined $cmd_opts{i} and defined $cmd_opts{f};
+pod2usage(1) unless defined $cmd_opts{e} and defined $cmd_opts{l}
+                    and defined $cmd_opts{r} and defined $cmd_opts{i}
+                    and defined $cmd_opts{f};
 
 my $VCS_NAME = $cmd_opts{v} // "git";
 if (! defined $SUPPORTED_VCSs{$VCS_NAME}) {
@@ -183,30 +166,12 @@ if (! defined $SUPPORTED_VCSs{$VCS_NAME}) {
 }
 my %VCS = %{$SUPPORTED_VCSs{$VCS_NAME}};
 
-my $PID = $cmd_opts{p};
 my $REGEXP = $cmd_opts{e};
 my $LOG_FILE = $cmd_opts{l};
 my $REPOSITORY_DIR = $cmd_opts{r};
 my $ISSUES_FILE = abs_path($cmd_opts{i});
 my $OUTPUT_FILE = $cmd_opts{f};
 my $PROJECT_NAME = $cmd_opts{n};
-
-# Cache any existing entry in the commit_db
-my $EXISTING_COMMIT_DB = "$PROJECTS_DIR/$PID/commit-db";
-my %COMMIT_DB = ();
-if (-e "$EXISTING_COMMIT_DB") {
-    open my $fh, "<$EXISTING_COMMIT_DB" or die "Cannot open ${EXISTING_COMMIT_DB}!";
-    while (my $entry = <$fh>) {
-        chomp $entry;
-        my ($bug_id, $buggy_commit, $fixed_commit, $issue_id, $issue_url) = split /,/, $entry;
-        $COMMIT_DB{$bug_id} = {
-            'buggy_commit' => $buggy_commit,
-            'fixed_commit' => $fixed_commit
-        }
-    }
-    close $fh;
-}
-my $highest_version_id = %COMMIT_DB ? (max keys %COMMIT_DB) + 1 : 1;
 
 # Issues file must exist and it can be empty
 if (! -s $ISSUES_FILE) {
@@ -218,7 +183,7 @@ my $ISSUES_DB = Utils::read_config_file($ISSUES_FILE, ",") or die "Failed to rea
 %$ISSUES_DB = map { lc($_) => $ISSUES_DB->{$_} } keys %$ISSUES_DB;
 
 open my $fh, $LOG_FILE or die "Could not open commit-log $LOG_FILE";
-my %commits = %{$VCS{'get_commits'}($fh, $PROJECT_NAME, $REGEXP, $ISSUES_FILE, $ISSUES_DB, $highest_version_id)};
+my %commits = %{$VCS{'get_commits'}($fh, $PROJECT_NAME, $REGEXP, $ISSUES_FILE, $ISSUES_DB)};
 close $fh;
 if (scalar keys %commits eq 0) {
     print("Warning, no commit that matches the regex expression provided has been found\n");
@@ -229,23 +194,6 @@ for my $commit_id (sort { $a <=> $b} keys %commits) {
     print $fh "$commit_id,$row->{'p'},$row->{'c'},$row->{'issue_id'},$row->{'issue_url'}\n";
 }
 close($fh);
-
-sub _is_it_an_existing_d4j_bug {
-    my ($buggy_commit, $fixed_commit) = @_;
-
-    if (! %COMMIT_DB) {
-        return 1;
-    }
-
-    for my $bug_id (keys %COMMIT_DB) {
-        if ($COMMIT_DB{$bug_id}{'buggy_commit'} eq $buggy_commit and
-                $COMMIT_DB{$bug_id}{'fixed_commit'} eq $fixed_commit) {
-            return 0;
-        }
-    }
-
-    return 1;
-}
 
 sub _git_get_parent {
     my $commit = shift;
