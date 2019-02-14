@@ -1,28 +1,25 @@
 diff --git a/src/com/google/javascript/jscomp/JsAst.java b/src/com/google/javascript/jscomp/JsAst.java
-index ff71d944..2ada6d2a 100644
+index ff71d944..9f7bf8a5 100644
 --- a/src/com/google/javascript/jscomp/JsAst.java
 +++ b/src/com/google/javascript/jscomp/JsAst.java
-@@ -79,8 +79,8 @@ public class JsAst implements SourceAst {
+@@ -79,7 +79,6 @@ public class JsAst implements SourceAst {
    }
  
    private void parse(AbstractCompiler compiler) {
 -    int startErrorCount = compiler.getErrorManager().getErrorCount();
      try {
-+      logger_.fine("Parsing: " + sourceFile.getName());
        ParserRunner.ParseResult result = ParserRunner.parse(sourceFile, sourceFile.getCode(),
            compiler.getParserConfig(),
-           compiler.getDefaultErrorReporter(),
-@@ -92,12 +92,7 @@ public class JsAst implements SourceAst {
-           JSError.make(AbstractCompiler.READ_ERROR, sourceFile.getName()));
+@@ -93,11 +92,10 @@ public class JsAst implements SourceAst {
      }
  
--
+ 
 -    if (root == null ||
--        // Most passes try to report as many errors as possible,
--        // so there may already be errors. We only care if there were
--        // errors in the code we just parsed.
--        (compiler.getErrorManager().getErrorCount() > startErrorCount && !compiler.isIdeMode())) {
 +    if (root == null || compiler.hasHaltingErrors()) {
+         // Most passes try to report as many errors as possible,
+         // so there may already be errors. We only care if there were
+         // errors in the code we just parsed.
+-        (compiler.getErrorManager().getErrorCount() > startErrorCount && !compiler.isIdeMode())) {
        // There was a parse error or IOException, so use a dummy block.
        root = IR.script();
      } else {
@@ -44,7 +41,7 @@ index 4facea30..c4f7f8da 100644
      }
      return result;
 diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
-index 3a771c95..7108f27f 100644
+index 3a771c95..a4e503d0 100644
 --- a/src/com/google/javascript/jscomp/ScopedAliases.java
 +++ b/src/com/google/javascript/jscomp/ScopedAliases.java
 @@ -353,8 +353,8 @@ class ScopedAliases implements HotSwapCompilerPass {
@@ -71,30 +68,19 @@ index 3a771c95..7108f27f 100644
            String name = n.getString();
            int nameCount = scopedAliasNames.count(name);
            scopedAliasNames.add(name);
-@@ -376,17 +374,15 @@ class ScopedAliases implements HotSwapCompilerPass {
+@@ -376,7 +374,6 @@ class ScopedAliases implements HotSwapCompilerPass {
  
            // Add $jscomp.scope.name = EXPR;
            // Make sure we copy over all the jsdoc and debug info.
 -          if (value != null || v.getJSDocInfo() != null) {
--            Node newDecl = NodeUtil.newQualifiedNameNodeDeclaration(
--                compiler.getCodingConvention(),
--                globalName,
--                value,
--                v.getJSDocInfo())
--                .useSourceInfoIfMissingFromForTree(n);
--            NodeUtil.setDebugInformation(
--                newDecl.getFirstChild().getFirstChild(), n, name);
--            parent.getParent().addChildBefore(newDecl, parent);
+             Node newDecl = NodeUtil.newQualifiedNameNodeDeclaration(
+                 compiler.getCodingConvention(),
+                 globalName,
+@@ -386,7 +383,6 @@ class ScopedAliases implements HotSwapCompilerPass {
+             NodeUtil.setDebugInformation(
+                 newDecl.getFirstChild().getFirstChild(), n, name);
+             parent.getParent().addChildBefore(newDecl, parent);
 -          }
-+          Node newDecl = NodeUtil.newQualifiedNameNodeDeclaration(
-+              compiler.getCodingConvention(),
-+              globalName,
-+              value,
-+              v.getJSDocInfo())
-+              .useSourceInfoIfMissingFromForTree(n);
-+          NodeUtil.setDebugInformation(
-+              newDecl.getFirstChild().getFirstChild(), n, name);
-+          parent.getParent().addChildBefore(newDecl, parent);
  
            // Rewrite "var name = EXPR;" to "var name = $jscomp.scope.name;"
            v.getNameNode().addChildToFront(
