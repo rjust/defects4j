@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
-index 448e2b56..5bd48f49 100644
+index 448e2b56..d2524b4f 100644
 --- a/src/com/google/javascript/jscomp/Compiler.java
 +++ b/src/com/google/javascript/jscomp/Compiler.java
 @@ -261,7 +261,6 @@ public class Compiler extends AbstractCompiler {
@@ -10,7 +10,7 @@ index 448e2b56..5bd48f49 100644
  
      this.externs = makeCompilerInput(externs, true);
      this.modules = modules;
-@@ -326,15 +325,6 @@ public class Compiler extends AbstractCompiler {
+@@ -326,14 +325,6 @@ public class Compiler extends AbstractCompiler {
     * Fill any empty modules with a place holder file. It makes any cross module
     * motion easier.
     */
@@ -22,11 +22,10 @@ index 448e2b56..5bd48f49 100644
 -      }
 -    }
 -  }
--  
+   
    static final DiagnosticType DUPLICATE_INPUT_IN_MODULES =
        DiagnosticType.error("JSC_DUPLICATE_INPUT_IN_MODULES_ERROR",
-           "Two modules cannot contain the same input, but module {0} and {1} "
-@@ -1588,6 +1578,12 @@ public class Compiler extends AbstractCompiler {
+@@ -1588,6 +1579,12 @@ public class Compiler extends AbstractCompiler {
      if (inputs.size() > 0) {
        return inputs.get(0).getAstRoot(this);
      }
