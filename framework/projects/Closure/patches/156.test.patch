@@ -1,60 +1,80 @@
-diff --git a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
-index e0e98204..b168fd9a 100644
---- a/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
-+++ b/test/com/google/javascript/jscomp/CheckGlobalThisTest.java
-@@ -203,21 +203,4 @@ public class CheckGlobalThisTest extends CompilerTestCase {
-     testSame(
-         "function f() { var x = {}; x.y(function() { return this.x; }); }");
+diff --git a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
+index 15895225..db452daa 100644
+--- a/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/CollapsePropertiesTest.java
+@@ -1270,75 +1270,4 @@ public class CollapsePropertiesTest extends CompilerTestCase {
+   public void testPropertyOnGlobalFunction() {
+     testSame("function Map() {} Map.foo = 3; Map;");
    }
 -
--  public void testIssue182a() {
--    testFailure("var NS = {read: function() { return this.foo; }};");
+-  public void testIssue389() {
+-    test(
+-        "function alias() {}" +
+-        "var dojo = {};" +
+-        "dojo.gfx = {};" +
+-        "dojo.declare = function() {};" +
+-        "/** @constructor */" +
+-        "dojo.gfx.Shape = function() {};" +
+-        "dojo.gfx.Shape = dojo.declare('dojo.gfx.Shape');" +
+-        "alias(dojo);",
+-        "function alias() {}" +
+-        "var dojo = {};" +
+-        "dojo.gfx = {};" +
+-        "dojo.declare = function() {};" +
+-        "/** @constructor */" +
+-        "var dojo$gfx$Shape = function() {};" +
+-        "dojo$gfx$Shape = dojo.declare('dojo.gfx.Shape');" +
+-        "alias(dojo);",
+-        null,
+-        CollapseProperties.UNSAFE_NAMESPACE_WARNING);
 -  }
 -
--  public void testIssue182b() {
--    testFailure("var NS = {write: function() { this.foo = 3; }};");
+-  public void testAliasedTopLevelName() {
+-    testSame(
+-        "function alias() {}" +
+-        "var dojo = {};" +
+-        "dojo.gfx = {};" +
+-        "dojo.declare = function() {};" +
+-        "dojo.gfx.Shape = {SQUARE: 2};" +
+-        "dojo.gfx.Shape = dojo.declare('dojo.gfx.Shape');" +
+-        "alias(dojo);" +
+-        "alias(dojo$gfx$Shape$SQUARE);");
 -  }
 -
--  public void testIssue182c() {
--    testFailure("var NS = {}; NS.write2 = function() { this.foo = 3; };");
+-  public void testAliasedTopLevelEnum() {
+-    test(
+-        "function alias() {}" +
+-        "var dojo = {};" +
+-        "dojo.gfx = {};" +
+-        "dojo.declare = function() {};" +
+-        "/** @enum {number} */" +
+-        "dojo.gfx.Shape = {SQUARE: 2};" +
+-        "dojo.gfx.Shape = dojo.declare('dojo.gfx.Shape');" +
+-        "alias(dojo);" +
+-        "alias(dojo.gfx.Shape.SQUARE);",
+-        "function alias() {}" +
+-        "var dojo = {};" +
+-        "dojo.gfx = {};" +
+-        "dojo.declare = function() {};" +
+-        "/** @constructor */" +
+-        "var dojo$gfx$Shape = {SQUARE: 2};" +
+-        "dojo$gfx$Shape = dojo.declare('dojo.gfx.Shape');" +
+-        "alias(dojo);" +
+-        "alias(dojo$gfx$Shape.SQUARE);",
+-        null,
+-        CollapseProperties.UNSAFE_NAMESPACE_WARNING);
 -  }
 -
--  public void testIssue182d() {
--    testSame("function Foo() {} " +
--        "Foo.prototype = {write: function() { this.foo = 3; }};");
+-  public void testAssignFunctionBeforeDefinition() {
+-    testSame(
+-        "f = function() {};" +
+-        "var f = null;");
+-  }
+-
+-  public void testObjectLitBeforeDefinition() {
+-    testSame(
+-        "a = {b: 3};" +
+-        "var a = null;" +
+-        "this.c = a.b;");
 -  }
  }
-diff --git a/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java b/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java
-old mode 100755
-new mode 100644
-diff --git a/test/com/google/javascript/jscomp/ExternExportsPassTest.java b/test/com/google/javascript/jscomp/ExternExportsPassTest.java
-old mode 100755
-new mode 100644
-diff --git a/test/com/google/javascript/jscomp/RuntimeTypeCheckTest.java b/test/com/google/javascript/jscomp/RuntimeTypeCheckTest.java
-index 221acadc..87e50061 100644
---- a/test/com/google/javascript/jscomp/RuntimeTypeCheckTest.java
-+++ b/test/com/google/javascript/jscomp/RuntimeTypeCheckTest.java
-@@ -30,7 +30,6 @@ public class RuntimeTypeCheckTest extends CompilerTestCase {
-   private Node runtimeTypeCheckCode = null;
- 
-   public RuntimeTypeCheckTest() {
--    super("/** @const */ var undefined;");
-     enableTypeCheck(CheckLevel.WARNING);
-   }
- 
-@@ -58,15 +57,6 @@ public class RuntimeTypeCheckTest extends CompilerTestCase {
-         "}");
-   }
- 
--  public void testValueWithInnerFn() {
--    testChecks("/** @param {number} i */ function f(i) { function g() {} }",
--        "function f(i) {" +
--        "  function g() {}" +
--        "  jscomp.typecheck.checkType(i, " +
--        "      [jscomp.typecheck.valueChecker('number')]);" +
--        "}");
--  }
--
-   public void testNullValue() {
-     testChecks("/** @param {null} i */ function f(i) {}",
-         "function f(i) {" +

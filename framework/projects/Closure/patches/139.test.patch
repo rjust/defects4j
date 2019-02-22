@@ -1,133 +1,98 @@
-diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
-index 99ee71c2..4d93dbdd 100644
---- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
-+++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
-@@ -1784,11 +1784,11 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
-         "F.prototype.foo = function() { };" +
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
--        "/** @override */ G.prototype.foo = function(x, y) { };",
--        "mismatch of the foo property type and the type of the property " +
--        "it overrides from superclass F\n" +
--        "original: function (this:F): undefined\n" +
--        "override: function (this:G, ?, ?): undefined");
-+        "/** @override */ G.prototype.foo = function(x, y) { };" +
-+        "(new G()).foo();",
-+        "Function G.prototype.foo: called with 0 argument(s). " +
-+        "Function requires at least 2 argument(s) " +
-+        "and no more than 2 argument(s).");
+diff --git a/test/com/google/javascript/jscomp/NormalizeTest.java b/test/com/google/javascript/jscomp/NormalizeTest.java
+index 2f0fcbda..2073bff0 100644
+--- a/test/com/google/javascript/jscomp/NormalizeTest.java
++++ b/test/com/google/javascript/jscomp/NormalizeTest.java
+@@ -139,57 +139,11 @@ public class NormalizeTest extends CompilerTestCase {
+   public void testMoveFunctions2() throws Exception {
+     testSame("function f() { function foo() {} }");
+     test("function f() { f(); a:function bar() {} }",
+-         "function f() { f(); a:{ var bar = function () {} }}");
+-    test("function f() { f(); {function bar() {}}}",
+-         "function f() { f(); {var bar = function () {}}}");
+-    test("function f() { f(); if (true) {function bar() {}}}",
+-         "function f() { f(); if (true) {var bar = function () {}}}");
++         "function f() { f(); a:{function bar() {}}}");
++    testSame("function f() { f(); {function bar() {}}}");
++    testSame("function f() { f(); if (true) {function bar() {}}}");
    }
  
-   public void testMethodInference8() throws Exception {
-@@ -1798,8 +1798,10 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
-         "/** @override */ " +
--        "G.prototype.foo = function(opt_b, var_args) { };" +
--        "(new G()).foo(1, 2, 3);");
-+        "G.prototype.foo = function(a, opt_b, var_args) { };" +
-+        "(new G()).foo();",
-+        "Function G.prototype.foo: called with 0 argument(s). " +
-+        "Function requires at least 1 argument(s).");
+-  private String inFunction(String code) {
+-    return "(function(){" + code + "})";
+-  }
+-
+-  private void testSameInFunction(String code) {
+-    testSame(inFunction(code));
+-  }
+-
+-  private void testInFunction(String code, String expected) {
+-    test(inFunction(code), inFunction(expected));
+-  }
+-
+-  public void testNormalizeFunctionDeclarations() throws Exception {
+-    testSame("function f() {}");
+-    testSame("var f = function () {}");
+-    test("var f = function f() {}",
+-         "var f = function f$$1() {}");
+-    testSame("var f = function g() {}");
+-    test("a:function g() {}",
+-         "a:{ var g = function () {} }");
+-    test("{function g() {}}",
+-         "{var g = function () {}}");
+-    testSame("if (function g() {}) {}");
+-    test("if (true) {function g() {}}",
+-         "if (true) {var g = function () {}}");
+-    test("if (true) {} else {function g() {}}",
+-         "if (true) {} else {var g = function () {}}");
+-    testSame("switch (function g() {}) {}");
+-    test("switch (1) { case 1: function g() {}}",
+-         "switch (1) { case 1: var g = function () {}}");
+-
+-
+-    testSameInFunction("function f() {}");
+-    testInFunction("f(); a:function g() {}",
+-                   "f(); a:{ var g = function () {} }");
+-    testInFunction("f(); {function g() {}}",
+-                   "f(); {var g = function () {}}");
+-    testInFunction("f(); if (true) {function g() {}}",
+-                   "f(); if (true) {var g = function () {}}");
+-    testInFunction("if (true) {} else {function g() {}}",
+-                   "if (true) {} else {var g = function () {}}");
+-  }
+-
+-
+   public void testMakeLocalNamesUnique() {
+     if (!Normalize.MAKE_LOCAL_NAMES_UNIQUE) {
+       return;
+@@ -250,31 +204,7 @@ public class NormalizeTest extends CompilerTestCase {
+     test("var e = 1; function f(){ try {} catch (e) {} var e = 2 }",
+          "var e = 1; function f(){ try {} catch (e$$2) {} var e$$1 = 2 }");
    }
- 
-   public void testMethodInference9() throws Exception {
-@@ -1809,7 +1811,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
-         "/** @override */ " +
--        "G.prototype.foo = function(var_args, opt_b) { };",
-+        "G.prototype.foo = function(a, var_args, opt_b) { };",
-         "variable length argument must be last");
-   }
- 
-diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
-index 073dbc7c..8d8cc4f2 100644
---- a/test/com/google/javascript/jscomp/TypeCheckTest.java
-+++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
-@@ -2050,11 +2050,11 @@ public class TypeCheckTest extends CompilerTypeTestCase {
-         "F.prototype.foo = function() { };" +
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
--        "/** @override */ G.prototype.foo = function(x, y) { };",
--        "mismatch of the foo property type and the type of the property " +
--        "it overrides from superclass F\n" +
--        "original: function (this:F): undefined\n" +
--        "override: function (this:G, ?, ?): undefined");
-+        "/** @override */ G.prototype.foo = function(x, y) { };" +
-+        "(new G()).foo();",
-+        "Function G.prototype.foo: called with 0 argument(s). " +
-+        "Function requires at least 2 argument(s) " +
-+        "and no more than 2 argument(s).");
-   }
- 
-   public void testMethodInference8() throws Exception {
-@@ -2064,8 +2064,10 @@ public class TypeCheckTest extends CompilerTypeTestCase {
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
-         "/** @override */ " +
--        "G.prototype.foo = function(opt_b, var_args) { };" +
--        "(new G()).foo(1, 2, 3);");
-+        "G.prototype.foo = function(a, opt_b, var_args) { };" +
-+        "(new G()).foo();",
-+        "Function G.prototype.foo: called with 0 argument(s). " +
-+        "Function requires at least 1 argument(s).");
-   }
- 
-   public void testMethodInference9() throws Exception {
-@@ -2075,7 +2077,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
-         "/** @constructor \n * @extends {F} */ " +
-         "function G() {}" +
-         "/** @override */ " +
--        "G.prototype.foo = function(var_args, opt_b) { };",
-+        "G.prototype.foo = function(a, var_args, opt_b) { };",
-         "variable length argument must be last");
-   }
- 
-diff --git a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
-index 055c9c6f..aceab77b 100644
---- a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
-+++ b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
-@@ -147,9 +147,9 @@ public class FunctionTypeTest extends BaseJSTypeTestCase {
-         .withReturnType(BOOLEAN_TYPE).build();
- 
-     assertLeastSupertype(
--        "function (number, number): boolean", twoNumbers, oneNumber);
-+        "Function", twoNumbers, oneNumber);
-     assertGreatestSubtype(
--        "function (number): boolean", twoNumbers, oneNumber);
-+        "function (...[*]): None", twoNumbers, oneNumber);
-   }
- 
-   public void testSubtypeWithInterfaceThisType() {
-diff --git a/test/com/google/javascript/rhino/jstype/JSTypeTest.java b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
-index 5e444bf9..20818551 100644
---- a/test/com/google/javascript/rhino/jstype/JSTypeTest.java
-+++ b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
-@@ -2973,7 +2973,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
-         .withParamsNode(registry.createParameters())
-         .withTypeOfThis(DATE_TYPE).build();
-     FunctionType dateMethodWithParam = new FunctionBuilder(registry)
--        .withParamsNode(registry.createOptionalParameters(NUMBER_TYPE))
-+        .withParamsNode(registry.createParameters(NUMBER_TYPE))
-         .withTypeOfThis(DATE_TYPE).build();
-     FunctionType dateMethodWithReturn = new FunctionBuilder(registry)
-         .withReturnType(NUMBER_TYPE)
-@@ -2982,7 +2982,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
-         .withParamsNode(registry.createParameters())
-         .withTypeOfThis(STRING_OBJECT_TYPE).build();
-     FunctionType stringMethodWithParam = new FunctionBuilder(registry)
--        .withParamsNode(registry.createOptionalParameters(NUMBER_TYPE))
-+        .withParamsNode(registry.createParameters(NUMBER_TYPE))
-         .withTypeOfThis(STRING_OBJECT_TYPE).build();
-     FunctionType stringMethodWithReturn = new FunctionBuilder(registry)
-         .withReturnType(NUMBER_TYPE)
-@@ -4374,7 +4374,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
- 
-   public void testSubtypingFunctionFixedArgsNotMatching() throws Exception {
-     FunctionType f1 = registry.createFunctionType(OBJECT_TYPE,
--        false, EVAL_ERROR_TYPE, UNKNOWN_TYPE);
-+        false, EVAL_ERROR_TYPE);
-     FunctionType f2 = registry.createFunctionType(STRING_OBJECT_TYPE,
-         false, ERROR_TYPE, ALL_TYPE);
- 
+-
+-  public void testRemoveDuplicateVarDeclarations3() {
+-    test("var f = 1; function f(){}",
+-         "f = 1; function f(){}");
+-    test("var f; function f(){}",
+-         "function f(){}");
+-    test("if (a) { var f = 1; } else { function f(){} }",
+-         "if (a) { var f = 1; } else { f = function (){} }");
+-
+-    test("function f(){} var f = 1;",
+-         "function f(){} f = 1;");
+-    test("function f(){} var f;",
+-         "function f(){}");
+-    test("if (a) { function f(){} } else { var f = 1; }",
+-         "if (a) { var f = function (){} } else { f = 1; }");
+-
+-    // TODO(johnlenz): Do we need to handle this differently for "third_party"
+-    // mode? Remove the previous function definitions?
+-    test("function f(){} function f(){}",
+-         "function f(){} function f(){}",
+-         SyntacticScopeCreator.VAR_MULTIPLY_DECLARED_ERROR);
+-    test("if (a) { function f(){} } else { function f(){} }",
+-         "if (a) { var f = function (){} } else { f = function (){} }");
+-  }
+-
++  
+   public void testRenamingConstants() {
+     test("var ACONST = 4;var b = ACONST;",
+          "var ACONST = 4; var b = ACONST;");

@@ -1,4 +1,3 @@
-com.google.javascript.jscomp.RenameVarsTest
-com.google.javascript.jscomp.MethodCheckTest
-com.google.javascript.jscomp.CompilerTestCase
-com.google.javascript.jscomp.InlineGettersTest
+com.google.javascript.rhino.jstype.JSTypeTest
+com.google.javascript.jscomp.TypeCheckTest
+com.google.javascript.jscomp.CompilerTypeTestCase

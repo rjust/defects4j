@@ -1,3 +1,2 @@
-com.google.javascript.jscomp.parsing.JsDocInfoParserTest
 com.google.javascript.jscomp.CompilerTestCase
-com.google.javascript.jscomp.CoalesceVariableNamesTest
+com.google.javascript.jscomp.PeepholeFoldConstantsTest

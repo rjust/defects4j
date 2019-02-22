@@ -1,2 +1,2 @@
-com.google.javascript.jscomp.type.SemanticReverseAbstractInterpreter
-com.google.javascript.rhino.jstype.JSType
+com.google.javascript.jscomp.MethodCompilerPass
+com.google.javascript.jscomp.RenameVars

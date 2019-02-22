@@ -35,7 +35,6 @@ com.google.javascript.jscomp.CollapsePropertiesTest
 com.google.javascript.jscomp.CollapseVariableDeclarationsTest
 com.google.javascript.jscomp.CombinedCompilerPassTest
 com.google.javascript.jscomp.CommandLineRunnerTest
-com.google.javascript.jscomp.CompilerOptionsTest
 com.google.javascript.jscomp.CompilerTest
 com.google.javascript.jscomp.ConstCheckTest
 com.google.javascript.jscomp.ControlFlowAnalysisTest
@@ -49,6 +48,7 @@ com.google.javascript.jscomp.DefaultCodingConventionTest
 com.google.javascript.jscomp.DefinitionsRemoverTest
 com.google.javascript.jscomp.DenormalizeTest
 com.google.javascript.jscomp.DevirtualizePrototypeMethodsTest
+com.google.javascript.jscomp.DiagnosticGroupTest
 com.google.javascript.jscomp.DisambiguatePrivatePropertiesTest
 com.google.javascript.jscomp.DisambiguatePropertiesTest
 com.google.javascript.jscomp.ExpandJqueryAliasesTest
@@ -68,7 +68,6 @@ com.google.javascript.jscomp.GatherCharacterEncodingBiasTest
 com.google.javascript.jscomp.GatherRawExportsTest
 com.google.javascript.jscomp.GatherSideEffectSubexpressionsCallbackTest
 com.google.javascript.jscomp.GenerateExportsTest
-com.google.javascript.jscomp.GlobalVarReferenceMapTest
 com.google.javascript.jscomp.GoogleCodingConventionTest
 com.google.javascript.jscomp.GroupVariableDeclarationsTest
 com.google.javascript.jscomp.IgnoreCajaPropertiesTest
@@ -88,6 +87,7 @@ com.google.javascript.jscomp.JSModuleGraphTest
 com.google.javascript.jscomp.JSModuleTest
 com.google.javascript.jscomp.JsMessageExtractorTest
 com.google.javascript.jscomp.JsMessageVisitorTest
+com.google.javascript.jscomp.LinkedFlowScopeTest
 com.google.javascript.jscomp.LiveVariableAnalysisTest
 com.google.javascript.jscomp.LooseTypeCheckTest
 com.google.javascript.jscomp.MakeDeclaredNamesUniqueTest
@@ -122,7 +122,7 @@ com.google.javascript.jscomp.PeepholeRemoveDeadCodeTest
 com.google.javascript.jscomp.PeepholeReplaceKnownMethodsTest
 com.google.javascript.jscomp.PeepholeSimplifyRegExpTest
 com.google.javascript.jscomp.PeepholeSubstituteAlternateSyntaxTest
-com.google.javascript.jscomp.PerformanceTrackerTest
+com.google.javascript.jscomp.PhaseOptimizerTest
 com.google.javascript.jscomp.PrepareAstTest
 com.google.javascript.jscomp.ProcessClosurePrimitivesTest
 com.google.javascript.jscomp.ProcessCommonJSModulesTest
@@ -152,12 +152,12 @@ com.google.javascript.jscomp.RhinoErrorReporterTest
 com.google.javascript.jscomp.RuntimeTypeCheckTest
 com.google.javascript.jscomp.SanityCheckTest
 com.google.javascript.jscomp.ScopedAliasesTest
+com.google.javascript.jscomp.SemanticReverseAbstractInterpreterTest
 com.google.javascript.jscomp.ShadowVariables2Test
 com.google.javascript.jscomp.ShadowVariablesTest
 com.google.javascript.jscomp.SideEffectsAnalysisTest
 com.google.javascript.jscomp.SimpleDefinitionFinderTest
 com.google.javascript.jscomp.SimpleFunctionAliasAnalysisTest
-com.google.javascript.jscomp.SourceInformationAnnotatorTest
 com.google.javascript.jscomp.SourceMapTest
 com.google.javascript.jscomp.SpecializeModuleTest$SpecializeModuleSpecializationStateTest
 com.google.javascript.jscomp.SpecializeModuleTest

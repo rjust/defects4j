@@ -1,4 +1,2 @@
-com.google.javascript.jscomp.AbstractCommandLineRunner
-com.google.javascript.jscomp.CommandLineRunner
-com.google.javascript.jscomp.Compiler
-com.google.javascript.jscomp.CompilerOptions
+com.google.javascript.jscomp.TypeCheck
+com.google.javascript.jscomp.TypeValidator

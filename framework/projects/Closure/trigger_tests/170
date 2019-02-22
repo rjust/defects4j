@@ -1,12 +1,66 @@
---- com.google.javascript.jscomp.TypeCheckTest::testIssue1056
-junit.framework.AssertionFailedError: expected a warning
+--- com.google.javascript.jscomp.FlowSensitiveInlineVariablesTest::testVarAssinInsideHookIssue965
+junit.framework.AssertionFailedError: 
+Expected: function _func(){var i=0;return 1?i=5:0,i}
+Result: function _func(){var i;return 1?i=5:0,0}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION _func 1 [source_file: expected0]
+            NAME _func 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                VAR 1 [source_file: expected0]
+                    NAME i 1 [source_file: expected0]
+                        NUMBER 0.0 1 [source_file: expected0]
+                RETURN 1 [source_file: expected0]
+                    COMMA 1 [source_file: expected0]
+                        HOOK 1 [source_file: expected0]
+                            NUMBER 1.0 1 [source_file: expected0]
+                            ASSIGN 1 [source_file: expected0]
+                                NAME i 1 [source_file: expected0]
+                                NUMBER 5.0 1 [source_file: expected0]
+                            NUMBER 0.0 1 [source_file: expected0]
+                        NAME i 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        FUNCTION _func 1 [source_file: testcode]
+            NAME _func 1 [source_file: testcode]
+            PARAM_LIST 1 [source_file: testcode]
+            BLOCK 1 [source_file: testcode]
+                VAR 1 [source_file: testcode]
+                    NAME i 1 [source_file: testcode]
+                RETURN 1 [source_file: testcode]
+                    COMMA 1 [source_file: testcode]
+                        HOOK 1 [source_file: testcode]
+                            NUMBER 1.0 1 [source_file: testcode]
+                            ASSIGN 1 [source_file: testcode]
+                                NAME i 1 [source_file: testcode]
+                                NUMBER 5.0 1 [source_file: testcode]
+                            NUMBER 0.0 1 [source_file: testcode]
+                        NUMBER 0.0 1 [source_file: testcode]
+
+
+Subtree1: NAME i 1 [source_file: expected0]
+    NUMBER 0.0 1 [source_file: expected0]
+
+
+Subtree2: NAME i 1 [source_file: testcode]
+
 	at junit.framework.Assert.fail(Assert.java:57)
 	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.TestCase.assertTrue(TestCase.java:192)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:12785)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:12765)
-	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:12701)
-	at com.google.javascript.jscomp.TypeCheckTest.testIssue1056(TypeCheckTest.java:6911)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:927)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:459)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:423)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:401)
+	at com.google.javascript.jscomp.FlowSensitiveInlineVariablesTest.inline(FlowSensitiveInlineVariablesTest.java:589)
+	at com.google.javascript.jscomp.FlowSensitiveInlineVariablesTest.noInline(FlowSensitiveInlineVariablesTest.java:585)
+	at com.google.javascript.jscomp.FlowSensitiveInlineVariablesTest.testVarAssinInsideHookIssue965(FlowSensitiveInlineVariablesTest.java:578)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

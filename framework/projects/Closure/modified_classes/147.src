@@ -1,1 +1,2 @@
-com.google.javascript.jscomp.CollapseProperties
+com.google.javascript.jscomp.CheckGlobalThis
+com.google.javascript.jscomp.RuntimeTypeCheck

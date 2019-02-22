@@ -1,33 +1,42 @@
-diff --git a/test/com/google/javascript/jscomp/ScopedAliasesTest.java b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
-index 9150a1c8..f3aebec7 100644
---- a/test/com/google/javascript/jscomp/ScopedAliasesTest.java
-+++ b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
-@@ -522,28 +522,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
-          SCOPE_NAMESPACE + "$jscomp.scope.x = 3; $jscomp.scope.x$1 = 4");
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 65cb18f6..28545ecf 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -11989,37 +11989,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "Property x never defined on Foo.prototype", false);
    }
  
--  public void testIssue1103a() {
--    test("goog.scope(function () {" +
--         "  var a;" +
--         "  foo.bar = function () { a = 1; };" +
--         "});",
--         SCOPE_NAMESPACE + "foo.bar = function () { $jscomp.scope.a = 1; }");
+-  public void testIssue1024() throws Exception {
+-     testTypes(
+-        "/** @param {Object} a */\n" +
+-        "function f(a) {\n" +
+-        "  a.prototype = '__proto'\n" +
+-        "}\n" +
+-        "/** @param {Object} b\n" +
+-        " *  @return {!Object}\n" +
+-        " */\n" +
+-        "function g(b) {\n" +
+-        "  return b.prototype\n" +
+-        "}\n");
+-     /* TODO(blickly): Make this warning go away.
+-      * This is old behavior, but it doesn't make sense to warn about since
+-      * both assignments are inferred.
+-      */
+-     testTypes(
+-        "/** @param {Object} a */\n" +
+-        "function f(a) {\n" +
+-        "  a.prototype = {foo:3};\n" +
+-        "}\n" +
+-        "/** @param {Object} b\n" +
+-        " */\n" +
+-        "function g(b) {\n" +
+-        "  b.prototype = function(){};\n" +
+-        "}\n",
+-        "assignment to property prototype of Object\n" +
+-        "found   : {foo: number}\n" +
+-        "required: function (): undefined");
 -  }
 -
--  public void testIssue1103b() {
--    test("goog.scope(function () {" +
--         "  var a = foo, b, c = 1;" +
--         "});",
--         SCOPE_NAMESPACE + "$jscomp.scope.c=1");
--  }
--
--  public void testIssue1103c() {
--    test("goog.scope(function () {" +
--         "  /** @type {number} */ var a;" +
--         "});",
--         SCOPE_NAMESPACE + "/** @type {number} */ $jscomp.scope.a;");
--  }
--
-   // Alias Recording Tests
-   // TODO(tylerg) : update these to EasyMock style tests once available
-   public void testNoGoogScope() {
+ 
+   private void testTypes(String js) throws Exception {
+     testTypes(js, (String) null);

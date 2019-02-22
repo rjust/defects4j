@@ -1,96 +1,90 @@
-diff --git a/src/com/google/javascript/jscomp/TypeCheck.java b/src/com/google/javascript/jscomp/TypeCheck.java
-index 41b94e0c..a752e76a 100644
---- a/src/com/google/javascript/jscomp/TypeCheck.java
-+++ b/src/com/google/javascript/jscomp/TypeCheck.java
-@@ -182,6 +182,13 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
-           "original: {2}\n" +
-           "override: {3}");
+diff --git a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+index 8e2b2633..8cb44726 100644
+--- a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
++++ b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
+@@ -156,7 +156,6 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+     options.setCodingConvention(config.codingConvention);
+     options.setSummaryDetailLevel(config.summaryDetailLevel);
  
-+  static final DiagnosticType HIDDEN_INTERFACE_PROPERTY_MISMATCH =
-+      DiagnosticType.warning(
-+          "JSC_HIDDEN_INTERFACE_PROPERTY_MISMATCH",
-+          "mismatch of the {0} property type and the type " +
-+          "of the property it overrides from interface {1}\n" +
-+          "original: {2}\n" +
-+          "override: {3}");
-   static final DiagnosticType UNKNOWN_OVERRIDE =
-       DiagnosticType.warning(
-           "JSC_UNKNOWN_OVERRIDE",
-@@ -232,6 +239,7 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
-       HIDDEN_SUPERCLASS_PROPERTY,
-       HIDDEN_INTERFACE_PROPERTY,
-       HIDDEN_SUPERCLASS_PROPERTY_MISMATCH,
-+      HIDDEN_INTERFACE_PROPERTY_MISMATCH,
-       UNKNOWN_OVERRIDE,
-       INTERFACE_METHOD_OVERRIDE,
-       UNKNOWN_EXPR_TYPE,
-@@ -1038,6 +1046,16 @@ public class TypeCheck implements NodeTraversal.Callback, CompilerPass {
-               HIDDEN_INTERFACE_PROPERTY, propertyName,
-               interfaceType.getTopMostDefiningType(propertyName).toString()));
-         }
-+        if (interfaceHasProperty) {
-+          JSType interfacePropType =
-+              interfaceType.getPrototype().getPropertyType(propertyName);
-+          if (!propertyType.canAssignTo(interfacePropType)) {
-+            compiler.report(t.makeError(n,
-+                HIDDEN_INTERFACE_PROPERTY_MISMATCH, propertyName,
-+                interfaceType.getTopMostDefiningType(propertyName).toString(),
-+                interfacePropType.toString(), propertyType.toString()));
-+          }
-+        }
-       }
-     }
+-    options.outputCharset = getOutputCharset();
+     inputCharset = getInputCharset();
  
-diff --git a/src/com/google/javascript/jscomp/TypeValidator.java b/src/com/google/javascript/jscomp/TypeValidator.java
-index 24bf792f..1d585226 100644
---- a/src/com/google/javascript/jscomp/TypeValidator.java
-+++ b/src/com/google/javascript/jscomp/TypeValidator.java
-@@ -107,13 +107,6 @@ class TypeValidator {
-           "JSC_INTERFACE_METHOD_NOT_IMPLEMENTED",
-           "property {0} on interface {1} is not implemented by type {2}");
+     if (config.jsOutputFile.length() > 0) {
+@@ -516,6 +515,11 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+     Result result;
  
--  static final DiagnosticType HIDDEN_INTERFACE_PROPERTY_MISMATCH =
--      DiagnosticType.warning(
--        "JSC_HIDDEN_INTERFACE_PROPERTY_MISMATCH",
--        "mismatch of the {0} property type and the type " +
--        "of the property it overrides from interface {1}\n" +
--        "original: {2}\n" +
--        "override: {3}");
+     setRunOptions(options);
++    if (inputCharset == Charsets.UTF_8) {
++      options.outputCharset = Charsets.US_ASCII;
++    } else {
++      options.outputCharset = inputCharset;
++    }
  
-   static final DiagnosticGroup ALL_DIAGNOSTICS = new DiagnosticGroup(
-       INVALID_CAST,
-@@ -121,8 +114,7 @@ class TypeValidator {
-       MISSING_EXTENDS_TAG_WARNING,
-       DUP_VAR_DECLARATION,
-       HIDDEN_PROPERTY_MISMATCH,
--      INTERFACE_METHOD_NOT_IMPLEMENTED,
--      HIDDEN_INTERFACE_PROPERTY_MISMATCH);
-+      INTERFACE_METHOD_NOT_IMPLEMENTED);
- 
-   TypeValidator(AbstractCompiler compiler) {
-     this.compiler = compiler;
-@@ -593,24 +585,7 @@ class TypeValidator {
-             prop, implementedInterface.toString(), instance.toString()));
-       }
-       registerMismatch(instance, implementedInterface);
--    } else {
--      JSType found = instance.getPropertyType(prop);
--      JSType required
--        = implementedInterface.getImplicitPrototype().getPropertyType(prop);
--      found = found.restrictByNotNullOrUndefined();
--      required = required.restrictByNotNullOrUndefined();
--      if (!found.canAssignTo(required)) {
-         // Implemented, but not correctly typed
--        if (shouldReport) {
--          FunctionType constructor
--            = implementedInterface.toObjectType().getConstructor();
--          compiler.report(t.makeError(n,
--              HIDDEN_INTERFACE_PROPERTY_MISMATCH, prop,
--              constructor.getTopMostDefiningType(prop).toString(),
--              required.toString(), found.toString()));
--        }
--        registerMismatch(found, required);
+     boolean writeOutputToFile = !options.jsOutputFile.isEmpty();
+     if (writeOutputToFile) {
+@@ -686,16 +690,6 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
+    *    be a supported charset.
+    * @throws FlagUsageException if flag is not a valid Charset name.
+    */
+-  private String getOutputCharset() throws FlagUsageException {
+-    if (!config.charset.isEmpty()) {
+-      if (!Charset.isSupported(config.charset)) {
+-        throw new FlagUsageException(config.charset +
+-            " is not a valid charset name.");
 -      }
+-      return config.charset;
+-    }
+-    return "US-ASCII";
+-  }
+ 
+   protected List<JSSourceFile> createExterns() throws FlagUsageException,
+       IOException {
+diff --git a/src/com/google/javascript/jscomp/CommandLineRunner.java b/src/com/google/javascript/jscomp/CommandLineRunner.java
+index bd2de605..e3334a30 100644
+--- a/src/com/google/javascript/jscomp/CommandLineRunner.java
++++ b/src/com/google/javascript/jscomp/CommandLineRunner.java
+@@ -468,6 +468,7 @@ public class CommandLineRunner extends
      }
+ 
+     options.closurePass = flags.process_closure_primitives;
++    initOptionsFromFlags(options);
+     return options;
    }
  
+diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
+index 56bc4eb8..7a12c4fc 100644
+--- a/src/com/google/javascript/jscomp/Compiler.java
++++ b/src/com/google/javascript/jscomp/Compiler.java
+@@ -1359,8 +1359,7 @@ public class Compiler extends AbstractCompiler {
+     builder.setSourceMap(sourceMap);
+     builder.setSourceMapDetailLevel(options.sourceMapDetailLevel);
+ 
+-    Charset charset = options.outputCharset != null ?
+-        Charset.forName(options.outputCharset) : null;
++    Charset charset = options.outputCharset;
+     builder.setOutputCharset(charset);
+ 
+     return builder.build();
+diff --git a/src/com/google/javascript/jscomp/CompilerOptions.java b/src/com/google/javascript/jscomp/CompilerOptions.java
+index f1c95357..f4c78363 100644
+--- a/src/com/google/javascript/jscomp/CompilerOptions.java
++++ b/src/com/google/javascript/jscomp/CompilerOptions.java
+@@ -585,7 +585,7 @@ public class CompilerOptions implements Serializable, Cloneable {
+    * Charset to use when generating code.  If null, then output ASCII.
+    * This needs to be a string because CompilerOptions is serializable.
+    */
+-  String outputCharset;
++  public Charset outputCharset;
+ 
+   /**
+    * Whether the named objects types included 'undefined' by default.
+@@ -957,9 +957,6 @@ public class CompilerOptions implements Serializable, Cloneable {
+   /**
+    * Sets the output charset by name.
+    */
+-  public void setOutputCharset(String charsetName) {
+-    this.outputCharset = charsetName;
+-  }
+ 
+   /**
+    * Whether to include "undefined" in the default types.

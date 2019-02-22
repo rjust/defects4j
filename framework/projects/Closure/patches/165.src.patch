@@ -1,56 +1,123 @@
-diff --git a/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java b/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
-index 7bfbae52..720b60b7 100644
---- a/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
-+++ b/src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java
-@@ -205,6 +205,7 @@ class ClosureReverseAbstractInterpreter
-       Node param = condition.getLastChild();
-       if (callee.getType() == GETPROP && param.isQualifiedName()) {
-         JSType paramType =  getTypeIfRefinable(param, blindScope);
-+        if (paramType != null) {
-         Node left = callee.getFirstChild();
-         Node right = callee.getLastChild();
-         if (left.getType() == NAME && "goog".equals(left.getString()) &&
-@@ -214,6 +215,7 @@ class ClosureReverseAbstractInterpreter
-           if (restricter != null) {
-             return restrictParameter(param, paramType, blindScope, restricter,
-                 outcome);
-+            }
-           }
-         }
-       }
-diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
-index 749eb6d3..1b3755d2 100644
---- a/src/com/google/javascript/jscomp/TypeInference.java
-+++ b/src/com/google/javascript/jscomp/TypeInference.java
-@@ -629,29 +629,21 @@ class TypeInference
-       return scope;
-     } else {
-       StaticSlot<JSType> var = scope.getSlot(varName);
--      if (var != null) {
-+      if (var != null &&
-+          !(var.isTypeInferred() && unflowableVarNames.contains(varName))) {
-         // There are two situations where we don't want to use type information
-         // from the scope, even if we have it.
- 
-         // 1) The var is escaped in a weird way, e.g.,
-         // function f() { var x = 3; function g() { x = null } (x); }
--        boolean isInferred = var.isTypeInferred();
--        boolean unflowable =
--            isInferred && unflowableVarNames.contains(varName);
- 
-         // 2) We're reading type information from another scope for an
-         // inferred variable.
-         // var t = null; function f() { (t); }
--        boolean nonLocalInferredSlot =
--            isInferred &&
--            syntacticScope.getParent() != null &&
--            var == syntacticScope.getParent().getSlot(varName);
- 
--        if (!unflowable && !nonLocalInferredSlot) {
-           type = var.getType();
-           if (type == null) {
-             type = getNativeType(UNKNOWN_TYPE);
+diff --git a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
+index edce9bfd0..6c6fcd45e 100644
+--- a/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
++++ b/src/com/google/javascript/rhino/jstype/JSTypeRegistry.java
+@@ -695,10 +695,6 @@ public class JSTypeRegistry implements Serializable {
+         if (!greatestSubtype.isEmptyType()) {
+           // We've found a type with this property. Now we just have to make
+           // sure it's not a type used for internal bookkeeping.
+-          RecordType maybeRecordType = greatestSubtype.toMaybeRecordType();
+-          if (maybeRecordType != null && maybeRecordType.isSynthetic()) {
+-            continue;
 -          }
+ 
+           return true;
          }
+diff --git a/src/com/google/javascript/rhino/jstype/ObjectType.java b/src/com/google/javascript/rhino/jstype/ObjectType.java
+index 37bd48701..82d229de5 100644
+--- a/src/com/google/javascript/rhino/jstype/ObjectType.java
++++ b/src/com/google/javascript/rhino/jstype/ObjectType.java
+@@ -287,10 +287,6 @@ public abstract class ObjectType extends JSType implements StaticScope<JSType> {
+    * don't actually exist in the user's program. They're just used for
+    * bookkeeping in the type system.
+    */
+-  public final boolean defineSynthesizedProperty(String propertyName,
+-      JSType type, Node propertyNode) {
+-    return defineProperty(propertyName, type, false, propertyNode);
+-  }
+ 
+   /**
+    * Defines a property whose type is inferred.
+diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
+index 8ff279cbd..7cc48901c 100755
+--- a/src/com/google/javascript/rhino/jstype/RecordType.java
++++ b/src/com/google/javascript/rhino/jstype/RecordType.java
+@@ -65,12 +65,8 @@ class RecordType extends PrototypeObjectType {
+   private static final long serialVersionUID = 1L;
+ 
+   private final SortedMap<String, JSType> properties = Maps.newTreeMap();
+-  private final boolean declared;
+   private boolean isFrozen = false;
+ 
+-  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties) {
+-    this(registry, properties, true);
+-  }
+ 
+   /**
+    * Creates a record type.
+@@ -84,11 +80,9 @@ class RecordType extends PrototypeObjectType {
+    * @throws IllegalStateException if the {@code RecordProperty} associated
+    *         with a property is null.
+    */
+-  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties,
+-      boolean declared) {
++  RecordType(JSTypeRegistry registry, Map<String, RecordProperty> properties) {
+     super(registry, null, null);
+     setPrettyPrint(true);
+-    this.declared = declared;
+ 
+     for (String property : properties.keySet()) {
+       RecordProperty prop = properties.get(property);
+@@ -96,13 +90,8 @@ class RecordType extends PrototypeObjectType {
+         throw new IllegalStateException(
+             "RecordProperty associated with a property should not be null!");
        }
+-      if (declared) {
+         defineDeclaredProperty(
+             property, prop.getType(), prop.getPropertyNode());
+-      } else {
+-        defineSynthesizedProperty(
+-            property, prop.getType(), prop.getPropertyNode());
+-      }
      }
+ 
+     // Freeze the record type.
+@@ -110,9 +99,6 @@ class RecordType extends PrototypeObjectType {
+   }
+ 
+   /** @return Is this synthesized for internal bookkeeping? */
+-  boolean isSynthetic() {
+-    return !declared;
+-  }
+ 
+   @Override
+   public boolean isEquivalentTo(JSType other) {
+@@ -163,7 +149,6 @@ class RecordType extends PrototypeObjectType {
+     if (that.isRecordType()) {
+       RecordType thatRecord = that.toMaybeRecordType();
+       RecordTypeBuilder builder = new RecordTypeBuilder(registry);
+-      builder.setSynthesized(true);
+ 
+       // The greatest subtype consists of those *unique* properties of both
+       // record types. If any property conflicts, then the NO_TYPE type
+diff --git a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
+index 60d1e103d..345795b55 100755
+--- a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
++++ b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
+@@ -51,7 +51,6 @@ import java.util.HashMap;
+  */
+ public class RecordTypeBuilder {
+   private boolean isEmpty = true;
+-  private boolean isDeclared = true;
+   private final JSTypeRegistry registry;
+   private final HashMap<String, RecordProperty> properties = Maps.newHashMap();
+ 
+@@ -60,9 +59,6 @@ public class RecordTypeBuilder {
+   }
+ 
+   /** See the comments on RecordType about synthetic types. */
+-  void setSynthesized(boolean synthesized) {
+-    isDeclared = !synthesized;
+-  }
+ 
+   /**
+    * Adds a property with the given name and type to the record type.
+@@ -93,7 +89,7 @@ public class RecordTypeBuilder {
+     }
+ 
+     return new RecordType(
+-        registry, Collections.unmodifiableMap(properties), isDeclared);
++        registry, Collections.unmodifiableMap(properties));
+   }
+ 
+   static class RecordProperty {

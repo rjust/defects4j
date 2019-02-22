@@ -1,4 +1,2 @@
-com.google.javascript.rhino.jstype.FunctionTypeTest
-com.google.javascript.jscomp.TypeCheckTest
-com.google.javascript.jscomp.LooseTypeCheckTest
-com.google.javascript.jscomp.CompilerTypeTestCase
+com.google.javascript.jscomp.NormalizeTest
+com.google.javascript.jscomp.CompilerTestCase

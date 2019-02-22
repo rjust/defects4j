@@ -1,19 +1,35 @@
-diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
-index dcf62b29..d253cf68 100644
---- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
-+++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
-@@ -380,14 +380,6 @@ public class CommandLineRunnerTest extends TestCase {
-             lastCompiler.getModuleGraph().getRootModule()));
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 0eb9cb1d..39a6c944 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -4817,8 +4817,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+              "Element.prototype.innerHTML;" +
+              "/** @constructor \n @extends Element */" +
+              "function DIVElement() {};",
+-             "(new DIVElement).innerHTML = new Array();",
+-             null, false);
++             "(new DIVElement).innerHTML = new Array();", null, false);
    }
  
--  public void testCharSetExpansion() {
--    testSame("");
--    assertEquals("US-ASCII", lastCompiler.getOptions().outputCharset);
--    args.add("--charset=UTF-8");
--    testSame("");
--    assertEquals("UTF-8", lastCompiler.getOptions().outputCharset);
+   public void testImplicitCastNotInExterns() throws Exception {
+@@ -6713,20 +6712,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: string");
+   }
+ 
+-  public void testInterfaceInheritanceCheck12() throws Exception {
+-    testTypes(
+-        "/** @interface */ function I() {};\n" +
+-        "/** @type {string} */ I.prototype.foobar;\n" +
+-        "/** \n * @constructor \n * @implements {I} */\n" +
+-        "function C() {\n" +
+-        "/** \n * @type {number} */ this.foobar = 2;};\n" +
+-        "/** @type {I} */ \n var test = new C(); alert(test.foobar);",
+-        "mismatch of the foobar property type and the type of the property" +
+-        " it overrides from interface I\n" +
+-        "original: string\n" +
+-        "override: number");
 -  }
 -
-   public void testChainModuleManifest() throws Exception {
-     useModules = ModulePattern.CHAIN;
-     testSame(new String[] {
+   public void testInterfacePropertyNotImplemented() throws Exception {
+     testTypes(
+         "/** @interface */function Int() {};" +
