@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -59,7 +59,7 @@ sub _diff_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
     $path = defined $path ? "-- $path $path" : "";
-    return "git --git-dir=$self->{repo} diff --binary ${rev1} ${rev2} $path";
+    return "git --git-dir=$self->{repo} diff --no-ext-diff --binary ${rev1} ${rev2} $path";
 }
 
 sub _rev_date_cmd {

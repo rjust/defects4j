@@ -4,5 +4,6 @@ framework/test/*.log
 framework/build-scripts/
 framework/lib/test_generation
 framework/lib/build_systems
+framework/lib/analyzer.jar
 work/
 local/

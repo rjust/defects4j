@@ -1,11 +1,32 @@
----
+language: perl
+perl:
+  - "5.24"
+
+os: linux
+
 addons:
   apt:
     packages:
-    - openjdk-7-jdk
+      - maven
+      - diffstat
+
+cache:
+  directories:
+    - /home/travis/.java/
+
+before_install:
+  - JDK_OS="$TRAVIS_OS_NAME"
+  - JDK_ARCH="x64"
+  - JDK_VERSION="7u80"
+  - JDK_BUILD_VERSION="$JDK_VERSION-b15"
+  - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
+  - JDK_URL="http://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE";
+  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && wget -nv  "$JDK_URL" && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
+
 install:
-  - jdk_switcher use openjdk7
+  - export JAVA_HOME=/home/travis/.java/jdk1.7.0_80
   - export PATH=$JAVA_HOME/bin:$PATH
+  - java -version
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - cpan install Carton
   - carton install
@@ -22,39 +43,43 @@ jobs:
     - script: carton exec ./test_randoop.sh
       stage: test
     - script: carton exec ./test_fix_test_suite.sh
-      stage: test
-    - script: carton exec ./test_verify_bugs.sh -p Chart
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Mockito -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36 -b37 -b38
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Time -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Time -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Time -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b1 -b2 -b3 -b4 -b5 -b6 -b7 -b8 -b9
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b10 -b11 -b12 -b13 -b14 -b15 -b16 -b17 -b18
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b19 -b20 -b21 -b22 -b23 -b24 -b25 -b26 -b27
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b28 -b29 -b30 -b31 -b32 -b33 -b34 -b35 -b36
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b37 -b38 -b39 -b40 -b41 -b42 -b43 -b44 -b45
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b46 -b47 -b48 -b49 -b50 -b51 -b52 -b53 -b54
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b55 -b56 -b57 -b58 -b59 -b60 -b61 -b62 -b63
-      stage: verify
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b64 -b65
-      stage: verify
-language: perl
-perl:
-  - 5.24
+    - script: carton exec ./test_export_command.sh
+    - script: carton exec ./test_bug_mining.sh
+    # Verify that all bugs are reproducible (run multiple jobs for projects that
+# take a long time to finish).
+    - stage: verify-bugs
+## Chart
+      script: carton exec ./test_verify_bugs.sh -p Chart
+## Closure
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b11..15
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b16..20
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b21..30
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b31..40
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b41..50
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b51..60
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b61..70
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b71..80
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b81..90
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b91..100
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b101..111
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b112..122
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b123..133
+## Lang
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
+    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
+## Math
+    - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
+    - script: carton exec ./test_verify_bugs.sh -p Math -b19..36
+    - script: carton exec ./test_verify_bugs.sh -p Math -b20..54
+    - script: carton exec ./test_verify_bugs.sh -p Math -b55..80
+    - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
+# Mockito
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..5
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b11..15
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b16..20
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b21..26
+    - script: carton exec ./test_verify_bugs.sh -p Mockito -b27..38
+## Time
+    - script: carton exec ./test_verify_bugs.sh -p Time
