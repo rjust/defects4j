@@ -1,0 +1,42 @@
+diff --git a/src/com/google/javascript/jscomp/CheckGlobalThis.java b/src/com/google/javascript/jscomp/CheckGlobalThis.java
+index 604526e6..d63c72b1 100644
+--- a/src/com/google/javascript/jscomp/CheckGlobalThis.java
++++ b/src/com/google/javascript/jscomp/CheckGlobalThis.java
+@@ -105,8 +105,7 @@ final class CheckGlobalThis implements Callback {
+       if (!(pType == Token.BLOCK ||
+             pType == Token.SCRIPT ||
+             pType == Token.NAME ||
+-            pType == Token.ASSIGN ||
+-            pType == Token.OBJECTLIT)) {
++            pType == Token.ASSIGN)) {
+         return false;
+       }
+     }
+diff --git a/src/com/google/javascript/jscomp/CrossModuleCodeMotion.java b/src/com/google/javascript/jscomp/CrossModuleCodeMotion.java
+old mode 100755
+new mode 100644
+diff --git a/src/com/google/javascript/jscomp/RuntimeTypeCheck.java b/src/com/google/javascript/jscomp/RuntimeTypeCheck.java
+index 5cedf1e0..ed4a6b9a 100644
+--- a/src/com/google/javascript/jscomp/RuntimeTypeCheck.java
++++ b/src/com/google/javascript/jscomp/RuntimeTypeCheck.java
+@@ -244,11 +244,6 @@ class RuntimeTypeCheck implements CompilerPass {
+ 
+       // To satisfy normalization constraints, the type checking must be
+       // added after any inner function declarations.
+-      for (Node next = block.getFirstChild();
+-           next != null && NodeUtil.isFunctionDeclaration(next);
+-           next = next.getNext()) {
+-        insertionPoint = next;
+-      }
+ 
+       for (Node paramType : funType.getParameters()) {
+         // Can this ever happen?
+diff --git a/src/com/google/javascript/jscomp/SourceInformationAnnotator.java b/src/com/google/javascript/jscomp/SourceInformationAnnotator.java
+old mode 100755
+new mode 100644
+diff --git a/src/com/google/javascript/rhino/jstype/RecordType.java b/src/com/google/javascript/rhino/jstype/RecordType.java
+old mode 100755
+new mode 100644
+diff --git a/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java b/src/com/google/javascript/rhino/jstype/RecordTypeBuilder.java
+old mode 100755
+new mode 100644

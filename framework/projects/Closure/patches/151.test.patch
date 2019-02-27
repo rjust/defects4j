@@ -1,0 +1,61 @@
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index 276e1afa..f00d7c66 100644
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -25,8 +25,6 @@ import com.google.javascript.rhino.Node;
+ 
+ import junit.framework.TestCase;
+ 
+-import java.io.ByteArrayOutputStream;
+-import java.io.PrintStream;
+ import java.util.List;
+ 
+ /**
+@@ -39,8 +37,6 @@ public class CommandLineRunnerTest extends TestCase {
+   private Compiler lastCompiler = null;
+   private CommandLineRunner lastCommandLineRunner = null;
+   private List<Integer> exitCodes = null;
+-  private ByteArrayOutputStream outReader = null;
+-  private ByteArrayOutputStream errReader = null;
+ 
+   // If set to true, uses comparison by string instead of by AST.
+   private boolean useStringComparison = false;
+@@ -72,8 +68,6 @@ public class CommandLineRunnerTest extends TestCase {
+   public void setUp() throws Exception {
+     super.setUp();
+     lastCompiler = null;
+-    outReader = new ByteArrayOutputStream();
+-    errReader = new ByteArrayOutputStream();
+     useStringComparison = false;
+     useModules = ModulePattern.NONE;
+     args.clear();
+@@ -446,17 +440,6 @@ public class CommandLineRunnerTest extends TestCase {
+         builder.toString());
+   }
+ 
+-  public void testVersionFlag() {
+-    args.add("--version");
+-    testSame("");
+-    assertEquals(
+-        0,
+-        new String(errReader.toByteArray()).indexOf(
+-            "Closure Compiler (http://code.google.com/p/closure/compiler)\n" +
+-            "Version: HEAD\n" +
+-            "Built on:"));
+-  }
+-
+   /* Helper functions */
+ 
+   private void testSame(String original) {
+@@ -559,10 +542,7 @@ public class CommandLineRunnerTest extends TestCase {
+     }
+ 
+     String[] argStrings = args.toArray(new String[] {});
+-    return new CommandLineRunner(
+-        argStrings,
+-        new PrintStream(outReader),
+-        new PrintStream(errReader));
++    return new CommandLineRunner(argStrings);
+   }
+ 
+   private Compiler compile(String[] original) {

@@ -1,0 +1,76 @@
+diff --git a/src/com/google/javascript/jscomp/FunctionInjector.java b/src/com/google/javascript/jscomp/FunctionInjector.java
+index 659f39ab..9d3fdd39 100644
+--- a/src/com/google/javascript/jscomp/FunctionInjector.java
++++ b/src/com/google/javascript/jscomp/FunctionInjector.java
+@@ -43,14 +43,6 @@ class FunctionInjector {
+   private final boolean assumeStrictThis;
+   private final boolean assumeMinimumCapture;
+   private final Supplier<String> safeNameIdSupplier;
+-  private final Supplier<String> throwawayNameSupplier =
+-      new Supplier<String>() {
+-    private int nextId = 0;
+-    @Override
+-    public String get() {
+-      return String.valueOf(nextId++);
+-    }
+-  };
+ 
+   /**
+    * @param allowDecomposition Whether an effort should be made to break down
+@@ -213,7 +205,7 @@ class FunctionInjector {
+     }
+ 
+     if (mode == InliningMode.DIRECT) {
+-      return canInlineReferenceDirectly(callNode, fnNode, needAliases);
++      return canInlineReferenceDirectly(callNode, fnNode);
+     } else {
+       return canInlineReferenceAsStatementBlock(
+           t, callNode, fnNode, needAliases);
+@@ -695,11 +687,12 @@ class FunctionInjector {
+    * </pre>
+    */
+   private CanInlineResult canInlineReferenceDirectly(
+-      Node callNode, Node fnNode, Set<String> namesToAlias) {
++      Node callNode, Node fnNode) {
+     if (!isDirectCallNodeReplacementPossible(fnNode)) {
+       return CanInlineResult.NO;
+     }
+ 
++    Node block = fnNode.getLastChild();
+     // CALL NODE: [ NAME, ARG1, ARG2, ... ]
+     Node cArg = callNode.getFirstChild().getNext();
+ 
+@@ -719,17 +712,24 @@ class FunctionInjector {
+       }
+     }
+ 
+-    Map<String, Node> args =
+-        FunctionArgumentInjector.getFunctionCallParameterMap(
+-            fnNode, callNode, this.throwawayNameSupplier);
+-    boolean hasArgs = !args.isEmpty();
+-    if (hasArgs) {
++    Node fnParam = NodeUtil.getFunctionParameters(fnNode).getFirstChild();
++    while (cArg != null || fnParam != null) {
++      if (fnParam != null) {
++        if (cArg != null) {
++          if (NodeUtil.mayEffectMutableState(cArg, compiler)
++              && NodeUtil.getNameReferenceCount(
++                  block, fnParam.getString()) > 1) {
++            return CanInlineResult.NO;
++          }
++        }
++        fnParam = fnParam.getNext();
++      }
+       // Limit the inlining
+-      Set<String> allNamesToAlias = Sets.newHashSet(namesToAlias);
+-      FunctionArgumentInjector.maybeAddTempsForCallArguments(
+-          fnNode, args, allNamesToAlias, compiler.getCodingConvention());
+-      if (!allNamesToAlias.isEmpty()) {
++      if (cArg != null) {
++        if (NodeUtil.mayHaveSideEffects(cArg, compiler)) {
+         return CanInlineResult.NO;
++        }
++        cArg = cArg.getNext();
+       }
+     }
+ 

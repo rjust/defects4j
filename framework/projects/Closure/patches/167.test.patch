@@ -1,0 +1,83 @@
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+index 91832c2c..68815089 100644
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+@@ -6712,6 +6712,20 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+         "Property foo never defined on Object");
+   }
+ 
++  public void testMissingProperty20() throws Exception {
++    // NOTE(nicksantos): In the else branch, we know that x.foo is a
++    // CHECKED_UNKNOWN (UNKNOWN restricted to a falsey value). We could
++    // do some more sophisticated analysis here. Obviously, if x.foo is false,
++    // then x.foo cannot possibly be called. For example, you could imagine a
++    // VagueType that was like UnknownType, but had some constraints on it
++    // so that we knew it could never be a function.
++    //
++    // For now, we just punt on this issue.
++    testTypes(
++        "/** @param {Object} x */" +
++        "function f(x) { if (x.foo) { } else { x.foo(); } }");
++  }
++
+   public void testMissingProperty21() throws Exception {
+     testTypes(
+         "/** @param {Object} x */" +
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 2d42ee79..b043112a 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -5993,20 +5993,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: string");
+   }
+ 
+-  public void testIssue783() throws Exception {
+-    testTypes(
+-        "/** @constructor */" +
+-        "var Type = function () {" +
+-        "  /** @type {Type} */" +
+-        "  this.me_ = this;" +
+-        "};" +
+-        "Type.prototype.doIt = function() {" +
+-        "  var me = this.me_;" +
+-        "  for (var i = 0; i < me.unknownProp; i++) {}" +
+-        "};",
+-        "Property unknownProp never defined on Type");
+-  }
+-
+   /**
+    * Tests that the || operator is type checked correctly, that is of
+    * the type of the first argument or of the second argument. See
+@@ -9112,10 +9098,17 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testMissingProperty20() throws Exception {
++    // NOTE(nicksantos): In the else branch, we know that x.foo is a
++    // CHECKED_UNKNOWN (UNKNOWN restricted to a falsey value). We could
++    // do some more sophisticated analysis here. Obviously, if x.foo is false,
++    // then x.foo cannot possibly be called. For example, you could imagine a
++    // VagueType that was like UnknownType, but had some constraints on it
++    // so that we knew it could never be a function.
++    //
++    // For now, we just punt on this issue.
+     testTypes(
+         "/** @param {Object} x */" +
+-        "function f(x) { if (x.foo) { } else { x.foo(); } }",
+-        "Property foo never defined on Object");
++        "function f(x) { if (x.foo) { } else { x.foo(); } }");
+   }
+ 
+   public void testMissingProperty21() throws Exception {
+diff --git a/test/com/google/javascript/rhino/jstype/JSTypeTest.java b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
+index 3237bb1d..ecc70bc7 100644
+--- a/test/com/google/javascript/rhino/jstype/JSTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
+@@ -5260,7 +5260,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
+     assertTypeEquals(ALL_TYPE,
+         ALL_TYPE.getRestrictedTypeGivenToBooleanOutcome(false));
+ 
+-    assertTypeEquals(CHECKED_UNKNOWN_TYPE,
++    assertTypeEquals(UNKNOWN_TYPE,
+         UNKNOWN_TYPE.getRestrictedTypeGivenToBooleanOutcome(true));
+     assertTypeEquals(UNKNOWN_TYPE,
+         UNKNOWN_TYPE.getRestrictedTypeGivenToBooleanOutcome(false));
