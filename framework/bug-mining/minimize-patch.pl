@@ -181,6 +181,23 @@ while (1) {
         system("cat $local_trigger_tests");
         next;
     }
+
+    # Do triggering test cases fail due to the exact same (original) reason?
+    system(">$local_trigger_tests-reason.original");
+    system(">$local_trigger_tests-reason.minimal");
+    system("cat \"$local_trigger_tests.sorted.original\" | while read -r trigger_test_case; do " .
+                "grep -A10 --no-group-separator \"^\$trigger_test_case\$\" $trigger_tests | grep -v \"	at \" >> $local_trigger_tests-reason.original; " .
+                "grep -A10 --no-group-separator \"^\$trigger_test_case\$\" $local_trigger_tests | grep -v \"	at \" >> $local_trigger_tests-reason.minimal; " .
+           "done");
+
+    if (compare("$local_trigger_tests-reason.original", "$local_trigger_tests-reason.minimal") == 1) {
+        print("Triggering test cases now fail due to other reasons:\n");
+        system("cat $local_trigger_tests-reason.original");
+        print("vs\n");
+        system("cat $local_trigger_tests-reason.minimal");
+        next;
+    }
+
     # Stack trace might have changed (e.g., line numbers), update it
     system("cat $local_trigger_tests > $trigger_tests");
 

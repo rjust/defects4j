@@ -125,8 +125,8 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>", "relevant_tests/<id>");
-my @generic_files_and_directories = ("dependent_tests", "build.xml.patch", "${PID}.build.xml",
-                                     "dir-layout.csv", "lib");
+my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib");
+my @generic_files_to_append = ("dependent_tests", "dir-layout.csv");
 
 my @ids = _get_bug_ids($BID);
 foreach my $id (@ids) {
@@ -171,7 +171,7 @@ foreach my $id (@ids) {
             $fn_rev =~ s/<rev>/$rev/;
             my $src = "$PROJECTS_DIR/$PID/$fn_rev";
             my $dst = "$OUTPUT_DIR/$PID/$fn_rev";
-            _cp($src, $dst);
+            _copy($src, $dst);
         }
     }
     for my $fn (@id_specific_files) {
@@ -181,26 +181,32 @@ foreach my $id (@ids) {
         $fn_dst =~ s/<id>/$max_number/;
         my $src = "$PROJECTS_DIR/$PID/$fn_src";
         my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
-        _cp($src, $dst);
+        _copy($src, $dst);
     }
 }
 
-for my $fn (@generic_files_and_directories) {
+for my $fn (@generic_files_and_directories_to_replace) {
     my $src = "$PROJECTS_DIR/$PID/$fn";
     my $dst = "$OUTPUT_DIR/$PID/$fn";
-    _cp($src, $dst);
+    _copy($src, $dst);
+}
+
+for my $fn (@generic_files_to_append) {
+    my $src = "$PROJECTS_DIR/$PID/$fn";
+    my $dst = "$OUTPUT_DIR/$PID/$fn";
+    _append($src, $dst);
 }
 
 # Copy project submodule
 my $src = "$WORK_DIR/framework/core/Project/${PID}.pm";
 my $dst = "$CORE_DIR/Project/${PID}.pm";
-_cp($src, $dst);
+_copy($src, $dst);
 
 # Copy repository directory
 my $dir_name = $REPOSITORY_DIR;
 $dir_name =~ m[^.*/(.*)$];
 system ("rm -rf $REPO_DIR/$1") == 0 or die "Could not remove $REPO_DIR/$1: $!";
-_cp($REPOSITORY_DIR, $REPO_DIR);
+_copy($REPOSITORY_DIR, $REPO_DIR);
 
 # Update README file
 my $bug_miniming_repos_readme_file = "$WORK_DIR/project_repos/README";
@@ -249,7 +255,7 @@ sub _get_bug_ids {
     return @ids;
 }
 
-sub _cp {
+sub _copy {
     my ($src, $dst) = @_;
     print "\t... copying $src -> $dst\n";
     $dst =~ m[^(.*)/.*$];
@@ -260,17 +266,13 @@ sub _cp {
     }
 }
 
-sub _db_cp {
-    my ($db_in, $db_out, $tab, $id, $new_id) = @_;
-    my $stmnt = $db_in->prepare("SELECT * FROM $tab WHERE $PROJECT=? AND $ID=?")
-        or die $db_in->errstr;
-    $stmnt->execute($PID, $id);
-    my @vals = $stmnt->fetchrow_array;
-    $stmnt->finish();
-    $vals[1] = $new_id;
-    for (my $i=0; $i < scalar(@vals); $i++) {
-        $vals[$i] = "'" . $vals[$i] . "'";
+sub _append {
+    my ($src, $dst) = @_;
+    print "\t... appending $src -> $dst\n";
+    $dst =~ m[^(.*)/.*$];
+    system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
+    if (-e $src) {
+        system("cat $src >> $dst") == 0 or die "could not append $src: $!";
+        print "\t... OK\n";
     }
-    my $row = join(',', @vals);
-    $db_out->do("INSERT INTO $tab VALUES ($row)") or die $db_out->errstr;
 }

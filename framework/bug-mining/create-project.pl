@@ -90,8 +90,6 @@ my $NAME = $cmd_opts{n};
 my $WORK_DIR = $cmd_opts{w};
 my $URL = $cmd_opts{r};
 
--e "$CORE_DIR/Project/$PID.pm" and die "Project $PID already exists!";
-
 my $module_template = "$CORE_DIR/Project/template";
 my $build_template  = "$SCRIPT_DIR/projects/template.build.xml";
 my $build_patch  = "$SCRIPT_DIR/projects/build.xml.patch";

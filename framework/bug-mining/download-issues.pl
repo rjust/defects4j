@@ -115,7 +115,7 @@ my %SUPPORTED_TRACKERS = (
                                         for my $issue (@{$$p{'issues'}}) {
                                             for my $label (@{$$issue{'labels'}}) {
                                                 $label =~ /^Type-Defect.*/ or next;
-                                                my $url = "https://code.google.com/archive/p/" . uri_escape($project) . "/issues/" . $$issue{'id'};
+                                                my $url = "https://storage.googleapis.com/google-code-archive/v2/code.google.com/". uri_escape($project) . "/issues/issue-" . $$issue{'id'} . ".json";
                                                 push @results, ($$issue{'id'}, $url);
                                                 last;
                                             }
