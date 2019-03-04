@@ -1,0 +1,35 @@
+diff --git a/src/com/google/javascript/jscomp/CoalesceVariableNames.java b/src/com/google/javascript/jscomp/CoalesceVariableNames.java
+index e990c82e..78c27b30 100644
+--- a/src/com/google/javascript/jscomp/CoalesceVariableNames.java
++++ b/src/com/google/javascript/jscomp/CoalesceVariableNames.java
+@@ -105,9 +105,6 @@ class CoalesceVariableNames extends AbstractPostOrderCallback implements
+     // a work-around for an IE bug where it throws an exception if you
+     // write to the parameters of the callback in a sort(). See:
+     // http://code.google.com/p/closure-compiler/issues/detail?id=58
+-    if (scope.getRootNode().getFirstChild().getNext().getChildCount() == 2) {
+-      liveness.markAllParametersEscaped();
+-    }
+     liveness.analyze();
+ 
+     UndiGraph<Var, Void> interferenceGraph =
+diff --git a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+index 216740b8..cdcd2ff4 100644
+--- a/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
++++ b/src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java
+@@ -1165,8 +1165,6 @@ public final class JsDocInfoParser {
+         case EOF:
+           // When we're capturing a license block, annotations
+           // in the block are ok.
+-          if (!(option == WhitespaceOption.PRESERVE &&
+-                token == JsDocToken.ANNOTATION)) {
+             String multilineText = builder.toString();
+ 
+             if (option != WhitespaceOption.PRESERVE) {
+@@ -1182,7 +1180,6 @@ public final class JsDocInfoParser {
+             }
+ 
+             return new ExtractionInfo(multilineText, token);
+-          }
+ 
+           // FALL THROUGH
+ 

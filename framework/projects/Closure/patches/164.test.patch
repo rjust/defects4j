@@ -1,0 +1,133 @@
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+index 99ee71c2..4d93dbdd 100644
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+@@ -1784,11 +1784,11 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+         "F.prototype.foo = function() { };" +
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+-        "/** @override */ G.prototype.foo = function(x, y) { };",
+-        "mismatch of the foo property type and the type of the property " +
+-        "it overrides from superclass F\n" +
+-        "original: function (this:F): undefined\n" +
+-        "override: function (this:G, ?, ?): undefined");
++        "/** @override */ G.prototype.foo = function(x, y) { };" +
++        "(new G()).foo();",
++        "Function G.prototype.foo: called with 0 argument(s). " +
++        "Function requires at least 2 argument(s) " +
++        "and no more than 2 argument(s).");
+   }
+ 
+   public void testMethodInference8() throws Exception {
+@@ -1798,8 +1798,10 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+         "/** @override */ " +
+-        "G.prototype.foo = function(opt_b, var_args) { };" +
+-        "(new G()).foo(1, 2, 3);");
++        "G.prototype.foo = function(a, opt_b, var_args) { };" +
++        "(new G()).foo();",
++        "Function G.prototype.foo: called with 0 argument(s). " +
++        "Function requires at least 1 argument(s).");
+   }
+ 
+   public void testMethodInference9() throws Exception {
+@@ -1809,7 +1811,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+         "/** @override */ " +
+-        "G.prototype.foo = function(var_args, opt_b) { };",
++        "G.prototype.foo = function(a, var_args, opt_b) { };",
+         "variable length argument must be last");
+   }
+ 
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 073dbc7c..8d8cc4f2 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -2050,11 +2050,11 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "F.prototype.foo = function() { };" +
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+-        "/** @override */ G.prototype.foo = function(x, y) { };",
+-        "mismatch of the foo property type and the type of the property " +
+-        "it overrides from superclass F\n" +
+-        "original: function (this:F): undefined\n" +
+-        "override: function (this:G, ?, ?): undefined");
++        "/** @override */ G.prototype.foo = function(x, y) { };" +
++        "(new G()).foo();",
++        "Function G.prototype.foo: called with 0 argument(s). " +
++        "Function requires at least 2 argument(s) " +
++        "and no more than 2 argument(s).");
+   }
+ 
+   public void testMethodInference8() throws Exception {
+@@ -2064,8 +2064,10 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+         "/** @override */ " +
+-        "G.prototype.foo = function(opt_b, var_args) { };" +
+-        "(new G()).foo(1, 2, 3);");
++        "G.prototype.foo = function(a, opt_b, var_args) { };" +
++        "(new G()).foo();",
++        "Function G.prototype.foo: called with 0 argument(s). " +
++        "Function requires at least 1 argument(s).");
+   }
+ 
+   public void testMethodInference9() throws Exception {
+@@ -2075,7 +2077,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "/** @constructor \n * @extends {F} */ " +
+         "function G() {}" +
+         "/** @override */ " +
+-        "G.prototype.foo = function(var_args, opt_b) { };",
++        "G.prototype.foo = function(a, var_args, opt_b) { };",
+         "variable length argument must be last");
+   }
+ 
+diff --git a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+index 055c9c6f..aceab77b 100644
+--- a/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/FunctionTypeTest.java
+@@ -147,9 +147,9 @@ public class FunctionTypeTest extends BaseJSTypeTestCase {
+         .withReturnType(BOOLEAN_TYPE).build();
+ 
+     assertLeastSupertype(
+-        "function (number, number): boolean", twoNumbers, oneNumber);
++        "Function", twoNumbers, oneNumber);
+     assertGreatestSubtype(
+-        "function (number): boolean", twoNumbers, oneNumber);
++        "function (...[*]): None", twoNumbers, oneNumber);
+   }
+ 
+   public void testSubtypeWithInterfaceThisType() {
+diff --git a/test/com/google/javascript/rhino/jstype/JSTypeTest.java b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
+index 5e444bf9..20818551 100644
+--- a/test/com/google/javascript/rhino/jstype/JSTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/JSTypeTest.java
+@@ -2973,7 +2973,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
+         .withParamsNode(registry.createParameters())
+         .withTypeOfThis(DATE_TYPE).build();
+     FunctionType dateMethodWithParam = new FunctionBuilder(registry)
+-        .withParamsNode(registry.createOptionalParameters(NUMBER_TYPE))
++        .withParamsNode(registry.createParameters(NUMBER_TYPE))
+         .withTypeOfThis(DATE_TYPE).build();
+     FunctionType dateMethodWithReturn = new FunctionBuilder(registry)
+         .withReturnType(NUMBER_TYPE)
+@@ -2982,7 +2982,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
+         .withParamsNode(registry.createParameters())
+         .withTypeOfThis(STRING_OBJECT_TYPE).build();
+     FunctionType stringMethodWithParam = new FunctionBuilder(registry)
+-        .withParamsNode(registry.createOptionalParameters(NUMBER_TYPE))
++        .withParamsNode(registry.createParameters(NUMBER_TYPE))
+         .withTypeOfThis(STRING_OBJECT_TYPE).build();
+     FunctionType stringMethodWithReturn = new FunctionBuilder(registry)
+         .withReturnType(NUMBER_TYPE)
+@@ -4374,7 +4374,7 @@ public class JSTypeTest extends BaseJSTypeTestCase {
+ 
+   public void testSubtypingFunctionFixedArgsNotMatching() throws Exception {
+     FunctionType f1 = registry.createFunctionType(OBJECT_TYPE,
+-        false, EVAL_ERROR_TYPE, UNKNOWN_TYPE);
++        false, EVAL_ERROR_TYPE);
+     FunctionType f2 = registry.createFunctionType(STRING_OBJECT_TYPE,
+         false, ERROR_TYPE, ALL_TYPE);
+ 

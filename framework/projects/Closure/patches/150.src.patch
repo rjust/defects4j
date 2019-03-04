@@ -1,0 +1,27 @@
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 5628a08a..4b841ae8 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1448,7 +1448,21 @@ final class TypedScopeCreator implements ScopeCreator {
+         return;
+       }
+ 
+-      super.visit(t, n, parent);
++      attachLiteralTypes(n);
++      switch (n.getType()) {
++        case Token.FUNCTION:
++          if (parent.getType() == Token.NAME) {
++            return;
++          }
++          defineDeclaredFunction(n, parent);
++          break;
++        case Token.CATCH:
++          defineCatch(n, parent);
++          break;
++        case Token.VAR:
++          defineVar(n, parent);
++          break;
++      }
+     }
+ 
+     /** Handle bleeding functions and function parameters. */

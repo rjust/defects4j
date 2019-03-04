@@ -1,0 +1,115 @@
+diff --git a/test/com/google/javascript/jscomp/CompilerTypeTestCase.java b/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
+index ab7d0132..0f74f609 100644
+--- a/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
++++ b/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
+@@ -90,8 +90,7 @@ abstract class CompilerTypeTestCase extends BaseJSTypeTestCase {
+       "Arguments.prototype.length;\n" +
+       "/** @type {!Arguments} */\n" +
+       "var arguments;" +
+-      "" + ACTIVE_X_OBJECT_DEF +
+-      "/** @type {?} */ var unknown;"; // For producing unknowns in tests.
++      "" + ACTIVE_X_OBJECT_DEF;
+ 
+   protected Compiler compiler;
+ 
+diff --git a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+index 3a5fa58f..2ac02c5d 100644
+--- a/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/LooseTypeCheckTest.java
+@@ -971,7 +971,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAdd14() throws Exception {
+-    testTypes("/** @type {(null,string)} */ var a = unknown;" +
++    testTypes("/** @type {(null,string)} */ var a = null;" +
+         "/** @type {number} */ var b = 5;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+@@ -989,7 +989,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAdd16() throws Exception {
+-    testTypes("/** @type {(undefined,string)} */ var a = unknown;" +
++    testTypes("/** @type {(undefined,string)} */ var a = undefined;" +
+         "/** @type {number} */ var b = 5;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+@@ -999,7 +999,7 @@ public class LooseTypeCheckTest extends CompilerTypeTestCase {
+ 
+   public void testAdd17() throws Exception {
+     testTypes("/** @type {number} */ var a = 5;" +
+-        "/** @type {(undefined,string)} */ var b = unknown;" +
++        "/** @type {(undefined,string)} */ var b = undefined;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+         "found   : (number|string)\n" +
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 74001b13..9415a3a9 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -1286,7 +1286,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAdd14() throws Exception {
+-    testTypes("/** @type {(null,string)} */ var a = unknown;" +
++    testTypes("/** @type {(null,string)} */ var a = null;" +
+         "/** @type {number} */ var b = 5;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+@@ -1304,7 +1304,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testAdd16() throws Exception {
+-    testTypes("/** @type {(undefined,string)} */ var a = unknown;" +
++    testTypes("/** @type {(undefined,string)} */ var a = undefined;" +
+         "/** @type {number} */ var b = 5;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+@@ -1314,7 +1314,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+ 
+   public void testAdd17() throws Exception {
+     testTypes("/** @type {number} */ var a = 5;" +
+-        "/** @type {(undefined,string)} */ var b = unknown;" +
++        "/** @type {(undefined,string)} */ var b = undefined;" +
+         "/** @type {boolean} */ var c = a + b;",
+         "initializing variable\n" +
+         "found   : (number|string)\n" +
+@@ -6100,19 +6100,19 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+ 
+   public void testSwitchCase4() throws Exception {
+     testTypes("/** @type {(string,Null)} */" +
+-        "var a = unknown;" +
++        "var a = 'foo';" +
+         "switch (a) { case 'A':break; case null:break; }");
+   }
+ 
+   public void testSwitchCase5() throws Exception {
+     testTypes("/** @type {(String,Null)} */" +
+-        "var a = unknown;" +
++        "var a = new String('foo');" +
+         "switch (a) { case 'A':break; case null:break; }");
+   }
+ 
+   public void testSwitchCase6() throws Exception {
+     testTypes("/** @type {(Number,Null)} */" +
+-        "var a = unknown;" +
++        "var a = new Number(5);" +
+         "switch (a) { case 5:break; case null:break; }");
+   }
+ 
+@@ -6907,15 +6907,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "Property prop never defined on C2");
+   }
+ 
+-  public void testIssue1056() throws Exception {
+-    testTypes(
+-        "/** @type {Array} */ var x = null;" +
+-        "x.push('hi');",
+-        "No properties on this expression\n" +
+-        "found   : null\n" +
+-        "required: Object");
+-  }
+-
+   public void testIssue1072() throws Exception {
+     testTypes(
+         "/**\n" +

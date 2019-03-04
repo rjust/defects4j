@@ -1,4 +1,4 @@
-Defects4J -- version 1.4.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,12 +8,12 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 395 bugs from the following open-source projects:
+Defects4J contains 438 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
 | Chart      | JFreeChart           |  26            |
-| Closure    | Closure compiler     | 133            |
+| Closure    | Closure compiler     | 176            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
 | Mockito    | Mockito              |  38            |
