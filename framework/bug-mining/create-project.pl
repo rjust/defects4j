@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -85,16 +85,18 @@ getopts('p:n:w:r:', \%cmd_opts) or pod2usage(1);
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{n}
                     and defined $cmd_opts{w} and defined $cmd_opts{r};
 
-my ($PID, $NAME, $WORK_DIR, $URL) = ($cmd_opts{p}, $cmd_opts{n}, $cmd_opts{w}, $cmd_opts{r});
-
-# TODO: Copy existing project module and build file to working directory
--e "$CORE_DIR/Project/$PID.pm" and die "Project $PID already exists!";
+my $PID = $cmd_opts{p};
+my $NAME = $cmd_opts{n};
+my $WORK_DIR = $cmd_opts{w};
+my $URL = $cmd_opts{r};
 
 my $module_template = "$CORE_DIR/Project/template";
 my $build_template  = "$SCRIPT_DIR/projects/template.build.xml";
+my $build_patch  = "$SCRIPT_DIR/projects/build.xml.patch";
 
-my $module_file  = "$WORK_DIR/framework/core/Project/$PID.pm";
-my $build_file   = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
+my $module_file = "$WORK_DIR/framework/core/Project/$PID.pm";
+my $build_file  = "$WORK_DIR/framework/projects/$PID/$PID.build.xml";
+my $build_patch_file  = "$WORK_DIR/framework/projects/$PID/build.xml.patch";
 
 # Directory to which the remote repository is cloned.
 my $repo_dir    = "$WORK_DIR/project_repos";
@@ -102,16 +104,20 @@ my $repo_dir    = "$WORK_DIR/project_repos";
 # Initialize working directory and create empty commit-db
 my $project_dir = "$WORK_DIR/framework/projects/$PID";
 
+my $ISSUES_DIR = "$WORK_DIR/issues";
+
 # Directories for meta data
 my $PATCH_DIR   = "$project_dir/patches";
 my $FAILING_DIR = "$project_dir/failing_tests";
 my $TRIGGER_DIR = "$project_dir/trigger_tests";
+my $RELEVANT_DIR = "$project_dir/relevant_tests";
 my $MOD_CLASSES = "$project_dir/modified_classes";
 my $REL_CLASSES = "$project_dir/loaded_classes";
+
 # Directory for the perl module
 my $core_dir = "$WORK_DIR/framework/core/Project";
 
-system("mkdir -p $core_dir $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $MOD_CLASSES $REL_CLASSES");
+system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $RELEVANT_DIR $MOD_CLASSES $REL_CLASSES");
 system("touch $project_dir/commit-db");
 
 # Copy module template and set project id and name
@@ -136,7 +142,16 @@ while(<IN>) {
 close(IN);
 close(OUT);
 
+# Copy patch build file and set project id
+open(IN, "<$build_patch") or die "Cannot open build patch file: $!";
+open(OUT, ">$build_patch_file") or die "Cannot open build patch file: $!";
+while(<IN>) {
+    s/<PROJECT_NAME>/$NAME/g;
+    print(OUT $_);
+}
+close(IN);
+close(OUT);
+
 # Clone the repository
-Utils::exec_cmd("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git 2>&1"
-        . " && echo $NAME: Cloned from $URL >> $repo_dir/README",
-        "Cloning repository (please hang tight)") or die "Failed to clone repository";
+system("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git 2>&1"
+        . " && echo $NAME: Cloned from $URL >> $repo_dir/README") == 0 or die "Failed to clone repository";

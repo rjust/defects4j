@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,16 +41,14 @@ get-class-list.pl -p project_id -w work_dir [-b bug_id]
 
 The id of the project for which the meta data should be generated.
 
-=item B<-w C<work_dir>>
+=item B<-w F<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
 
 =item B<-b C<bug_id>>
 
-Only analyze this bug id or interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
-provided, the interval boundaries are included in the analysis.
-Per default all bug ids are considered that are listed in $TAB_TRIGGER.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =back
 
@@ -61,9 +59,8 @@ and exports the class names of loaded and modified classes. It also, determines
 the set of relevant tests (i.e., tests that touch at least one of the modified
 classes).
 
-This script runs the following workflow for the provided C<project_id>:
-
-For each bug that has at least one (reviewed) triggering test(s) in $TAB_TRIGGER:
+This script runs the following workflow for the provided C<project_id>. For each
+bug that has at least one (reviewed) triggering test(s) in L<TAB_TRIGGER|DB>:
 
 =over 4
 
@@ -109,57 +106,53 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
 my %cmd_opts;
 getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR) =
-    ($cmd_opts{p},
-     $cmd_opts{b},
-     $cmd_opts{w}
-    );
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
-
-$WORK_DIR = abs_path($WORK_DIR);
-
-# Add script and core directory to @INC
-unshift(@INC, "$WORK_DIR/framework/core");
-
-# Set the projects and repository directories to the current working directory.
-$PROJECTS_DIR = "$WORK_DIR/framework/projects";
-$REPO_DIR = "$WORK_DIR/project_repos";
-
-my $project_dir = "$PROJECTS_DIR/$PID";
-# Directories for loaded and modified classes
-my $LOADED = "$project_dir/loaded_classes";
-my $MODIFIED = "$project_dir/modified_classes";
-
-# Directories containing triggering tests and relevant tests
-my $TRIGGER = "$project_dir/trigger_tests";
-my $RELEVANT= "$project_dir/relevant_tests";
-
-# TODO make output dir more flexible; maybe organize the csv-based db differently
-my $db_dir = $WORK_DIR;
+my $PID = $cmd_opts{p};
+my $BID = $cmd_opts{b};
+my $WORK_DIR = abs_path($cmd_opts{w});
 
 # Check format of target bug id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-############################### VARIABLE SETUP
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
+
+# Override global constants
+$REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
+my $PROJECT_DIR = "$PROJECTS_DIR/$PID";
+# Directories for loaded and modified classes
+my $LOADED = "$PROJECT_DIR/loaded_classes";
+my $MODIFIED = "$PROJECT_DIR/modified_classes";
+
+# Directories containing triggering tests and relevant tests
+my $TRIGGER = "$PROJECT_DIR/trigger_tests";
+my $RELEVANT= "$PROJECT_DIR/relevant_tests";
+
+# DB_CSVs directory
+my $db_dir = $WORK_DIR;
+
 # Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
 
-# Set up output directories
-system("mkdir -p $LOADED $MODIFIED $RELEVANT");
+# Check if output directories exit
+-d $LOADED or die "$LOADED does not exist: $!";
+-d $MODIFIED or die "$MODIFIED does not exist: $!";
+-d $RELEVANT or die "$RELEVANT does not exist: $!";
 
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
 
-my @bids  = _get_bug_ids($BID);
+my @bids = _get_bug_ids($BID);
 foreach my $bid (@bids) {
     # Lookup revision ids
     my $v1  = $project->lookup("${bid}b");
@@ -167,10 +160,6 @@ foreach my $bid (@bids) {
 
     my $file = "$TRIGGER/$bid";
     -e $file or die "Triggering test does not exist: $file!";
-
-    # TODO: Skip if file already exists
-    # TODO: Check whether triggering test file has been modified
-    # next if -e "$LOADED/$bid.src";
 
     my @list = @{Utils::get_failing_tests($file)->{methods}};
     # There has to be a triggering test
@@ -183,15 +172,16 @@ foreach my $bid (@bids) {
 
     # Compile sources and tests
     $project->compile() or die;
-    $project->fix_tests("${bid}f");
     $project->compile_tests() or die;
 
     my %src;
     my %test;
     foreach my $test (@list) {
         my $log_file = "$TMP_DIR/tests.fail";
+
         # Run triggering test and verify that it passes
         $project->run_tests($log_file, $test) or die;
+
         # Get number of failing tests -> has to be 0
         my $fail = Utils::get_failing_tests($log_file);
         (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die;
@@ -226,7 +216,8 @@ foreach my $bid (@bids) {
     $ENV{'PROJECTS_DIR'} = abs_path($PROJECTS_DIR);
     $ENV{'REPO_DIR'} = abs_path($REPO_DIR);
     # TODO: This should also be configurable in Constants.pm
-    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core";
+    my $perl_lib = $ENV{'PERL5LIB'} // "";
+    $ENV{'PERL5LIB'} = "$WORK_DIR/framework/core:$perl_lib";
     # Determine modified files
     #
     # Note:
@@ -240,7 +231,6 @@ foreach my $bid (@bids) {
 }
 # Remove temporary directory
 system("rm -rf $TMP_DIR");
-
 
 #
 # Determine all suitable version ids:
@@ -328,10 +318,9 @@ sub _export_relevant_tests {
 
 =head1 SEE ALSO
 
-All valid project_ids are listed in F<Project.pm>.
-Run after getting trigger tests by executing F<get-trigger.pl>.
-After running this script, you can determine the revisions that have minimized
-patches. Then you can use F<promote-to-directory.pl> to merge desired
-revisions with the main database.
+This script should be executed after getting the list of trigger tests by
+running the F<get-trigger.pl> script. After running this script, you can inspect
+whether the patch of each revision is indeed minimal. Then you can use
+F<promote-to-db.pl> script to merge desired revisions with the main database.
 
 =cut

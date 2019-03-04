@@ -1,0 +1,38 @@
+diff --git a/src/com/google/javascript/jscomp/CommandLineRunner.java b/src/com/google/javascript/jscomp/CommandLineRunner.java
+index 609df79d..ebf4b51b 100644
+--- a/src/com/google/javascript/jscomp/CommandLineRunner.java
++++ b/src/com/google/javascript/jscomp/CommandLineRunner.java
+@@ -298,9 +298,6 @@ public class CommandLineRunner extends
+         + "a manifest for each module.")
+     private String output_manifest = "";
+ 
+-    @Option(name = "--version",
+-        usage = "Prints the compiler version to stderr.")
+-    private boolean version = false;
+ 
+     // Our own option parser to be backwards-compatible.
+     // It needs to be public because of the crazy reflection that args4j does.
+@@ -367,8 +364,6 @@ public class CommandLineRunner extends
+ 
+   private final Flags flags = new Flags();
+ 
+-  private static final String configResource =
+-      "com.google.javascript.jscomp.parsing.ParserConfig";
+ 
+   private boolean isConfigValid = false;
+ 
+@@ -420,14 +415,6 @@ public class CommandLineRunner extends
+       isConfigValid = false;
+     }
+ 
+-    if (flags.version) {
+-      ResourceBundle config = ResourceBundle.getBundle(configResource);
+-      err.println(
+-          "Closure Compiler (http://code.google.com/p/closure/compiler)\n" +
+-          "Version: " + config.getString("compiler.version") + "\n" +
+-          "Built on: " + config.getString("compiler.date"));
+-      err.flush();
+-    }
+ 
+     if (!isConfigValid || flags.display_help) {
+       isConfigValid = false;

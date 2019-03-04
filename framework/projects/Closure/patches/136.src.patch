@@ -1,0 +1,56 @@
+diff --git a/src/com/google/javascript/jscomp/MethodCompilerPass.java b/src/com/google/javascript/jscomp/MethodCompilerPass.java
+index 5e0268f9..cd39b6ee 100644
+--- a/src/com/google/javascript/jscomp/MethodCompilerPass.java
++++ b/src/com/google/javascript/jscomp/MethodCompilerPass.java
+@@ -99,10 +99,30 @@ abstract class MethodCompilerPass implements CompilerPass {
+    * itself or the name of a function).
+    */
+   private void addPossibleSignature(String name, Node node, NodeTraversal t) {
++    boolean signatureAdded = false;
+     if (node.getType() == Token.FUNCTION) {
+       // The node we're looking at is a function, so we can add it directly
+       addSignature(name, node, t.getSourceName());
+-    } else {
++      signatureAdded = true;
++    } else if (node.getType() == Token.NAME) {
++      String functionName = node.getString();
++      Scope.Var v = t.getScope().getVar(functionName);
++      if (v == null) {
++        if (compiler.isIdeMode()) {
++          return;
++        } else {
++          throw new IllegalStateException(
++              "VarCheck should have caught this undefined function");
++        }
++      }
++      Node function = v.getInitialValue();
++      if (function != null &&
++          function.getType() == Token.FUNCTION) {
++        addSignature(name, function, v.getInputName());
++        signatureAdded = true;
++      }
++    }
++    if (!signatureAdded) {
+       nonMethodProperties.add(name);
+     }
+   }
+diff --git a/src/com/google/javascript/jscomp/RenameVars.java b/src/com/google/javascript/jscomp/RenameVars.java
+index fb13e4de..29f4d7a4 100644
+--- a/src/com/google/javascript/jscomp/RenameVars.java
++++ b/src/com/google/javascript/jscomp/RenameVars.java
+@@ -200,15 +200,7 @@ final class RenameVars implements CompilerPass {
+ 
+       // Check if we can rename this.
+       if (!okToRenameVar(name, local)) {
+-        if (local) {
+           // Blindly de-uniquify for the Prototype library for issue 103.
+-          String newName =
+-            MakeDeclaredNamesUnique.ContextualRenameInverter.getOrginalName(
+-                name);
+-          if (!newName.equals(name)) {
+-            n.setString(newName);
+-          }
+-        }
+         return;
+       }
+ 

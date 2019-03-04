@@ -30,6 +30,7 @@
     <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">
         <istrue value="${use.ant}"/>
     </condition>
+    <property name="test.classes.dir" value="${test.home}" />
 
     <condition property="build.home" value="${basedir}/target" else="${basedir}/build">
         <istrue value="${use.ant}"/>

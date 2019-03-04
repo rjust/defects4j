@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -82,6 +82,13 @@ classes touched by the triggering tests.
 The filename of an optional Randoop configuration file can be provided with the
 environment variable C<RANDOOP_CONFIG_FILE>. The default configuration file of Randoop
 is: F<framework/util/randoop.config>.
+
+To use a locally-built version of Randoop, do the following (update the version number):
+
+  cd ${D4J_HOME}/framework/lib/test_generation/generation && \
+  ln -sf ${RANDOOP_HOME}/build/libs/randoop-all-4.0.4.jar randoop-current.jar && \
+  ln -sf ${RANDOOP_HOME}/build/libs/replacecall-4.0.4.jar replacecall-current.jar
+
 
 =cut
 use strict;

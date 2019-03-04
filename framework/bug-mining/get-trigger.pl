@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,11 @@
 =head1 NAME
 
 get-trigger.pl -- Determines triggering tests for all reviewed version pairs in
-F<work_dir/$TAB_REV_PAIRS>, or a single version (or range) specified by version_id.
+F<work_dir/$TAB_REV_PAIRS>, or a single version (or range).
 
 =head1 SYNOPSIS
 
-get-trigger.pl -p project_id  -w work_dir [ -b bug_id]
+get-trigger.pl -p project_id -w work_dir [-b bug_id]
 
 =head1 OPTIONS
 
@@ -39,69 +39,51 @@ get-trigger.pl -p project_id  -w work_dir [ -b bug_id]
 
 =item B<-p C<project_id>>
 
-The id of the project for which the version pairs are analyzed.
+The id of the project for which the meta data should be generated.
 
-=item B<-w C<work_dir>>
+=item B<-w F<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
 
 =item B<-b C<bug_id>>
 
-Only analyze this bug id or interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is
-provided, the interval boundaries are included in the analysis.
-Per default all bug ids are considered that are listed in the commit-db and
-marked as suitable in F<work_dir/$TAB_REV_PAIRS>.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =head1 DESCRIPTION
 
-Runs the following workflow for the project C<project_id> -- the results are
-written to F<work_dir/TAB_TRIGGER>.
-
-For all B<reviewed> version pairs in F<work_dir/$TAB_REV_PAIRS>:
+Runs the following workflow for the project C<project_id> and the results are
+written to F<work_dir/TAB_TRIGGER>. For all B<reviewed> version pairs in
+F<work_dir/$TAB_REV_PAIRS>:
 
 =over 4
 
-=item 1) Checkout fixed version
+=item 1) Checkout fixed version.
 
-=item 2) Compile src and test
+=item 2) Compile src and test.
 
-=item 3) Run tests and verify that all tests pass
+=item 3) Run tests and verify that all tests pass.
 
-=item
+=item 4) Checkout buggy version.
 
-=item 4) Checkout buggy version
+=item 5) Compile src and test.
 
-=item 5) Compile src and test
+=item 6) Run tests and verify that no test class fails and at least on test
+         method fails (all failing test methods are B<individual triggering tests>).
 
-=item 6) Run tests and verify that:
+=item 7) Run every triggering test in isolation on the fixed version and verify
+         that it passes.
 
-=over 8
+=item 8) Run every triggering test in isolation on the buggy verision and verify
+         that it fails.
 
-=item No test class fails
-
-=item At least on test method fails (all failing test methods are
-    B<individual triggering tests>)
-
-=back
-
-=item
-
-=item 7) Run every triggering test in isolation on the fixed version and verify that it passes
-
-=item 8) Run every triggering test in isolation on the buggy verision and verify that it fails
-
-=item 9) Export triggering tests to F<C<work_dir>/"project_id"/trigger_tests>
+=item 9) Export triggering tests to F<C<work_dir>/<project_id>/trigger_tests>.
 
 =back
 
-The result for each individual step is stored in F<work_dir/$TAB_TRIGGER>.
-
+The result for each individual step is stored in F<C<work_dir>/$TAB_TRIGGER>.
 For each step the output table contains a column, indicating the result of the
-the step or '-' if the step was not applicable.
-
-If the C<version_id> is provided in addition to the C<project_id>, then only
-this C<version_id> is considered for the project.
+step or '-' if the step was not applicable.
 
 =cut
 use warnings;
@@ -117,38 +99,37 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
 my %cmd_opts;
 getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $BID, $WORK_DIR) =
-    ($cmd_opts{p},
-     $cmd_opts{b},
-     $cmd_opts{w}
-    );
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
-pod2usage(1) unless defined $PID and defined $WORK_DIR; # $BID can be undefined
-$WORK_DIR = abs_path($WORK_DIR);
+my $PID = $cmd_opts{p};
+my $BID = $cmd_opts{b};
+my $WORK_DIR = abs_path($cmd_opts{w});
 
-# TODO make output dir more flexible; maybe organize the csv-based db differently
-my $db_dir = $WORK_DIR;
-
-# Check format of target version id
+# Check format of target bug id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong version id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
+# DB_CSVs directory
+my $db_dir = $WORK_DIR;
+
 # Add script and core directory to @INC
 unshift(@INC, "$WORK_DIR/framework/core");
 
-# Set the projects and repository directories to the current working directory.
-$PROJECTS_DIR = "$WORK_DIR/framework/projects";
+# Override global constants
 $REPO_DIR = "$WORK_DIR/project_repos";
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
-############################### VARIABLE SETUP
-# Temportary directory
+# Set the projects and repository directories to the current working directory.
+my $PROJECTS_DIR = "$WORK_DIR/framework/projects";
+
+# Temporary directory
 my $TMP_DIR = Utils::get_tmp_dir();
 system("mkdir -p $TMP_DIR");
+
 # Set up project
 my $project = Project::create_project($PID);
 $project->{prog_root} = $TMP_DIR;
@@ -173,8 +154,6 @@ my $FAILED_TESTS_FILE_SINGLE = "$FAILED_TESTS_FILE.single";
 my $EXPECT_PASS = 0;
 my $EXPECT_FAIL = 1;
 
-############################### MAIN LOOP
-# figure out which IDs to run script for
 my @bids = _get_bug_ids($BID);
 foreach my $bid (@bids) {
     printf ("%4d: $project->{prog_name}\n", $bid);
@@ -186,6 +165,7 @@ foreach my $bid (@bids) {
     # V2 must not have any failing tests
     my $list = _get_failing_tests($project, "$TMP_DIR/v2", "${bid}f");
     if (($data{$FAIL_V2} = (scalar(@{$list->{"classes"}}) + scalar(@{$list->{"methods"}}))) != 0) {
+        print("Non expected failing test classes/methods on ${PID}-${bid}\n");
         _add_row(\%data);
         next;
     }
@@ -195,6 +175,7 @@ foreach my $bid (@bids) {
     my $fail_c = scalar(@{$list->{"classes"}}); $data{$FAIL_C_V1} = $fail_c;
     my $fail_m = scalar(@{$list->{"methods"}}); $data{$FAIL_M_V1} = $fail_m;
     if ($fail_c !=0 or $fail_m == 0) {
+        print("Expected at least one failing test method on ${PID}-${bid}b\n");
         _add_row(\%data);
         next;
     }
@@ -209,22 +190,26 @@ foreach my $bid (@bids) {
         die "Duplicate test case failure: $_. Build is probably broken" unless ++$seen{$_} < 2;
     }
 
-    print "List of methods: \n" . join ("\n",  @$list) . "\n";
+    print "List of test methods: \n" . join ("\n",  @$list) . "\n";
     # Run triggering test(s) in isolation on v2 -> tests should pass. Any test not
     # passing is excluded from further processing.
     $list = _run_tests_isolation("$TMP_DIR/v2", $list, $EXPECT_PASS);
     $data{$PASS_ISO_V2} = scalar(@$list);
-    print "List of methods: (passed in isolation on v2)\n" . join ("\n", @$list) . "\n";
+    print "List of test methods: (passed in isolation on v2)\n" . join ("\n", @$list) . "\n";
 
     # Run triggering test(s) in isolation on v1 -> tests should fail. Any test not
     # failing is excluded from further processing.
     $list = _run_tests_isolation("$TMP_DIR/v1", $list, $EXPECT_FAIL);
     $data{$FAIL_ISO_V1} = scalar(@$list);
-    print "List of methods: (failed in isolation on v1)\n" . join ("\n", @$list) . "\n";
+    print "List of test methods: (failed in isolation on v1)\n" . join ("\n", @$list) . "\n";
 
      # Save non-dependent triggering tests to $OUT_DIR/$bid
     if (scalar(@{$list}) > 0) {
         system("cp $FAILED_TESTS_FILE $OUT_DIR/$bid");
+    } else {
+        print("No triggering test case has been found. This could either mean that no test" .
+              " has been executed or that all test cases pass (e.g., a javadoc change could" .
+              " be considered bugfix however it might not be captured by any unit test case)\n");
     }
 
     # Save dependent tests to $DEP_TEST_FILE
@@ -242,8 +227,9 @@ $dbh_trigger->disconnect();
 $dbh_revs->disconnect();
 system("rm -rf $TMP_DIR");
 
-############################### SUBROUTINES
+#
 # Get bug ids from TAB_REV_PAIRS
+#
 sub _get_bug_ids {
     my $target_bid = shift;
 
@@ -278,7 +264,9 @@ sub _get_bug_ids {
     return @bids;
 }
 
+#
 # Get a list of all failing tests
+#
 sub _get_failing_tests {
     my ($project, $root, $vid) = @_;
 
@@ -290,10 +278,6 @@ sub _get_failing_tests {
 
     # Compile src and test
     $project->compile() or die;
-
-    # Fix tests if there are any broken ones
-    # TODO: Doesn't Defects4J automatically call fix_tests during checkout_vid?
-    $project->fix_tests($vid);
     $project->compile_tests() or die;
 
     # Run tests and get number of failing tests
@@ -302,7 +286,9 @@ sub _get_failing_tests {
     return Utils::get_failing_tests($FAILED_TESTS_FILE);
 }
 
+#
 # Run tests in isolation and check for pass/fail
+#
 sub _run_tests_isolation {
     my ($root, $list, $expect_fail) = @_;
 
@@ -327,7 +313,9 @@ sub _run_tests_isolation {
     \@succeeded_tests;
 }
 
+#
 # Add a row to the database table
+#
 sub _add_row {
     my $data = shift;
 
@@ -346,6 +334,6 @@ sub _add_row {
 
 Previous step in workflow is F<analyze-project.pl>.
 
-Next step in workflow is running F<get-class-list.pl>.
+Next step in workflow is running F<get-metadata.pl>.
 
 =cut

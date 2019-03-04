@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -212,7 +212,7 @@ sub write_config_file {
 
 =pod
 
-  Utils::read_config_file(filename)
+  Utils::read_config_file(filename [, key_separator])
 
 Read all key-value pairs of the config file named F<filename>. Format:
 C<key=value>.  Returns a hash containing all key-value pairs on success,
@@ -220,8 +220,9 @@ C<undef> otherwise.
 
 =cut
 sub read_config_file {
-    @_ == 1 or die $ARG_ERROR;
+    @_ >= 1 or die $ARG_ERROR;
     my $file = shift;
+    my $key_separator = shift // '=';
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
         return undef;
@@ -233,7 +234,7 @@ sub read_config_file {
         next if /^\s*$/;
         chomp;
         # Read key value pair and remove white spaces
-        my ($key, $val) = split /=/;
+        my ($key, $val) = split /${key_separator}/;
         $key =~ s/ //;
         $val =~ s/ //;
         $hash->{$key} = $val;
@@ -373,6 +374,8 @@ sub extract_test_suite {
     return 1;
 }
 
+=pod
+
 =item B<append_to_file_unless_matches> C<append_to_file_unless_matches(file, string, regexp)>
 
 This utility method appends C<string> to C<file>, unless C<file>
@@ -405,6 +408,8 @@ sub append_to_file_unless_matches {
     return $seen == 1 ? 0 : 1;
 }
 
+=pod
+
 =item B<files_in_commit> C<files_in_commit(repo_dir,commit)>
 
 This utility method takes C<commit> and get the files it changes
@@ -415,6 +420,36 @@ sub files_in_commit {
     my @files = "cd $repo_dir; git diff-tree --no-commit-id --name-only -r $commit";
     chomp @files;
     return @files;
+}
+
+=pod
+
+  Utils::bug_report_info(pid, vid)
+
+Returns the bug report ID and URL of a given project id C<pid> and version id
+C<vid>. In case there is not any bug report ID/URL available for a specific
+project id C<pid> and version id, it returns "NA".
+
+=cut
+sub bug_report_info {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $vid) = @_;
+
+    my $bug_report_info = {id=>"NA", url=>"NA"};
+
+    my $commit_db = "$PROJECTS_DIR/$pid/commit-db";
+    open (IN, "<$commit_db") or die "Cannot open $commit_db file: $!";
+    while (<IN>) {
+        chomp;
+        /([^,]+),[^,]+,[^,]+,(.+),(.+)/ or next;
+        if ($vid == $1) {
+            $bug_report_info = {id=>$2, url=>$3};
+            last;
+        }
+    }
+    close IN;
+
+    return $bug_report_info;
 }
 
 1;

@@ -6,9 +6,25 @@
 # An optional second agument will replace the default bid list.
 #
 ################################################################################
+
+# Must use Java version 7.
+JAVA_VERSION_STRING=`java -version 2>&1 | head -1`
+JAVA_RELEASE_NUMBER=`echo $JAVA_VERSION_STRING | sed 's/^.*1\.\(.\).*/\1/'`
+if [[ "$JAVA_RELEASE_NUMBER" != "7" ]]; then
+ echo Must use Java version 7
+ exit
+fi
+
 # Import helper subroutines and variables, and init Defects4J
+if [ ! -f test.include ]; then
+    echo "File test.include not found!  Ran script from wrong directory?"
+    exit 1
+fi
 source test.include
 init
+
+# Don't exit on first error
+HALT_ON_ERROR=0
 
 # master coverage file
 master_coverage=$TMP_DIR/coverage

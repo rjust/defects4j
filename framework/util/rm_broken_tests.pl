@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -238,7 +238,7 @@ sub _remove_test_method {
             foreach (@tmp) {
                 # This captures String literals -- accounting for escaped quotes
                 # (\") and non-escaped quotes (" and \\")
-                s/([\"'])(?:(?<!\\)\\\1|.)*?\1/$1$1/g;
+                s/([\"'])(?:\\(\\\\)*\1|.)*?\1/$1$1/g;
                 s/\/\/.*/\/\//;
             }
 

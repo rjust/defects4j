@@ -1,0 +1,42 @@
+diff --git a/src/com/google/javascript/rhino/jstype/ArrowType.java b/src/com/google/javascript/rhino/jstype/ArrowType.java
+index 4b9583778..1c900acd9 100644
+--- a/src/com/google/javascript/rhino/jstype/ArrowType.java
++++ b/src/com/google/javascript/rhino/jstype/ArrowType.java
+@@ -125,25 +125,13 @@ final class ArrowType extends JSType {
+ 
+       boolean thisIsVarArgs = thisParam.isVarArgs();
+       boolean thatIsVarArgs = thatParam.isVarArgs();
+-      boolean thisIsOptional = thisIsVarArgs || thisParam.isOptionalArg();
+-      boolean thatIsOptional = thatIsVarArgs || thatParam.isOptionalArg();
+ 
+       // "that" can't be a supertype, because it's missing a required argument.
+-      if (!thisIsOptional && thatIsOptional) {
+         // NOTE(nicksantos): In our type system, we use {function(...?)} and
+         // {function(...NoType)} to to indicate that arity should not be
+         // checked. Strictly speaking, this is not a correct formulation,
+         // because now a sub-function can required arguments that are var_args
+         // in the super-function. So we special-case this.
+-        boolean isTopFunction =
+-            thatIsVarArgs &&
+-            (thatParamType == null ||
+-             thatParamType.isUnknownType() ||
+-             thatParamType.isNoType());
+-        if (!isTopFunction) {
+-          return false;
+-        }
+-      }
+ 
+       // don't advance if we have variable arguments
+       if (!thisIsVarArgs) {
+@@ -161,11 +149,6 @@ final class ArrowType extends JSType {
+     }
+ 
+     // "that" can't be a supertype, because it's missing a required arguement.
+-    if (thisParam != null
+-        && !thisParam.isOptionalArg() && !thisParam.isVarArgs()
+-        && thatParam == null) {
+-      return false;
+-    }
+ 
+     return true;
+   }

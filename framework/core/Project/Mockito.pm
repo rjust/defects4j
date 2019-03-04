@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ sub new {
 }
 
 sub _post_checkout {
-    my ($self, $rev_id, $prog_root) = @_;
+    my ($self, $rev_id, $work_dir) = @_;
 
     # Fix Mockito's test runners
     my $vid = $self->{_vcs}->lookup_vid($rev_id);
@@ -66,13 +66,13 @@ sub _post_checkout {
     # affected revision id.
     my $mockito_junit_runner_patch_file = "$PROJECTS_DIR/$PID/mockito_test_runners.patch";
     if ($vid == 16 || $vid == 17 || ($vid >= 34 && $vid <= 38)) {
-        $self->apply_patch($prog_root, "$mockito_junit_runner_patch_file")
+        $self->apply_patch($work_dir, "$mockito_junit_runner_patch_file")
                 or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
     # Change Url to Gradle distribution
-    my $prop = "$prog_root/gradle/wrapper/gradle-wrapper.properties";
-    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+    my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
+    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";
 
     # Read existing Gradle properties file, if it exists
     open(PROP, "<$prop") or return;
@@ -93,9 +93,12 @@ sub _post_checkout {
     close(OUT);
 
     # Disable the Gradle daemon
-    if (-e "$prog_root/gradle.properties") {
-        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$prog_root/gradle.properties\"");
+    if (-e "$work_dir/gradle.properties") {
+        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
     }
+
+    # Enable local repository
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n jcenter()\\\n|g' {} \\;");
 }
 
 sub determine_layout {
@@ -120,7 +123,7 @@ sub _ant_call {
     #
     # TODO: Extract all exported environment variables into a user-visible
     # config file.
-    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
+    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/$GRADLE_LOCAL_HOME_DIR";
     return $self->SUPER::_ant_call($target, $option_str, $log_file);
 }
 

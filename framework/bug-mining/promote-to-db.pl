@@ -1,7 +1,7 @@
-#! /usr/bin/env perl
+#!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,29 @@
 
 =head1 NAME
 
-promote-to-db.pl -- promote reproducible and minimized bugs with all meta data
-                    to the main Defects4J database.
+promote-to-db.pl -- Promote reproducible and minimized bugs and their metadata
+to the main Defects4J database. In detail, this script copies over the following
+metadata:
+  - framework/core/Project/<PROJECT_ID>.pm
+  - framework/projects/<PROJECT_ID>/build_files
+  - framework/projects/<PROJECT_ID>/failing_tests
+  - framework/projects/<PROJECT_ID>/lib
+  - framework/projects/<PROJECT_ID>/loaded_classes
+  - framework/projects/<PROJECT_ID>/modified_classes
+  - framework/projects/<PROJECT_ID>/patches
+  - framework/projects/<PROJECT_ID>/relevant_tests
+  - framework/projects/<PROJECT_ID>/trigger_tests
+  - framework/projects/<PROJECT_ID>/build.xml.patch
+  - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
+  - framework/projects/<PROJECT_ID>/commit-db
+  - framework/projects/<PROJECT_ID>/dir-layout.csv
+  - project_repos/<PROJECT_NAME>.git
+and updates the project_repos/README file with information of when the project
+repository was cloned.
 
 =head1 SYNOPSIS
 
-promote-to-db.pl -p project_id -w work_dir [-b bug_id] [-o output_dir] [-d output_db_dir]
+promote-to-db.pl -p project_id -w work_dir -r repository_dir [-b bug_id] [-o output_dir]
 
 =head1 OPTIONS
 
@@ -43,22 +60,20 @@ The id of the project for which the revision pairs are to be promoted.
 
 =item B<-b C<bug_id>>
 
-Only promote this bug id or an interval of bug ids (optional).
-The bug_id has to have the format B<(\d+)(:(\d+))?> -- if an interval is provided,
-the interval boundaries are included in the analysis.
-Per default all bug ids are considered.
+Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+Per default all bug ids, listed in the commit-db, are considered.
 
 =item B<-w C<work_dir>>
 
-Use C<work_dir> as the working directory.
+The working directory used for the bug-mining process.
+
+=item B<-r C<repository_dir>>
+
+The path to the repository of this project.
 
 =item B<-o C<output_dir>>
 
-Use C<output_dir> as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
-
-=item B<-d C<output_db_dir>>
-
-Use C<output_db_dir> as the C<result_db> directory. Defaults to F<$DB_DIR>.
+The output directory as the Defects4J directory. Defaults to F<$PROJECTS_DIR>.
 
 =back
 
@@ -78,76 +93,62 @@ use Project;
 use DB;
 use Utils;
 
-############################## ARGUMENT PARSING
-# Issue usage message and quit
-sub _usage {
-    die "usage: " . basename($0) . " -p project_id " .
-        "-w WORK_DIR";
-        "[-b bug_range] " .
-        "[-o output_dir] " .
-        "[-d output_db_dir] ";
-}
-
 my %cmd_opts;
-getopts('p:w:b:o:d:', \%cmd_opts) or _usage();
+getopts('p:w:r:b:o:d:', \%cmd_opts) or pod2usage(1);
 
-my ($PID, $WORK_DIR, $BID, $output_dir, $output_db_dir) =
-    ($cmd_opts{p},
-     $cmd_opts{w},
-     $cmd_opts{b},
-     $cmd_opts{o} // "$SCRIPT_DIR/projects",
-     $cmd_opts{d} // $DB_DIR);
+pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w} and defined $cmd_opts{r};
 
-# ok for BID to be undef
-_usage() unless all {defined} ($PID, $WORK_DIR, $output_dir, $output_db_dir);
+my $PID = $cmd_opts{p};
+my $WORK_DIR = abs_path($cmd_opts{w});
+my $REPOSITORY_DIR = abs_path($cmd_opts{r});
+my $BID = $cmd_opts{b};
+my $OUTPUT_DIR = $cmd_opts{o} // "$SCRIPT_DIR/projects";
 
 # Check format of target version id
 if (defined $BID) {
     $BID =~ /^(\d+)(:(\d+))?$/ or die "Wrong bug id format ((\\d+)(:(\\d+))?): $BID!";
 }
 
-$WORK_DIR = abs_path("$WORK_DIR");
+# Add script and core directory to @INC
+unshift(@INC, "$WORK_DIR/framework/core");
 
-system("mkdir -p $output_dir/$PID");
-system("mkdir -p $output_db_dir");
+# Override global constants
+$PROJECTS_DIR = "$WORK_DIR/framework/projects";
 
-############################### COPY/CREATE RELEVANT FILES
-system("cp $WORK_DIR/framework/core/Project/$PID.pm ../core/Project");
-system("cp $WORK_DIR/framework/projects/$PID/$PID.build.xml ../projects/$PID");
-system("cp $WORK_DIR/framework/projects/$PID/dir-layout.csv ../projects/$PID");
-system("touch ../projects/$PID/commit-db");
-############################### VARIABLE SETUP
-my $project = Project::create_project($PID); #, $WORK_DIR, "$WORK_DIR/$PID/commit-db", "$WORK_DIR/$PID/$PID.build.xml");
-my $dbh_trigger_in = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
-my $dbh_trigger_out = DB::get_db_handle($TAB_TRIGGER, $output_db_dir);
-my $dbh_revs_in = DB::get_db_handle($TAB_REV_PAIRS, $WORK_DIR);
-my $dbh_revs_out = DB::get_db_handle($TAB_REV_PAIRS, $output_db_dir);
+system("mkdir -p $OUTPUT_DIR/$PID");
 
-my @rev_specific_files = ("failing_tests/<rev>",);
+my $project = Project::create_project($PID);
+my $dbh_trigger = DB::get_db_handle($TAB_TRIGGER, $WORK_DIR);
+
+my @rev_specific_files = ("failing_tests/<rev>", "build_files/<rev>");
 my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
-                            "trigger_tests/<id>");
-my @generic_files = ("dependent_tests");
+                            "trigger_tests/<id>", "relevant_tests/<id>");
+my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib");
+my @generic_files_to_append = ("dependent_tests", "dir-layout.csv");
 
-############################### MAIN LOOP
-# figure out which IDs to run script for
-my @ids = _get_version_ids($BID);
+my @ids = _get_bug_ids($BID);
 foreach my $id (@ids) {
     printf ("%4d: $project->{prog_name}\n", $id);
+
     my $v1 = $project->lookup("${id}b");
     my $v2 = $project->lookup("${id}f");
+
+    my $issue_id  = $project->bug_report_id("${id}");
+    my $issue_url = $project->bug_report_url("${id}");
+
     # find number
     my $max_number = 0;
-    my $output_commit_db = "$output_dir/$PID/commit-db";
+    my $output_commit_db = "$OUTPUT_DIR/$PID/commit-db";
     if (-e $output_commit_db) {
         open FH, $output_commit_db or die "could not open output commit-db";
         my $exists_line = 0;
         while (my $line = <FH>) {
             chomp $line;
-            $line =~ /^(\d+),(.*),(.*)$/ or die "could not parse line";
+            $line =~ /^(\d+),(.*),(.*),(.*),(.*)$/ or die "could not parse line";
             $max_number = max($max_number, $1);
-            if ("$2,$3" eq "$v1,$v2") {
+            if ("$2,$3,$4,$5" eq "$v1,$v2,$issue_id,$issue_url") {
                 $exists_line = $1;
                 last;
             }
@@ -161,46 +162,71 @@ foreach my $id (@ids) {
     ++$max_number;
     print "\t... adding as new commit-id $max_number\n";
 
-
     open FH, ">>$output_commit_db" or die "could not open output commit-db for writing";
-    print FH "$max_number,$v1,$v2\n";
+    print FH "$max_number,$v1,$v2,$issue_id,$issue_url\n";
     close FH;
     for my $rev ($v1, $v2) {
         for my $fn (@rev_specific_files) {
-            $fn =~ s/<rev>/$rev/;
-            my $src = "$WORK_DIR/$PID/$fn";
-            my $dst = "$output_dir/$PID/$fn";
-            _cp($src, $dst);
+            my $fn_rev = $fn;
+            $fn_rev =~ s/<rev>/$rev/;
+            my $src = "$PROJECTS_DIR/$PID/$fn_rev";
+            my $dst = "$OUTPUT_DIR/$PID/$fn_rev";
+            _copy($src, $dst);
         }
     }
     for my $fn (@id_specific_files) {
-        my $fn_src = $fn; $fn_src =~ s/<id>/$id/;
-        my $fn_dst = $fn; $fn_dst =~ s/<id>/$max_number/;
-        my $src = "$WORK_DIR/$PID/$fn_src";
-        my $dst = "$output_dir/$PID/$fn_dst";
-        _cp($src, $dst);
-    }
-
-    # write to dbs
-    _db_cp($dbh_trigger_in, $dbh_trigger_out, $TAB_TRIGGER, $id, $max_number);
-    _db_cp($dbh_revs_in, $dbh_revs_out, $TAB_REV_PAIRS, $id, $max_number);
-}
-
-for my $fn (@generic_files) {
-    my $src = "$WORK_DIR/$PID/$fn";
-    my $dst = "$output_dir/$PID/$fn";
-    my $tmp = "$output_dir/$PID/${fn}_tmp";
-    if (-e $src) {
-        `cat $src >> $dst && cp $dst $tmp && sort -u $tmp > $dst`;
-        die unless ($? == 0);
-        `rm -rf $tmp`;
+        my $fn_src = $fn;
+        $fn_src =~ s/<id>/$id/;
+        my $fn_dst = $fn;
+        $fn_dst =~ s/<id>/$max_number/;
+        my $src = "$PROJECTS_DIR/$PID/$fn_src";
+        my $dst = "$OUTPUT_DIR/$PID/$fn_dst";
+        _copy($src, $dst);
     }
 }
 
+for my $fn (@generic_files_and_directories_to_replace) {
+    my $src = "$PROJECTS_DIR/$PID/$fn";
+    my $dst = "$OUTPUT_DIR/$PID/$fn";
+    _copy($src, $dst);
+}
 
-############################### SUBROUTINES
-# Get version ids from TAB_TRIGGER
-sub _get_version_ids {
+for my $fn (@generic_files_to_append) {
+    my $src = "$PROJECTS_DIR/$PID/$fn";
+    my $dst = "$OUTPUT_DIR/$PID/$fn";
+    _append($src, $dst);
+}
+
+# Copy project submodule
+my $src = "$WORK_DIR/framework/core/Project/${PID}.pm";
+my $dst = "$CORE_DIR/Project/${PID}.pm";
+_copy($src, $dst);
+
+# Copy repository directory
+my $dir_name = $REPOSITORY_DIR;
+$dir_name =~ m[^.*/(.*)$];
+system ("rm -rf $REPO_DIR/$1") == 0 or die "Could not remove $REPO_DIR/$1: $!";
+_copy($REPOSITORY_DIR, $REPO_DIR);
+
+# Update README file
+my $bug_miniming_repos_readme_file = "$WORK_DIR/project_repos/README";
+my $d4j_repos_readme_file = "$REPO_DIR/README";
+if (-e $bug_miniming_repos_readme_file) {
+    if (-e $d4j_repos_readme_file) {
+        system("cat $bug_miniming_repos_readme_file | while read -r row; do \
+                    if ! grep -Eq \"\$row\" $d4j_repos_readme_file; then \
+                        echo \"\$row\" >> $d4j_repos_readme_file; \
+                    fi; \
+                done") == 0 or die;
+    } else {
+        system("cat $bug_miniming_repos_readme_file > $d4j_repos_readme_file") == 0 or die;
+    }
+}
+
+#
+# Get bug ids from TAB_TRIGGER
+#
+sub _get_bug_ids {
     my $target_vid = shift;
 
     my $min_id;
@@ -211,9 +237,9 @@ sub _get_version_ids {
     }
 
     # Select all version ids from previous step in workflow
-    my $sth = $dbh_trigger_in->prepare("SELECT $ID FROM $TAB_TRIGGER WHERE $PROJECT=? "
-                . "AND $FAIL_ISO_V1>0") or die $dbh_trigger_in->errstr;
-    $sth->execute($PID) or die "Cannot query database: $dbh_trigger_in->errstr";
+    my $sth = $dbh_trigger->prepare("SELECT $ID FROM $TAB_TRIGGER WHERE $PROJECT=? "
+                . "AND $FAIL_ISO_V1>0") or die $dbh_trigger->errstr;
+    $sth->execute($PID) or die "Cannot query database: $dbh_trigger->errstr";
     my @ids = ();
     foreach (@{$sth->fetchall_arrayref}) {
         my $vid = $_->[0];
@@ -229,25 +255,24 @@ sub _get_version_ids {
     return @ids;
 }
 
-sub _cp {
+sub _copy {
     my ($src, $dst) = @_;
     print "\t... copying $src -> $dst\n";
     $dst =~ m[^(.*)/.*$];
     system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
     if (-e $src) {
-        system("cp $src $dst") == 0 or die "could not copy $src: $!";
+        system("cp -R $src $dst") == 0 or die "could not copy $src: $!";
+        print "\t... OK\n";
     }
 }
 
-sub _db_cp {
-    my ($db_in, $db_out, $tab, $id, $new_id) = @_;
-    my $stmnt = $db_in->prepare("SELECT * FROM $tab WHERE $PROJECT=? AND $ID=?")
-        or die $db_in->errstr;
-    $stmnt->execute($PID, $id);
-    my @vals = $stmnt->fetchrow_array;
-    $stmnt->finish();
-    $vals[0] = "'" . $vals[0] . "'";
-    $vals[1] = $new_id;
-    my $row = join(',', @vals);
-    $db_out->do("INSERT INTO $tab VALUES ($row)") or die $db_out->errstr;
+sub _append {
+    my ($src, $dst) = @_;
+    print "\t... appending $src -> $dst\n";
+    $dst =~ m[^(.*)/.*$];
+    system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
+    if (-e $src) {
+        system("cat $src >> $dst") == 0 or die "could not append $src: $!";
+        print "\t... OK\n";
+    }
 }

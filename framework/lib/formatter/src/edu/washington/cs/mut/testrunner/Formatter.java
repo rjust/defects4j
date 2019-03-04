@@ -97,6 +97,7 @@ public class Formatter implements JUnitResultFormatter {
 				methodName = match.group(2);
 			}
 		}
+
 		if ("warning".equals(methodName) || "initializationError".equals(methodName)) {
 			failClass(t, prefix); // there is an issue with the class, not the method.
 		} else if (null != methodName && null != className) {

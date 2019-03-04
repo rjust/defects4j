@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -182,6 +182,34 @@ sub print_info {
     my @ids = $self->get_version_ids();
     printf ("%14s: %s\n", "Number of bugs", scalar(@ids));
     print "-"x80 . "\n";
+}
+
+=pod
+
+  $project->bug_report_id()
+
+Returns the bug report ID of a given version id C<vid>.
+
+=cut
+sub bug_report_id {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
+    return $bug_report_info->{id};
+}
+
+=pod
+
+  $project->bug_report_url()
+
+Returns the bug report URL of a given version id C<vid>.
+
+=cut
+sub bug_report_url {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $vid) = @_;
+    my $bug_report_info = Utils::bug_report_info($self->{pid}, $vid);
+    return $bug_report_info->{url};
 }
 
 =pod
@@ -897,15 +925,23 @@ sub run_randoop {
     # and set appropriate arguments.
     my $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main`;
     if (($log =~ /minimize/) == 1) {
+      if (($log =~ /4.0/) == 1) {
 #       print "new version \n";
         $config = "$config --time-limit=$timeout --flaky-test-behavior=output";
+      } else {
+#       print "middle version \n";
+        $config = "$config --time-limit=$timeout --ignore-flaky-tests=true";
+      }
     } else {
 #       print "old version \n";
         $config = "$config --timelimit=$timeout  --ignore-flaky-tests=true";
     }
 
     my $cmd = "cd $self->{prog_root}" .
-              " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main gentests " .
+              " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
+                "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
+                "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar " .
+                "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--usethreads " .
