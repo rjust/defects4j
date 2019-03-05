@@ -385,7 +385,7 @@ After performing patch minimization, the minimized patch should still yield the 
 However, in some cases, code changes that appear to be refactoring could still alter the reason for a test failure. After removing that code change, the same tests may fail, but a different exception or error message may be offered.
 
 Consider Closure-140. The following lines were removed when fixing the bug:
-```
+```diff
 +    for (JSModule m : getModuleGraph().getTransitiveDepsDeepestFirst(module)) {
 +      inputs = m.getInputs();
 +      if (inputs.size() > 0) {
