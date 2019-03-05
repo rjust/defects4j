@@ -37,8 +37,6 @@ package Project::Chart;
 use strict;
 use warnings;
 
-use Carp qw(confess);
-
 use Constants;
 use Vcs::Svn;
 
