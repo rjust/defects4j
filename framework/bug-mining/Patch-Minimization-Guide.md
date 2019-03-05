@@ -2,14 +2,15 @@
 
 This document includes:
 
-1. [Guidelines of ideal minimized patches](#guidelines-of-ideal-minimized-patches)
-2. [Proposed rules to perform patch minimization, along with justifications and code examples](#common-types-of-bug-fix-and-proposed-rules-to-disambiguate-results)
-3. [Situations that Do Not Require minimization](#do-not-remove-the-changes-in-the-following-situations)
-4. [Comprehensive examples of non-minimized vs. minimized patches](#comprehensive-examples-of-non-minimized-vs-minimized-patches)
+1. [Properties of ideal minimized patches](#properties-of-ideal-minimized-patches)
+2. [Rules for performing patch minimization](#rules-for-performing-patch-minimization)
+3. [Situations that do not require minimization](#do-not-remove-changes-in-the-following-situations)
+4. [Examples of non-minimized vs. minimized patches](#examples-of-non-minimized-vs-minimized-patches)
 
-Note: Please refer to [Bug-Mining README: Instructions to Using the Framework](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/README.md) for information regarding instructions to using patch minimization framework(includes restoring original patch) and using patch minimization editor.
+Note: Please refer to the [Bug-Mining README](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/README.md) for instructions on the full bug mining process, including the basic process of patch minimization.
 
-## Guidelines of Ideal Minimized Patches
+## Properties of ideal minimized patches
+
 #### Overall, a minimized patch is expected to have the following properties:
 1. [Excludes all refactoring changes](#1-code-of-refctorings-should-be-removed)
 2. [Excludes compiler directives and annotations properly](#2-compiler-directives-and-annotations)
@@ -19,12 +20,31 @@ Note: Please refer to [Bug-Mining README: Instructions to Using the Framework](h
 
 ## Understanding the Bug and Narrowing Down the Scope
 
-Keep in mind that each patch is a reverse patch -- applying patch to fixed version of the program will reintroduce the bug.
+Keep in mind that each patch is a reverse patch -- we apply this patch to the fixed version of the program in order to reintroduce the bug.
 
-Read corresponding stack trace under `trigger_tests` directory to get a rough idea of how to trigger the bug. Determine the failed tests (in `package.className::methodName`format). Delete irrelevant changes(diffs).
+Proper minimization requires an understanding of *what* the fault in the code means, and how it affects the system. 
+Three key pieces of information should guide your minimization:
+* The bug report: The `commit-db` includes a link to the bug report (or, in some cases, a pull request). 
+* The commit message: The `commit-db` includes the hash of the commit that fixes the bug. The commit message often explains what was changed and *why*. 
+* The trigger tests: Each fault has a set of trigger tests -- tests that fail on the buggy version and pass on the fixed version. The trigger test file lists
+the failing tests and, for each, includes the stack trace of the failing test case.
 
-Note that commit messages, comments, and sometimes the messages included in exceptions are also be helpful to gain more insights on the bugs.
-## Common Types of Bug Fix and Proposed Rules to Disambiguate Results
+These three pieces of information should hep you decide which code changes are relevant to the bug itself, and which code changes are irrelevant to the faulty behavior.
+
+For example, consider bug Closure-174:
+ * [Bug Report](https://storage.googleapis.com/google-code-archive/v2/code.google.com/closure-compiler/issues/issue-1103.json)
+ * [Commit Message](https://github.com/google/closure-compiler/commit/d2b3ca66b6088c1c08437c120ae215d91d313b7c)
+ * [Trigger Tests](https://github.com/rjust/defects4j/blob/master/framework/projects/Closure/trigger_tests/174)
+
+The bug report indicates that the compiler will crash on `goog.scope locals`. The commit message specifically notes that the change ensured that `ScopedAliases` do not crash then where is a 
+`dangling var` reference. The three trigger tests then provide examples of situations where the bug causes a program failure in the faulty version -- where the local variables are in the `goog.scope` but
+are not aliases. 
+
+This information suggests that code changes unrelated to aliases and scoping are likely irrelevant to the fault. Many of the changes in this patch *are* relevant, but a logger call was removed 
+from the buggy version (thus, a line added by the Defects4J patch) that is unrelated to the behavior. Instead, this removal was an unrelated refactoring, and can be removed from the patch.
+
+## Rules for performing patch minimization
+
 ### 1. Code of Refctorings Should be Removed   
 
 Code refactoring is the process of restructuring existing code without changing its external behavior. Since refactoring does not affect the behavior of the code, it is not a part of bug fix and the changes can be removed from the patch. Code refactoring may consist one or more of the following:
@@ -318,7 +338,7 @@ New features added along with bug fix code, that are not part of bug fix, are tr
 
 
 
-## Do Not Remove the Changes in the Following Situations
+## Do not remove changes in the following situations
 
 ### 1. Bug fix function: do not remove the changes to bug fix function from the patch  
 Some bug-fix patches will require new features to be included. If a new feature is added to fix the bug, the entire function and the call should be kept in the patch. Although removing the function definition and keeping the call will also reintroduce the bug, __do not__ remove the function definition because it explains the bug fix.
@@ -355,7 +375,8 @@ Although the bug may be triggered by only one part of the changes, retaining the
 
 
 
-## Comprehensive Examples of Non-minimized vs Minimized Patches
+## Examples of non-minimized vs minimized patches
+
 1. Collections 19 [Non-minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.19.nonminimized.patch) vs. [Minimized](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.19.minimized.patch)
     * Steps and rules used to perform patch minimization:
         1. Remove changes to comments in line [42-45](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.19.nonminimized.patch#L42), and line [57-62](https://github.com/ypzheng/defects4j/blob/merge-bug-mining-into-master/framework/bug-mining/code-example/col.19.nonminimized.patch#L57) (Refactoring).
