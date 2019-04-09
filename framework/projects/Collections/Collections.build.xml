@@ -26,13 +26,6 @@ It defines project-specific properties and targets, and imports the build file
 of the checked-out project version.
 #############################################################################-->
 <project name="D4j-Collections" basedir="${basedir}">
-    <!-- TODO: Make sure that the following properties and paths are defined:
-           - source.home        ->  Directory of sources
-           - test.home          ->  Directory of test sources
-           - build.home         ->  Root directory for compiled (test) classes
-           - test.classpath     ->  Classpath to compile tests
-           - compile.classpath  ->  Classpath to compile sources
-    -->
 
     <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
     <property name="easymock.jar" value="${d4j.dir.projects}/Collections/lib/easymock-2.0.jar"/>
@@ -62,6 +55,7 @@ of the checked-out project version.
           <path id="compile.classpath">
               <path refid="build.classpath"/>
           </path>
+          <property name="test.classes.dir" value="{maven.build.testOutputDir}"/>
         </then>
         <else>
           <property name="test.home" value="${source.test}" />
@@ -72,6 +66,7 @@ of the checked-out project version.
           <path id="compile.classpath">
             <pathelement location="${build.home}/classes" />
           </path>
+          <property name="test.classes.dir" value="{build.home}/tests"/>
         </else>
     </if>
 
