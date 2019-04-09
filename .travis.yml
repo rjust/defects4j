@@ -67,6 +67,9 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b152..160
     - script: carton exec ./test_verify_bugs.sh -p Closure -b161..169
     - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
+## Collections
+    - script: carton exec ./test_verify_bugs.sh -p Collections -b1..14
+    - script: carton exec ./test_verify_bugs.sh -p Collections -b15..28
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
