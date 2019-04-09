@@ -69,9 +69,9 @@ test_ExportTestClassesDir() {
                     expected="target/tests"
                 fi
             elif [ "$pid" == "Collections" ]; then
-                if [ "$bid" -ge "1" ] && ["$bid" -le "21" ]; then
+                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
                     expected="build/tests"
-                elif  [ "$bid" -ge "22" ] && ["$bid" -le "28" ]; then
+                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
                     expected="target/tests"
                 fi
    	    elif [ "$pid" == "Math" ]; then
