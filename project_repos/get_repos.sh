@@ -7,6 +7,7 @@ clean() {
     rm -rf \
     closure-compiler.git \
     commons-collections.git \
+    commons-compress.git \
     commons-lang.git \
     commons-math.git \
     jfreechart \

@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
+index 90820df8..37dfbe03 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
+@@ -241,9 +241,8 @@ public class ArchiveStreamFactory {
+                 try {
+                     TarArchiveInputStream tais = new TarArchiveInputStream(new ByteArrayInputStream(tarheader));
+                     // COMPRESS-191 - verify the header checksum
+-                    if (tais.getNextTarEntry().isCheckSumOK()) {
++                    tais.getNextEntry();
+                         return new TarArchiveInputStream(in);
+-                    }
+                 } catch (Exception e) { // NOPMD
+                     // can generate IllegalArgumentException as well
+                     // as IOException

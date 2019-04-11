@@ -1,0 +1,21 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+index 317d7781..05912b9f 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/sevenz/SevenZOutputFile.java
+@@ -636,13 +636,14 @@ public class SevenZOutputFile {
+         int shift = 7;
+         for (int i = 0; i < length; i++) {
+             cache |= ((bits.get(i) ? 1 : 0) << shift);
+-            if (--shift < 0) {
++            --shift;
++            if (shift == 0) {
+                 header.write(cache);
+                 shift = 7;
+                 cache = 0;
+             }
+         }
+-        if (shift != 7) {
++        if (length > 0 && shift > 0) {
+             header.write(cache);
+         }
+     }

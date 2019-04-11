@@ -1,0 +1,40 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 41e6940b..dd845b83 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -412,8 +412,7 @@ public boolean canReadEntryData(final ArchiveEntry ae) {
+         if (ae instanceof ZipArchiveEntry) {
+             final ZipArchiveEntry ze = (ZipArchiveEntry) ae;
+             return ZipUtil.canHandleEntryData(ze)
+-                && supportsDataDescriptorFor(ze)
+-                && supportsCompressedSizeFor(ze);
++                && supportsDataDescriptorFor(ze);
+         }
+         return false;
+     }
+@@ -438,10 +437,6 @@ public int read(final byte[] buffer, final int offset, final int length) throws
+             throw new UnsupportedZipFeatureException(UnsupportedZipFeatureException.Feature.DATA_DESCRIPTOR,
+                     current.entry);
+         }
+-        if (!supportsCompressedSizeFor(current.entry)) {
+-            throw new UnsupportedZipFeatureException(UnsupportedZipFeatureException.Feature.UNKNOWN_COMPRESSED_SIZE,
+-                    current.entry);
+-        }
+ 
+         int read;
+         if (current.entry.getMethod() == ZipArchiveOutputStream.STORED) {
+@@ -811,14 +806,6 @@ private boolean supportsDataDescriptorFor(final ZipArchiveEntry entry) {
+      * Whether the compressed size for the entry is either known or
+      * not required by the compression method being used.
+      */
+-    private boolean supportsCompressedSizeFor(final ZipArchiveEntry entry) {
+-        return entry.getCompressedSize() != ArchiveEntry.SIZE_UNKNOWN
+-            || entry.getMethod() == ZipEntry.DEFLATED
+-            || entry.getMethod() == ZipMethod.ENHANCED_DEFLATED.getCode()
+-            || (entry.getGeneralPurposeBit().usesDataDescriptor()
+-                && allowStoredEntriesWithDataDescriptor
+-                && entry.getMethod() == ZipEntry.STORED);
+-    }
+ 
+     /**
+      * Caches a stored entry that uses the data descriptor.

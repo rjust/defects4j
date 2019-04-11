@@ -60,6 +60,14 @@ test_ExportTestClassesDir() {
                 expected="build-tests"
             elif [ "$pid" == "Closure" ]; then
                 expected="build/test"
+            elif [ "$pid" == "Collections" ]; then
+                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
+                    expected="build/tests"
+                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
+                    expected="target/tests"
+                fi
+            elif [ "$pid" == "Compress" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "Lang" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "20" ]; then
                     expected="target/tests"
@@ -68,13 +76,7 @@ test_ExportTestClassesDir() {
                 elif [ "$bid" -ge "42" ] && [ "$bid" -le "65" ]; then
                     expected="target/tests"
                 fi
-            elif [ "$pid" == "Collections" ]; then
-                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
-                    expected="build/tests"
-                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
-                    expected="target/tests"
-                fi
-   	    elif [ "$pid" == "Math" ]; then
+            elif [ "$pid" == "Math" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "Mockito" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "11" ]; then
