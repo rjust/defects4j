@@ -55,7 +55,8 @@ of the checked-out project version.
           <path id="compile.classpath">
               <path refid="build.classpath"/>
           </path>
-          <property name="test.classes.dir" value="${maven.build.testOutputDir}"/>
+	  <property name="test.classes.dir" value="${maven.build.testOutputDir}"/>
+	  <property name="classes.dir" value="${maven.build.outputDir}"/>
         </then>
         <else>
           <property name="test.home" value="${source.test}" />
@@ -66,7 +67,8 @@ of the checked-out project version.
           <path id="compile.classpath">
             <pathelement location="${build.home}/classes" />
           </path>
-          <property name="test.classes.dir" value="${build.home}/tests"/>
+	  <property name="test.classes.dir" value="${build.home}/tests"/>
+	  <property name="classes.dir" value="${build.home}/classes">
         </else>
     </if>
 
