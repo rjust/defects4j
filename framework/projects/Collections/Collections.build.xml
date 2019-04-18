@@ -68,7 +68,7 @@ of the checked-out project version.
             <pathelement location="${build.home}/classes" />
           </path>
 	  <property name="test.classes.dir" value="${build.home}/tests"/>
-	  <property name="classes.dir" value="${build.home}/classes">
+	  <property name="classes.dir" value="${build.home}/classes"/>
         </else>
     </if>
 
