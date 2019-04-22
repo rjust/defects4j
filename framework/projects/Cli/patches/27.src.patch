@@ -1,0 +1,16 @@
+diff --git a/src/java/org/apache/commons/cli/OptionGroup.java b/src/java/org/apache/commons/cli/OptionGroup.java
+index 67cd5e2..dd474cc 100644
+--- a/src/java/org/apache/commons/cli/OptionGroup.java
++++ b/src/java/org/apache/commons/cli/OptionGroup.java
+@@ -95,9 +95,9 @@ public class OptionGroup implements Serializable
+         // if no option has already been selected or the 
+         // same option is being reselected then set the
+         // selected member variable
+-        if (selected == null || selected.equals(option.getKey()))
++        if (selected == null || selected.equals(option.getOpt()))
+         {
+-            selected = option.getKey();
++            selected = option.getOpt();
+         }
+         else
+         {

@@ -1,0 +1,18 @@
+diff --git a/src/test/java/org/apache/commons/cli/TypeHandlerTest.java b/src/test/java/org/apache/commons/cli/TypeHandlerTest.java
+index 13e7672..1d7f8cf 100644
+--- a/src/test/java/org/apache/commons/cli/TypeHandlerTest.java
++++ b/src/test/java/org/apache/commons/cli/TypeHandlerTest.java
+@@ -148,13 +148,6 @@ public class TypeHandlerTest
+         TypeHandler.createValue("malformed-url", PatternOptionBuilder.URL_VALUE);
+     }
+ 
+-    @Test(expected = ParseException.class)
+-    public void testCreateValueInteger_failure()
+-            throws Exception
+-    {
+-        TypeHandler.createValue("just-a-string", Integer.class);
+-    }
+-
+     public static class Instantiable
+     {
+     }

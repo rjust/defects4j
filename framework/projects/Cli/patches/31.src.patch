@@ -1,0 +1,43 @@
+diff --git a/src/main/java/org/apache/commons/cli/HelpFormatter.java b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+index 6d73237..1debaf6 100644
+--- a/src/main/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+@@ -650,10 +650,10 @@ public class HelpFormatter
+         }
+         
+         // if the Option has a value and a non blank argname
+-        if (option.hasArg() && (option.getArgName() == null || option.getArgName().length() != 0))
++        if (option.hasArg() && option.hasArgName())
+         {
+             buff.append(option.getOpt() == null ? longOptSeparator : " ");
+-            buff.append("<").append(option.getArgName() != null ? option.getArgName() : getArgName()).append(">");
++            buff.append("<").append(option.getArgName()).append(">");
+         }
+         
+         // if the Option is not a required option
+diff --git a/src/main/java/org/apache/commons/cli/Option.java b/src/main/java/org/apache/commons/cli/Option.java
+index ce12780..921c7ab 100644
+--- a/src/main/java/org/apache/commons/cli/Option.java
++++ b/src/main/java/org/apache/commons/cli/Option.java
+@@ -54,7 +54,7 @@ public class Option implements Cloneable, Serializable
+     private String longOpt;
+ 
+     /** the name of the argument for this option */
+-    private String argName;
++    private String argName = "arg";
+ 
+     /** description of the option */
+     private String description;
+diff --git a/src/main/java/org/apache/commons/cli/OptionBuilder.java b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+index a22d829..33a24a6 100644
+--- a/src/main/java/org/apache/commons/cli/OptionBuilder.java
++++ b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+@@ -77,7 +77,7 @@ public final class OptionBuilder
+     private static void reset()
+     {
+         description = null;
+-        argName = null;
++        argName = "arg";
+         longopt = null;
+         type = null;
+         required = false;

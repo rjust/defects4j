@@ -47,6 +47,9 @@ jobs:
     - stage: verify-bugs
 ## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart
+## Cli
+    - script: carton exec ./test_verify_bugs.sh -p Cli -b1..20
+    - script: carton exec ./test_verify_bugs.sh -p Cli -b21..41
 ## Closure
     - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
     - script: carton exec ./test_verify_bugs.sh -p Closure -b11..15

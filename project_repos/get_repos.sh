@@ -6,6 +6,7 @@ ARCHIVE=defects4j-repos.zip
 clean() {
     rm -rf \
     closure-compiler.git \
+    commons-cli.git \
     commons-lang.git \
     commons-math.git \
     jfreechart \

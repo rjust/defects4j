@@ -1,0 +1,22 @@
+diff --git a/src/test/org/apache/commons/cli/ValueTest.java b/src/test/org/apache/commons/cli/ValueTest.java
+index 93564de..c7d764a 100644
+--- a/src/test/org/apache/commons/cli/ValueTest.java
++++ b/src/test/org/apache/commons/cli/ValueTest.java
+@@ -212,7 +212,7 @@ public class ValueTest extends TestCase
+         cmd = parser.parse(opts, null, properties);
+         assertTrue( !cmd.hasOption("a") );
+         assertTrue( !cmd.hasOption("c") );
+-        assertTrue( cmd.hasOption("e") ); // this option accepts as argument
++        assertTrue( !cmd.hasOption("e") );
+ 
+ 
+         properties = new Properties();
+@@ -233,7 +233,7 @@ public class ValueTest extends TestCase
+         cmd = parser.parse(opts, null, properties);
+         assertTrue( !cmd.hasOption("a") );
+         assertTrue( !cmd.hasOption("c") );
+-        assertTrue( cmd.hasOption("e") );
++        assertTrue( !cmd.hasOption("e") );
+     } 
+ 
+     public void testPropertyOptionMultipleValues() throws Exception

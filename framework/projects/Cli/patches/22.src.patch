@@ -1,0 +1,83 @@
+diff --git a/src/java/org/apache/commons/cli/PosixParser.java b/src/java/org/apache/commons/cli/PosixParser.java
+index ca8b6c6..47ad0f7 100644
+--- a/src/java/org/apache/commons/cli/PosixParser.java
++++ b/src/java/org/apache/commons/cli/PosixParser.java
+@@ -38,7 +38,6 @@ public class PosixParser extends Parser
+     private boolean eatTheRest;
+ 
+     /** holder for the current option */
+-    private Option currentOption;
+ 
+     /** the command line Options */
+     private Options options;
+@@ -114,11 +113,10 @@ public class PosixParser extends Parser
+ 
+                 if (!options.hasOption(opt))
+                 {
+-                    processNonOptionToken(token, stopAtNonOption);
++                    processNonOptionToken(token);
+                 }
+                 else
+                 {
+-                    currentOption = options.getOption(opt);
+                     
+                     tokens.add(opt);
+                     if (pos != -1)
+@@ -145,9 +143,13 @@ public class PosixParser extends Parser
+                     burstToken(token, stopAtNonOption);
+                 }
+             }
++            else if (stopAtNonOption)
++            {
++                processNonOptionToken(token);
++            }
+             else
+             {
+-                processNonOptionToken(token, stopAtNonOption);
++                tokens.add(token);
+             }
+ 
+             gobble(iter);
+@@ -179,13 +181,10 @@ public class PosixParser extends Parser
+      *
+      * @param value The current token
+      */
+-    private void processNonOptionToken(String value, boolean stopAtNonOption)
++    private void processNonOptionToken(String value)
+     {
+-        if (stopAtNonOption && (currentOption == null || !currentOption.hasArg()))
+-        {
+             eatTheRest = true;
+             tokens.add("--");
+-        }
+ 
+         tokens.add(value);
+     }
+@@ -209,10 +208,6 @@ public class PosixParser extends Parser
+             eatTheRest = true;
+         }
+ 
+-        if (options.hasOption(token))
+-        {
+-            currentOption = options.getOption(token);
+-        }
+ 
+         tokens.add(token);
+     }
+@@ -245,6 +240,7 @@ public class PosixParser extends Parser
+      */
+     protected void burstToken(String token, boolean stopAtNonOption)
+     {
++        Option currentOption;
+         for (int i = 1; i < token.length(); i++)
+         {
+             String ch = String.valueOf(token.charAt(i));
+@@ -263,7 +259,7 @@ public class PosixParser extends Parser
+             }
+             else if (stopAtNonOption)
+             {
+-                processNonOptionToken(token.substring(i), true);
++                processNonOptionToken(token.substring(i));
+                 break;
+             }
+             else
