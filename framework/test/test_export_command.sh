@@ -58,6 +58,8 @@ test_ExportTestClassesDir() {
             local expected=""
             if [ "$pid" == "Chart" ]; then
                 expected="build-tests"
+            elif [ "$pid" == "Cli" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "Closure" ]; then
                 expected="build/test"
             elif [ "$pid" == "Lang" ]; then
