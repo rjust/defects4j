@@ -29,7 +29,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget -N http://blankslatetech.com/download/$ARCHIVE
+wget -N http://blankslatetech.com/downloads/$ARCHIVE
 new=$($cmd)
 
 # Exit if no newer file is available
