@@ -1,0 +1,46 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVLexer.java b/src/main/java/org/apache/commons/csv/CSVLexer.java
+index 90b9c58..6513055 100644
+--- a/src/main/java/org/apache/commons/csv/CSVLexer.java
++++ b/src/main/java/org/apache/commons/csv/CSVLexer.java
+@@ -161,11 +161,7 @@ final class CSVLexer extends Lexer {
+                 break;
+             } else if (isEscape(c)) {
+                 final int unescaped = readEscape();
+-                if (unescaped == Constants.END_OF_STREAM) { // unexpected char after escape
+-                    tkn.content.append((char) c).append((char) in.getLastChar());
+-                } else {
+                     tkn.content.append((char) unescaped);
+-                }
+                 c = in.read(); // continue
+             } else {
+                 tkn.content.append((char) c);
+@@ -208,12 +204,7 @@ final class CSVLexer extends Lexer {
+             c = in.read();
+ 
+             if (isEscape(c)) {
+-                final int unescaped = readEscape();
+-                if (unescaped == Constants.END_OF_STREAM) { // unexpected char after escape
+-                    tkn.content.append((char) c).append((char) in.getLastChar());
+-                } else {
+-                    tkn.content.append((char) unescaped);
+-                }
++                tkn.content.append((char) readEscape());
+             } else if (isQuoteChar(c)) {
+                 if (isQuoteChar(in.lookAhead())) {
+                     // double or escaped encapsulator -> add single encapsulator to token
+diff --git a/src/main/java/org/apache/commons/csv/Lexer.java b/src/main/java/org/apache/commons/csv/Lexer.java
+index af99745..0a6a090 100644
+--- a/src/main/java/org/apache/commons/csv/Lexer.java
++++ b/src/main/java/org/apache/commons/csv/Lexer.java
+@@ -108,11 +108,8 @@ abstract class Lexer {
+             throw new IOException("EOF whilst processing escape sequence");
+         default:
+             // Now check for meta-characters
+-            if (isDelimiter(c) || isEscape(c) || isQuoteChar(c) || isCommentStart(c)) {
+                 return c;
+-            }
+             // indicate unexpected char - available from in.getLastChar()
+-            return END_OF_STREAM;
+         }
+     }
+ 

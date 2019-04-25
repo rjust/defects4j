@@ -263,7 +263,25 @@ sub _check_t2v2 {
 
         # Run t2 and get number of failing tests
         my $file = "$project->{prog_root}/v2.fail"; `>$file`;
+
         $project->run_tests($file) or die;
+
+        # Filter out invalid test names, such as testEncode[0].
+        # This problem impacts many Commons projects.
+        if(-e "$project->{prog_root}/v2.fail"){
+            rename("$project->{prog_root}/v2.fail", "$project->{prog_root}/v2.fail".'.bak');
+            open(IN, '<'."$project->{prog_root}/v2.fail".'.bak') or die $!;
+            open(OUT, '>'."$project->{prog_root}/v2.fail") or die $!;
+            while(<IN>) {
+                if($_ =~ /\-\-\-/){
+                    $_ =~ s/\[[0-9]\]//g;
+                }
+                print OUT $_;
+            }
+            close(IN);
+            close(OUT);
+        }
+	
         # Get number of failing tests
         my $list = Utils::get_failing_tests($file);
         my $fail = scalar(@{$list->{"classes"}}) + scalar(@{$list->{"methods"}});

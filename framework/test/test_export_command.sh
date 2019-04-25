@@ -70,6 +70,8 @@ test_ExportTestClassesDir() {
                 elif [ "$bid" -ge "42" ] && [ "$bid" -le "65" ]; then
                     expected="target/tests"
                 fi
+            elif [ "$pid" == "Csv" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "Math" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "Mockito" ]; then
