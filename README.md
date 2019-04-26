@@ -8,13 +8,14 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 494 bugs from the following open-source projects:
+Defects4J contains 512 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
 | Chart      | JFreeChart           |  26            |
 | Cli        | Apache commons-cli   |  40            |
 | Closure    | Closure compiler     | 176            |
+| Codec      | Apache commons-codec |  18            |
 | Csv        | Apache commons-csv   |  16            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |

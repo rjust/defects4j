@@ -70,6 +70,8 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b152..160
     - script: carton exec ./test_verify_bugs.sh -p Closure -b161..169
     - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
+## Codec
+    - script: carton exec ./test_verify_bugs.sh -p Codec -b 1..18
 ## Csv
     - script: carton exec ./test_verify_bugs.sh -p Csv -b 1..16
 ## Lang

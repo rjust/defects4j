@@ -1,0 +1,17 @@
+org.apache.commons.codec.StringEncoderComparatorTest
+org.apache.commons.codec.binary.Base32InputStreamTest
+org.apache.commons.codec.binary.Base32OutputStreamTest
+org.apache.commons.codec.binary.Base32Test
+org.apache.commons.codec.binary.Base64InputStreamTest
+org.apache.commons.codec.binary.Base64OutputStreamTest
+org.apache.commons.codec.binary.Base64Test
+org.apache.commons.codec.binary.BaseNCodecTest
+org.apache.commons.codec.binary.HexTest
+org.apache.commons.codec.binary.StringUtilsTest
+org.apache.commons.codec.digest.DigestUtilsTest
+org.apache.commons.codec.language.DoubleMetaphone2Test
+org.apache.commons.codec.language.DoubleMetaphoneTest
+org.apache.commons.codec.net.BCodecTest
+org.apache.commons.codec.net.QCodecTest
+org.apache.commons.codec.net.QuotedPrintableCodecTest
+org.apache.commons.codec.net.URLCodecTest

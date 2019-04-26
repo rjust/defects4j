@@ -7,6 +7,7 @@ clean() {
     rm -rf \
     closure-compiler.git \
     commons-cli.git \
+    commons-codec.git \
     commons-csv.git \
     commons-lang.git \
     commons-math.git \
