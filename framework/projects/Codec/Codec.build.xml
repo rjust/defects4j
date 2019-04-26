@@ -42,7 +42,8 @@ of the checked-out project version.
     <!-- Project properties targets -->
     <if> <isset property="ant.refid:compile.classpath" />
           <then>
-            <property name="test.dir" value="${test.home}" />
+              <property name="test.dir" value="${test.home}" />
+              <property name="build.tests" value="${build.home}/tests" />
           </then>
           <else>
             <property name="oldversion"    value="yes" />
