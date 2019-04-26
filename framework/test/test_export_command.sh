@@ -63,7 +63,7 @@ test_ExportTestClassesDir() {
             elif [ "$pid" == "Closure" ]; then
                 expected="build/test"
             elif [ "$pid" == "Codec" ]; then
-                expected="target/test-classes"
+                expected="target/tests"
             elif [ "$pid" == "Lang" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "20" ]; then
                     expected="target/tests"
