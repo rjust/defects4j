@@ -65,7 +65,7 @@ test_ExportTestClassesDir() {
             elif [ "$pid" == "Codec" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "16" ]; then
                     expected="target/tests"
-                elif [ "$bid" -ge "17" ] && [ "$bid" -le "18" ]; then
+                elif [ "$bid" -ge "17" ]; then
                     expected="target/test-classes"
                 fi
             elif [ "$pid" == "Lang" ]; then
