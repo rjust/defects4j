@@ -1,0 +1,30 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java b/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
+index 50136a3..0ffe76d 100644
+--- a/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
+@@ -46,7 +46,6 @@ public class CoreOperationTest extends JXPathTestCase {
+             Variables vars = context.getVariables();
+             vars.declareVariable("integer", new Integer(1));
+             vars.declareVariable("array", new double[] { 0.25, 0.5, 0.75 });
+-            vars.declareVariable("nan", new Double(Double.NaN));
+         }
+     }
+ 
+@@ -111,16 +110,4 @@ public class CoreOperationTest extends JXPathTestCase {
+         assertXPathValue(context, "$array > 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$array < 0", Boolean.FALSE, Boolean.class);
+     }
+-
+-    public void testNan() {
+-        assertXPathValue(context, "$nan > $nan", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan < $nan", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan = $nan", Boolean.TRUE, Boolean.class);
+-        assertXPathValue(context, "$nan > 0", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan < 0", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan = 0", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan > 1", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan < 1", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan = 1", Boolean.FALSE, Boolean.class);
+-    }
+ }
+\ No newline at end of file

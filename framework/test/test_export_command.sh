@@ -68,7 +68,11 @@ test_ExportTestClassesDir() {
                 elif [ "$bid" -ge "17" ] && [ "$bid" -le "18" ]; then
                     expected="target/test-classes"
                 fi
-            elif [ "$pid" == "Lang" ]; then
+            elif [ "$pid" == "Csv" ]; then
+                expected="target/test-classes"
+            elif [ "$pid" == "JxPath" ]; then
+                expected="target/test-classes"
+    	    elif [ "$pid" == "Lang" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "20" ]; then
                     expected="target/tests"
                 elif [ "$bid" -ge "21" ] && [ "$bid" -le "41" ]; then
@@ -76,8 +80,6 @@ test_ExportTestClassesDir() {
                 elif [ "$bid" -ge "42" ] && [ "$bid" -le "65" ]; then
                     expected="target/tests"
                 fi
-            elif [ "$pid" == "Csv" ]; then
-                expected="target/test-classes"
             elif [ "$pid" == "Math" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "Mockito" ]; then

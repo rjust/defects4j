@@ -1,0 +1,147 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
+index e083ab3..0495807 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
+@@ -34,28 +34,13 @@ import org.apache.commons.jxpath.ri.axes.SelfContext;
+  * @version $Revision$ $Date$
+  */
+ public abstract class CoreOperationCompare extends CoreOperation {
+-    private boolean invert;
+ 
+     public CoreOperationCompare(Expression arg1, Expression arg2) {
+-        this(arg1, arg2, false);
+-    }
+-
+-    protected CoreOperationCompare(Expression arg1, Expression arg2, boolean invert) {
+         super(new Expression[] { arg1, arg2 });
+-        this.invert = invert;
+     }
+ 
+-    public Object computeValue(EvalContext context) {
+-        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;
+-    }
+ 
+-    protected int getPrecedence() {
+-        return 2;
+-    }
+ 
+-    protected boolean isSymmetric() {
+-        return true;
+-    }
+ 
+     /**
+      * Compares two values
+@@ -128,6 +113,11 @@ public abstract class CoreOperationCompare extends CoreOperation {
+     }
+ 
+     protected boolean equal(Object l, Object r) {
++        if (l instanceof Pointer && r instanceof Pointer) {
++            if (l.equals(r)) {
++                return true;
++            }
++        }
+         if (l instanceof Pointer) {
+             l = ((Pointer) l).getValue();
+         }
+@@ -136,28 +126,22 @@ public abstract class CoreOperationCompare extends CoreOperation {
+             r = ((Pointer) r).getValue();
+         }
+ 
+-        boolean result;
++        if (l == r) {
++            return true;
++        }
++
+         if (l instanceof Boolean || r instanceof Boolean) {
+-            result = l == r || InfoSetUtil.booleanValue(l) == InfoSetUtil.booleanValue(r);
+-        } else if (l instanceof Number || r instanceof Number) {
++            return (InfoSetUtil.booleanValue(l) == InfoSetUtil.booleanValue(r));
++        }
+             //if either side is NaN, no comparison returns true:
+-            double ld = InfoSetUtil.doubleValue(l);
+-            if (Double.isNaN(ld)) {
+-                return false;
+-            }
+-            double rd = InfoSetUtil.doubleValue(r);
+-            if (Double.isNaN(rd)) {
+-                return false;
+-            }
+-            result = ld == rd;
+-        } else {
+-            if (l instanceof String || r instanceof String) {
+-                l = InfoSetUtil.stringValue(l);
+-                r = InfoSetUtil.stringValue(r);
+-            }
+-            result = l == r || l != null && l.equals(r);
++        if (l instanceof Number || r instanceof Number) {
++            return (InfoSetUtil.doubleValue(l) == InfoSetUtil.doubleValue(r));
++        }
++        if (l instanceof String || r instanceof String) {
++            return (
++                InfoSetUtil.stringValue(l).equals(InfoSetUtil.stringValue(r)));
+         }
+-        return result ^ invert;
++        return l != null && l.equals(r);
+     }
+ 
+ }
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
+index 801e7fb..94b16fb 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
+ /**
+  * Implementation of Expression for the operation "=".
+  *
+@@ -28,6 +29,15 @@ public class CoreOperationEqual extends CoreOperationCompare {
+         super(arg1, arg2);
+     }
+ 
++    public Object computeValue(EvalContext context) {
++        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;
++    }  
++    protected int getPrecedence() {
++        return 2;
++    }
++    protected boolean isSymmetric() {
++        return true;
++    } 
+     public String getSymbol() {
+         return "=";
+     }
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
+index aad3f5f..ff766a2 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
+ /**
+  * Implementation of Expression for the operation "!=".
+  *
+@@ -25,9 +26,18 @@ package org.apache.commons.jxpath.ri.compiler;
+ public class CoreOperationNotEqual extends CoreOperationCompare {
+ 
+     public CoreOperationNotEqual(Expression arg1, Expression arg2) {
+-        super(arg1, arg2, true);
++        super(arg1, arg2);
+     }
+ 
++    public Object computeValue(EvalContext context) {
++        return equal(context, args[0], args[1]) ? Boolean.FALSE : Boolean.TRUE;
++    } 
++    protected int getPrecedence() {
++        return 2;
++    }
++    protected boolean isSymmetric() {
++        return true;
++    }
+     public String getSymbol() {
+         return "!=";
+     }

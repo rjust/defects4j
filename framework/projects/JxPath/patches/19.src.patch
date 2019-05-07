@@ -1,0 +1,60 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+index 8e3b775..3300d03 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+@@ -557,21 +557,17 @@ public class DOMNodePointer extends NodePointer {
+         int count = 1;
+         Node n = node.getPreviousSibling();
+         while (n != null) {
+-            if (n.getNodeType() == Node.ELEMENT_NODE && matchesQName(n)) {
++            if (n.getNodeType() == Node.ELEMENT_NODE) {
++                String nm = n.getNodeName();
++                if (nm.equals(node.getNodeName())) {
+                 count++;
++                }
+             }
+             n = n.getPreviousSibling();
+         }
+         return count;
+     }
+ 
+-    private boolean matchesQName(Node n) {
+-        if (getNamespaceURI() != null) {
+-            return equalStrings(getNamespaceURI(n), getNamespaceURI())
+-                    && equalStrings(node.getLocalName(), n.getLocalName());
+-        }
+-        return equalStrings(node.getNodeName(), n.getNodeName());
+-    }
+ 
+     /**
+      * Get relative position of this among all siblings.
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java
+index 4b40a39..7df3ace 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java
+@@ -693,7 +693,8 @@ public class JDOMNodePointer extends NodePointer {
+             String name = ((Element) node).getQualifiedName();
+             for (int i = 0; i < children.size(); i++) {
+                 Object child = children.get(i);
+-                if (child instanceof Element && matchesQName(((Element) child))) {
++                if ((child instanceof Element)
++                    && ((Element) child).getQualifiedName().equals(name)) {
+                     count++;
+                 }
+                 if (child == node) {
+@@ -705,15 +706,6 @@ public class JDOMNodePointer extends NodePointer {
+         return 1;
+     }
+ 
+-    private boolean matchesQName(Element element) {
+-        if (getNamespaceURI() != null) {
+-            String ns = getNamespaceURI(element);
+-            if (ns == null || !ns.equals(getNamespaceURI())) {
+-                return false;
+-            }
+-        }
+-        return element.getName().equals(((Element) node).getName());
+-    }
+ 
+     /**
+      * Get relative position of this among all siblings.

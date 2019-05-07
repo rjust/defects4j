@@ -10,6 +10,7 @@ clean() {
     commons-codec.git \
     commons-csv.git \
     commons-lang.git \
+    commons-jxpath.git \
     commons-math.git \
     jfreechart \
     joda-time.git \

@@ -1,0 +1,16 @@
+org.apache.commons.jxpath.ri.JXPathCompiledExpressionTest
+org.apache.commons.jxpath.ri.StressTest
+org.apache.commons.jxpath.ri.axes.RecursiveAxesTest
+org.apache.commons.jxpath.ri.axes.SimplePathInterpreterTest
+org.apache.commons.jxpath.ri.compiler.ContextDependencyTest
+org.apache.commons.jxpath.ri.compiler.CoreFunctionTest
+org.apache.commons.jxpath.ri.compiler.CoreOperationTest
+org.apache.commons.jxpath.ri.compiler.ExtensionFunctionTest
+org.apache.commons.jxpath.ri.compiler.VariableTest
+org.apache.commons.jxpath.ri.model.MixedModelTest
+org.apache.commons.jxpath.ri.model.beans.BeanModelTest
+org.apache.commons.jxpath.ri.model.container.ContainerModelTest
+org.apache.commons.jxpath.ri.model.dom.DOMModelTest
+org.apache.commons.jxpath.ri.model.dynabeans.DynaBeanModelTest
+org.apache.commons.jxpath.ri.model.dynamic.DynamicPropertiesModelTest
+org.apache.commons.jxpath.ri.model.jdom.JDOMModelTest
