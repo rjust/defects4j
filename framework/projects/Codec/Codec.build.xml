@@ -87,7 +87,8 @@ of the checked-out project version.
         <include name='**/*Test.java' />
         <include name='**/Test*.java' />
         <exclude name='**/*AbstractTest.java' />
-        <exclude name='**/*PerformanceTest.java' />
+	<exclude name='**/*PerformanceTest.java' />
+        <exclude name='**/*PhoneticEngineTest.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
