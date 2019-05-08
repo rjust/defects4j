@@ -1,0 +1,84 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/base/ParserBase.java b/src/main/java/com/fasterxml/jackson/core/base/ParserBase.java
+index ea40476c..0bf4e77e 100644
+--- a/src/main/java/com/fasterxml/jackson/core/base/ParserBase.java
++++ b/src/main/java/com/fasterxml/jackson/core/base/ParserBase.java
+@@ -955,7 +955,7 @@ public abstract class ParserBase
+              * to avoid rounding errors that non-decimal floating operations
+              * would incur
+              */
+-            _numberBigDecimal = NumberInput.parseBigDecimal(getText());
++            _numberBigDecimal = new BigDecimal(getText());
+         } else if ((_numTypesValid & NR_BIGINT) != 0) {
+             _numberBigDecimal = new BigDecimal(_numberBigInt);
+         } else if ((_numTypesValid & NR_LONG) != 0) {
+diff --git a/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java b/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
+index eb463b99..8d33385e 100644
+--- a/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
++++ b/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
+@@ -1,6 +1,5 @@
+ package com.fasterxml.jackson.core.io;
+ 
+-import java.math.BigDecimal;
+ 
+ public final class NumberInput
+ {
+@@ -290,30 +289,7 @@ public final class NumberInput
+         return Double.parseDouble(numStr);
+     }
+ 
+-    public static BigDecimal parseBigDecimal(String numStr) throws NumberFormatException
+-    {
+-        try {
+-            return new BigDecimal(numStr);
+-        } catch (NumberFormatException e) {
+-            throw _badBigDecimal(numStr);
+-        }
+-    }
+ 
+-    public static BigDecimal parseBigDecimal(char[] buffer) throws NumberFormatException {
+-        return parseBigDecimal(buffer, 0, buffer.length);
+-    }
+     
+-    public static BigDecimal parseBigDecimal(char[] buffer, int offset, int len)
+-            throws NumberFormatException
+-    {
+-        try {
+-            return new BigDecimal(buffer, offset, len);
+-        } catch (NumberFormatException e) {
+-            throw _badBigDecimal(new String(buffer, offset, len));
+-        }
+-    }
+ 
+-    private static NumberFormatException _badBigDecimal(String str) {
+-        return new NumberFormatException("Value \""+str+"\" can not be represented as BigDecimal");
+-    }
+ }
+diff --git a/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java b/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+index bab80e0a..e0acf96f 100644
+--- a/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
++++ b/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+@@ -384,18 +384,18 @@ public final class TextBuffer
+     {
+         // Already got a pre-cut array?
+         if (_resultArray != null) {
+-            return NumberInput.parseBigDecimal(_resultArray);
++            return new BigDecimal(_resultArray);
+         }
+         // Or a shared buffer?
+-        if ((_inputStart >= 0) && (_inputBuffer != null)) {
+-            return NumberInput.parseBigDecimal(_inputBuffer, _inputStart, _inputLen);
++        if (_inputStart >= 0) {
++            return new BigDecimal(_inputBuffer, _inputStart, _inputLen);
+         }
+         // Or if not, just a single buffer (the usual case)
+-        if ((_segmentSize == 0) && (_currentSegment != null)) {
+-            return NumberInput.parseBigDecimal(_currentSegment, 0, _currentSize);
++        if (_segmentSize == 0) {
++            return new BigDecimal(_currentSegment, 0, _currentSize);
+         }
+         // If not, let's just get it aggregated...
+-        return NumberInput.parseBigDecimal(contentsAsArray());
++        return new BigDecimal(contentsAsArray());
+     }
+ 
+     /**

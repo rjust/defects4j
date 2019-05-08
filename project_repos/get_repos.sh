@@ -12,6 +12,7 @@ clean() {
     commons-lang.git \
     commons-jxpath.git \
     commons-math.git \
+    jackson-core.git \
     jfreechart \
     joda-time.git \
     README 

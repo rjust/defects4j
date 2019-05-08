@@ -1,0 +1,145 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java b/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
+index 1270eae4..57b2ab7d 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
+@@ -90,7 +90,6 @@ public abstract class JsonGeneratorImpl extends GeneratorBase
+      *
+      * @since 2.7
+      */
+-    protected boolean _cfgUnqNames;
+ 
+     /*
+     /**********************************************************
+@@ -102,11 +101,10 @@ public abstract class JsonGeneratorImpl extends GeneratorBase
+     {
+         super(features, codec);
+         _ioContext = ctxt;
+-        if (Feature.ESCAPE_NON_ASCII.enabledIn(features)) {
++        if (isEnabled(Feature.ESCAPE_NON_ASCII)) {
+             // inlined `setHighestNonEscapedChar()`
+             _maximumNonEscapedChar = 127;
+         }
+-        _cfgUnqNames = !Feature.QUOTE_FIELD_NAMES.enabledIn(features);
+     }
+ 
+     /*
+@@ -115,29 +113,8 @@ public abstract class JsonGeneratorImpl extends GeneratorBase
+     /**********************************************************
+      */
+ 
+-    @Override
+-    public JsonGenerator enable(Feature f) {
+-        super.enable(f);
+-        if (f == Feature.QUOTE_FIELD_NAMES) {
+-            _cfgUnqNames = false;
+-        }
+-        return this;
+-    }
+ 
+-    @Override
+-    public JsonGenerator disable(Feature f) {
+-        super.disable(f);
+-        if (f == Feature.QUOTE_FIELD_NAMES) {
+-            _cfgUnqNames = true;
+-        }
+-        return this;
+-    }
+ 
+-    @Override
+-    protected void _checkStdFeatureChanges(int newFeatureFlags, int changedFeatures) {
+-        super._checkStdFeatureChanges(newFeatureFlags, changedFeatures);
+-        _cfgUnqNames = !Feature.QUOTE_FIELD_NAMES.enabledIn(newFeatureFlags);
+-    }
+ 
+     @Override
+     public JsonGenerator setHighestNonEscapedChar(int charCode) {
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+index 8f17ea32..e307e637 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+@@ -91,6 +91,7 @@ public class UTF8JsonGenerator
+      */
+     protected boolean _bufferRecyclable;
+ 
++    protected boolean _cfgUnqNames;
+     /*
+     /**********************************************************
+     /* Life-cycle
+@@ -118,6 +119,7 @@ public class UTF8JsonGenerator
+         if (isEnabled(Feature.ESCAPE_NON_ASCII)) {
+             setHighestNonEscapedChar(127);
+         }
++        _cfgUnqNames = !Feature.QUOTE_FIELD_NAMES.enabledIn(features);
+     }
+     
+     public UTF8JsonGenerator(IOContext ctxt, int features, ObjectCodec codec,
+@@ -135,6 +137,7 @@ public class UTF8JsonGenerator
+         _outputMaxContiguous = (_outputEnd >> 3);
+         _charBuffer = ctxt.allocConcatBuffer();
+         _charBufferLength = _charBuffer.length;
++        _cfgUnqNames = !Feature.QUOTE_FIELD_NAMES.enabledIn(features);
+     }
+ 
+     /*
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
+index 316886be..af871ce9 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
+@@ -136,7 +136,7 @@ public final class WriterBasedJsonGenerator
+             _outputBuffer[_outputTail++] = ',';
+         }
+         // Alternate mode, in which quoting of field names disabled?
+-        if (_cfgUnqNames) {
++        if (!isEnabled(Feature.QUOTE_FIELD_NAMES)) {
+             _writeString(name);
+             return;
+         }
+@@ -166,7 +166,7 @@ public final class WriterBasedJsonGenerator
+         }
+         // Alternate mode, in which quoting of field names disabled?
+         final char[] quoted = name.asQuotedChars();
+-        if (_cfgUnqNames) {
++        if (!isEnabled(Feature.QUOTE_FIELD_NAMES)) {
+             writeRaw(quoted, 0, quoted.length);
+             return;
+         }
+@@ -270,9 +270,7 @@ public final class WriterBasedJsonGenerator
+             _cfgPrettyPrinter.beforeObjectEntries(this);
+         }
+ 
+-        if (_cfgUnqNames) {// non-standard, omit quotes
+-            _writeString(name);
+-        } else { 
++        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) { // standard
+             if (_outputTail >= _outputEnd) {
+                 _flushBuffer();
+             }
+@@ -282,6 +280,8 @@ public final class WriterBasedJsonGenerator
+                 _flushBuffer();
+             }
+             _outputBuffer[_outputTail++] = '"';
++        } else { // non-standard, omit quotes
++            _writeString(name);
+         }
+     }
+ 
+@@ -294,9 +294,7 @@ public final class WriterBasedJsonGenerator
+         }
+     
+         final char[] quoted = name.asQuotedChars();
+-        if (_cfgUnqNames) {// non-standard, omit quotes
+-            writeRaw(quoted, 0, quoted.length);
+-        } else {
++        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) { // standard
+             if (_outputTail >= _outputEnd) {
+                 _flushBuffer();
+             }
+@@ -306,6 +304,8 @@ public final class WriterBasedJsonGenerator
+                 _flushBuffer();
+             }
+             _outputBuffer[_outputTail++] = '"';
++        } else { // non-standard, omit quotes
++            writeRaw(quoted, 0, quoted.length);
+         }
+     }
+ 

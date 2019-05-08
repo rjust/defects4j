@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/LocationInObjectTest.java b/src/test/java/com/fasterxml/jackson/failing/LocationInObjectTest.java
+similarity index 99%
+rename from src/test/java/com/fasterxml/jackson/core/json/LocationInObjectTest.java
+rename to src/test/java/com/fasterxml/jackson/failing/LocationInObjectTest.java
+index eb317d40..355d8bca 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/LocationInObjectTest.java
++++ b/src/test/java/com/fasterxml/jackson/failing/LocationInObjectTest.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.core.json;
++package com.fasterxml.jackson.failing;
+ 
+ import com.fasterxml.jackson.core.*;
+ 

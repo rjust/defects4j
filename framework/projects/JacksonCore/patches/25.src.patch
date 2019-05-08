@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+index f38e4aae..2c1f5a23 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+@@ -1960,7 +1960,7 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+             }
+             char c = _inputBuffer[_inputPtr];
+             int i = (int) c;
+-            if (i < maxCode) {
++            if (i <= maxCode) {
+                 if (codes[i] != 0) {
+                     break;
+                 }

@@ -1,0 +1,79 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java b/src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java
+index 128fbcf4..ecc8e36f 100644
+--- a/src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java
++++ b/src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java
+@@ -1,7 +1,6 @@
+ package com.fasterxml.jackson.core.base;
+ 
+ import java.io.*;
+-import java.math.BigDecimal;
+ 
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.core.json.DupDetector;
+@@ -50,7 +49,6 @@ public abstract class GeneratorBase extends JsonGenerator
+      * 
+      * @since 2.7.7
+      */
+-    protected final static int MAX_BIG_DECIMAL_SCALE = 9999;
+     
+     /*
+     /**********************************************************
+@@ -431,19 +429,7 @@ public abstract class GeneratorBase extends JsonGenerator
+      *
+      * @since 2.7.7
+      */
+-    protected String _asString(BigDecimal value) throws IOException {
+-        if (Feature.WRITE_BIGDECIMAL_AS_PLAIN.enabledIn(_features)) {
+             // 24-Aug-2016, tatu: [core#315] prevent possible DoS vector
+-            int scale = value.scale();
+-            if ((scale < -MAX_BIG_DECIMAL_SCALE) || (scale > MAX_BIG_DECIMAL_SCALE)) {
+-                _reportError(String.format(
+-"Attempt to write plain `java.math.BigDecimal` (see JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN) with illegal scale (%d): needs to be between [-%d, %d]",
+-scale, MAX_BIG_DECIMAL_SCALE, MAX_BIG_DECIMAL_SCALE));
+-            }
+-            return value.toPlainString();
+-        }
+-        return value.toString();
+-    }
+ 
+     /*
+     /**********************************************************
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+index 55246913..77fc58d9 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+@@ -907,9 +907,13 @@ public class UTF8JsonGenerator
+         if (value == null) {
+             _writeNull();
+         } else  if (_cfgNumbersAsStrings) {
+-            _writeQuotedRaw(_asString(value));
++            String raw = Feature.WRITE_BIGDECIMAL_AS_PLAIN.enabledIn(_features)
++                    ? value.toPlainString() : value.toString();
++            _writeQuotedRaw(raw);
++        } else if (Feature.WRITE_BIGDECIMAL_AS_PLAIN.enabledIn(_features)) {
++            writeRaw(value.toPlainString());
+         } else {
+-            writeRaw(_asString(value));
++            writeRaw(value.toString());
+         }
+     }
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
+index 2340ea20..cdfca071 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java
+@@ -684,9 +684,12 @@ public final class WriterBasedJsonGenerator
+         if (value == null) {
+             _writeNull();
+         } else  if (_cfgNumbersAsStrings) {
+-            _writeQuotedRaw(_asString(value));
++            String raw = isEnabled(Feature.WRITE_BIGDECIMAL_AS_PLAIN) ? value.toPlainString() : value.toString();
++            _writeQuotedRaw(raw);
++        } else if (isEnabled(Feature.WRITE_BIGDECIMAL_AS_PLAIN)) {
++            writeRaw(value.toPlainString());
+         } else {
+-            writeRaw(_asString(value));
++            writeRaw(value.toString());
+         }
+     }
+ 

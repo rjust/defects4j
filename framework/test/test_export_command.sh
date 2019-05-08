@@ -70,6 +70,8 @@ test_ExportTestClassesDir() {
                 fi
             elif [ "$pid" == "Csv" ]; then
                 expected="target/test-classes"
+            elif [ "$pid" == "JacksonCore" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "JxPath" ]; then
                 expected="target/test-classes"
     	    elif [ "$pid" == "Lang" ]; then

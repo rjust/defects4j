@@ -75,6 +75,9 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Codec -b1..18
 ## Csv
     - script: carton exec ./test_verify_bugs.sh -p Csv -b1..16
+## JacksonCore
+    - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
+    - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b14..26
 ## JxPath
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b1..11
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b12..22
