@@ -78,6 +78,8 @@ jobs:
 ## JacksonCore
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b14..26
+## JacksonXml
+    - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..6
 ## JxPath
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b1..11
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b12..22
