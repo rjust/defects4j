@@ -1,0 +1,43 @@
+diff --git a/test/com/google/javascript/jscomp/ScopedAliasesTest.java b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
+index e6467bd4..ce24f8bd 100644
+--- a/test/com/google/javascript/jscomp/ScopedAliasesTest.java
++++ b/test/com/google/javascript/jscomp/ScopedAliasesTest.java
+@@ -177,10 +177,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
+ 
+   private void testTypes(String aliases, String code) {
+     testScopedNoChanges(aliases, code);
+-    verifyTypes();
+-  }
+-
+-  private void verifyTypes() {
+     Compiler lastCompiler = getLastCompiler();
+     new TypeVerifyingPass(lastCompiler).process(lastCompiler.externsRoot,
+         lastCompiler.jsRoot);
+@@ -308,27 +304,6 @@ public class ScopedAliasesTest extends CompilerTestCase {
+         + "/** @type {function() : goog.Timer} */ types.expected;");
+   }
+ 
+-  public void testForwardJsDoc() {
+-    testScoped(
+-        "/**\n" +
+-        " * @constructor\n" +
+-        " */\n" +
+-        "foo.Foo = function() {};" +
+-        "/** @param {Foo.Bar} x */ function actual(x) {3}" +
+-        "var Foo = foo.Foo;" +
+-        "/** @constructor */ Foo.Bar = function() {};" +
+-        "/** @param {foo.Foo.Bar} x */ function expected(x) {}",
+-
+-        "/**\n" +
+-        " * @constructor\n" +
+-        " */\n" +
+-        "foo.Foo = function() {};" +
+-        "/** @param {foo.Foo.Bar} x */ function actual(x) {3}" +
+-        "/** @constructor */ foo.Foo.Bar = function() {};" +
+-        "/** @param {foo.Foo.Bar} x */ function expected(x) {}");
+-    verifyTypes();
+-  }
+-
+   public void testTestTypes() {
+     try {
+       testTypes(

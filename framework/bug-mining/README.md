@@ -78,7 +78,7 @@ the `commit-db` for Chart):
 | Project ID | Issue tracker | Issue tracker project ID | Regexp                    |
 |------------|---------------|--------------------------|---------------------------|
 | Chart      |               |                          |                           |
-| Closure    | google        | closure-compiler         | `/issue.*[^\d](\d+)/mi`   |
+| Closure    | google        | closure-compiler         | `/issue[^\d]*(\d+)/mi`    |
 | Lang       | jira          | LANG                     | `/(LANG-\d+)/mi`          |
 | Math       | jira          | MATH                     | `/(MATH-\d+)/mi`          |
 | Mockito    | github        | mockito/mockito          | `/Fix(?:es)?\s*#(\d+)/mi` |
@@ -317,8 +317,6 @@ Terms commonly used in Defects4J
 
 ## Limitations of the bug-mining framework
 
-- At the moment the bug-mining framework does not mine existing projects in the
-  `Defects4J` database.
 - Although some scripts in the bug-mining framework are agnostic to the version
   control system used by a project and even support different version control
   systems, there are some other scripts that are Git dependent.
