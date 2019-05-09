@@ -124,17 +124,20 @@ GZOLTAR_ZIP="gzoltar-${GZOLTAR_FULL_VERSION}.zip"
 GZOLTAR_TMP_DIR="gzoltar_tmp_dir"
 GZOLTAR_ANT_JAR="gzoltarant.jar"
 GZOLTAR_AGENT_RT_JAR="gzoltaragent.jar"
+GZOLTAR_CLI_JAR="gzoltarcli.jar"
 
 cd "$DIR_LIB_FL" && [ ! -f "$GZOLTAR_ZIP" ] \
                  && wget -nv "$GZOLTAR_URL/$GZOLTAR_ZIP" \
                  && unzip -o -q "$GZOLTAR_ZIP" -d "$GZOLTAR_TMP_DIR" \
                  && mv "$GZOLTAR_TMP_DIR/lib/$GZOLTAR_ANT_JAR" . \
                  && mv "$GZOLTAR_TMP_DIR/lib/$GZOLTAR_AGENT_RT_JAR" . \
+                 && mv "$GZOLTAR_TMP_DIR/lib/$GZOLTAR_CLI_JAR" . \
                  && rm -r "$GZOLTAR_TMP_DIR" "$GZOLTAR_ZIP"
 
 # Set symlinks for the supported version of GZoltar
 (cd "$DIR_LIB_FL" && ln -sf "$GZOLTAR_ANT_JAR" "gzoltar-ant-current.jar")
 (cd "$DIR_LIB_FL" && ln -sf "$GZOLTAR_AGENT_RT_JAR" "gzoltar-agent-rt-current.jar")
+(cd "$DIR_LIB_FL" && ln -sf "$GZOLTAR_CLI_JAR" "gzoltar-cli-current.jar")
 
 LOCS_TO_STMS_VERSION="0.0.1"
 LOCS_TO_STMS_URL="https://github.com/GZoltar/locs-to-stms/releases/download/v${LOCS_TO_STMS_VERSION}"
