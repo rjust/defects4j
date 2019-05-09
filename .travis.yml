@@ -4,6 +4,12 @@ perl:
 
 os: linux
 
+addons:
+  apt:
+    packages:
+      - maven
+      - diffstat
+
 cache:
   directories:
     - /home/travis/.java/
@@ -35,6 +41,7 @@ jobs:
     - script: carton exec ./test_randoop.sh
     - script: carton exec ./test_fix_test_suite.sh
     - script: carton exec ./test_export_command.sh
+    - script: carton exec ./test_bug_mining.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
 # take a long time to finish).
     - stage: verify-bugs
@@ -55,6 +62,11 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b101..111
     - script: carton exec ./test_verify_bugs.sh -p Closure -b112..122
     - script: carton exec ./test_verify_bugs.sh -p Closure -b123..133
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b134..142
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b143..151
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b152..160
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b161..169
+    - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65

@@ -1,0 +1,32 @@
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
+index 4a03b1e3..9367b32f 100644
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
+@@ -728,7 +728,12 @@ class TypeInference
+     // See CodingConvention#getObjectLiteralCase and goog.object.reflect.
+     // Ignore these types of literals.
+     ObjectType objectType = ObjectType.cast(type);
+-    if (objectType == null || n.getBooleanProp(Node.REFLECTED_OBJECT)) {
++    if (objectType == null) {
++      return scope;
++    }
++    boolean hasLendsName = n.getJSDocInfo() != null &&
++        n.getJSDocInfo().getLendsName() != null;
++    if (objectType.hasReferenceName() && !hasLendsName) {
+       return scope;
+     }
+ 
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index ef02b9c1..e9e8486f 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1666,9 +1666,6 @@ final class TypedScopeCreator implements ScopeCreator {
+       }
+ 
+       // Prototype sets are always declared.
+-      if (qName != null && qName.endsWith(".prototype")) {
+-        return false;
+-      }
+ 
+       boolean inferred = true;
+       if (info != null) {

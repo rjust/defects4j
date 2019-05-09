@@ -1,0 +1,19 @@
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index dcf62b29..d253cf68 100644
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -380,14 +380,6 @@ public class CommandLineRunnerTest extends TestCase {
+             lastCompiler.getModuleGraph().getRootModule()));
+   }
+ 
+-  public void testCharSetExpansion() {
+-    testSame("");
+-    assertEquals("US-ASCII", lastCompiler.getOptions().outputCharset);
+-    args.add("--charset=UTF-8");
+-    testSame("");
+-    assertEquals("UTF-8", lastCompiler.getOptions().outputCharset);
+-  }
+-
+   public void testChainModuleManifest() throws Exception {
+     useModules = ModulePattern.CHAIN;
+     testSame(new String[] {

@@ -1,0 +1,40 @@
+diff --git a/src/com/google/javascript/jscomp/TypeInference.java b/src/com/google/javascript/jscomp/TypeInference.java
+index 54d429d9..c43a7d1a 100644
+--- a/src/com/google/javascript/jscomp/TypeInference.java
++++ b/src/com/google/javascript/jscomp/TypeInference.java
+@@ -527,9 +527,7 @@ class TypeInference
+       case Token.NAME:
+         String varName = left.getString();
+         Var var = syntacticScope.getVar(varName);
+-        JSType varType = var == null ? null : var.getType();
+-        boolean isVarDeclaration = left.hasChildren()
+-            && varType != null && !var.isTypeInferred();
++        boolean isVarDeclaration = left.hasChildren();
+ 
+         // When looking at VAR initializers for declared VARs, we tend
+         // to use the declared type over the type it's being
+@@ -547,9 +545,8 @@ class TypeInference
+         // sure we back-infer the <string> element constraint on
+         // the left hand side, so we use the left hand side.
+ 
+-        boolean isVarTypeBetter = isVarDeclaration &&
++        boolean isVarTypeBetter = !isVarDeclaration || var == null || var.isTypeInferred();
+             // Makes it easier to check for NPEs.
+-            !resultType.isNullType() && !resultType.isVoidType();
+ 
+         // TODO(nicksantos): This might be a better check once we have
+         // back-inference of object/array constraints.  It will probably
+@@ -562,11 +559,10 @@ class TypeInference
+ 
+ 
+         if (isVarTypeBetter) {
+-          redeclareSimpleVar(scope, left, varType);
+-        } else {
+           redeclareSimpleVar(scope, left, resultType);
+         }
+-        left.setJSType(resultType);
++        left.setJSType(isVarDeclaration || leftType == null ?
++            resultType : null);
+ 
+         if (var != null && var.isTypeInferred()) {
+           JSType oldType = var.getType();

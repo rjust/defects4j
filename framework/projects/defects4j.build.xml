@@ -39,6 +39,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <!-- Check whether d4j.home is set -->
     <fail message="Property d4j.home not set!" unless="d4j.home" />
 
+    <!-- The default location for the projects meta data -->
+    <property name="d4j.dir.projects" value="${d4j.home}/framework/projects" />
+
     <taskdef resource="net/sf/antcontrib/antlib.xml"
             classpath="${d4j.home}/framework/lib/ant-contrib.jar"/>
 
@@ -86,7 +89,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
 
     <!-- Include project-specific build file -->
-    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
+    <import file="${d4j.dir.projects}/${d4j.project.id}/${d4j.project.id}.build.xml"/>
 
 
 <!--
@@ -378,7 +381,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
                    build file should not rely on the current directory structure
               => D4J should provide properly filtered files in the working directory-->
-        <loadfile srcfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
+        <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
                  property="rel.files">
             <filterchain>
                 <tokenfilter>

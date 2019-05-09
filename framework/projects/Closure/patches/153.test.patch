@@ -1,0 +1,28 @@
+diff --git a/test/com/google/javascript/jscomp/NormalizeTest.java b/test/com/google/javascript/jscomp/NormalizeTest.java
+index 27b39b2f..8486c20d 100644
+--- a/test/com/google/javascript/jscomp/NormalizeTest.java
++++ b/test/com/google/javascript/jscomp/NormalizeTest.java
+@@ -93,7 +93,7 @@ public class NormalizeTest extends CompilerTestCase {
+ 
+   public void testDuplicateVarInExterns() {
+     test("var extern;",
+-         "/** @suppress {duplicate} */ var extern = 3;", "var extern = 3;",
++         "/** @suppress {duplicate} */ var extern = 3;", "extern = 3;",
+          null, null);
+   }
+ 
+@@ -255,12 +255,8 @@ public class NormalizeTest extends CompilerTestCase {
+     test("try { } catch(e) {e; try { } catch(e) {e;}};",
+          "try { } catch(e) {e; try { } catch(e$$1) {e$$1;} }; ");
+ 
+-    // Verify the 1st global redefinition of extern definition is not removed.
+-    test("/** @suppress {duplicate} */\nvar window;", "var window;");
+-
+-    // Verify the 2nd global redefinition of extern definition is removed.
+-    test("/** @suppress {duplicate} */\nvar window;" +
+-         "/** @suppress {duplicate} */\nvar window;", "var window;");
++    // Verify global redefinition of extern definition is removed.
++    test("/** @suppress {duplicate} */\nvar window;", "");
+ 
+     // Verify local masking extern made unique.
+     test("function f() {var window}",

@@ -1,4 +1,4 @@
-Defects4J -- version 1.2.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,12 +8,12 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 395 bugs from the following open-source projects:
+Defects4J contains 438 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
 | Chart      | JFreeChart           |  26            |
-| Closure    | Closure compiler     | 133            |
+| Closure    | Closure compiler     | 176            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
 | Mockito    | Mockito              |  38            |
@@ -153,6 +153,11 @@ provides the following scripts:
 | [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
 | [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
+Mining and contributing additional bugs to Defects4J
+================
+The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
+
+
 Additional resources
 ================
 
@@ -218,6 +223,15 @@ The directory structure of Defects4J is as follows:
            |
            |--- test:          Scripts to test the framework.
            
+Versioning information
+----------------------
+Defects4J uses a semantic versioning scheme (`major`.`minor`.`patch`):
+
+| Change                                  | `major` | `minor` | `patch` |
+|-----------------------------------------|:-------:|:-------:|:-------:|
+| Addition/Deletion of bugs               |    X    |         |         |
+| New/upgraded internal or external tools |         |    X    |         |
+| Fixes and documentation changes         |         |         |    X    |
 
 License
 ---------

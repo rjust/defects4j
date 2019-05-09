@@ -1,0 +1,17 @@
+com.google.javascript.jscomp.CheckRequiresForConstructorsTest
+com.google.javascript.jscomp.CollapseAnonymousFunctionsTest
+com.google.javascript.jscomp.CollapsePropertiesTest
+com.google.javascript.jscomp.CommandLineRunnerTest
+com.google.javascript.jscomp.ConstCheckTest
+com.google.javascript.jscomp.DenormalizeTest
+com.google.javascript.jscomp.ExternExportsPassTest
+com.google.javascript.jscomp.FunctionInjectorTest
+com.google.javascript.jscomp.GatherRawExportsTest
+com.google.javascript.jscomp.InlineFunctionsTest
+com.google.javascript.jscomp.InlineVariablesConstantsTest
+com.google.javascript.jscomp.InlineVariablesTest
+com.google.javascript.jscomp.NormalizeTest
+com.google.javascript.jscomp.RenamePropertiesTest
+com.google.javascript.jscomp.RenameVarsTest
+com.google.javascript.jscomp.SanityCheckTest
+com.google.javascript.jscomp.SourceMapTest
