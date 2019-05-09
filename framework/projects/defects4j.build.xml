@@ -47,6 +47,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
     <property name="gzoltar-ant.jar" value="${d4j.home}/framework/lib/fault_localization/gzoltar-ant-current.jar"/>
     <property name="gzoltar-agent-rt.jar" value="${d4j.home}/framework/lib/fault_localization/gzoltar-agent-rt-current.jar"/>
+    <property name="gzoltar-cli.jar" value="${d4j.home}/framework/lib/fault_localization/gzoltar-cli-current.jar"/>
 
     <!-- Import GZoltar Ant tasks -->
     <taskdef uri="antlib:com.gzoltar.ant" resource="antlib.xml">
@@ -427,44 +428,76 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <echo message="fl.classes.file: ${fl.classes.file}" />
         <echo message="gzoltar-ant.jar: ${gzoltar-ant.jar}" />
 
+        <!--
+          Get list of all test method(s) to run
+         -->
+
+        <property name="test.methods.file" value="${classes.dir}/_gz_test_methods.txt"/>
+        <delete file="${test.methods.file}" />
+        <if> <isset property="test.entry.class" /> <then>
+            <property name="rel.tests.expr" value="${test.entry.class}#${test.entry.method}"/>
+        </then>
+        <else>
+            <loadfile srcfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}" property="rel.tests.list" />
+            <propertyregex property="rel.tests.expr" input="${rel.tests.list}" regexp="[\n]+" replace="#*:" />
+        </else>
+        </if>
+        <echo message="Expression to search for test methods: ${rel.tests.expr}" />
+
+        <java classname="com.gzoltar.cli.Main" fork="true">
+            <classpath>
+                <pathelement location="${d4j.dir.classes.instrumented}" />
+                <pathelement path="${junit.jar}" />
+                <path refid="d4j.test.classpath"/>
+                <pathelement path="${gzoltar-cli.jar}" />
+            </classpath>
+            <arg value="listTestMethods" />
+            <arg value="${test.classes.dir}" />
+            <arg value="--outputFile" />
+            <arg value="${test.methods.file}" />
+            <arg value="--includes" />
+            <arg value="${rel.tests.expr}" />
+        </java>
+
+        <!--
+          Get coverage of the pre-selected list of test method(s)
+         -->
+
         <delete file="${d4j.file.gzoltar.ser}"/>
 
         <loadfile property="fl.classes.list" srcFile="${fl.classes.file}" />
         <propertyregex property="fl.classes" input="${fl.classes.list}" regexp="[\n]+" replace=":" />
         <propertyregex property="fl.innerclasses" input="${fl.classes.list}" regexp="[\n]+" replace="$*:" />
-        <echo message="fl.classes and fl.innerclasses: ${fl.classes}${fl.innerclasses}" />
 
-        <property name="gz_includes_file" value="${classes.dir}/_gz_includes.txt"/>
-        <echo file="${gz_includes_file}" append="false" message="${fl.classes}${fl.innerclasses}"/>
+        <property name="gz.instrument.classes" value="${fl.classes}${fl.innerclasses}"/>
+        <echo message="gz.instrument.classes: ${gz.instrument.classes}" />
 
-        <!-- Wrap test execution with the GZoltar coverage task -->
+        <property name="gz.instrument.classes.file" value="${classes.dir}/_gz_instrument_classes.txt"/>
+        <echo file="${gz.instrument.classes.file}" append="false" message="${gz.instrument.classes}"/>
+
+        <!-- Wrap test method execution with the GZoltar coverage task -->
         <gzoltar:coverage destfile="${d4j.file.gzoltar.ser}"
                           buildLocation="${classes.dir}"
-                          includes="${gz_includes_file}"
+                          includes="${gz.instrument.classes}"
                           excludes=""
                           exclClassLoader="sun.reflect.DelegatingClassLoader"
                           inclNoLocationClasses="false"
                           output="file">
-            <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="yes" forkmode="perTest" showOutput="true">
+            <java classname="com.gzoltar.cli.Main" fork="true">
                 <classpath>
-                    <pathelement location="${classes.dir}" />
+                    <pathelement location="${d4j.dir.classes.instrumented}" />
+                    <pathelement path="${junit.jar}" />
                     <path refid="d4j.test.classpath"/>
-                    <!-- Add dependencies to fault localization tools -->
                     <pathelement path="${gzoltar-ant.jar}" />
+                    <pathelement path="${gzoltar-cli.jar}" />
                 </classpath>
-
-                <formatter classname="com.gzoltar.ant.listener.JUnitFormatter" usefile="false" />
-                <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
-                <batchtest unless="test.entry.class">
-                    <fileset refid="all.manual.tests" />
-                </batchtest>
-            </junit>
+                <jvmArg value="-XX:MaxPermSize=2048M" />
+                <arg value="runTestMethods" />
+                <arg value="--testMethods" />
+                <arg value="${test.methods.file}" />
+                <arg value="--collectCoverage" />
+            </java>
         </gzoltar:coverage>
-        <!-- fail build in case we are running all classes, but there are none in the fileset -->
-        <if> <not> <isset property="test.entry.class" /> </not> <then>
-            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
-        </then> </if>
     </target>
 
 <!--

@@ -1,3 +1,5 @@
 --- org.mockito.runners.RunnersValidateFrameworkUsageTest$DummyTest::dummy
 --- org.mockitousage.verification.VerificationAfterDelayTest::shouldVerifyNormallyWithAtLeast
 --- org.mockito.verification.TimeoutTest::should_try_to_verify_correct_number_of_times
+--- org.mockitousage.basicapi.MockingMultipleInterfacesTest::should_mock_class_with_interfaces_of_different_class_loader_AND_different_classpaths
+--- org.mockitousage.annotation.MockInjectionUsingConstructorTest::constructor_is_called_for_each_test
