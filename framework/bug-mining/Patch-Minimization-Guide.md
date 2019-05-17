@@ -408,6 +408,7 @@ In such cases, the code changes should be retained in the minimized patch to pre
         4. The actual bug-fix is calling the private method `calculateHashCode` in [private object readResolve](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L63). Although `calculateHashCode` seems like a newly added helper function, it actually is a refactoring operation from some method in [line 28 in the patch](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L28).  Therefore, we can discard the changes regarding the refactoring, leaving only the change to bug fix method which contains function call to `calculateHashCode` that actually reintroduces the bug (Refactoring).
 
 
+
 2. Compress-6 [Non-minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/comp.6.nonminimized.patch) vs. [Minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/comp.6.minimized.patch)
     * Steps and rules used to perform patch minimization:
         1. Remove changes to comments in line 9-12, 14-17, 25-31, and 38-39(Refactoring).

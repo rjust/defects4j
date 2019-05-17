@@ -1,0 +1,41 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java b/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
+index b0bf498b..7ed8db54 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/ArchiveStreamFactoryTest.java
+@@ -21,10 +21,7 @@ package org.apache.commons.compress.archivers;
+ import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.fail;
+ 
+-import java.io.BufferedInputStream;
+ import java.io.ByteArrayInputStream;
+-import java.io.FileInputStream;
+-import java.io.InputStream;
+ 
+ import org.junit.Test;
+ 
+@@ -44,23 +41,4 @@ public class ArchiveStreamFactoryTest {
+         }
+     }
+ 
+-    /**
+-     * see https://issues.apache.org/jira/browse/COMPRESS-191
+-     */
+-    @Test
+-    public void aiffFilesAreNoTARs() throws Exception {
+-        InputStream is = null;
+-        try {
+-            is = new BufferedInputStream(new FileInputStream("src/test/resources/testAIFF.aif"));
+-            new ArchiveStreamFactory().createArchiveInputStream(is);
+-            fail("created an input stream for a non-archive");
+-        } catch (ArchiveException ae) {
+-            assertTrue(ae.getMessage().startsWith("No Archiver found"));
+-        } finally {
+-            if (is != null) {
+-                is.close();
+-            }
+-        }
+-    }
+-
+-}
++}
+\ No newline at end of file

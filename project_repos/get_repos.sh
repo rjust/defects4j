@@ -6,10 +6,13 @@ ARCHIVE=defects4j-repos.zip
 clean() {
     rm -rf \
     closure-compiler.git \
+    commons-collections.git \
+    commons-compress.git \
     commons-lang.git \
     commons-math.git \
     jfreechart \
     joda-time.git \
+    mockito.git \
     README 
 }
 
@@ -28,7 +31,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget -N http://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
+wget -N http://blankslatetech.com/downloads/$ARCHIVE
 new=$($cmd)
 
 # Exit if no newer file is available

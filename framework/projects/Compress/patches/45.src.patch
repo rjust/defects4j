@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index d132d9d0..39ce5c1a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -484,9 +484,8 @@ public static int formatLongOctalOrBinaryBytes(
+ 
+         if (length < 9) {
+             formatLongBinary(value, buf, offset, length, negative);
+-        } else {
+-            formatBigIntegerBinary(value, buf, offset, length, negative);
+         }
++        formatBigIntegerBinary(value, buf, offset, length, negative);
+ 
+         buf[offset] = (byte) (negative ? 0xff : 0x80);
+         return offset + length;

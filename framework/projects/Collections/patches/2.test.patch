@@ -1,0 +1,40 @@
+diff --git a/src/test/org/apache/commons/collections/TestExtendedProperties.java b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+index 26d5b922..ab093c0f 100644
+--- a/src/test/org/apache/commons/collections/TestExtendedProperties.java
++++ b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright 2001-2006 The Apache Software Foundation
++ *  Copyright 2001-2005 The Apache Software Foundation
+  *
+  *  Licensed under the Apache License, Version 2.0 (the "License");
+  *  you may not use this file except in compliance with the License.
+@@ -313,28 +313,4 @@ public class TestExtendedProperties extends TestCase {
+         assertEquals("class", extended.getString("resource.loader"));
+     }
+ 
+-    public void testInclude() {
+-        ExtendedProperties a = new ExtendedProperties();
+-        ExtendedProperties b = new ExtendedProperties();
+-        
+-        assertEquals("include", a.getInclude());
+-        assertEquals("include", b.getInclude());
+-        
+-        a.setInclude("import");
+-        assertEquals("import", a.getInclude());
+-        assertEquals("include", b.getInclude());
+-        
+-        a.setInclude("");
+-        assertEquals(null, a.getInclude());
+-        assertEquals("include", b.getInclude());
+-        
+-        a.setInclude("hi");
+-        assertEquals("hi", a.getInclude());
+-        assertEquals("include", b.getInclude());
+-        
+-        a.setInclude(null);
+-        assertEquals(null, a.getInclude());
+-        assertEquals("include", b.getInclude());
+-    }
+-
+ }

@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 0a383367..c5532494 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -132,9 +132,8 @@ public class TarUtils {
+         }
+         // May have additional NULs or spaces
+         trailer = buffer[end - 1];
+-        while (start < end - 1 && (trailer == 0 || trailer == ' ')) {
++        if (trailer == 0 || trailer == ' '){
+             end--;
+-            trailer = buffer[end - 1];
+         }
+ 
+         for ( ;start < end; start++) {

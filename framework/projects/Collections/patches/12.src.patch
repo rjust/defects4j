@@ -1,0 +1,14 @@
+diff --git a/src/java/org/apache/commons/collections/ExtendedProperties.java b/src/java/org/apache/commons/collections/ExtendedProperties.java
+index 35245d58..c5bda4f3 100644
+--- a/src/java/org/apache/commons/collections/ExtendedProperties.java
++++ b/src/java/org/apache/commons/collections/ExtendedProperties.java
+@@ -820,8 +820,7 @@ public class ExtendedProperties extends Hashtable {
+     public void combine(ExtendedProperties props) {
+         for (Iterator it = props.getKeys(); it.hasNext();) {
+             String key = (String) it.next();
+-            clearProperty(key);
+-            addPropertyDirect(key, props.get(key));
++            super.put(key, props.get(key));
+         }
+     }
+     
