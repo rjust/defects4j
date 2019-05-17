@@ -275,9 +275,8 @@ explains how to manually edit patches. Keep in mind that some editors,
 such as Atom, will automatically remove the spaces at the end of the file, 
 causing the patch file to be corrupted.
 
-See [Patch Minimization Guide.md](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/Patch-Minimization-Guide.md) 
-for documentation explaining the patch minimization process. 
-Please read the guide before you perform patch minimization.
+**Please read the [Patch Minimization Guide.md](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/Patch-Minimization-Guide.md)**
+before performing patch minimization. This guide provides detailed documentation for the patch minimization process.
 
 Note that the patch is the *reverse* patch, i.e., patching the fixed version
 with this patch will reintroduce the fault.
