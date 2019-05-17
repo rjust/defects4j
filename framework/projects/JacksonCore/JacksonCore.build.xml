@@ -72,9 +72,9 @@ of the checked-out project version.
         <pathelement location="${classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
         <pathelement path="${junit.jar}" />
-        <!--
-        <pathelement path="${dependency.jar}" />
-        -->
+        <fileset dir="${d4j.dir.projects}/JacksonCore/lib/">
+             <include name="**/*.jar" />
+        </fileset>
     </path>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
