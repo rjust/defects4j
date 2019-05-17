@@ -1,6 +1,6 @@
 # Overview of the bug-mining process
 
-1. Initialize a bug-mining working directory and configuring a project for bug mining.
+1. Initialize a bug-mining working directory and configure a project for bug mining.
 
 2. Identify candidate bugs by cross-referencing the project's version control
    history with the project's bug tracker.
@@ -20,25 +20,25 @@
 
 
 
-## Initializing the bug-mining working directory, configuring the project, and identifying candidate bugs
+## Initializing the working directory, configuring the project, and identifying candidate bugs
 
-Suppose we want to mine the
+Suppose we want to mine reproducible bugs from the
 [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
-project. First we must define a working directory for the *bug-mining* process,
-e.g.:
+project.
+
+First, define a working directory for the *bug-mining* process, e.g.:
 
 ```bash
 WORK_DIR="bug-mining"
 ```
 
 All mined data, i.e., commits, issues, metadata of the project will be written
-to this working temporary directory. At the end of this step-by-step tutorial
-all metadata is then moved to the `Defects4J` database.
+to this temporary working directory. (The final step of this step-by-step tutorial
+promotes all metadata to the `Defects4J` database.)
 
-Next step is to define general properties of the project we would like to mine.
-For instance, for the
-[Apache Commons Codec](https://commons.apache.org/proper/commons-codec/) project
-we would define the following properties:
+Next, define the general properties of the project.
+For the [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/)
+project, these are:
 
 ```bash
 PROJECT_ID="Codec"
@@ -72,7 +72,7 @@ BUG_FIX_REGEX="/(CODEC-\d+)/mi"
   regular expression has to capture the issue number.
 
 The following table reports the issue trackers, issue tracker project IDs, and
-regular expressions previously used in `Defects4J`. (Note that we manually built
+regular expressions previously used in `Defects4J` (note that we manually built
 the `commit-db` for Chart):
 
 | Project ID | Issue tracker | Issue tracker project ID | Regexp                    |
@@ -275,9 +275,8 @@ explains how to manually edit patches. Keep in mind that some editors,
 such as Atom, will automatically remove the spaces at the end of the file, 
 causing the patch file to be corrupted.
 
-See [Patch Minimization Guide.md](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/Patch-Minimization-Guide.md) 
-for documentation explaining the patch minimization process. 
-Please read the guide before you perform patch minimization.
+**Please read the [Patch Minimization Guide.md](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/Patch-Minimization-Guide.md)**
+before performing patch minimization. This guide provides detailed documentation for the patch minimization process.
 
 Note that the patch is the *reverse* patch, i.e., patching the fixed version
 with this patch will reintroduce the fault.
