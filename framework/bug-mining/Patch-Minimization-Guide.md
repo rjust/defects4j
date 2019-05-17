@@ -7,9 +7,9 @@ This document includes:
 3. [Situations that do not require minimization](#do-not-remove-changes-in-the-following-situations)
 4. [Examples of non-minimized vs. minimized patches](#examples-of-non-minimized-vs-minimized-patches)
 
-Note: Please refer to the [Bug-Mining README](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/README.md) for instructions on the full bug mining process, including the basic process of patch minimization.
+Note: The top-level [Bug-Mining README](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/README.md) outlines the entire bug-mining process and describes when and how patch minimization should be performed.
 
-## Properties of ideal minimized patches0
+## Properties of ideal minimized patches
 
 #### Overall, a minimized patch is expected to have the following properties:
 1. [Excludes all refactoring changes](#1-refactoring-should-be-removed)
@@ -72,7 +72,7 @@ Code refactoring may consist of one or more of the following:
             -    }
             ```
 
-    * Example 2: Collections-71 contains several tab changes (refactorings) that result in an unnecessarily large patch. See [Collections-71 non-minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections-71 minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.71.minimized.patch)
+    * Example 2: Collections-71 contains several tab changes (refactorings) that result in an unnecessarily large patch. See [Collections-71 non-minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections-71 minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.71.minimized.patch)
 
 2. __Comments__  
      Comments could be considered as part of the bug fix: a developer may want to associate a comment with a bug fix and therefore include it in the pure bug-fixing patch. However, a researcher may want to ignore comments when reasoning about or analyzing a bug-fixing patch. Therefore, we remove all changes to comments or documentation from the patch. This information can be seen by directly examining the commits, as offered in the `commit-db`.
@@ -376,7 +376,7 @@ Some bug-fix patches will require new features to be included. If a new feature 
 
 ### 2. Similar or identical functional changes over multiple diffs should not be removed  
 Although the bug may be triggered by only one part of the changes, retaining the other similar changes is important -- the tests written by the developers might not cover all the cases introduced in the bug fix, but only covers the case that triggers the bug.  The entire artifact may contain important information to researchers.
-* Example: [Collections 6 non-minimized patch](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.6.nonminimized.patch) contains 6 similar changes over different parts of the program.  Although there is only one hunk that triggers the bug, we should keep all changes.
+* Example: [Collections 6 non-minimized patch](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.6.nonminimized.patch) contains 6 similar changes over different parts of the program.  Although there is only one hunk that triggers the bug, we should keep all changes.
 
 ### 3. Changes that alter the reasons for test failure should be retained
 
@@ -400,15 +400,15 @@ In such cases, the code changes should be retained in the minimized patch to pre
 
 ## Examples of non-minimized vs minimized patches
 
-1. Collections-19 [Non-minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.19.nonminimized.patch) vs. [Minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.19.minimized.patch)
+1. Collections-19 [Non-minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.19.nonminimized.patch) vs. [Minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.19.minimized.patch)
     * Steps and rules used to perform patch minimization:
-        1. Remove changes to comments in line [42-45](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.19.nonminimized.patch#L42), and line [57-62](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/col.19.nonminimized.patch#L57) (Refactoring).
+        1. Remove changes to comments in line [42-45](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.19.nonminimized.patch#L42), and line [57-62](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.19.nonminimized.patch#L57) (Refactoring).
         2. Remove changes to import statements in [line 9 and 10](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L9)  (Compiler Directives).
         3. Remove changes to modifiers in line [18 and 19](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L18) (Compiler Directives).
         4. The actual bug-fix is calling the private method `calculateHashCode` in [private object readResolve](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L63). Although `calculateHashCode` seems like a newly added helper function, it actually is a refactoring operation from some method in [line 28 in the patch](https://github.com/rjust/defects4j/blob/a881251f0305ed9e1cd26ac454b2b90c27e533ba/framework/bug-mining/code-example/col.19.nonminimized.patch#L28).  Therefore, we can discard the changes regarding the refactoring, leaving only the change to bug fix method which contains function call to `calculateHashCode` that actually reintroduces the bug (Refactoring).
 
 
-2. Compress-6 [Non-minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/comp.6.nonminimized.patch) vs. [Minimized](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/comp.6.minimized.patch)
+2. Compress-6 [Non-minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/comp.6.nonminimized.patch) vs. [Minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/comp.6.minimized.patch)
     * Steps and rules used to perform patch minimization:
         1. Remove changes to comments in line 9-12, 14-17, 25-31, and 38-39(Refactoring).
         2. Read stack trace under `trigger_tests` directory and determine bug-triggering code.  In this case, the bug is an assertion failure in deleting archived entries. The bug-fixing change is a new private variable `entryOffset` introduced to the fixed version.  This variable keeps track of where the current entry starts.
@@ -475,4 +475,4 @@ In such cases, the code changes should be retained in the minimized patch to pre
                          final int ret = this.input.read(b, off, toRead);
                 ```
 
-    * After performing the above steps, the patch will be minimized ([Minimized Compress 6](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/code-example/comp.6.minimized.patch)).
+    * After performing the above steps, the patch will be minimized ([Minimized Compress 6](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/comp.6.minimized.patch)).
