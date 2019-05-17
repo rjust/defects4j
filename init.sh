@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 #
+# Any subsequent command which fail will cause the shell script to exit
+# immediately
+set -e
+#
 ################################################################################
 # This script initializes Defects4J. In particular, it downloads and sets up:
 # - the project's version control repositories
