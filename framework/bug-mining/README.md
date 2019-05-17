@@ -269,7 +269,15 @@ reproducible fault has an entry with the file name `<bid>.src.patch` in the
 ```
 
 The default editor for patch minimization is [meld](https://meldmerge.org).
-However, you may use other editors if you prefer.
+However, you may use other editors if you prefer. 
+[The following link](http://joaquin.windmuller.ca/2011/11/16/selectively-select-changes-to-commit-with-git-or-imma-edit-your-hunk) 
+explains how to manually edit patches. Keep in mind that some editors, 
+such as Atom, will automatically remove the spaces at the end of the file, 
+causing the patch file to be corrupted.
+
+See [Patch Minimization Guide.md](https://github.com/rjust/defects4j/blob/bug-mining-documentation/framework/bug-mining/Patch-Minimization-Guide.md) 
+for documentation explaining the patch minimization process. 
+Please read the guide before you perform patch minimization.
 
 Note that the patch is the *reverse* patch, i.e., patching the fixed version
 with this patch will reintroduce the fault.
@@ -279,6 +287,9 @@ whether the source code and the test cases still compile and (2) whether the
 list of triggering test cases is still the same. The script also recomputes all
 metadata by rerunning the `get-metadata.pl` script if the patch has been
 minimized.
+
+To restore the original patch, you may delete the corresponding patch in the `patch` 
+directory and re-run `./initialize-revision.pl -p <project> -w <working-directory> -b <bug.id>`
 
 ## Promoting reproducible bugs to the main database
 
