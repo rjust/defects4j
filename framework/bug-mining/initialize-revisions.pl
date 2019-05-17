@@ -50,11 +50,6 @@ The working directory used for the bug-mining process.
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
 Per default all bug ids, listed in the commit-db, are considered.
 
-=item B<-s C<subdirectory>>
-
-A prefix used to indicate the folder that contains the project files inside 
-the project root directory (i.e., all Time bugs are in the JodaTime folder).
-
 =back
 
 =cut
@@ -72,14 +67,13 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:b:w:s:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
 my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 my $WORK_DIR = abs_path($cmd_opts{w});
-my $SUBDIR = $cmd_opts{s};
 
 # Check format of target bug id
 if (defined $BID) {
@@ -118,12 +112,6 @@ sub _init_version {
     my ($project, $bid, $vid) = @_;
 
     my $work_dir = "${TMP_DIR}/${vid}";
-    my $real_work_dir = $work_dir;
-    if (defined $SUBDIR) {
-        $real_work_dir = $work_dir . "/" . $SUBDIR;
-    }
-
-
     $project->{prog_root} = $work_dir;
 
     my $rev_id = $project->lookup("${vid}");
@@ -133,13 +121,13 @@ sub _init_version {
     $project->{_vcs}->checkout_vid("${vid}", $work_dir) or die "Cannot checkout $vid version";
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
-    if (-e "$real_work_dir/build.xml") {
-        my $cmd = " cd $real_work_dir" .
-                  " && java -jar $LIB_DIR/analyzer.jar $real_work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+    if (-e "$work_dir/build.xml") {
+        my $cmd = " cd $work_dir" .
+                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
         Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
-    } elsif (-e "$real_work_dir/pom.xml") {
+    } elsif (-e "$work_dir/pom.xml") {
         # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-        my $cmd = " cd $real_work_dir" .
+        my $cmd = " cd $work_dir" .
                   " && mvn ant:ant -Doverwrite=true 2>&1" .
                   " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
                   " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
@@ -147,12 +135,12 @@ sub _init_version {
                   " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
         Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id) or die;
 
-        $cmd = " cd $real_work_dir" .
-               " && java -jar $LIB_DIR/analyzer.jar $real_work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+        $cmd = " cd $work_dir" .
+               " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
         Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
 
         # Get dependencies if it is maven-ant project
-        my $download_dep = "cd $real_work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
+        my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
         Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
     } else {
         # TODO add support for other build systems
