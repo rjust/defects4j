@@ -211,7 +211,7 @@ The directory structure of Defects4J is as follows:
            |
            |--- bin:           Command line interface to Defects4J.
            |
-           |--- bug-mining:    [Bug-mining framework](framework/bug-mining/README.md).
+           |--- bug-mining:    Bug-mining framework.
            |
            |--- core:          The modules of the core framework.
            |
