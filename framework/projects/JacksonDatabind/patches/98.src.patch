@@ -1,0 +1,22 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
+index 9ff1c0b9e..2a3fbaab1 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
+@@ -295,16 +295,7 @@ public class ExternalTypeHandler
+                 if ((typeProp != null) && (typeProp.getCreatorIndex() >= 0)) {
+                     // 31-May-2018, tatu: [databind#1328] if id is NOT plain `String`, need to
+                     //    apply deserializer... fun fun.
+-                    final Object v;
+-                    if (typeProp.getType().hasRawClass(String.class)) {
+-                        v = typeId;
+-                    } else {
+-                        TokenBuffer tb = new TokenBuffer(p, ctxt);
+-                        tb.writeString(typeId);
+-                        v = typeProp.getValueDeserializer().deserialize(tb.asParserOnFirstToken(), ctxt);
+-                        tb.close();
+-                    }
+-                    buffer.assignParameter(typeProp, v);
++                    buffer.assignParameter(typeProp, typeId);
+                 }
+             }
+         }

@@ -1,0 +1,61 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/jdk/JDKScalarsTest.java b/src/test/java/com/fasterxml/jackson/databind/deser/jdk/JDKScalarsTest.java
+index a64e5b824..64aea4913 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/jdk/JDKScalarsTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/jdk/JDKScalarsTest.java
+@@ -113,11 +113,6 @@ public class JDKScalarsTest
+                 @JsonProperty(value="b",required=true) int b) { }
+     }
+ 
+-    // [databind#2197]
+-    static class VoidBean {
+-        public Void value;
+-    }
+-
+     private final ObjectMapper MAPPER = new ObjectMapper();
+ 
+     /*
+@@ -857,14 +852,6 @@ public class JDKScalarsTest
+         }
+     }
+ 
+-    // [databind#2197]
+-    public void testVoidDeser() throws Exception
+-    {
+-        VoidBean bean = MAPPER.readValue(aposToQuotes("{'value' : 123 }"),
+-                VoidBean.class);
+-        assertNull(bean.value);
+-    }
+-    
+     /*
+     /**********************************************************
+     /* Test for invalid String values
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/JDKTypeSerializationTest.java b/src/test/java/com/fasterxml/jackson/databind/ser/jdk/JDKTypeSerializationTest.java
+index b93d9a9a7..643e90113 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/JDKTypeSerializationTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/jdk/JDKTypeSerializationTest.java
+@@ -27,12 +27,7 @@ public class JDKTypeSerializationTest
+ 
+         public InetAddressBean(InetAddress i) { value = i; }
+     }
+-
+-    // [databind#2197]
+-    static class VoidBean {
+-        public Void value;
+-    }
+-
++    
+     public void testBigDecimal() throws Exception
+     {
+         Map<String, Object> map = new HashMap<String, Object>();
+@@ -192,11 +187,4 @@ public class JDKTypeSerializationTest
+             assertEquals(quote(uuid.toString()), json);
+         }
+     }
+-
+-    // [databind#2197]
+-    public void testVoidSerialization() throws Exception
+-    {
+-        assertEquals(aposToQuotes("{'value':null}"),
+-                MAPPER.writeValueAsString(new VoidBean()));
+-    }
+ }

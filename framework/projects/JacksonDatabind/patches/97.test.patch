@@ -1,0 +1,116 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/node/ArrayNodeTest.java b/src/test/java/com/fasterxml/jackson/databind/node/ArrayNodeTest.java
+index 9a1a59f31..62053c37e 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/node/ArrayNodeTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/node/ArrayNodeTest.java
+@@ -88,6 +88,11 @@ public class ArrayNodeTest
+         n.addPOJO("foo");
+         assertEquals(6, n.size());
+ 
++        // Try serializing it for fun, too...
++        JsonGenerator g = objectMapper().getFactory().createGenerator(new StringWriter());
++        n.serialize(g, null);
++        g.close();
++
+         n.removeAll();
+         assertEquals(0, n.size());
+     }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/node/POJONodeTest.java b/src/test/java/com/fasterxml/jackson/databind/node/POJONodeTest.java
+deleted file mode 100644
+index 638cb4302..000000000
+--- a/src/test/java/com/fasterxml/jackson/databind/node/POJONodeTest.java
++++ /dev/null
+@@ -1,55 +0,0 @@
+-package com.fasterxml.jackson.databind.node;
+-
+-import java.io.IOException;
+-import java.util.*;
+-
+-import com.fasterxml.jackson.core.JsonGenerator;
+-import com.fasterxml.jackson.databind.*;
+-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+-import com.fasterxml.jackson.databind.node.ObjectNode;
+-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+-
+-public class POJONodeTest extends NodeTestBase
+-{
+-    @JsonSerialize(using = CustomSer.class)
+-    public static class Data {
+-      public String aStr;
+-    }
+-
+-    @SuppressWarnings("serial")
+-    public static class CustomSer extends StdSerializer<Data> {
+-      public CustomSer() {
+-          super(Data.class);
+-      }
+-
+-      @Override
+-      public void serialize(Data value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+-        String attrStr = (String) provider.getAttribute("myAttr");
+-        gen.writeStartObject();
+-        gen.writeStringField("aStr", "The value is: " + (attrStr == null ? "NULL" : attrStr));
+-        gen.writeEndObject();
+-      }
+-    }
+-
+-    final ObjectMapper MAPPER = newObjectMapper();
+-
+-    public void testPOJONodeCustomSer() throws Exception
+-    {
+-      Data data = new Data();
+-      data.aStr = "Hello";
+-
+-      Map<String, Object> mapTest = new HashMap<>();
+-      mapTest.put("data", data);
+-
+-      ObjectNode treeTest = MAPPER.createObjectNode();
+-      treeTest.putPOJO("data", data);
+-
+-      final String EXP = "{\"data\":{\"aStr\":\"The value is: Hello!\"}}";
+-      
+-      String mapOut = MAPPER.writer().withAttribute("myAttr", "Hello!").writeValueAsString(mapTest);
+-      assertEquals(EXP, mapOut);
+-
+-      String treeOut = MAPPER.writer().withAttribute("myAttr", "Hello!").writeValueAsString(treeTest);
+-      assertEquals(EXP, treeOut);
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/failing/CreatorAnySetter1401Test.java b/src/test/java/com/fasterxml/jackson/failing/CreatorProperties1401Test.java
+similarity index 94%
+rename from src/test/java/com/fasterxml/jackson/failing/CreatorAnySetter1401Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/CreatorProperties1401Test.java
+index b8fb64524..7b0600437 100644
+--- a/src/test/java/com/fasterxml/jackson/failing/CreatorAnySetter1401Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/CreatorProperties1401Test.java
+@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.*;
+ 
+ // for [databind#1401]: should allow "Any Setter" to back up otherwise
+ // problematic Creator properties?
+-public class CreatorAnySetter1401Test extends BaseMapTest
++public class CreatorProperties1401Test extends BaseMapTest
+ {
+     // for [databind#1401]
+     static class NoSetter1401 {
+diff --git a/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java b/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
+index 890f57653..6594df4df 100644
+--- a/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
+@@ -24,7 +24,7 @@ public class ImplicitParamsForCreator806Test extends BaseMapTest
+         protected int x, y;
+ 
+         // annotation should NOT be needed with 2.6 any more (except for single-arg case)
+-//        @com.fasterxml.jackson.annotation.JsonCreator
++        //@com.fasterxml.jackson.annotation.JsonCreator
+         public XY(int x, int y) {
+             this.x = x;
+             this.y = y;
+@@ -42,8 +42,7 @@ public class ImplicitParamsForCreator806Test extends BaseMapTest
+             .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+             ;
+ 
+-    // for [databind#806]: problem is that renaming occurs too late for implicitly detected
+-    // Creators
++    // for [databind#806]
+     public void testImplicitNameWithNamingStrategy() throws Exception
+     {
+         XY value = MAPPER.readValue(aposToQuotes("{'param_name0':1,'param_name1':2}"), XY.class);

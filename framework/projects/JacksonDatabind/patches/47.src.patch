@@ -1,0 +1,46 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java b/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java
+index 3966997e9..4a27438b6 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java
++++ b/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java
+@@ -813,19 +813,10 @@ public abstract class AnnotationIntrospector
+                 //    static typing this way
+                 type = type.withStaticTyping();
+             } else {
+-                Class<?> currRaw = type.getRawClass();
+                 try {
+                     // 11-Oct-2015, tatu: For deser, we call `TypeFactory.constructSpecializedType()`,
+                     //   may be needed here too in future?
+-                    if (serClass.isAssignableFrom(currRaw)) { // common case
+                         type = tf.constructGeneralizedType(type, serClass);
+-                    } else if (currRaw.isAssignableFrom(serClass)) { // specialization, ok as well
+-                        type = tf.constructSpecializedType(type, serClass);
+-                    } else {
+-                        throw new JsonMappingException(null,
+-                                String.format("Can not refine serialization type %s into %s; types not related",
+-                                        type, serClass.getName()));
+-                    }
+                 } catch (IllegalArgumentException iae) {
+                     throw new JsonMappingException(null,
+                             String.format("Failed to widen type %s with annotation (value %s), from '%s': %s",
+@@ -844,20 +835,8 @@ public abstract class AnnotationIntrospector
+                 if (keyType.hasRawClass(keyClass)) {
+                     keyType = keyType.withStaticTyping();
+                 } else {
+-                    Class<?> currRaw = keyType.getRawClass();
+                     try {
+-                        // 19-May-2016, tatu: As per [databind#1231], [databind#1178] may need to actually
+-                        //   specialize (narrow) type sometimes, even if more commonly opposite
+-                        //   is needed.
+-                        if (keyClass.isAssignableFrom(currRaw)) { // common case
+-                            keyType = tf.constructGeneralizedType(keyType, keyClass);
+-                        } else if (currRaw.isAssignableFrom(keyClass)) { // specialization, ok as well
+-                            keyType = tf.constructSpecializedType(keyType, keyClass);
+-                        } else {
+-                            throw new JsonMappingException(null,
+-                                    String.format("Can not refine serialization key type %s into %s; types not related",
+-                                            keyType, keyClass.getName()));
+-                        }
++                        keyType = tf.constructGeneralizedType(keyType, keyClass);
+                     } catch (IllegalArgumentException iae) {
+                         throw new JsonMappingException(null,
+                                 String.format("Failed to widen key type of %s with concrete-type annotation (value %s), from '%s': %s",

@@ -72,6 +72,8 @@ test_ExportTestClassesDir() {
                 expected="target/test-classes"
             elif [ "$pid" == "JacksonCore" ]; then
                 expected="target/test-classes"
+            elif [ "$pid" == "JacksonDatabind" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "JacksonXml" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "JxPath" ]; then

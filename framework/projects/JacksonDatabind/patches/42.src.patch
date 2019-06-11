@@ -1,0 +1,14 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+index b2ccd1aeb..cdbd5e8ac 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+@@ -281,9 +281,6 @@ public abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>
+                 return URI.create("");
+             }
+             // As per [databind#1123], Locale too
+-            if (_kind == STD_LOCALE) {
+-                return Locale.ROOT;
+-            }
+             return super._deserializeFromEmptyString();
+         }
+     }

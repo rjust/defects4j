@@ -1,0 +1,28 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/BigDecimalPlain2230Test.java b/src/test/java/com/fasterxml/jackson/failing/BigDecimalPlain2230Test.java
+similarity index 82%
+rename from src/test/java/com/fasterxml/jackson/databind/ser/jdk/BigDecimalPlain2230Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/BigDecimalPlain2230Test.java
+index fdbe0880b..36dd49d29 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/BigDecimalPlain2230Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/BigDecimalPlain2230Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.ser.jdk;
++package com.fasterxml.jackson.failing;
+ 
+ import java.math.BigDecimal;
+ 
+@@ -26,12 +26,12 @@ public class BigDecimalPlain2230Test extends BaseMapTest
+         final BigDecimal BD_VALUE = new BigDecimal(NORM_VALUE);
+         final BigDecimalAsString INPUT = new BigDecimalAsString(BD_VALUE);
+         // by default, use the default `toString()`
+-        assertEquals("{\"value\":\""+BD_VALUE.toString()+"\"}", MAPPER.writeValueAsString(INPUT));
++        assertEquals("{\"value\":\""+BD_VALUE.toString()+"\"", MAPPER.writeValueAsString(INPUT));
+ 
+         // but can force to "plain" notation
+         final ObjectMapper m = jsonMapperBuilder()
+             .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
+             .build();
+-        assertEquals("{\"value\":\""+NORM_VALUE+"\"}", m.writeValueAsString(INPUT));
++        assertEquals("{\"value\":\""+NORM_VALUE+"\"", m.writeValueAsString(INPUT));
+     }
+ }

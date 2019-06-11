@@ -1,0 +1,139 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java
+index 538796def..c7cb812a0 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java
+@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
+ import java.util.LinkedHashSet;
+ import java.util.Set;
+ 
+-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
+@@ -15,7 +14,6 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable;
+ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
+ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonStringFormatVisitor;
+ import com.fasterxml.jackson.databind.jsonschema.SchemaAware;
+-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+ import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+ import com.fasterxml.jackson.databind.ser.BeanSerializer;
+ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+@@ -225,8 +223,7 @@ public class JsonValueSerializer
+             // 28-Sep-2016, tatu: As per [databind#1385], we do need to do some juggling
+             //    to use different Object for type id (logical type) and actual serialization
+             //    (delegat type).
+-            TypeSerializerRerouter rr = new TypeSerializerRerouter(typeSer0, bean);
+-            ser.serializeWithType(value, gen, provider, rr);
++            ser.serializeWithType(value, gen, provider, typeSer0);
+         } catch (IOException ioe) {
+             throw ioe;
+         } catch (Exception e) {
+@@ -363,108 +360,24 @@ public class JsonValueSerializer
+      * override Object to use for type id (logical type) even when asking serialization
+      * of something else (delegate type)
+      */
+-    static class TypeSerializerRerouter
+-        extends TypeSerializer
+-    {
+-        protected final TypeSerializer _typeSerializer;
+-        protected final Object _forObject;
+ 
+-        public TypeSerializerRerouter(TypeSerializer ts, Object ob) {
+-            _typeSerializer = ts;
+-            _forObject = ob;
+-        }
+ 
+-        @Override
+-        public TypeSerializer forProperty(BeanProperty prop) { // should never get called
+-            throw new UnsupportedOperationException();
+-        }
+ 
+-        @Override
+-        public As getTypeInclusion() {
+-            return _typeSerializer.getTypeInclusion();
+-        }
+ 
+-        @Override
+-        public String getPropertyName() {
+-            return _typeSerializer.getPropertyName();
+-        }
+ 
+-        @Override
+-        public TypeIdResolver getTypeIdResolver() {
+-            return _typeSerializer.getTypeIdResolver();
+-        }
+ 
+-        @Override
+-        public void writeTypePrefixForScalar(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypePrefixForScalar(_forObject, gen);
+-        }
+ 
+-        @Override
+-        public void writeTypePrefixForObject(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypePrefixForObject(_forObject, gen);
+-        }
+ 
+-        @Override
+-        public void writeTypePrefixForArray(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypePrefixForArray(_forObject, gen);
+-        }
+ 
+-        @Override
+-        public void writeTypeSuffixForScalar(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypeSuffixForScalar(_forObject, gen);
+-        }
+ 
+-        @Override
+-        public void writeTypeSuffixForObject(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypeSuffixForObject(_forObject, gen);
+-        }
+ 
+-        @Override
+-        public void writeTypeSuffixForArray(Object value, JsonGenerator gen) throws IOException {
+-            _typeSerializer.writeTypeSuffixForArray(_forObject, gen);
+-        }
+ 
+-        public void writeTypePrefixForScalar(Object value, JsonGenerator gen, Class<?> type) throws IOException {
+-            _typeSerializer.writeTypePrefixForScalar(_forObject, gen, type);
+-        }
+ 
+-        public void writeTypePrefixForObject(Object value, JsonGenerator gen, Class<?> type) throws IOException {
+-            _typeSerializer.writeTypePrefixForObject(_forObject, gen, type);
+-        }
+ 
+-        public void writeTypePrefixForArray(Object value, JsonGenerator gen, Class<?> type) throws IOException {
+-            _typeSerializer.writeTypePrefixForArray(_forObject, gen, type);
+-        }
+         
+-        @Override
+-        public void writeCustomTypePrefixForScalar(Object value, JsonGenerator gen, String typeId)
+-                throws IOException {
+-            _typeSerializer.writeCustomTypePrefixForScalar(_forObject, gen, typeId);
+-        }
+ 
+-        @Override
+-        public void writeCustomTypePrefixForObject(Object value, JsonGenerator gen, String typeId) throws IOException {
+-            _typeSerializer.writeCustomTypePrefixForObject(_forObject, gen, typeId);
+-        }
+ 
+-        @Override
+-        public void writeCustomTypePrefixForArray(Object value, JsonGenerator gen, String typeId) throws IOException {
+-            _typeSerializer.writeCustomTypePrefixForArray(_forObject, gen, typeId);
+-        }
+ 
+-        @Override
+-        public void writeCustomTypeSuffixForScalar(Object value, JsonGenerator gen, String typeId) throws IOException {
+-            _typeSerializer.writeCustomTypeSuffixForScalar(_forObject, gen, typeId);
+-        }
+ 
+-        @Override
+-        public void writeCustomTypeSuffixForObject(Object value, JsonGenerator gen, String typeId) throws IOException {
+-            _typeSerializer.writeCustomTypeSuffixForObject(_forObject, gen, typeId);
+-        }
+ 
+-        @Override
+-        public void writeCustomTypeSuffixForArray(Object value, JsonGenerator gen, String typeId) throws IOException {
+-            _typeSerializer.writeCustomTypeSuffixForArray(_forObject, gen, typeId);
+-        }
+-    }
+ }

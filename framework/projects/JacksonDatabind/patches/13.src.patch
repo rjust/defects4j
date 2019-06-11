@@ -1,0 +1,28 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java b/src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java
+index 813201828..373ac896b 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java
+@@ -84,9 +84,6 @@ public abstract class DefaultDeserializationContext
+         /* 02-Apr-2015, tatu: As per [databind#742] should allow 'null', similar to how
+          *   missing id already works.
+          */
+-        if (id == null) {
+-            return null;
+-        }
+ 
+         final ObjectIdGenerator.IdKey key = gen.key(id);
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty.java b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty.java
+index 594d85ff4..921904f4e 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty.java
+@@ -89,9 +89,6 @@ public final class ObjectIdValueProperty
+          *  will be generated externally, at a later point, and is not available
+          *  quite yet. Typical use case is with DB inserts.
+          */
+-        if (id == null) {
+-            return null;
+-        }
+         
+         ReadableObjectId roid = ctxt.findObjectId(id, _objectIdReader.generator, _objectIdReader.resolver);
+         roid.bindItem(instance);
