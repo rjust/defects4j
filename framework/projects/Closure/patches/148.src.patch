@@ -1,0 +1,467 @@
+diff --git a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
+index f3d95836..1df9098b 100644
+--- a/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
++++ b/src/com/google/javascript/jscomp/PeepholeFoldConstants.java
+@@ -179,9 +179,6 @@ public class PeepholeFoldConstants extends AbstractPeepholeOptimization {
+       case Token.ARRAYLIT:
+         typeNameString = "object";
+         break;
+-      case Token.VOID:
+-        typeNameString = "undefined";
+-        break;
+       case Token.NAME:
+         // We assume here that programs don't change the value of the
+         // keyword undefined to something other than the value undefined.
+diff --git a/src/com/google/javascript/jscomp/SourceMap.java b/src/com/google/javascript/jscomp/SourceMap.java
+index 698dfdec..ff61bddf 100644
+--- a/src/com/google/javascript/jscomp/SourceMap.java
++++ b/src/com/google/javascript/jscomp/SourceMap.java
+@@ -38,7 +38,6 @@ import java.util.List;
+  */
+ public class SourceMap {
+ 
+-  private final static int UNMAPPED = -1;
+ 
+   /**
+    * A mapping from a given position in an input source file to a given position
+@@ -48,7 +47,7 @@ public class SourceMap {
+     /**
+      * A unique ID for this mapping for record keeping purposes.
+      */
+-    int id = UNMAPPED;
++    int id;
+ 
+     /**
+      * The input source file.
+@@ -83,67 +82,38 @@ public class SourceMap {
+     /**
+      * Whether the mapping is actually used by the source map.
+      */
+-    boolean used = false;
+-  }
+ 
+-  private class MappingWriter {
+     /**
+      * Cache of escaped source file name.
+      */
+-    private String lastSourceFile = null;
+-    private String lastSourceFileEscaped = null;
+-    private int lastLine = 0;
+-    private String lastLineString = String.valueOf(0);
+ 
+     /**
+      * Appends the mapping to the given buffer.
+      */
+-    private void appendMappingTo(
+-        Mapping m, Appendable out) throws IOException {
++    void appendTo(Appendable out) throws IOException {
+       out.append("[");
+ 
+-      String sourceFile = m.sourceFile;
++      out.append(sourceFile);
+       // The source file rarely changes, so cache the escaped string.
+-      String escapedSourceFile;
+-      if (lastSourceFile != sourceFile) { // yes, s1 != s2, not !s1.equals(s2)
+-        lastSourceFile = sourceFile;
+-        lastSourceFileEscaped = escapeString(sourceFile);
+-      }
+-      escapedSourceFile = lastSourceFileEscaped;
+ 
+-      out.append(escapedSourceFile);
+       out.append(",");
+ 
+-      int line = m.originalPosition.getLineNumber();
+-      if (line != lastLine) {
+-        lastLineString = String.valueOf(line);
+-      }
+-      String lineValue = lastLineString;
+ 
+-      out.append(lineValue);
++      out.append(String.valueOf(originalPosition.getLineNumber()));
+ 
+       out.append(",");
+-      out.append(String.valueOf(
+-          m.originalPosition.getCharacterIndex()));
++      out.append(String.valueOf(originalPosition.getCharacterIndex()));
+ 
+-      if (m.originalName != null) {
++      if (originalName != null) {
+         out.append(",");
+-        out.append(escapeString(m.originalName));
++        out.append(originalName);
+       }
+ 
+-      out.append("]\n");
++      out.append("]");
+     }
+-
+     /**
+      * Add used mappings to the supplied Appendable.
+      */
+-    void appendMappings(Appendable out) throws IOException {
+-      for (Mapping m : mappings) {
+-        if (m.used) {
+-          appendMappingTo(m, out);
+-        }
+-      }
+-    }
+   }
+ 
+   /**
+@@ -170,6 +140,8 @@ public class SourceMap {
+   private static String escapeString(String value) {
+     return CodeGenerator.escapeToDoubleQuotedJsString(value);
+   }
++  private String lastSourceFile = null;
++  private String lastSourceFileEscaped = null;
+ 
+   /**
+    * Adds a mapping for the given node.  Mappings must be added in order.
+@@ -188,21 +160,23 @@ public class SourceMap {
+       return;
+     }
+ 
++    String escapedSourceFile;
++    if (lastSourceFile != sourceFile) {  // yes, "s1 != s2" not "!s1.equals(s2)"
++      lastSourceFile = sourceFile;
++      lastSourceFileEscaped = escapeString(sourceFile);
++    }
++    escapedSourceFile = lastSourceFileEscaped;
+     // Create the new mapping.
+     Mapping mapping = new Mapping();
+-    mapping.sourceFile = sourceFile;
++    mapping.id = mappings.size();
++    mapping.sourceFile = escapedSourceFile;
+     mapping.originalPosition = new Position(node.getLineno(), node.getCharno());
+ 
+     String originalName = (String)node.getProp(Node.ORIGINALNAME_PROP);
+     if (originalName != null) {
+-      mapping.originalName = originalName;
++      mapping.originalName = escapeString(originalName);
+     }
+ 
+-    if (offsetPosition.getLineNumber() == 0
+-        && offsetPosition.getCharacterIndex() == 0) {
+-      mapping.startPosition = startPosition;
+-      mapping.endPosition = endPosition;
+-    } else {
+       // If the mapping is found on the first line, we need to offset
+       // its character position by the number of characters found on
+       // the *last* line of the source file to which the code is
+@@ -226,7 +200,6 @@ public class SourceMap {
+       mapping.endPosition =
+           new Position(endPosition.getLineNumber() + offsetLine,
+                        endPosition.getCharacterIndex() + endOffsetPosition);
+-    }
+ 
+     mappings.add(mapping);
+   }
+@@ -281,6 +254,14 @@ public class SourceMap {
+     prefixPosition = new Position(0, 0);
+   }
+ 
++  private int findLastLine() {
++    int maxLine = 0;
++    for (Mapping mapping : mappings) {
++      int endPositionLine = mapping.endPosition.getLineNumber();
++      maxLine = Math.max(maxLine, endPositionLine);
++    }
++    return maxLine + prefixPosition.getLineNumber();
++  }
+   /**
+    * Appends the source map in LavaBug format to the given buffer.
+    *
+@@ -320,7 +301,7 @@ public class SourceMap {
+     // 11) ["c.js", 1, 4]
+     // 12) ["d.js", 3, 78, "foo"]
+ 
+-    int maxLine = prepMappings();
++    int maxLine = findLastLine();
+ 
+     // Add the line character maps.
+     out.append("/** Begin line maps. **/{ \"file\" : ");
+@@ -342,42 +323,32 @@ public class SourceMap {
+     // Add the mappings themselves.
+     out.append("/** Begin mapping definitions. **/\n");
+ 
+-    (new MappingWriter()).appendMappings(out);
++    for (Mapping mapping : mappings) {
++      mapping.appendTo(out);
++      out.append("\n");
++    }
+   }
+ 
+   /**
+    * Assigns sequential ids to used mappings, and returns the last line mapped.
+    */
+-  private int prepMappings() throws IOException {
+     // Mark any unused mappings.
+-    (new MappingTraversal()).traverse(new UsedMappingCheck());
+ 
+     // Renumber used mappings and keep track of the last line.
+-    int id = 0;
+-    int maxLine = 0;
+-    for (Mapping m : mappings) {
+-      if (m.used) {
+-        m.id = id++;
+-        int endPositionLine = m.endPosition.getLineNumber();
+-        maxLine = Math.max(maxLine, endPositionLine);
+-      }
+-    }
+ 
+     // Adjust for the prefix.
+-    return maxLine + prefixPosition.getLineNumber();
+-  }
+ 
+-  private class LineMapper implements MappingVisitor {
++  private class LineMapper {
+     // The destination.
+     private final Appendable out;
+-
++    private int line;
++    private int col;
+     // Whether the current line has had a value written yet.
+     private boolean firstChar = true;
+ 
+     private final static String UNMAPPED_STRING = "-1";
+ 
+-    private int lastId = UNMAPPED;
+-    private String lastIdString = UNMAPPED_STRING;
++    private final static int UNMAPPED = -1;
+ 
+     LineMapper(Appendable out) {
+       this.out = out;
+@@ -386,30 +357,11 @@ public class SourceMap {
+     /**
+      * As each segment is visited write out the appropriate line mapping.
+      */
+-    public void visit(Mapping m, int line, int col, int nextLine, int nextCol)
+-      throws IOException {
+ 
+-      int id = (m != null) ? m.id : UNMAPPED;
+-      if (lastId != id) {
+         // Prevent the creation of unnecessary temporary stings for often
+         // repeated values.
+-        lastIdString = (id == UNMAPPED) ? UNMAPPED_STRING : String.valueOf(id);
+-        lastId = id;
+-      }
+-      String idString = lastIdString;
+ 
+-      for (int i = line; i <= nextLine; i++) {
+-        if (i == nextLine) {
+-          for (int j = col; j < nextCol; j++) {
+-            addCharEntry(idString);
+-          }
+-          break;
+-        }
+ 
+-        closeLine();
+-        openLine();
+-      }
+-    }
+ 
+     // Append the line mapping entries.
+     void appendLineMappings() throws IOException {
+@@ -418,64 +370,29 @@ public class SourceMap {
+       // Start the first line.
+       openLine();
+ 
+-      (new MappingTraversal()).traverse(this);
+ 
+       // And close the final line.
+-      closeLine();
+-    }
+ 
+     /**
+      * Begin the entry for a new line.
+      */
+-    private void openLine() throws IOException {
+-      if (out != null) {
+-        out.append("[");
+-        this.firstChar = true;
+-      }
+-    }
+ 
+     /**
+      * End the entry for a line.
+      */
+-    private void closeLine() throws IOException {
+-      if (out != null) {
+-        out.append("]\n");
+-      }
+-    }
+ 
+     /**
+      * Add a new char position entry.
+      * @param id The mapping id to record.
+      */
+-    private void addCharEntry(String id) throws IOException {
+-      if (out != null) {
+-        if (firstChar) {
+-          firstChar = false;
+-        } else {
+-          out.append(",");
+-        }
+-        out.append(id);
+-      }
+-    }
+-  }
+ 
+   /**
+    * Mark any visited mapping as "used".
+    */
+-  private class UsedMappingCheck implements MappingVisitor {
+     /**
+      * @throws IOException
+      */
+-    @Override
+-    public void visit(Mapping m, int line, int col, int nextLine, int nextCol)
+-        throws IOException {
+-      if (m != null) {
+-        m.used = true;
+-      }
+-    }
+-  }
+ 
+-  private interface MappingVisitor {
+     /**
+      * @param m The mapping for the current code segment. null if the segment
+      *     is unmapped.
+@@ -485,25 +402,15 @@ public class SourceMap {
+      * @param endCol The ending column
+      * @throws IOException
+      */
+-    void visit(Mapping m, int line, int col, int endLine, int endCol)
+-        throws IOException;
+-  }
+ 
+   /**
+    * Walk the mappings and visit each segment of the mappings, unmapped
+    * segments are visited with a null mapping, unused mapping are not visited.
+    */
+-  private class MappingTraversal {
+     // The last line and column written
+-    private int line;
+-    private int col;
+ 
+-    MappingTraversal() {
+-    }
+ 
+     // Append the line mapping entries.
+-    void traverse(MappingVisitor v) throws IOException {
+-      Preconditions.checkState(!mappings.isEmpty());
+ 
+       // The mapping list is ordered as a pre-order traversal.  The mapping
+       // positions give us enough information to rebuild the stack and this
+@@ -516,13 +423,13 @@ public class SourceMap {
+         // closed in the reverse order of when they encountered.
+         while (!stack.isEmpty() && !isOverlapped(stack.peek(), m)) {
+           Mapping previous = stack.pop();
+-          maybeVisit(v, previous);
++          writeClosedMapping(previous);
+         }
+ 
+         // Any gaps between the current line position and the start of the
+         // current mapping belong to the parent.
+         Mapping parent = stack.peek();
+-        maybeVisitParent(v, parent, m);
++        writeCharsBetween(parent, m);
+ 
+         stack.push(m);
+       }
+@@ -531,8 +438,24 @@ public class SourceMap {
+       // mappings in the reverse order of when they encountered.
+       while (!stack.isEmpty()) {
+         Mapping m = stack.pop();
+-        maybeVisit(v, m);
++        writeClosedMapping(m);
++      }
++      closeLine();
++    }
++    private void openLine() throws IOException {
++      out.append("[");
++      this.firstChar = true;
++    }
++    private void closeLine() throws IOException {
++      out.append("]\n");
++    }
++    private void addCharEntry(String id) throws IOException {
++      if (firstChar) {
++        firstChar = false;
++      } else {
++        out.append(",");
+       }
++      out.append(id);
+     }
+ 
+     /**
+@@ -570,47 +493,54 @@ public class SourceMap {
+      * Write any needed entries from the current position to the end of the
+      * provided mapping.
+      */
+-    private void maybeVisit(MappingVisitor v, Mapping m) throws IOException {
++    private void writeClosedMapping(Mapping m) throws IOException {
+       int nextLine = getAdjustedLine(m.endPosition);
+       int nextCol = getAdjustedCol(m.endPosition);
+       // If this anything remaining in this mapping beyond the
+       // current line and column position, write it out now.
+       if (line < nextLine || (line == nextLine && col < nextCol)) {
+-        visit(v, m, nextLine, nextCol);
++        writeCharsUpTo(nextLine, nextCol, m.id);
+       }
+     }
+ 
+     /**
+      * Write any needed entries to complete the provided mapping.
+      */
+-    private void maybeVisitParent(MappingVisitor v, Mapping parent, Mapping m)
++    private void writeCharsBetween(Mapping prev, Mapping next)
+         throws IOException {
+-      int nextLine = getAdjustedLine(m.startPosition);
+-      int nextCol = getAdjustedCol(m.startPosition);
++      int nextLine = getAdjustedLine(next.startPosition);
++      int nextCol = getAdjustedCol(next.startPosition);
+       // If the previous value is null, no mapping exists.
+-      Preconditions.checkState(line < nextLine || col <= nextCol);
+-      if (line < nextLine || (line == nextLine && col < nextCol)) {
+-        visit(v, parent, nextLine, nextCol);
+-      }
++      int id = (prev != null) ? prev.id : UNMAPPED;
++      writeCharsUpTo(nextLine, nextCol, id);
+     }
+ 
+     /**
+      * Write any entries needed between the current position the next position
+      * and update the current position.
+      */
+-    private void visit(MappingVisitor v, Mapping m,
+-        int nextLine, int nextCol)
++    private void writeCharsUpTo(
++        int nextLine, int nextCol, int id)
+         throws IOException {
+-      Preconditions.checkState(line <= nextLine);
+-      Preconditions.checkState(line < nextLine || col < nextCol);
++      Preconditions.checkState(line <= nextLine, "");
++      Preconditions.checkState(line < nextLine || col <= nextCol);
+ 
+       if (line == nextLine && col == nextCol) {
+         // Nothing to do.
+-        Preconditions.checkState(false);
+         return;
+       }
+ 
+-      v.visit(m, line, col, nextLine, nextCol);
++      String idString = (id == UNMAPPED) ? UNMAPPED_STRING : String.valueOf(id);
++      for (int i = line; i <= nextLine; i++) {
++        if (i == nextLine) {
++          for (int j = col; j < nextCol; j++) {
++            addCharEntry(idString);
++          }
++          break;
++        }
++        closeLine();
++        openLine();
++      }
+ 
+       line = nextLine;
+       col = nextCol;

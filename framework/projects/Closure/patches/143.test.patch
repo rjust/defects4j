@@ -1,0 +1,48 @@
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index b7d44163..524eb894 100644
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -132,18 +132,6 @@ public class CommandLineRunnerTest extends TestCase {
+          "var FOO = true, BAR = 5, CCC = true, DDD = true;");
+   }
+ 
+-  public void testDefineFlag2() {
+-    args.add("--define=FOO='x\"'");
+-    test("/** @define {string} */ var FOO = \"a\";",
+-         "var FOO = \"x\\\"\";");
+-  }
+-
+-  public void testDefineFlag3() {
+-    args.add("--define=FOO=\"x'\"");
+-    test("/** @define {string} */ var FOO = \"a\";",
+-         "var FOO = \"x'\";");
+-  }
+-
+   public void testScriptStrictModeNoWarning() {
+     test("'use strict';", "");
+     test("'no use strict';", CheckSideEffects.USELESS_CODE_ERROR);
+diff --git a/test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java b/test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java
+index 67d07924..63c1f7e1 100644
+--- a/test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java
++++ b/test/com/google/javascript/jscomp/RemoveConstantExpressionsTest.java
+@@ -277,20 +277,4 @@ public class RemoveConstantExpressionsTest extends CompilerTestCase {
+   public void testRemoveFromLabel2() {
+     test("LBL: foo() + 1 + bar()", "LBL: {foo();bar()}");
+   }
+-
+-  public void testCall1() {
+-    test("Math.sin(0);", "");
+-  }
+-
+-  public void testCall2() {
+-    test("1 + Math.sin(0);", "");
+-  }
+-
+-  public void testNew1() {
+-    test("new Date;", "");
+-  }
+-
+-  public void testNew2() {
+-    test("1 + new Date;", "");
+-  }
+ }

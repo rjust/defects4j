@@ -1,4 +1,4 @@
-Defects4J -- version 1.3.1 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,12 +8,12 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 395 bugs from the following open-source projects:
+Defects4J contains 438 bugs from the following open-source projects:
 
 | Identifier | Project name         | Number of bugs |
 |------------|----------------------|----------------|
 | Chart      | JFreeChart           |  26            |
-| Closure    | Closure compiler     | 133            |
+| Closure    | Closure compiler     | 176            |
 | Lang       | Apache commons-lang  |  65            |
 | Math       | Apache commons-math  | 106            |
 | Mockito    | Mockito              |  38            |
@@ -25,7 +25,7 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit
+- Fixed in a single commit.
 - Minimized: the Defects4J maintainers manually pruned out
   irrelevant changes in the commit (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
@@ -151,6 +151,11 @@ provides the following scripts:
 | [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
 | [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
+Mining and contributing additional bugs to Defects4J
+================
+The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
+
+
 Additional resources
 ================
 
@@ -201,10 +206,12 @@ The directory structure of Defects4J is as follows:
        |
        |--- major:             The Major mutation framework.
        |
-       |--- framework:         Libraries and executables of the database abstraction and
-           |                   test execution framework.
+       |--- framework:         Libraries and executables of the core, test execution,
+           |                   and bug-mining frameworks.
            |
            |--- bin:           Command line interface to Defects4J.
+           |
+           |--- bug-mining:    Bug-mining framework.
            |
            |--- core:          The modules of the core framework.
            |

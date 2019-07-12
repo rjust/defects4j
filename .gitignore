@@ -4,4 +4,5 @@ framework/test/*.log
 framework/lib/test_generation/generation/*.jar
 framework/lib/test_generation/runtime/*.jar
 framework/lib/build_systems
+framework/lib/analyzer.jar
 work/

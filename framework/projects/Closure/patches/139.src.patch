@@ -1,0 +1,72 @@
+diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
+index 22a51318..26655f17 100644
+--- a/src/com/google/javascript/jscomp/Normalize.java
++++ b/src/com/google/javascript/jscomp/Normalize.java
+@@ -278,9 +278,6 @@ class Normalize implements CompilerPass {
+           }
+           break;
+ 
+-        case Token.FUNCTION:
+-          normalizeFunctionDeclaration(n);
+-          break;
+       }
+     }
+ 
+@@ -292,13 +289,6 @@ class Normalize implements CompilerPass {
+      * to:
+      *    var f = function () {};
+      */
+-    private void normalizeFunctionDeclaration(Node n) {
+-      Preconditions.checkState(n.getType() == Token.FUNCTION);
+-      if (!NodeUtil.isFunctionAnonymous(n)
+-          && !NodeUtil.isHoistedFunctionDeclaration(n)) {
+-        rewriteFunctionDeclaration(n);
+-      }
+-    }
+ 
+     /**
+      * Rewrite the function declaration from:
+@@ -316,23 +306,12 @@ class Normalize implements CompilerPass {
+      *         LP
+      *         BLOCK
+      */
+-    private void rewriteFunctionDeclaration(Node n) {
+       // Prepare a spot for the function.
+-      Node oldNameNode = n.getFirstChild();
+-      Node fnNameNode = oldNameNode.cloneNode();
+-      Node var = new Node(Token.VAR, fnNameNode, n.getLineno(), n.getCharno());
+-      var.copyInformationFrom(n);
+ 
+       // Prepare the function
+-      oldNameNode.setString("");
+ 
+       // Move the function
+-      Node parent = n.getParent();
+-      parent.replaceChild(n, var);
+-      fnNameNode.addChildToFront(n);
+ 
+-      reportCodeChange("Function declaration");
+-    }
+ 
+     /**
+      * Do normalizations that introduce new siblings or parents.
+@@ -539,18 +518,8 @@ class Normalize implements CompilerPass {
+         Scope s, String name, Node n, Node parent, Node gramps,
+         Node nodeWithLineNumber) {
+       Preconditions.checkState(n.getType() == Token.NAME);
+-      Var v = s.getVar(name);
++      if (parent.getType() == Token.VAR) {
+       // If name is "arguments", Var maybe null.
+-      Preconditions.checkState(
+-          v == null || v.getParentNode().getType() != Token.CATCH);
+-      if (v != null && parent.getType() == Token.FUNCTION) {
+-        if (v.getParentNode().getType() == Token.VAR) {
+-          s.undeclare(v);
+-          s.declare(name, n, n.getJSType(), v.input);
+-          replaceVarWithAssignment(v.getNameNode(), v.getParentNode(),
+-              v.getParentNode().getParent());
+-        }
+-      } else if (parent.getType() == Token.VAR) {
+         Preconditions.checkState(parent.hasOneChild());
+ 
+         replaceVarWithAssignment(n, parent, gramps);
