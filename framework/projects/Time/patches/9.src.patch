@@ -1,8 +1,16 @@
 diff --git a/src/main/java/org/joda/time/DateTimeZone.java b/src/main/java/org/joda/time/DateTimeZone.java
-index afa75d7..899ae4c 100644
+index afa75d79..3ad5cfeb 100644
 --- a/src/main/java/org/joda/time/DateTimeZone.java
 +++ b/src/main/java/org/joda/time/DateTimeZone.java
-@@ -255,19 +255,16 @@ public abstract class DateTimeZone implements Serializable {
+@@ -93,7 +93,6 @@ public abstract class DateTimeZone implements Serializable {
+     /** The time zone for Universal Coordinated Time */
+     public static final DateTimeZone UTC = new FixedDateTimeZone("UTC", "UTC", 0, 0);
+     /** Maximum offset. */
+-    private static final int MAX_MILLIS = (86400 * 1000) - 1;
+ 
+     /** The instance that is providing time zones. */
+     private static Provider cProvider;
+@@ -255,19 +254,16 @@ public abstract class DateTimeZone implements Serializable {
          if (hoursOffset == 0 && minutesOffset == 0) {
              return DateTimeZone.UTC;
          }
@@ -25,7 +33,7 @@ index afa75d7..899ae4c 100644
              }
              offset = FieldUtils.safeMultiply(minutesOffset, DateTimeConstants.MILLIS_PER_MINUTE);
          } catch (ArithmeticException ex) {
-@@ -283,9 +280,6 @@ public abstract class DateTimeZone implements Serializable {
+@@ -283,9 +279,6 @@ public abstract class DateTimeZone implements Serializable {
       * @return the DateTimeZone object for the offset
       */
      public static DateTimeZone forOffsetMillis(int millisOffset) {
