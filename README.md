@@ -21,11 +21,11 @@ Defects4J contains 438 bugs from the following open-source projects:
 
 ### Looking for additional bugs?
 
-A number of additional bugs are available in various branches. These bugs 
-should be considered as "work-in-progress". Metadata and patch content 
-may still change. These bugs may be used in experiments, but should not be
-considered as "stable" as the bugs in the master repository. If you use
-these bugs, we request that you ackowledge their beta status in publications.
+A number of additional bugs are available in "work-in-progress" status. 
+Metadata and patch content will potentially change before these bugs are 
+migrated into the master repository. These bugs may be used in experiments, 
+but should not be considered as "stable" as the bugs in the master repository. 
+If you use these bugs, please ackowledge their beta status in any publications.
 
 **Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
 
