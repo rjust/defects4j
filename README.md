@@ -19,6 +19,33 @@ Defects4J contains 438 bugs from the following open-source projects:
 | Mockito    | Mockito              |  38            |
 | Time       | Joda-Time            |  27            |
 
+### Looking for additional bugs?
+
+A number of additional bugs are available in various branches. These bugs 
+should be considered as "work-in-progress". Metadata and patch content 
+may still change. These bugs may be used in experiments, but should not be
+considered as "stable" as the bugs in the master repository. If you use
+these bugs, we request that you ackowledge their beta status in publications.
+
+**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
+
+| Identifier | Project name               | Number of bugs |
+|------------|----------------------------|----------------|
+| Collections| Apache commons-collections |  28            |
+| Compress   | Apache commons-compress    |  47            |
+
+**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
+
+| Identifier      | Project name           | Number of bugs |
+|-----------------|------------------------|----------------|
+| Cli             | Apache commons-cli     |  40            |
+| Codec           | Apache commons-codec   |  18            |
+| Csv             | Apache commons-csv     |  16            |
+| JacksonCore     | Jackson JSON parser    |  26            |
+| JacksonDatabind | Jackson data bindings  | 112            |
+| JacksonXml      | Jackson XML extension  |   6            |
+| JxPath          | Apache commons-jxpath  |  22            |
+
 The bugs
 ---------------
 Each bug has the following properties:
