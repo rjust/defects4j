@@ -1,4 +1,4 @@
-Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -25,7 +25,7 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit
+- Fixed in a single commit.
 - Minimized: the Defects4J maintainers manually pruned out
   irrelevant changes in the commit (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
@@ -206,10 +206,12 @@ The directory structure of Defects4J is as follows:
        |
        |--- major:             The Major mutation framework.
        |
-       |--- framework:         Libraries and executables of the database abstraction and
-           |                   test execution framework.
+       |--- framework:         Libraries and executables of the core, test execution,
+           |                   and bug-mining frameworks.
            |
            |--- bin:           Command line interface to Defects4J.
+           |
+           |--- bug-mining:    Bug-mining framework.
            |
            |--- core:          The modules of the core framework.
            |
