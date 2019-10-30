@@ -103,7 +103,6 @@ sub initialize_revision {
 
     my $work_dir = $self->{prog_root};
     my $result = {src=>"src/main/java", test=>"src/test/java"};
-    die "Unknown layout for revision: ${rev_id}" unless defined $result;
 
     $self->_add_to_layout_map($rev_id, $result->{src}, $result->{test});
     $self->_cache_layout_map(); # Force cache rebuild
