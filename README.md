@@ -36,6 +36,35 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
+Looking for additional bugs?
+-----------------------------
+A number of additional bugs are available in "work-in-progress" status.
+These bugs meet the same properties as the ones above, but have only been
+minimized by one of the maintainers. Metadata and patch content can 
+potentially change before these bugs are migrated into the master repository. 
+These bugs may be used in experiments, but should not be considered as 
+"stable" as the bugs in the master repository. If you use these bugs, please 
+ackowledge their "beta status" in any publications.
+
+**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
+
+| Identifier | Project name               | Number of bugs |
+|------------|----------------------------|----------------|
+| Collections| Apache commons-collections |  28            |
+| Compress   | Apache commons-compress    |  47            |
+
+**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
+
+| Identifier      | Project name           | Number of bugs |
+|-----------------|------------------------|----------------|
+| Cli             | Apache commons-cli     |  40            |
+| Codec           | Apache commons-codec   |  18            |
+| Csv             | Apache commons-csv     |  16            |
+| JacksonCore     | Jackson JSON parser    |  26            |
+| JacksonDatabind | Jackson data bindings  | 112            |
+| JacksonXml      | Jackson XML extension  |   6            |
+| JxPath          | Apache commons-jxpath  |  22            |
+
 Setting up Defects4J
 ================
 
