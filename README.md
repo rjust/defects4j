@@ -1,4 +1,4 @@
-Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -27,7 +27,7 @@ Each bug has the following properties:
 
 - Issue filed in the corresponding issue tracker, and issue tracker identifier
   mentioned in the fixing commit message.
-- Fixed in a single commit
+- Fixed in a single commit.
 - Minimized: the Defects4J maintainers manually pruned out
   irrelevant changes in the commit (e.g., refactorings or feature additions).
 - Fixed by modifying the source code (as opposed to configuration files,
@@ -37,6 +37,35 @@ Each bug has the following properties:
 
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
+
+Looking for additional bugs?
+-----------------------------
+A number of additional bugs are available in "work-in-progress" status.
+These bugs meet the same properties as the ones above, but have only been
+minimized by one of the maintainers. Metadata and patch content can 
+potentially change before these bugs are migrated into the master repository. 
+These bugs may be used in experiments, but should not be considered as 
+"stable" as the bugs in the master repository. If you use these bugs, please 
+ackowledge their "beta status" in any publications.
+
+**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
+
+| Identifier | Project name               | Number of bugs |
+|------------|----------------------------|----------------|
+| Collections| Apache commons-collections |  28            |
+| Compress   | Apache commons-compress    |  47            |
+
+**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
+
+| Identifier      | Project name           | Number of bugs |
+|-----------------|------------------------|----------------|
+| Cli             | Apache commons-cli     |  40            |
+| Codec           | Apache commons-codec   |  18            |
+| Csv             | Apache commons-csv     |  16            |
+| JacksonCore     | Jackson JSON parser    |  26            |
+| JacksonDatabind | Jackson data bindings  | 112            |
+| JacksonXml      | Jackson XML extension  |   6            |
+| JxPath          | Apache commons-jxpath  |  22            |
 
 Setting up Defects4J
 ================
@@ -208,10 +237,12 @@ The directory structure of Defects4J is as follows:
        |
        |--- major:             The Major mutation framework.
        |
-       |--- framework:         Libraries and executables of the database abstraction and
-           |                   test execution framework.
+       |--- framework:         Libraries and executables of the core, test execution,
+           |                   and bug-mining frameworks.
            |
            |--- bin:           Command line interface to Defects4J.
+           |
+           |--- bug-mining:    Bug-mining framework.
            |
            |--- core:          The modules of the core framework.
            |
