@@ -19,13 +19,32 @@ Defects4J contains 438 bugs from the following open-source projects:
 | Mockito    | Mockito              |  38            |
 | Time       | Joda-Time            |  27            |
 
-### Looking for additional bugs?
+The bugs
+---------------
+Each bug has the following properties:
 
-A number of additional bugs are available in "work-in-progress" status. 
-Metadata and patch content will potentially change before these bugs are 
-migrated into the master repository. These bugs may be used in experiments, 
-but should not be considered as "stable" as the bugs in the master repository. 
-If you use these bugs, please ackowledge their beta status in any publications.
+- Issue filed in the corresponding issue tracker, and issue tracker identifier
+  mentioned in the fixing commit message.
+- Fixed in a single commit.
+- Minimized: the Defects4J maintainers manually pruned out
+  irrelevant changes in the commit (e.g., refactorings or feature additions).
+- Fixed by modifying the source code (as opposed to configuration files,
+  documentation, or test files).
+- A triggering test exists that failed before the fix and passes after the fix
+  -- the test failure is not random or dependent on test execution order.
+
+The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
+`<id>f`, respectively (`<id>` is an integer).
+
+Looking for additional bugs?
+-----------------------------
+A number of additional bugs are available in "work-in-progress" status.
+These bugs meet the same properties as the ones above, but have only been
+minimized by one of the maintainers. Metadata and patch content can 
+potentially change before these bugs are migrated into the master repository. 
+These bugs may be used in experiments, but should not be considered as 
+"stable" as the bugs in the master repository. If you use these bugs, please 
+ackowledge their "beta status" in any publications.
 
 **Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
 
@@ -45,23 +64,6 @@ If you use these bugs, please ackowledge their beta status in any publications.
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
 | JxPath          | Apache commons-jxpath  |  22            |
-
-The bugs
----------------
-Each bug has the following properties:
-
-- Issue filed in the corresponding issue tracker, and issue tracker identifier
-  mentioned in the fixing commit message.
-- Fixed in a single commit.
-- Minimized: the Defects4J maintainers manually pruned out
-  irrelevant changes in the commit (e.g., refactorings or feature additions).
-- Fixed by modifying the source code (as opposed to configuration files,
-  documentation, or test files).
-- A triggering test exists that failed before the fix and passes after the fix
-  -- the test failure is not random or dependent on test execution order.
-
-The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
-`<id>f`, respectively (`<id>` is an integer).
 
 Setting up Defects4J
 ================
