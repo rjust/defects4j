@@ -64,6 +64,7 @@ ackowledge their "beta status" in any publications.
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
 | JxPath          | Apache commons-jxpath  |  22            |
+| Jsoup           | jsoup HTML Parser      |  93            |
 
 Setting up Defects4J
 ================
