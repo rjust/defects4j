@@ -76,6 +76,8 @@ test_ExportTestClassesDir() {
                 expected="target/test-classes"
             elif [ "$pid" == "JacksonXml" ]; then
                 expected="target/test-classes"
+            elif [ "$pid" == "Jsoup" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "JxPath" ]; then
                 expected="target/test-classes"
     	    elif [ "$pid" == "Lang" ]; then

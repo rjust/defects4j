@@ -17,6 +17,7 @@ clean() {
     jackson-dataformat-xml \
     jfreechart \
     joda-time.git \
+    jsoup.git \
     README 
 }
 

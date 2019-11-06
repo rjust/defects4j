@@ -1,0 +1,32 @@
+diff --git a/src/main/java/org/jsoup/parser/Tokeniser.java b/src/main/java/org/jsoup/parser/Tokeniser.java
+index 316cbea..6d729cf 100644
+--- a/src/main/java/org/jsoup/parser/Tokeniser.java
++++ b/src/main/java/org/jsoup/parser/Tokeniser.java
+@@ -194,9 +194,6 @@ class Tokeniser {
+         return tagPending.tagName.equals(lastStartTag.tagName);
+     }
+ 
+-    String appropriateEndTagName() {
+-        return lastStartTag.tagName;
+-    }
+ 
+     boolean isTrackErrors() {
+         return trackErrors;
+diff --git a/src/main/java/org/jsoup/parser/TokeniserState.java b/src/main/java/org/jsoup/parser/TokeniserState.java
+index 8774823..ca27ea0 100644
+--- a/src/main/java/org/jsoup/parser/TokeniserState.java
++++ b/src/main/java/org/jsoup/parser/TokeniserState.java
+@@ -215,13 +215,8 @@ enum TokeniserState {
+             if (r.matches('/')) {
+                 t.createTempBuffer();
+                 t.advanceTransition(RCDATAEndTagOpen);
+-            } else if (r.matchesLetter() && !r.containsIgnoreCase("</" + t.appropriateEndTagName())) {
+                 // diverge from spec: got a start tag, but there's no appropriate end tag (</title>), so rather than
+                 // consuming to EOF; break out here
+-                t.tagPending = new Token.EndTag(t.appropriateEndTagName());
+-                t.emitTagPending();
+-                r.unconsume(); // undo "<"
+-                t.transition(Data);
+             } else {
+                 t.emit("<");
+                 t.transition(Rcdata);

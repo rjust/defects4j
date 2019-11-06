@@ -83,12 +83,24 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b15..28
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b29..42
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b43..56
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b57..70
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b71..84
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b85..98
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b99..112
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b57..65
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b66..75
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b76..85
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b86..95
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b96..105
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b106..112
 ## JacksonXml
     - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..6
+## Jsoup
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..11
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b12..22
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b23..33
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b34..43
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b44..53
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b54..63
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b64..73
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b74..83
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b84..93
 ## JxPath
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b1..11
     - script: carton exec ./test_verify_bugs.sh -p JxPath -b12..22

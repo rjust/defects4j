@@ -1,0 +1,14 @@
+diff --git a/src/test/java/org/jsoup/nodes/DocumentTest.java b/src/test/java/org/jsoup/nodes/DocumentTest.java
+index 46a8930..3a2fa1c 100644
+--- a/src/test/java/org/jsoup/nodes/DocumentTest.java
++++ b/src/test/java/org/jsoup/nodes/DocumentTest.java
+@@ -32,9 +32,6 @@ public class DocumentTest {
+         withTitle.title("Hello");
+         assertEquals("Hello", withTitle.title());
+         assertEquals("Hello", withTitle.select("title").first().text());
+-
+-        Document normaliseTitle = Jsoup.parse("<title>   Hello\nthere   \n   now   \n");
+-        assertEquals("Hello there now", normaliseTitle.title());
+     }
+ 
+     @Test public void testOutputEncoding() {

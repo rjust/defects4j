@@ -1,0 +1,17 @@
+org.jsoup.parser.Tag
+org.jsoup.nodes.Element
+org.jsoup.nodes.DataNode
+org.jsoup.nodes.XmlDeclaration
+org.jsoup.nodes.TextNode
+org.jsoup.parser.TokenQueue
+org.jsoup.nodes.Attributes
+org.jsoup.nodes.Document
+org.jsoup.nodes.Comment
+org.jsoup.nodes.Attribute
+org.jsoup.parser.Parser
+org.jsoup.select.Elements
+org.jsoup.Jsoup
+org.jsoup.select.Collector
+org.jsoup.nodes.Node
+org.jsoup.nodes.Evaluator
+org.jsoup.select.Selector

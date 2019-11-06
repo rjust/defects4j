@@ -1,0 +1,16 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index e0604b4..f2d6e9b 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -799,11 +799,4 @@ public class HtmlParserTest {
+         assertEquals(1, doc.select("table input").size());
+         assertEquals(2, doc.select("input").size());
+     }
+-
+-    @Test public void convertsImageToImg() {
+-        // image to img, unless in a svg. old html cruft.
+-        String h = "<body><image><svg><image /></svg></body>";
+-        Document doc = Jsoup.parse(h);
+-        assertEquals("<img />\n<svg>\n <image />\n</svg>", doc.body().html());
+-    }
+ }

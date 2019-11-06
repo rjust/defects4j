@@ -1,0 +1,104 @@
+diff --git a/src/test/java/org/jsoup/integration/ConnectTest.java b/src/test/java/org/jsoup/integration/ConnectTest.java
+index b6e1a18..cdc2536 100644
+--- a/src/test/java/org/jsoup/integration/ConnectTest.java
++++ b/src/test/java/org/jsoup/integration/ConnectTest.java
+@@ -2,11 +2,9 @@ package org.jsoup.integration;
+ 
+ import org.jsoup.Connection;
+ import org.jsoup.Jsoup;
+-import org.jsoup.UncheckedIOException;
+ import org.jsoup.integration.servlets.Deflateservlet;
+ import org.jsoup.integration.servlets.EchoServlet;
+ import org.jsoup.integration.servlets.HelloServlet;
+-import org.jsoup.integration.servlets.InterruptedServlet;
+ import org.jsoup.integration.servlets.SlowRider;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+@@ -383,38 +381,4 @@ public class ConnectTest {
+         Document doc = res.parse();
+         assertEquals("Hello, World!", doc.selectFirst("p").text());
+     }
+-
+-    @Test
+-    public void handlesEmptyStreamDuringParseRead() throws IOException {
+-        // this handles situations where the remote server sets a content length greater than it actually writes
+-
+-        Connection.Response res = Jsoup.connect(InterruptedServlet.Url)
+-            .timeout(200)
+-            .execute();
+-
+-        boolean threw = false;
+-        try {
+-            Document document = res.parse();
+-            assertEquals("Something", document.title());
+-        } catch (IOException e) {
+-            threw = true;
+-        }
+-        assertEquals(true, threw);
+-    }
+-
+-    @Test
+-    public void handlesEmtpyStreamDuringBufferdRead() throws IOException {
+-        Connection.Response res = Jsoup.connect(InterruptedServlet.Url)
+-            .timeout(200)
+-            .execute();
+-
+-        boolean threw = false;
+-        try {
+-            res.bufferUp();
+-        } catch (UncheckedIOException e) {
+-            threw = true;
+-        }
+-        assertEquals(true, threw);
+-
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/integration/servlets/InterruptedServlet.java b/src/test/java/org/jsoup/integration/servlets/InterruptedServlet.java
+deleted file mode 100644
+index f403be9..0000000
+--- a/src/test/java/org/jsoup/integration/servlets/InterruptedServlet.java
++++ /dev/null
+@@ -1,31 +0,0 @@
+-package org.jsoup.integration.servlets;
+-
+-import org.jsoup.integration.TestServer;
+-import org.jsoup.parser.CharacterReaderTest;
+-
+-import javax.servlet.ServletException;
+-import javax.servlet.http.HttpServletRequest;
+-import javax.servlet.http.HttpServletResponse;
+-import java.io.IOException;
+-
+-public class InterruptedServlet extends BaseServlet {
+-    public static final String Url = TestServer.map(InterruptedServlet.class);
+-
+-    @Override
+-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+-        res.setContentType(TextHtml);
+-        res.setStatus(HttpServletResponse.SC_OK);
+-
+-        StringBuilder sb = new StringBuilder();
+-        sb.append("<title>Something</title>");
+-        while (sb.length() <= CharacterReaderTest.maxBufferLen) {
+-            sb.append("A suitable amount of data. \n");
+-        }
+-        String data = sb.toString();
+-
+-        res.setContentLength(data.length() * 2);
+-
+-        res.getWriter().write(data);
+-
+-    }
+-}
+diff --git a/src/test/java/org/jsoup/parser/CharacterReaderTest.java b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+index ad9e32b..b058db0 100644
+--- a/src/test/java/org/jsoup/parser/CharacterReaderTest.java
++++ b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+@@ -13,7 +13,6 @@ import static org.junit.Assert.*;
+  * @author Jonathan Hedley, jonathan@hedley.net
+  */
+ public class CharacterReaderTest {
+-    public final static int maxBufferLen = CharacterReader.maxBufferLen;
+ 
+     @Test public void consume() {
+         CharacterReader r = new CharacterReader("one");

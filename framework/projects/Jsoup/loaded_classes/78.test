@@ -1,0 +1,5 @@
+org.jsoup.integration.servlets.BaseServlet
+org.jsoup.integration.ConnectTest
+org.jsoup.integration.TestServer
+org.jsoup.integration.servlets.InterruptedServlet
+org.jsoup.integration.servlets.EchoServlet

@@ -8,7 +8,7 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 678 bugs from the following open-source projects:
+Defects4J contains 771 bugs from the following open-source projects:
 
 | Identifier      | Project name           | Number of bugs |
 |-----------------|------------------------|----------------|
@@ -20,6 +20,7 @@ Defects4J contains 678 bugs from the following open-source projects:
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
+| Jsoup           | jsoup HTML Parser      |  93            |
 | JxPath          | Apache commons-jxpath  |  22            |
 | Lang            | Apache commons-lang    |  65            |
 | Math            | Apache commons-math    | 106            |
@@ -70,6 +71,7 @@ ackowledge their "beta status" in any publications.
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
+| Jsoup           | jsoup HTML Parser      |  93            |
 | JxPath          | Apache commons-jxpath  |  22            |
 
 Setting up Defects4J
