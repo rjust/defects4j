@@ -129,7 +129,7 @@ Using Defects4J
     - `defects4j compile`
     - `defects4j test`
 
-5. The scripts in [`framework/test/`](tree/master/framework/test/)
+5. The scripts in [`framework/test/`](framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
