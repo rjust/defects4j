@@ -60,6 +60,7 @@ ackowledge their "beta status" in any publications.
 | Cli             | Apache commons-cli     |  40            |
 | Codec           | Apache commons-codec   |  18            |
 | Csv             | Apache commons-csv     |  16            |
+| Gson            | Google Gson            |  18            |
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
@@ -215,8 +216,13 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
+* "Challenges in Using Search-Based Test Generation to Identify Real Faults in Mockito"
+   Gregory Gay.
+   SSBSE 2016 [[download]][ssbse16].
+
 [issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
 [fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+[ssbse16]: https://greg4cr.github.io/pdf/16mockito.pdf
 
 [More publications](https://scholar.google.com/scholar?q=defects4j)
 
