@@ -12,6 +12,7 @@ clean() {
     commons-lang.git \
     commons-jxpath.git \
     commons-math.git \
+    gson.git \
     jackson-core.git \
     jackson-databind.git \
     jackson-dataformat-xml \
