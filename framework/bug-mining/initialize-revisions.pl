@@ -128,9 +128,7 @@ sub _init_version {
     if (defined $SUBPROJ) {
         $work_dir .= "/$SUBPROJ/";
         $project->{prog_root} = $work_dir;
-    } 
-
-    print $work_dir;
+    }
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
     if (-e "$work_dir/build.xml") {
