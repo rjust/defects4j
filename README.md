@@ -8,7 +8,7 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 771 bugs from the following open-source projects:
+Defects4J contains 789 bugs from the following open-source projects:
 
 | Identifier      | Project name           | Number of bugs |
 |-----------------|------------------------|----------------|
@@ -17,6 +17,7 @@ Defects4J contains 771 bugs from the following open-source projects:
 | Closure         | Closure compiler       | 176            |
 | Codec           | Apache commons-codec   |  18            |
 | Csv             | Apache commons-csv     |  16            |
+| Gson            | Google Gson            |  18            |
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
@@ -68,6 +69,7 @@ ackowledge their "beta status" in any publications.
 | Cli             | Apache commons-cli     |  40            |
 | Codec           | Apache commons-codec   |  18            |
 | Csv             | Apache commons-csv     |  16            |
+| Gson            | Google Gson            |  18            |
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |

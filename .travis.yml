@@ -75,15 +75,17 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Codec -b1..18
 ## Csv
     - script: carton exec ./test_verify_bugs.sh -p Csv -b1..16
+## Gson
+    - script: carton exec ./test_verify_bugs.sh -p Gson -b1..18
 ## JacksonCore
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
     - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b14..26
 ## JacksonDatabind
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..14
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b15..28
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b29..42
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b43..58
-    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b59..67
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b29..43
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b44..57
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b58..67
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b68..76
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b77..86
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b87..96

@@ -31,7 +31,7 @@ layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
-initialize-revisions.pl -p project_id -w work_dir [ -b bug_id]
+initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] 
 
 =head1 OPTIONS
 
@@ -44,6 +44,10 @@ The id of the project for which the meta data should be generated.
 =item B<-w F<work_dir>>
 
 The working directory used for the bug-mining process.
+
+=item B<-s F<subproject>>
+
+The subproject to be mined (if not the root directory)
 
 =item B<-b C<bug_id>>
 
@@ -67,13 +71,14 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:s:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
 my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 my $WORK_DIR = abs_path($cmd_opts{w});
+my $SUBPROJ = $cmd_opts{s};
 
 # Check format of target bug id
 if (defined $BID) {
@@ -119,6 +124,13 @@ sub _init_version {
     # Use the VCS checkout routine, which does not apply the cached, possibly
     # minimized patch to obtain the buggy version.
     $project->{_vcs}->checkout_vid("${vid}", $work_dir) or die "Cannot checkout $vid version";
+
+    if (defined $SUBPROJ) {
+        $work_dir .= "/$SUBPROJ/";
+        $project->{prog_root} = $work_dir;
+    } 
+
+    print $work_dir;
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
     if (-e "$work_dir/build.xml") {

@@ -1,0 +1,25 @@
+diff --git a/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java b/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
+index 3c787a66..b3ee5a6f 100644
+--- a/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
++++ b/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
+@@ -161,20 +161,6 @@ public class DefaultDateTypeAdapterTest extends TestCase {
+     } catch (IllegalArgumentException expected) { }
+   }
+ 
+-  public void testNullValue() throws Exception {
+-    DefaultDateTypeAdapter adapter = new DefaultDateTypeAdapter(Date.class);
+-    assertNull(adapter.fromJson("null"));
+-    assertEquals("null", adapter.toJson(null));
+-  }
+-
+-  public void testUnexpectedToken() throws Exception {
+-    try {
+-      DefaultDateTypeAdapter adapter = new DefaultDateTypeAdapter(Date.class);
+-      adapter.fromJson("{}");
+-      fail("Unexpected token should fail.");
+-    } catch (IllegalStateException expected) { }
+-  }
+-
+   private void assertFormatted(String formatted, DefaultDateTypeAdapter adapter) {
+     assertEquals(toLiteral(formatted), adapter.toJson(new Date(0)));
+   }
