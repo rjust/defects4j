@@ -184,6 +184,7 @@ provides the following scripts:
 
 Mining and contributing additional bugs to Defects4J
 ================
+We welcome your contributions to Defects4J!
 The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
 
 
@@ -230,7 +231,7 @@ Implementation details
 ----------------------
 
 Documentation for any script or module is available as
-[html documentation][htmldocs].
+[HTML documentation][htmldocs].
 
 [htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
 
