@@ -1,5 +1,5 @@
 jobs:
-- job: all_tests_jdk8
+- job: test_randoop_coverage
   pool:
     vmImage: 'ubuntu-16.04'
   container: mdernst/defects4j-ubuntu-jdk8:latest
