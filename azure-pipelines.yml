@@ -1,0 +1,10 @@
+jobs:
+- job: all_tests_jdk8
+  pool:
+    vmImage: 'ubuntu-16.04'
+  container: mdernst/defects4j-ubuntu-jdk8:latest
+  steps:
+  - checkout: self
+    fetchDepth: 25
+  - bash: ./framework/test/test_randoop_coverage.sh
+    displayName: test_randoop_coverage.sh
