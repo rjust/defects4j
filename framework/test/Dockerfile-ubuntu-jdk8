@@ -14,14 +14,20 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy install \
   cpanminus \
   git \
+  make \
   perl \
-  subversion
+  subversion \
+  wget
 
 RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy update \
 && apt-get -qqy install \
   openjdk-8-jdk \
 && update-java-alternatives --set java-1.8.0-openjdk-amd64
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+&& wget https://raw.githubusercontent.com/rjust/defects4j/master/cpanfile \
+&& cpanm --installdeps .
 
 RUN export DEBIAN_FRONTEND=noninteractive \
 && export TZ=America/Los_Angeles
