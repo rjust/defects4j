@@ -20,7 +20,7 @@ cpanm --installdeps .
 
 ./init.sh
 
-export PATH=$PATH:"path2defects4j"/framework/bin
+export PATH=$PATH:$PWD/framework/bin
 
 defects4j info -p Lang
 
