@@ -1,5 +1,4 @@
-# Create a Docker image that is ready to run the main Randoop tests,
-# using JDK 8.
+# Create a Docker image to compute Randoop's coverage on Defects4J projects.
 
 FROM ubuntu
 MAINTAINER Michael Ernst <mernst@cs.washington.edu>
