@@ -9,6 +9,8 @@
 # Fail if any comand fails.
 set -e
 
+D4J_DIR=$PWD
+
 ### 1. Follow steps 1-4 under Steps to set up Defects4J in the top-level README.
 
 ## This is already done since we are in a clone of defects4j
@@ -20,7 +22,7 @@ cpanm --installdeps .
 
 ./init.sh
 
-export PATH=$PATH:$PWD/framework/bin
+export PATH=$PATH:$D4J_DIR/framework/bin
 
 defects4j info -p Lang
 
@@ -32,6 +34,7 @@ defects4j info -p Lang
 
 ### 3. Run the test generation and coverage analysis:
 # TODO: Currently, this does not generate tests for all the defects, just five in each project.
+cd $D4J_DIR/framework/test
 ./randoop_coverage.sh
 
 ../util/show_coverage.pl
