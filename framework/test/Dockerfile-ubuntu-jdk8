@@ -17,15 +17,19 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get -qqy update \
 && apt-get -qqy install \
-  cpanminus \
   gcc \
   git \
+  maven \
   make \
   perl \
   subversion \
-  wget
+  wget \
+  unzip
 
 RUN export DEBIAN_FRONTEND=noninteractive \
+&& apt-get -qqy update \
+&& apt-get -qqy install \
+  cpanminus \
 && wget https://raw.githubusercontent.com/rjust/defects4j/master/cpanfile \
 && cpanm --installdeps .
 
