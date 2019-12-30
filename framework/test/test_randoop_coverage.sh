@@ -8,6 +8,8 @@
 
 # Fail if any comand fails.
 set -e
+# Show commands as they are run.
+set -x
 
 D4J_DIR=$PWD
 
