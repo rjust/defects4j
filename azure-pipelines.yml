@@ -2,7 +2,7 @@ jobs:
 - job: test_randoop_coverage
   pool:
     vmImage: 'ubuntu-16.04'
-  container: mdernst/defects4j-ubuntu-jdk8:latest
+  container: mdernst/randoop-ubuntu-jdkany-coverage:latest
   steps:
   - checkout: self
     fetchDepth: 25
