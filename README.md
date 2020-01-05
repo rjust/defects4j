@@ -75,7 +75,7 @@ Requirements
  - Java 1.7
  - Git >= 1.9
  - SVN >= 1.8
- - Perl >= 5.0.10
+ - Perl >= 5.0.12
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
