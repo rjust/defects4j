@@ -1,0 +1,248 @@
+diff --git a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+index d88520cb..51f440c2 100644
+--- a/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
++++ b/src/com/google/javascript/jscomp/MakeDeclaredNamesUnique.java
+@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+ import com.google.common.collect.Multiset;
+ import com.google.common.collect.Sets;
+-import com.google.javascript.jscomp.NodeTraversal.ScopedCallback;
++import com.google.javascript.jscomp.NodeTraversal.AbstractPostOrderCallback;
+ import com.google.javascript.jscomp.Scope.Var;
+ import com.google.javascript.rhino.Node;
+ import com.google.javascript.rhino.Token;
+@@ -45,7 +45,6 @@ import java.util.Set;
+ class MakeDeclaredNamesUnique
+     implements NodeTraversal.ScopedCallback {
+ 
+-  public static final String ARGUMENTS = "arguments";
+   private Deque<Renamer> nameStack = new ArrayDeque<Renamer>();
+   private final Renamer rootRenamer;
+ 
+@@ -233,18 +232,16 @@ class MakeDeclaredNamesUnique
+   /**
+    * Inverts the transformation by {@link ContextualRenamer}, when possible.
+    */
+-  static class ContextualRenameInverter
+-      implements ScopedCallback, CompilerPass {
++  static class ContextualRenameInverter extends AbstractPostOrderCallback
++      implements CompilerPass {
+     private final AbstractCompiler compiler;
+ 
+     // The set of names referenced in the current scope.
+-    private Set<String> referencedNames = ImmutableSet.of();
+ 
+     // Stack reference sets.
+-    private Deque<Set<String>> referenceStack = new ArrayDeque<Set<String>>();
+ 
+     // Name are globally unique initially, so we don't need a per-scope map.
+-    private Map<String, List<Node>> nameMap = Maps.newHashMap();
++    private Map<Var, String> nameMap = Maps.newHashMap();
+ 
+     private ContextualRenameInverter(AbstractCompiler compiler) {
+       this.compiler = compiler;
+@@ -266,105 +263,86 @@ class MakeDeclaredNamesUnique
+     private boolean containsSeparator(String name) {
+       return name.indexOf(ContextualRenamer.UNIQUE_ID_SEPARATOR) != -1;
+     }
++    private static String getOrginalNameInternal(String name, int index) {
++      return name.substring(0, index);
++    }
+ 
+     /**
+      * Prepare a set for the new scope.
+      */
+-    public void enterScope(NodeTraversal t) {
+-      if (t.inGlobalScope()) {
+-        return;
+-      }
+ 
+-      referenceStack.push(referencedNames);
+-      referencedNames = Sets.newHashSet();
++    private static String getNameSuffix(String name, int index) {
++      return name.substring(
++          index + ContextualRenamer.UNIQUE_ID_SEPARATOR.length(),
++          name.length());
+     }
+ 
+     /**
+      * Rename vars for the current scope, and merge any referenced 
+      * names into the parent scope reference set.
+      */
+-    public void exitScope(NodeTraversal t) {
+-      if (t.inGlobalScope()) {
++    @Override
++    public void visit(NodeTraversal t, Node node, Node parent) {
++      if (node.getType() == Token.NAME) {
++        String oldName = node.getString();
++        if (containsSeparator(oldName)) {
++          Scope scope = t.getScope();
++          Var var = t.getScope().getVar(oldName);
++          if (var == null || var.isGlobal()) {
+         return;
+       }
+ 
+-      for (Iterator<Var> it = t.getScope().getVars(); it.hasNext();) {
+-        Var v = it.next();
+-        handleScopeVar(v);
+-      }
++          if (nameMap.containsKey(var)) {
++            node.setString(nameMap.get(var));
++          } else {
++            int index = indexOfSeparator(oldName);
++            String newName = getOrginalNameInternal(oldName, index);
++            String suffix = getNameSuffix(oldName, index);
+ 
+       // Merge any names that were referenced but not declared in the current
+       // scope.
+-      Set<String> current = referencedNames;
+-      referencedNames = referenceStack.pop();
+       // If there isn't anything left in the stack we will be going into the
+       // global scope: don't try to build a set of referenced names for the
+       // global scope.
+-      if (!referenceStack.isEmpty()) {
+-        referencedNames.addAll(current);
+-      }
+-    }
++            boolean recurseScopes = false;
++            if (!suffix.matches("\\d+")) {
++              recurseScopes = true;
++            }
+ 
+     /**
+      * For the Var declared in the current scope determine if it is possible
+      * to revert the name to its orginal form without conflicting with other
+      * values.
+      */
+-    void handleScopeVar(Var v) {
+-      String name  = v.getName();
+-      if (containsSeparator(name)) {
+-        String newName = getOrginalName(name);
+         // Check if the new name is valid and if it would cause conflicts.
+-        if (TokenStream.isJSIdentifier(newName) &&
+-            !referencedNames.contains(newName) && 
+-            !newName.equals(ARGUMENTS)) {
+-          referencedNames.remove(name);
++            if (var.scope.isDeclared(newName, recurseScopes) ||
++                !TokenStream.isJSIdentifier(newName)) {
++              newName = oldName;
++            } else {
++              var.scope.declare(newName, var.nameNode, null, null);
+           // Adding a reference to the new name to prevent either the parent
+           // scopes or the current scope renaming another var to this new name.
+-          referencedNames.add(newName);
+-          List<Node> references = nameMap.get(name);
+-          Preconditions.checkState(references != null);
+-          for (Node n : references) {
+-            Preconditions.checkState(n.getType() == Token.NAME);
+-            n.setString(newName);
+-          }
++              Node parentNode = var.getParentNode();
++              if (parentNode.getType() == Token.FUNCTION &&
++                  parentNode == var.scope.getRootNode()) {
++                var.getNameNode().setString(newName);
++              }
++
++              node.setString(newName);
+           compiler.reportCodeChange();
+         }
+-        nameMap.remove(name);
+-      }
+-    }
+ 
+-    @Override
+-    public boolean shouldTraverse(NodeTraversal t, Node n, Node parent) {
+-      return true;
+-    }
++            nameMap.put(var, newName);
+ 
+-    @Override
+-    public void visit(NodeTraversal t, Node node, Node parent) {
+-      if (t.inGlobalScope()) {
+-        return;
+       }
+ 
+-      if (NodeUtil.isReferenceName(node)) {
+-        String name = node.getString();
+         // Add all referenced names to the set so it is possible to check for
+         // conflicts.
+-        referencedNames.add(name);
+         // Store only references to candidate names in the node map.
+-        if (containsSeparator(name)) {
+-          addCandidateNameReference(name, node);
+         }
+       }
+     }
+ 
+-    private void addCandidateNameReference(String name, Node n) {
+-      List<Node> nodes = nameMap.get(name);
+-      if (null == nodes) {
+-        nodes = Lists.newLinkedList();
+-        nameMap.put(name, nodes);
+-      }
+-      nodes.add(n);
+-    }
+   }
+ 
+   /**
+@@ -411,7 +389,6 @@ class MakeDeclaredNamesUnique
+      */
+     @Override
+     public void addDeclaredName(String name) {
+-      if (!name.equals(ARGUMENTS)) {
+         if (global) {
+           reserveName(name);
+         } else {
+@@ -421,9 +398,8 @@ class MakeDeclaredNamesUnique
+             String newName = null;
+             if (id != 0) {
+               newName = getUniqueName(name, id);
+-            }
+-            declarations.put(name, newName);
+           }
++          declarations.put(name, newName);
+         }
+       }
+     }
+@@ -483,7 +459,6 @@ class MakeDeclaredNamesUnique
+ 
+     @Override
+     public void addDeclaredName(String name) {
+-      Preconditions.checkState(!name.equals(ARGUMENTS));
+       if (!declarations.containsKey(name)) {
+         declarations.put(name, getUniqueName(name));
+       }
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
+index 6c3643a3..c69d9d1d 100644
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
+@@ -1040,9 +1040,6 @@ public final class NodeUtil {
+    * @return Whether the name is a reference to a variable, function or
+    *       function parameter (not a label or a empty anonymous function name).
+    */
+-  static boolean isReferenceName(Node n) {
+-    return isName(n) && !n.getString().isEmpty() && !isLabelName(n);
+-  }
+ 
+   /** @return Whether the node is a label name. */
+   static boolean isLabelName(Node n) {
+diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
+index 993b68dc..a8526b5e 100644
+--- a/src/com/google/javascript/jscomp/Normalize.java
++++ b/src/com/google/javascript/jscomp/Normalize.java
+@@ -79,6 +79,7 @@ class Normalize implements CompilerPass {
+   public void process(Node externs, Node root) {
+     NodeTraversal.traverse(compiler, root,
+         new NormalizeStatements(compiler, assertOnChange));
++    removeDuplicateDeclarations(root);
+     if (MAKE_LOCAL_NAMES_UNIQUE) {
+       MakeDeclaredNamesUnique renamer = new MakeDeclaredNamesUnique();
+       NodeTraversal t = new NodeTraversal(compiler, renamer);
+@@ -98,7 +99,6 @@ class Normalize implements CompilerPass {
+     //   }
+     // otherwise 'var e = 1' would be rewritten as 'e = 1'.
+     // TODO(johnlenz): Introduce a seperate scope for catch nodes. 
+-    removeDuplicateDeclarations(root);
+     new PropogateConstantAnnotations(compiler, assertOnChange)
+         .process(externs, root);
+   }

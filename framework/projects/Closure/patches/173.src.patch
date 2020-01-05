@@ -1,0 +1,63 @@
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
+index d9ac0199..35a93af9 100644
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
+@@ -127,7 +127,12 @@ class CodeGenerator {
+       // the IN_FOR_INIT_CLAUSE one.
+       Context rhsContext = getContextForNoInOperator(context);
+ 
+-      if (NodeUtil.isAssignmentOp(n) && NodeUtil.isAssignmentOp(last)) {
++      if (last.getType() == type &&
++          NodeUtil.isAssociative(type)) {
++        addExpr(first, p, context);
++        cc.addOp(opstr, true);
++        addExpr(last, p, rhsContext);
++      } else if (NodeUtil.isAssignmentOp(n) && NodeUtil.isAssignmentOp(last)) {
+         // Assignments are the only right-associative binary operators
+         addExpr(first, p, context);
+         cc.addOp(opstr, true);
+diff --git a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+index 2015f050..2c137245 100644
+--- a/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
++++ b/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java
+@@ -99,40 +99,12 @@ class PeepholeSubstituteAlternateSyntax
+       case Token.ARRAYLIT:
+         return tryMinimizeArrayLiteral(node);
+ 
+-      case Token.MUL:
+-      case Token.AND:
+-      case Token.OR:
+-      case Token.BITOR:
+-      case Token.BITXOR:
+-      case Token.BITAND:
+-        return tryRotateAssociativeOperator(node);
+ 
+       default:
+         return node; //Nothing changed
+     }
+   }
+ 
+-  private Node tryRotateAssociativeOperator(Node n) {
+-    if (!late) {
+-      return n;
+-    }
+-    Preconditions.checkArgument(NodeUtil.isAssociative(n.getType()));
+-    Node rhs = n.getLastChild();
+-    if (n.getType() == rhs.getType()) {
+-      Node parent = n.getParent();
+-      Node first = n.getFirstChild().detachFromParent();
+-      Node second = rhs.getFirstChild().detachFromParent();
+-      Node third = rhs.getLastChild().detachFromParent();
+-      Node newLhs = new Node(n.getType(), first, second)
+-          .copyInformationFrom(n);
+-      Node newRoot = new Node(rhs.getType(), newLhs, third)
+-          .copyInformationFrom(rhs);
+-      parent.replaceChild(n, newRoot);
+-      reportCodeChange();
+-      return newRoot;
+-    }
+-    return n;
+-  }
+ 
+   private Node tryFoldSimpleFunctionCall(Node n) {
+     Preconditions.checkState(n.isCall());

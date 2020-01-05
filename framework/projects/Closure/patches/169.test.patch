@@ -1,0 +1,100 @@
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index f6b83d96..c75a29d1 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -6420,12 +6420,16 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testIssue791() throws Exception {
++    // TODO(nicksantos): This warning is wrong, and should be fixed.
+     testTypes(
+         "/** @param {{func: function()}} obj */" +
+         "function test1(obj) {}" +
+         "var fnStruc1 = {};" +
+         "fnStruc1.func = function() {};" +
+-        "test1(fnStruc1);");
++        "test1(fnStruc1);",
++        "actual parameter 1 of test1 does not match formal parameter\n" +
++        "found   : {func: function (): undefined}\n" +
++        "required: {func: function (): ?}");
+   }
+ 
+   public void testIssue810() throws Exception {
+diff --git a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
+index 3371dcd2..4afd4dba 100644
+--- a/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
++++ b/test/com/google/javascript/rhino/jstype/RecordTypeTest.java
+@@ -109,73 +109,4 @@ public class RecordTypeTest extends BaseJSTypeTestCase {
+     Asserts.assertTypeEquals(
+         aSupC, proxyRecordA.getLeastSupertype(proxyRecordC));
+   }
+-
+-  public void testSubtypeWithUnknowns() throws Exception {
+-    JSType recordA = new RecordTypeBuilder(registry)
+-        .addProperty("a", NUMBER_TYPE, null)
+-        .build();
+-    JSType recordB = new RecordTypeBuilder(registry)
+-        .addProperty("a", UNKNOWN_TYPE, null)
+-        .build();
+-    assertTrue(recordA.isSubtype(recordB));
+-    assertTrue(recordB.isSubtype(recordA));
+-  }
+-
+-  public void testSubtypeWithUnknowns2() throws Exception {
+-    JSType recordA = new RecordTypeBuilder(registry)
+-        .addProperty("a",
+-            new FunctionBuilder(registry)
+-            .withReturnType(NUMBER_TYPE)
+-            .build(),
+-            null)
+-        .build();
+-    JSType recordB = new RecordTypeBuilder(registry)
+-        .addProperty("a",
+-            new FunctionBuilder(registry)
+-            .withReturnType(UNKNOWN_TYPE)
+-            .build(),
+-            null)
+-        .build();
+-    assertTrue(recordA.isSubtype(recordB));
+-    assertTrue(recordB.isSubtype(recordA));
+-  }
+-
+-  public void testSubtypeWithFunctionProps() throws Exception {
+-    JSType recordA = new RecordTypeBuilder(registry)
+-        .addProperty("a",
+-            new FunctionBuilder(registry)
+-            .withReturnType(NUMBER_TYPE)
+-            .build(),
+-            null)
+-        .build();
+-    JSType recordB = new RecordTypeBuilder(registry)
+-        .addProperty("a",
+-            new FunctionBuilder(registry)
+-            .withReturnType(STRING_TYPE)
+-            .build(),
+-            null)
+-        .build();
+-    assertFalse(recordA.isSubtype(recordB));
+-    assertFalse(recordB.isSubtype(recordA));
+-  }
+-
+-  public void testSubtypeWithManyProps() throws Exception {
+-    JSType recordA = new RecordTypeBuilder(registry)
+-        .addProperty("a", NUMBER_TYPE, null)
+-        .addProperty("b", NUMBER_TYPE, null)
+-        .build();
+-    JSType recordB = new RecordTypeBuilder(registry)
+-        .addProperty("a", NUMBER_TYPE, null)
+-        .addProperty("b", STRING_TYPE, null)
+-        .build();
+-    JSType recordC = new RecordTypeBuilder(registry)
+-        .addProperty("a", NUMBER_TYPE, null)
+-        .addProperty("b",
+-            registry.createUnionType(NUMBER_TYPE, STRING_TYPE), null)
+-        .build();
+-    assertFalse(recordA.isSubtype(recordB));
+-    assertFalse(recordB.isSubtype(recordA));
+-    assertFalse(recordC.isSubtype(recordB));
+-    assertFalse(recordB.isSubtype(recordC));
+-  }
+ }
