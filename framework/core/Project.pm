@@ -1105,9 +1105,6 @@ sub _ant_call {
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "" unless defined $option_str;
     $ant_cmd = "ant" unless defined $ant_cmd;
-    my $file = $self->{_build_file};
-    # TODO: Check also whether target is provided by the build file
-    -f $file or die "Build file does not exist: $file";
 
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
