@@ -27,8 +27,8 @@ export PATH=$PATH:$D4J_DIR/framework/bin
 defects4j info -p Lang
 
 # 2. Use the HEAD version of Randoop from GitHub
-(cd $HOME && git clone https://github.com/randoop/randoop.git && cd randoop && ./gradlew assemble)
-(cd $D4J_HOME/framework/lib/test_generation/generation && $HOME/randoop/scripts/replace-randoop-jars.sh "-current")
+(cd $D4J_HOME/.. && git clone https://github.com/randoop/randoop.git && cd randoop && ./gradlew assemble)
+(cd $D4J_HOME/framework/lib/test_generation/generation && $D4J_HOME/../randoop/scripts/replace-randoop-jars.sh "-current")
 
 ### 3. Run the test generation and coverage analysis:
 # TODO: Currently, this does not generate tests for all the defects, just five in each project.
