@@ -137,8 +137,8 @@ if [ -e $GRADLE_DEPS_ZIP ]; then
 fi
 
 # Only download archive if the server has a newer file
-wget -N $HOST_URL/$GRADLE_DISTS_ZIP
-wget -N $HOST_URL/$GRADLE_DEPS_ZIP
+wget --progress=dot:giga -N $HOST_URL/$GRADLE_DISTS_ZIP
+wget --progress=dot:giga -N $HOST_URL/$GRADLE_DEPS_ZIP
 new_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
 new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
