@@ -10,6 +10,7 @@
 set -e
 
 D4J_DIR=$PWD
+echo "D4J_DIR=$PWD"
 
 ### 1. Follow steps 1-4 under Steps to set up Defects4J in the top-level README.
 
