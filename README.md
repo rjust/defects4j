@@ -44,7 +44,7 @@ minimized by one of the maintainers. Metadata and patch content can
 potentially change before these bugs are migrated into the master repository. 
 These bugs may be used in experiments, but should not be considered as 
 "stable" as the bugs in the master repository. If you use these bugs, please 
-ackowledge their "beta status" in any publications.
+acknowledge their "beta status" in any publications.
 
 **Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
 
