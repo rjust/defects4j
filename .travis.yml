@@ -48,10 +48,10 @@ jobs:
       name: test_export_command.sh
     - script: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
-# Verify that all bugs are reproducible (run multiple jobs for projects that
+    # Verify that all bugs are reproducible (run multiple jobs for projects that
 # take a long time to finish).
-## Chart
     - stage: verify-bugs
+## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart
       name: "Chart"
 ## Closure
