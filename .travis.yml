@@ -109,7 +109,7 @@ jobs:
       name: "Math 55-80"
     - script: carton exec ./test_verify_bugs.sh -p Math -b81..106
       name: "Math 81-106"
-# Mockito
+## Mockito
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b1..5
       name: "Mockito 1-5"
     - script: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
@@ -124,4 +124,4 @@ jobs:
       name: "Mockito 27-38"
 ## Time
     - script: carton exec ./test_verify_bugs.sh -p Time
-      name "Time"
+      name: "Time"
