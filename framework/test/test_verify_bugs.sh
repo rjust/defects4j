@@ -102,7 +102,7 @@ for bid in $(echo $BUGS); do
         [ $triggers -eq $expected ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
-            grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
+            grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
         done
     done
 done
