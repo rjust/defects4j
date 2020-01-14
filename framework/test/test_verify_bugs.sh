@@ -82,6 +82,12 @@ work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
+    # Skip all bug ids that do not exist in the commit-db
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/commit-db"; then
+        warn "Skipping bug ID that is not listed in commit-db: $PID-$bid"
+        continue
+    fi
+
     for v in "b" "f"; do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
