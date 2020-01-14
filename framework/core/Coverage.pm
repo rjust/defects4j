@@ -123,14 +123,14 @@ code, which is necessary to generate reports.
 
 =cut
 sub coverage_ext {
-	@_ == 6 or die $ARG_ERROR;
-	my ($project, $instrument_classes, $src_dir, $test_dir, $include, $log_file) = @_;
+	@_ >= 6 or die $ARG_ERROR;
+	my ($project, $instrument_classes, $src_dir, $test_dir, $include, $log_file, $single_test) = @_;
 
     # Instrument all classes provided
 	$project->coverage_instrument($instrument_classes) or return undef;
 
     # Execute test suite
-	$project->run_ext_tests($test_dir, $include, $log_file) or die "Could not run test suite";
+	$project->run_ext_tests($test_dir, $include, $log_file, $single_test) or die "Could not run test suite";
 
     # Generate coverage report
 	$project->coverage_report($src_dir) or die "Could not create report";

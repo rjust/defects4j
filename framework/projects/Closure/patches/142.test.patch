@@ -1,0 +1,98 @@
+diff --git a/test/com/google/javascript/jscomp/CoalesceVariableNamesTest.java b/test/com/google/javascript/jscomp/CoalesceVariableNamesTest.java
+index c11257cf..b6d6e50d 100644
+--- a/test/com/google/javascript/jscomp/CoalesceVariableNamesTest.java
++++ b/test/com/google/javascript/jscomp/CoalesceVariableNamesTest.java
+@@ -186,16 +186,9 @@ public class CoalesceVariableNamesTest extends CompilerTestCase {
+   }
+ 
+   public void testParameter4() {
+-    // Make sure that we do not merge two-arg functions because of the
+-    // IE sort bug (see comments in computeEscaped)
++    // Make sure that we are taking advantage of correct merge opportunities.
+     test("function FUNC(x, y) {var a,b; y; a=0; a; x; b=0; b}",
+-         "function FUNC(x, y) {var a; y; a=0; a; x; a=0; a}");
+-  }
+-
+-  public void testParameter4b() {
+-    // Merge parameters
+-    test("function FUNC(x, y, z) {var a,b; y; a=0; a; x; b=0; b}",
+-         "function FUNC(x, y, z) {         y; y=0; y; x; x=0; x}");
++         "function FUNC(x, y) {         y; y=0; y; x; x=0; x}");
+   }
+ 
+   public void testLiveRangeChangeWithinCfgNode() {
+diff --git a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+index 8fcccff0..3e684318 100644
+--- a/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/JsDocInfoParserTest.java
+@@ -39,7 +39,6 @@ import java.util.Set;
+ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
+ 
+   private Set<String> extraAnnotations;
+-  private Node.FileLevelJsDocBuilder fileLevelJsDocBuilder = null;
+ 
+   @Override
+   public void setUp() throws Exception {
+@@ -1054,30 +1053,27 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
+     assertEquals(": [ ] ...", parse(comment).getDescription());
+   }
+ 
+-  public void testParsePreserve() throws Exception {
+-    Node node = new Node(1);
+-    this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
+-    String comment = "@preserve Foo\nBar\n\nBaz*/";
+-    parse(comment);
+-    assertEquals(" Foo\n Bar\n\n Baz", node.getJSDocInfo().getLicense());
+-  }
++  //public void testParsePreserveWithNoBuilderGivesWarning() throws Exception {
++  //  String comment = "@preserve Foo\nBar\n*/";
++  //  parse(comment,
++  //      "@preserve or @license annotation without file to associate it with");
++  //}
+ 
+-  public void testParseLicense() throws Exception {
+-    Node node = new Node(1);
+-    this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
+-    String comment = "@license Foo\nBar\n\nBaz*/";
+-    parse(comment);
+-    assertEquals(" Foo\n Bar\n\n Baz", node.getJSDocInfo().getLicense());
+-  }
++  //public void testParsePreserve() throws Exception {
++  //  Node node = new Node(1);
++  //  this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
++  //  String comment = "@preserve Foo\nBar\n\nBaz*/";
++  //  parse(comment);
++  //  assertEquals(" Foo\n Bar\n\n Baz", node.getJSDocInfo().getLicense());
++  //}
+ 
+-  public void testParseLicenseWithAnnotation() throws Exception {
+-    Node node = new Node(1);
+-    this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
+-    String comment = "@license Foo \n * @author Charlie Brown */";
+-    parse(comment);
+-    assertEquals(" Foo \n @author Charlie Brown ",
+-        node.getJSDocInfo().getLicense());
+-  }
++  //public void testParseLicense() throws Exception {
++  //  Node node = new Node(1);
++  //  this.fileLevelJsDocBuilder = node.getJsDocBuilderForNode();
++  //  String comment = "@license Foo\nBar\n\nBaz*/";
++  //  parse(comment);
++  //  assertEquals(" Foo\n Bar\n\n Baz", node.getJSDocInfo().getLicense());
++  //}
+ 
+   public void testParseDefine1() throws Exception {
+     assertTypeEquals(STRING_TYPE,
+@@ -2304,9 +2300,9 @@ public class JsDocInfoParserTest extends BaseJSTypeTestCase {
+     JsDocInfoParser jsdocParser = new JsDocInfoParser(stream(comment),
+         "testcode", config, errorReporter);
+ 
+-    if (fileLevelJsDocBuilder != null) {
+-      jsdocParser.setFileLevelJsDocBuilder(fileLevelJsDocBuilder);
+-    }
++    //if (fileLevelJsDocBuilder != null) {
++    //  jsdocParser.setFileLevelJsDocBuilder(fileLevelJsDocBuilder);
++    //}
+ 
+     jsdocParser.parse();
+ 

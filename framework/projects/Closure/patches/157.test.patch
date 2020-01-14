@@ -1,0 +1,259 @@
+diff --git a/test/com/google/javascript/jscomp/CodePrinterTest.java b/test/com/google/javascript/jscomp/CodePrinterTest.java
+index 4bb4257f..329b868c 100644
+--- a/test/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/test/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -1122,27 +1122,6 @@ public class CodePrinterTest extends TestCase {
+     assertPrint("var x={1:1}", "var x={1:1}");
+   }
+ 
+-  public void testObjectLit2() {
+-    assertPrint("var x={1:1}", "var x={1:1}");
+-    assertPrint("var x={'1':1}", "var x={1:1}");
+-    assertPrint("var x={'1.0':1}", "var x={\"1.0\":1}");
+-    assertPrint("var x={1.5:1}", "var x={\"1.5\":1}");
+-
+-  }
+-
+-  public void testObjectLit3() {
+-    assertPrint("var x={3E9:1}",
+-                "var x={3E9:1}");
+-    assertPrint("var x={'3000000000':1}", // More than 31 bits
+-                "var x={3E9:1}");
+-    assertPrint("var x={'3000000001':1}",
+-                "var x={3000000001:1}");
+-    assertPrint("var x={'6000000001':1}",  // More than 32 bits
+-                "var x={6000000001:1}");
+-    assertPrint("var x={\"12345678901234567\":1}",  // More than 53 bits
+-                "var x={\"12345678901234567\":1}");
+-  }
+-
+   public void testGetter() {
+     assertPrint("var x = {}", "var x={}");
+     assertPrint("var x = {get a() {return 1}}", "var x={get a(){return 1}}");
+@@ -1150,36 +1129,30 @@ public class CodePrinterTest extends TestCase {
+       "var x = {get a() {}, get b(){}}",
+       "var x={get a(){},get b(){}}");
+ 
+-    assertPrint(
+-      "var x = {get 'a'() {return 1}}",
+-      "var x={get \"a\"(){return 1}}");
++    // Valid ES5 but Rhino doesn't accept this yet.
++    // assertPrint(
++    //  "var x = {get 1() {return 1}}",
++    //  "var x={get \"1\"(){return 1}}");
+ 
+-    assertPrint(
+-      "var x = {get 1() {return 1}}",
+-      "var x={get 1(){return 1}}");
+-
+-    assertPrint(
+-      "var x = {get \"()\"() {return 1}}",
+-      "var x={get \"()\"(){return 1}}");
++    // Valid ES5 but Rhino doesn't accept this yet.
++    // assertPrint(
++    //  "var x = {get \"()\"() {return 1}}",
++    //   "var x={get \"()\"(){return 1}}");
+   }
+ 
+   public void testSetter() {
+     assertPrint("var x = {}", "var x={}");
+-    assertPrint(
+-       "var x = {set a(y) {return 1}}",
+-       "var x={set a(y){return 1}}");
++    assertPrint("var x = {set a(x) {return 1}}", "var x={set a(x){return 1}}");
+ 
+-    assertPrint(
+-      "var x = {get 'a'() {return 1}}",
+-      "var x={get \"a\"(){return 1}}");
++    // Valid ES5 but Rhino doesn't accept this yet.
++    // assertPrint(
++    //  "var x = {set 1(x) {return 1}}",
++    //  "var x={set \"1\"(x){return 1}}");
+ 
+-    assertPrint(
+-      "var x = {set 1(y) {return 1}}",
+-      "var x={set 1(y){return 1}}");
+-
+-    assertPrint(
+-      "var x = {set \"(x)\"(y) {return 1}}",
+-      "var x={set \"(x)\"(y){return 1}}");
++    // Valid ES5 but Rhino doesn't accept this yet.
++    // assertPrint(
++    //  "var x = {set \"(x)\"() {return 1}}",
++    //   "var x={set \"(x)\"(){return 1}}");
+   }
+ 
+   public void testNegCollapse() {
+diff --git a/test/com/google/javascript/jscomp/FunctionNamesTest.java b/test/com/google/javascript/jscomp/FunctionNamesTest.java
+index a49c1dc2..65f3ca3c 100644
+--- a/test/com/google/javascript/jscomp/FunctionNamesTest.java
++++ b/test/com/google/javascript/jscomp/FunctionNamesTest.java
+@@ -86,8 +86,8 @@ public class FunctionNamesTest extends CompilerTestCase {
+     expectedMap.put(11, "recliteral.l1.l2");
+     expectedMap.put(12, "litnamed");
+     expectedMap.put(13, "reclitnamed");
+-    expectedMap.put(14, "numliteral.__2");
+-    expectedMap.put(15, "recnumliteral.__3.a");
++    expectedMap.put(14, "<anonymous>");
++    expectedMap.put(15, "<anonymous>");
+     assertEquals("Function id/name mismatch",
+                  expectedMap, idNameMap);
+   }
+diff --git a/test/com/google/javascript/jscomp/RenamePropertiesTest.java b/test/com/google/javascript/jscomp/RenamePropertiesTest.java
+index 331e50d1..5bc0cb2b 100644
+--- a/test/com/google/javascript/jscomp/RenamePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/RenamePropertiesTest.java
+@@ -68,18 +68,24 @@ public class RenamePropertiesTest extends CompilerTestCase {
+   }
+ 
+   public void testPrototypePropertiesAsObjLitKeys2() {
+-    testSame("Bar.prototype = {get 2(){}}; bar[2];");
++    // TODO(johnlenz): Add tests when Rhino supports numbers and quoted strings
++    // for get and set.
+ 
+-    testSame("Bar.prototype = {get 'a'(){}}; bar['a'];");
++    // testSame("Bar.prototype = {get 2(){}}; bar[2];");
++
++    // testSame("Bar.prototype = {get 'a'(){}}; bar['a'];");
+ 
+     test("Bar.prototype = {get getA(){}}; bar.getA;",
+          "Bar.prototype = {get a(){}}; bar.a;");
+   }
+ 
+   public void testPrototypePropertiesAsObjLitKeys3() {
+-    testSame("Bar.prototype = {set 2(x){}}; bar[2];");
++    // TODO(johnlenz): Add tests when Rhino supports numbers and quoted strings
++    // for get and set.
++
++    // testSame("Bar.prototype = {set 2(x){}}; bar[2];");
+ 
+-    testSame("Bar.prototype = {set 'a'(x){}}; bar['a'];");
++    // testSame("Bar.prototype = {set 'a'(x){}}; bar['a'];");
+ 
+     test("Bar.prototype = {set getA(x){}}; bar.getA;",
+          "Bar.prototype = {set a(x){}}; bar.a;");
+diff --git a/test/com/google/javascript/jscomp/RenamePrototypesTest.java b/test/com/google/javascript/jscomp/RenamePrototypesTest.java
+index 74ff6662..232ae661 100644
+--- a/test/com/google/javascript/jscomp/RenamePrototypesTest.java
++++ b/test/com/google/javascript/jscomp/RenamePrototypesTest.java
+@@ -46,12 +46,7 @@ public class RenamePrototypesTest extends CompilerTestCase {
+     return 1;
+   }
+ 
+-  public void testRenamePrototypes1() {
+-    test("Bar.prototype={'getFoo':function(){},2:function(){}}",
+-         "Bar.prototype={'a':function(){},2:function(){}}");
+-  }
+-
+-  public void testRenamePrototypes2() {
++  public void testRenamePrototypes() {
+     // Simple
+     test("Bar.prototype.getFoo=function(){};Bar.getFoo(b);" +
+          "Bar.prototype.getBaz=function(){}",
+diff --git a/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java b/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
+index bab854c8..f6618e80 100644
+--- a/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
++++ b/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
+@@ -81,7 +81,7 @@ public class SimpleDefinitionFinderTest extends CompilerTestCase {
+ 
+     checkDefinitionsInJs(
+       "({1 : 1}); o[1]",
+-      ImmutableSet.<String>of("DEF STRING null -> NUMBER"));
++      ImmutableSet.<String>of());
+ 
+     checkDefinitionsInJs(
+         "var a = {b : 1}; a.b",
+diff --git a/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java b/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+index 96e18ac4..40bee6fa 100644
+--- a/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
++++ b/test/com/google/javascript/jscomp/parsing/IRFactoryTest.java
+@@ -261,45 +261,6 @@ public class IRFactoryTest extends BaseJSTypeTestCase {
+     newParse("var o = {'a': 'a'}");
+   }
+ 
+-  public void testObjectLiteral6() {
+-    testNewParser("({1: true})",
+-      "SCRIPT 0\n" +
+-      "    EXPR_RESULT 0\n" +
+-      "        OBJECTLIT 0 [parenthesized: true]\n" +
+-      "            STRING 1 0 [quoted: 1]\n" +
+-      "                TRUE 0\n");
+-  }
+-
+-  public void testObjectLiteral7() {
+-    mode = LanguageMode.ECMASCRIPT5;
+-
+-    testNewParser("({get 1() {}})",
+-      "SCRIPT 0\n" +
+-      "    EXPR_RESULT 0\n" +
+-      "        OBJECTLIT 0 [parenthesized: true]\n" +
+-      "            GET 1 0 [quoted: 1]\n" +
+-      "                FUNCTION  0\n" +
+-      "                    NAME  0\n" +
+-      "                    LP 0\n" +
+-      "                    BLOCK 0\n");
+-  }
+-
+-  public void testObjectLiteral8() {
+-    mode = LanguageMode.ECMASCRIPT5;
+-
+-    testNewParser("({set 1(a) {}})",
+-      "SCRIPT 0\n" +
+-      "    EXPR_RESULT 0\n" +
+-      "        OBJECTLIT 0 [parenthesized: true]\n" +
+-      "            SET 1 0 [quoted: 1]\n" +
+-      "                FUNCTION  0\n" +
+-      "                    NAME  0\n" +
+-      "                    LP 0\n" +
+-      "                        NAME a 0\n" +
+-      "                    BLOCK 0\n");
+-  }
+-
+-
+   public void testKeywordLiteral() {
+     parse("true");
+   }
+diff --git a/test/com/google/javascript/jscomp/parsing/ParserTest.java b/test/com/google/javascript/jscomp/parsing/ParserTest.java
+index 378973de..e544b5fe 100644
+--- a/test/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/ParserTest.java
+@@ -737,7 +737,7 @@ public class ParserTest extends BaseJSTypeTestCase {
+     assertEquals(Token.OBJECTLIT, objectLit.getType());
+ 
+     Node number = objectLit.getFirstChild();
+-    assertEquals(Token.STRING, number.getType());
++    assertEquals(Token.NUMBER, number.getType());
+     assertNotNull(number.getJSDocInfo());
+   }
+ 
+@@ -747,30 +747,18 @@ public class ParserTest extends BaseJSTypeTestCase {
+ 
+   public void testGetter() {
+     mode = LanguageMode.ECMASCRIPT3;
+-    parseError("var x = {get 1(){}};",
+-        "getters are not supported in Internet Explorer");
+-    parseError("var x = {get 'a'(){}};",
+-        "getters are not supported in Internet Explorer");
+     parseError("var x = {get a(){}};",
+         "getters are not supported in Internet Explorer");
+     mode = LanguageMode.ECMASCRIPT5;
+-    parse("var x = {get 1(){}};");
+-    parse("var x = {get 'a'(){}};");
+     parse("var x = {get a(){}};");
+     parseError("var x = {get a(b){}};", "getters may not have parameters");
+   }
+ 
+   public void testSetter() {
+     mode = LanguageMode.ECMASCRIPT3;
+-    parseError("var x = {set 1(x){}};",
+-        "setters are not supported in Internet Explorer");
+-    parseError("var x = {set 'a'(x){}};",
+-        "setters are not supported in Internet Explorer");
+     parseError("var x = {set a(x){}};",
+         "setters are not supported in Internet Explorer");
+     mode = LanguageMode.ECMASCRIPT5;
+-    parse("var x = {set 1(x){}};");
+-    parse("var x = {set 'a'(x){}};");
+     parse("var x = {set a(x){}};");
+     parseError("var x = {set a(){}};",
+         "setters must have exactly one parameter");
