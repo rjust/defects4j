@@ -3,7 +3,7 @@ Test and analysis scripts
 
 * `test.include`: Constants and helper functions for test scripts.
 
-* `test_evosuite.sh`: Generates tests with Evosuite and checks whether the
+* `test_evosuite.sh`: Generates tests with EvoSuite and checks whether the
    generated test suites are compatible with the coverage, mutation, and bug
    detection analyses.
 
