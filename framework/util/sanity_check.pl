@@ -92,7 +92,7 @@ if (defined $BID) {
     $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
     @ids = ($BID);
 } else {
-    @ids = $project->get_version_ids();
+    @ids = $project->get_bug_ids();
 }
 
 foreach my $bid (@ids) {
