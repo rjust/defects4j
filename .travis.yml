@@ -67,14 +67,21 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b152..160
     - script: carton exec ./test_verify_bugs.sh -p Closure -b161..169
     - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
+      name: "Closure 170-176"
 ## Collections
     - script: carton exec ./test_verify_bugs.sh -p Collections -b1..14
+      name: "Collections 1-14"
     - script: carton exec ./test_verify_bugs.sh -p Collections -b15..28
+      name: "Collections 15-28"
 ## Compress
     - script: carton exec ./test_verify_bugs.sh -p Compress -b1..12
+      name: "Compress 1-12"
     - script: carton exec ./test_verify_bugs.sh -p Compress -b13..24
+      name: "Compress 13-24"
     - script: carton exec ./test_verify_bugs.sh -p Compress -b25..36
+      name: "Compress 25-36"
     - script: carton exec ./test_verify_bugs.sh -p Compress -b37..47
+      name: "Compress 37-47"
 ## Lang
     - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
     - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
