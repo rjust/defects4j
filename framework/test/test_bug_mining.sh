@@ -362,7 +362,7 @@ WORK_DIR="$TMP_DIR/test_bug_mining"
 rm -rf "$WORK_DIR"
 
 # Project example
-PROJECT_ID="Codec"
+PROJECT_ID="CodecTest"
 PROJECT_NAME="commons-codec"
 REPOSITORY_URL="https://github.com/apache/commons-codec.git"
 ISSUE_TRACKER_NAME="jira"

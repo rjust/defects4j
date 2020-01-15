@@ -41,8 +41,7 @@ jobs:
     - script: carton exec ./test_randoop.sh
     - script: carton exec ./test_fix_test_suite.sh
     - script: carton exec ./test_export_command.sh
-    #- script: carton exec ./test_bug_mining.sh
-    # Commented this out for now. It stopped working once Codec was added as a project... Look into this.
+    - script: carton exec ./test_bug_mining.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
 # take a long time to finish).
     - stage: verify-bugs
