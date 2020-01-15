@@ -152,11 +152,11 @@ test_initialize_revisions() {
     mkdir -p "$lib_dir"
 
     mkdir -p "$lib_dir/junit/junit/4.12"
-    wget -nv http://central.maven.org/maven2/junit/junit/4.12/junit-4.12.jar -O "$lib_dir/junit/junit/4.12/junit-4.12.jar" || die "Failed to download junit-4.12.jar"
+    wget -nv https://central.maven.org/maven2/junit/junit/4.12/junit-4.12.jar -O "$lib_dir/junit/junit/4.12/junit-4.12.jar" || die "Failed to download junit-4.12.jar"
     mkdir -p "$lib_dir/org/apache/commons/commons-lang3/3.4"
-    wget -nv http://central.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar -O "$lib_dir/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar" || die "Failed to download commons-lang3-3.4.jar"
+    wget -nv https://central.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar -O "$lib_dir/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar" || die "Failed to download commons-lang3-3.4.jar"
     mkdir -p "$lib_dir/org/hamcrest/hamcrest-core/1.3"
-    wget -nv http://central.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -O "$lib_dir/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" || die "Failed to download hamcrest-core-1.3.jar"
+    wget -nv https://central.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -O "$lib_dir/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" || die "Failed to download hamcrest-core-1.3.jar"
     # End of fix for Java-7
 
     pushd . > /dev/null 2>&1
