@@ -1,0 +1,84 @@
+diff --git a/src/com/google/javascript/jscomp/AmbiguateProperties.java b/src/com/google/javascript/jscomp/AmbiguateProperties.java
+index 14fe1c32..aad743ff 100644
+--- a/src/com/google/javascript/jscomp/AmbiguateProperties.java
++++ b/src/com/google/javascript/jscomp/AmbiguateProperties.java
+@@ -207,6 +207,7 @@ class AmbiguateProperties implements CompilerPass {
+     for (Property p : propertyMap.values()) {
+       if (!p.skipAmbiguating) {
+         ++numRenamedPropertyNames;
++        computeRelatedTypes(p.type);
+         propsByFreq.add(p);
+       } else {
+         ++numSkippedPropertyNames;
+@@ -352,7 +353,7 @@ class AmbiguateProperties implements CompilerPass {
+       if (typesRelatedToSet.intersects(prop.typesSet)) {
+         return false;
+       }
+-      return !prop.relatedTypesSet.intersects(typesInSet);
++      return !getRelated(prop.type).intersects(typesInSet);
+     }
+ 
+     /**
+@@ -362,7 +363,7 @@ class AmbiguateProperties implements CompilerPass {
+      */
+     public void addNode(Property prop) {
+       typesInSet.or(prop.typesSet);
+-      typesRelatedToSet.or(prop.relatedTypesSet);
++      typesRelatedToSet.or(getRelated(prop.type));
+     }
+ 
+     /**
+@@ -549,11 +550,11 @@ class AmbiguateProperties implements CompilerPass {
+   /** Encapsulates the information needed for renaming a property. */
+   private class Property {
+     final String oldName;
++    JSType type;
+     String newName;
+     int numOccurrences;
+     boolean skipAmbiguating;
+     JSTypeBitSet typesSet = new JSTypeBitSet(intForType.size());
+-    JSTypeBitSet relatedTypesSet = new JSTypeBitSet(intForType.size());
+ 
+     Property(String name) {
+       this.oldName = name;
+@@ -590,12 +591,12 @@ class AmbiguateProperties implements CompilerPass {
+         return;
+       }
+ 
+-      int typeInt = getIntForType(newType);
+-      if (!typesSet.get(typeInt)) {
+-        computeRelatedTypes(newType);
+-        typesSet.set(typeInt);
+-        relatedTypesSet.or(getRelatedTypesOnNonUnion(newType));
++      if (type == null) {
++        type = newType;
++      } else {
++        type = type.getLeastSupertype(newType);
+       }
++      typesSet.set(getIntForType(newType));
+     }
+   }
+ 
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 9d2f7dda..5fdec75e 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -557,17 +557,9 @@ final class TypedScopeCreator implements ScopeCreator {
+       JSType propType = ownerType.getPropertyType(propName);
+       if (propType instanceof FunctionType) {
+         return (FunctionType) propType;
+-      } else {
++      }
+         // If it's not, then check to see if it's implemented
+         // on an implemented interface.
+-        for (ObjectType iface :
+-                 ownerType.getCtorImplementedInterfaces()) {
+-          propType = iface.getPropertyType(propName);
+-          if (propType instanceof FunctionType) {
+-            return (FunctionType) propType;
+-          }
+-        }
+-      }
+ 
+       return null;
+     }

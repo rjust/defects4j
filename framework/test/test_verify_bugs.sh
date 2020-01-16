@@ -82,6 +82,12 @@ work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
+    # Skip all bug ids that do not exist in the commit-db
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/commit-db"; then
+        warn "Skipping bug ID that is not listed in commit-db: $PID-$bid"
+        continue
+    fi
+
     for v in "b" "f"; do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
@@ -102,7 +108,7 @@ for bid in $(echo $BUGS); do
         [ $triggers -eq $expected ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
-            grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
+            grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
         done
     done
 done

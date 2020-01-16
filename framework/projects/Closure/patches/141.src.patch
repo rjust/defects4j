@@ -1,0 +1,61 @@
+diff --git a/src/com/google/javascript/jscomp/NodeUtil.java b/src/com/google/javascript/jscomp/NodeUtil.java
+index aaf84703d..044bdd930 100644
+--- a/src/com/google/javascript/jscomp/NodeUtil.java
++++ b/src/com/google/javascript/jscomp/NodeUtil.java
+@@ -599,11 +599,8 @@ public final class NodeUtil {
+       case Token.GETELEM:
+         return true;
+ 
+-      case Token.FUNCTION:
+         // Anonymous functions definitions are not changed by side-effects,
+         // and named functions are not part of expressions.
+-        Preconditions.checkState(NodeUtil.isAnonymousFunction(n));
+-        return false;
+     }
+ 
+     for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+diff --git a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
+index 894d65ba2..55afa6078 100644
+--- a/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
++++ b/src/com/google/javascript/jscomp/PureFunctionIdentifier.java
+@@ -174,9 +174,11 @@ class PureFunctionIdentifier implements CompilerPass {
+    */
+   private static Collection<Definition> getCallableDefinitions(
+       DefinitionProvider definitionProvider, Node name) {
+-    if (NodeUtil.isGetProp(name) || NodeUtil.isName(name)) {
+       List<Definition> result = Lists.newArrayList();
+ 
++      if (!NodeUtil.isGetProp(name) && !NodeUtil.isName(name)) {
++        return null;
++      }
+       Collection<Definition> decls =
+           definitionProvider.getDefinitionsReferencedAt(name);
+       if (decls == null) {
+@@ -193,27 +195,6 @@ class PureFunctionIdentifier implements CompilerPass {
+       }
+ 
+       return result;
+-    } else if (name.getType() == Token.OR || name.getType() == Token.HOOK) {
+-      Node firstVal;
+-      if (name.getType() == Token.HOOK) {
+-        firstVal = name.getFirstChild().getNext();
+-      } else {
+-        firstVal = name.getFirstChild();
+-      }
+-
+-      Collection<Definition> defs1 = getCallableDefinitions(definitionProvider,
+-                                                            firstVal);
+-      Collection<Definition> defs2 = getCallableDefinitions(definitionProvider,
+-                                                            firstVal.getNext());
+-      if (defs1 != null && defs2 != null) {
+-        defs1.addAll(defs2);
+-        return defs1;
+-      } else {
+-        return null;
+-      }
+-    } else {
+-      return null;
+-    }
+   }
+ 
+   /**

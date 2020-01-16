@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -180,16 +180,16 @@ sub lookup {
 
 =pod
 
-  $vcs->lookup_revision_id(revision)
+  $vcs->lookup_vid(revision_id)
 
-Returns the C<revision_id> for the given revision number or hash.
+Returns the C<version_id> for the given revision id.
 
 =cut
-sub lookup_revision_id {
+sub lookup_vid {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $revision) = @_;
-    my @answer = grep {$self->lookup($_ . "f") eq $revision ||
-                       $self->lookup($_ . "b") eq $revision} $self->get_version_ids();
+    my ($self, $rev_id) = @_;
+    my @answer = grep {$self->lookup($_ . "f") eq $rev_id ||
+                       $self->lookup($_ . "b") eq $rev_id} $self->get_bug_ids();
     return -1 unless scalar(@answer) > 0;
     return $answer[0];
 }
@@ -213,8 +213,7 @@ sub num_revision_pairs {
 Returns an array of all bug ids in the C<commit-db>.
 
 =cut
-# TODO: rename subroutine
-sub get_version_ids {
+sub get_bug_ids {
     my $self = shift;
     return sort {$a <=> $b} keys %{$self->{_cache}};
 }
@@ -289,7 +288,19 @@ sub checkout_vid {
 
     # Get and run specific checkout command
     my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
-    return Utils::exec_cmd($cmd, "Check out " . _trunc_rev_id($revision_id) . " to $work_dir");
+    Utils::exec_cmd($cmd, "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir") or return 0;
+
+    # TODO: The post-checkout should only be called from Project.pm
+    #       Avoid confusion and make the _co_hook an attribute of Project rather
+    #       than Vcs.
+    # $self->{_co_hook}($self, $revision_id, $work_dir) if defined $self->{_co_hook};
+
+    # Write version info file to indicate that this directory is a Defects4J
+    # working directory.
+    my %config = ();
+    $config{$CONFIG_PID} = $self->{pid};
+    $config{$CONFIG_VID} = $vid;
+    Utils::write_config_file("$work_dir/$CONFIG", \%config);
 }
 
 =pod

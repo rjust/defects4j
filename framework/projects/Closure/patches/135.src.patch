@@ -1,0 +1,37 @@
+diff --git a/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java b/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
+index e7cfc6d9..a42dc347 100644
+--- a/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
++++ b/src/com/google/javascript/jscomp/DevirtualizePrototypeMethods.java
+@@ -359,7 +359,6 @@ class DevirtualizePrototypeMethods implements CompilerPass {
+     for (Node child : node.children()) {
+       if (NodeUtil.isThis(child)) {
+         Node newName = Node.newString(Token.NAME, name);
+-        newName.setJSType(child.getJSType());
+         node.replaceChild(child, newName);
+       } else {
+         replaceReferencesToThis(child, name);
+diff --git a/src/com/google/javascript/rhino/jstype/FunctionType.java b/src/com/google/javascript/rhino/jstype/FunctionType.java
+index b318d8a6..3e8ab079 100644
+--- a/src/com/google/javascript/rhino/jstype/FunctionType.java
++++ b/src/com/google/javascript/rhino/jstype/FunctionType.java
+@@ -409,10 +409,6 @@ public class FunctionType extends PrototypeObjectType {
+     return super.hasProperty(name) || "prototype".equals(name);
+   }
+ 
+-  @Override
+-  public boolean hasOwnProperty(String name) {
+-    return super.hasOwnProperty(name) || "prototype".equals(name);
+-  }
+ 
+   @Override
+   public JSType getPropertyType(String name) {
+@@ -473,9 +469,6 @@ public class FunctionType extends PrototypeObjectType {
+     if ("prototype".equals(name)) {
+       ObjectType objType = type.toObjectType();
+       if (objType != null) {
+-        if (objType.equals(prototype)) {
+-          return true;
+-        }
+         return setPrototype(
+             new FunctionPrototypeType(
+                 registry, this, objType, isNativeObjectType()));

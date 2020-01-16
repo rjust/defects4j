@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 #
+# Any subsequent command which fail will cause the shell script to exit
+# immediately
+set -e
+#
 ################################################################################
 # This script initializes Defects4J. In particular, it downloads and sets up:
 # - the project's version control repositories
@@ -98,7 +102,7 @@ cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.1.0"
+RANDOOP_VERSION="4.2.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
@@ -147,5 +151,18 @@ new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 [ "$old_deps_ts" != "$new_deps_ts" ] && unzip -q -u $GRADLE_DEPS_ZIP
 
 cd "$BASE"
+
+################################################################################
+#
+# Download utility programs
+#
+echo
+echo "Setting up utility programs ... "
+
+BUILD_ANALYZER_VERSION="0.0.1"
+BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/build-analyzer-$BUILD_ANALYZER_VERSION.jar"
+BUILD_ANALYZER_JAR="analyzer.jar"
+cd "$BASE/framework/lib" && wget -nv "$BUILD_ANALYZER_URL" -O "$BUILD_ANALYZER_JAR"
+
 echo
 echo "Defects4J successfully initialized."
