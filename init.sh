@@ -84,13 +84,14 @@ cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
 #
 echo
 echo "Setting up EvoSuite ... "
-EVOSUITE_VERSION="0.2.0"
+EVOSUITE_VERSION="1.0.6"
+EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$EVOSUITE_JAR" ] \
-                  && wget -nv "$HOST_URL/$EVOSUITE_JAR"
+                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_JAR"
 cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
-                  && wget -nv "$HOST_URL/$EVOSUITE_RT_JAR"
+                  && wget -nv "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
 (cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
 (cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
@@ -101,18 +102,21 @@ cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.0.4"
+RANDOOP_VERSION="4.2.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
+RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
-cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
-                  && wget -nv "$RANDOOP_URL/$RANDOOP_JAR"
-cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
-                  && wget -nv "$RANDOOP_URL/$REPLACECALL_JAR"
+COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
+(cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_ZIP" ] \
+                   && wget -nv "$RANDOOP_URL/$RANDOOP_ZIP" \
+                   && unzip $RANDOOP_ZIP)
 # Set symlink for the supported version of Randoop
-(cd "$DIR_LIB_GEN" && ln -sf "$RANDOOP_JAR" "randoop-current.jar")
-(cd "$DIR_LIB_GEN" && ln -sf "$REPLACECALL_JAR" "replacecall-current.jar")
-(cd "$DIR_LIB_GEN" && jar -xf "$REPLACECALL_JAR" "default-replacements.txt")
+(cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$RANDOOP_JAR" "randoop-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$COVEREDCLASS_JAR" "covered-class-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
+# TODO: Does not seem to be necessary as the replacecall jar is on the boot cp.
+#(cd "$DIR_LIB_GEN" && jar -xf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "default-replacements.txt")
 
 ################################################################################
 #

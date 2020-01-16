@@ -93,10 +93,10 @@ rm -f "$summary_file"
 
 # Mutate an arbitrary, non-modified class
 instrument_classes="$pid_bid_dir/instrument_classes.txt"
-echo "org.apache.commons.lang3.LocaleUtils" > "$instrument_classes"
+echo "org.apache.commons.lang3.text.translate.UnicodeEscaper" > "$instrument_classes"
 
-defects4j mutation -w "$pid_bid_dir" -i "$instrument_classes" || die "Mutation analysis (instrument LocaleUtils) failed!"
-_check_mutation_result 189 189 149
+defects4j mutation -w "$pid_bid_dir" -r -i "$instrument_classes" || die "Mutation analysis (instrument UnicodeEscaper) failed!"
+_check_mutation_result 57 54 43
 
 # Clean up
 rm -rf "$pid_bid_dir"
