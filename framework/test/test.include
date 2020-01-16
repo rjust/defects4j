@@ -70,6 +70,13 @@ die() {
     fi
 }
 
+# Print and log warning message.
+# warn <warning_text>
+warn() {
+    echo "Warning: $1" 1>&2
+    log "Warning: $1"
+}
+
 # Determine and print triggering tests listed in <file_name>
 # get_triggers <file_name>
 get_triggers() {

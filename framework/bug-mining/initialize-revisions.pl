@@ -185,7 +185,7 @@ sub _bootstrap {
     $project->export_diff($v2, $v1, "$PATCH_DIR/$bid.test.patch", "$test_f");
 }
 
-my @ids = $project->get_version_ids();
+my @ids = $project->get_bug_ids();
 if (defined $BID) {
     if ($BID =~ /(\d+):(\d+)/) {
         @ids = grep { ($1 <= $_) && ($_ <= $2) } @ids;
