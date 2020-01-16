@@ -24,7 +24,7 @@
 
 =head1 NAME
 
-Project::Codec.pm -- L<Project> submodule for commons-codec.
+Project::TestCodec.pm -- L<Project> submodule for commons-codec.
 
 =head1 DESCRIPTION
 
@@ -32,7 +32,7 @@ This module provides all project-specific configurations and subroutines for the
 commons-codec project.
 
 =cut
-package Project::Codec;
+package Project::TestCodec;
 
 use strict;
 use warnings;
@@ -41,7 +41,7 @@ use Constants;
 use Vcs::Git;
 
 our @ISA = qw(Project);
-my $PID  = "Codec";
+my $PID  = "TestCodec";
 
 sub new {
     @_ == 1 or die $ARG_ERROR;
