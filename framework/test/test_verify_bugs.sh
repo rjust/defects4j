@@ -66,6 +66,7 @@ fi
 # Create log file
 script_name=$(echo $script | sed 's/\.sh$//')
 LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
+DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).failing_tests"
 
 ################################################################################
 # Run developer-written tests on all buggy and fixed program versions, and 
@@ -78,6 +79,8 @@ HALT_ON_ERROR=0
 test_dir="$TMP_DIR/test_trigger"
 mkdir -p $test_dir
 
+mkdir -p $DIR_FAILING
+
 work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
@@ -87,6 +90,8 @@ for bid in $(echo $BUGS); do
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test -r -w "$work_dir" || die "run relevant tests: $PID-$vid"
+
+        cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
         triggers=$(num_triggers "$work_dir/failing_tests")
         # Expected number of failing tests for each fixed version is 0!
