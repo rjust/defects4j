@@ -189,7 +189,7 @@ sub lookup_vid {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $rev_id) = @_;
     my @answer = grep {$self->lookup($_ . "f") eq $rev_id ||
-                       $self->lookup($_ . "b") eq $rev_id} $self->get_version_ids();
+                       $self->lookup($_ . "b") eq $rev_id} $self->get_bug_ids();
     return -1 unless scalar(@answer) > 0;
     return $answer[0];
 }
@@ -213,8 +213,7 @@ sub num_revision_pairs {
 Returns an array of all bug ids in the C<commit-db>.
 
 =cut
-# TODO: rename subroutine
-sub get_version_ids {
+sub get_bug_ids {
     my $self = shift;
     return sort {$a <=> $b} keys %{$self->{_cache}};
 }

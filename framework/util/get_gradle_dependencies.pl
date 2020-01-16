@@ -135,7 +135,7 @@ if (-e "$GRADLE_DEPS_ZIP") {
 
 system("echo \"Gradle dependencies updated: ${month}/${year}\\n\" > $GRADLE_DEPS_README");
 
-my @ids = $project->get_version_ids();
+my @ids = $project->get_bug_ids();
 foreach my $bid (@ids) {
     # Checkout a project version
     my $vid = "${bid}f";
