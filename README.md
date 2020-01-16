@@ -46,7 +46,7 @@ minimized by one of the maintainers. Metadata and patch content can
 potentially change before these bugs are migrated into the master repository. 
 These bugs may be used in experiments, but should not be considered as 
 "stable" as the bugs in the master repository. If you use these bugs, please 
-ackowledge their "beta status" in any publications.
+acknowledge their "beta status" in any publications.
 
 **Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
 
@@ -62,10 +62,12 @@ ackowledge their "beta status" in any publications.
 | Cli             | Apache commons-cli     |  40            |
 | Codec           | Apache commons-codec   |  18            |
 | Csv             | Apache commons-csv     |  16            |
+| Gson            | Google Gson            |  18            |
 | JacksonCore     | Jackson JSON parser    |  26            |
 | JacksonDatabind | Jackson data bindings  | 112            |
 | JacksonXml      | Jackson XML extension  |   6            |
 | JxPath          | Apache commons-jxpath  |  22            |
+| Jsoup           | jsoup HTML Parser      |  93            |
 
 Setting up Defects4J
 ================
@@ -130,7 +132,7 @@ Using Defects4J
     - `defects4j compile`
     - `defects4j test`
 
-5. The scripts in [`framework/test/`](tree/master/framework/test/)
+5. The scripts in [`framework/test/`](framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
@@ -184,6 +186,7 @@ provides the following scripts:
 
 Mining and contributing additional bugs to Defects4J
 ================
+We welcome your contributions to Defects4J!
 The bug-mining [README](framework/bug-mining/README.md) details the bug-mining process.
 
 
@@ -216,8 +219,13 @@ Publications
     René Just, Darioush Jalali, Laura Inozemtseva, Michael D. Ernst, Reid Holmes, and Gordon Fraser,
     FSE 2014 [[download]][fse14].
 
+* "Challenges in Using Search-Based Test Generation to Identify Real Faults in Mockito"
+   Gregory Gay.
+   SSBSE 2016 [[download]][ssbse16].
+
 [issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
 [fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
+[ssbse16]: https://greg4cr.github.io/pdf/16mockito.pdf
 
 [More publications](https://scholar.google.com/scholar?q=defects4j)
 
@@ -225,7 +233,7 @@ Implementation details
 ----------------------
 
 Documentation for any script or module is available as
-[html documentation][htmldocs].
+[HTML documentation][htmldocs].
 
 [htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
 

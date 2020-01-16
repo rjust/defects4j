@@ -160,7 +160,7 @@ my $dbh = DB::get_db_handle($TAB_REV_PAIRS, $db_dir);
 my @COLS = DB::get_tab_columns($TAB_REV_PAIRS) or die;
 
 # Figure out which IDs to run script for
-my @ids = $project->get_version_ids();
+my @ids = $project->get_bug_ids();
 if (defined $BID) {
     if ($BID =~ /(\d+):(\d+)/) {
         @ids = grep { ($1 <= $_) && ($_ <= $2) } @ids;
