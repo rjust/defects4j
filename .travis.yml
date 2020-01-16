@@ -17,14 +17,13 @@ cache:
 before_install:
   - JDK_OS="$TRAVIS_OS_NAME"
   - JDK_ARCH="x64"
-  - JDK_VERSION="7u80"
-  - JDK_BUILD_VERSION="$JDK_VERSION-b15"
+  - JDK_VERSION="8u192"
   - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
   - JDK_URL="http://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE";
   - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && wget -nv  "$JDK_URL" && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
 
 install:
-  - export JAVA_HOME=/home/travis/.java/jdk1.7.0_80
+  - export JAVA_HOME=/home/travis/.java/jdk1.8.0_192
   - export PATH=$JAVA_HOME/bin:$PATH
   - java -version
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
@@ -42,6 +41,8 @@ jobs:
       name: test_mutation_analysis.sh
     - script: carton exec ./test_randoop.sh
       name: test_randoop.sh
+    - script: carton exec ./test_evosuite.sh
+      name: test_evosuite.sh
     - script: carton exec ./test_fix_test_suite.sh
       name: test_fix_test_suite.sh
     - script: carton exec ./test_export_command.sh
@@ -49,7 +50,7 @@ jobs:
     - script: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
-# take a long time to finish).
+    # take a long time to finish).
     - stage: verify-bugs
 ## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart

@@ -35,7 +35,7 @@ setting the corresponding environment variable.
 =cut
 package Constants;
 
-use 5.010;
+use 5.012;
 use warnings;
 use strict;
 
@@ -211,8 +211,8 @@ our $GRADLE_LOCAL_HOME_DIR = ".gradle_local_home";
 unshift(@INC, $CORE_DIR);
 unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
-# Prepend Major's executables to the PATH
-$ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
+# Append Major's executables to the PATH -> ant may not be installed by default
+$ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
 # set name of mml file that provides definitions of used mutation operators
 $ENV{MML}="$MAJOR_ROOT/mml/all_mutants.mml.bin" unless defined $ENV{'MML'};
 
