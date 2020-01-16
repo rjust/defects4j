@@ -107,10 +107,11 @@ sub _post_checkout {
 	    $_ =~ s/build\.classpath/compile\.classpath/g;
 	    $_ =~ s/classesdir/classes\.dir/g;
 	    $_ =~ s/testclasses\.dir/test\.classes\.dir/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/http:\/\/central\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/http:\/\/central\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/http:\/\/central.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/http:\/\/central\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/https:\/\/repo1.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
             print OUT $_;
         }
         close(IN);
@@ -124,10 +125,11 @@ sub _post_checkout {
         while(<IN>) {
             $_ =~ s/compile-tests/compile\.tests/g;
 	    $_ =~ s/build\.classpath/compile\.classpath/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/http:\/\/central\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/http:\/\/central\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/http:\/\/central.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/http:\/\/central\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/https:\/\/repo1.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
             print OUT $_;
         }
         close(IN);
