@@ -21,7 +21,7 @@ before_install:
   - JDK_BUILD_VERSION="$JDK_VERSION-b15"
   - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
   - JDK_URL="http://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE"
-  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (wget -nv --timeout=60 --tries=4 "$JDK_URL" || (echo "retrying wget $JDK_FILE" && wget -nv --timeout=60 --tries=4 "$JDK_URL")) && echo "wget $JDK_FILE completed" && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
+  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (wget -nv --timeout=60 --tries=4 "$JDK_URL" || wget -nv --timeout=60 --tries=4 "$JDK_URL") && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
 
 install:
   - export JAVA_HOME=/home/travis/.java/jdk1.7.0_80
