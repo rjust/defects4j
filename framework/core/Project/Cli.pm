@@ -139,8 +139,11 @@ sub _post_checkout {
     # Convert the file encoding of a problematic file
     my $result = determine_layout($self, $rev_id);
     if(-e $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java"){
-        system("iconv", "-f", "iso-8859-1", "-t", "utf-8", "-o", "output.txt", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java");
-	move("output.txt", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java");
+        rename($work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java".".bak");
+        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java") or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java.bak"`;
+        print OUT $converted_file;
+        close(OUT);
     }
 }
 
