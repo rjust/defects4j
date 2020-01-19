@@ -28,7 +28,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget --progress=dot:giga -N http://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
+wget --progress=dot:giga -N https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
 new=$($cmd)
 
 # Exit if no newer file is available
