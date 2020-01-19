@@ -1,0 +1,15 @@
+diff --git a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+index 7e494c05..ffe0f387 100644
+--- a/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java
+@@ -923,10 +923,6 @@ public class PeepholeFoldConstantsTest extends CompilerTestCase {
+     testSame("!+'\\v1'");
+   }
+ 
+-  public void testIssue522() {
+-    testSame("[][1] = 1;");
+-  }
+-
+   private static final List<String> LITERAL_OPERANDS =
+       ImmutableList.of(
+           "null",

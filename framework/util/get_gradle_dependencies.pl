@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -135,7 +135,7 @@ if (-e "$GRADLE_DEPS_ZIP") {
 
 system("echo \"Gradle dependencies updated: ${month}/${year}\\n\" > $GRADLE_DEPS_README");
 
-my @ids = $project->get_version_ids();
+my @ids = $project->get_bug_ids();
 foreach my $bid (@ids) {
     # Checkout a project version
     my $vid = "${bid}f";

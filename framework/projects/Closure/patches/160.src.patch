@@ -1,0 +1,29 @@
+diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
+index a4a41a8e..11850211 100644
+--- a/src/com/google/javascript/jscomp/Compiler.java
++++ b/src/com/google/javascript/jscomp/Compiler.java
+@@ -265,7 +265,6 @@ public class Compiler extends AbstractCompiler {
+             getDiagnosticGroups().getRegisteredGroups()));
+     guards.add(options.getWarningsGuard());
+ 
+-    ComposeWarningsGuard composedGuards = new ComposeWarningsGuard(guards);
+ 
+     // All passes must run the variable check. This synthesizes
+     // variables later so that the compiler doesn't crash. It also
+@@ -273,12 +272,13 @@ public class Compiler extends AbstractCompiler {
+     // about missing variable declarations, we shut that specific
+     // error off.
+     if (!options.checkSymbols &&
+-        !composedGuards.enables(DiagnosticGroups.CHECK_VARIABLES)) {
+-      composedGuards.addGuard(new DiagnosticGroupWarningsGuard(
++        (warningsGuard == null || !warningsGuard.disables(
++            DiagnosticGroups.CHECK_VARIABLES))) {
++      guards.add(new DiagnosticGroupWarningsGuard(
+           DiagnosticGroups.CHECK_VARIABLES, CheckLevel.OFF));
+     }
+ 
+-    this.warningsGuard = composedGuards;
++    this.warningsGuard = new ComposeWarningsGuard(guards);
+   }
+ 
+   /**

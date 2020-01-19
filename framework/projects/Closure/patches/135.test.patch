@@ -1,0 +1,138 @@
+diff --git a/test/com/google/javascript/jscomp/DevirtualizePrototypeMethodsTest.java b/test/com/google/javascript/jscomp/DevirtualizePrototypeMethodsTest.java
+index c1f74e2d..c4d2bcb8 100644
+--- a/test/com/google/javascript/jscomp/DevirtualizePrototypeMethodsTest.java
++++ b/test/com/google/javascript/jscomp/DevirtualizePrototypeMethodsTest.java
+@@ -105,9 +105,7 @@ public class DevirtualizePrototypeMethodsTest extends CompilerTestCase {
+ 
+     static final List<String> EXPECTED_TYPE_CHECKING_OFF = ImmutableList.of(
+         "FUNCTION a = null",
+-        "NAME JSCompiler_StaticMethods_foo$self = null",
+         "FUNCTION JSCompiler_StaticMethods_foo = null",
+-        "NAME JSCompiler_StaticMethods_bar$self = null",
+         "FUNCTION JSCompiler_StaticMethods_bar = null",
+         "FUNCTION JSCompiler_StaticMethods_baz = null",
+         "NEW a = null",
+@@ -117,9 +115,7 @@ public class DevirtualizePrototypeMethodsTest extends CompilerTestCase {
+ 
+     static final List<String> EXPECTED_TYPE_CHECKING_ON = ImmutableList.of(
+         "FUNCTION a = function (this:a): ?",
+-        "NAME JSCompiler_StaticMethods_foo$self = a",
+         "FUNCTION JSCompiler_StaticMethods_foo = function (a): number",
+-        "NAME JSCompiler_StaticMethods_bar$self = a",
+         "FUNCTION JSCompiler_StaticMethods_bar = function (a, number): number",
+         "FUNCTION JSCompiler_StaticMethods_baz = function (a): ?",
+         "NEW a = a",
+@@ -547,22 +543,22 @@ public class DevirtualizePrototypeMethodsTest extends CompilerTestCase {
+ 
+   @Override
+   protected CompilerPass getProcessor(Compiler compiler) {
+-    return new TypeInformationGatherer(
++    return new FunctionTypeInformationGatherer(
+         compiler, new DevirtualizePrototypeMethods(compiler), typeInformation);
+   }
+ 
+   /**
+-   * Wrapper that gathers function, call, and self variable type strings after
+-   * the pass under test runs.  For use to test passes that modify JSType
++   * Wrapper that gathers function and call type strings after the
++   * pass under test runs.  For use to test passes that modify JSType
+    * annotations.
+    */
+-  private static class TypeInformationGatherer
++  private static class FunctionTypeInformationGatherer
+       implements CompilerPass {
+     private final Compiler compiler;
+     private final CompilerPass passUnderTest;
+     private final List<String> typeInformation;
+ 
+-    TypeInformationGatherer(Compiler compiler,
++    FunctionTypeInformationGatherer(Compiler compiler,
+                                     CompilerPass passUnderTest,
+                                     List<String> typeInformation) {
+       this.compiler = compiler;
+@@ -603,20 +599,6 @@ public class DevirtualizePrototypeMethodsTest extends CompilerTestCase {
+                         " = ",
+                         (type != null) ? type.toString() : "null"));
+         }
+-
+-        if (NodeUtil.isGetProp(node)) {
+-          Node child = node.getFirstChild();
+-          if (NodeUtil.isName(child) && child.getString().endsWith("$self")) {
+-            JSType type = child.getJSType();
+-            typeInformation.add(
+-                Joiner.on("").join(
+-                    Token.name(child.getType()),
+-                    " ",
+-                    child.getString(),
+-                    " = ",
+-                    (type != null) ? type.toString() : "null"));
+-          }
+-        }
+       }
+     }
+   }
+diff --git a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+index 3c2f0eaf..cd34115e 100644
+--- a/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
++++ b/test/com/google/javascript/jscomp/DisambiguatePropertiesTest.java
+@@ -904,8 +904,7 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
+       String fieldTypes) {
+     this.runTightenTypes = runTightenTypes;
+     test(js, expected);
+-    assertEquals(
+-        fieldTypes, mapToString(lastPass.getRenamedTypesForTesting()));
++    assertEquals(fieldTypes, mapToString(lastPass.getRenamedTypesForTesting()));
+   }
+ 
+   @SuppressWarnings("unchecked")
+@@ -920,8 +919,7 @@ public class DisambiguatePropertiesTest extends CompilerTestCase {
+        String description) {
+     this.runTightenTypes = runTightenTypes;
+     test(externs, js, expected, null, warning, description);
+-    assertEquals(
+-        fieldTypes, mapToString(lastPass.getRenamedTypesForTesting()));
++    assertEquals(fieldTypes, mapToString(lastPass.getRenamedTypesForTesting()));
+   }
+ 
+   /**
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index f00c58ee..94305d6e 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -2632,36 +2632,6 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+         "required: number");
+   }
+ 
+-  public void testGoodExtends9() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Super() {}" +
+-        "Super.prototype.foo = function() {};" +
+-        "/** @constructor \n * @extends {Super} */ function Sub() {}" +
+-        "Sub.prototype = new Super();" +
+-        "/** @override */ Sub.prototype.foo = function() {};");
+-  }
+-
+-  public void testGoodExtends10() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Super() {}" +
+-        "/** @constructor \n * @extends {Super} */ function Sub() {}" +
+-        "Sub.prototype = new Super();" +
+-        "/** @return {Super} */ function foo() { return new Sub(); }");
+-  }
+-
+-  public void testGoodExtends11() throws Exception {
+-    testTypes(
+-        "/** @constructor */ function Super() {}" +
+-        "/** @param {boolean} x */ Super.prototype.foo = function(x) {};" +
+-        "/** @constructor \n * @extends {Super} */ function Sub() {}" +
+-        "Sub.prototype = new Super();" +
+-        "(new Sub()).foo(0);",
+-        "actual parameter 1 of Super.prototype.foo " +
+-        "does not match formal parameter\n" +
+-        "found   : number\n" +
+-        "required: boolean");
+-  }
+-
+   public void testBadExtends1() throws Exception {
+     testTypes("/** @constructor */function base() {}\n" +
+         "/** @constructor\n * @extends {not_base} */function derived() {}\n",

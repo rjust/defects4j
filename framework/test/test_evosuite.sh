@@ -10,9 +10,9 @@ init
 
 # Directory for EvoSuite test suites
 evo_dir=$TMP_DIR/evosuite
-# Generate tests for Lang-2 (modified classes) and Lang-62 (all relevant classes)
+# Generate tests for Lang-5 (modified classes) and Lang-62 (all relevant classes)
 pid=Lang
-bid_mod=2
+bid_mod=5
 bid_all=62
 # Test suite source and number
 suite_src=evosuite-branch

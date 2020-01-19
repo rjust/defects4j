@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -79,6 +79,13 @@ The directory that contains all scripts and modules (I<parent of this module's d
 
 =cut
 our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
+
+=item C<PROJECTS_DIR>
+
+The directory that contains all project metadata (I<C<SCRIPT_DIR>/projects>)
+
+=cut
+our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
 
 =pod
 
@@ -239,6 +246,7 @@ our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
 our @EXPORT = qw(
 $SCRIPT_DIR
+$PROJECTS_DIR
 $CORE_DIR
 $LIB_DIR
 $UTIL_DIR

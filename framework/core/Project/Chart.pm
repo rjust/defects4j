@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,16 +44,26 @@ our @ISA = qw(Project);
 my $PID = "Chart";
 
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "jfreechart";
-    my $src  = "source";
-    my $test = "tests";
     my $vcs = Vcs::Svn->new($PID,
                             "file://$REPO_DIR/$name/trunk",
-                            "$SCRIPT_DIR/projects/$PID/commit-db",
+                            "$PROJECTS_DIR/$PID/commit-db",
                             \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
+}
+
+#
+# Determines the directory layout for sources and tests
+#
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $revision_id) = @_;
+    # All revisions have the same directory layout
+    return {src=>"source", test=>"tests"};
 }
 
 sub _post_checkout {
@@ -61,15 +71,16 @@ sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
 
-    my $compile_errors = "$SCRIPT_DIR/projects/$PID/compile-errors/";
-    opendir(DIR, $compile_errors) or die "could not find compile-error directory.";
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
     my @entries = readdir(DIR);
     closedir(DIR);
 
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
             if ($revision_id >= $1 && $revision_id <= $2) {
-                $self->{_vcs}->apply_patch($work_dir, "$compile_errors/$file") or confess("Couldn't apply patch ($file): $!");
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
             }
         }
     }

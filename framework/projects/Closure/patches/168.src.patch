@@ -1,0 +1,13 @@
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 36f83466e..cf87eaaf0 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1993,7 +1993,7 @@ final class TypedScopeCreator implements ScopeCreator {
+         data.get(t.getScopeRoot()).recordNonEmptyReturn();
+       }
+ 
+-      if (t.getScopeDepth() <= 1) {
++      if (t.getScopeDepth() <= 2) {
+         // The first-order function analyzer looks at two types of variables:
+         //
+         // 1) Local variables that are assigned in inner scopes ("escaped vars")
