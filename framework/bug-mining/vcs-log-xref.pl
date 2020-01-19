@@ -136,7 +136,7 @@ my %SUPPORTED_VCSs = (
                                     next unless $commit; # skip lines before first commit info.
                                     if (my $bug_number = eval('$_ =~' . "$regexp" . '; $1')) {
                                         # skip bug ids that have not been reported in the issue tracker
-                                        next unless system("wget -q -O /dev/null \"https://sourceforge.net/p/$project_name/bugs/$bug_number\"") == 0;
+                                        next unless system("curl -s -S -o /dev/null \"https://sourceforge.net/p/$project_name/bugs/$bug_number\"") == 0;
                                         my $parent = $commit - 1;
                                         next unless $parent > 0; # skip first revision
                                         $results{$version_id}{'p'} = $parent;
