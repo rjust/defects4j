@@ -19,7 +19,7 @@ if ! curl --version > /dev/null 2>&1; then
     exit 1
 fi
 
-HOST_URL="http://people.cs.umass.edu/~rjust/defects4j/download"
+HOST_URL="https://people.cs.umass.edu/~rjust/defects4j/download"
 
 # Directories for project repositories and external libraries
 BASE="$(cd $(dirname $0); pwd)"
