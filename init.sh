@@ -88,9 +88,9 @@ EVOSUITE_VERSION="0.2.0"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$EVOSUITE_JAR" ] \
-                  && curl -O -s -S "$HOST_URL/$EVOSUITE_JAR"
+                  && curl -s -S -O -L "$HOST_URL/$EVOSUITE_JAR"
 cd "$DIR_LIB_RT"  && [ ! -f "$EVOSUITE_RT_JAR" ] \
-                  && curl -O -s -S "$HOST_URL/$EVOSUITE_RT_JAR"
+                  && curl -s -S -O -L "$HOST_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
 (cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
 (cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
@@ -106,9 +106,9 @@ RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VER
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
 cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_JAR" ] \
-                  && curl -O -s -S "$RANDOOP_URL/$RANDOOP_JAR"
+                  && curl -s -S -O -L "$RANDOOP_URL/$RANDOOP_JAR"
 cd "$DIR_LIB_GEN" && [ ! -f "$REPLACECALL_JAR" ] \
-                  && curl -O -s -S "$RANDOOP_URL/$REPLACECALL_JAR"
+                  && curl -s -S -O -L "$RANDOOP_URL/$REPLACECALL_JAR"
 # Set symlink for the supported version of Randoop
 (cd "$DIR_LIB_GEN" && ln -sf "$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "$REPLACECALL_JAR" "replacecall-current.jar")
@@ -158,7 +158,7 @@ echo "Setting up utility programs ... "
 BUILD_ANALYZER_VERSION="0.0.1"
 BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/build-analyzer-$BUILD_ANALYZER_VERSION.jar"
 BUILD_ANALYZER_JAR="analyzer.jar"
-cd "$BASE/framework/lib" && curl -s -S "$BUILD_ANALYZER_URL" -o "$BUILD_ANALYZER_JAR"
+cd "$BASE/framework/lib" && curl -s -S -L "$BUILD_ANALYZER_URL" -o "$BUILD_ANALYZER_JAR"
 
 echo
 echo "Defects4J successfully initialized."

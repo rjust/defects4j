@@ -284,7 +284,7 @@ for (my $start = 0; ; $start += $FETCHING_LIMIT) {
 sub get_file {
     my ($uri, $save_to) = @_;
     die unless all {defined $_} ($uri, $save_to);
-    my $cmd = "curl -s -S -o ${save_to} \"${uri}\"";
+    my $cmd = "curl -s -S -L -o ${save_to} \"${uri}\"";
     my $retval = system($cmd);
     return $retval == 0 ? 1 : 0;
 }
