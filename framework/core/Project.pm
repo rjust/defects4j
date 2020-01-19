@@ -179,7 +179,7 @@ sub print_info {
     printf ("%14s: %s\n", "Vcs", ref $self->{_vcs});
     printf ("%14s: %s\n", "Repository", $self->{_vcs}->{repo});
     printf ("%14s: %s\n", "Commit db", $self->{_vcs}->{commit_db});
-    my @ids = $self->get_version_ids();
+    my @ids = $self->get_bug_ids();
     printf ("%14s: %s\n", "Number of bugs", scalar(@ids));
     print "-"x80 . "\n";
 }
@@ -1005,14 +1005,14 @@ sub num_revision_pairs {
 
 =pod
 
-  $project->get_version_ids()
+  $project->get_bug_ids()
 
 Delegate to the L<VCS> backend.
 
 =cut
-sub get_version_ids {
+sub get_bug_ids {
     my $self = shift;
-    return $self->{_vcs}->get_version_ids();
+    return $self->{_vcs}->get_bug_ids();
 }
 
 =pod
