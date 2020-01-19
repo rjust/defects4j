@@ -3,6 +3,7 @@
 # machine experiences a high load.
 --- org.concurrentmockito.ThreadsRunAllTestsHalfManualTest::shouldRunInMultipleThreads
 --- org.mockitousage.bugs.ShouldNotDeadlockAnswerExecutionTest::successIfEveryThreadHasItsOwnMock
+--- org.mockitousage.verification.VerificationAfterDelayTest::shouldVerifyNormallyWithSpecificTimes
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOnlyWithTimeout
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOnlyWithTimeoutAndFail
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeout
