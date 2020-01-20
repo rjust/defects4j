@@ -107,11 +107,11 @@ sub _post_checkout {
 	    $_ =~ s/build\.classpath/compile\.classpath/g;
 	    $_ =~ s/classesdir/classes\.dir/g;
 	    $_ =~ s/testclasses\.dir/test\.classes\.dir/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/https:\/\/repo1.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
             print OUT $_;
         }
         close(IN);
@@ -125,11 +125,11 @@ sub _post_checkout {
         while(<IN>) {
             $_ =~ s/compile-tests/compile\.tests/g;
 	    $_ =~ s/build\.classpath/compile\.classpath/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
-	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
-	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/https:\/\/repo1.maven.org\/maven2\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
-            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/https:\/\/repo1\.maven\.org\/maven2\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/commons-lang\/jars\/commons-lang-2\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/commons-lang\/commons-lang\/2\.1\/commons-lang-2\.1\.jar/g;
+	    $_ =~ s/http:\/\/repo1\.maven\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+            $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/junit\/jars\/junit-3\.8\.1\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/junit\/junit\/3\.8\.1\/junit-3\.8\.1\.jar/g;
+	    $_ =~ s/http:\/\/www\.ibiblio\.org\/maven\/jdepend\/jars\/jdepend-2\.5\.jar/file:\/\/$PROJECTS_DIR\/$PID\/lib\/jdepend\/jdepend\/2\.5\/jdepend-2\.5\.jar/g;
             print OUT $_;
         }
         close(IN);
@@ -139,8 +139,11 @@ sub _post_checkout {
     # Convert the file encoding of a problematic file
     my $result = determine_layout($self, $rev_id);
     if(-e $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java"){
-        system("iconv", "-f", "iso-8859-1", "-t", "utf-8", "-o", "output.txt", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java");
-	move("output.txt", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java");
+        rename($work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java", $work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java".".bak");
+        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java") or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java.bak"`;
+        print OUT $converted_file;
+        close(OUT);
     }
 }
 

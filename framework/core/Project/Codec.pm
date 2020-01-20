@@ -96,12 +96,18 @@ sub _post_checkout {
     # Convert the file encoding of problematic files
     my $result = determine_layout($self, $rev_id);
     if (-e $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java"){
-        system("iconv", "-f", "iso-8859-1", "-t", "utf-8", "-o", "output.txt", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java");
-	move("output.txt", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java");
+        rename($work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java".".bak");
+        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java") or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/codec/language/DoubleMetaphoneTest.java.bak"`;
+        print OUT $converted_file;
+        close(OUT);
     }
     if (-e $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java"){
-        system("iconv", "-f", "iso-8859-1", "-t", "utf-8", "-o", "output.txt", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
-	move("output.txt", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
+        rename($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java".".bak");
+        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java") or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/codec/language/SoundexTest.java.bak"`;
+        print OUT $converted_file;
+        close(OUT);
     }
 
     # Copy in a missing dependency
