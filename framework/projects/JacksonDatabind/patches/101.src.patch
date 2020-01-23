@@ -6,7 +6,7 @@ index 88051e75d..e1f54c234 100644
                      // if so, need to copy all remaining tokens into buffer
                      while (t == JsonToken.FIELD_NAME) {
                          // NOTE: do NOT skip name as it needs to be copied; `copyCurrentStructure` does that
-+                        p.nextToken(); // to skip name
++                        p.nextToken();
                          tokens.copyCurrentStructure(p);
                          t = p.nextToken();
                      }

@@ -15,7 +15,7 @@ index 81ac932..ac71e59 100644
  
          private final Document doc;
 -        private final Stack<HashMap<String, String>> namespacesStack = new Stack<>(); // stack of namespaces, prefix => urn
-+        private final HashMap<String, String> namespaces = new HashMap<>(); // prefix => urn
++        private final HashMap<String, String> namespaces = new HashMap<>();
          private Element dest;
  
          public W3CBuilder(Document doc) {

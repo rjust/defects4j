@@ -7,7 +7,7 @@ index 691b1cf..d54ba64 100644
      private void combinator(char combinator) {
          tq.consumeWhitespace();
 -        String subQuery = consumeSubQuery(); // support multi > childs
-+        String subQuery = tq.consumeToAny(combinators); // support multi > childs
++        String subQuery = tq.consumeToAny(combinators);
          
          Elements output;
          if (combinator == '>')

@@ -18,7 +18,7 @@ index 7c37ffa4..241c06af 100644
          hash += (hash >>> 16); // to xor hi- and low- 16-bits
 -        hash ^= (hash << 3); // shuffle back a bit
 -        hash += (hash >>> 12); // and bit more
-+        hash ^= (hash >>> 12); // as well as lowest 2 bytes
++        hash ^= (hash >>> 12);
          return hash;
      }
  

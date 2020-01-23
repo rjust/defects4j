@@ -43,7 +43,7 @@ index e083ab3..0495807 100644
          if (l instanceof Pointer) {
              l = ((Pointer) l).getValue();
          }
-@@ -136,28 +126,22 @@ public abstract class CoreOperationCompare extends CoreOperation {
+@@ -136,28 +126,21 @@ public abstract class CoreOperationCompare extends CoreOperation {
              r = ((Pointer) r).getValue();
          }
  
@@ -51,7 +51,6 @@ index e083ab3..0495807 100644
 +        if (l == r) {
 +            return true;
 +        }
-+
          if (l instanceof Boolean || r instanceof Boolean) {
 -            result = l == r || InfoSetUtil.booleanValue(l) == InfoSetUtil.booleanValue(r);
 -        } else if (l instanceof Number || r instanceof Number) {

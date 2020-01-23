@@ -110,7 +110,7 @@ index 316886be..af871ce9 100644
 -        if (_cfgUnqNames) {// non-standard, omit quotes
 -            _writeString(name);
 -        } else { 
-+        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) { // standard
++        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) {
              if (_outputTail >= _outputEnd) {
                  _flushBuffer();
              }
@@ -118,7 +118,7 @@ index 316886be..af871ce9 100644
                  _flushBuffer();
              }
              _outputBuffer[_outputTail++] = '"';
-+        } else { // non-standard, omit quotes
++        } else {
 +            _writeString(name);
          }
      }
@@ -130,7 +130,7 @@ index 316886be..af871ce9 100644
 -        if (_cfgUnqNames) {// non-standard, omit quotes
 -            writeRaw(quoted, 0, quoted.length);
 -        } else {
-+        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) { // standard
++        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) {
              if (_outputTail >= _outputEnd) {
                  _flushBuffer();
              }
@@ -138,7 +138,7 @@ index 316886be..af871ce9 100644
                  _flushBuffer();
              }
              _outputBuffer[_outputTail++] = '"';
-+        } else { // non-standard, omit quotes
++        } else {
 +            writeRaw(quoted, 0, quoted.length);
          }
      }

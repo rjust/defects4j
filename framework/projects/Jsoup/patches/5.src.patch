@@ -8,7 +8,7 @@ index 38eb6f0..4af0a68 100644
          else {
 -            if (value.length() == 0) // no key, no val; unknown char, keep popping so not get stuck
 -                tq.advance();
-+            tq.consume(); // unknown char, keep popping so not get stuck
++            tq.consume();
                  
              return null;
          }

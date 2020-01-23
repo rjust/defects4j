@@ -132,7 +132,7 @@ index 24333e7..0fb33bd 100644
          createInline("BUTTON").setAncestor("FORM"); // bunch of excludes not defined
 -        createInline("OPTGROUP").setParent("SELECT"); //  only contain option
 -        createInline("OPTION").setParent("SELECT").setContainDataOnly();
-+        createInline("OPTGROUP").setAncestor("SELECT"); //  only contain option
++        createInline("OPTGROUP").setAncestor("SELECT");
 +        createInline("OPTION").setAncestor("SELECT").setContainDataOnly();
          createBlock("FIELDSET").setAncestor("FORM");
          createInline("LEGEND").setAncestor("FIELDSET");
@@ -147,8 +147,8 @@ index 24333e7..0fb33bd 100644
          createBlock("DL");
 -        createInline("DT").setParent("DL").setOptionalClosing(); // only within DL.
 -        createInline("DD").setParent("DL").setOptionalClosing(); // only within DL.
-+        createInline("DT").setAncestor("DL").setOptionalClosing(); // only within DL.
-+        createInline("DD").setAncestor("DL").setOptionalClosing(); // only within DL.
++        createInline("DT").setAncestor("DL").setOptionalClosing();
++        createInline("DD").setAncestor("DL").setOptionalClosing();
  
          createBlock("LI").setAncestor("UL", "OL").setOptionalClosing(); // only within OL or UL.
  
@@ -164,12 +164,12 @@ index 24333e7..0fb33bd 100644
 -        createBlock("TH").setParent("TR").setOptionalClosing();
 -        createBlock("TD").setParent("TR").setOptionalClosing();
 +        createBlock("CAPTION").setAncestor("TABLE");
-+        createBlock("THEAD").setAncestor("TABLE").setOptionalClosing(); // just TR
-+        createBlock("TFOOT").setAncestor("TABLE").setOptionalClosing(); // just TR
-+        createBlock("TBODY").setAncestor("TABLE").setOptionalClosing(); // optional / implicit open too. just TR
-+        createBlock("COLGROUP").setAncestor("TABLE").setOptionalClosing(); // just COL
++        createBlock("THEAD").setAncestor("TABLE").setOptionalClosing();
++        createBlock("TFOOT").setAncestor("TABLE").setOptionalClosing();
++        createBlock("TBODY").setAncestor("TABLE").setOptionalClosing();
++        createBlock("COLGROUP").setAncestor("TABLE").setOptionalClosing();
 +        createBlock("COL").setAncestor("COLGROUP").setEmpty();
-+        createBlock("TR").setAncestor("TABLE").setOptionalClosing(); // just TH, TD
++        createBlock("TR").setAncestor("TABLE").setOptionalClosing();
 +        createBlock("TH").setAncestor("TR").setOptionalClosing();
 +        createBlock("TD").setAncestor("TR").setOptionalClosing();
      }

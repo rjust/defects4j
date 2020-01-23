@@ -41,7 +41,7 @@ index 735606f..86b43d9 100644
  import org.jsoup.nodes.XmlDeclaration;
  
  import java.util.List;
-@@ -753,26 +751,7 @@ public abstract class Evaluator {
+@@ -753,26 +751,6 @@ public abstract class Evaluator {
          }
      }
  
@@ -67,7 +67,6 @@ index 735606f..86b43d9 100644
 -            return ":matchText";
 -        }
 -    }
-+
  }
 diff --git a/src/main/java/org/jsoup/select/QueryParser.java b/src/main/java/org/jsoup/select/QueryParser.java
 index 99e5147..e00f46e 100644

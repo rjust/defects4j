@@ -26,27 +26,27 @@ index a60fab8..cc72b7d 100644
 -        return Parser.unescapeEntities(string, strict);
 +        if (!string.contains("&"))
 +            return string;
-+        Matcher m = strict? strictUnescapePattern.matcher(string) : unescapePattern.matcher(string); // &(#(x|X)?([0-9a-fA-F]+)|[a-zA-Z]\\d*);?
-+        StringBuffer accum = new StringBuffer(string.length()); // pity matcher can't use stringbuilder, avoid syncs
++        Matcher m = strict? strictUnescapePattern.matcher(string) : unescapePattern.matcher(string);
++        StringBuffer accum = new StringBuffer(string.length());
 +        while (m.find()) {
 +            int charval = -1;
 +            String num = m.group(3);
 +            if (num != null) {
 +                try {
-+                    int base = m.group(2) != null ? 16 : 10; // 2 is hex indicator
++                    int base = m.group(2) != null ? 16 : 10;
 +                    charval = Integer.valueOf(num, base);
 +                } catch (NumberFormatException e) {
-+                } // skip
++                }
 +            } else {
 +                String name = m.group(1);
 +                if (full.containsKey(name))
 +                    charval = full.get(name);
 +            }
-+            if (charval != -1 || charval > 0xFFFF) { // out of range
++            if (charval != -1 || charval > 0xFFFF) {
 +                String c = Character.toString((char) charval);
 +                m.appendReplacement(accum, Matcher.quoteReplacement(c));
 +            } else {
-+                m.appendReplacement(accum, Matcher.quoteReplacement(m.group(0))); // replace with original string
++                m.appendReplacement(accum, Matcher.quoteReplacement(m.group(0)));
 +            }
 +        }
 +        m.appendTail(accum);
@@ -77,7 +77,7 @@ index 3445855..cc9f470 100644
          } else { // named
              // get as many letters as possible, and look for matching entities.
              String nameRef = reader.consumeLetterThenDigitSequence();
-+            String origNameRef = new String(nameRef); // for error reporting. nameRef gets chomped looking for matches
++            String origNameRef = new String(nameRef);
              boolean looksLegit = reader.matches(';');
              // found if a base named entity without a ;, or an extended entity with the ;.
 -            boolean found = (Entities.isBaseNamedEntity(nameRef) || (Entities.isNamedEntity(nameRef) && looksLegit));

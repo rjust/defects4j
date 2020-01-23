@@ -2,7 +2,7 @@ diff --git a/src/main/java/org/apache/commons/codec/binary/BaseNCodecInputStream
 index d1eb77bb..73f7e6b8 100644
 --- a/src/main/java/org/apache/commons/codec/binary/BaseNCodecInputStream.java
 +++ b/src/main/java/org/apache/commons/codec/binary/BaseNCodecInputStream.java
-@@ -139,31 +139,10 @@ public class BaseNCodecInputStream extends FilterInputStream {
+@@ -139,31 +139,9 @@ public class BaseNCodecInputStream extends FilterInputStream {
       *
       * @throws IllegalArgumentException if the provided skip length is negative
       */
@@ -31,7 +31,6 @@ index d1eb77bb..73f7e6b8 100644
  
 -        return total;
 -    }
-+
  
      /**
       * {@inheritDoc}

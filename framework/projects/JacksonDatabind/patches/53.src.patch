@@ -14,7 +14,7 @@ index 6752f2022..b888ab97c 100644
  
      /*
      /**********************************************************************
-@@ -428,46 +425,10 @@ name, i, t.getRawClass()));
+@@ -428,46 +425,6 @@ name, i, t.getRawClass()));
       *
       * @since 2.8
       */
@@ -60,10 +60,6 @@ index 6752f2022..b888ab97c 100644
 -            return _raw.getName()+"<>";
 -        }
 -    }
-+
-+
-+
-+
  }
 diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
 index a27097e4a..098cd2e35 100644
@@ -150,7 +146,7 @@ index a27097e4a..098cd2e35 100644
 -        result = _typeCache.get(key); // ok, cache object is synced
 +        boolean cachable = (bindings == null) || bindings.isEmpty();
 +        if (cachable) {
-+            result = _typeCache.get(rawType); // ok, cache object is synced
++            result = _typeCache.get(rawType);
          if (result != null) {
              return result;
 +            }
@@ -163,7 +159,7 @@ index a27097e4a..098cd2e35 100644
          context.resolveSelfReferences(result);
 -        _typeCache.putIfAbsent(key, result); // cache object syncs
 +        if (cachable) {
-+            _typeCache.putIfAbsent(rawType, result); // cache object syncs
++            _typeCache.putIfAbsent(rawType, result);
 +        }
          return result;
      }

@@ -100,15 +100,13 @@ index 3c82942..c0924f3 100644
          return null;
      }
  
-@@ -285,7 +274,20 @@ public class CommandLine {
+@@ -285,7 +274,17 @@ public class CommandLine {
       */
      void addOption(Option opt)
      {
 -        options.add(opt);
 +        hashcodeMap.put(new Integer(opt.hashCode()), opt);
-+
 +        String key = opt.getKey();
-+
 +        if (key == null)
 +        {
 +            key = opt.getLongOpt();
@@ -117,7 +115,6 @@ index 3c82942..c0924f3 100644
 +        {
 +            names.put(opt.getLongOpt(), key);
 +        }
-+
 +        options.put(key, opt);
      }
  

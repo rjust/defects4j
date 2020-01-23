@@ -89,7 +89,7 @@ index 6c52b736e..f6b82b2e0 100644
  
      @Override
 -    @Deprecated // since 2.5
-+    @Deprecated // since 1.5
++    @Deprecated
      public boolean isEmpty(Object value)
      {
          Object delegateValue = convertValue(value);

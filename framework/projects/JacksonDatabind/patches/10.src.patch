@@ -64,7 +64,7 @@ index ec540cc6d..3b026d6a8 100644
              // 23-Feb-2015, tatu: As per [#705], need to support custom serializers
 -            JsonSerializer<?> anySer = findSerializerFromAnnotation(prov, anyGetter);
 -            if (anySer == null) {
-+            MapSerializer anySer = MapSerializer.construct(/* ignored props*/ null, type, staticTyping, typeSer, null, null, /*filterId*/ null);
++            MapSerializer anySer = MapSerializer.construct(null, type, staticTyping, typeSer, null, null, null);
                  // TODO: support '@JsonIgnoreProperties' with any setter?
 -                anySer = MapSerializer.construct(/* ignored props*/ null, type, staticTyping,
 -                        typeSer, null, null, /*filterId*/ null);

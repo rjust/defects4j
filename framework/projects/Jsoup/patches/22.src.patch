@@ -52,7 +52,7 @@ index c0640cd..5537db3 100644
 -            if (node != this)
 -                siblings.add(node);
 -        return siblings;
-+        return parent().childNodes(); // TODO: should this strip out this node? i.e. not a sibling of self?
++        return parent().childNodes();
      }
  
      /**

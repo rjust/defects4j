@@ -11,7 +11,7 @@ index 27af7a7..9e06b9c 100644
  
  import java.util.List;
  
-@@ -69,17 +67,12 @@ public class Cleaner {
+@@ -69,17 +67,11 @@ public class Cleaner {
      /**
       Iterates the input and copies trusted nodes (tags, attributes, text) into the destination.
       */
@@ -29,7 +29,6 @@ index 27af7a7..9e06b9c 100644
 +        int numDiscarded = 0;
  
 -        public void head(Node source, int depth) {
-+
 +        for (Node source : sourceChildren) {
              if (source instanceof Element) {
                  Element sourceEl = (Element) source;
@@ -40,8 +39,8 @@ index 27af7a7..9e06b9c 100644
                      numDiscarded += meta.numAttribsDiscarded;
 -                    destination = destChild;
 -                } else if (source != root) { // not a safe tag, so don't add. don't count root against discarded.
-+                    numDiscarded += copySafeNodes(sourceEl, destChild); // recurs
-+                } else { // not a safe tag, but it may have children (els or text) that are, so recurse
++                    numDiscarded += copySafeNodes(sourceEl, destChild);
++                } else {
                      numDiscarded++;
 +                    numDiscarded += copySafeNodes(sourceEl, destination);
                  }
