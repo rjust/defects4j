@@ -12,7 +12,7 @@ index 8bddee9f..d02c7be8 100644
                  // only add if non-zero size to maintain class state
                  getMap().put(key, coll);
 -                result = true;  // map definitely changed
-+                result = false;  // map definitely changed
++                result = false;
              }
          } else {
              result = coll.add(value);
@@ -30,7 +30,7 @@ index 8bddee9f..d02c7be8 100644
                  // only add if non-zero size to maintain class state
                  getMap().put(key, coll);
 -                result = true;  // map definitely changed
-+                result = false;  // map definitely changed
++                result = false;
              }
 +            return result;
          } else {

@@ -34,7 +34,7 @@ index 76e28666..7773ca54 100644
  
          if (offset == 0) {
              final byte[] expected = ArArchiveEntry.HEADER.getBytes();
-@@ -86,17 +74,16 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+@@ -86,17 +74,15 @@ public class ArArchiveInputStream extends ArchiveInputStream {
              }
          }
  
@@ -52,11 +52,10 @@ index 76e28666..7773ca54 100644
 +        if (offset % 2 != 0) {
 +            read();
 +        }
-+
          final byte[] name = new byte[16];
          final byte[] lastmodified = new byte[12];
          final byte[] userid = new byte[6];
-@@ -125,11 +112,8 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+@@ -125,11 +112,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
              }
          }
  
@@ -66,7 +65,6 @@ index 76e28666..7773ca54 100644
 -                                                         .trim()));
 -        return currentEntry;
 +        return new ArArchiveEntry(new String(name).trim(), Long.parseLong(new String(length).trim()));
-+
      }
  
  

@@ -9,7 +9,7 @@ index f0d60cb8..61b908f0 100644
 -                if (ch == '\n') { // blank line in header
 -                    break;
 -                } else if (ch == ' '){ // End of length string
-+                if (ch == ' '){ // End of length string
++                if (ch == ' '){
                      // Get keyword
                      final ByteArrayOutputStream coll = new ByteArrayOutputStream();
                      while((ch = i.read()) != -1) {

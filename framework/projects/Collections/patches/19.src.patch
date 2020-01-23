@@ -12,8 +12,8 @@ index 4443a3f8..c19d5666 100644
 -            set.remove(removed); // remove the item deleted by the set
          }
 -        
-+        set.add(object); // add the new item to the unique set
-+        set.remove(removed); // remove the item deleted by the set
++        set.add(object); 
++        set.remove(removed);
          return removed; // return the item deleted by the set
      }
  
