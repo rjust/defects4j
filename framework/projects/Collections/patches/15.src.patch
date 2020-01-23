@@ -15,7 +15,7 @@ index 8ad35538..2cdeb524 100644
          }
  
 -        set.add(object);      // add the new item to the unique set
-+        super.remove(pos);  // remove the duplicate by index
++        super.remove(pos);
          set.remove(removed);  // remove the item deleted by the set
  
          return removed;  // return the item deleted by the set

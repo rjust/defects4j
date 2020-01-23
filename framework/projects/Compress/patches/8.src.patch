@@ -2,7 +2,7 @@ diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.ja
 index 27b2a00d..0f13e914 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
-@@ -50,54 +50,34 @@ public class TarUtils {
+@@ -50,54 +50,33 @@ public class TarUtils {
       */
      public static long parseOctal(final byte[] buffer, final int offset, final int length) {
          long    result = 0;
@@ -20,7 +20,7 @@ index 27b2a00d..0f13e914 100644
 -                allNUL = false;
 +        for (int i = offset; i < end; ++i) {
 +            final byte currentByte = buffer[i];
-+            if (currentByte == 0) { // Found trailing null
++            if (currentByte == 0) {
                  break;
              }
 -        }
@@ -37,8 +37,7 @@ index 27b2a00d..0f13e914 100644
 +                if (stillPadding) {
 +                   continue;
 +            }
-+
-+                if (currentByte == (byte) ' ') { // Found trailing space
++                if (currentByte == (byte) ' ') {
                  break;
 +                }
              }

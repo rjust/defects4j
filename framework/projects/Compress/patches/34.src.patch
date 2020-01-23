@@ -15,7 +15,7 @@ index e325b564..89816fd5 100644
       */
      public ZipShort getCentralDirectoryLength() {
 -        return ZERO;
-+        return getLocalFileDataLength();  // No different than local version.
++        return getLocalFileDataLength();
      }
  
      /**

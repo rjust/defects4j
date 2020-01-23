@@ -34,13 +34,12 @@ index 1cd6f913..74dcb15b 100644
          return c;
      }
  
-@@ -194,34 +195,41 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+@@ -194,34 +195,40 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
      }
  
      private int read0() throws IOException {
 -        switch (currentState) {
 +        final int retChar = this.currentChar;
-+
 +        switch (this.currentState) {
          case EOF:
              return -1;

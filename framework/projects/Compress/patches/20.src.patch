@@ -83,7 +83,7 @@ index 664d0e6d..3678dfdb 100644
          ret.setInode(readAsciiLong(8, 16));
          long mode = readAsciiLong(8, 16);
 -        if (CpioUtil.fileType(mode) != 0){ // mode is initialised to 0
-+        if (mode != 0){ // mode is initialised to 0
++        if (mode != 0){
              ret.setMode(mode);
          }
          ret.setUID(readAsciiLong(8, 16));
