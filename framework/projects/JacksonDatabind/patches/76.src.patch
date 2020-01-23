@@ -8,16 +8,16 @@ index 817e29ec4..c3a3001af 100644
              if (creatorProp != null) {
 -                buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt));
 +                if (buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt))) {
-+                    t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT
++                    t = p.nextToken();
 +                    Object bean;
 +                    try {
 +                        bean = creator.build(ctxt, buffer);
 +                    } catch (Exception e) {
 +                        wrapAndThrow(e, _beanType.getRawClass(), propName, ctxt);
-+                        continue; // never gets here
++                        continue;
 +                    }
 +                    while (t == JsonToken.FIELD_NAME) {
-+                        p.nextToken(); // to skip name
++                        p.nextToken();
 +                        tokens.copyCurrentStructure(p);
 +                        t = p.nextToken();
 +                    }

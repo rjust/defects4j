@@ -21,7 +21,7 @@ index 417cb22..d0afaaf 100644
              boolean seenWhite = tq.consumeWhitespace();
  
 -            if (tq.matchesAny(combinators)) {
-+            if (tq.matchChomp(",")) { // group or
++            if (tq.matchChomp(",")) {
 +                CombiningEvaluator.Or or = new CombiningEvaluator.Or(evals);
 +                evals.clear();
 +                evals.add(or);

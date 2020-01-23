@@ -8,12 +8,12 @@ index 3fe076a..c9963b9 100644
              if (tag.isKnownTag()) {
 -                if (!tag.isEmpty())
 -                    tokeniser.error("Tag cannot be self closing; not a void tag");
-+                if (tag.isSelfClosing()) tokeniser.acknowledgeSelfClosingFlag(); // if not acked, promulagates error
++                if (tag.isSelfClosing()) tokeniser.acknowledgeSelfClosingFlag();
              }
 -            else // unknown tag, remember this is self closing for output
-+            else { // unknown tag, remember this is self closing for output
++            else {
                  tag.setSelfClosing();
-+                tokeniser.acknowledgeSelfClosingFlag(); // not an distinct error
++                tokeniser.acknowledgeSelfClosingFlag();
 +            }
          }
          return el;

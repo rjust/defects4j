@@ -15,12 +15,11 @@ index 3c686044f..0b36b0b04 100644
          }
          if (_propertyBasedCreator != null) {
              return _deserializeUsingPropertyBased(p, ctxt);
-@@ -1218,13 +1217,13 @@ public abstract class BeanDeserializerBase
+@@ -1218,13 +1217,12 @@ public abstract class BeanDeserializerBase
          if (_objectIdReader != null) {
              return deserializeFromObjectId(p, ctxt);
          }
 -        final JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
-+
          switch (p.getNumberType()) {
          case INT:
 -            if (delegateDeser != null) {

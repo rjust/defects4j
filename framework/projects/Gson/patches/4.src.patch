@@ -17,7 +17,7 @@ index 838355cb..214df65e 100644
        pos--; // Don't consume the first character in a literal value.
      }
 +    if (stackSize == 1) {
-+      checkLenient(); // Top-level value isn't an array or an object.
++      checkLenient();
 +    }
  
      int result = peekKeyword();

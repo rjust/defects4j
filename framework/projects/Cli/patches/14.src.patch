@@ -2,7 +2,7 @@ diff --git a/src/java/org/apache/commons/cli2/option/GroupImpl.java b/src/java/o
 index e3b69f8..5841a67 100644
 --- a/src/java/org/apache/commons/cli2/option/GroupImpl.java
 +++ b/src/java/org/apache/commons/cli2/option/GroupImpl.java
-@@ -246,7 +246,13 @@ public class GroupImpl
+@@ -246,7 +246,12 @@ public class GroupImpl
              final Option option = (Option) i.next();
  
              // needs validation?
@@ -10,7 +10,6 @@ index e3b69f8..5841a67 100644
 +            if (option.isRequired()) {
 +                option.validate(commandLine);
 +            }
-+
 +            if (option instanceof Group) {
 +                option.validate(commandLine);
 +            }

@@ -122,7 +122,7 @@ index bea598d..67a830a 100644
              // 8. create new element from element, 9 insert into current node, onto stack
              skip = false; // can only skip increment from 4.
 -            Element newEl = insertStartTag(entry.normalName()); // todo: avoid fostering here?
-+            Element newEl = insertStartTag(entry.nodeName()); // todo: avoid fostering here?
++            Element newEl = insertStartTag(entry.nodeName());
              // newEl.namespace(entry.namespace()); // todo: namespaces
              newEl.attributes().addAll(entry.attributes());
  
@@ -307,7 +307,7 @@ index a5532c7..656bd50 100644
  
          boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
 -            String name = t.asEndTag().normalName; // case insensitive search - goal is to preserve output case, not for the parse to be case sensitive
-+            String name = tb.settings.normalizeTag(t.asEndTag().name()); // matches with case sensitivity if enabled
++            String name = tb.settings.normalizeTag(t.asEndTag().name());
              ArrayList<Element> stack = tb.getStack();
              for (int pos = stack.size() -1; pos >= 0; pos--) {
                  Element node = stack.get(pos);
@@ -360,7 +360,7 @@ index a5532c7..656bd50 100644
                      Token.EndTag endTag = t.asEndTag();
                      if (endTag.normalName.equals("colgroup")) {
 -                        if (tb.currentElement().normalName().equals("html")) { // frag case
-+                        if (tb.currentElement().nodeName().equals("html")) { // frag case
++                        if (tb.currentElement().nodeName().equals("html")) {
                              tb.error(this);
                              return false;
                          } else {
@@ -378,7 +378,7 @@ index a5532c7..656bd50 100644
              }
              tb.clearStackToTableBodyContext();
 -            tb.processEndTag(tb.currentElement().normalName()); // tbody, tfoot, thead
-+            tb.processEndTag(tb.currentElement().nodeName()); // tbody, tfoot, thead
++            tb.processEndTag(tb.currentElement().nodeName());
              return tb.process(t);
          }
  
@@ -441,7 +441,7 @@ index a5532c7..656bd50 100644
                  }
              } else if (t.isEndTag() && t.asEndTag().normalName().equals("frameset")) {
 -                if (tb.currentElement().normalName().equals("html")) { // frag
-+                if (tb.currentElement().nodeName().equals("html")) { // frag
++                if (tb.currentElement().nodeName().equals("html")) {
                      tb.error(this);
                      return false;
                  } else {
