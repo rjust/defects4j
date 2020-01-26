@@ -2,12 +2,9 @@ diff --git a/src/main/java/org/jsoup/nodes/DocumentType.java b/src/main/java/org
 index 4e7730b..fde181f 100644
 --- a/src/main/java/org/jsoup/nodes/DocumentType.java
 +++ b/src/main/java/org/jsoup/nodes/DocumentType.java
-@@ -9,10 +9,7 @@ import org.jsoup.nodes.Document.OutputSettings.*;
-  * A {@code <!DOCTYPE>} node.
-  */
- public class DocumentType extends Node {
--    public static final String PUBLIC_KEY = "PUBLIC";
--    public static final String SYSTEM_KEY = "SYSTEM";
+@@ -12,7 +12,6 @@
+     public static final String PUBLIC_KEY = "PUBLIC";
+     public static final String SYSTEM_KEY = "SYSTEM";
      private static final String NAME = "name";
 -    private static final String PUB_SYS_KEY = "pubSysKey"; // PUBLIC or SYSTEM
      private static final String PUBLIC_ID = "publicId";
@@ -106,17 +103,14 @@ index 6a97238..c0148f3 100644
  
  import java.util.Arrays;
  
-@@ -1191,11 +1190,9 @@ enum TokeniserState {
-             else if (r.matches('>')) {
+@@ -1192,10 +1191,8 @@
                  t.emitDoctypePending();
                  t.advanceTransition(Data);
--            } else if (r.matchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {
+             } else if (r.matchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {
 -                t.doctypePending.pubSysKey = DocumentType.PUBLIC_KEY;
-+            } else if (r.matchConsumeIgnoreCase("PUBLIC")) {
                  t.transition(AfterDoctypePublicKeyword);
--            } else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
+             } else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
 -                t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;
-+            } else if (r.matchConsumeIgnoreCase("SYSTEM")) {
                  t.transition(AfterDoctypeSystemKeyword);
              } else {
                  t.error(this);
