@@ -31,10 +31,6 @@ of the checked-out project version.
     <property name="easymock.jar" value="${d4j.dir.projects}/Collections/lib/easymock-2.0.jar"/>
     <property name="hamcrest.jar" value="${d4j.dir.projects}/Collections/lib/hamcrest-core-1.3.jar"/>
 
-    <!-- Do not download maven dependencies -->
-    <property name="maven.settings.offline" value="true" />
-    <property name="maven.repo.local" value="${d4j.dir.projects}/Collections/lib/" />
-
     <!-- Generate all debugging information -->
     <property name="compile.debug" value="yes" />
 
@@ -42,46 +38,19 @@ of the checked-out project version.
     <import file="${d4j.workdir}/build.xml"/>
 
     <!-- Project properties targets -->
-    <if> <isset property="maven.build.testDir.0" />
-        <then>
-          <property name="test.home" value="${maven.build.testDir.0}" />
-          <property name="build.home" value="${maven.build.dir}" />
-          <property name="isNewVersion" value="true" />
-          <path id="test.classpath">
-              <path refid="build.test.classpath"/>
-              <pathelement location="${maven.build.outputDir}"/>
-              <pathelement location="${maven.build.testOutputDir}"/>
-          </path>
-          <path id="compile.classpath">
-              <path refid="build.classpath"/>
-          </path>
-	  <property name="test.classes.dir" value="${maven.build.testOutputDir}"/>
-	  <property name="classes.dir" value="${maven.build.outputDir}"/>
-        </then>
-        <else>
-          <property name="test.home" value="${source.test}" />
-          <path id="test.classpath">
-            <pathelement location="${build.home}/classes"/>
-            <pathelement location="${build.home}/tests"/>
-          </path>
-          <path id="compile.classpath">
-            <pathelement location="${build.home}/classes" />
-          </path>
-	  <property name="test.classes.dir" value="${build.home}/tests"/>
-	  <property name="classes.dir" value="${build.home}/classes"/>
-        </else>
-    </if>
+    <property name="test.home" value="${source.test}" />
+    <path id="test.classpath">
+        <pathelement location="${build.home}/classes"/>
+        <pathelement location="${build.home}/tests"/>
+    </path>
+    <path id="compile.classpath">
+        <pathelement location="${build.home}/classes" />
+    </path>
+    <property name="test.classes.dir" value="${build.home}/tests"/>
+    <property name="classes.dir" value="${build.home}/classes"/>
 
-    <!-- Conditionally overriding target names (compile.tests for ant versions and compile-tests for maven-ant versions) -->
-    <target name="compile.tests.new" if="isNewVersion">
-        <ant antfile="${basedir}/build.xml" target="compile-tests" inheritAll="true"/>
-    </target>
-    <target name="compile.tests.old" unless="isNewVersion">
+    <target name="compile.tests">
         <ant antfile="${basedir}/build.xml" target="compile.tests" inheritAll="true"/>
-    </target>
-    <target name="compile.tests" >
-        <antcall target="compile.tests.new"/>
-        <antcall target="compile.tests.old"/>
     </target>
 
     <property name="build.home" value="${classes.dir}/.." />
@@ -90,7 +59,7 @@ of the checked-out project version.
     <path id="d4j.test.classpath">
         <path refid="test.classpath"/>
         <pathelement location="${classes.dir}"/>
-        <pathelement location="${test.classes.dir}"/>
+	<pathelement location="${test.classes.dir}"/>
 	<pathelement path="${junit.jar}" />
         <pathelement location="${hamcrest.jar}"/>
         <pathelement location="${easymock.jar}"/>
