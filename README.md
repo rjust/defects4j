@@ -1,4 +1,4 @@
-Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,13 +8,12 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 513 bugs from the following open-source projects:
+Defects4J contains 485 bugs from the following open-source projects:
 
 | Identifier | Project name               | Number of bugs |
 |------------|----------------------------|----------------|
 | Chart      | JFreeChart                 |  26            |
 | Closure    | Closure compiler           | 176            |
-| Collections| Apache commons-collections |  28            |
 | Compress   | Apache commons-compress    |  47            |
 | Lang       | Apache commons-lang        |  65            |
 | Math       | Apache commons-math        | 106            |
@@ -48,13 +47,6 @@ These bugs may be used in experiments, but should not be considered as
 "stable" as the bugs in the master repository. If you use these bugs, please 
 acknowledge their "beta status" in any publications.
 
-**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
-
-| Identifier | Project name               | Number of bugs |
-|------------|----------------------------|----------------|
-| Collections| Apache commons-collections |  28            |
-| Compress   | Apache commons-compress    |  47            |
-
 **Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
 
 | Identifier      | Project name           | Number of bugs |
@@ -74,17 +66,16 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.7
+ - Java 1.8
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
-version of Java 1.7.
-Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version. The next major release of Defects4J will be compatible with
-Java 8.
+version of Java 1.8.
+Note that using Java 1.9+ might result in unexpected failing tests on a fixed
+program version. 
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
