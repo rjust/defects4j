@@ -95,10 +95,8 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
       name: "Closure 170-176"
 ## Collections
-    - script: carton exec ./test_verify_bugs.sh -p Collections -b1..14
-      name: "Collections 1-14"
-    - script: carton exec ./test_verify_bugs.sh -p Collections -b15..28
-      name: "Collections 15-28"
+    - script: carton exec ./test_verify_bugs.sh -p Collections -b25..28
+      name: "Collections"
 ## Compress
     - script: carton exec ./test_verify_bugs.sh -p Compress -b1..12
       name: "Compress 1-12"
