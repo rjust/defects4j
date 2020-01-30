@@ -3,6 +3,7 @@
 #
 # This script verifies that all bugs for a given project are reproducible and
 # that the provided information about triggering tests is correct.
+# This script must be run from its own directory (`framework/tests/`).
 #
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
