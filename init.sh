@@ -140,6 +140,7 @@ fi
 # Only download archive if the server has a newer file
 curl_with_retry -O -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
 curl_with_retry -O -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
+ls -al
 if [ ! -s $GRADLE_DISTS_ZIP ]; then
     echo $GRADLE_DISTS_ZIP not successfully downloaded
     exit 1
