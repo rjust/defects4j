@@ -19,7 +19,7 @@ if ! wget --version > /dev/null 2>&1; then
     exit 1
 fi
 
-HOST_URL="https://people.cs.umass.edu/~rjust/defects4j/download"
+HOST_URL="https://defects4j.org/downloads"
 
 # Directories for project repositories and external libraries
 BASE="$(cd $(dirname $0); pwd)"
@@ -71,7 +71,7 @@ cd "$DIR_REPOS" && ./get_repos.sh
 echo
 echo "Setting up Major ... "
 MAJOR_VERSION="1.3.4"
-MAJOR_URL="http://mutation-testing.org/downloads"
+MAJOR_URL="https://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
 cd "$BASE" && wget -nv -N "$MAJOR_URL/$MAJOR_ZIP" \
            && unzip -o "$MAJOR_ZIP" > /dev/null \
