@@ -35,8 +35,9 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 #
 
 # Try curl command twice to handle hosts that hang for a long time.
+# The last argument must be the URL, and the -O command-line argument must be supplied.
 curl_with_retry() {
-    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")
+    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && rm -f `basename ${@: -1}` && curl "$@")
 }
 
 # Get time of last data modification of a file
@@ -166,9 +167,12 @@ echo
 echo "Setting up utility programs ... "
 
 BUILD_ANALYZER_VERSION="0.0.1"
-BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/build-analyzer-$BUILD_ANALYZER_VERSION.jar"
-BUILD_ANALYZER_JAR="analyzer.jar"
-cd "$BASE/framework/lib" && curl_with_retry -L -R -o "$BUILD_ANALYZER_JAR" -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
+BUILD_ANALYZER_JAR=build-analyzer-$BUILD_ANALYZER_VERSION.jar
+BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/$BUILD_ANALYZER_JAR"
+BUILD_ANALYZER_JAR_LOCAL="analyzer.jar"
+cd "$BASE/framework/lib" && curl_with_retry -O -L -R -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
+rm -f "$BUILD_ANALYZER_JAR_LOCAL"
+ln -s "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_JAR_LOCAL"
 
 echo
 echo "Defects4J successfully initialized."

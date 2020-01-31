@@ -16,8 +16,9 @@ clean() {
 }
 
 # Try curl command twice to handle hosts that hang for a long time.
+# The last argument must be the URL, and the -O command-line argument must be supplied.
 curl_with_retry() {
-    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")
+    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && rm -f `basename ${@: -1}` && curl "$@")
 }
 
 # The BSD version of stat does not support --version or -c
