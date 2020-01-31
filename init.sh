@@ -36,7 +36,7 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 
 # Try curl command twice to handle hosts that hang for a long time.
 curl_with_timeout() {
-    timeout 5m curl -s -S "$@" || curl "$@"
+    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")
 }
 
 # Get time of last data modification of a file
