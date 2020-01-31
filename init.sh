@@ -105,6 +105,9 @@ echo "Setting up Randoop ... "
 RANDOOP_VERSION="4.2.1"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
+RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
+REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
+COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
 (cd "$DIR_LIB_GEN" && [ ! -f "$RANDOOP_ZIP" ] \
                    && curl -s -S -O -L "$RANDOOP_URL/$RANDOOP_ZIP" \
                    && unzip $RANDOOP_ZIP)
