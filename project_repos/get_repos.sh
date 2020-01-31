@@ -28,7 +28,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-curl -s -S -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE"
+timeout 5m curl -s -S -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE" || curl -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
