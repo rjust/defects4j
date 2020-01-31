@@ -133,8 +133,8 @@ if [ -e $GRADLE_DEPS_ZIP ]; then
 fi
 
 # Only download archive if the server has a newer file
-curl -O -s -S -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
-curl -O -s -S -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
+timeout 5m curl -O -s -S -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP || curl -O -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
+timeout 5m curl -O -s -S -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP || curl -O -s -S -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
 new_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
 new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
