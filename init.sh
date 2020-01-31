@@ -34,6 +34,11 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 # Utility functions
 #
 
+# Try curl command twice to handle hosts that hang for a long time.
+curl_with_timeout() {
+    timeout 5m curl -s -S "$@" || curl "$@"
+}
+
 # Get time of last data modification of a file
 get_modification_timestamp() {
     local USAGE="Usage: get_modification_timestamp <file>"
@@ -73,7 +78,7 @@ echo "Setting up Major ... "
 MAJOR_VERSION="1.3.4"
 MAJOR_URL="http://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
-cd "$BASE" && curl -s -S -R -L -O -z "$MAJOR_ZIP" "$MAJOR_URL/$MAJOR_ZIP" \
+cd "$BASE" && curl_with_timeout -R -L -O -z "$MAJOR_ZIP" "$MAJOR_URL/$MAJOR_ZIP" \
            && unzip -o "$MAJOR_ZIP" > /dev/null \
            && rm "$MAJOR_ZIP" \
            && cp major/bin/.ant major/bin/ant
@@ -87,8 +92,8 @@ echo "Setting up EvoSuite ... "
 EVOSUITE_VERSION="0.2.0"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
-cd "$DIR_LIB_GEN" && curl -s -S -R -L -O -z "$EVOSUITE_JAR" "$HOST_URL/$EVOSUITE_JAR"
-cd "$DIR_LIB_RT"  && curl -s -S -R -L -O -z "$EVOSUITE_RT_JAR" "$HOST_URL/$EVOSUITE_RT_JAR"
+cd "$DIR_LIB_GEN" && curl_with_timeout -R -L -O -z "$EVOSUITE_JAR" "$HOST_URL/$EVOSUITE_JAR"
+cd "$DIR_LIB_RT"  && curl_with_timeout -R -L -O -z "$EVOSUITE_RT_JAR" "$HOST_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
 (cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
 (cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
@@ -103,8 +108,8 @@ RANDOOP_VERSION="4.0.4"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
-cd "$DIR_LIB_GEN" && curl -s -S -R -L -O -z "$RANDOOP_JAR" "$RANDOOP_URL/$RANDOOP_JAR"
-cd "$DIR_LIB_GEN" && curl -s -S -R -L -O -z "$REPLACECALL_JAR" "$RANDOOP_URL/$REPLACECALL_JAR"
+cd "$DIR_LIB_GEN" && curl_with_timeout -R -L -O -z "$RANDOOP_JAR" "$RANDOOP_URL/$RANDOOP_JAR"
+cd "$DIR_LIB_GEN" && curl_with_timeout -R -L -O -z "$REPLACECALL_JAR" "$RANDOOP_URL/$REPLACECALL_JAR"
 # Set symlink for the supported version of Randoop
 (cd "$DIR_LIB_GEN" && ln -sf "$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "$REPLACECALL_JAR" "replacecall-current.jar")
@@ -133,8 +138,8 @@ if [ -e $GRADLE_DEPS_ZIP ]; then
 fi
 
 # Only download archive if the server has a newer file
-timeout 5m curl -O -s -S -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP || curl -O -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
-timeout 5m curl -O -s -S -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP || curl -O -s -S -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
+curl_with_timeout -O -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
+curl_with_timeout -O -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
 new_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
 new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
@@ -154,7 +159,7 @@ echo "Setting up utility programs ... "
 BUILD_ANALYZER_VERSION="0.0.1"
 BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/build-analyzer-$BUILD_ANALYZER_VERSION.jar"
 BUILD_ANALYZER_JAR="analyzer.jar"
-cd "$BASE/framework/lib" && curl -s -S -L -R -O -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
+cd "$BASE/framework/lib" && curl_with_timeout -L -R -O -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
 
 echo
 echo "Defects4J successfully initialized."

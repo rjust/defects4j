@@ -13,6 +13,11 @@ clean() {
     README 
 }
 
+# Try curl command twice to handle hosts that hang for a long time.
+curl_with_timeout() {
+    timeout 5m curl -s -S "$@" || curl "$@"
+}
+
 # The BSD version of stat does not support --version or -c
 if stat --version &> /dev/null; then
     # GNU version
@@ -28,7 +33,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-timeout 5m curl -s -S -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE" || curl -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE"
+curl_with_timeout -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
