@@ -5,6 +5,8 @@
 #
 ################################################################################
 
+set -e
+
 HERE=$(cd `dirname $0` && pwd)
 
 # Import helper subroutines and variables, and init Defects4J
@@ -40,7 +42,7 @@ _check_output() {
 
 # Try curl command twice to handle hosts that hang for a long time
 curl_with_retry() {
-    timeout 5m curl -s -S "$@" || curl "$@"
+    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")
 }
 
 #

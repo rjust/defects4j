@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # The name of the archive that contains all project repos
 ARCHIVE=defects4j-repos.zip
 
