@@ -19,8 +19,8 @@ before_install:
   - JDK_ARCH="x64"
   - JDK_VERSION="8u192"
   - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
-  - JDK_URL="http://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE"
-  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (wget -nv --timeout=60 --tries=4 "$JDK_URL" || (echo "retrying wget $JDK_FILE" && wget -nv --timeout=60 --tries=4 "$JDK_URL")) && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
+  - JDK_URL="https://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE"
+  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && curl -O -s -S -L --retry 2 "$JDK_URL" && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
 
 install:
   - export JAVA_HOME=/home/travis/.java/jdk1.8.0_192

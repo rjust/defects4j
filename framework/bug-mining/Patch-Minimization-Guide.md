@@ -21,7 +21,9 @@ Note: The top-level [Bug-Mining README](https://github.com/rjust/defects4j/blob/
 
 ## Understanding the bug and narrowing the scope
 
-Keep in mind that each patch is a reverse patch -- we apply this patch to the fixed version of the program in order to reintroduce the bug.
+To minimize a patch, edit a file in `framework/projects/PROJECTNAME/patches/` to be smaller.
+
+Keep in mind that each patch in `framework/projects/PROJECTNAME/patches/` is a reverse patch -- we apply this patch to the fixed version of the program in order to reintroduce the bug.  To see the forward patch (for code only, not tests), check out both the buggy and fixed versions of the program and diff them.
 
 Proper minimization requires an understanding of *what* the fault in the code means, and how it affects the system. 
 Three key pieces of information should guide your minimization:
@@ -380,7 +382,8 @@ Although the bug may be triggered by only one part of the changes, retaining the
 
 ### 3. Changes that alter the reasons for test failure should be retained
 
-After performing patch minimization, the minimized patch should still yield the same trigger tests -- the same tests should pass and fail for both minimized and the original patch.
+After performing patch minimization, the minimized patch should still yield the same trigger tests -- the same tests should pass and fail for both minimized and the original patch.  To verify this fact, run from `framework/test/`:
+```./test_verify_bugs.sh -p PROJECTNAME -bBUGNUMBER```
 
 However, in some cases, code changes that appear to be refactoring could still alter the reason for a test failure. After removing that code change, the same tests may fail, but a different exception or error message may be offered.
 
