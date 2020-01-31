@@ -28,7 +28,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget -N https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE
+curl -s -S -R -L -O -z "$ARCHIVE" "https://people.cs.umass.edu/~rjust/defects4j/download/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
