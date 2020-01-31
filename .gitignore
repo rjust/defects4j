@@ -1,7 +1,8 @@
-project_repos/
-major/
-framework/test/*.log
-framework/lib/test_generation
-framework/lib/build_systems
 framework/lib/analyzer.jar
+framework/lib/build_systems
+framework/lib/test_generation
+framework/test/*.log
+project_repos/*
+!project_repos/get_repos.sh
+major/
 work/
