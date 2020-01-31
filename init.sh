@@ -159,7 +159,7 @@ echo "Setting up utility programs ... "
 BUILD_ANALYZER_VERSION="0.0.1"
 BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/build-analyzer-$BUILD_ANALYZER_VERSION.jar"
 BUILD_ANALYZER_JAR="analyzer.jar"
-cd "$BASE/framework/lib" && curl_with_retry -L -R -O -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
+cd "$BASE/framework/lib" && curl_with_retry -L -R -o "$BUILD_ANALYZER_JAR" -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
 
 echo
 echo "Defects4J successfully initialized."
