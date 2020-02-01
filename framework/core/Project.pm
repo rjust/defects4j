@@ -301,7 +301,7 @@ Checks whether the project is correctly configured.
 =cut
 sub sanity_check {
     my $self = shift;
-    return $self->_ant_call("sanity.check");
+    return $self->_ant_call_comp("sanity.check");
 }
 
 =pod
@@ -858,7 +858,7 @@ sub run_evosuite {
     my ($self, $criterion, $time, $class, $timeout, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
+    $self->_ant_call_comp("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional evosuite configuration
@@ -907,7 +907,7 @@ sub run_randoop {
     my ($self, $target_classes, $timeout, $seed, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
+    $self->_ant_call_comp("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional randoop configuration
