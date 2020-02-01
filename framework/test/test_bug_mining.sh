@@ -134,7 +134,8 @@ test_crossref_commmit_issue() {
     popd > /dev/null 2>&1
 
     # Check whether expected files exist
-    [ -s "$commit_db_file" ] || die "$commit_db_file does not exist or it is empty"
+    [ -e "$commit_db_file" ] || die "$commit_db_file does not exist in $PWD"
+    [ -s "$commit_db_file" ] || die "$commit_db_file is empty in $PWD"
 
     # Does each row contain 5 values?
     while read -r row; do

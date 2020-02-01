@@ -10,9 +10,9 @@ init
 
 # Directory for Randoop test suites
 randoop_dir=$TMP_DIR/randoop
-# Generate tests for Lang-2
+# Generate tests for Lang-5
 pid=Lang
-bid=2
+bid=5
 # Test suite source and number
 suite_src=randoop
 suite_num=1
