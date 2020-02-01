@@ -20,7 +20,7 @@ before_install:
   - JDK_VERSION="7u80"
   - JDK_BUILD_VERSION="$JDK_VERSION-b15"
   - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
-  - JDK_URL="https://people.cs.umass.edu/~rjust/defects4j/download/$JDK_FILE"
+  - JDK_URL="https://defects4j.org/downloads/$JDK_FILE"
   - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (timeout 7m curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
 
 install:
