@@ -164,7 +164,7 @@ test_initialize_revisions() {
     mkdir -p "$lib_dir/junit/junit/4.12"
     (cd "$lib_dir/junit/junit/4.12" && curl_with_retry https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar || die "Failed to download junit-4.12.jar")
     mkdir -p "$lib_dir/org/apache/commons/commons-lang3/3.4"
-    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4 && curl_with_retry https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar || die "Failed to download commons-lang3-3.4.jar")
+    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4" && curl_with_retry https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar || die "Failed to download commons-lang3-3.4.jar")
     mkdir -p "$lib_dir/org/hamcrest/hamcrest-core/1.3"
     (cd "$lib_dir/org/hamcrest/hamcrest-core/1.3" && curl_with_retry https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar || die "Failed to download hamcrest-core-1.3.jar")
     # End of fix for Java-7
