@@ -1,4 +1,4 @@
-Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,13 +8,12 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 513 bugs from the following open-source projects:
+Defects4J contains 485 bugs from the following open-source projects:
 
 | Identifier | Project name               | Number of bugs |
 |------------|----------------------------|----------------|
 | Chart      | JFreeChart                 |  26            |
 | Closure    | Closure compiler           | 176            |
-| Collections| Apache commons-collections |  28            |
 | Compress   | Apache commons-compress    |  47            |
 | Lang       | Apache commons-lang        |  65            |
 | Math       | Apache commons-math        | 106            |
@@ -48,13 +47,6 @@ These bugs may be used in experiments, but should not be considered as
 "stable" as the bugs in the master repository. If you use these bugs, please 
 acknowledge their "beta status" in any publications.
 
-**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
-
-| Identifier | Project name               | Number of bugs |
-|------------|----------------------------|----------------|
-| Collections| Apache commons-collections |  28            |
-| Compress   | Apache commons-compress    |  47            |
-
 **Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
 
 | Identifier      | Project name           | Number of bugs |
@@ -74,17 +66,16 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.7
+ - Java 1.8
  - Git >= 1.9
  - SVN >= 1.8
- - Perl >= 5.0.10
+ - Perl >= 5.0.12
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
-version of Java 1.7.
-Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version. The next major release of Defects4J will be compatible with
-Java 8.
+version of Java 1.8.
+Note that using Java 1.9+ might result in unexpected failing tests on a fixed
+program version. 
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
@@ -138,18 +129,18 @@ as inspiration when you are writing your own scripts that use Defects4J.
 
 Command-line interface: defects4j command
 -----------------------
-Use [`framework/bin/defects4j`](https://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html) to execute any of the following commands:
+Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to execute any of the following commands:
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
-| [info](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
-| [checkout](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
-| [compile](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| [test](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| [mutation](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
-| [coverage](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
-| [monitor.test](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
-| [export](https://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [info](http://defects4j.org/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
+| [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
+| [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| [test](http://defects4j.org/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
+| [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
+| [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
+| [export](http://defects4j.org/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
 Export version-specific properties
@@ -177,12 +168,12 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| [defects4j](https://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html)         | Main script, described above                        |
-| [run_bug_detection](https://people.cs.umass.edu/~rjust/defects4j/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
-| [run_mutation](https://people.cs.umass.edu/~rjust/defects4j/html_doc/run_mutation.html)      | Determine the mutation score                                   |
-| [run_coverage](https://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
-| [run_evosuite](https://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
-| [run_randoop](https://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
+| [defects4j](http://defects4j.org/html_doc/defects4j.html)         | Main script, described above                        |
+| [run_bug_detection](http://defects4j.org/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
+| [run_mutation](http://defects4j.org/html_doc/run_mutation.html)      | Determine the mutation score                                   |
+| [run_coverage](http://defects4j.org/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
+| [run_evosuite](http://defects4j.org/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
+| [run_randoop](http://defects4j.org/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
 Mining and contributing additional bugs to Defects4J
 ================
@@ -235,7 +226,7 @@ Implementation details
 Documentation for any script or module is available as
 [HTML documentation][htmldocs].
 
-[htmldocs]: https://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
+[htmldocs]: http://defects4j.org/html_doc/index.html
 
 The directory structure of Defects4J is as follows:
 

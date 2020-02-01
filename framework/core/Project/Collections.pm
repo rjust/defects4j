@@ -92,6 +92,19 @@ sub _post_checkout {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
     }
+
+    if (-e "$work_dir/build.xml"){
+        rename("$work_dir/build.xml", "$work_dir/build.xml".'.bak');
+        open(IN, '<'."$work_dir/build.xml".'.bak') or die $!;
+        open(OUT, '>'."$work_dir/build.xml") or die $!;
+        while(<IN>) {
+            $_ =~ s/\<javac srcdir=\"\$\{source\.home\}\" destdir=\"\$\{build\.home\}\/classes\" debug=\"\$\{compile\.debug\}\" deprecation\=\"\$\{compile\.deprecation\}\" target=\"\$\{compile\.target\}\" source=\"\$\{compile\.source\}\" excludes=\"\$\{compile\.excludes\}\" optimize=\"\$\{compile\.optimize\}\" includeantruntime=\"false\" encoding=\"\$\{compile\.encoding\}\"\>/\<javac fork=\"true\" srcdir=\"\$\{source\.home\}\" destdir=\"\$\{build\.home\}\/classes\" debug=\"\$\{compile\.debug\}\" deprecation\=\"\$\{compile\.deprecation\}\" target=\"1\.7\" source=\"1\.7\" excludes=\"\$\{compile\.excludes\}\" optimize=\"\$\{compile\.optimize\}\" includeantruntime=\"false\" encoding=\"\$\{compile\.encoding\}\"\>/g;
+            print OUT $_;
+        }
+        close(IN);
+        close(OUT);
+    }
+
     # Convert the file encoding of a problematic file
     my $result = determine_layout($self, $rev_id);
     if(-e $work_dir."/".$result->{src}."/org/apache/commons/collections/functors/ComparatorPredicate.java"){
