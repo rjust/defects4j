@@ -3,7 +3,7 @@ Test and analysis scripts
 
 * `test.include`: Constants and helper functions for test scripts.
 
-* `test_evosuite.sh`: Generates tests with Evosuite and checks whether the
+* `test_evosuite.sh`: Generates tests with EvoSuite and checks whether the
    generated test suites are compatible with the coverage, mutation, and bug
    detection analyses.
 
@@ -35,19 +35,21 @@ defects (see the top-level
 [README](https://github.com/rjust/defects4j/blob/master/README.md) for
 more details about the defects and requirements).
 
-1. Follow steps 1-4 under 
-[Steps to set up Defects4J](https://github.com/rjust/defects4j/blob/master/README.md#steps-to-set-up-defects4j)
- in the top-level README.
+1. Follow steps 1-4 under
+   [Steps to set up
+   Defects4J](https://github.com/rjust/defects4j/blob/master/README.md#steps-to-set-up-defects4j)
+   in the top-level README.
 
-2. Optionally, indicate where to find the version of Randoop you wish to test.
+2. By default, the system uses the version of Randoop at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
+   Optionally, indicate where to find the version of Randoop you wish to test.
     - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
+   Note that the `.jar` files must be suffixed `-current.jar`.
 
-    The randoop.jar you wish to test must be named randoop-current.jar.
-    By default, the system runs version 4.0.4 of Randoop,
-    located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
-    If you change the default version of randoop-current.jar you must also copy the
-    matching version of replacecall.jar to replacecall-current.jar in the same location as
-    randoop-current.jar.
+   The following commands copy and rename `.jar` files from a local version of Randoop:
+    ```
+    (cd MY_RANDOOP && ./gradlew assemble)
+    (cd $D4J_HOME/framework/lib/test_generation/generation && MY_RANDOOP/scripts/replace-randoop-jars.sh "-current")
+    ```
 
 3. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`

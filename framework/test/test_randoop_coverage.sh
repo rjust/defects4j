@@ -12,6 +12,7 @@ set -e
 set -x
 
 D4J_DIR=$PWD
+echo "D4J_DIR=$PWD"
 
 ### 1. Follow steps 1-4 under Steps to set up Defects4J in the top-level README.
 
@@ -28,11 +29,9 @@ export PATH=$PATH:$D4J_DIR/framework/bin
 
 defects4j info -p Lang
 
-# TODO
-### 2. Optionally, indicate where to find the version of Randoop you wish to test.
-### 
-### export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"
-### The randoop.jar you wish to test must be named randoop-current.jar. By default, the system runs version 4.0.4 of Randoop, located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar. If you change the default version of randoop-current.jar you must also copy the matching version of replacecall.jar to replacecall-current.jar in the same location as randoop-current.jar.
+### 2. Use the HEAD version of Randoop from GitHub
+(cd /tmp && git clone https://github.com/randoop/randoop.git && cd randoop && ./gradlew assemble)
+(cd $D4J_DIR/framework/lib/test_generation/generation && /tmp/randoop/scripts/replace-randoop-jars.sh "-current")
 
 ### 3. Run the test generation and coverage analysis:
 # TODO: Currently, this does not generate tests for all the defects, just five in each project.
