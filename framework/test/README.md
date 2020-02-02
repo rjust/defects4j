@@ -51,7 +51,7 @@ more details about the defects and requirements).
       ```
       (cd MY_RANDOOP && ./gradlew assemble)
       (cd $D4J_HOME/framework/lib/test_generation/generation && MY_RANDOOP/scripts/replace-randoop-jars.sh "-current")
-    ```
+      ```
 
 3. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`
