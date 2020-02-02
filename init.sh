@@ -115,7 +115,7 @@ RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
 COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
 (cd "$DIR_LIB_GEN" && curl_with_retry -R -L -O -z "$RANDOOP_ZIP" "$RANDOOP_URL/$RANDOOP_ZIP" \
-                   && unzip $RANDOOP_ZIP)
+                   && unzip -q $RANDOOP_ZIP)
 # Set symlink for the supported version of Randoop
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
