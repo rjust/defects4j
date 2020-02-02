@@ -46,7 +46,7 @@ more details about the defects and requirements).
    "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
 
     * You can indicate a different directory that contains Randoop (note that the `.jar` files must be suffixed `-current.jar`):
-      ```export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"```
+      ```export TESTGEN_LIB_DIR="path-to-directory-containing-randoop-current.jar"```
     * You can copy and rename `.jar` files from a local version of Randoop:
       ```
       (cd MY_RANDOOP && ./gradlew assemble)
