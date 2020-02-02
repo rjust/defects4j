@@ -39,10 +39,12 @@ if [ "$(uname)" = "Darwin" ] ; then
   function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
 fi
 
-# Try curl command twice to handle hosts that hang for a long time.
-# The last argument must be the URL, and the -O command-line argument must be supplied.
+# Download the remote resource to a local file of the same name, if the
+# remote resource is newer.  Works around connections that hang.  Takes a
+# single command-line argument, a URL.
 curl_with_retry() {
-    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && rm -f `basename ${@: -1}` && curl "$@")
+    BASENAME=`basename ${@: -1}`
+    timeout 5m curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
 }
 
 # Get time of last data modification of a file
@@ -84,7 +86,7 @@ echo "Setting up Major ... "
 MAJOR_VERSION="1.3.4"
 MAJOR_URL="https://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
-cd "$BASE" && curl_with_retry -R -L -O -z "$MAJOR_ZIP" "$MAJOR_URL/$MAJOR_ZIP" \
+cd "$BASE" && curl_with_retry "$MAJOR_URL/$MAJOR_ZIP" \
            && unzip -o "$MAJOR_ZIP" > /dev/null \
            && rm "$MAJOR_ZIP" \
            && cp major/bin/.ant major/bin/ant
@@ -99,8 +101,8 @@ EVOSUITE_VERSION="1.0.6"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
-cd "$DIR_LIB_GEN" && curl_with_retry -R -L -O -z "$EVOSUITE_JAR" "$EVOSUITE_URL/$EVOSUITE_JAR"
-cd "$DIR_LIB_RT"  && curl_with_retry -R -L -O -z "$EVOSUITE_RT_JAR" "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
+cd "$DIR_LIB_GEN" && curl_with_retry "$EVOSUITE_URL/$EVOSUITE_JAR"
+cd "$DIR_LIB_RT"  && curl_with_retry "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 # Set symlinks for the supported version of EvoSuite
 (cd "$DIR_LIB_GEN" && ln -sf "$EVOSUITE_JAR" "evosuite-current.jar")
 (cd "$DIR_LIB_RT" && ln -sf "$EVOSUITE_RT_JAR" "evosuite-rt.jar")
@@ -118,7 +120,7 @@ RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
 REPLACECALL_JAR="replacecall-${RANDOOP_VERSION}.jar"
 COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
 (cd "$DIR_LIB_GEN" && curl_with_retry -R -L -O -z "$RANDOOP_ZIP" "$RANDOOP_URL/$RANDOOP_ZIP" \
-                   && unzip $RANDOOP_ZIP)
+                   && unzip -q $RANDOOP_ZIP)
 # Set symlink for the supported version of Randoop
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
@@ -147,8 +149,8 @@ if [ -e $GRADLE_DEPS_ZIP ]; then
 fi
 
 # Only download archive if the server has a newer file
-curl_with_retry -O -L -R -z "$GRADLE_DISTS_ZIP" $HOST_URL/$GRADLE_DISTS_ZIP
-curl_with_retry -O -L -R -z "$GRADLE_DEPS_ZIP" $HOST_URL/$GRADLE_DEPS_ZIP
+curl_with_retry $HOST_URL/$GRADLE_DISTS_ZIP
+curl_with_retry $HOST_URL/$GRADLE_DEPS_ZIP
 new_dists_ts=$(get_modification_timestamp $GRADLE_DISTS_ZIP)
 new_deps_ts=$(get_modification_timestamp $GRADLE_DEPS_ZIP)
 
@@ -169,7 +171,7 @@ BUILD_ANALYZER_VERSION="0.0.1"
 BUILD_ANALYZER_JAR=build-analyzer-$BUILD_ANALYZER_VERSION.jar
 BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/$BUILD_ANALYZER_JAR"
 BUILD_ANALYZER_JAR_LOCAL="analyzer.jar"
-cd "$BASE/framework/lib" && curl_with_retry -O -L -R -z "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_URL"
+cd "$BASE/framework/lib" && curl_with_retry "$BUILD_ANALYZER_URL"
 rm -f "$BUILD_ANALYZER_JAR_LOCAL"
 ln -s "$BUILD_ANALYZER_JAR" "$BUILD_ANALYZER_JAR_LOCAL"
 
