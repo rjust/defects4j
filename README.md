@@ -75,7 +75,7 @@ Requirements
  - Java 1.7
  - Git >= 1.9
  - SVN >= 1.8
- - Perl >= 5.0.10
+ - Perl >= 5.0.12
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
@@ -136,18 +136,18 @@ as inspiration when you are writing your own scripts that use Defects4J.
 
 Command-line interface: defects4j command
 -----------------------
-Use [`framework/bin/defects4j`](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html) to execute any of the following commands:
+Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to execute any of the following commands:
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
-| [info](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
-| [checkout](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
-| [compile](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| [test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| [mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
-| [coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
-| [monitor.test](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
-| [export](http://people.cs.umass.edu/~rjust/defects4j/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [info](http://defects4j.org/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
+| [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
+| [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| [test](http://defects4j.org/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
+| [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
+| [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
+| [export](http://defects4j.org/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
 Export version-specific properties
@@ -175,12 +175,12 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| [defects4j](http://people.cs.umass.edu/~rjust/defects4j/html_doc/defects4j.html)         | Main script, described above                        |
-| [run_bug_detection](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
-| [run_mutation](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_mutation.html)      | Determine the mutation score                                   |
-| [run_coverage](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
-| [run_evosuite](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
-| [run_randoop](http://people.cs.umass.edu/~rjust/defects4j/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
+| [defects4j](http://defects4j.org/html_doc/defects4j.html)         | Main script, described above                        |
+| [run_bug_detection](http://defects4j.org/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
+| [run_mutation](http://defects4j.org/html_doc/run_mutation.html)      | Determine the mutation score                                   |
+| [run_coverage](http://defects4j.org/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
+| [run_evosuite](http://defects4j.org/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
+| [run_randoop](http://defects4j.org/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
 
 Mining and contributing additional bugs to Defects4J
 ================
@@ -233,7 +233,7 @@ Implementation details
 Documentation for any script or module is available as
 [HTML documentation][htmldocs].
 
-[htmldocs]: http://people.cs.umass.edu/~rjust/defects4j/html_doc/index.html
+[htmldocs]: http://defects4j.org/html_doc/index.html
 
 The directory structure of Defects4J is as follows:
 

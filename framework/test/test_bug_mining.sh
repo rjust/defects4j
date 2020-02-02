@@ -5,6 +5,8 @@
 #
 ################################################################################
 
+set -e
+
 HERE=$(cd `dirname $0` && pwd)
 
 # Import helper subroutines and variables, and init Defects4J
@@ -36,6 +38,11 @@ _check_output() {
     fi
 
     rm -f "$actual.sorted" "$expected.sorted"
+}
+
+# Try curl command twice to handle hosts that hang for a long time
+curl_with_retry() {
+    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")
 }
 
 #
@@ -127,7 +134,8 @@ test_crossref_commmit_issue() {
     popd > /dev/null 2>&1
 
     # Check whether expected files exist
-    [ -s "$commit_db_file" ] || die "$commit_db_file does not exist or it is empty"
+    [ -e "$commit_db_file" ] || die "$commit_db_file does not exist in $PWD"
+    [ -s "$commit_db_file" ] || die "$commit_db_file is empty in $PWD"
 
     # Does each row contain 5 values?
     while read -r row; do
@@ -151,11 +159,11 @@ test_initialize_revisions() {
     mkdir -p "$lib_dir"
 
     mkdir -p "$lib_dir/junit/junit/4.12"
-    wget -nv https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar -O "$lib_dir/junit/junit/4.12/junit-4.12.jar" || die "Failed to download junit-4.12.jar"
+    curl_with_retry -L --retry 2 https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar -o "$lib_dir/junit/junit/4.12/junit-4.12.jar" || die "Failed to download junit-4.12.jar"
     mkdir -p "$lib_dir/org/apache/commons/commons-lang3/3.4"
-    wget -nv https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar -O "$lib_dir/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar" || die "Failed to download commons-lang3-3.4.jar"
+    curl_with_retry -L --retry 2 https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar -o "$lib_dir/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar" || die "Failed to download commons-lang3-3.4.jar"
     mkdir -p "$lib_dir/org/hamcrest/hamcrest-core/1.3"
-    wget -nv https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -O "$lib_dir/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" || die "Failed to download hamcrest-core-1.3.jar"
+    curl_with_retry -L --retry 2 https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -o "$lib_dir/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" || die "Failed to download hamcrest-core-1.3.jar"
     # End of fix for Java-7
 
     pushd . > /dev/null 2>&1

@@ -301,7 +301,7 @@ Checks whether the project is correctly configured.
 =cut
 sub sanity_check {
     my $self = shift;
-    return $self->_ant_call("sanity.check");
+    return $self->_ant_call_comp("sanity.check");
 }
 
 =pod
@@ -475,7 +475,7 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 sub compile {
     my ($self, $log_file) = @_;
-    return $self->_ant_call("compile", undef, $log_file);
+    return $self->_ant_call_comp("compile", undef, $log_file);
 }
 
 =pod
@@ -488,7 +488,7 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 sub compile_tests {
     my ($self, $log_file) = @_;
-    return $self->_ant_call("compile.tests", undef, $log_file);
+    return $self->_ant_call_comp("compile.tests", undef, $log_file);
 }
 
 =pod
@@ -511,7 +511,7 @@ sub run_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
+    return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
 }
 
 =pod
@@ -526,7 +526,7 @@ sub run_relevant_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $out_file) = @_;
 
-    return $self->_ant_call("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
+    return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
 }
 
 =pod
@@ -649,7 +649,7 @@ sub monitor_test {
         test => []
     };
 
-    if (! $self->_ant_call("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file")) {
+    if (! $self->_ant_call_comp("monitor.test", "-Dtest.entry=$single_test -Dtest.output=$log_file")) {
         return undef;
     }
 
@@ -711,7 +711,7 @@ sub coverage_instrument {
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Call ant to do the instrumentation
-    return $self->_ant_call("coverage.instrument");
+    return $self->_ant_call_comp("coverage.instrument");
 }
 
 =pod
@@ -724,7 +724,7 @@ TODO
 sub coverage_report {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $source_dir) = @_;
-    return $self->_ant_call("coverage.report", "-Dcoverage.src.dir=$source_dir");
+    return $self->_ant_call_comp("coverage.report", "-Dcoverage.src.dir=$source_dir");
 }
 
 =pod
@@ -766,7 +766,7 @@ sub mutate {
     $ENV{MML} = $mml_bin;
 
     # Mutate and compile sources
-    if (! $self->_ant_call("mutate")) {
+    if (! $self->_call_major("mutate")) {
         return -1;
     }
 
@@ -805,7 +805,7 @@ sub mutation_analysis {
 
     my $basedir = $self->{prog_root};
 
-    return $self->_ant_call("mutation.test",
+    return $self->_call_major("mutation.test",
                             "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$relevant $log $exclude $single_test_opt");
 }
@@ -836,7 +836,7 @@ sub mutation_analysis_ext {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    return $self->_ant_call("mutation.test",
+    return $self->_call_major("mutation.test",
                             "-Dd4j.test.dir=$dir -Dd4j.test.include=$include " .
                             "-Dmajor.kill.log=$basedir/$Mutation::KILL_FILE " .
                             "$log $exclude $single_test_opt");
@@ -858,7 +858,7 @@ sub run_evosuite {
     my ($self, $criterion, $time, $class, $timeout, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
+    $self->_ant_call_comp("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional evosuite configuration
@@ -907,7 +907,7 @@ sub run_randoop {
     my ($self, $target_classes, $timeout, $seed, $config_file, $log_file) = @_;
 
     my $cp_file = "$self->{prog_root}/project.cp";
-    $self->_ant_call("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
+    $self->_ant_call_comp("export.cp.compile", "-Dfile.export=$cp_file") or die "Cannot determine project classpath";
     my $cp = `cat $cp_file`;
 
     # Read additional randoop configuration
@@ -921,35 +921,24 @@ sub run_randoop {
     }
     close(IN);
 
-    # Get information about version of Randoop being used
-    # and set appropriate arguments.
-    my $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main`;
-    if (($log =~ /minimize/) == 1) {
-      if (($log =~ /4.0/) == 1) {
-#       print "new version \n";
-        $config = "$config --time-limit=$timeout --flaky-test-behavior=output";
-      } else {
-#       print "middle version \n";
-        $config = "$config --time-limit=$timeout --ignore-flaky-tests=true";
-      }
-    } else {
-#       print "old version \n";
-        $config = "$config --timelimit=$timeout  --ignore-flaky-tests=true";
-    }
-
+    # Build command for Randoop 4.
     my $cmd = "cd $self->{prog_root}" .
               " && java -ea -classpath $cp:$TESTGEN_LIB_DIR/randoop-current.jar " .
                 "-Xbootclasspath/a:$TESTGEN_LIB_DIR/replacecall-current.jar " .
                 "-javaagent:$TESTGEN_LIB_DIR/replacecall-current.jar " .
+                "-javaagent:$TESTGEN_LIB_DIR/covered-class-current.jar " .
                 "randoop.main.Main gentests " .
                 "$target_classes " .
                 "--junit-output-dir=randoop " .
                 "--usethreads " .
                 "--randomseed=$seed " .
+                "--time-limit=$timeout " .
+                "--flaky-test-behavior=output " .
                 "$config 2>&1";
 
     # log information about version of Randoop being used
-    my @values = ( split /\n/, $log );
+    my $log = `java -cp $TESTGEN_LIB_DIR/randoop-current.jar randoop.main.Main`;
+    my @values = split(/\n/, $log);
     print(STDERR "Randoop: $TESTGEN_LIB_DIR/randoop-current.jar, $values[0] \n");
 
     my $ret = Utils::exec_cmd($cmd, "Run Randoop ($config_file)", \$log);
@@ -1113,12 +1102,13 @@ sub _get_classes {
 #
 sub _ant_call {
     @_ >= 2 or die $ARG_ERROR;
-    my ($self, $target, $option_str, $log_file) =  @_;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "" unless defined $option_str;
+    $ant_cmd = "ant" unless defined $ant_cmd;
 
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
-              " && ant" .
+              " && $ant_cmd" .
                 " -f $D4J_BUILD_FILE" .
                 " -Dd4j.home=$BASE_DIR" .
                 " -Dd4j.dir.projects=$PROJECTS_DIR" .
@@ -1132,6 +1122,26 @@ sub _ant_call {
         close(OUT);
     }
     return $ret;
+}
+
+#
+# Ensure backward compatibility with Java 7
+# TODO: Remove after providing full Java 8 support
+#
+sub _ant_call_comp {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = "-Dbuild.compiler=javac1.7 " . ($option_str // "");
+    $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+}
+sub _call_major {
+    @_ >= 2 or die $ARG_ERROR;
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
+    $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
+    $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
 
 #
