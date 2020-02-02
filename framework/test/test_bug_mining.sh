@@ -40,6 +40,11 @@ _check_output() {
     rm -f "$actual.sorted" "$expected.sorted"
 }
 
+# MacOS does not install the timeout command by default.
+if [ "$(uname)" = "Darwin" ] ; then
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
 # Try curl command twice to handle hosts that hang for a long time
 curl_with_retry() {
     timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && curl "$@")

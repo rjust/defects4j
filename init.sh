@@ -34,6 +34,11 @@ mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
 # Utility functions
 #
 
+# MacOS does not install the timeout command by default.
+if [ "$(uname)" = "Darwin" ] ; then
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
 # Try curl command twice to handle hosts that hang for a long time.
 # The last argument must be the URL, and the -O command-line argument must be supplied.
 curl_with_retry() {
