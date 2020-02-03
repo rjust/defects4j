@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # The name of the archive that contains all project repos
 ARCHIVE=defects4j-repos.zip
 
@@ -22,6 +24,14 @@ clean() {
     README 
 }
 
+# Download the remote resource to a local file of the same name, if the
+# remote resource is newer.  Works around connections that hang.  Takes a
+# single command-line argument, a URL.
+curl_with_retry() {
+    BASENAME=`basename ${@: -1}`
+    timeout 5m curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+}
+
 # The BSD version of stat does not support --version or -c
 if stat --version &> /dev/null; then
     # GNU version
@@ -37,7 +47,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-wget -N http://blankslatetech.com/downloads/$ARCHIVE
+curl_with_retry "http://blankslatetech.com/downloads/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
