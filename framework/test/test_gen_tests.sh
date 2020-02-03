@@ -19,7 +19,7 @@ _run_tool() {
     tool_dir="$TMP_DIR/$tool"
     # Generate tests for Lang-2
     pid=Lang
-    bid=2
+    bid=6
     # Test suite source and number
     suite_src="$tool"
     suite_num=1
