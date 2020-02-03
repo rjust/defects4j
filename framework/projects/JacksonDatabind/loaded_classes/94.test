@@ -1,4 +1,4 @@
 com.mchange.v2.c3p0.jacksontest.ComboPooledDataSource
+com.fasterxml.jackson.databind.interop.IllegalTypesCheckTest
 com.fasterxml.jackson.databind.BaseMapTest
 com.fasterxml.jackson.databind.BaseTest
-com.fasterxml.jackson.databind.interop.IllegalTypesCheckTest
