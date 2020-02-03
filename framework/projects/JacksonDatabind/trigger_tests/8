@@ -43,7 +43,7 @@ com.fasterxml.jackson.databind.JsonMappingException: Conflicting String creators
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 Caused by: java.lang.IllegalArgumentException: Conflicting String creators: already had explicitly marked [constructor for java.lang.StringBuilder, annotations: [null]], encountered [constructor for java.lang.StringBuilder, annotations: [null]]
-	at com.fasterxml.jackson.databind.deser.impl.CreatorCollector.verifyNonDup(CreatorCollector.java:296)
+	at com.fasterxml.jackson.databind.deser.impl.CreatorCollector.verifyNonDup(CreatorCollector.java:297)
 	at com.fasterxml.jackson.databind.deser.impl.CreatorCollector.addStringCreator(CreatorCollector.java:158)
 	at com.fasterxml.jackson.databind.deser.BasicDeserializerFactory._handleSingleArgumentConstructor(BasicDeserializerFactory.java:555)
 	at com.fasterxml.jackson.databind.deser.BasicDeserializerFactory._addDeserializerConstructors(BasicDeserializerFactory.java:439)

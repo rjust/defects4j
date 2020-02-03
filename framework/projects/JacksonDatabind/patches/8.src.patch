@@ -1,5 +1,5 @@
 diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java b/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
-index 1a99abc5e..3cb8dc401 100644
+index 1a99abc5e..39514f63f 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
 +++ b/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
 @@ -280,7 +280,6 @@ public class CreatorCollector
@@ -10,7 +10,7 @@ index 1a99abc5e..3cb8dc401 100644
  
              if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
                  // but skip, if new one not annotated
-@@ -288,27 +287,16 @@ public class CreatorCollector
+@@ -288,27 +287,17 @@ public class CreatorCollector
                      return;
                  }
                  // both explicit: verify
@@ -26,7 +26,7 @@ index 1a99abc5e..3cb8dc401 100644
                  // [databind#667]: avoid one particular class of bogus problems
 -                Class<?> oldType = oldOne.getRawParameterType(0);
 -                Class<?> newType = newOne.getRawParameterType(0);
--
+ 
 -                if (oldType == newType) {
                      throw new IllegalArgumentException("Conflicting "+TYPE_DESCS[typeIndex]
                              +" creators: already had explicitly marked "+oldOne+", encountered "+newOne);
