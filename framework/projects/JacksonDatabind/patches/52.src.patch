@@ -12,22 +12,10 @@ index 43445e20d..8484caa92 100644
              _nonStandardCreation = true;
          }
 diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
-index 30fb56f78..dd4573ef7 100644
+index 30fb56f78..e273c3b5e 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
 +++ b/src/main/java/com/fasterxml/jackson/databind/deser/impl/ExternalTypeHandler.java
-@@ -214,11 +214,7 @@ public class ExternalTypeHandler
-                 buffer.assignParameter(prop, values[i]);
- 
-                 // [databind#999] And maybe there's creator property for type id too?
--                SettableBeanProperty typeProp = extProp.getTypeProperty();
-                 // for now, should only be needed for creator properties, too
--                if ((typeProp != null) && (typeProp.getCreatorIndex() >= 0)) {
--                    buffer.assignParameter(typeProp, typeId);
--                }
-             }
-         }
- 
-@@ -307,21 +303,7 @@ public class ExternalTypeHandler
+@@ -307,21 +307,7 @@ public class ExternalTypeHandler
           *
           * @since 2.8
           */
@@ -49,30 +37,3 @@ index 30fb56f78..dd4573ef7 100644
  
          @Deprecated // since 2.8; may be removed as early as 2.9
          public ExternalTypeHandler build() {
-@@ -339,7 +321,6 @@ public class ExternalTypeHandler
-         /**
-          * @since 2.8
-          */
--        private SettableBeanProperty _typeProperty;
- 
-         public ExtTypedProperty(SettableBeanProperty property, TypeDeserializer typeDeser)
-         {
-@@ -351,9 +332,6 @@ public class ExternalTypeHandler
-         /**
-          * @since 2.8
-          */
--        public void linkTypeProperty(SettableBeanProperty p) {
--            _typeProperty = p;
--        }
- 
-         public boolean hasTypePropertyName(String n) {
-             return n.equals(_typePropertyName);
-@@ -385,8 +363,5 @@ public class ExternalTypeHandler
-         /**
-          * @since 2.8
-          */
--        public SettableBeanProperty getTypeProperty() {
--            return _typeProperty;
--        }
-     }
- }
