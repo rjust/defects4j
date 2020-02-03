@@ -1,30 +1,3 @@
-diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
-index 45d6ca478..42b6d2b77 100644
---- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
-+++ b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
-@@ -1,6 +1,5 @@
- package com.fasterxml.jackson.databind.type;
- 
--import java.lang.reflect.TypeVariable;
- import java.util.Collection;
- 
- import com.fasterxml.jackson.databind.JavaType;
-@@ -62,14 +61,7 @@ public class CollectionLikeType extends TypeBase
-     public static CollectionLikeType construct(Class<?> rawType, JavaType elemT) {
-         // First: may need to fabricate TypeBindings (needed for refining into
-         // concrete collection types, as per [databind#1102])
--        TypeVariable<?>[] vars = rawType.getTypeParameters();
--        TypeBindings bindings;
--        if ((vars == null) || (vars.length != 1)) {
--            bindings = TypeBindings.emptyBindings();
--        } else {
--            bindings = TypeBindings.create(rawType, elemT);
--        }
--        return new CollectionLikeType(rawType, bindings,
-+        return new CollectionLikeType(rawType, null, 
-                 _bogusSuperClass(rawType), null,
-                 elemT, null, null, false);
-     }
 diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
 index e0a785672..39c103822 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
@@ -52,33 +25,6 @@ index e0a785672..39c103822 100644
                  // !!! TODO: Wrong, does have supertypes, but:
                  _bogusSuperClass(rawType), null, elemT,
                  null, null, false);
-diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
-index b8d5ea432..e750780c0 100644
---- a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
-+++ b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
-@@ -1,6 +1,5 @@
- package com.fasterxml.jackson.databind.type;
- 
--import java.lang.reflect.TypeVariable;
- import java.util.*;
- 
- import com.fasterxml.jackson.databind.JavaType;
-@@ -74,14 +73,7 @@ public class MapLikeType extends TypeBase {
-             JavaType valueT) {
-         // First: may need to fabricate TypeBindings (needed for refining into
-         // concrete collection types, as per [databind#1102])
--        TypeVariable<?>[] vars = rawType.getTypeParameters();
--        TypeBindings bindings;
--        if ((vars == null) || (vars.length != 2)) {
--            bindings = TypeBindings.emptyBindings();
--        } else {
--            bindings = TypeBindings.create(rawType, keyT, valueT);
--        }
--        return new MapLikeType(rawType, bindings, _bogusSuperClass(rawType),
-+        return new MapLikeType(rawType, null, _bogusSuperClass(rawType),
-                 null, keyT, valueT, null, null, false);
-     }
- 
 diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
 index e71abb683..a11767f44 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
