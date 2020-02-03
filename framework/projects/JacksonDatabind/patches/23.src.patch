@@ -1,5 +1,5 @@
 diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
-index 05f7b78e9..c30772954 100644
+index 05f7b78e9..c11155e6c 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
 +++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
 @@ -51,7 +51,6 @@ public class NumberSerializers
@@ -65,12 +65,9 @@ index 05f7b78e9..c30772954 100644
  
          @Override
          public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-@@ -214,22 +195,17 @@ public class NumberSerializers
-     }
- 
+@@ -216,16 +197,11 @@ public class NumberSerializers
      @JacksonStdImpl
--    public final static class FloatSerializer extends Base<Object>
-+    public final static class FloatSerializer extends Base<Float>
+     public final static class FloatSerializer extends Base<Object>
      {
 -        private final static Float EMPTY = 0f;
  
@@ -84,13 +81,7 @@ index 05f7b78e9..c30772954 100644
 -        }
  
          @Override
--        public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
--            gen.writeNumber(((Float) value).floatValue());
-+        public void serialize(Float value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-+            gen.writeNumber(value.floatValue());
-         }
-     }
- 
+         public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
 @@ -243,16 +219,11 @@ public class NumberSerializers
      @JacksonStdImpl
      public final static class DoubleSerializer extends Base<Object>
