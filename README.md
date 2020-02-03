@@ -1,4 +1,4 @@
-Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -62,37 +62,21 @@ acknowledge their "beta status" in any publications.
 | Collections| Apache commons-collections |  28            |
 | Compress   | Apache commons-compress    |  47            |
 
-**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
-
-| Identifier      | Project name           | Number of bugs |
-|-----------------|------------------------|----------------|
-| Cli             | Apache commons-cli     |  40            |
-| Codec           | Apache commons-codec   |  18            |
-| Csv             | Apache commons-csv     |  16            |
-| Gson            | Google Gson            |  18            |
-| JacksonCore     | Jackson JSON parser    |  26            |
-| JacksonDatabind | Jackson data bindings  | 112            |
-| JacksonXml      | Jackson XML extension  |   6            |
-| Jsoup           | jsoup HTML Parser      |  93            |
-| JxPath          | Apache commons-jxpath  |  22            |
-| Jsoup           | jsoup HTML Parser      |  93            |
-
 Setting up Defects4J
 ================
 
 Requirements
 ----------------
- - Java 1.7
+ - Java 1.8
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
-version of Java 1.7.
-Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version. The next major release of Defects4J will be compatible with
-Java 8.
+version of Java 1.8.
+Note that using Java 1.9+ might result in unexpected failing tests on a fixed
+program version. 
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
