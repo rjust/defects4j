@@ -10,7 +10,7 @@ index ad37dd170..a8f42c81f 100644
          // Use generic bean introspection to build deserializer
          return buildBeanDeserializer(ctxt, type, beanDesc);
      }
-@@ -840,21 +839,6 @@ public class BeanDeserializerFactory
+@@ -840,21 +839,7 @@ public class BeanDeserializerFactory
      /**
       * @since 2.8.9
       */
@@ -31,4 +31,5 @@ index ad37dd170..a8f42c81f 100644
 -            }
 -        }
 -    }
++
  }
