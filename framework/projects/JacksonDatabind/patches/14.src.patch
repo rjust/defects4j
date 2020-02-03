@@ -1,5 +1,5 @@
 diff --git a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
-index 05098fd73..3385e9c83 100644
+index 05098fd73..e684b10a2 100644
 --- a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
 +++ b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
 @@ -1473,7 +1473,7 @@ public class ObjectReader
@@ -11,7 +11,7 @@ index 05098fd73..3385e9c83 100644
              if (_unwrapRoot) {
                  result = (JsonNode) _unwrapAndDeserialize(jp, ctxt, JSON_NODE_TYPE, deser);
              } else {
-@@ -1574,20 +1574,6 @@ public class ObjectReader
+@@ -1574,20 +1574,7 @@ public class ObjectReader
      /**
       * @since 2.6
       */
@@ -20,7 +20,7 @@ index 05098fd73..3385e9c83 100644
 -    {
 -        JsonDeserializer<Object> deser = _rootDeserializers.get(JSON_NODE_TYPE);
 -        if (deser == null) {
--            // Nope: need to ask provider to resolve it
+             // Nope: need to ask provider to resolve it
 -            deser = ctxt.findRootValueDeserializer(JSON_NODE_TYPE);
 -            if (deser == null) { // can this happen?
 -                throw new JsonMappingException("Can not find a deserializer for type "+JSON_NODE_TYPE);
