@@ -1,24 +1,23 @@
 diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
-index 27b2a00d..0f13e914 100644
+index 27b2a00d..31ef5368 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
-@@ -50,54 +50,33 @@ public class TarUtils {
+@@ -50,50 +50,30 @@ public class TarUtils {
       */
      public static long parseOctal(final byte[] buffer, final int offset, final int length) {
          long    result = 0;
 +        boolean stillPadding = true;
          int     end = offset + length;
--        int     start = offset;
+         int     start = offset;
  
 -        if (length < 2){
 -            throw new IllegalArgumentException("Length "+length+" must be at least 2");
 -        }
 -
 -        boolean allNUL = true;
--        for (int i = start; i < end; i++){
+         for (int i = start; i < end; i++){
 -            if (buffer[i] != 0){
 -                allNUL = false;
-+        for (int i = offset; i < end; ++i) {
 +            final byte currentByte = buffer[i];
 +            if (currentByte == 0) {
                  break;
@@ -64,22 +63,3 @@ index 27b2a00d..0f13e914 100644
              // CheckStyle:MagicNumber OFF
              if (currentByte < '0' || currentByte > '7'){
                  throw new IllegalArgumentException(
--                        exceptionMessage(buffer, offset, length, start, currentByte));
-+                        "Invalid octal digit at position "+i+" in '"+new String(buffer, offset, length)+"'");
-             }
-             result = (result << 3) + (currentByte - '0'); // convert from ASCII
-             // CheckStyle:MagicNumber ON
-@@ -107,13 +87,6 @@ public class TarUtils {
-     }
- 
-     // Helper method to generate the exception message
--    private static String exceptionMessage(byte[] buffer, final int offset,
--            final int length, int current, final byte currentByte) {
--        String string = new String(buffer, offset, length);
--        string=string.replaceAll("\0", "{NUL}"); // Replace NULs to allow string to be printed
--        final String s = "Invalid byte "+currentByte+" at offset "+(current-offset)+" in '"+string+"' len="+length;
--        return s;
--    }
- 
-     /**
-      * Parse an entry name from a buffer.
