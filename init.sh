@@ -44,7 +44,7 @@ fi
 # single command-line argument, a URL.
 curl_with_retry() {
     BASENAME=`basename ${@: -1}`
-    timeout 5m curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
 }
 
 # Get time of last data modification of a file
