@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
-index 76e28666..7773ca54 100644
+index 76e28666..acfe3279 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/ar/ArArchiveInputStream.java
 @@ -39,12 +39,10 @@ public class ArArchiveInputStream extends ArchiveInputStream {
@@ -55,20 +55,20 @@ index 76e28666..7773ca54 100644
          final byte[] name = new byte[16];
          final byte[] lastmodified = new byte[12];
          final byte[] userid = new byte[6];
-@@ -125,11 +112,7 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+@@ -125,11 +111,9 @@ public class ArArchiveInputStream extends ArchiveInputStream {
              }
          }
  
 -        entryOffset = offset;
 -        currentEntry = new ArArchiveEntry(new String(name).trim(),
--                                          Long.parseLong(new String(length)
--                                                         .trim()));
++        return new ArArchiveEntry(new String(name).trim(),
+                                           Long.parseLong(new String(length)
+                                                          .trim()));
 -        return currentEntry;
-+        return new ArArchiveEntry(new String(name).trim(), Long.parseLong(new String(length).trim()));
      }
  
  
-@@ -142,30 +126,20 @@ public class ArArchiveInputStream extends ArchiveInputStream {
+@@ -142,13 +126,12 @@ public class ArArchiveInputStream extends ArchiveInputStream {
              closed = true;
              input.close();
          }
@@ -85,11 +85,10 @@ index 76e28666..7773ca54 100644
      }
  
      public int read(byte[] b) throws IOException {
-         return read(b, 0, b.length);
-     }
+@@ -157,14 +140,6 @@ public class ArArchiveInputStream extends ArchiveInputStream {
  
--    public int read(byte[] b, final int off, final int len) throws IOException {
--        int toRead = len;
+     public int read(byte[] b, final int off, final int len) throws IOException {
+         int toRead = len;
 -        if (currentEntry != null) {
 -            final long entryEnd = entryOffset + currentEntry.getLength();
 -            if (len > 0 && entryEnd > offset) {
@@ -98,9 +97,6 @@ index 76e28666..7773ca54 100644
 -                return -1;
 -            }
 -        }
--        final int ret = this.input.read(b, off, toRead);
-+    public int read(byte[] b, int off, int len) throws IOException {
-+        final int ret = this.input.read(b, off, len);
+         final int ret = this.input.read(b, off, toRead);
          offset += (ret > 0 ? ret : 0);
          return ret;
-     }
