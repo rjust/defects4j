@@ -35,19 +35,23 @@ defects (see the top-level
 [README](https://github.com/rjust/defects4j/blob/master/README.md) for
 more details about the defects and requirements).
 
-1. Follow steps 1-4 under 
-[Steps to set up Defects4J](https://github.com/rjust/defects4j/blob/master/README.md#steps-to-set-up-defects4j)
- in the top-level README.
+1. Follow steps 1-4 under
+   [Steps to set up
+   Defects4J](https://github.com/rjust/defects4j/blob/master/README.md#steps-to-set-up-defects4j)
+   in the top-level README.
 
-2. Optionally, indicate where to find the version of Randoop you wish to test.
-    - `export TESTGEN_LIB_DIR="path2directory-containing-randoop-current.jar"`
+2. Optionally, use a different version of Randoop.
 
-    The randoop.jar you wish to test must be named randoop-current.jar.
-    By default, the system runs version 4.0.4 of Randoop,
-    located at "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
-    If you change the default version of randoop-current.jar you must also copy the
-    matching version of replacecall.jar to replacecall-current.jar in the same location as
-    randoop-current.jar.
+   By default, the system uses the version of Randoop at
+   "path2defects4j"/framework/lib/test_generation/generation/randooop-current.jar.
+
+    * You can indicate a different directory that contains Randoop (note that the `.jar` files must be suffixed `-current.jar`):
+      ```export TESTGEN_LIB_DIR="path-to-directory-containing-randoop-current.jar"```
+    * You can copy and rename `.jar` files from a local version of Randoop:
+      ```
+      (cd MY_RANDOOP && ./gradlew assemble)
+      (cd $D4J_HOME/framework/lib/test_generation/generation && MY_RANDOOP/scripts/replace-randoop-jars.sh "-current")
+      ```
 
 3. Run the test generation and coverage analysis:
     - `./randoop_coverage.sh`
