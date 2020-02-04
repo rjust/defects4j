@@ -39,7 +39,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-curl_with_retry -R -L -O -z "$ARCHIVE" "https://defects4j.org/downloads/$ARCHIVE"
+curl_with_retry -R -L -O -z "$ARCHIVE" "http://blankslatetech.com/downloads/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
