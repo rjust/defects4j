@@ -248,27 +248,34 @@ sub _get_bug_ids {
         $max_id = $3 if defined $3;
     }
 
-    # Connect to database
-    my $dbh = DB::get_db_handle($TAB_TRIGGER, $db_dir);
-
-    # Select all version ids with reviewed src patch and verified triggering test
-    my $sth = $dbh->prepare("SELECT $ID FROM $TAB_TRIGGER " .
-                                "WHERE $FAIL_ISO_V1>0 AND $PROJECT=?")
-                            or die $dbh->errstr;
-    $sth->execute($PID) or die "Cannot query database: $dbh->errstr";
     my @ids = ();
-    foreach (@{$sth->fetchall_arrayref}) {
-        my $bid = $_->[0];
 
-        # Filter ids if necessary
-        next if (defined $min_id && ($bid<$min_id || $bid>$max_id));
+    if (-e "$db_dir/$TAB_TRIGGER") {
+        # Connect to database
+        my $dbh = DB::get_db_handle($TAB_TRIGGER, $db_dir);
 
-        # Add id to result array
-        push(@ids, $bid);
+        # Select all version ids with reviewed src patch and verified triggering test
+        my $sth = $dbh->prepare("SELECT $ID FROM $TAB_TRIGGER " .
+                                    "WHERE $FAIL_ISO_V1>0 AND $PROJECT=?")
+                                or die $dbh->errstr;
+        $sth->execute($PID) or die "Cannot query database: $dbh->errstr";
+
+        foreach (@{$sth->fetchall_arrayref}) {
+            my $bid = $_->[0];
+
+            # Filter ids if necessary
+            next if (defined $min_id && ($bid<$min_id || $bid>$max_id));
+
+            # Add id to result array
+            push(@ids, $bid);
+        }
+        $sth->finish();
+        $dbh->disconnect();
+    } elsif (defined $min_id && defined $max_id) {
+        @ids = ($min_id .. $max_id);
     }
-    $sth->finish();
-    $dbh->disconnect();
 
+    scalar(@ids) > 0 or die "No bug ids are suitable to run ./get-metadata.pl on";
     return @ids;
 }
 
