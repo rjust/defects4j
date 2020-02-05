@@ -23,9 +23,13 @@ fi
 # Download the remote resource to a local file of the same name, if the
 # remote resource is newer.  Works around connections that hang.  Takes a
 # single command-line argument, a URL.
-curl_with_retry() {
+download_url() {
     BASENAME=`basename ${@: -1}`
-    timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    if [ "$(uname)" = "Darwin" ] ; then
+        wget -nv -N "$@"
+    else
+	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    fi
 }
 
 # The BSD version of stat does not support --version or -c
@@ -43,7 +47,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-curl_with_retry "https://defects4j.org/downloads/$ARCHIVE"
+download_url "https://defects4j.org/downloads/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
