@@ -112,6 +112,7 @@ use Constants;
 use Utils;
 use File::Path qw(make_path);
 use Carp qw(confess);
+use POSIX qw(strftime);
 
 =pod
 
@@ -288,7 +289,8 @@ sub checkout_vid {
 
     # Get and run specific checkout command
     my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
-    Utils::exec_cmd($cmd, "Checking out " . _trunc_rev_id($revision_id) . " to $work_dir") or return 0;
+    Utils::exec_cmd($cmd, "Checking out revision " . _trunc_rev_id($revision_id) . " to $work_dir") or return 0;
+    print(STDERR strftime "%Y-%m-%d %H:%M:%S", gmtime time);
 
     # TODO: The post-checkout should only be called from Project.pm
     #       Avoid confusion and make the _co_hook an attribute of Project rather
