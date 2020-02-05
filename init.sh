@@ -49,12 +49,14 @@ fi
 # remote resource is newer.  Works around connections that hang.  Takes a
 # single command-line argument, a URL.
 download_url() {
-    BASENAME=`basename ${@: -1}`
+    echo "Downloading $@"
     if [ "$(uname)" = "Darwin" ] ; then
         wget -nv -N "$@"
     else
+        BASENAME=`basename ${@: -1}`
 	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
     fi
+    echo "Downloaded $@"
 }
 
 # Get time of last data modification of a file
