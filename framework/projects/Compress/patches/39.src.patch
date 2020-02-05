@@ -1,16 +1,8 @@
 diff --git a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
-index cd0165fd..e05fed1a 100644
+index cd0165fd..0a755ce3 100644
 --- a/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
 +++ b/src/main/java/org/apache/commons/compress/utils/ArchiveUtils.java
-@@ -19,7 +19,6 @@
- package org.apache.commons.compress.utils;
- 
- import java.io.UnsupportedEncodingException;
--import java.util.Arrays;
- 
- import org.apache.commons.compress.archivers.ArchiveEntry;
- 
-@@ -28,7 +27,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
+@@ -28,7 +28,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
   */
  public class ArchiveUtils {
  
@@ -18,7 +10,7 @@ index cd0165fd..e05fed1a 100644
  
      /** Private constructor to prevent instantiation of this utility class. */
      private ArchiveUtils(){
-@@ -271,13 +269,7 @@ public class ArchiveUtils {
+@@ -271,13 +270,7 @@ public class ArchiveUtils {
       * @since Compress 1.12
       */
      public static String sanitize(String s) {
