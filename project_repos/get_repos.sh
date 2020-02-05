@@ -15,6 +15,11 @@ clean() {
     README 
 }
 
+# MacOS does not install the timeout command by default.
+if [ "$(uname)" = "Darwin" ] ; then
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
 # Download the remote resource to a local file of the same name, if the
 # remote resource is newer.  Works around connections that hang.  Takes a
 # single command-line argument, a URL.
@@ -23,7 +28,7 @@ download_url() {
     if [ "$(uname)" = "Darwin" ] ; then
         wget -nv -N "$@"
     else
-	timeout 5m curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
     fi
 }
 
