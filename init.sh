@@ -80,10 +80,14 @@ get_modification_timestamp() {
     echo "$ts"
 }
 
+echo "Starting defects4j/init.sh"
+date -u
+
 ################################################################################
 #
 # Download project repositories if necessary
 #
+echo
 echo "Setting up project repositories ... "
 cd "$DIR_REPOS" && ./get_repos.sh
 
