@@ -291,6 +291,7 @@ sub checkout_vid {
     my $cmd = $self->_checkout_cmd($revision_id, $work_dir);
     Utils::exec_cmd($cmd, "Checking out revision " . _trunc_rev_id($revision_id) . " to $work_dir") or return 0;
     print(STDERR strftime "%Y-%m-%d %H:%M:%S", gmtime time);
+    print(STDERR "\n");
 
     # TODO: The post-checkout should only be called from Project.pm
     #       Avoid confusion and make the _co_hook an attribute of Project rather
