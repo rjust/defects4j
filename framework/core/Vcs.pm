@@ -112,7 +112,6 @@ use Constants;
 use Utils;
 use File::Path qw(make_path);
 use Carp qw(confess);
-use POSIX qw(strftime);
 
 =pod
 
