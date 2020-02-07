@@ -285,18 +285,23 @@ C<log_ref> is provided, the captured output is stored in that variable.
 sub exec_cmd {
     @_ >= 2 or die $ARG_ERROR;
     my ($cmd, $descr, $log_ref) = @_;
+    my $start_time = time();
     print(STDERR substr($descr . '.'x75, 0, 75), " ");
     my $log = `$cmd`; my $ret = $?;
     $$log_ref = $log if defined $log_ref;
+    my $elapsed_time = $time() - $start_time
     if ($ret!=0) {
         print(STDERR "FAIL\n$log");
-        print(STDERR "Executed command: $cmd\n");
+        print(STDERR "Failed command: $cmd\n");
+        print(STDERR "Time spent: $elapsed_time seconds\n");
         return 0;
     }
     print(STDERR "OK\n");
-    # Upon success, only print log messages if debugging is enabled
-    print(STDERR "Executed command: $cmd\n") if $DEBUG;
-    print(STDERR $log) if $DEBUG;
+    if ($DEBUG) {
+      print(STDERR "Executed command: $cmd\n");
+      print(STDERR "Time spent: $elapsed_time seconds\n");
+      print(STDERR $log);
+    }
 
     return 1;
 }
