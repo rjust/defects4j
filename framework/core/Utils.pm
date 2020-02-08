@@ -289,7 +289,7 @@ sub exec_cmd {
     print(STDERR substr($descr . '.'x75, 0, 75), " ");
     my $log = `$cmd`; my $ret = $?;
     $$log_ref = $log if defined $log_ref;
-    my $elapsed_time = $time() - $start_time
+    my $elapsed_time = $time() - $start_time;
     if ($ret!=0) {
         print(STDERR "FAIL\n$log");
         print(STDERR "Failed command: $cmd\n");
