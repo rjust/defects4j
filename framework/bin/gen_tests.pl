@@ -30,7 +30,7 @@ gen_tests.pl -- generate a test suite using one of the supported test generators
 
 =head1 SYNOPSIS
 
-  gen_tests.pl -g generator -p project_id -v version_id -n test_id -o out_dir -b budget [-t tmp_dir] [-D]
+  gen_tests.pl -g generator -p project_id -v version_id -n test_id -o out_dir -b total_budget [-c target_classes] [-s random_seed] [-t tmp_dir] [-D]
 
 =head1 OPTIONS
 
@@ -61,9 +61,19 @@ The root output directory for the generated test suite. The test suite and logs 
 written to:
 F<out_dir/project_id/version_id>.
 
-=item -b C<budget>
+=item -b C<total_budget>
 
-The time in seconds allowed for test generation.
+The total time in seconds allowed for test generation.
+
+=item -c F<classes_file>
+
+The file that lists all classes the test generator should target (optional).
+By default, this list contains only the classes modified by the bug fix.
+
+=item -s C<random_seed>
+
+The random seed used for test generation (optional). By default, the random seed
+is computed as: <test_id> * 1000 + <bug_id>.
 
 =item -t F<tmp_dir>
 
@@ -108,7 +118,7 @@ use Log;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('g:p:v:o:n:b:t:D', \%cmd_opts) or pod2usage(1);
+getopts('g:p:v:o:n:b:c:s:t:D', \%cmd_opts) or pod2usage(1);
 my $TOOL = $cmd_opts{g};
 # Print all supported generators, regardless of the other arguments, if -g help
 # is set
@@ -133,20 +143,25 @@ my $VID = $cmd_opts{v};
 my $BID = Utils::check_vid($VID)->{bid};
 $project->contains_version_id($VID) or die "Version id ($VID) does not exist in project: $PID";
 
+# Verify that the provided test id is valid
 my $TID = $cmd_opts{n};
 $TID =~ /^\d+$/ or die "Wrong test_id format (\\d+): $TID!";
+
+# Verify that the provided time budget is valid
 my $TIME = $cmd_opts{b};
 $TIME =~ /^\d+$/ or die "Wrong budget format (\\d+): $TIME!";
+
 my $OUT_DIR = $cmd_opts{o};
+
+# Set or compute the random seed
+my $SEED = $cmd_opts{s} // $TID*1000 + $BID;
+
+# List of target classes (list of modified classes is the default)
+my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
+my $TARGET_CLASSES = $cmd_opts{c} // $MOD_CLASSES;
 
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
-
-# List of loaded classes
-my $LOADED_CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
-
-# List of modified classes
-my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
 
 # Temporary directory for project checkout
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
@@ -183,6 +198,8 @@ $LOG->log_msg(" -p $PID");
 $LOG->log_msg(" -v $VID");
 $LOG->log_msg(" -n $TID");
 $LOG->log_msg(" -b $TIME");
+$LOG->log_msg(" -i $TARGET_CLASSES");
+$LOG->log_msg(" -s $SEED");
 
 my $cp_file = "$TMP_DIR/project.cp";                               
 $project->_ant_call("export.cp.compile", "-Dfile.export=$cp_file")
@@ -191,15 +208,14 @@ $project->_ant_call("export.cp.compile", "-Dfile.export=$cp_file")
 # Export all environment variables that are expected by the wrapper script of
 # the test generator.
 $ENV{D4J_HOME}                = "$BASE_DIR";
-$ENV{D4J_FILE_ALL_CLASSES}    = "$LOADED_CLASSES";
-$ENV{D4J_FILE_TARGET_CLASSES} = "$MOD_CLASSES";
+$ENV{D4J_FILE_TARGET_CLASSES} = "$TARGET_CLASSES";
 $ENV{D4J_DIR_WORKDIR}         = "$TMP_DIR";
 $ENV{D4J_DIR_OUTPUT}          = "$TMP_DIR/$TOOL";
 $ENV{D4J_DIR_LOG}             = "$LOG_DIR";
 $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
-$ENV{D4J_CLASS_BUDGET}        = "$TIME";
+$ENV{D4J_TOTAL_BUDGET}        = "$TIME";
 # Use test_id and bug_id to compute the random seed!
-$ENV{D4J_SEED}                = ($TID*1000 + $BID);
+$ENV{D4J_SEED}                = "$SEED";
 
 # Invoke the test generator
 Utils::exec_cmd("$TESTGEN_LIB_DIR/bin/$TOOL.sh", "Generating tests ($TOOL)")
@@ -246,7 +262,6 @@ F<out_dir/C<project_id>/C<TOOL>/C<test_id>>
 #
 # e.g., .../Lang/randoop/1
 #       .../Lang/evosuite/1
-#       .../Lang/t3/1
 #
 my $dir = "$OUT_DIR/$PID/$TOOL/$TID";
 system("mkdir -p $dir && mv $TMP_DIR/$archive $dir") == 0
