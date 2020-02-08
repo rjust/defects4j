@@ -47,6 +47,22 @@ get_project_cp() {
     $D4J_HOME/framework/bin/defects4j export -pcp.compile -w$D4J_DIR_WORKDIR 2> /dev/null
 }
 
+# Parse a tool's config file: ignore comments and replace newlines with spaces.
+parse_config() {
+    local file=$1
+    grep -v "\s*#" $file | tr '\n' ' '
+}
+
+# Returns the list of all classes for the current bug
+get_all_classes() {
+    $D4J_HOME/framework/bin/defects4j export -pclasses.all -w$D4J_DIR_WORKDIR 2> /dev/null
+}
+
+# Returns the list of all relevant classes for the current bug
+get_relevant_classes() {
+    $D4J_HOME/framework/bin/defects4j export -pclasses.relevant -w$D4J_DIR_WORKDIR 2> /dev/null
+}
+
 # Check whether all expected environment variables are properly exported.
 sanity_check() {
     check_env D4J_HOME
@@ -56,6 +72,7 @@ sanity_check() {
     check_env D4J_DIR_TESTGEN_LIB
     check_env D4J_TOTAL_BUDGET
     check_env D4J_SEED
+    check_env D4J_TEST_MODE
 }
 ###############################################################################
 
