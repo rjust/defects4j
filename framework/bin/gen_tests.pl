@@ -30,7 +30,7 @@ gen_tests.pl -- generate a test suite using one of the supported test generators
 
 =head1 SYNOPSIS
 
-  gen_tests.pl -g generator -p project_id -v version_id -n test_id -o out_dir -b total_budget [-c target_classes] [-s random_seed] [-t tmp_dir] [-D]
+  gen_tests.pl -g generator -p project_id -v version_id -n test_id -o out_dir -b total_budget [-c target_classes] [-s random_seed] [-t tmp_dir] [-E] [-D]
 
 =head1 OPTIONS
 
@@ -67,8 +67,9 @@ The total time in seconds allowed for test generation.
 
 =item -c F<classes_file>
 
-The file that lists all classes the test generator should target (optional).
-By default, this list contains only the classes modified by the bug fix.
+The file that lists all classes the test generator should target, one class per
+line (optional).  By default, tests are generated only for classes modified by
+the bug fix.
 
 =item -s C<random_seed>
 
@@ -79,6 +80,14 @@ is computed as: <test_id> * 1000 + <bug_id>.
 
 The temporary root directory to be used to check out the program version (optional).
 The default is F</tmp>.
+
+=item -E
+
+Generate error-revealing (as opposed to regression) tests (optional).
+By default this script generates regression tests, regardless of whether the
+project version is a buggy or a fixed project version.
+Note that not all test generators support both modes (i.e., generating
+regression tests and generating error-revealing tests).
 
 =item -D
 
@@ -119,7 +128,7 @@ use Log;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('g:p:v:o:n:b:c:s:t:D', \%cmd_opts) or pod2usage(1);
+getopts('g:p:v:o:n:b:c:s:t:ED', \%cmd_opts) or pod2usage(1);
 my $TOOL = $cmd_opts{g};
 # Print all supported generators, regardless of the other arguments, if -g help
 # is set
@@ -161,6 +170,9 @@ my $SEED = $cmd_opts{s} // $TID*1000 + $BID;
 my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
 my $TARGET_CLASSES = $cmd_opts{c} // $MOD_CLASSES;
 
+# Generate regression tests by default
+my $MODE = (defined $cmd_opts{E}) ? "error-revealing" : "regression";
+
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
@@ -193,6 +205,7 @@ $project->compile() or die "Cannot compile!";
 # Open temporary log file
 my $LOG = Log::create_log("$TMP_DIR/$PID.$VID.$TID.log");
 $LOG->log_time("Start test generation");
+$LOG->log_msg("Mode: $MODE");
 $LOG->log_msg("Parameters:");
 $LOG->log_msg(" -g $TOOL");
 $LOG->log_msg(" -p $PID");
@@ -215,8 +228,8 @@ $ENV{D4J_DIR_OUTPUT}          = "$TMP_DIR/$TOOL";
 $ENV{D4J_DIR_LOG}             = "$LOG_DIR";
 $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
 $ENV{D4J_TOTAL_BUDGET}        = "$TIME";
-# Use test_id and bug_id to compute the random seed!
 $ENV{D4J_SEED}                = "$SEED";
+$ENV{D4J_TEST_MODE}           = "$MODE";
 
 # Invoke the test generator
 Utils::exec_cmd("$TESTGEN_LIB_DIR/bin/$TOOL.sh", "Generating tests ($TOOL)")
