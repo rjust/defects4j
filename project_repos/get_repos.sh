@@ -12,6 +12,7 @@ clean() {
     commons-math.git \
     jfreechart \
     joda-time.git \
+    mockito.git \
     README 
 }
 
