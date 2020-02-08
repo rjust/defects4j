@@ -14,6 +14,7 @@
 # D4J_TOTAL_BUDGET:        The total budget (in seconds) that the tool should
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
+# D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
 
 # Check whether the D4J_DIR_TESTGEN_LIB variable is set
 if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
@@ -24,11 +25,26 @@ fi
 # General helper functions
 source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
 
-# Name of the wrapper regression test suite
-BASE_NAME=RegressionTest
-
 # The classpath to compile and run the project
 project_cp=$(get_project_cp)
+
+# Read all additional configuration parameters
+add_config=$(parse_config $D4J_DIR_TESTGEN_LIB/bin/randoop.config)
+
+# Make sure the provided test mode is supported
+if [ $D4J_TEST_MODE == "regression" ]; then
+    get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+    add_config="$add_config --no-error-revealing-tests=true"
+elif [ $D4J_TEST_MODE == "error-revealing" ]; then
+    get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+    add_config="$add_config --no-regression-tests=true"
+else
+    die "Unsupported test mode: $D4J_TEST_MODE"
+fi
+
+# Name of the wrapper regression test suite
+REG_BASE_NAME=RegressionTest
+ERR_BASE_NAME=ErrorTest
 
 # Print Randoop version
 version=$(java -cp $D4J_DIR_TESTGEN_LIB/randoop-current.jar randoop.main.Main | head -1)
@@ -42,21 +58,13 @@ cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
           -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
           -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
     randoop.main.Main gentests \
-          --classlist=$D4J_FILE_ALL_CLASSES \
+          --classlist=$D4J_DIR_WORKDIR/classes.randoop \
+          --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
           --junit-output-dir=$D4J_DIR_OUTPUT \
-          --flaky-test-behavior=output \
-          --usethreads \
           --randomseed=$D4J_SEED \
           --time-limit=$D4J_TOTAL_BUDGET \
-          --clear=10000 \
-          --string-maxlen=5000 \
-          --forbid-null=false \
-          --null-ratio=0.1 \
-          --no-error-revealing-tests=true \
-          --only-test-public-members=false \
-          --omitmethods=HashCodeAndEqualsSafeSet.of \
-          --regression-test-basename=$BASE_NAME \
-          --require-covered-classes=$D4J_FILE_TARGET_CLASSES"
+          --regression-test-basename=$REG_BASE_NAME \
+          --error-test-basename=$ERR_BASE_NAME"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then
@@ -65,5 +73,6 @@ if ! $cmd; then
     exit 1
 fi
 
-# Remove the wrapper test suite, which isn't used by Defects4J.
-rm "$D4J_DIR_OUTPUT/${BASE_NAME}.java"
+# Remove wrapper test suites, which are not used by Defects4J.
+rm -f "$D4J_DIR_OUTPUT/${REG_BASE_NAME}.java"
+rm -f "$D4J_DIR_OUTPUT/${ERR_BASE_NAME}.java"
