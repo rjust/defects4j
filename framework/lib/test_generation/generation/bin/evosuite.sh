@@ -14,6 +14,7 @@
 # D4J_TOTAL_BUDGET:        The total budget (in seconds) that the tool should
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
+# D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
 
 # Check whether the D4J_DIR_TESTGEN_LIB variable is set
 if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
@@ -24,28 +25,30 @@ fi
 # General helper functions
 source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
 
-# Compute the budget per target class
-num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
-budget=$(echo "$D4J_TOTAL_BUDGET/$num_classes" | bc)
-
 # The classpath to compile and run the project
 project_cp=$(get_project_cp)
+
+# Read all additional configuration parameters
+add_config=$(parse_config $D4J_DIR_TESTGEN_LIB/bin/evosuite.config)
+
+# Make sure the provided test mode is supported
+if [ $D4J_TEST_MODE != "regression" ]; then
+    die "Unsupported test mode: $D4J_TEST_MODE"
+fi
+
+# Compute the budget per target class; evenly split the time for search and assertions
+num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
+budget=$(echo "$D4J_TOTAL_BUDGET/2/$num_classes" | bc)
 
 for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     cmd="java -cp $D4J_DIR_TESTGEN_LIB/evosuite-current.jar org.evosuite.EvoSuite \
     -class $class \
     -projectCP $project_cp \
-    -criterion branch \
     -seed $D4J_SEED \
     -Dsearch_budget=$budget \
-    -Dstopping_condition=MaxTime \
+    -Dassertion_timeout=$budget \
     -Dtest_dir=$D4J_DIR_OUTPUT \
-    -Dassertion_timeout=30 \
-    -Dshow_progress=false \
-    -Djunit_check=false \
-    -Dfilter_assertions=false \
-    -Dtest_comments=false \
-    -mem 1500"
+    $add_config"
 
     # Print the command that failed, if an error occurred.
     if ! $cmd; then
