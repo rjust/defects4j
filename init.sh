@@ -53,8 +53,13 @@ download_url() {
     if [ "$(uname)" = "Darwin" ] ; then
         wget -nv -N "$@"
     else
-        BASENAME=`basename ${@: -1}`
-	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+	BASENAME=`basename ${@: -1}`
+	if [ -f $BASENAME ]; then
+	    ZBASENAME="-z $BASENAME"
+	else
+	    ZBASENAME=""
+	fi
+	timeout 300 curl -s -S -R -L -O $ZBASENAME "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O "$@")
     fi
     echo "Downloaded $@"
 }
