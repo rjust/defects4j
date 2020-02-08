@@ -1163,6 +1163,26 @@ sub _modified_classes {
 }
 
 #
+# Helper subroutine that returns a list of relevant classes
+#
+sub _relevant_classes {
+    my ($self, $bid) = @_;
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    open(IN, "<${project_dir}/loaded_classes/${bid}.src")
+        or warn "Cannot read loaded classes, perhaps they have not been created yet?";
+    my @classes = <IN>;
+    close(IN);
+    my $rel_classes = shift(@classes); chomp($rel_classes);
+    defined $rel_classes or warn "Set of loaded classes is empty!";
+    foreach (@classes) {
+        chomp;
+        $rel_classes .= ",$_";
+    }
+    return $rel_classes;
+}
+
+
+#
 # Write all version-specific properties to file
 #
 sub _write_props {
@@ -1172,9 +1192,11 @@ sub _write_props {
 
     # will skip writing mod classes and trigger tests if we are bug mining because they are not defined yet
     my $mod_classes = "";
+    my $rel_classes = "";
     my $trigger_tests = "";
     if(! $is_bugmine) {
         $mod_classes = $self->_modified_classes($bid);
+        $rel_classes = $self->_relevant_classes($bid);
 
         my $project_dir = "$PROJECTS_DIR/$self->{pid}";
         my $triggers = Utils::get_failing_tests("${project_dir}/trigger_tests/${bid}");
@@ -1188,6 +1210,7 @@ sub _write_props {
         $PROP_DIR_SRC_CLASSES => $self->src_dir($vid),
         $PROP_DIR_SRC_TESTS   => $self->test_dir($vid),
         $PROP_CLASSES_MODIFIED=> $mod_classes,
+        $PROP_CLASSES_RELEVANT=> $rel_classes,
         $PROP_TESTS_TRIGGER   => $trigger_tests,
     };
     Utils::write_config_file("$self->{prog_root}/$PROP_FILE", $config);
