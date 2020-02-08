@@ -90,7 +90,8 @@ Debug: Enable verbose logging and do not delete the temporary check-out director
 =head1 DESCRIPTION
 
 This script runs the specified test generator on a particular program version.
-Tests are generated for all classes touched by at least one triggering test.
+Tests are, by default, generated for all classes modified by the bug fix; a set
+of target classes can be specified using the C<-c> flag.
 
 =head2 Tool configuration
 
