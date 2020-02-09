@@ -30,8 +30,8 @@ check_env() {
 # source file of the provided class name.
 get_rel_src_path() {
     local class="$1"
-    src_dir=$($D4J_HOME/framework/bin/defects4j export \
-            -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
+    local src_dir=$($D4J_HOME/framework/bin/defects4j \
+            export -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
     echo "$src_dir/$(echo $class | tr '.' '/').java"
 }
 
@@ -44,7 +44,8 @@ get_abs_src_path() {
 # Get the project classpath -- that is, the classpath to compile and run the
 # checked-out Defects4J project version.
 get_project_cp() {
-    $D4J_HOME/framework/bin/defects4j export -pcp.compile -w$D4J_DIR_WORKDIR 2> /dev/null
+    $D4J_HOME/framework/bin/defects4j \
+            export -p cp.compile -w $D4J_DIR_WORKDIR 2> /dev/null
 }
 
 # Parse a tool's config file: ignore comments and replace newlines with spaces.
@@ -55,12 +56,16 @@ parse_config() {
 
 # Returns the list of all classes for the current bug
 get_all_classes() {
-    $D4J_HOME/framework/bin/defects4j export -pclasses.all -w$D4J_DIR_WORKDIR 2> /dev/null
+    local src_dir=$($D4J_HOME/framework/bin/defects4j \
+            export -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
+    (cd $D4J_DIR_WORKDIR/$src_dir && \
+            find . -name "*.java" | tr '/' '.' | sed -e 's/^\.*//g' | sed -e 's/\.java//g')
 }
 
 # Returns the list of all relevant classes for the current bug
 get_relevant_classes() {
-    $D4J_HOME/framework/bin/defects4j export -pclasses.relevant -w$D4J_DIR_WORKDIR 2> /dev/null
+    $D4J_HOME/framework/bin/defects4j \
+            export -p classes.relevant -w $D4J_DIR_WORKDIR 2> /dev/null
 }
 
 # Check whether all expected environment variables are properly exported.
