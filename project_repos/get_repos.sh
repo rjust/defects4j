@@ -18,10 +18,21 @@ clean() {
     README 
 }
 
-# Try curl command twice to handle hosts that hang for a long time.
-# The last argument must be the URL, and the -O command-line argument must be supplied.
-curl_with_retry() {
-    timeout 5m curl -s -S "$@" || (echo "retrying curl $@" && rm -f `basename ${@: -1}` && curl "$@")
+# MacOS does not install the timeout command by default.
+if [ "$(uname)" = "Darwin" ] ; then
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
+# Download the remote resource to a local file of the same name, if the
+# remote resource is newer.  Works around connections that hang.  Takes a
+# single command-line argument, a URL.
+download_url() {
+    BASENAME=`basename ${@: -1}`
+    if [ "$(uname)" = "Darwin" ] ; then
+        wget -nv -N "$@"
+    else
+	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    fi
 }
 
 # The BSD version of stat does not support --version or -c
@@ -39,7 +50,8 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-curl_with_retry -R -L -O -z "$ARCHIVE" "http://blankslatetech.com/downloads/$ARCHIVE"
+download_url "http://blankslatetech.com/downloads/$ARCHIVE"
+
 new=$($cmd)
 
 # Exit if no newer file is available

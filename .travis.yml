@@ -20,15 +20,15 @@ before_install:
   - JDK_VERSION="8u192"
   - JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
   - JDK_URL="https://defects4j.org/downloads/$JDK_FILE"
-  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (timeout 7m curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
+  - if [ ! -f "$JDK_FILE" ]; then mkdir -p /home/travis/.java && (timeout 400 curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C /home/travis/.java; fi
 
 install:
   - export JAVA_HOME=/home/travis/.java/jdk1.8.0_192
   - export PATH=$JAVA_HOME/bin:$PATH
   - java -version
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
-  - cpan install Carton
-  - carton install
+  - timeout 300 cpan install Carton || cpan install Carton
+  - timeout 300 carton install || cpan carton install
   - ./init.sh
   - cd framework/test
 
