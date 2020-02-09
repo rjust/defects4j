@@ -36,7 +36,8 @@ if [ $D4J_TEST_MODE == "regression" ]; then
     get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-error-revealing-tests=true"
 elif [ $D4J_TEST_MODE == "error-revealing" ]; then
-    get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+    #get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+    get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-regression-tests=true"
 else
     die "Unsupported test mode: $D4J_TEST_MODE"
