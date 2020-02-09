@@ -167,8 +167,7 @@ my $OUT_DIR = $cmd_opts{o};
 my $SEED = $cmd_opts{s} // $TID*1000 + $BID;
 
 # List of target classes (list of modified classes is the default)
-my $MOD_CLASSES = "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
-my $TARGET_CLASSES = $cmd_opts{c} // $MOD_CLASSES;
+my $TARGET_CLASSES = $cmd_opts{c} // "$SCRIPT_DIR/projects/$PID/modified_classes/$BID.src";
 
 # Generate regression tests by default
 my $MODE = (defined $cmd_opts{E}) ? "error-revealing" : "regression";
@@ -212,12 +211,8 @@ $LOG->log_msg(" -p $PID");
 $LOG->log_msg(" -v $VID");
 $LOG->log_msg(" -n $TID");
 $LOG->log_msg(" -b $TIME");
-$LOG->log_msg(" -i $TARGET_CLASSES");
+$LOG->log_msg(" -c $TARGET_CLASSES");
 $LOG->log_msg(" -s $SEED");
-
-my $cp_file = "$TMP_DIR/project.cp";                               
-$project->_ant_call("export.cp.compile", "-Dfile.export=$cp_file")
-        or die "Cannot determine project classpath";
 
 # Export all environment variables that are expected by the wrapper script of
 # the test generator.
@@ -262,8 +257,6 @@ Examples:
 =item * F<Lang-12f-randoop.2.tar.bz2>
 
 =item * F<Lang-12f-evosuite.1.tar.bz2>
-
-=item * F<Lang-12f-t3.1.tar.bz2>
 
 =back
 
