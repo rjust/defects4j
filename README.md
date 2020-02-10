@@ -72,17 +72,16 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.7
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
 
 #### Java version
-All bugs have been reproduced and triggering tests verified, using the latest
-version of Java 1.7.
-Note that using Java 1.8+ might result in unexpected failing tests on a fixed
-program version. The next major release of Defects4J will be compatible with
-Java 8.
+
+* `master` branch: the master branch of Defects4J is fully Java-8 compatible. Using Java 1.8+ on thse versions might result in unexpected failing tests on a fixed program version.
+* `version 2.0.0`: will be compatible with Java 8.
+* `version 1.5.0` and lower: requires Java 1.7 
+
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
