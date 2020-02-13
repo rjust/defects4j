@@ -67,7 +67,7 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.8
+ - Java 1.8 (see below)
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
@@ -77,6 +77,11 @@ All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.8.
 Note that using Java 1.9+ might result in unexpected failing tests on a fixed
 program version. 
+
+* `version 2.0.0` and later: require Java 1.8
+* `version 1.5.0` and lower: requires Java 1.7 
+
+>>>>>>> cdf5fe696f8b3c2350275c75e1e2ebb753e9c105
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
@@ -134,14 +139,14 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
-| [info](http://defects4j.org/html_doc/d4j/d4j-info.html)           | View configuration of a specific project or summary of a specific bug                             |
-| [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)       | Checkout a buggy or a fixed project version                                                       |
-| [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)        | Compile sources and developer-written tests of a buggy or a fixed project version                 |
-| [test](http://defects4j.org/html_doc/d4j/d4j-test.html)           | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)       | Run mutation analysis on a buggy or a fixed project version                                       |
-| [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)       | Run code coverage analysis on a buggy or a fixed project version                                  |
+| [info](http://defects4j.org/html_doc/d4j/d4j-info.html)                   | View configuration of a specific project or summary of a specific bug                             |
+| [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)           | Checkout a buggy or a fixed project version                                                       |
+| [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)             | Compile sources and developer-written tests of a buggy or a fixed project version                 |
+| [test](http://defects4j.org/html_doc/d4j/d4j-test.html)                   | Run a single test method or a test suite on a buggy or a fixed project version                    |
+| [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)           | Run mutation analysis on a buggy or a fixed project version                                       |
+| [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)           | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
-| [export](http://defects4j.org/html_doc/d4j/d4j-export.html)         | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [export](http://defects4j.org/html_doc/d4j/d4j-export.html)               | Export version-specific properties such as classpaths, directories, or lists of tests             |
 
 
 Export version-specific properties
@@ -169,12 +174,12 @@ provides the following scripts:
 
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
-| [defects4j](http://defects4j.org/html_doc/defects4j.html)         | Main script, described above                        |
-| [run_bug_detection](http://defects4j.org/html_doc/run_bug_detection.html) | Determine the real fault detection rate                        |
-| [run_mutation](http://defects4j.org/html_doc/run_mutation.html)      | Determine the mutation score                                   |
-| [run_coverage](http://defects4j.org/html_doc/run_coverage.html)      | Determine code coverage ratios (statement and branch coverage) |
-| [run_evosuite](http://defects4j.org/html_doc/run_evosuite.html)      | Generate test suites using EvoSuite                             |
-| [run_randoop](http://defects4j.org/html_doc/run_randoop.html)       | Generate test suites using Randoop                              |
+| [defects4j](http://defects4j.org/html_doc/defects4j.html)         | Main script, described above                                   |
+| [run_bug_detection](http://defects4j.org/html_doc/run_bug_detection.html) | Determine the real fault detection rate                |
+| [run_mutation](http://defects4j.org/html_doc/run_mutation.html)   | Determine the mutation score                                   |
+| [run_coverage](http://defects4j.org/html_doc/run_coverage.html)   | Determine code coverage ratios (statement and branch coverage) |
+| [run_evosuite](http://defects4j.org/html_doc/run_evosuite.html)   | Generate test suites using EvoSuite                            |
+| [run_randoop](http://defects4j.org/html_doc/run_randoop.html)     | Generate test suites using Randoop                             |
 
 Mining and contributing additional bugs to Defects4J
 ================

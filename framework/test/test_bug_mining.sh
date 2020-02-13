@@ -40,12 +40,21 @@ _check_output() {
     rm -f "$actual.sorted" "$expected.sorted"
 }
 
+# MacOS does not install the timeout command by default.
+if [ "$(uname)" = "Darwin" ] ; then
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
 # Download the remote resource to a local file of the same name, if the
 # remote resource is newer.  Works around connections that hang.  Takes a
 # single command-line argument, a URL.
-curl_with_retry() {
+download_url() {
     BASENAME=`basename ${@: -1}`
-    timeout 5m curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    if [ "$(uname)" = "Darwin" ] ; then
+        wget -nv -N "$@"
+    else
+	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+    fi
 }
 
 #
@@ -162,11 +171,11 @@ test_initialize_revisions() {
     mkdir -p "$lib_dir"
 
     mkdir -p "$lib_dir/junit/junit/4.12"
-    (cd "$lib_dir/junit/junit/4.12" && curl_with_retry https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar || die "Failed to download junit-4.12.jar")
+    (cd "$lib_dir/junit/junit/4.12" && download_url https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar || die "Failed to download junit-4.12.jar")
     mkdir -p "$lib_dir/org/apache/commons/commons-lang3/3.4"
-    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4" && curl_with_retry https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar || die "Failed to download commons-lang3-3.4.jar")
+    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4" && download_url https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar || die "Failed to download commons-lang3-3.4.jar")
     mkdir -p "$lib_dir/org/hamcrest/hamcrest-core/1.3"
-    (cd "$lib_dir/org/hamcrest/hamcrest-core/1.3" && curl_with_retry https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar || die "Failed to download hamcrest-core-1.3.jar")
+    (cd "$lib_dir/org/hamcrest/hamcrest-core/1.3" && download_url https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar || die "Failed to download hamcrest-core-1.3.jar")
     # End of fix for Java-7
 
     pushd . > /dev/null 2>&1
