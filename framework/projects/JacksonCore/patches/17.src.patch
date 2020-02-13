@@ -1,8 +1,8 @@
 diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
-index a638519a..203b2fe1 100644
+index a638519a..4f4394c8 100644
 --- a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
 +++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
-@@ -525,33 +525,18 @@ public class UTF8JsonGenerator
+@@ -525,33 +525,17 @@ public class UTF8JsonGenerator
          final char[] buf = _charBuffer;
  
          // minor optimization: see if we can just get and copy
@@ -20,8 +20,7 @@ index a638519a..203b2fe1 100644
  
          while (len > 0) {
 -            int len2 = Math.min(maxChunk, len);
-+            final int blen = buf.length;
-+            final int len2 = (len < blen) ? len : blen;
++            int len2 = Math.min(buf.length, len);
              text.getChars(offset, offset+len2, buf, 0);
 -            if ((_outputTail + maxBytes) > _outputEnd) {
 -                _flushBuffer();
@@ -39,7 +38,7 @@ index a638519a..203b2fe1 100644
              offset += len2;
              len -= len2;
          }
-@@ -685,30 +670,6 @@ public class UTF8JsonGenerator
+@@ -685,30 +669,6 @@ public class UTF8JsonGenerator
       *
       * @since 2.8.2
       */
@@ -70,7 +69,7 @@ index a638519a..203b2fe1 100644
  
      /*
      /**********************************************************
-@@ -1924,8 +1885,7 @@ public class UTF8JsonGenerator
+@@ -1924,8 +1884,7 @@ public class UTF8JsonGenerator
              if (ch <= SURR2_LAST) { // yes, outside of BMP
                  // Do we have second part?
                  if (inputOffset >= inputEnd || cbuf == null) { // nope... have to note down
