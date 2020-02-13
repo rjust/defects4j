@@ -56,7 +56,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-download_url "https://blankslatetech.com/downloads/$ARCHIVE"
+download_url "http://blankslatetech.com/downloads/$ARCHIVE"
 new=$($cmd)
 
 # Exit if no newer file is available
