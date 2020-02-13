@@ -93,16 +93,15 @@ index c2c413f0..60919c88 100644
      }
  
 diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
-index b0c007b7..6de54775 100644
+index b0c007b7..589a34c4 100644
 --- a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
 +++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
-@@ -3619,7 +3619,8 @@ public class UTF8StreamJsonParser
+@@ -3619,7 +3619,7 @@ public class UTF8StreamJsonParser
                      _nameInputTotal, -1L, _nameInputRow, _tokenInputCol);
          }
          return new JsonLocation(src,
 -                _tokenInputTotal, -1L, _tokenInputRow,
-+                getTokenCharacterOffset(), -1L,
-+                getTokenLineNr(),
++                getTokenCharacterOffset(), -1L, getTokenLineNr(),
                  getTokenColumnNr());
      }
  
