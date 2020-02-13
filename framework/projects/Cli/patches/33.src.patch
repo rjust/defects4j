@@ -1,19 +1,8 @@
 diff --git a/src/main/java/org/apache/commons/cli/HelpFormatter.java b/src/main/java/org/apache/commons/cli/HelpFormatter.java
-index 4329a8b..bac9ba2 100644
+index 4329a8b..3322f76 100644
 --- a/src/main/java/org/apache/commons/cli/HelpFormatter.java
 +++ b/src/main/java/org/apache/commons/cli/HelpFormatter.java
-@@ -17,10 +17,7 @@
- 
- package org.apache.commons.cli;
- 
--import java.io.BufferedReader;
--import java.io.IOException;
- import java.io.PrintWriter;
--import java.io.StringReader;
- import java.util.ArrayList;
- import java.util.Arrays;
- import java.util.Collection;
-@@ -727,7 +724,7 @@ public class HelpFormatter
+@@ -727,7 +727,7 @@ public class HelpFormatter
      {
          StringBuffer sb = new StringBuffer(text.length());
  
@@ -22,7 +11,7 @@ index 4329a8b..bac9ba2 100644
          pw.println(sb.toString());
      }
  
-@@ -897,25 +894,7 @@ public class HelpFormatter
+@@ -897,25 +897,8 @@ public class HelpFormatter
       * @param nextLineTabStop The position on the next line for the first tab.
       * @param text The text to be rendered.
       */
@@ -40,7 +29,7 @@ index 4329a8b..bac9ba2 100644
 -                renderWrappedText(sb, width, nextLineTabStop, line);
 -            }
 -        } catch (IOException e) {
--            // cannot happen
+             // cannot happen
 -        }
  
 -        return sb;
