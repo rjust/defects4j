@@ -1,4 +1,3 @@
-com.fasterxml.jackson.core.base64.TestBase64Generation
 com.fasterxml.jackson.core.base64.TestBase64Parsing
 com.fasterxml.jackson.core.base64.TestJsonParserBinary
 com.fasterxml.jackson.core.format.TestJsonFormatDetection
@@ -6,12 +5,10 @@ com.fasterxml.jackson.core.io.TestJDKSerializable
 com.fasterxml.jackson.core.io.TestJsonStringEncoder
 com.fasterxml.jackson.core.json.TestCharEscaping
 com.fasterxml.jackson.core.json.TestComments
-com.fasterxml.jackson.core.json.TestCustomEscaping
 com.fasterxml.jackson.core.json.TestDecorators
 com.fasterxml.jackson.core.json.TestGeneratorWithSerializedString
 com.fasterxml.jackson.core.json.TestJsonFactory
 com.fasterxml.jackson.core.json.TestJsonGenerator
-com.fasterxml.jackson.core.json.TestJsonGeneratorFeatures
 com.fasterxml.jackson.core.json.TestJsonParser
 com.fasterxml.jackson.core.json.TestNextXxx
 com.fasterxml.jackson.core.json.TestNumericValues
@@ -24,7 +21,6 @@ com.fasterxml.jackson.core.json.TestValueConversions
 com.fasterxml.jackson.core.json.TestWithTonsaSymbols
 com.fasterxml.jackson.core.main.TestArrayParsing
 com.fasterxml.jackson.core.main.TestGeneratorArray
-com.fasterxml.jackson.core.main.TestGeneratorClosing
 com.fasterxml.jackson.core.main.TestGeneratorCopy
 com.fasterxml.jackson.core.main.TestGeneratorMisc
 com.fasterxml.jackson.core.main.TestGeneratorObject
