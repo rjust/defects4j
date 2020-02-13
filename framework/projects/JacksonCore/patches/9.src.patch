@@ -1,8 +1,8 @@
 diff --git a/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java b/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
-index fbca28ed..16e3b692 100644
+index fbca28ed..37c6503c 100644
 --- a/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
 +++ b/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
-@@ -389,22 +389,15 @@ public abstract class ParserMinimalBase extends JsonParser
+@@ -389,9 +389,6 @@ public abstract class ParserMinimalBase extends JsonParser
          if (_currToken == JsonToken.VALUE_STRING) {
              return getText();
          }
@@ -12,21 +12,16 @@ index fbca28ed..16e3b692 100644
          return getValueAsString(null);
      }
      
-     @Override
-     public String getValueAsString(String defaultValue) throws IOException {
--        if (_currToken == JsonToken.VALUE_STRING) {
--            return getText();
--        }
+@@ -400,9 +397,6 @@ public abstract class ParserMinimalBase extends JsonParser
+         if (_currToken == JsonToken.VALUE_STRING) {
+             return getText();
+         }
 -        if (_currToken == JsonToken.FIELD_NAME) {
 -            return getCurrentName();
 -        }
-+        if (_currToken != JsonToken.VALUE_STRING) {
          if (_currToken == null || _currToken == JsonToken.VALUE_NULL || !_currToken.isScalarValue()) {
              return defaultValue;
-+            }
          }
-         return getText();
-     }
 diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
 index 4f0f753f..b5b0051c 100644
 --- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
