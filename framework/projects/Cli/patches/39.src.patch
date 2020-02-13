@@ -1,17 +1,8 @@
 diff --git a/src/main/java/org/apache/commons/cli/TypeHandler.java b/src/main/java/org/apache/commons/cli/TypeHandler.java
-index 68b4f02..e8dbcd6 100644
+index 68b4f02..93c0b73 100644
 --- a/src/main/java/org/apache/commons/cli/TypeHandler.java
 +++ b/src/main/java/org/apache/commons/cli/TypeHandler.java
-@@ -18,8 +18,6 @@
- package org.apache.commons.cli;
- 
- import java.io.File;
--import java.io.FileInputStream;
--import java.io.FileNotFoundException;
- 
- import java.net.MalformedURLException;
- import java.net.URL;
-@@ -89,7 +87,7 @@ public class TypeHandler
+@@ -89,7 +89,7 @@ public class TypeHandler
          }
          else if (PatternOptionBuilder.EXISTING_FILE_VALUE == clazz)
          {
@@ -20,7 +11,7 @@ index 68b4f02..e8dbcd6 100644
          }
          else if (PatternOptionBuilder.FILES_VALUE == clazz)
          {
-@@ -231,17 +229,6 @@ public class TypeHandler
+@@ -231,17 +231,6 @@ public class TypeHandler
       * @return The file input stream represented by <code>str</code>.
       * @throws ParseException if the file is not exist or not readable
       */
