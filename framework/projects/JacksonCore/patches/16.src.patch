@@ -1,25 +1,3 @@
-diff --git a/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
-index 5917f5d9..0048bda7 100644
---- a/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
-+++ b/src/main/java/com/fasterxml/jackson/core/JsonGenerator.java
-@@ -1681,7 +1681,7 @@ public abstract class JsonGenerator
-      */
-     public void copyCurrentEvent(JsonParser p) throws IOException
-     {
--        JsonToken t = p.currentToken();
-+        JsonToken t = p.getCurrentToken();
-         // sanity check; what to do?
-         if (t == null) {
-             _reportError("No current event to copy");
-@@ -1784,7 +1784,7 @@ public abstract class JsonGenerator
-      */
-     public void copyCurrentStructure(JsonParser p) throws IOException
-     {
--        JsonToken t = p.currentToken();
-+        JsonToken t = p.getCurrentToken();
-         if (t == null) {
-             _reportError("No current event to copy");
-         }
 diff --git a/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java b/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java
 index 0c9c4eb9..9dadc51f 100644
 --- a/src/main/java/com/fasterxml/jackson/core/util/JsonParserSequence.java
