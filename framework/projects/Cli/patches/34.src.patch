@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/cli/Option.java b/src/main/java/org/apache/commons/cli/Option.java
-index 66c7ef9..c7d9ceb 100644
+index 66c7ef9..11a3685 100644
 --- a/src/main/java/org/apache/commons/cli/Option.java
 +++ b/src/main/java/org/apache/commons/cli/Option.java
 @@ -69,7 +69,7 @@ public class Option implements Cloneable, Serializable
@@ -7,32 +7,14 @@ index 66c7ef9..c7d9ceb 100644
  
      /** the type of this Option */
 -    private Class type = String.class;
-+    private Object type;
++    private Class type;
  
      /** the list of argument values **/
      private List values = new ArrayList();
-@@ -193,7 +193,7 @@ public class Option implements Cloneable, Serializable
-      *
-      * @param type the type of this Option
-      */
--    public void setType(Class type)
-+    public void setType(Object type)
-     {
-         this.type = type;
-     }
 diff --git a/src/main/java/org/apache/commons/cli/OptionBuilder.java b/src/main/java/org/apache/commons/cli/OptionBuilder.java
-index 6fd1b43..5cae375 100644
+index 6fd1b43..f9eb13a 100644
 --- a/src/main/java/org/apache/commons/cli/OptionBuilder.java
 +++ b/src/main/java/org/apache/commons/cli/OptionBuilder.java
-@@ -48,7 +48,7 @@ public final class OptionBuilder
-     private static int numberOfArgs = Option.UNINITIALIZED;
- 
-     /** option type */
--    private static Class type;
-+    private static Object type;
- 
-     /** option can have an optional argument value */
-     private static boolean optionalArg;
 @@ -81,7 +81,7 @@ public final class OptionBuilder
          description = null;
          argName = null;
@@ -42,12 +24,3 @@ index 6fd1b43..5cae375 100644
          required = false;
          numberOfArgs = Option.UNINITIALIZED;
          optionalArg = false;
-@@ -287,7 +287,7 @@ public final class OptionBuilder
-      * @param newType the type of the Options argument value
-      * @return the OptionBuilder instance
-      */
--    public static OptionBuilder withType(Class newType)
-+    public static OptionBuilder withType(Object newType)
-     {
-         OptionBuilder.type = newType;
- 
