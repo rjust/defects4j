@@ -83,12 +83,8 @@ The filename of an optional Randoop configuration file can be provided with the
 environment variable C<RANDOOP_CONFIG_FILE>. The default configuration file of Randoop
 is: F<framework/util/randoop.config>.
 
-To use a locally-built version of Randoop, do the following (update the version number):
-
-  cd ${D4J_HOME}/framework/lib/test_generation/generation && \
-  ln -sf ${RANDOOP_HOME}/build/libs/randoop-all-4.0.4.jar randoop-current.jar && \
-  ln -sf ${RANDOOP_HOME}/build/libs/replacecall-4.0.4.jar replacecall-current.jar
-
+To use a locally-built version of Randoop, see the instructions in
+F<framework/test/README.md>.
 
 =cut
 use strict;

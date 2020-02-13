@@ -1,14 +1,8 @@
 diff --git a/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java b/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
-index 319f8c2..fe698cd 100644
+index 319f8c2..3ca952d 100644
 --- a/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
 +++ b/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
-@@ -109,33 +109,27 @@ public class WriteableCommandLineImpl
-     }
- 
-     public List getValues(final Option option,
--                          List defaultValues) {
-+                          final List defaultValues) {
-         // initialize the return list
+@@ -114,26 +114,17 @@ public class WriteableCommandLineImpl
          List valueList = (List) values.get(option);
  
          // grab the correct default values
@@ -36,12 +30,7 @@ index 319f8c2..fe698cd 100644
 -                    }
 -                }
 -            }
-+        if (valueList == null) {
-+            valueList = Collections.EMPTY_LIST;
-         }
+-        }
          
--        return valueList == null ? Collections.EMPTY_LIST : valueList;
-+        return valueList;
+         return valueList == null ? Collections.EMPTY_LIST : valueList;
      }
- 
-     public List getUndefaultedValues(Option option) {

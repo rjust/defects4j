@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/cli/TypeHandler.java b/src/java/org/apache/commons/cli/TypeHandler.java
-index 0a0aa72..ef0f787 100644
+index 0a0aa72..1ddde5b 100644
 --- a/src/java/org/apache/commons/cli/TypeHandler.java
 +++ b/src/java/org/apache/commons/cli/TypeHandler.java
 @@ -22,6 +22,7 @@ import java.net.URL;
@@ -10,7 +10,7 @@ index 0a0aa72..ef0f787 100644
  /**
    * This is a temporary implementation. TypeHandler will handle the 
    * pluggableness of OptionTypes and it will direct all of these types 
-@@ -158,24 +159,14 @@ public class TypeHandler {
+@@ -158,17 +159,7 @@ public class TypeHandler {
      {
          try
          {
@@ -29,11 +29,3 @@ index 0a0aa72..ef0f787 100644
          }
          catch (NumberFormatException nfe)
          {
-             System.err.println(nfe.getMessage());
--        }
- 
-         return null;
-+        }
-     }
- 
-     /**
