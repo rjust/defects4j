@@ -10,23 +10,25 @@ The projects
 ---------------
 Defects4J contains 789 bugs from the following open-source projects:
 
-| Identifier      | Project name           | Number of bugs |
-|-----------------|------------------------|----------------|
-| Chart           | JFreeChart             |  26            |
-| Cli             | Apache commons-cli     |  40            |
-| Closure         | Closure compiler       | 176            |
-| Codec           | Apache commons-codec   |  18            |
-| Csv             | Apache commons-csv     |  16            |
-| Gson            | Google Gson            |  18            |
-| JacksonCore     | Jackson JSON parser    |  26            |
-| JacksonDatabind | Jackson data bindings  | 112            |
-| JacksonXml      | Jackson XML extension  |   6            |
-| Jsoup           | jsoup HTML Parser      |  93            |
-| JxPath          | Apache commons-jxpath  |  22            |
-| Lang            | Apache commons-lang    |  65            |
-| Math            | Apache commons-math    | 106            |
-| Mockito         | Mockito                |  38            |
-| Time            | Joda-Time              |  27            |
+| Identifier      | Project name               | Number of bugs |
+|-----------------|----------------------------|----------------|
+| Chart           | JFreeChart                 |  26            |
+| Cli             | Apache commons-cli         |  40            |
+| Closure         | Closure compiler           | 176            |
+| Codec           | Apache commons-codec       |  18            |
+| Collections     | Apache commons-collections |  28            |
+| Compress        | Apache commons-compress    |  47            |
+| Csv             | Apache commons-csv         |  16            |
+| Gson            | Google Gson                |  18            |
+| JacksonCore     | Jackson JSON parser        |  26            |
+| JacksonDatabind | Jackson data bindings      | 112            |
+| JacksonXml      | Jackson XML extension      |   6            |
+| Jsoup           | jsoup HTML Parser          |  93            |
+| JxPath          | Apache commons-jxpath      |  22            |
+| Lang            | Apache commons-lang        |  65            |
+| Math            | Apache commons-math        | 106            |
+| Mockito         | Mockito                    |  38            |
+| Time            | Joda-Time                  |  27            |
 
 The bugs
 ---------------
@@ -45,22 +47,6 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
-Looking for additional bugs?
------------------------------
-A number of additional bugs are available in "work-in-progress" status.
-These bugs meet the same properties as the ones above, but have only been
-minimized by one of the maintainers. Metadata and patch content can 
-potentially change before these bugs are migrated into the master repository. 
-These bugs may be used in experiments, but should not be considered as 
-"stable" as the bugs in the master repository. If you use these bugs, please 
-acknowledge their "beta status" in any publications.
-
-**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
-
-| Identifier | Project name               | Number of bugs |
-|------------|----------------------------|----------------|
-| Collections| Apache commons-collections |  28            |
-| Compress   | Apache commons-compress    |  47            |
 
 Setting up Defects4J
 ================
@@ -77,11 +63,6 @@ All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.8.
 Note that using Java 1.9+ might result in unexpected failing tests on a fixed
 program version. 
-
-* `version 2.0.0` and later: require Java 1.8
-* `version 1.5.0` and lower: requires Java 1.7 
-
->>>>>>> cdf5fe696f8b3c2350275c75e1e2ebb753e9c105
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,
