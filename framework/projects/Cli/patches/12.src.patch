@@ -1,26 +1,13 @@
 diff --git a/src/java/org/apache/commons/cli/GnuParser.java b/src/java/org/apache/commons/cli/GnuParser.java
-index 1590fc3..b6ac077 100644
+index 1590fc3..0de035f 100644
 --- a/src/java/org/apache/commons/cli/GnuParser.java
 +++ b/src/java/org/apache/commons/cli/GnuParser.java
-@@ -70,25 +70,19 @@ public class GnuParser extends Parser {
-             }
-             else if (arg.startsWith("-"))
-             {
--                String opt = Util.stripLeadingHyphens(arg);
-+                Option option = options.getOption(arg);
- 
--                if (options.hasOption(opt))
-+                String head = arg.substring(0, 2);
-+                String tail = arg.substring(2);
-+                if (option == null)
+@@ -78,14 +78,9 @@ public class GnuParser extends Parser {
+                 }
+                 else
                  {
--                    tokens.add(arg);
--                }
--                else
--                {
 -                    if (opt.indexOf('=') != -1 && options.hasOption(opt.substring(0, opt.indexOf('='))))
-+                    Option specialOption = options.getOption(head);
-+                    if (specialOption != null)
++                    if (options.hasOption(arg.substring(0, 2)))
                      {
                          // the format is --foo=value or -foo=value
 -                        tokens.add(arg.substring(0, arg.indexOf('='))); // --foo
@@ -29,21 +16,5 @@ index 1590fc3..b6ac077 100644
 -                    else if (options.hasOption(arg.substring(0, 2)))
 -                    {
                          // the format is a special properties option (-Dproperty=value)
--                        tokens.add(arg.substring(0, 2)); // -D
--                        tokens.add(arg.substring(2)); // property=value
-+                        tokens.add(head);
-+                        tokens.add(tail);
-                     }
-                     else
-                     {
-@@ -96,6 +91,10 @@ public class GnuParser extends Parser {
-                         tokens.add(arg);
-                     }
-                 }
-+                else
-+                {
-+                    tokens.add(arg);
-+                }
-             }
-             else
-             {
+                         tokens.add(arg.substring(0, 2)); // -D
+                         tokens.add(arg.substring(2)); // property=value
