@@ -11,7 +11,7 @@ The projects
 Defects4J contains 835 bugs from the following open-source projects:
 
 | Identifier      | Project name               | Number of bugs |
-|-----------------|----------------------------|----------------|
+|-----------------|----------------------------|---------------:|
 | Chart           | jfreechart                 |       26       |
 | Cli             | commons-cli                |       39       |
 | Closure         | closure-compiler           |      174       |
