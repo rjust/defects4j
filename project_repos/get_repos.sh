@@ -59,7 +59,7 @@ else
     old=0
 fi
 # Only download repos if the server has a newer file
-download_url "http://blankslatetech.com/downloads/$ARCHIVE"
+download_url "https://defects4j.org/downloads/$ARCHIVE"
 
 new=$($cmd)
 
