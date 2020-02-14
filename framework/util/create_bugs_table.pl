@@ -78,7 +78,7 @@ for my $file (@files) {
 # Print the summary as a markdown table
 print("Defects4J contains $total bugs from the following open-source projects:\n\n");
 print("| Identifier      | Project name               | Number of bugs |\n");
-print("|-----------------|----------------------------|----------------|\n");
+print("|-----------------|----------------------------|---------------:|\n");
 for (@projects) {
     printf("| %-15s | %-26s |      %3d       |\n", $_->[0], $_->[1], $_->[2]);
 }
