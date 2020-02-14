@@ -100,6 +100,12 @@ jobs:
 ## Codec
     - script: carton exec ./test_verify_bugs.sh -p Codec -b1..18
       name: "Codec"
+## Collections
+    - script: carton exec ./test_verify_bugs.sh -p Collections -b25..28
+      name: "Collections"
+## Compress
+    - script: carton exec ./test_verify_bugs.sh -p Compress
+      name: "Compress"
 ## Csv
     - script: carton exec ./test_verify_bugs.sh -p Csv -b1..16
       name: "Csv"

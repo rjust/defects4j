@@ -25,6 +25,8 @@ Defects4J contains 789 bugs from the following open-source projects:
 | JacksonXml      | Jackson XML extension      |   6            |
 | Jsoup           | jsoup HTML Parser          |  93            |
 | JxPath          | Apache commons-jxpath      |  22            |
+| JxPath          | Apache commons-jxpath      |  22            |
+| Jsoup           | jsoup HTML Parser          |  93            |
 | Lang            | Apache commons-lang        |  65            |
 | Math            | Apache commons-math        | 106            |
 | Mockito         | Mockito                    |  38            |
@@ -53,7 +55,7 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.8 (see below)
+ - Java 1.8 (version 1.5.0 and older requires Java 1.7)
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12

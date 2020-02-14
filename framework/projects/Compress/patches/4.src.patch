@@ -1,0 +1,48 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index 959df8de..3641ab69 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -333,6 +333,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+      */
+     public void close() throws IOException {
+         if (!this.closed) {
++            this.finish();
+             out.close();
+             this.closed = true;
+         }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+index d3afc3da..abe87596 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+@@ -123,6 +123,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+      */
+     public void close() throws IOException {
+         if (!closed) {
++            finish();
+             buffer.close();
+             out.close();
+             closed = true;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 11808a96..5aa7c87c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -527,6 +527,7 @@ public class ZipArchiveOutputStream extends ArchiveOutputStream {
+      * @exception  IOException  if an I/O error occurs.
+      */
+     public void close() throws IOException {
++        finish();
+         if (raf != null) {
+             raf.close();
+         }
+diff --git a/src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java b/src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java
+index 778c2aa5..ec8e2cf4 100644
+--- a/src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java
++++ b/src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java
+@@ -125,7 +125,6 @@ public class ChangeSetPerformer {
+                 results.addedFromChangeSet(change.getEntry().getName());
+             }
+         }
+-        out.finish();
+         return results;
+     }
+ 

@@ -1,0 +1,36 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java b/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
+index beb0d7f7..1c514d8c 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
+@@ -259,31 +259,6 @@ public class SevenZFileTest extends AbstractTestCase {
+             sevenZFile.close();
+         }
+     }
+-
+-    /**
+-     * @see "https://issues.apache.org/jira/browse/COMPRESS-348"
+-     */
+-    @Test
+-    public void readEntriesOfSize0() throws IOException {
+-        final SevenZFile sevenZFile = new SevenZFile(getFile("COMPRESS-348.7z"));
+-        try {
+-            int entries = 0;
+-            SevenZArchiveEntry entry = sevenZFile.getNextEntry();
+-            while (entry != null) {
+-                entries++;
+-                int b = sevenZFile.read();
+-                if ("2.txt".equals(entry.getName()) || "5.txt".equals(entry.getName())) {
+-                    assertEquals(-1, b);
+-                } else {
+-                    assertNotEquals(-1, b);
+-                }
+-                entry = sevenZFile.getNextEntry();
+-            }
+-            assertEquals(5, entries);
+-        } finally {
+-            sevenZFile.close();
+-        }
+-    }
+     
+     private void test7zUnarchive(final File f, final SevenZMethod m, final byte[] password) throws Exception {
+         final SevenZFile sevenZFile = new SevenZFile(f, password);

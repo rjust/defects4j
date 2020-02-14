@@ -1,0 +1,101 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/ZipTestCase.java b/src/test/java/org/apache/commons/compress/archivers/ZipTestCase.java
+index 7988e23d..c54cbaec 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/ZipTestCase.java
++++ b/src/test/java/org/apache/commons/compress/archivers/ZipTestCase.java
+@@ -31,7 +31,6 @@ import java.util.ArrayList;
+ import java.util.Enumeration;
+ import java.util.List;
+ import java.util.zip.ZipEntry;
+-import java.util.zip.ZipException;
+ 
+ import org.apache.commons.compress.AbstractTestCase;
+ import org.apache.commons.compress.archivers.zip.Zip64Mode;
+@@ -244,7 +243,6 @@ public final class ZipTestCase extends AbstractTestCase {
+         final File input = getFile("OSX_ArchiveWithNestedArchive.zip");
+ 
+         final List<String> results = new ArrayList<>();
+-        final List<ZipException> expectedExceptions = new ArrayList<>();
+ 
+         final InputStream is = new FileInputStream(input);
+         ArchiveInputStream in = null;
+@@ -252,20 +250,15 @@ public final class ZipTestCase extends AbstractTestCase {
+             in = new ArchiveStreamFactory().createArchiveInputStream("zip", is);
+ 
+             ZipArchiveEntry entry = null;
+-            while ((entry = (ZipArchiveEntry) in.getNextEntry()) != null) {
++            while((entry = (ZipArchiveEntry)in.getNextEntry()) != null) {
+                 results.add(entry.getName());
+ 
+                 final ArchiveInputStream nestedIn = new ArchiveStreamFactory().createArchiveInputStream("zip", in);
+-                try {
+-                    ZipArchiveEntry nestedEntry = null;
+-                    while ((nestedEntry = (ZipArchiveEntry) nestedIn.getNextEntry()) != null) {
+-                        results.add(nestedEntry.getName());
+-                    }
+-                } catch (ZipException ex) {
+-                    // expected since you cannot create a final ArchiveInputStream from test3.xml
+-                    expectedExceptions.add(ex);
++                ZipArchiveEntry nestedEntry = null;
++                while((nestedEntry = (ZipArchiveEntry)nestedIn.getNextEntry()) != null) {
++                    results.add(nestedEntry.getName());
+                 }
+-                // nested stream must not be closed here
++               // nested stream must not be closed here
+             }
+         } finally {
+             if (in != null) {
+@@ -274,11 +267,10 @@ public final class ZipTestCase extends AbstractTestCase {
+         }
+         is.close();
+ 
+-        assertTrue(results.contains("NestedArchiv.zip"));
+-        assertTrue(results.contains("test1.xml"));
+-        assertTrue(results.contains("test2.xml"));
+-        assertTrue(results.contains("test3.xml"));
+-        assertEquals(1, expectedExceptions.size());
++        results.contains("NestedArchiv.zip");
++        results.contains("test1.xml");
++        results.contains("test2.xml");
++        results.contains("test3.xml");
+     }
+ 
+     @Test
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+index ea087c46..297de9ad 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+@@ -30,7 +30,6 @@ import java.io.FileInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.util.Arrays;
+-import java.util.zip.ZipException;
+ 
+ import org.apache.commons.compress.utils.IOUtils;
+ import org.junit.Test;
+@@ -228,26 +227,6 @@ public class ZipArchiveInputStreamTest {
+         }
+     }
+ 
+-    /**
+-     * <code>getNextZipEntry()</code> should throw a <code>ZipException</code> rather than return
+-     * <code>null</code> when an unexpected structure is encountered.
+-     */
+-    @Test
+-    public void testThrowOnInvalidEntry() throws Exception {
+-        final InputStream is = ZipArchiveInputStreamTest.class
+-                .getResourceAsStream("/invalid-zip.zip");
+-        final ZipArchiveInputStream zip = new ZipArchiveInputStream(is);
+-
+-        try {
+-            zip.getNextZipEntry();
+-            fail("IOException expected");
+-        } catch (ZipException expected) {
+-            assertTrue(expected.getMessage().contains("Unexpected record signature"));
+-        } finally {
+-            zip.close();
+-        }
+-    }
+-
+     private static byte[] readEntry(ZipArchiveInputStream zip, ZipArchiveEntry zae) throws IOException {
+         final int len = (int)zae.getSize();
+         final byte[] buff = new byte[len];

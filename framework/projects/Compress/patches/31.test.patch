@@ -1,0 +1,17 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
+index 5ebbbb5b..846b2f6a 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
+@@ -102,12 +102,6 @@ public class TarUtilsTest {
+             fail("Expected IllegalArgumentException - embedded space");
+         } catch (IllegalArgumentException expected) {
+         }
+-        buffer = " 0\00007 ".getBytes(CharsetNames.UTF_8); // Invalid - embedded NUL
+-        try {
+-            TarUtils.parseOctal(buffer,0, buffer.length);
+-            fail("Expected IllegalArgumentException - embedded NUL");
+-        } catch (IllegalArgumentException expected) {
+-        }
+     }
+ 
+     private void checkRoundTripOctal(final long value, final int bufsize) {

@@ -1,0 +1,6 @@
+org.apache.commons.compress.IOMethodsTest
+org.apache.commons.compress.archivers.ArchiveOutputStreamTest
+org.apache.commons.compress.archivers.TarTestCase
+org.apache.commons.compress.archivers.tar.TarArchiveEntryTest
+org.apache.commons.compress.archivers.tar.TarUtilsTest
+org.apache.commons.compress.changes.ChangeSetTestCase

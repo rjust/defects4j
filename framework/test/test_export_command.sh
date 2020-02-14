@@ -83,6 +83,15 @@ test_ExportTestClassesDir() {
             elif [ "$pid" == "JxPath" ]; then
                 expected="target/test-classes"
     	    elif [ "$pid" == "Lang" ]; then
+            elif [ "$pid" == "Collections" ]; then
+                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
+                    expected="build/tests"
+                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
+                    expected="target/tests"
+                fi
+            elif [ "$pid" == "Compress" ]; then
+                expected="target/test-classes"
+            elif [ "$pid" == "Lang" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "20" ]; then
                     expected="target/tests"
                 elif [ "$bid" -ge "21" ] && [ "$bid" -le "41" ]; then

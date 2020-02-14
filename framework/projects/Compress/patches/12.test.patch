@@ -1,0 +1,24 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/TarTestCase.java b/src/test/java/org/apache/commons/compress/archivers/TarTestCase.java
+index dcc27067..d663aef6 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/TarTestCase.java
++++ b/src/test/java/org/apache/commons/compress/archivers/TarTestCase.java
+@@ -300,19 +300,4 @@ public final class TarTestCase extends AbstractTestCase {
+             rmdir(tmp[0]);
+         }
+     }
+-
+-    public void testCOMPRESS178() throws Exception {
+-        final File input = getFile("COMPRESS-178.tar");
+-        final InputStream is = new FileInputStream(input);
+-        final ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream("tar", is);
+-        try {
+-            in.getNextEntry();
+-            fail("Expected IOException");
+-        } catch (IOException e) {
+-            Throwable t = e.getCause();
+-            assertTrue("Expected cause = IllegalArgumentException", t instanceof IllegalArgumentException);
+-        }
+-        in.close();
+-    }
+-
+ }
