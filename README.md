@@ -8,29 +8,27 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 789 bugs from the following open-source projects:
+Defects4J contains 835 bugs from the following open-source projects:
 
 | Identifier      | Project name               | Number of bugs |
 |-----------------|----------------------------|----------------|
-| Chart           | JFreeChart                 |  26            |
-| Cli             | Apache commons-cli         |  40            |
-| Closure         | Closure compiler           | 176            |
-| Codec           | Apache commons-codec       |  18            |
-| Collections     | Apache commons-collections |  28            |
-| Compress        | Apache commons-compress    |  47            |
-| Csv             | Apache commons-csv         |  16            |
-| Gson            | Google Gson                |  18            |
-| JacksonCore     | Jackson JSON parser        |  26            |
-| JacksonDatabind | Jackson data bindings      | 112            |
-| JacksonXml      | Jackson XML extension      |   6            |
-| Jsoup           | jsoup HTML Parser          |  93            |
-| JxPath          | Apache commons-jxpath      |  22            |
-| JxPath          | Apache commons-jxpath      |  22            |
-| Jsoup           | jsoup HTML Parser          |  93            |
-| Lang            | Apache commons-lang        |  65            |
-| Math            | Apache commons-math        | 106            |
-| Mockito         | Mockito                    |  38            |
-| Time            | Joda-Time                  |  27            |
+| Chart           | jfreechart                 |       26       |
+| Cli             | commons-cli                |       39       |
+| Closure         | closure-compiler           |      174       |
+| Codec           | commons-codec              |       18       |
+| Collections     | commons-collections        |        4       |
+| Compress        | commons-compress           |       47       |
+| Csv             | commons-csv                |       16       |
+| Gson            | gson                       |       18       |
+| JacksonCore     | jackson-core               |       26       |
+| JacksonDatabind | jackson-databind           |      112       |
+| JacksonXml      | jackson-dataformat-xml     |        6       |
+| Jsoup           | jsoup                      |       93       |
+| JxPath          | commons-jxpath             |       22       |
+| Lang            | commons-lang               |       64       |
+| Math            | commons-math               |      106       |
+| Mockito         | mockito                    |       38       |
+| Time            | joda-time                  |       26       |
 
 The bugs
 ---------------
