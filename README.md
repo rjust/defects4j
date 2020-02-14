@@ -10,15 +10,24 @@ The projects
 ---------------
 Defects4J contains 485 bugs from the following open-source projects:
 
-| Identifier | Project name               | Number of bugs |
-|------------|----------------------------|----------------|
-| Chart      | JFreeChart                 |  26            |
-| Closure    | Closure compiler           | 176            |
-| Compress   | Apache commons-compress    |  47            |
-| Lang       | Apache commons-lang        |  65            |
-| Math       | Apache commons-math        | 106            |
-| Mockito    | Mockito                    |  38            |
-| Time       | Joda-Time                  |  27            |
+| Identifier      | Project name               | Number of bugs |
+|-----------------|----------------------------|----------------|
+| Chart           | JFreeChart                 |  26            |
+| Cli             | Apache commons-cli         |  40            |
+| Closure         | Closure compiler           | 176            |
+| Codec           | Apache commons-codec       |  18            |
+| Compress        | Apache commons-compress    |  47            |
+| Csv             | Apache commons-csv         |  16            |
+| Gson            | Google Gson                |  18            |
+| JacksonCore     | Jackson JSON parser        |  26            |
+| JacksonDatabind | Jackson data bindings      | 112            |
+| JacksonXml      | Jackson XML extension      |   6            |
+| JxPath          | Apache commons-jxpath      |  22            |
+| Jsoup           | jsoup HTML Parser          |  93            |
+| Lang            | Apache commons-lang        |  65            |
+| Math            | Apache commons-math        | 106            |
+| Mockito         | Mockito                    |  38            |
+| Time            | Joda-Time                  |  27            |
 
 The bugs
 ---------------
@@ -37,36 +46,13 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
-Looking for additional bugs?
------------------------------
-A number of additional bugs are available in "work-in-progress" status.
-These bugs meet the same properties as the ones above, but have only been
-minimized by one of the maintainers. Metadata and patch content can 
-potentially change before these bugs are migrated into the master repository. 
-These bugs may be used in experiments, but should not be considered as 
-"stable" as the bugs in the master repository. If you use these bugs, please 
-acknowledge their "beta status" in any publications.
-
-**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
-
-| Identifier      | Project name           | Number of bugs |
-|-----------------|------------------------|----------------|
-| Cli             | Apache commons-cli     |  40            |
-| Codec           | Apache commons-codec   |  18            |
-| Csv             | Apache commons-csv     |  16            |
-| Gson            | Google Gson            |  18            |
-| JacksonCore     | Jackson JSON parser    |  26            |
-| JacksonDatabind | Jackson data bindings  | 112            |
-| JacksonXml      | Jackson XML extension  |   6            |
-| JxPath          | Apache commons-jxpath  |  22            |
-| Jsoup           | jsoup HTML Parser      |  93            |
 
 Setting up Defects4J
 ================
 
 Requirements
 ----------------
- - Java 1.8
+ - Java 1.8 (version 1.5.0 and older requires Java 1.7)
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
