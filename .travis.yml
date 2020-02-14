@@ -98,19 +98,11 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Collections -b25..28
       name: "Collections"
 ## Compress
-    - script: carton exec ./test_verify_bugs.sh -p Compress -b1..12
-      name: "Compress 1-12"
-    - script: carton exec ./test_verify_bugs.sh -p Compress -b13..24
-      name: "Compress 13-24"
-    - script: carton exec ./test_verify_bugs.sh -p Compress -b25..36
-      name: "Compress 25-36"
-    - script: carton exec ./test_verify_bugs.sh -p Compress -b37..47
-      name: "Compress 37-47"
+    - script: carton exec ./test_verify_bugs.sh -p Compress
+      name: "Compress"
 ## Lang
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
-      name: "Lang 1-32"
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
-      name: "Lang 33-65"
+    - script: carton exec ./test_verify_bugs.sh -p Lang
+      name: "Lang"
 ## Math
     - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
       name: "Math 1-18"
