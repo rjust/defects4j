@@ -56,10 +56,8 @@ jobs:
       script: carton exec ./test_verify_bugs.sh -p Chart
       name: "Chart"
 ## Cli
-    - script: carton exec ./test_verify_bugs.sh -p Cli -b1..20
-      name: "Cli 1-20"
-    - script: carton exec ./test_verify_bugs.sh -p Cli -b21..40
-      name: "Cli 21-40"
+    - script: carton exec ./test_verify_bugs.sh -p Cli
+      name: "Cli"
 ## Closure
     - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
       name: "Closure 1-10"
@@ -109,10 +107,8 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p Gson -b1..18
       name: "Gson"
 ## JacksonCore
-    - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b1..13
-      name: "JacksonCore 1-13"
-    - script: carton exec ./test_verify_bugs.sh -p JacksonCore -b14..26
-      name: "JacksonCore 14-26"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonCore
+      name: "JacksonCore"
 ## JacksonDatabind
     - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..14
       name: "JacksonDatabind 1-14"
@@ -138,34 +134,16 @@ jobs:
     - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..6
       name: "JacksonXml"
 ## Jsoup
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b1..11
-      name: "Jsoup 1-11"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b12..22
-      name: "Jsoup 12-22"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b23..33
-      name: "Jsoup 23-33"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b34..43
-      name: "Jsoup 34-43"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b44..53
-      name: "Jsoup 44-53"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b54..63
-      name: "Jsoup 54-63"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b64..73
-      name: "Jsoup 64-73"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b74..83
-      name: "Jsoup 74-83"
-    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b84..93
-      name: "Jsoup 84-93"
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b1..50
+      name: "Jsoup 1-50"
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b51..93
+      name: "Jsoup 51-93"
 ## JxPath
-    - script: carton exec ./test_verify_bugs.sh -p JxPath -b1..11
-      name: "JxPath 1-11"
-    - script: carton exec ./test_verify_bugs.sh -p JxPath -b12..22
-      name: "JxPath 12-22"
+    - script: carton exec ./test_verify_bugs.sh -p JxPath
+      name: "JxPath"
 ## Lang
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
-      name: "Lang 1-32"
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
-      name: "Lang 33-65"
+    - script: carton exec ./test_verify_bugs.sh -p Lang
+      name: "Lang"
 ## Math
     - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
       name: "Math 1-18"
