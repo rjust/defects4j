@@ -68,6 +68,14 @@ test_ExportTestClassesDir() {
                 elif [ "$bid" -ge "17" ] && [ "$bid" -le "18" ]; then
                     expected="target/test-classes"
                 fi
+            elif [ "$pid" == "Collections" ]; then
+                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
+                    expected="build/tests"
+                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
+                    expected="target/tests"
+                fi
+            elif [ "$pid" == "Compress" ]; then
+                expected="target/test-classes"
             elif [ "$pid" == "Csv" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "Gson" ]; then
@@ -81,15 +89,6 @@ test_ExportTestClassesDir() {
             elif [ "$pid" == "Jsoup" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "JxPath" ]; then
-                expected="target/test-classes"
-    	    elif [ "$pid" == "Lang" ]; then
-            elif [ "$pid" == "Collections" ]; then
-                if [ "$bid" -ge "1" ] && [ "$bid" -le "21" ]; then
-                    expected="build/tests"
-                elif [ "$bid" -ge "22" ] && [ "$bid" -le "28" ]; then
-                    expected="target/tests"
-                fi
-            elif [ "$pid" == "Compress" ]; then
                 expected="target/test-classes"
             elif [ "$pid" == "Lang" ]; then
                 if [ "$bid" -ge "1" ] && [ "$bid" -le "20" ]; then
