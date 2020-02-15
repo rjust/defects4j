@@ -91,6 +91,24 @@ be used stand-alone.
         <echo message="${cp.test}" file="${file.export}"/>
     </target>
 
+<!-- Relevant classes -->
+    <target name="export.classes.relevant"
+            description="Classes loaded by the triggering tests"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.classes.relevant}" file="${file.export}"/>
+
+        <loadfile property="classes.rel" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${classes.rel}" file="${file.export}"/>
+    </target>
+
 <!-- Modified classes -->
     <target name="export.classes.modified"
             description="Classes modified by the bug fix"
