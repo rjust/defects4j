@@ -289,8 +289,9 @@ sub exec_cmd {
     my $log = `$cmd`; my $ret = $?;
     $$log_ref = $log if defined $log_ref;
     if ($ret!=0) {
-        print(STDERR "FAIL\n$log");
+        print(STDERR "FAIL\n");
         print(STDERR "Executed command: $cmd\n");
+        print(STDERR "$log");
         return 0;
     }
     print(STDERR "OK\n");
