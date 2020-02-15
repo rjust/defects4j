@@ -157,7 +157,8 @@ directory to export a version-specific property:
 
 | Property         | Description                                                                         |
 |------------------|-------------------------------------------------------------------------------------|
-| classes.modified | Classes (source files) modified by the bug fix                                      |
+| classes.modified | Classes modified by the bug fix                                                     |
+| classes.relevant | Classes loaded by the JVM when executing all triggering tests                       |
 | cp.compile       | Classpath to compile and run the project                                            |
 | cp.test          | Classpath to compile and run the developer-written tests                            |
 | dir.src.classes  | Source directory of classes (relative to working directory)                         |
@@ -176,11 +177,10 @@ provides the following scripts:
 | Script            | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
 | [defects4j](http://defects4j.org/html_doc/defects4j.html)         | Main script, described above                                   |
+| [gen_tests](http://defects4j.org/html_doc/gen_tests.html)         | Generate test suites using EvoSuite or Randoop                 |
 | [run_bug_detection](http://defects4j.org/html_doc/run_bug_detection.html) | Determine the real fault detection rate                |
 | [run_mutation](http://defects4j.org/html_doc/run_mutation.html)   | Determine the mutation score                                   |
 | [run_coverage](http://defects4j.org/html_doc/run_coverage.html)   | Determine code coverage ratios (statement and branch coverage) |
-| [run_evosuite](http://defects4j.org/html_doc/run_evosuite.html)   | Generate test suites using EvoSuite                            |
-| [run_randoop](http://defects4j.org/html_doc/run_randoop.html)     | Generate test suites using Randoop                             |
 
 Mining and contributing additional bugs to Defects4J
 ================

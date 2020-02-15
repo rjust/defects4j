@@ -1,7 +1,8 @@
 framework/lib/analyzer.jar
 framework/lib/build-analyzer-*.jar
 framework/lib/build_systems
-framework/lib/test_generation
+framework/lib/test_generation/*
+!framework/lib/test_generation/bin
 framework/test/*.log
 project_repos/*
 !project_repos/get_repos.sh
