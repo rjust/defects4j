@@ -39,7 +39,7 @@ jobs:
       name: test_tutorial.sh
     - script: carton exec ./test_mutation_analysis.sh
       name: test_mutation_analysis.sh
-    - script: carton exec ./test_gen_tests.sh
+    - script: carton exec ./test_gen_tests.sh -p Lang -b 6
       name: test_gen_tests.sh
     - script: carton exec ./test_fix_test_suite.sh
       name: test_fix_test_suite.sh
