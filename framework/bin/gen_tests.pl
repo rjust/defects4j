@@ -221,6 +221,7 @@ $ENV{D4J_FILE_TARGET_CLASSES} = "$TARGET_CLASSES";
 $ENV{D4J_DIR_WORKDIR}         = "$TMP_DIR";
 $ENV{D4J_DIR_OUTPUT}          = "$TMP_DIR/$TOOL";
 $ENV{D4J_DIR_LOG}             = "$LOG_DIR";
+$ENV{D4J_DIR_TESTGEN_BIN}     = "$TESTGEN_BIN_DIR";
 $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
 $ENV{D4J_TOTAL_BUDGET}        = "$TIME";
 $ENV{D4J_SEED}                = "$SEED";
@@ -292,7 +293,7 @@ sub is_generator_valid {
     my %all_tools;
     opendir(my $dir, "$TESTGEN_BIN_DIR") || die("Cannot read test generators: $!");
         while (readdir $dir) {
-            /^(.*)\.sh/ and $all_tools{$1} = 1;
+            /^([^_].+)\.sh/ and $all_tools{$1} = 1;
         }
     closedir $dir;
     unless(defined $all_tools{$tool}) {
