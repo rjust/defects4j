@@ -9,27 +9,29 @@
 #                          should be written (may not exist).
 # D4J_DIR_WORKDIR:         Defects4J working directory of the checked-out
 #                          project version.
+# D4J_DIR_TESTGEN_BIN:     Directory that provides all scripts and configs of
+#                          all test-generation tools (directory of this script).
 # D4J_DIR_TESTGEN_LIB:     Directory that provides the libraries of all
-#                          testgeneration tools.
+#                          test-generation tools.
 # D4J_TOTAL_BUDGET:        The total budget (in seconds) that the tool should
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
 # D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
 
-# Check whether the D4J_DIR_TESTGEN_LIB variable is set
-if [ -z "$D4J_DIR_TESTGEN_LIB" ]; then
-    echo "Variable D4J_DIR_TESTGEN_LIB not set!"
+# Check whether the D4J_DIR_TESTGEN_BIN variable is set
+if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
+    echo "Variable D4J_DIR_TESTGEN_BIN not set!"
     exit 1
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_LIB/bin/_tool.source
+source $D4J_DIR_TESTGEN_BIN/_tool.source
 
 # The classpath to compile and run the project
 project_cp=$(get_project_cp)
 
 # Read all additional configuration parameters
-add_config=$(parse_config $D4J_DIR_TESTGEN_LIB/bin/<generator id>.config)
+add_config=$(parse_config $D4J_DIR_TESTGEN_BIN/<generator id>.config)
 
 # Make sure the provided test mode is supported
 if [ $D4J_TEST_MODE == "regression" ]; then

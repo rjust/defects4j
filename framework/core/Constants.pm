@@ -161,6 +161,15 @@ our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/gen
 
 =pod
 
+=item C<TESTGEN_BIN_DIR>
+
+The directory of the wrapper scripts of the test generation tools (I<C<LIB_DIR>/test_generation/bin>)
+
+=cut
+our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin");
+
+=pod
+
 =item C<BUILD_SYSTEMS_LIB_DIR>
 
 The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_systems>)
@@ -253,6 +262,7 @@ $LIB_DIR
 $UTIL_DIR
 $BASE_DIR
 $MAJOR_ROOT
+$TESTGEN_BIN_DIR
 $TESTGEN_LIB_DIR
 $BUILD_SYSTEMS_LIB_DIR
 $REPO_DIR

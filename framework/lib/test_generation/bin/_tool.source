@@ -74,6 +74,7 @@ sanity_check() {
     check_env D4J_FILE_TARGET_CLASSES
     check_env D4J_DIR_OUTPUT
     check_env D4J_DIR_WORKDIR
+    check_env D4J_DIR_TESTGEN_BIN
     check_env D4J_DIR_TESTGEN_LIB
     check_env D4J_TOTAL_BUDGET
     check_env D4J_SEED

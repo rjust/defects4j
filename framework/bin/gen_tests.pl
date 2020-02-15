@@ -106,7 +106,7 @@ of target classes can be specified using the C<-c> flag.
 
 The following wrapper script invokes the specified test generator and provides
 the generator-specific configuration:
-F<C<TESTGEN_LIB_DIR>/bin/_C<GENERATOR>.sh>.
+F<C<TESTGEN_BIN_DIR>/C<GENERATOR>.sh>.
 
 =cut
 use strict;
@@ -227,7 +227,7 @@ $ENV{D4J_SEED}                = "$SEED";
 $ENV{D4J_TEST_MODE}           = "$MODE";
 
 # Invoke the test generator
-Utils::exec_cmd("$TESTGEN_LIB_DIR/bin/$TOOL.sh", "Generating tests ($TOOL)")
+Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating tests ($TOOL)")
         or die "Failed to generate tests!";
 
 # Compress generated tests and copy archive to output directory
@@ -238,7 +238,7 @@ Utils::exec_cmd("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .", "Creating tes
 $LOG->log_msg("Created test suite archive: $archive");
 
 # Acknowledge the tool author(s)
-system("cat $TESTGEN_LIB_DIR/bin/$TOOL.credit");
+system("cat $TESTGEN_BIN_DIR/$TOOL.credit");
 
 =pod
 
@@ -290,7 +290,7 @@ system("rm -rf $TMP_DIR") unless $DEBUG;
 sub is_generator_valid {
     my $tool = shift;
     my %all_tools;
-    opendir(my $dir, "$TESTGEN_LIB_DIR/bin") || die("Cannot read test generators: $!");
+    opendir(my $dir, "$TESTGEN_BIN_DIR") || die("Cannot read test generators: $!");
         while (readdir $dir) {
             /^(.*)\.sh/ and $all_tools{$1} = 1;
         }
