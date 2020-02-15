@@ -91,7 +91,7 @@ for bid in $(echo $BUGS); do
 
     # Iterate over all supported generators
 
-    for tool in $(../bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
+    for tool in $($BASE_DIR/framework/bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
         # Directory for generated test suites
         suite_src="$tool"
         suite_num=1
