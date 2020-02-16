@@ -89,8 +89,7 @@ for bid in $(echo $BUGS); do
         continue
     fi
 
-    # Iterate over all supported generators
-
+    # Iterate over all supported generators and generate regression tests
     for tool in $($BASE_DIR/framework/bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
         # Directory for generated test suites
         suite_src="$tool"
@@ -98,12 +97,16 @@ for bid in $(echo $BUGS); do
         suite_dir="$work_dir/$tool/$suite_num"
         target_classes="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
 
-        # Iterate over all supported generators and generate regression tests
-        for type in f b; do
+        # Generate (regression) tests for the fixed version
+        for type in f; do
             vid=${bid}$type
 
             # Run generator and the fix script on the generated test suite
-            gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" || die "run $tool (regression) on $PID-$vid"
+            if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
+                die "run $tool (regression) on $PID-$vid"
+                # Skip any remaining analyses (cannot be run), even if halt-on-error is false
+                continue
+            fi
             fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
 
             # Run test suite and determine bug detection
