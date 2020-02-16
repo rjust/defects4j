@@ -18,7 +18,7 @@ log_file=$(echo $script | sed 's/\.sh$/\.log/')
 LOG=$TEST_DIR/${log_file}
 
 # Set default temporary directory
-TMP_DIR=/tmp/test_d4j
+TMP_DIR="/tmp/test_d4j_$$_$(date +%s)"
 
 # By default exit on first error
 HALT_ON_ERROR=1

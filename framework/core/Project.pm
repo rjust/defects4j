@@ -1016,7 +1016,8 @@ sub _ant_call {
 
 #
 # Ensure backward compatibility with Java 7
-# TODO: Remove after providing full Java 8 support
+# TODO: Remove after Defects4J downloads and initializes its own version of Ant
+#       Currently, we rely on Major's version of Ant to be properly set up.
 #
 sub _ant_call_comp {
     @_ >= 2 or die $ARG_ERROR;
