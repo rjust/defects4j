@@ -72,8 +72,8 @@ organization the repo is under, e.g., apache.
 
 =item B<-q C<query>>
 
-The query sent to the issue tracker. Suitable defaults for supported trackers
-are chosen so they identify only bugs.
+The query (i.e., filter for bug type or label) sent to the issue tracker.
+Suitable defaults for supported trackers are chosen so they identify only bugs.
 
 =item B<-u C<tracker-uri>>
 
@@ -125,7 +125,7 @@ my $ISSUE_TRACKER_PROJECT_ID = $cmd_opts{t};
 my $ISSUES_DIR = "$WORK_DIR/issues";
 my $ISSUES_FILE = "$WORK_DIR/issues.txt";
 my $ORGANIZATION_ID = $cmd_opts{z};
-my $QUERY = $cmd_opts{q} // "labels=Bug";
+my $QUERY = $cmd_opts{q};
 my $TRACKER_URI = $cmd_opts{u};
 my $FETCHING_LIMIT = $cmd_opts{l};
 
@@ -151,12 +151,17 @@ if (-e "$CORE_DIR/Project/$PID.pm") {
     system("cp $PROJECTS_DIR/$PID/$PID.build.xml $WORK_DIR/framework/projects/$PID/$PID.build.xml");
 }
 
+if (defined($QUERY)) {
+    $QUERY = "-q $QUERY";
+} else {
+    $QUERY = "";
+}
 # Collect all issues from the project issue tracker
 Utils::exec_cmd("./download-issues.pl -g $ISSUE_TRACKER_NAME"
                                   . " -t $ISSUE_TRACKER_PROJECT_ID"
                                   . " -o $ISSUES_DIR"
                                   . " -f $ISSUES_FILE"
-                                  . " -q $QUERY",
+                                  . "$QUERY",
                 "Collecting all issues from the project issue tracker") or die "Cannot collect all issues from the project issue tracker!";
 
 # Collect git log
