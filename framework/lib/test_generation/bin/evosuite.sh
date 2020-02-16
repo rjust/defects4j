@@ -2,7 +2,7 @@
 #
 # Wrapper script for Evosuite
 #
-# Exported environment variables:
+# Environment variables exported by Defects4J's gen_tests.pl script:
 # D4J_HOME:                The root directory of the used Defects4J installation.
 # D4J_FILE_TARGET_CLASSES: File that lists all target classes (one per line).
 # D4J_DIR_OUTPUT:          Directory to which the generated test suite sources
@@ -17,6 +17,7 @@
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
 # D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
+# D4J_DEBUG:               Run in debug mode: 0 (no) or 1 (yes).
 
 # Check whether the D4J_DIR_TESTGEN_BIN variable is set
 if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then

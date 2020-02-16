@@ -79,6 +79,7 @@ sanity_check() {
     check_env D4J_TOTAL_BUDGET
     check_env D4J_SEED
     check_env D4J_TEST_MODE
+    check_env D4J_DEBUG
 }
 ###############################################################################
 

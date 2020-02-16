@@ -226,6 +226,7 @@ $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
 $ENV{D4J_TOTAL_BUDGET}        = "$TIME";
 $ENV{D4J_SEED}                = "$SEED";
 $ENV{D4J_TEST_MODE}           = "$MODE";
+$ENV{D4J_DEBUG}               = "$DEBUG";
 
 # Invoke the test generator
 Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating tests ($TOOL)")
