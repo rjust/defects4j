@@ -70,10 +70,8 @@ cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
           --regression-test-basename=$REG_BASE_NAME \
           --error-test-basename=$ERR_BASE_NAME"
 
-# Print the command that failed, if an error occurred.
-if ! $cmd; then
-    echo
-    echo "FAILED: $cmd"
+# Run the test-generation command
+if ! exec_cmd "$cmd"
     exit 1
 fi
 

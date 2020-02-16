@@ -43,12 +43,10 @@ else
     die "Unsupported test mode: $D4J_TEST_MODE"
 fi
 
-# The command that invokes the test generator
+# Build the test-generation command
 cmd="..."
 
-# Print the command that failed, if an error occurred.
-if ! $cmd; then
-    echo
-    echo "FAILED: $cmd"
+# Run the test-generation command
+if ! exec_cmd "$cmd"
     exit 1
 fi

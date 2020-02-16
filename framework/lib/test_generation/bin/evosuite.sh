@@ -53,10 +53,8 @@ for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     -Dtest_dir=$D4J_DIR_OUTPUT \
     $add_config"
 
-    # Print the command that failed, if an error occurred.
-    if ! $cmd; then
-        echo
-        echo "FAILED: $cmd"
+    # Run the test-generation command
+    if ! exec_cmd "$cmd"
         exit 1
     fi
 done
