@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
 ################################################################################
 #
-# This script verifies that all bugs for a given project are reproducible and
-# that the provided information about triggering tests is correct.
-# This script must be run from its own directory (`framework/tests/`).
-#
-# By default, this script runs only relevant tests. Set the -A flag to run all
-# tests.
+# This script verifies that test generation tools can be executed for all bugs
+# for a given project. 
 #
 # Examples for Lang:
-#   * Verify all bugs:         ./test_verify_bugs.sh -pLang
-#   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
-#   * Verify bugs 1 and 3:     ./test_verify_bugs.sh -pLang -b1 -b3
-#   * Verify bugs 1-10 and 20: ./test_verify_bugs.sh -pLang -b1..10 -b20
+#   * Generate for all bugs:         ./test_generate_suites.sh -pLang
+#   * Generate for bugs 1-10:        ./test_generate_suites.sh -pLang -b1..10
+#   * Generate for bugs 1 and 3:     ./test_generate_suites.sh -pLang -b1 -b3
+#   * Generate for bugs 1-10 and 20: ./test_generate_suites.sh -pLang -b1..10 -b20
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
 source test.include
+init
 
 # Print usage message and exit
 usage() {
@@ -29,14 +26,9 @@ usage() {
     exit 1
 }
 
-# Run only relevant tests by default
-TEST_FLAG="-r"
-
 # Check arguments
-while getopts ":p:b:A" opt; do
+while getopts ":p:b:" opt; do
     case $opt in
-        A) TEST_FLAG=""
-            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -75,24 +67,21 @@ fi
 # Create log file
 script_name=$(echo $script | sed 's/\.sh$//')
 LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
-DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).failing_tests"
 
 ################################################################################
-# Run developer-written tests on all buggy and fixed program versions, and 
-# verify trigger tests
+# Run all generators on the specified bugs, and determine bug detection,
+# mutation score, and coverage.
 ################################################################################
 
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
 
-test_dir="$TMP_DIR/test_trigger"
-mkdir -p $test_dir
+work_dir="$TMP_DIR/$PID"
+mkdir -p $work_dir
 
-mkdir -p $DIR_FAILING
-
-work_dir="$test_dir/$PID"
 # Clean working directory
-rm -rf $work_dir
+rm -rf "$work_dir/*"
+
 for bid in $(echo $BUGS); do
     # Skip all bug ids that do not exist in the commit-db
     if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/commit-db"; then
@@ -100,33 +89,40 @@ for bid in $(echo $BUGS); do
         continue
     fi
 
-    for v in "b" "f"; do
-        vid=${bid}$v
-        defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
-        defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+    # Iterate over all supported generators
 
-        cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
+    for tool in $($BASE_DIR/framework/bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
+        # Directory for generated test suites
+        suite_src="$tool"
+        suite_num=1
+        suite_dir="$work_dir/$tool/$suite_num"
+        target_classes="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
 
-        triggers=$(num_triggers "$work_dir/failing_tests")
-        # Expected number of failing tests for each fixed version is 0!
-        if [ $v == "f" ]; then
-            [ $triggers -eq 0 ] \
-                    || die "verify number of triggering tests: $PID-$vid (expected: 0, actual: $triggers)"
-            continue
-        fi
+        # Iterate over all supported generators and generate regression tests
+        for type in f b; do
+            vid=${bid}$type
 
-        # Expected number of failing tests for each buggy version is equal
-        # to the number of provided triggering tests
-        expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
-        [ $triggers -eq $expected ] \
-                || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
-        for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
-            grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
+            # Run generator and the fix script on the generated test suite
+            gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" || die "run $tool (regression) on $PID-$vid"
+            fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
+
+            # Run test suite and determine bug detection
+            test_bug_detection $PID "$suite_dir"
+
+            # Run test suite and determine mutation score
+            test_mutation $PID "$suite_dir"
+
+            # Run test suite and determine code coverage
+            test_coverage $PID "$suite_dir" 0
+
+            rm -rf $work_dir/$tool
         done
     done
+
+    # Run Randoop and generate error-revealing tests
+    gen_tests.pl -g randoop -p $PID -v ${bid}b -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E || die "run $tool (error-revealing) on $pid-$vid"
+
 done
-rm -rf $work_dir
 HALT_ON_ERROR=1
 
 # Print a summary of what went wrong

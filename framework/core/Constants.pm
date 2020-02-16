@@ -161,6 +161,15 @@ our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/gen
 
 =pod
 
+=item C<TESTGEN_BIN_DIR>
+
+The directory of the wrapper scripts of the test generation tools (I<C<LIB_DIR>/test_generation/bin>)
+
+=cut
+our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin");
+
+=pod
+
 =item C<BUILD_SYSTEMS_LIB_DIR>
 
 The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_systems>)
@@ -234,6 +243,7 @@ our $PROP_MUTATE          = "d4j.classes.mutate";
 our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
+our $PROP_CLASSES_RELEVANT= "d4j.classes.relevant";
 our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
 our $PROP_PID             = "d4j.project.id";
 our $PROP_BID             = "d4j.bug.id";
@@ -252,6 +262,7 @@ $LIB_DIR
 $UTIL_DIR
 $BASE_DIR
 $MAJOR_ROOT
+$TESTGEN_BIN_DIR
 $TESTGEN_LIB_DIR
 $BUILD_SYSTEMS_LIB_DIR
 $REPO_DIR
@@ -275,6 +286,7 @@ $PROP_MUTATE
 $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
 $PROP_CLASSES_MODIFIED
+$PROP_CLASSES_RELEVANT
 $PROP_TESTS_TRIGGER
 $PROP_PID
 $PROP_BID
