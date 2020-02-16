@@ -109,7 +109,7 @@ $project->{prog_root} = $WORK_DIR;
 
 # Export property to a temporary file
 my $tmp_file = "$WORK_DIR/.export.$PROP";
-$project->_ant_call("export.$PROP", "-Dfile.export=$tmp_file")
+$project->_ant_call_comp("export.$PROP", "-Dfile.export=$tmp_file")
     or die "Cannot export property $PROP";
 
 # Read temporary file and either print to STDOUT or out_file
