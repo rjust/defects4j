@@ -2,8 +2,9 @@
 com.fasterxml.jackson.core.JsonParseException: Numeric value (9223372036854775817) out of range of long (-9223372036854775808 - 9223372036854775807)
  at [Source: UNKNOWN; line: 1, column: 20]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:698)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:574)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:704)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:582)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:577)
 	at com.fasterxml.jackson.core.base.ParserBase.convertNumberToLong(ParserBase.java:921)
 	at com.fasterxml.jackson.core.base.ParserBase.getLongValue(ParserBase.java:663)
 	at com.fasterxml.jackson.core.testsupport.AsyncReaderWrapper.getLongValue(AsyncReaderWrapper.java:57)
@@ -46,7 +47,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value (922337203685477581
 com.fasterxml.jackson.core.JsonParseException: Numeric value (2147483648) out of range of int
  at [Source: UNKNOWN; line: 1, column: 11]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:698)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:704)
 	at com.fasterxml.jackson.core.base.ParserBase.convertNumberToInt(ParserBase.java:887)
 	at com.fasterxml.jackson.core.base.ParserBase.getIntValue(ParserBase.java:649)
 	at com.fasterxml.jackson.core.testsupport.AsyncReaderWrapper.getIntValue(AsyncReaderWrapper.java:56)
@@ -89,8 +90,9 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value (2147483648) out of
 com.fasterxml.jackson.core.JsonParseException: Numeric value (9223372036854775817) out of range of long (-9223372036854775808 - 9223372036854775807)
  at [Source: (ByteArrayInputStream); line: 1, column: 39]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:698)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:574)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:704)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:582)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase.reportOverflowLong(ParserMinimalBase.java:577)
 	at com.fasterxml.jackson.core.base.ParserBase.convertNumberToLong(ParserBase.java:921)
 	at com.fasterxml.jackson.core.base.ParserBase.getLongValue(ParserBase.java:663)
 	at com.fasterxml.jackson.core.read.NumberCoercionTest.testToLongFailing(NumberCoercionTest.java:189)
@@ -132,7 +134,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value (922337203685477581
 com.fasterxml.jackson.core.JsonParseException: Numeric value (2147483648) out of range of int
  at [Source: (ByteArrayInputStream); line: 1, column: 21]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:698)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:704)
 	at com.fasterxml.jackson.core.base.ParserBase.convertNumberToInt(ParserBase.java:887)
 	at com.fasterxml.jackson.core.base.ParserBase.getIntValue(ParserBase.java:649)
 	at com.fasterxml.jackson.core.read.NumberCoercionTest.testToIntFailing(NumberCoercionTest.java:68)
@@ -174,7 +176,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value (2147483648) out of
 com.fasterxml.jackson.core.JsonParseException: Numeric value ([Integer with 199999 digits]) out of range of long
  at [Source: (ByteArrayInputStream); line: 1, column: 200001]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:708)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:714)
 	at com.fasterxml.jackson.core.base.ParserBase._reportTooLongIntegral(ParserBase.java:870)
 	at com.fasterxml.jackson.core.base.ParserBase._parseSlowInt(ParserBase.java:849)
 	at com.fasterxml.jackson.core.base.ParserBase._parseNumericValue(ParserBase.java:775)
@@ -218,7 +220,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value ([Integer with 1999
 com.fasterxml.jackson.core.JsonParseException: Numeric value (-9223372036854775809) out of range of long
  at [Source: (ByteArrayInputStream); line: 1, column: 22]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:708)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:714)
 	at com.fasterxml.jackson.core.base.ParserBase._reportTooLongIntegral(ParserBase.java:870)
 	at com.fasterxml.jackson.core.base.ParserBase._parseSlowInt(ParserBase.java:849)
 	at com.fasterxml.jackson.core.base.ParserBase._parseNumericValue(ParserBase.java:775)
@@ -262,7 +264,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value (-92233720368547758
 com.fasterxml.jackson.core.JsonParseException: Numeric value ([Integer with 199999 digits]) out of range of int
  at [Source: (ByteArrayInputStream); line: 1, column: 200001]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:708)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:714)
 	at com.fasterxml.jackson.core.base.ParserBase._reportTooLongIntegral(ParserBase.java:870)
 	at com.fasterxml.jackson.core.base.ParserBase._parseSlowInt(ParserBase.java:849)
 	at com.fasterxml.jackson.core.base.ParserBase._parseNumericValue(ParserBase.java:775)
@@ -307,7 +309,7 @@ com.fasterxml.jackson.core.JsonParseException: Numeric value ([Integer with 1999
 com.fasterxml.jackson.core.JsonParseException: Numeric value (12345678907) out of range of int
  at [Source: (ByteArrayInputStream); line: 1, column: 14]
 	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1833)
-	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:698)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:704)
 	at com.fasterxml.jackson.core.base.ParserBase.convertNumberToInt(ParserBase.java:887)
 	at com.fasterxml.jackson.core.base.ParserBase.getIntValue(ParserBase.java:649)
 	at com.fasterxml.jackson.core.read.NumberParsingTest._testSimpleLong(NumberParsingTest.java:128)
