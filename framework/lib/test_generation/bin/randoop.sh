@@ -68,7 +68,8 @@ randoop.main.Main gentests \
   --randomseed=$D4J_SEED \
   --time-limit=$D4J_TOTAL_BUDGET \
   --regression-test-basename=$REG_BASE_NAME \
-  --error-test-basename=$ERR_BASE_NAME"
+  --error-test-basename=$ERR_BASE_NAME \
+  $add_config"
 
 if [ "$D4J_DEBUG" == "1" ]; then
   cmd="$cmd \
