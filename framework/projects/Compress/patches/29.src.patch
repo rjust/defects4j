@@ -1,304 +1,131 @@
 diff --git a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
-index c73e665f..9e9629a9 100644
+index c73e665f..6bd8f031 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
-@@ -227,11 +227,7 @@ public class ArchiveStreamFactory {
-             }
-         }
-         if (JAR.equalsIgnoreCase(archiverName)) {
--            if (entryEncoding != null) {
--                return new JarArchiveInputStream(in, entryEncoding);
--            } else {
--                return new JarArchiveInputStream(in);
--            }
-+            return new JarArchiveInputStream(in);
-         }
-         if (CPIO.equalsIgnoreCase(archiverName)) {
-             if (entryEncoding != null) {
-@@ -294,11 +290,7 @@ public class ArchiveStreamFactory {
+@@ -294,11 +294,7 @@ public class ArchiveStreamFactory {
              }
          }
          if (JAR.equalsIgnoreCase(archiverName)) {
 -            if (entryEncoding != null) {
 -                return new JarArchiveOutputStream(out, entryEncoding);
 -            } else {
--                return new JarArchiveOutputStream(out);
+                 return new JarArchiveOutputStream(out);
 -            }
-+            return new JarArchiveOutputStream(out);
          }
          if (CPIO.equalsIgnoreCase(archiverName)) {
              if (entryEncoding != null) {
-@@ -347,25 +339,13 @@ public class ArchiveStreamFactory {
-                     return new ZipArchiveInputStream(in);
+@@ -361,11 +357,7 @@ public class ArchiveStreamFactory {
+                     return new CpioArchiveInputStream(in);
                  }
-             } else if (JarArchiveInputStream.matches(signature, signatureLength)) {
--                if (entryEncoding != null) {
--                    return new JarArchiveInputStream(in, entryEncoding);
--                } else {
--                    return new JarArchiveInputStream(in);
--                }
-+                return new JarArchiveInputStream(in);
-             } else if (ArArchiveInputStream.matches(signature, signatureLength)) {
-                 return new ArArchiveInputStream(in);
-             } else if (CpioArchiveInputStream.matches(signature, signatureLength)) {
--                if (entryEncoding != null) {
--                    return new CpioArchiveInputStream(in, entryEncoding);
--                } else {
--                    return new CpioArchiveInputStream(in);
--                }
-+                return new CpioArchiveInputStream(in);
              } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {
 -                if (entryEncoding != null) {
 -                    return new ArjArchiveInputStream(in, entryEncoding);
 -                } else {
--                    return new ArjArchiveInputStream(in);
+                     return new ArjArchiveInputStream(in);
 -                }
-+                return new ArjArchiveInputStream(in);
              } else if (SevenZFile.matches(signature, signatureLength)) {
                  throw new StreamingNotSupportedException(SEVEN_Z);
              }
-@@ -376,7 +356,7 @@ public class ArchiveStreamFactory {
-             signatureLength = IOUtils.readFully(in, dumpsig);
-             in.reset();
-             if (DumpArchiveInputStream.matches(dumpsig, signatureLength)) {
--                return new DumpArchiveInputStream(in, entryEncoding);
-+                return new DumpArchiveInputStream(in);
-             }
- 
-             // Tar needs an even bigger buffer to check the signature; read the first block
-@@ -385,7 +365,11 @@ public class ArchiveStreamFactory {
-             signatureLength = IOUtils.readFully(in, tarheader);
-             in.reset();
-             if (TarArchiveInputStream.matches(tarheader, signatureLength)) {
--                return new TarArchiveInputStream(in, entryEncoding);
-+                if (entryEncoding != null) {
-+                    return new TarArchiveInputStream(in, entryEncoding);
-+                } else {
-+                    return new TarArchiveInputStream(in);
-+                }
-             }
-             // COMPRESS-117 - improve auto-recognition
-             if (signatureLength >= 512) {
-@@ -394,7 +378,7 @@ public class ArchiveStreamFactory {
-                     tais = new TarArchiveInputStream(new ByteArrayInputStream(tarheader));
-                     // COMPRESS-191 - verify the header checksum
-                     if (tais.getNextTarEntry().isCheckSumOK()) {
--                        return new TarArchiveInputStream(in, encoding);
-+                        return new TarArchiveInputStream(in);
-                     }
-                 } catch (Exception e) { // NOPMD
-                     // can generate IllegalArgumentException as well
 diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
-index 915b56e5..a7518275 100644
+index 915b56e5..1ad5f10e 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
-@@ -91,10 +91,9 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
-     /**
-      * The encoding to use for filenames and labels.
-      */
--    private final ZipEncoding zipEncoding;
-+    private final ZipEncoding encoding;
+@@ -94,7 +94,6 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+     private final ZipEncoding zipEncoding;
  
      // the provided encoding (for unit tests)
 -    final String encoding;
  
      /**
       * Construct the cpio input stream with a blocksize of {@link
-@@ -153,8 +152,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+@@ -153,7 +152,6 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
      public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding) {
          this.in = in;
          this.blockSize = blockSize;
 -        this.encoding = encoding;
--        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
      }
  
-     /**
-@@ -448,7 +446,7 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
-         byte tmpBuffer[] = new byte[length - 1];
-         readFully(tmpBuffer, 0, tmpBuffer.length);
-         this.in.read();
--        return zipEncoding.decode(tmpBuffer);
-+        return encoding.decode(tmpBuffer);
-     }
- 
-     /**
 diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
-index fc829ffa..391e512b 100644
+index fc829ffa..d2d12826 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
-@@ -92,10 +92,9 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
-     /**
-      * The encoding to use for filenames and labels.
-      */
--    private final ZipEncoding zipEncoding;
-+    private final ZipEncoding encoding;
+@@ -95,7 +95,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+     private final ZipEncoding zipEncoding;
  
      // the provided encoding (for unit tests)
 -    final String encoding;
  
      /**
       * Construct the cpio output stream with a specified format, a
-@@ -160,8 +159,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+@@ -160,7 +159,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
          }
          this.entryFormat = format;
          this.blockSize = blockSize;
 -        this.encoding = encoding;
--        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
      }
  
-     /**
-@@ -538,7 +536,7 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
-      * @throws IOException if the string couldn't be written
-      */
-     private void writeCString(final String str) throws IOException {
--        ByteBuffer buf = zipEncoding.encode(str);
-+        ByteBuffer buf = encoding.encode(str);
-         final int len = buf.limit() - buf.position();
-         out.write(buf.array(), buf.arrayOffset(), len);
-         out.write('\0');
 diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
-index 09431a40..af1012d3 100644
+index 09431a40..84c78396 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
-@@ -74,10 +74,9 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
-     /**
-      * The encoding to use for filenames and labels.
-      */
--    private final ZipEncoding zipEncoding;
-+    private final ZipEncoding encoding;
+@@ -77,7 +77,6 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+     private final ZipEncoding zipEncoding;
  
      // the provided encoding (for unit tests)
 -    final String encoding;
  
      /**
       * Constructor using the platform's default encoding for file
-@@ -102,8 +101,7 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+@@ -102,7 +101,6 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
          throws ArchiveException {
          this.raw = new TapeInputStream(is);
          this.hasHitEOF = false;
 -        this.encoding = encoding;
--        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
  
          try {
-             // read header, verify it's a dump archive.
-@@ -114,7 +112,7 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
-             }
- 
-             // get summary information
--            summary = new DumpArchiveSummary(headerBytes, this.zipEncoding);
-+            summary = new DumpArchiveSummary(headerBytes, this.encoding);
- 
-             // reset buffer with actual block size.
-             raw.resetBlockSize(summary.getNTRec(), summary.isCompressed());
-@@ -355,7 +353,7 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
- 
-                 byte type = blockBuffer[i + 6];
- 
--                String name = DumpArchiveUtil.decode(zipEncoding, blockBuffer, i + 8, blockBuffer[i + 7]);
-+                String name = DumpArchiveUtil.decode(encoding, blockBuffer, i + 8, blockBuffer[i + 7]);
- 
-                 if (".".equals(name) || "..".equals(name)) {
-                     // do nothing...
 diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
-index c5570071..3ef59d0c 100644
+index c5570071..b3cd0d61 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
-@@ -73,10 +73,9 @@ public class TarArchiveInputStream extends ArchiveInputStream {
-     private TarArchiveEntry currEntry;
- 
-     /** The encoding of the file */
--    private final ZipEncoding zipEncoding;
-+    private final ZipEncoding encoding;
+@@ -76,7 +76,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+     private final ZipEncoding zipEncoding;
  
      // the provided encoding (for unit tests)
 -    final String encoding;
  
      /**
       * Constructor for TarInputStream.
-@@ -140,8 +139,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+@@ -140,7 +139,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
                                   String encoding) {
          this.is = is;
          this.hasHitEOF = false;
 -        this.encoding = encoding;
--        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
          this.recordSize = recordSize;
          this.blockSize = blockSize;
-     }
-@@ -275,7 +273,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
-         }
- 
-         try {
--            currEntry = new TarArchiveEntry(headerBuf, zipEncoding);
-+            currEntry = new TarArchiveEntry(headerBuf, encoding);
-         } catch (IllegalArgumentException e) {
-             IOException ioe = new IOException("Error detected parsing the header");
-             ioe.initCause(e);
-@@ -293,7 +291,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
-                 // entry
-                 return null;
-             }
--            currEntry.setLinkName(zipEncoding.decode(longLinkData));
-+            currEntry.setLinkName(encoding.decode(longLinkData));
-         }
- 
-         if (currEntry.isGNULongNameEntry()) {
-@@ -304,7 +302,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
-                 // entry
-                 return null;
-             }
--            currEntry.setName(zipEncoding.decode(longNameData));
-+            currEntry.setName(encoding.decode(longNameData));
-         }
- 
-         if (currEntry.isPaxHeader()){ // Process Pax headers
 diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
-index 43525c8c..4d07bb8b 100644
+index 43525c8c..96ec740c 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
-@@ -84,10 +84,9 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
- 
-     private final OutputStream out;
- 
--    private final ZipEncoding zipEncoding;
-+    private final ZipEncoding encoding;
+@@ -87,7 +87,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+     private final ZipEncoding zipEncoding;
  
      // the provided encoding (for unit tests)
 -    final String encoding;
  
      private boolean addPaxHeadersForNonAsciiNames = false;
      private static final ZipEncoding ASCII =
-@@ -153,8 +152,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+@@ -153,7 +152,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
      public TarArchiveOutputStream(OutputStream os, int blockSize,
                                    int recordSize, String encoding) {
          out = new CountingOutputStream(os);
 -        this.encoding = encoding;
--        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
  
          this.assemLen = 0;
-         this.assemBuf = new byte[recordSize];
-@@ -305,7 +303,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
-             writePaxHeaders(entry, entryName, paxHeaders);
-         }
- 
--        entry.writeEntryHeader(recordBuf, zipEncoding,
-+        entry.writeEntryHeader(recordBuf, encoding,
-                                bigNumberMode == BIGNUMBER_STAR);
-         writeRecord(recordBuf);
- 
-@@ -664,7 +662,7 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
-                                    Map<String, String> paxHeaders,
-                                    String paxHeaderName, byte linkType, String fieldName)
-         throws IOException {
--        final ByteBuffer encodedName = zipEncoding.encode(name);
-+        final ByteBuffer encodedName = encoding.encode(name);
-         final int len = encodedName.limit() - encodedName.position();
-         if (len >= TarConstants.NAMELEN) {
- 
 diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
 index 7a69141c..711c149a 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java

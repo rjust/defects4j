@@ -1,4 +1,5 @@
 ## commons-compress: 5c2d32b322fa797cf428b35c4c5998173d6403d5 ##
+--- org.apache.commons.compress.archivers.zip.X5455_ExtendedTimestampTest
 --- org.apache.commons.compress.AbstractTestCase
 junit.framework.AssertionFailedError: No tests found in org.apache.commons.compress.AbstractTestCase
 	at junit.framework.Assert.fail(Assert.java:57)

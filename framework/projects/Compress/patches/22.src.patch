@@ -1,5 +1,5 @@
 diff --git a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
-index 1cd6f913..74dcb15b 100644
+index 1cd6f913..e6d22fb3 100644
 --- a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
 +++ b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
 @@ -64,6 +64,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
@@ -18,29 +18,12 @@ index 1cd6f913..74dcb15b 100644
      }
  
      @Override
-@@ -168,13 +170,12 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
- 
-         final int hi = offs + len;
-         int destOffs = offs;
--        int b;
--        while (destOffs < hi && ((b = read0()) >= 0)) {
-+        for (int b; (destOffs < hi) && ((b = read0()) >= 0);) {
-             dest[destOffs++] = (byte) b;
--            count(1);
-         }
- 
-         int c = (destOffs == offs) ? -1 : (destOffs - offs);
-+        count(c);
-         return c;
-     }
- 
-@@ -194,34 +195,40 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+@@ -194,34 +196,40 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
      }
  
      private int read0() throws IOException {
--        switch (currentState) {
 +        final int retChar = this.currentChar;
-+        switch (this.currentState) {
+         switch (currentState) {
          case EOF:
              return -1;
  
