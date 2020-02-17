@@ -54,7 +54,7 @@ for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     $add_config"
 
     # Run the test-generation command
-    if ! exec_cmd "$cmd"
+    if ! exec_cmd "$cmd"; then
         exit 1
     fi
 done

@@ -47,6 +47,6 @@ fi
 cmd="..."
 
 # Run the test-generation command
-if ! exec_cmd "$cmd"
+if ! exec_cmd "$cmd"; then
     exit 1
 fi
