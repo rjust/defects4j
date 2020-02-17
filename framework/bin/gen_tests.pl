@@ -239,9 +239,6 @@ Utils::exec_cmd("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .", "Creating tes
 
 $LOG->log_msg("Created test suite archive: $archive");
 
-# Acknowledge the tool author(s)
-system("cat $TESTGEN_BIN_DIR/$TOOL.credit");
-
 =pod
 
 =head2 Test suites
