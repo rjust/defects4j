@@ -43,8 +43,8 @@ else
     die "Unsupported test mode: $D4J_TEST_MODE"
 fi
 
-# Build the test-generation command
-cmd="..."
+# The command that invokes the test generator
+cmd="... $add_config"
 
 # Run the test-generation command
 if ! exec_cmd "$cmd"; then
