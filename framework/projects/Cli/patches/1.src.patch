@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/cli/CommandLine.java b/src/java/org/apache/commons/cli/CommandLine.java
-index 3c82942..593fe49 100644
+index 3c82942..f658a02 100644
 --- a/src/java/org/apache/commons/cli/CommandLine.java
 +++ b/src/java/org/apache/commons/cli/CommandLine.java
 @@ -16,11 +16,11 @@
@@ -16,7 +16,7 @@ index 3c82942..593fe49 100644
  
  /** 
   * <p>Represents list of arguments parsed against
-@@ -43,10 +43,13 @@ public class CommandLine {
+@@ -43,10 +43,12 @@ public class CommandLine {
      private List args = new LinkedList();
  
      /** the processed options */
@@ -27,11 +27,10 @@ index 3c82942..593fe49 100644
      /** Map of unique options for ease to get complete list of options */
  //    private Set allOptions = new HashSet();
 +    private Map hashcodeMap = new HashMap();
-+    private Option[] optionsArray;
  
      /**
       * Creates a command line.
-@@ -64,7 +67,7 @@ public class CommandLine {
+@@ -64,7 +66,7 @@ public class CommandLine {
       */
      public boolean hasOption(String opt)
      {
@@ -40,7 +39,7 @@ index 3c82942..593fe49 100644
      }
  
      /** 
-@@ -88,13 +91,12 @@ public class CommandLine {
+@@ -88,13 +90,12 @@ public class CommandLine {
      {
          String res = getOptionValue(opt);
  
@@ -56,27 +55,30 @@ index 3c82942..593fe49 100644
  
          return (res == null)        ? null : TypeHandler.createValue(res, type);
      }
-@@ -145,14 +147,13 @@ public class CommandLine {
+@@ -145,13 +146,19 @@ public class CommandLine {
       */
      public String[] getOptionValues(String opt)
      {
 -        Option key = resolveOption( opt );
 +        opt = Util.stripLeadingHyphens(opt);
- 
--        if (options.contains(key))
--        {
--            return key.getValues();
--        }
++
 +        String key = opt;
 +        if (names.containsKey(opt))
  
--        return null;
-+        {
+-        if (options.contains(key))
+         {
+-            return key.getValues();
 +            key = (String) names.get(opt);
          }
  
-     /**
-@@ -160,22 +161,11 @@ public class CommandLine {
++        if (options.containsKey(key))
++        {
++            return ((Option) options.get(key)).getValues();
++        }
+         return null;
+         }
+ 
+@@ -160,24 +167,7 @@ public class CommandLine {
       * @param opt short or long name of the option
       * @return Canonicalized option
       */
@@ -84,8 +86,7 @@ index 3c82942..593fe49 100644
 -    {
 -        opt = Util.stripLeadingHyphens(opt);
 -        for ( Iterator it = options.iterator(); it.hasNext(); )
-+        if (options.containsKey(key))
-         {
+-        {
 -            Option option = (Option) it.next();
 -            if (opt.equals(option.getOpt()))
 -            {
@@ -94,13 +95,14 @@ index 3c82942..593fe49 100644
 -            if (opt.equals( option.getLongOpt()))
 -            {
 -                return option;
-+            return ((Option) options.get(key)).getValues();
-         }
+-        }
  
 -        }
-         return null;
-     }
+-        return null;
+-    }
  
+     /** 
+      * Retrieves the array of values, if any, of an option.
 @@ -285,7 +275,17 @@ public class CommandLine {
       */
      void addOption(Option opt)
@@ -129,7 +131,7 @@ index 3c82942..593fe49 100644
      }
  
      /**
-@@ -306,12 +306,12 @@ public class CommandLine {
+@@ -306,7 +306,7 @@ public class CommandLine {
       */
      public Option[] getOptions()
      {
@@ -137,9 +139,8 @@ index 3c82942..593fe49 100644
 +        Collection processed = options.values();
  
          // reinitialise array
--        Option[] optionsArray = new Option[processed.size()];
-+        optionsArray = new Option[processed.size()];
- 
+         Option[] optionsArray = new Option[processed.size()];
+@@ -314,4 +314,4 @@ public class CommandLine {
          // return the array
          return (Option[]) processed.toArray(optionsArray);
      }
