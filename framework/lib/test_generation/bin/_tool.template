@@ -43,7 +43,7 @@ else
 fi
 
 # The command that invokes the test generator
-cmd="..."
+cmd="... $add_config"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then

@@ -67,7 +67,8 @@ cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
           --randomseed=$D4J_SEED \
           --time-limit=$D4J_TOTAL_BUDGET \
           --regression-test-basename=$REG_BASE_NAME \
-          --error-test-basename=$ERR_BASE_NAME"
+          --error-test-basename=$ERR_BASE_NAME \
+          $add_config"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then
