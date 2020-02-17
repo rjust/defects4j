@@ -1,73 +1,26 @@
 diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
-index 63aeba72..d8560349 100644
+index 63aeba72..df1f63ce 100644
 --- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
 +++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
-@@ -204,7 +204,7 @@
-     /**
-      * Holds some book-keeping data for each entry.
-      */
--    private final Map<ZipArchiveEntry, EntryMetaData> metaData =
-+    private final Map<ZipArchiveEntry, Long> offsets =
-         new HashMap<>();
- 
-     /**
-@@ -473,7 +473,7 @@ public void finish() throws IOException {
-         cdLength = streamCompressor.getTotalBytesWritten() - cdOffset;
-         writeZip64CentralDirectory();
-         writeCentralDirectoryEnd();
--        metaData.clear();
-+        offsets.clear();
-         entries.clear();
-         streamCompressor.close();
-         finished = true;
-@@ -539,9 +539,7 @@ private void closeEntry(final boolean actuallyNeedsZip64, final boolean phased)
-             rewriteSizesAndCrc(actuallyNeedsZip64);
-         }
- 
--        if (!phased) {
--            writeDataDescriptor(entry.entry);
--        }
-+        writeDataDescriptor(entry.entry);
-         entry = null;
-     }
- 
-@@ -697,7 +695,7 @@ private void rewriteSizesAndCrc(final boolean actuallyNeedsZip64)
-                 // do some cleanup:
-                 // * rewrite version needed to extract
-                 channel.position(entry.localDataStart  - 5 * SHORT);
--                writeOut(ZipShort.getBytes(versionNeededToExtract(entry.entry.getMethod(), false, false)));
-+                writeOut(ZipShort.getBytes(versionNeededToExtractMethod(entry.entry.getMethod())));
- 
-                 // * remove ZIP64 extra so it doesn't get written
-                 //   to the central directory
-@@ -1031,7 +1029,7 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
+@@ -1031,7 +1031,7 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
  
          final long localHeaderStart = streamCompressor.getTotalBytesWritten();
          final byte[] localHeader = createLocalFileHeader(ze, name, encodable, phased, localHeaderStart);
 -        metaData.put(ze, new EntryMetaData(localHeaderStart, usesDataDescriptor(ze.getMethod(), phased)));
-+        offsets.put(ze, localHeaderStart);
++        metaData.put(ze, new EntryMetaData(localHeaderStart, usesDataDescriptor(ze.getMethod())));
          entry.localDataStart = localHeaderStart + LFH_CRC_OFFSET; // At crc offset
          writeCounted(localHeader);
          entry.dataStart = streamCompressor.getTotalBytesWritten();
-@@ -1072,11 +1070,14 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
+@@ -1072,7 +1072,7 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
  
          //store method in local variable to prevent multiple method calls
          final int zipMethod = ze.getMethod();
 -        final boolean dataDescriptor = usesDataDescriptor(zipMethod, phased);
++        final boolean dataDescriptor = usesDataDescriptor(zipMethod);
  
--        putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze), dataDescriptor), buf, LFH_VERSION_NEEDED_OFFSET);
-+        if (phased &&  !isZip64Required(entry.entry, zip64Mode)){
-+            putShort(versionNeededToExtractMethod(zipMethod), buf, LFH_VERSION_NEEDED_OFFSET);
-+        } else {
-+            putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze)), buf, LFH_VERSION_NEEDED_OFFSET);
-+        }
+         putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze), dataDescriptor), buf, LFH_VERSION_NEEDED_OFFSET);
  
--        final GeneralPurposeBit generalPurposeBit = getGeneralPurposeBits(!encodable && fallbackToUTF8, dataDescriptor);
-+        final GeneralPurposeBit generalPurposeBit = getGeneralPurposeBits(zipMethod, !encodable && fallbackToUTF8);
-         generalPurposeBit.encode(buf, LFH_GPB_OFFSET);
- 
-         // compression method
-@@ -1168,7 +1169,7 @@ private void addUnicodeExtraFields(final ZipArchiveEntry ze, final boolean encod
+@@ -1168,7 +1168,7 @@ private void addUnicodeExtraFields(final ZipArchiveEntry ze, final boolean encod
       * @throws IOException on error
       */
      protected void writeDataDescriptor(final ZipArchiveEntry ze) throws IOException {
@@ -76,113 +29,14 @@ index 63aeba72..d8560349 100644
              return;
          }
          writeCounted(DD_SIG);
-@@ -1197,11 +1198,11 @@ protected void writeCentralFileHeader(final ZipArchiveEntry ze) throws IOExcepti
- 
-     private byte[] createCentralFileHeader(final ZipArchiveEntry ze) throws IOException {
- 
--        final EntryMetaData entryMetaData = metaData.get(ze);
-+        final long lfhOffset = offsets.get(ze);
-         final boolean needsZip64Extra = hasZip64Extra(ze)
-                 || ze.getCompressedSize() >= ZIP64_MAGIC
-                 || ze.getSize() >= ZIP64_MAGIC
--                || entryMetaData.offset >= ZIP64_MAGIC
-+                || lfhOffset >= ZIP64_MAGIC
-                 || zip64Mode == Zip64Mode.Always;
- 
-         if (needsZip64Extra && zip64Mode == Zip64Mode.Never) {
-@@ -1213,9 +1214,9 @@ protected void writeCentralFileHeader(final ZipArchiveEntry ze) throws IOExcepti
-         }
- 
- 
--        handleZip64Extra(ze, entryMetaData.offset, needsZip64Extra);
-+        handleZip64Extra(ze, lfhOffset, needsZip64Extra);
- 
--        return createCentralFileHeader(ze, getName(ze), entryMetaData, needsZip64Extra);
-+        return createCentralFileHeader(ze, getName(ze), lfhOffset, needsZip64Extra);
-     }
- 
-     /**
-@@ -1225,8 +1226,7 @@ protected void writeCentralFileHeader(final ZipArchiveEntry ze) throws IOExcepti
-      * @param entryMetaData meta data for this file
-      * @throws IOException on error
-      */
--    private byte[] createCentralFileHeader(final ZipArchiveEntry ze, final ByteBuffer name,
--                                           final EntryMetaData entryMetaData,
-+    private byte[] createCentralFileHeader(final ZipArchiveEntry ze, final ByteBuffer name, final long lfhOffset,
-                                            final boolean needsZip64Extra) throws IOException {
-         final byte[] extra = ze.getCentralDirectoryExtra();
- 
-@@ -1251,9 +1251,8 @@ protected void writeCentralFileHeader(final ZipArchiveEntry ze) throws IOExcepti
- 
-         final int zipMethod = ze.getMethod();
-         final boolean encodable = zipEncoding.canEncode(ze.getName());
--        putShort(versionNeededToExtract(zipMethod, needsZip64Extra, entryMetaData.usesDataDescriptor),
--            buf, CFH_VERSION_NEEDED_OFFSET);
--        getGeneralPurposeBits(!encodable && fallbackToUTF8, entryMetaData.usesDataDescriptor).encode(buf, CFH_GPB_OFFSET);
-+        putShort(versionNeededToExtract(zipMethod, needsZip64Extra), buf, CFH_VERSION_NEEDED_OFFSET);
-+        getGeneralPurposeBits(zipMethod, !encodable && fallbackToUTF8).encode(buf, CFH_GPB_OFFSET);
- 
-         // compression method
-         putShort(zipMethod, buf, CFH_METHOD_OFFSET);
-@@ -1293,10 +1292,10 @@ protected void writeCentralFileHeader(final ZipArchiveEntry ze) throws IOExcepti
-         putLong(ze.getExternalAttributes(), buf, CFH_EXTERNAL_ATTRIBUTES_OFFSET);
- 
-         // relative offset of LFH
--        if (entryMetaData.offset >= ZIP64_MAGIC || zip64Mode == Zip64Mode.Always) {
-+        if (lfhOffset >= ZIP64_MAGIC || zip64Mode == Zip64Mode.Always) {
-             putLong(ZIP64_MAGIC, buf, CFH_LFH_OFFSET);
-         } else {
--            putLong(Math.min(entryMetaData.offset, ZIP64_MAGIC), buf, CFH_LFH_OFFSET);
-+            putLong(Math.min(lfhOffset, ZIP64_MAGIC), buf, CFH_LFH_OFFSET);
-         }
- 
-         // file name
-@@ -1470,27 +1469,26 @@ protected final void writeOut(final byte[] data, final int offset, final int len
-     }
- 
- 
--    private GeneralPurposeBit getGeneralPurposeBits(final boolean utfFallback, boolean usesDataDescriptor) {
-+    private GeneralPurposeBit getGeneralPurposeBits(final int zipMethod, final boolean utfFallback) {
-         final GeneralPurposeBit b = new GeneralPurposeBit();
-         b.useUTF8ForNames(useUTF8Flag || utfFallback);
--        if (usesDataDescriptor) {
-+        if (isDeflatedToOutputStream(zipMethod)) {
-             b.useDataDescriptor(true);
-         }
-         return b;
-     }
- 
--    private int versionNeededToExtract(final int zipMethod, final boolean zip64, final boolean usedDataDescriptor) {
-+    private int versionNeededToExtract(final int zipMethod, final boolean zip64) {
-         if (zip64) {
-             return ZIP64_MIN_VERSION;
-         }
--        if (usedDataDescriptor) {
--            return DATA_DESCRIPTOR_MIN_VERSION;
--        }
--        return versionNeededToExtractMethod(zipMethod);
-+        return isDeflatedToOutputStream(zipMethod)
-+            ? DATA_DESCRIPTOR_MIN_VERSION
-+            : versionNeededToExtractMethod(zipMethod);
+@@ -1489,8 +1489,8 @@ private int versionNeededToExtract(final int zipMethod, final boolean zip64, fin
+         return versionNeededToExtractMethod(zipMethod);
      }
  
 -    private boolean usesDataDescriptor(final int zipMethod, boolean phased) {
 -        return !phased && zipMethod == DEFLATED && channel == null;
-+    private boolean isDeflatedToOutputStream(final int zipMethod) {
++    private boolean usesDataDescriptor(final int zipMethod) {
 +        return zipMethod == DEFLATED && channel == null;
      }
  
      private int versionNeededToExtractMethod(int zipMethod) {
-@@ -1675,12 +1673,4 @@ private CurrentEntry(final ZipArchiveEntry entry) {
-         private boolean hasWritten;
-     }
- 
--    private static final class EntryMetaData {
--        private final long offset;
--        private final boolean usesDataDescriptor;
--        private EntryMetaData(long offset, boolean usesDataDescriptor) {
--            this.offset = offset;
--            this.usesDataDescriptor = usesDataDescriptor;
--        }
--    }
- }
