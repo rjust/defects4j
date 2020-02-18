@@ -62,3 +62,4 @@ junit.framework.AssertionFailedError: Cannot instantiate test case: testSimpleLo
 	at org.apache.tools.ant.Main.startAnt(Main.java:217)
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- org.apache.commons.cli.OptionGroupTest
