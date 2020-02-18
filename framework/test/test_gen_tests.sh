@@ -122,8 +122,11 @@ for bid in $(echo $BUGS); do
         done
     done
 
+    vid=${bid}b
     # Run Randoop and generate error-revealing tests
-    gen_tests.pl -g randoop -p $PID -v ${bid}b -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E || die "run $tool (error-revealing) on $PID-$vid"
+    gen_tests.pl -g randoop -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
+    # We expect Randoop to not crash; it may or may not create an error-revealing test for this version
+    [ $? -eq 0 ] || [ $? -eq 127 ] || die "run $tool (error-revealing) on $PID-$vid"
 
 done
 HALT_ON_ERROR=1

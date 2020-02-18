@@ -6,7 +6,7 @@
 # D4J_HOME:                The root directory of the used Defects4J installation.
 # D4J_FILE_TARGET_CLASSES: File that lists all target classes (one per line).
 # D4J_DIR_OUTPUT:          Directory to which the generated test suite sources
-#                          should be written (may not exist).
+#                          should be written.
 # D4J_DIR_WORKDIR:         Defects4J working directory of the checked-out
 #                          project version.
 # D4J_DIR_TESTGEN_BIN:     Directory that provides all scripts and configs of
