@@ -68,7 +68,7 @@ get_relevant_classes() {
             export -p classes.relevant -w $D4J_DIR_WORKDIR 2> /dev/null
 }
 
-# Execute a command and output debugging information
+# Output a command, execute it, and print whether it succeeded or failed.
 exec_cmd() {
     local cmd=$1
 
