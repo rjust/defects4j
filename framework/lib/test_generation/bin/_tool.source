@@ -73,7 +73,7 @@ exec_cmd() {
     local cmd=$1
 
     echo
-    echo "Executed command:"
+    echo "Executing command:"
     echo "$cmd"
 
     if $cmd; then
