@@ -2,7 +2,7 @@
 #
 # Wrapper script for <generator name>
 #
-# Exported environment variables:
+# Environment variables exported by Defects4J's gen_tests.pl script:
 # D4J_HOME:                The root directory of the used Defects4J installation.
 # D4J_FILE_TARGET_CLASSES: File that lists all target classes (one per line).
 # D4J_DIR_OUTPUT:          Directory to which the generated test suite sources
