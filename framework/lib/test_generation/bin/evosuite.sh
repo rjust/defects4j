@@ -17,6 +17,7 @@
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
 # D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
+# D4J_DEBUG:               Run in debug mode: 0 (no) or 1 (yes).
 
 # Check whether the D4J_DIR_TESTGEN_BIN variable is set
 if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
@@ -52,10 +53,8 @@ for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     -Dtest_dir=$D4J_DIR_OUTPUT \
     $add_config"
 
-    # Print the command that failed, if an error occurred.
-    if ! $cmd; then
-        echo
-        echo "FAILED: $cmd"
+    # Run the test-generation command
+    if ! exec_cmd "$cmd"; then
         exit 1
     fi
 done

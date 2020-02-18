@@ -249,6 +249,7 @@ $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
 $ENV{D4J_TOTAL_BUDGET}        = "$TIME";
 $ENV{D4J_SEED}                = "$SEED";
 $ENV{D4J_TEST_MODE}           = "$MODE";
+$ENV{D4J_DEBUG}               = "$DEBUG";
 
 # Create temporary output directory
 Utils::exec_cmd("mkdir -p $TMP_DIR/$TOOL", "Creating temporary output directory")
