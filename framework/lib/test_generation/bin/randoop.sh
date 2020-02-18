@@ -75,9 +75,6 @@ if [ "$D4J_DEBUG" == "1" ]; then
   cmd="$cmd \
   --log=$D4J_DIR_OUTPUT/randoop-log.txt \
   --selection-log=$D4J_DIR_OUTPUT/selection-log.txt"
-
-  # Create output directory, in case it does not exist
-  mkdir -p "$D4J_DIR_OUTPUT"
 fi
 
 # Run the test-generation command
