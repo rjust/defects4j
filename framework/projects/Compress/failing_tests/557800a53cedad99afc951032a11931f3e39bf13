@@ -33,3 +33,4 @@ junit.framework.AssertionFailedError: No tests found in org.apache.commons.compr
 	at org.apache.tools.ant.Main.startAnt(Main.java:217)
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- org.apache.commons.compress.archivers.zip.X5455_ExtendedTimestampTest

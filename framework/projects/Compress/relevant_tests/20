@@ -18,7 +18,6 @@ org.apache.commons.compress.archivers.ar.ArArchiveOutputStreamTest
 org.apache.commons.compress.archivers.arj.ArjArchiveInputStreamTest
 org.apache.commons.compress.archivers.cpio.CpioArchiveInputStreamTest
 org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStreamTest
-org.apache.commons.compress.archivers.cpio.CpioUtilTest
 org.apache.commons.compress.archivers.dump.DumpArchiveInputStreamTest
 org.apache.commons.compress.archivers.sevenz.SevenZFileTest
 org.apache.commons.compress.archivers.tar.TarArchiveOutputStreamTest
