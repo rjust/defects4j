@@ -57,18 +57,18 @@ printf " " >&2
 
 # Build the test-generation command
 cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
-          -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
-          -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
-          -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
-    randoop.main.Main gentests \
-          --classlist=$D4J_DIR_WORKDIR/classes.randoop \
-          --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
-          --junit-output-dir=$D4J_DIR_OUTPUT \
-          --randomseed=$D4J_SEED \
-          --time-limit=$D4J_TOTAL_BUDGET \
-          --regression-test-basename=$REG_BASE_NAME \
-          --error-test-basename=$ERR_BASE_NAME \
-          $add_config"
+  -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+  -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+  -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
+randoop.main.Main gentests \
+  --classlist=$D4J_DIR_WORKDIR/classes.randoop \
+  --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
+  --junit-output-dir=$D4J_DIR_OUTPUT \
+  --randomseed=$D4J_SEED \
+  --time-limit=$D4J_TOTAL_BUDGET \
+  --regression-test-basename=$REG_BASE_NAME \
+  --error-test-basename=$ERR_BASE_NAME \
+  $add_config"
 
 # Print the command that failed, if an error occurred.
 if ! $cmd; then
