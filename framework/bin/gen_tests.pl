@@ -255,7 +255,7 @@ Utils::exec_cmd("mkdir -p $TMP_DIR/$TOOL", "Creating temporary output directory"
         or die("Failed to create temporary output directory!");
 
 # Invoke the test generator
-Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating tests ($TOOL)")
+Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating ($MODE) tests with: $TOOL")
         or die("Failed to generate tests!");
 
 my $ret_code = 0;
