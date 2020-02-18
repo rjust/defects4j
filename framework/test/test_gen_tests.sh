@@ -89,13 +89,15 @@ for bid in $(echo $BUGS); do
         continue
     fi
 
+    # Use the modified classes as target classes for efficiency
+    target_classes="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
+
     # Iterate over all supported generators and generate regression tests
     for tool in $($BASE_DIR/framework/bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
         # Directory for generated test suites
         suite_src="$tool"
         suite_num=1
         suite_dir="$work_dir/$tool/$suite_num"
-        target_classes="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
 
         # Generate (regression) tests for the fixed version
         for type in f; do
@@ -126,7 +128,8 @@ for bid in $(echo $BUGS); do
     # Run Randoop and generate error-revealing tests
     gen_tests.pl -g randoop -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
     # We expect Randoop to not crash; it may or may not create an error-revealing test for this version
-    [ $? -eq 0 ] || [ $? -eq 127 ] || die "run $tool (error-revealing) on $PID-$vid"
+    ret=$?
+    [ $ret -eq 0 ] || [ $ret -eq 127 ] || die "run $tool (error-revealing) on $PID-$vid"
 
 done
 HALT_ON_ERROR=1
