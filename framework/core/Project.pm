@@ -844,13 +844,13 @@ sub mutation_analysis_ext {
 
 =pod
 
-=head2 VCS related subroutines
+=head2 Vcs related subroutines
 
 The following delegate subroutines are implemented merely for convenience.
 
   $project->lookup(version_id)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub lookup {
@@ -862,7 +862,7 @@ sub lookup {
 
   $project->lookup_vid(revision_id)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub lookup_vid {
@@ -874,7 +874,7 @@ sub lookup_vid {
 
   $project->num_revision_pairs()
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub num_revision_pairs {
@@ -886,7 +886,7 @@ sub num_revision_pairs {
 
   $project->get_bug_ids()
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub get_bug_ids {
@@ -898,7 +898,7 @@ sub get_bug_ids {
 
   $project->contains_version_id(vid)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub contains_version_id {
@@ -910,7 +910,7 @@ sub contains_version_id {
 
   $project->diff(revision_id_1, revision_id_2 [, path])
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub diff {
@@ -921,7 +921,7 @@ sub diff {
 
   $project->export_diff(revision_id_1, revision_id_2, out_file [, path])
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub export_diff {
@@ -933,7 +933,7 @@ sub export_diff {
 
   $project->apply_patch(work_dir, patch_file)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub apply_patch {
