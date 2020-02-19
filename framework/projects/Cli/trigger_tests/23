@@ -1,6 +1,6 @@
 --- org.apache.commons.cli.bug.BugCLI162Test::testInfiniteLoop
 java.lang.RuntimeException: Text too long for line - throwing exception to avoid infinite loop [CLI-162]:              looooong description
-	at org.apache.commons.cli.HelpFormatter.renderWrappedText(HelpFormatter.java:837)
+	at org.apache.commons.cli.HelpFormatter.renderWrappedText(HelpFormatter.java:836)
 	at org.apache.commons.cli.HelpFormatter.renderOptions(HelpFormatter.java:783)
 	at org.apache.commons.cli.HelpFormatter.printOptions(HelpFormatter.java:662)
 	at org.apache.commons.cli.HelpFormatter.printHelp(HelpFormatter.java:485)
@@ -43,7 +43,7 @@ java.lang.RuntimeException: Text too long for line - throwing exception to avoid
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.apache.commons.cli.bug.BugCLI162Test::testPrintHelpLongLines
 java.lang.RuntimeException: Text too long for line - throwing exception to avoid infinite loop [CLI-162]:                              used if omited. Example: -e "Runs such and such"
-	at org.apache.commons.cli.HelpFormatter.renderWrappedText(HelpFormatter.java:837)
+	at org.apache.commons.cli.HelpFormatter.renderWrappedText(HelpFormatter.java:836)
 	at org.apache.commons.cli.HelpFormatter.renderOptions(HelpFormatter.java:783)
 	at org.apache.commons.cli.HelpFormatter.printOptions(HelpFormatter.java:662)
 	at org.apache.commons.cli.HelpFormatter.printHelp(HelpFormatter.java:485)
