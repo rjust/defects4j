@@ -68,6 +68,24 @@ get_relevant_classes() {
             export -p classes.relevant -w $D4J_DIR_WORKDIR 2> /dev/null
 }
 
+# Output a command, execute it, and print whether it succeeded or failed.
+exec_cmd() {
+    local cmd=$1
+
+    echo
+    echo "Executing command:"
+    echo "$cmd"
+
+    if $cmd; then
+        echo "OK"
+        return 0
+    else
+        echo "FAILED"
+        return 1
+    fi
+}
+
+###############################################################################
 # Check whether all expected environment variables are properly exported.
 sanity_check() {
     check_env D4J_HOME
@@ -79,6 +97,7 @@ sanity_check() {
     check_env D4J_TOTAL_BUDGET
     check_env D4J_SEED
     check_env D4J_TEST_MODE
+    check_env D4J_DEBUG
 }
 ###############################################################################
 

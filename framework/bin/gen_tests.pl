@@ -106,9 +106,32 @@ of target classes can be specified using the C<-c> flag.
 
 The following wrapper script invokes the specified test generator and provides
 the generator-specific configuration:
-F<C<TESTGEN_BIN_DIR>/C<GENERATOR>.sh>.
+F<C<TESTGEN_BIN_DIR>/C<generator>.sh>.
+
+=head2 Test suites
+
+The source files of the generated test suite are compressed into an archive with
+the following name:
+F<C<project_id>-C<version_id>-C<generator>.C<test_id>.tar.bz2>
+
+Examples:
+
+=over 4
+
+=item * F<Lang-12b-randoop.1.tar.bz2>
+
+=item * F<Lang-12f-randoop.2.tar.bz2>
+
+=item * F<Lang-12f-evosuite.1.tar.bz2>
+
+=back
+
+The test suite archive is written to:
+F<out_dir/C<project_id>/C<generator>/C<test_id>>
 
 =cut
+
+
 use strict;
 use warnings;
 
@@ -226,57 +249,42 @@ $ENV{D4J_DIR_TESTGEN_LIB}     = "$TESTGEN_LIB_DIR";
 $ENV{D4J_TOTAL_BUDGET}        = "$TIME";
 $ENV{D4J_SEED}                = "$SEED";
 $ENV{D4J_TEST_MODE}           = "$MODE";
+$ENV{D4J_DEBUG}               = "$DEBUG";
+
+# Create temporary output directory
+Utils::exec_cmd("mkdir -p $TMP_DIR/$TOOL", "Creating temporary output directory")
+        or die("Failed to create temporary output directory!");
 
 # Invoke the test generator
-Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating tests ($TOOL)")
-        or die "Failed to generate tests!";
+Utils::exec_cmd("$TESTGEN_BIN_DIR/$TOOL.sh", "Generating ($MODE) tests with: $TOOL")
+        or die("Failed to generate tests!");
 
-# Compress generated tests and copy archive to output directory
-my $archive = "$PID-$VID-$TOOL.$TID.tar.bz2";
-Utils::exec_cmd("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .", "Creating test suite archive")
-        or die("Cannot archive and compress test suite!");
+my $ret_code = 0;
+# Did the tool generate any tests?
+if(system("find $TMP_DIR/$TOOL -name \"*.java\" | grep -q '.'") == 0) {
+    # Compress generated tests and copy archive to output directory
+    my $archive = "$PID-$VID-$TOOL.$TID.tar.bz2";
+    Utils::exec_cmd("tar -cjf $TMP_DIR/$archive -C $TMP_DIR/$TOOL/ .", "Creating test suite archive")
+            or die("Cannot archive and compress test suite!");
 
-$LOG->log_msg("Created test suite archive: $archive");
+    $LOG->log_msg("Created test suite archive: $archive");
 
-# Acknowledge the tool author(s)
-system("cat $TESTGEN_BIN_DIR/$TOOL.credit");
+    my $dir = "$OUT_DIR/$PID/$TOOL/$TID";
+    # Create output directory
+        Utils::exec_cmd("mkdir -p $dir", "Creating output directory")
+                or die("Failed to create output directory!");
+    # Move test suite to OUT_DIR/pid/generator/test_id
+    # e.g., .../Lang/randoop/1 or .../Lang/evosuite/1
+    Utils::exec_cmd("mv $TMP_DIR/$archive $dir", "Moving test suite archive to $OUT_DIR")
+            or die("Cannot move test suite archive to output directory!");
 
-=pod
-
-=head2 Test suites
-
-The source files of the generated test suite are compressed into an archive with
-the following name:
-F<C<project_id>-C<version_id>-C<tool>.C<test_id>.tar.bz2>
-
-Examples:
-
-=over 4
-
-=item * F<Lang-12b-randoop.1.tar.bz2>
-
-=item * F<Lang-12f-randoop.2.tar.bz2>
-
-=item * F<Lang-12f-evosuite.1.tar.bz2>
-
-=back
-
-The test suite archive is written to:
-F<out_dir/C<project_id>/C<TOOL>/C<test_id>>
-
-=cut
-
-# Move test suite to OUT_DIR/pid/suite_src/test_id
-#
-# e.g., .../Lang/randoop/1
-#       .../Lang/evosuite/1
-#
-my $dir = "$OUT_DIR/$PID/$TOOL/$TID";
-system("mkdir -p $dir && mv $TMP_DIR/$archive $dir") == 0
-        or die "Cannot move test suite archive to output directory!";
-    
-$LOG->log_msg("Moved test suite archive to output directory: $dir");
-
+    $LOG->log_msg("Moved test suite archive to output directory: $dir");
+} else {
+    $LOG->log_msg("Test generator ($TOOL) did not generate any tests!");
+    printf(STDERR "Test generator ($TOOL) did not generate any tests!\n");
+    # Signal failure to generate any tests
+    $ret_code = 127;
+}
 $LOG->log_time("End test generation");
 
 # Close temporary log and append content to log file in output directory
@@ -285,6 +293,9 @@ system("cat $LOG->{file_name} >> $LOG_FILE");
 
 # Remove temporary directory
 system("rm -rf $TMP_DIR") unless $DEBUG;
+
+# Signal success or failure reason
+exit($ret_code);
 
 ################################################################################
 # Check whether the requested generator is valid
@@ -305,3 +316,4 @@ sub is_generator_valid {
     }
     return 1;
 }
+################################################################################

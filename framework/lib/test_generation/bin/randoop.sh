@@ -2,11 +2,11 @@
 #
 # Wrapper script for Randoop
 #
-# Exported environment variables:
+# Environment variables exported by Defects4J's gen_tests.pl script:
 # D4J_HOME:                The root directory of the used Defects4J installation.
 # D4J_FILE_TARGET_CLASSES: File that lists all target classes (one per line).
 # D4J_DIR_OUTPUT:          Directory to which the generated test suite sources
-#                          should be written (may not exist).
+#                          should be written.
 # D4J_DIR_WORKDIR:         Defects4J working directory of the checked-out
 #                          project version.
 # D4J_DIR_TESTGEN_BIN:     Directory that provides all scripts and configs of
@@ -17,6 +17,7 @@
 #                          spend at most for all target classes.
 # D4J_SEED:                The random seed.
 # D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
+# D4J_DEBUG:               Run in debug mode: 0 (no) or 1 (yes).
 
 # Check whether the D4J_DIR_TESTGEN_BIN variable is set
 if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
@@ -52,27 +53,32 @@ ERR_BASE_NAME=ErrorTest
 # Print Randoop version
 version=$(java -cp $D4J_DIR_TESTGEN_LIB/randoop-current.jar randoop.main.Main | head -1)
 printf "\n(%s)" "$version" >&2
-printf ".%.0s" {1..42} >&2
+printf ".%.0s" {1..expr 73 - length "$version"} >&2
 printf " " >&2
 
 # Build the test-generation command
 cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
-          -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
-          -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
-          -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
-    randoop.main.Main gentests \
-          --classlist=$D4J_DIR_WORKDIR/classes.randoop \
-          --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
-          --junit-output-dir=$D4J_DIR_OUTPUT \
-          --randomseed=$D4J_SEED \
-          --time-limit=$D4J_TOTAL_BUDGET \
-          --regression-test-basename=$REG_BASE_NAME \
-          --error-test-basename=$ERR_BASE_NAME"
+  -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+  -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+  -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
+randoop.main.Main gentests \
+  --classlist=$D4J_DIR_WORKDIR/classes.randoop \
+  --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
+  --junit-output-dir=$D4J_DIR_OUTPUT \
+  --randomseed=$D4J_SEED \
+  --time-limit=$D4J_TOTAL_BUDGET \
+  --regression-test-basename=$REG_BASE_NAME \
+  --error-test-basename=$ERR_BASE_NAME \
+  $add_config"
 
-# Print the command that failed, if an error occurred.
-if ! $cmd; then
-    echo
-    echo "FAILED: $cmd"
+if [ "$D4J_DEBUG" == "1" ]; then
+  cmd="$cmd \
+  --log=$D4J_DIR_OUTPUT/randoop-log.txt \
+  --selection-log=$D4J_DIR_OUTPUT/selection-log.txt"
+fi
+
+# Run the test-generation command
+if ! exec_cmd "$cmd"; then
     exit 1
 fi
 
