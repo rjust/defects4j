@@ -68,8 +68,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/commit-db)
-    BUGS="$(seq 1 1 $num_bugs)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/commit-db)"
 fi
 
 # Create log file
