@@ -98,7 +98,7 @@ sub _post_checkout {
     mkdir $work_dir."/target/lib";
     copy($project_dir."/lib/mockrunner-0.4.1.jar", $work_dir."/target/lib/mockrunner-0.4.1.jar") or die "Copy failed: $!";
 
-    # CommonsCLI uses "compile-tests" instead of "compile.test" as a target name. 
+    # JxPath uses "compile-tests" instead of "compile.test" as a target name. 
     # Replace all instances of "compile-tests" with "compile.test".
     # They also use "build.classpath" instead of "compile.classpath".
     # This also replaces several dead links in the build file
