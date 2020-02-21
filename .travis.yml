@@ -44,13 +44,13 @@ jobs:
     - script: carton exec ./test_fix_test_suite.sh
       name: test_fix_test_suite.sh
     - script: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
-      name: "test_export_command Chart, Cli, Closure" 239
+      name: "test export 1" 
     - script: carton exec ./test_export_command.sh -p Codec -p Collections -p Compress -p Csv -p JacksonDatabind
-      name: "test_export_command Codec, Collections, Compress, Csv, JacksonDatabind"
+      name: "test export 2"
     - script: carton exec ./test_export_command.sh -p Gson -p JacksonCore -p JacksonXml -p Jsoup -p JxPath
-      name: "test_export_command Gson, JacksonCore, JacksonXml, Jsoup, JxPath"  
+      name: "test export 3"  
     - script: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
-      name: "test_export_command Lang, Math, Mockito, Time"
+      name: "test export 4"
     - script: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
