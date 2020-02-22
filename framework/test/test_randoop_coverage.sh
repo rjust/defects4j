@@ -38,4 +38,4 @@ defects4j info -p Lang
 cd $D4J_DIR/framework/test
 ./randoop_coverage.sh
 
-../util/show_coverage.pl
+../util/show_coverage.pl $TMP_DIR/coverage
