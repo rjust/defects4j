@@ -82,3 +82,5 @@ done
 
 # delete tmp file directory
 rm -rf $randoop_dir
+
+../util/show_coverage.pl "$TMP_DIR"/coverage
