@@ -36,9 +36,9 @@ else
   git -C /tmp clone --depth 1 -q https://github.com/randoop/randoop.git
 fi
 (cd /tmp/randoop && ./gradlew assemble)
-(cd $D4J_DIR/framework/lib/test_generation/generation && /tmp/randoop/scripts/replace-randoop-jars.sh "-current")
+(cd "$D4J_DIR/framework/lib/test_generation/generation" && /tmp/randoop/scripts/replace-randoop-jars.sh "-current")
 
 ### 3. Run the test generation and coverage analysis:
 # TODO: Currently, this does not generate tests for all the defects, just five in each project.
-cd $D4J_DIR/framework/test
+cd "$D4J_DIR/framework/test"
 ./randoop_coverage.sh
