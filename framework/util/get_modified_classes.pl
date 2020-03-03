@@ -97,10 +97,12 @@ $classes =~ s/$src_dir\/?//g;
 $classes =~ s/\.java//g;
 $classes =~ s/\//\./g;
 
+my @sorted_classes = sort { "\L$a" cmp "\L$b" } $classes;
+
 if (defined $OUT_FILE) {
     open(OUT, ">$OUT_FILE") or die "Cannot write output file";
-        print(OUT $classes);
+        print(OUT @sorted_classes);
     close(OUT);
 } else {
-    print($classes);
+    print(@sorted_classes);
 }
