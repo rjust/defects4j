@@ -1,6 +1,6 @@
-org.apache.commons.math.linear.RealMatrix
-org.apache.commons.math.linear.BigMatrixImpl
 org.apache.commons.math.linear.BigMatrix
+org.apache.commons.math.linear.BigMatrixImpl
 org.apache.commons.math.linear.InvalidMatrixException
-org.apache.commons.math.linear.RealMatrixImpl
 org.apache.commons.math.linear.MatrixIndexException
+org.apache.commons.math.linear.RealMatrix
+org.apache.commons.math.linear.RealMatrixImpl

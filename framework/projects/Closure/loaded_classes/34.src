@@ -1,10 +1,10 @@
-com.google.javascript.rhino.Node
-com.google.javascript.jscomp.NodeUtil
-com.google.javascript.jscomp.CodePrinter
 com.google.javascript.jscomp.AbstractCompiler
 com.google.javascript.jscomp.CodeConsumer
 com.google.javascript.jscomp.CodeGenerator
-com.google.javascript.jscomp.TypedCodeGenerator
+com.google.javascript.jscomp.CodePrinter
 com.google.javascript.jscomp.Compiler
+com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceMap
+com.google.javascript.jscomp.TypedCodeGenerator
+com.google.javascript.rhino.Node
