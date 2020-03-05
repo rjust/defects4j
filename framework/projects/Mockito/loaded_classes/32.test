@@ -1,7 +1,7 @@
 org.mockito.configuration.MockitoConfiguration
-org.mockito.StateMaster
-org.mockitoutil.Assertor
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
 org.mockitousage.bugs.SpyShouldHaveNiceNameTest
 org.mockitousage.configuration.SmartMock
+org.mockitoutil.Assertor
 org.mockitoutil.TestBase

@@ -1,10 +1,10 @@
-org.jfree.chart.junit.JFreeChartTests
-org.jfree.chart.axis.junit.ValueAxisTests
-org.jfree.chart.junit.ScatterPlotTests
+org.jfree.chart.axis.junit.LogAxisTests
 org.jfree.chart.axis.junit.NumberAxisTests
+org.jfree.chart.axis.junit.ValueAxisTests
+org.jfree.chart.junit.JFreeChartTests
+org.jfree.chart.junit.ScatterPlotTests
+org.jfree.chart.junit.TimeSeriesChartTests
+org.jfree.chart.junit.XYAreaChartTests
+org.jfree.chart.junit.XYStepAreaChartTests
 org.jfree.chart.junit.XYStepChartTests
 org.jfree.chart.plot.junit.XYPlotTests
-org.jfree.chart.junit.TimeSeriesChartTests
-org.jfree.chart.junit.XYStepAreaChartTests
-org.jfree.chart.axis.junit.LogAxisTests
-org.jfree.chart.junit.XYAreaChartTests

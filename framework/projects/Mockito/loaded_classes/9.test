@@ -1,6 +1,6 @@
-org.mockitoutil.TestBase
-org.mockitoutil.Assertor
-org.mockitousage.constructor.CreatingMocksWithConstructorTest
-org.mockito.internal.configuration.ConfigurationAccess
 org.mockito.configuration.MockitoConfiguration
+org.mockito.internal.configuration.ConfigurationAccess
 org.mockito.StateMaster
+org.mockitousage.constructor.CreatingMocksWithConstructorTest
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase
