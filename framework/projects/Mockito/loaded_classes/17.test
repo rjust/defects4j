@@ -1,7 +1,7 @@
-org.mockito.internal.configuration.ConfigurationAccess
-org.mockitoutil.TestBase
-org.mockito.StateMaster
-org.mockitoutil.Assertor
-org.mockitousage.IMethods
 org.mockito.configuration.MockitoConfiguration
+org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
 org.mockitousage.basicapi.MocksSerializationTest
+org.mockitousage.IMethods
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

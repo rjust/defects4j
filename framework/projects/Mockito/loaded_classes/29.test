@@ -1,8 +1,8 @@
-org.mockito.internal.configuration.ConfigurationAccess
-org.mockitousage.IMethods
-org.mockitoutil.TestBase
-org.mockitousage.bugs.NPEWithCertainMatchersTest
-org.mockitoutil.Assertor
 org.mockito.configuration.MockitoConfiguration
-org.mockitousage.configuration.SmartMock
+org.mockito.internal.configuration.ConfigurationAccess
 org.mockito.StateMaster
+org.mockitousage.bugs.NPEWithCertainMatchersTest
+org.mockitousage.configuration.SmartMock
+org.mockitousage.IMethods
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

@@ -1,10 +1,10 @@
-org.mockitoutil.Assertor
-org.mockitousage.configuration.SmartMock
-org.mockitousage.IMethods
-org.mockitoutil.TestBase
+org.mockito.configuration.MockitoConfiguration
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.internal.invocation.InvocationBuilder
+org.mockito.internal.invocation.InvocationMatcherTest
 org.mockito.StateMaster
 org.mockitousage.basicapi.UsingVarargsTest
-org.mockito.configuration.MockitoConfiguration
-org.mockito.internal.invocation.InvocationMatcherTest
-org.mockito.internal.invocation.InvocationBuilder
+org.mockitousage.configuration.SmartMock
+org.mockitousage.IMethods
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

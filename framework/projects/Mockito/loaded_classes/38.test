@@ -1,7 +1,7 @@
-org.mockitoutil.TestBase
-org.mockitousage.bugs.ActualInvocationHasNullArgumentNPEBugTest
 org.mockito.configuration.MockitoConfiguration
+org.mockito.internal.configuration.ConfigurationAccess
 org.mockito.internal.verification.argumentmatching.ArgumentMatchingToolTest
 org.mockito.StateMaster
+org.mockitousage.bugs.ActualInvocationHasNullArgumentNPEBugTest
 org.mockitoutil.Assertor
-org.mockito.internal.configuration.ConfigurationAccess
+org.mockitoutil.TestBase

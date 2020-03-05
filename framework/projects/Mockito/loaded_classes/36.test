@@ -1,9 +1,9 @@
-org.mockito.StateMaster
-org.mockitousage.spies.SpyingOnInterfacesTest
-org.mockitoutil.TestBase
 org.mockito.configuration.MockitoConfiguration
-org.mockitousage.IMethods
 org.mockito.internal.configuration.ConfigurationAccess
-org.mockitoutil.Assertor
-org.mockito.internal.invocation.InvocationTest
 org.mockito.internal.invocation.InvocationBuilder
+org.mockito.internal.invocation.InvocationTest
+org.mockito.StateMaster
+org.mockitousage.IMethods
+org.mockitousage.spies.SpyingOnInterfacesTest
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

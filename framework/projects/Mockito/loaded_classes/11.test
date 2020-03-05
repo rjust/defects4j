@@ -1,6 +1,6 @@
 org.mockito.configuration.MockitoConfiguration
-org.mockito.internal.creation.DelegatingMethodTest
 org.mockito.internal.configuration.ConfigurationAccess
-org.mockitoutil.TestBase
+org.mockito.internal.creation.DelegatingMethodTest
 org.mockito.StateMaster
 org.mockitoutil.Assertor
+org.mockitoutil.TestBase

@@ -1,10 +1,10 @@
-org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValuesTest
+org.mockito.configuration.MockitoConfiguration
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.internal.progress.HandyReturnValuesTest
+org.mockito.internal.stubbing.defaultanswers.HasPrimitiveMethods
+org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValuesTest
+org.mockito.internal.stubbing.defaultanswers.ReturnsMocksTest
 org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNullsTest
 org.mockito.StateMaster
 org.mockitoutil.Assertor
-org.mockito.configuration.MockitoConfiguration
-org.mockito.internal.stubbing.defaultanswers.HasPrimitiveMethods
-org.mockito.internal.stubbing.defaultanswers.ReturnsMocksTest
 org.mockitoutil.TestBase
-org.mockito.internal.progress.HandyReturnValuesTest

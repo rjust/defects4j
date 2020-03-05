@@ -1,8 +1,8 @@
 org.mockito.configuration.MockitoConfiguration
-org.mockitoutil.Assertor
-org.mockitousage.configuration.SmartMock
-org.mockito.StateMaster
-org.mockitoutil.TestBase
-org.mockitousage.IMethods
-org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
+org.mockitousage.bugs.VerifyingWithAnExtraCallToADifferentMockTest
+org.mockitousage.configuration.SmartMock
+org.mockitousage.IMethods
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

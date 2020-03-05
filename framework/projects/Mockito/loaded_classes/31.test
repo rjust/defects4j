@@ -1,6 +1,6 @@
-org.mockito.internal.configuration.ConfigurationAccess
-org.mockito.StateMaster
-org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNullsTest
-org.mockitoutil.TestBase
 org.mockito.configuration.MockitoConfiguration
+org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNullsTest
+org.mockito.StateMaster
 org.mockitoutil.Assertor
+org.mockitoutil.TestBase
