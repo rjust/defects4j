@@ -8,16 +8,17 @@ Contents of Defects4J
 
 The projects
 ---------------
+
 Defects4J contains 434 bugs from the following open-source projects:
 
-| Identifier | Project name         | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\*) |
-|------------|----------------------|----------------|---------------------|------------------------|
-| Chart      | JFreeChart           |  26            | 1-26                | None                   |
-| Closure    | Closure compiler     | 174            | 1-62, 64-92, 93-176 | 63, 93                 |
-| Lang       | Apache commons-lang  |  64            | 1, 3-65             | 2                      |
-| Math       | Apache commons-math  | 106            | 1-106               | None                   |
-| Mockito    | Mockito              |  38            | 1-38                | None                   |
-| Time       | Joda-Time            |  26            | 1-21, 23-27         | 22                     |
+| Identifier      | Project name               | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\*) | 
+|-----------------|----------------------------|----------------|---------------------|------------------------| 
+| Chart           | jfreechart                 |       26       | 1-26                | None                   |
+| Closure         | closure-compiler           |      174       | 1-62,64-92,94-176   | 63,93                  |
+| Lang            | commons-lang               |       64       | 1,3-65              | 2                      |
+| Math            | commons-math               |      106       | 1-106               | None                   |
+| Mockito         | mockito                    |       38       | 1-38                | None                   |
+| Time            | joda-time                  |       26       | 1-20,22-27          | 21                     |
 
 \* Due to behavioral changes introduced under Java 8, some bugs no longer fail.
 These bugs have been removed from the commit-db, but their metadata is still 

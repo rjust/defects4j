@@ -63,7 +63,7 @@ closedir($dir);
 # of bugs.
 my $total = 0;
 my @projects = ();
-for my $file (@files) {
+for my $file (sort @files) {
     $file =~ "^([^.]+)\.pm\$" or next;
     my $pid=$1;
     my $project = Project::create_project($pid);
@@ -71,44 +71,57 @@ for my $file (@files) {
     my @bug_ids = $project->get_bug_ids();
     my $num_bugs = scalar(@bug_ids);
     my $in_use = "";
-    my $deprecated = "None,";
+    my $deprecated = "";
 
     my $prev_bug = 0;
+    my $in_use_low = 1;
+    my $in_use_high = 1;
+    my $deprecated_low = 1;
+    my $deprecated_high = 1;
+
     for my $bug (@bug_ids) {
-        if ($bug != $prev_bug +1) {
-            if ($deprecated eq "None,") {
-                $deprecated = $bug;
+        if ($bug != $prev_bug + 1) {
+            if ($in_use_low eq $in_use_high) {
+                $in_use .= $in_use_low.",";
             } else {
-                $deprecated .= $bug;
+                $in_use .= $in_use_low."-".$in_use_high.",";
             }
-            $deprecated .= ",";
-            $prev_bug = $bug;
-        } else {
-            $prev_bug +=1;
+            $in_use_low = $bug;
+
+            $deprecated_low = $prev_bug + 1;
+            $deprecated_high = $bug - 1;
+
+            if ($deprecated_low eq $deprecated_high) {
+                $deprecated .= $deprecated_low.","; 
+            } else{ 
+                $deprecated .= $deprecated_low."-".$deprecated_high.",";
+            }
+            $prev_bug = $bug - 1;
         }
+        $prev_bug +=1;
+        $in_use_high = $bug;
     }
 
+    if ($deprecated eq "") {
+        $deprecated = "None,";
+    }
     $deprecated = substr($deprecated, 0, -1);
+
+    if ($in_use_low eq $in_use_high) {
+        $in_use .= $in_use_low;
+    } else {
+        $in_use .= $in_use_low."-".$in_use_high;
+    }
 
     # Cache id, name, and number of bugs; update total number of bugs
     push(@projects, [$pid, $name, $num_bugs, $in_use, $deprecated]);
     $total += $num_bugs;
 }
 
-#| Identifier | Project name         | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\*) |
-#|------------|----------------------|----------------|---------------------|------------------------|
-#| Chart      | JFreeChart           |  26            | 1-26                | None                   |
-#| Closure    | Closure compiler     | 174            | 1-62, 64-92, 93-176 | 63, 93                 |
-#| Lang       | Apache commons-lang  |  64            | 1, 3-65             | 2                      |
-#| Math       | Apache commons-math  | 106            | 1-106               | None                   |
-#| Mockito    | Mockito              |  38            | 1-38                | None                   |
-#| Time       | Joda-Time            |  26            | 1-21, 23-27         | 22                     |
-
-
 # Print the summary as a markdown table
 print("Defects4J contains $total bugs from the following open-source projects:\n\n");
-print("| Identifier      | Project name               | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\*) | \n");
+print("| Identifier      | Project name               | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\\*) | \n");
 print("|-----------------|----------------------------|----------------|---------------------|------------------------| \n");
 for (@projects) {
-    printf("| %-15s | %-26s |      %3d       | %-19s | %-21s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
+    printf("| %-15s | %-26s |      %3d       | %-19s | %-22s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
 }
