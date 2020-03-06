@@ -80,8 +80,8 @@ org.mockito.invocation.InvocationOnMock
 org.mockito.invocation.Location
 org.mockito.invocation.MockHandler
 org.mockito.Mock
-org.mockito.MockitoAnnotations
 org.mockito.mock.MockName
+org.mockito.MockitoAnnotations
 org.mockito.plugins.MockMaker
 org.mockito.plugins.PluginSwitch
 org.mockito.plugins.StackTraceCleanerProvider

@@ -105,11 +105,11 @@ com.google.javascript.jscomp.SuppressDocWarningsGuard
 com.google.javascript.jscomp.SyntacticScopeCreator
 com.google.javascript.jscomp.Tracer
 com.google.javascript.jscomp.type.ChainableReverseAbstractInterpreter
+com.google.javascript.jscomp.type.ReverseAbstractInterpreter
+com.google.javascript.jscomp.type.SemanticReverseAbstractInterpreter
 com.google.javascript.jscomp.TypeCheck
 com.google.javascript.jscomp.TypedCodeGenerator
 com.google.javascript.jscomp.TypedScopeCreator
-com.google.javascript.jscomp.type.ReverseAbstractInterpreter
-com.google.javascript.jscomp.type.SemanticReverseAbstractInterpreter
 com.google.javascript.jscomp.TypeValidator
 com.google.javascript.jscomp.UseSite
 com.google.javascript.jscomp.VarCheck
@@ -159,4 +159,5 @@ com.google.javascript.rhino.jstype.VoidType
 com.google.javascript.rhino.Node
 com.google.javascript.rhino.ScriptRuntime
 com.google.javascript.rhino.SourcePosition
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.Token

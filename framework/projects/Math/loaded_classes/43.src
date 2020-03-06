@@ -19,10 +19,10 @@ org.apache.commons.math.stat.descriptive.rank.Max
 org.apache.commons.math.stat.descriptive.rank.Min
 org.apache.commons.math.stat.descriptive.StatisticalSummary
 org.apache.commons.math.stat.descriptive.StorelessUnivariateStatistic
-org.apache.commons.math.stat.descriptive.SummaryStatistics
 org.apache.commons.math.stat.descriptive.summary.Sum
 org.apache.commons.math.stat.descriptive.summary.SumOfLogs
 org.apache.commons.math.stat.descriptive.summary.SumOfSquares
+org.apache.commons.math.stat.descriptive.SummaryStatistics
 org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics
 org.apache.commons.math.stat.descriptive.UnivariateStatistic
 org.apache.commons.math.stat.descriptive.WeightedEvaluation

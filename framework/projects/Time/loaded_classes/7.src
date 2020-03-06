@@ -23,8 +23,8 @@ org.joda.time.chrono.ISOChronology
 org.joda.time.chrono.ISOYearOfEraDateTimeField
 org.joda.time.chrono.JulianChronology
 org.joda.time.chrono.LimitChronology
-org.joda.time.Chronology
 org.joda.time.chrono.ZonedChronology
+org.joda.time.Chronology
 org.joda.time.DateTime
 org.joda.time.DateTimeField
 org.joda.time.DateTimeFieldType

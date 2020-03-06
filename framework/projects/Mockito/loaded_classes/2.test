@@ -2,6 +2,6 @@ org.mockito.configuration.MockitoConfiguration
 org.mockito.internal.configuration.ConfigurationAccess
 org.mockito.internal.util.TimerTest
 org.mockito.StateMaster
+org.mockito.verification.NegativeDurationTest
 org.mockitoutil.Assertor
 org.mockitoutil.TestBase
-org.mockito.verification.NegativeDurationTest

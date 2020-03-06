@@ -146,13 +146,13 @@ org.mockito.invocation.StubInfo
 org.mockito.listeners.MethodInvocationReport
 org.mockito.Matchers
 org.mockito.Mock
+org.mockito.mock.MockCreationSettings
+org.mockito.mock.MockName
+org.mockito.mock.SerializableMode
 org.mockito.MockingDetails
 org.mockito.Mockito
 org.mockito.MockitoAnnotations
 org.mockito.MockitoDebugger
-org.mockito.mock.MockCreationSettings
-org.mockito.mock.MockName
-org.mockito.mock.SerializableMode
 org.mockito.MockSettings
 org.mockito.plugins.MockMaker
 org.mockito.plugins.StackTraceCleanerProvider

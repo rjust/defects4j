@@ -18,8 +18,8 @@ org.joda.time.chrono.GregorianChronology
 org.joda.time.chrono.ISOChronology
 org.joda.time.chrono.ISOYearOfEraDateTimeField
 org.joda.time.chrono.LenientChronology
-org.joda.time.Chronology
 org.joda.time.chrono.ZonedChronology
+org.joda.time.Chronology
 org.joda.time.DateTimeField
 org.joda.time.DateTimeFieldType
 org.joda.time.DateTimeUtils

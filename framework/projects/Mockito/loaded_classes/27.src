@@ -50,11 +50,11 @@ org.mockito.internal.invocation.InvocationMatcher
 org.mockito.internal.invocation.InvocationsFinder
 org.mockito.internal.invocation.MatchersBinder
 org.mockito.internal.invocation.MockitoMethod
-org.mockito.internal.InvocationNotifierHandler
 org.mockito.internal.invocation.realmethod.CGLIBProxyRealMethod
 org.mockito.internal.invocation.realmethod.FilteredCGLIBProxyRealMethod
 org.mockito.internal.invocation.realmethod.HasCGLIBMethodProxy
 org.mockito.internal.invocation.realmethod.RealMethod
+org.mockito.internal.InvocationNotifierHandler
 org.mockito.internal.listeners.NotifiedMethodInvocationReport
 org.mockito.internal.matchers.Any
 org.mockito.internal.matchers.CapturesArguments

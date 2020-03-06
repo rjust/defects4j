@@ -182,7 +182,6 @@ com.google.javascript.rhino.jstype.BooleanType
 com.google.javascript.rhino.jstype.EnumElementType
 com.google.javascript.rhino.jstype.EnumType
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionPrototypeType
@@ -219,6 +218,7 @@ com.google.javascript.rhino.jstype.UnresolvedTypeExpression
 com.google.javascript.rhino.jstype.ValueType
 com.google.javascript.rhino.jstype.Visitor
 com.google.javascript.rhino.jstype.VoidType
+com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode

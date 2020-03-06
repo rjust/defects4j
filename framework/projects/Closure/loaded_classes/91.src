@@ -86,7 +86,6 @@ com.google.javascript.rhino.jstype.AllType
 com.google.javascript.rhino.jstype.ArrowType
 com.google.javascript.rhino.jstype.BooleanType
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionPrototypeType
@@ -120,5 +119,5 @@ com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
-com.google.javascript.rhino.Token
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.TokenStream
