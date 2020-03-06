@@ -16,7 +16,7 @@ com.google.javascript.jscomp.ProcessCommonJSModules
 com.google.javascript.jscomp.Region
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
-com.google.javascript.jscomp.TypeCheck
 com.google.javascript.jscomp.type.ReverseAbstractInterpreter
+com.google.javascript.jscomp.TypeCheck
 com.google.javascript.rhino.jstype.StaticSourceFile
 com.google.javascript.rhino.Node

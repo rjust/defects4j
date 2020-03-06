@@ -7,9 +7,9 @@ org.mockito.internal.util.reflection.ParameterizedConstructorInstantiatorTest
 org.mockito.StateMaster
 org.mockitousage.basicapi.ResetTest
 org.mockitousage.basicapi.UsingVarargsTest
-org.mockitousage.bugs.VarargsErrorWhenCallingRealMethodTest
 org.mockitousage.bugs.varargs.VarargsAndAnyObjectPicksUpExtraInvocationsTest
 org.mockitousage.bugs.varargs.VarargsNotPlayingWithAnyObjectTest
+org.mockitousage.bugs.VarargsErrorWhenCallingRealMethodTest
 org.mockitousage.configuration.SmartMock
 org.mockitousage.IMethods
 org.mockitousage.matchers.VerificationAndStubbingUsingMatchersTest

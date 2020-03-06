@@ -3,6 +3,7 @@ com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory
 com.google.javascript.jscomp.parsing.ParserRunner
 com.google.javascript.jscomp.parsing.TypeSafeDispatcher
+com.google.javascript.jscomp.testing.TestErrorReporter
 com.google.javascript.rhino.ErrorReporter
 com.google.javascript.rhino.IR
 com.google.javascript.rhino.jstype.AllType
@@ -12,7 +13,6 @@ com.google.javascript.rhino.jstype.CanCastToVisitor
 com.google.javascript.rhino.jstype.EnumElementType
 com.google.javascript.rhino.jstype.EquivalenceMethod
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionType
@@ -51,6 +51,9 @@ com.google.javascript.rhino.jstype.UnresolvedTypeExpression
 com.google.javascript.rhino.jstype.ValueType
 com.google.javascript.rhino.jstype.Visitor
 com.google.javascript.rhino.jstype.VoidType
+com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.Node
 com.google.javascript.rhino.SimpleErrorReporter
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
+com.google.javascript.rhino.testing.TestErrorReporter
 com.google.javascript.rhino.TokenStream

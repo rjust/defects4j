@@ -1,13 +1,6 @@
-com.google.javascript.jscomp.InlineFunctionsTest
 com.google.javascript.jscomp.LooseTypeCheckTest
-com.google.javascript.jscomp.NameAnalyzerTest
-com.google.javascript.jscomp.PeepholeFoldConstantsTest
-com.google.javascript.jscomp.PeepholeSubstituteAlternateSyntaxTest
-com.google.javascript.jscomp.PureFunctionIdentifierTest
 com.google.javascript.jscomp.TypeCheckTest
 com.google.javascript.jscomp.TypedScopeCreatorTest
-com.google.javascript.jscomp.parsing.JsDocInfoParserTest
 com.google.javascript.jscomp.parsing.ParserTest
-com.google.javascript.rhino.jstype.JSTypeRegistryTest
 com.google.javascript.rhino.jstype.JSTypeTest
 com.google.javascript.rhino.jstype.RecordTypeTest

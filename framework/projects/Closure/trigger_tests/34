@@ -1,6 +1,6 @@
 --- com.google.javascript.jscomp.CodePrinterTest::testManyAdds
 java.lang.StackOverflowError
-	at com.google.javascript.jscomp.CodeGenerator.add(CodeGenerator.java:86)
+	at com.google.javascript.jscomp.CodeGenerator.add(CodeGenerator.java:102)
 	at com.google.javascript.jscomp.CodeGenerator.addExpr(CodeGenerator.java:891)
 	at com.google.javascript.jscomp.CodeGenerator.add(CodeGenerator.java:122)
 	at com.google.javascript.jscomp.CodeGenerator.addExpr(CodeGenerator.java:891)

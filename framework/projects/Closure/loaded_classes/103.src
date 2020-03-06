@@ -20,7 +20,6 @@ com.google.javascript.jscomp.CompilerInput
 com.google.javascript.jscomp.CompilerOptions
 com.google.javascript.jscomp.CompilerPass
 com.google.javascript.jscomp.ComposeWarningsGuard
-com.google.javascript.jscomp.ConcreteType
 com.google.javascript.jscomp.ControlFlowAnalysis
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.CreateSyntheticBlocks
@@ -32,7 +31,6 @@ com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
 com.google.javascript.jscomp.DisambiguateProperties
-com.google.javascript.jscomp.DotFormatter
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.FlowScope
@@ -89,7 +87,6 @@ com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
 com.google.javascript.jscomp.SymbolTable
 com.google.javascript.jscomp.SyntacticScopeCreator
-com.google.javascript.jscomp.TightenTypes
 com.google.javascript.jscomp.Tracer
 com.google.javascript.jscomp.TypeCheck
 com.google.javascript.jscomp.TypedCodeGenerator
@@ -113,7 +110,6 @@ com.google.javascript.rhino.jstype.BooleanType
 com.google.javascript.rhino.jstype.EnumElementType
 com.google.javascript.rhino.jstype.EnumType
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionPrototypeType
 com.google.javascript.rhino.jstype.FunctionType
@@ -143,11 +139,11 @@ com.google.javascript.rhino.jstype.UnknownType
 com.google.javascript.rhino.jstype.ValueType
 com.google.javascript.rhino.jstype.Visitor
 com.google.javascript.rhino.jstype.VoidType
+com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.Node
 com.google.javascript.rhino.ObjArray
 com.google.javascript.rhino.ObjToIntMap
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
-com.google.javascript.rhino.Token
-com.google.javascript.rhino.TokenStream
+com.google.javascript.rhino.testing.BaseJSTypeTestCase

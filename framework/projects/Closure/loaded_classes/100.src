@@ -45,9 +45,6 @@ com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.parsing.Annotation
 com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory
-com.google.javascript.jscomp.parsing.JsDocInfoParser
-com.google.javascript.jscomp.parsing.JsDocToken
-com.google.javascript.jscomp.parsing.JsDocTokenStream
 com.google.javascript.jscomp.parsing.ParserRunner
 com.google.javascript.jscomp.parsing.TypeSafeDispatcher
 com.google.javascript.jscomp.PassConfig
@@ -76,13 +73,10 @@ com.google.javascript.rhino.EcmaError
 com.google.javascript.rhino.ErrorReporter
 com.google.javascript.rhino.EvaluatorException
 com.google.javascript.rhino.FunctionNode
-com.google.javascript.rhino.JSDocInfo
-com.google.javascript.rhino.JSDocInfoBuilder
 com.google.javascript.rhino.jstype.AllType
 com.google.javascript.rhino.jstype.ArrowType
 com.google.javascript.rhino.jstype.BooleanType
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionPrototypeType
@@ -116,3 +110,4 @@ com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
+com.google.javascript.rhino.testing.BaseJSTypeTestCase

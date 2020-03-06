@@ -8,7 +8,6 @@ com.google.javascript.jscomp.CheckGlobalNames
 com.google.javascript.jscomp.CheckLevel
 com.google.javascript.jscomp.CheckRegExp
 com.google.javascript.jscomp.ClosureCodingConvention
-com.google.javascript.jscomp.ClosureReverseAbstractInterpreter
 com.google.javascript.jscomp.CodeChangeHandler
 com.google.javascript.jscomp.CodeConsumer
 com.google.javascript.jscomp.CodeGenerator
@@ -21,7 +20,6 @@ com.google.javascript.jscomp.CompilerPass
 com.google.javascript.jscomp.ComposeWarningsGuard
 com.google.javascript.jscomp.ControlFlowAnalysis
 com.google.javascript.jscomp.ControlFlowGraph
-com.google.javascript.jscomp.CssRenamingMap
 com.google.javascript.jscomp.DataFlowAnalysis
 com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
@@ -72,7 +70,6 @@ com.google.javascript.jscomp.parsing.TypeSafeDispatcher
 com.google.javascript.jscomp.PassConfig
 com.google.javascript.jscomp.PassFactory
 com.google.javascript.jscomp.PrepareAst
-com.google.javascript.jscomp.ProcessClosurePrimitives
 com.google.javascript.jscomp.ProcessDefines
 com.google.javascript.jscomp.PropertyRenamingPolicy
 com.google.javascript.jscomp.ReferenceCollectingCallback
@@ -108,12 +105,10 @@ com.google.javascript.rhino.JSDocInfo
 com.google.javascript.rhino.JSDocInfoBuilder
 com.google.javascript.rhino.jstype.AllType
 com.google.javascript.rhino.jstype.ArrowType
-com.google.javascript.rhino.jstype.BooleanLiteralSet
 com.google.javascript.rhino.jstype.BooleanType
 com.google.javascript.rhino.jstype.EnumElementType
 com.google.javascript.rhino.jstype.EnumType
 com.google.javascript.rhino.jstype.ErrorFunctionType
-com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.jstype.FunctionBuilder
 com.google.javascript.rhino.jstype.FunctionParamBuilder
 com.google.javascript.rhino.jstype.FunctionPrototypeType
@@ -139,7 +134,6 @@ com.google.javascript.rhino.jstype.StaticScope
 com.google.javascript.rhino.jstype.StaticSlot
 com.google.javascript.rhino.jstype.StringType
 com.google.javascript.rhino.jstype.TemplateType
-com.google.javascript.rhino.jstype.TernaryValue
 com.google.javascript.rhino.jstype.UnionType
 com.google.javascript.rhino.jstype.UnionTypeBuilder
 com.google.javascript.rhino.jstype.UnknownType
@@ -147,9 +141,9 @@ com.google.javascript.rhino.jstype.UnresolvedTypeExpression
 com.google.javascript.rhino.jstype.ValueType
 com.google.javascript.rhino.jstype.Visitor
 com.google.javascript.rhino.jstype.VoidType
+com.google.javascript.rhino.JSTypeExpression
 com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
-com.google.javascript.rhino.Token
-com.google.javascript.rhino.TokenStream
+com.google.javascript.rhino.testing.BaseJSTypeTestCase

@@ -99,11 +99,11 @@ org.mockito.invocation.Location
 org.mockito.invocation.MockHandler
 org.mockito.Matchers
 org.mockito.Mock
+org.mockito.mock.MockName
 org.mockito.MockingDetails
 org.mockito.Mockito
 org.mockito.MockitoAnnotations
 org.mockito.MockitoDebugger
-org.mockito.mock.MockName
 org.mockito.plugins.MockMaker
 org.mockito.plugins.PluginSwitch
 org.mockito.plugins.StackTraceCleanerProvider

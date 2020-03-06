@@ -134,3 +134,4 @@ com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
+com.google.javascript.rhino.testing.BaseJSTypeTestCase

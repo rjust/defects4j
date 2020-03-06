@@ -20,8 +20,8 @@ org.joda.time.chrono.GregorianChronology
 org.joda.time.chrono.ISOChronology
 org.joda.time.chrono.ISOYearOfEraDateTimeField
 org.joda.time.chrono.JulianChronology
-org.joda.time.Chronology
 org.joda.time.chrono.ZonedChronology
+org.joda.time.Chronology
 org.joda.time.convert.AbstractConverter
 org.joda.time.convert.CalendarConverter
 org.joda.time.convert.Converter

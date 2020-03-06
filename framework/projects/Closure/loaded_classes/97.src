@@ -30,7 +30,6 @@ com.google.javascript.jscomp.DiagnosticType
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.GoogleCodingConvention
-com.google.javascript.jscomp.InlineCostEstimator
 com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JSModule
@@ -101,7 +100,6 @@ com.google.javascript.rhino.jstype.RecordType
 com.google.javascript.rhino.jstype.StaticScope
 com.google.javascript.rhino.jstype.StringType
 com.google.javascript.rhino.jstype.TemplateType
-com.google.javascript.rhino.jstype.TernaryValue
 com.google.javascript.rhino.jstype.UnionType
 com.google.javascript.rhino.jstype.UnionTypeBuilder
 com.google.javascript.rhino.jstype.UnknownType
@@ -113,5 +111,5 @@ com.google.javascript.rhino.Node
 com.google.javascript.rhino.RhinoException
 com.google.javascript.rhino.ScriptOrFnNode
 com.google.javascript.rhino.ScriptRuntime
+com.google.javascript.rhino.testing.BaseJSTypeTestCase
 com.google.javascript.rhino.Token
-com.google.javascript.rhino.TokenStream
