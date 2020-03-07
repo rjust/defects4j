@@ -1,0 +1,9 @@
+org.apache.commons.compress.ArchiveReadTest
+org.apache.commons.compress.DetectArchiverTestCase
+org.apache.commons.compress.archivers.ArchiveStreamFactoryTest
+org.apache.commons.compress.archivers.DumpTestCase
+org.apache.commons.compress.archivers.LongSymLinkTest
+org.apache.commons.compress.archivers.SevenZTestCase
+org.apache.commons.compress.archivers.sevenz.SevenZFileTest
+org.apache.commons.compress.archivers.sevenz.SevenZOutputFileTest
+org.apache.commons.compress.changes.ChangeSetTestCase

@@ -1,0 +1,55 @@
+diff --git a/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineRegressionTest.java b/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineRegressionTest.java
+index 67d5b030..9ac61a05 100644
+--- a/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineRegressionTest.java
++++ b/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineRegressionTest.java
+@@ -17,7 +17,7 @@
+ 
+ package org.apache.commons.codec.language.bm;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
+ 
+ import java.util.Arrays;
+ import java.util.HashSet;
+@@ -185,16 +185,11 @@ public class PhoneticEngineRegressionTest {
+         Map<String, String> args = new TreeMap<String, String>();
+         args.put("nameType", "GENERIC");
+         args.put("ruleType", "APPROX");
+-
+         assertEquals(encode(args, true, "abram"), "Ybram|Ybrom|abram|abran|abrom|abron|avram|avrom|obram|obran|obrom|obron|ovram|ovrom");
+-        assertEquals(encode(args, true, "Bendzin"), "bndzn|bntsn|bnzn|vndzn|vntsn");
+ 
+         args.put("nameType", "ASHKENAZI");
+         args.put("ruleType", "APPROX");
+-
+         assertEquals(encode(args, true, "abram"), "Ybram|Ybrom|abram|abrom|avram|avrom|imbram|imbrom|obram|obrom|ombram|ombrom|ovram|ovrom");
+-        assertEquals(encode(args, true, "Halpern"), "YlpYrn|Ylpirn|alpYrn|alpirn|olpYrn|olpirn|xalpirn|xolpirn");
+-
+     }
+ 
+     /**
+diff --git a/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineTest.java b/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineTest.java
+index 1463b297..fa7ab425 100644
+--- a/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineTest.java
++++ b/src/test/java/org/apache/commons/codec/language/bm/PhoneticEngineTest.java
+@@ -17,7 +17,8 @@
+ 
+ package org.apache.commons.codec.language.bm;
+ 
+-import static org.junit.Assert.*;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertTrue;
+ 
+ import java.util.Arrays;
+ import java.util.List;
+@@ -40,8 +41,8 @@ public class PhoneticEngineTest {
+     public static List<Object[]> data() {
+         return Arrays
+                 .asList(new Object[] { "Renault", "rinD|rinDlt|rina|rinalt|rino|rinolt|rinu|rinult", NameType.GENERIC, RuleType.APPROX, Boolean.TRUE, TEN },
+-                        new Object[] { "Renault", "rYnDlt|rYnalt|rYnult|rinDlt|rinalt|rinolt|rinult", NameType.ASHKENAZI, RuleType.APPROX, Boolean.TRUE, TEN },
+-                        new Object[] { "Renault", "rinDlt", NameType.ASHKENAZI, RuleType.APPROX, Boolean.TRUE, Integer.valueOf(1) },
++                        new Object[] { "Renault", "rYnDlt|rYnalt|rYnult|rinDlt|rinalt|rinult", NameType.ASHKENAZI, RuleType.APPROX, Boolean.TRUE, TEN },
++                        new Object[] { "Renault", "rYnDlt", NameType.ASHKENAZI, RuleType.APPROX, Boolean.TRUE, Integer.valueOf(1) },
+                         new Object[] { "Renault", "rinDlt", NameType.SEPHARDIC, RuleType.APPROX, Boolean.TRUE, TEN },
+                         new Object[] { "SntJohn-Smith", "sntjonsmit", NameType.GENERIC, RuleType.EXACT, Boolean.TRUE, TEN },
+                         new Object[] { "d'ortley", "(ortlaj|ortlej)-(dortlaj|dortlej)", NameType.GENERIC, RuleType.EXACT, Boolean.TRUE, TEN },

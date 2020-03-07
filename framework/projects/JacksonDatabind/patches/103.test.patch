@@ -1,0 +1,51 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/exc/BasicExceptionTest.java b/src/test/java/com/fasterxml/jackson/databind/exc/BasicExceptionTest.java
+index 3c4d2bb35..38483325c 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/exc/BasicExceptionTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/exc/BasicExceptionTest.java
+@@ -3,10 +3,9 @@ package com.fasterxml.jackson.databind.exc;
+ import java.io.StringWriter;
+ import java.util.Collection;
+ import java.util.Collections;
+-import java.util.Map;
+ 
+ import com.fasterxml.jackson.core.*;
+-import com.fasterxml.jackson.core.type.TypeReference;
++
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+ import com.fasterxml.jackson.databind.type.TypeFactory;
+@@ -112,20 +111,4 @@ public class BasicExceptionTest extends BaseMapTest
+         assertEquals(getClass(), e.getReferringClass());
+         p.close();
+     }
+-
+-    // [databind#2128]: ensure Location added once and only once
+-    public void testLocationAddition() throws Exception
+-    {
+-        try {
+-            /*Map<?,?> map =*/ MAPPER.readValue("{\"value\":\"foo\"}",
+-                    new TypeReference<Map<ABC, Integer>>() { });
+-            fail("Should not pass");
+-        } catch (MismatchedInputException e) {
+-            String msg = e.getMessage();
+-            String[] str = msg.split(" at \\[");
+-            if (str.length != 2) {
+-                fail("Should only get one 'at [' marker, got "+(str.length-1)+", source: "+msg);
+-            }
+-        }
+-    }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/exc/ExceptionPathTest.java b/src/test/java/com/fasterxml/jackson/databind/exc/ExceptionPathTest.java
+index 70ee6b6f2..ae70ad388 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/exc/ExceptionPathTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/exc/ExceptionPathTest.java
+@@ -38,4 +38,9 @@ public class ExceptionPathTest extends BaseMapTest
+                     reference.toString());
+         }
+     }
++
++    public static void main(String[] args)
++    {
++        System.err.println("Int, full: "+Integer.TYPE.getName());
++    }
+ }

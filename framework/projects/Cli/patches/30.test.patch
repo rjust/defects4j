@@ -1,0 +1,93 @@
+diff --git a/src/test/java/org/apache/commons/cli/OptionGroupTest.java b/src/test/java/org/apache/commons/cli/OptionGroupTest.java
+index dfcd0f4..eea69ee 100644
+--- a/src/test/java/org/apache/commons/cli/OptionGroupTest.java
++++ b/src/test/java/org/apache/commons/cli/OptionGroupTest.java
+@@ -17,8 +17,6 @@
+ 
+ package org.apache.commons.cli;
+ 
+-import java.util.Properties;
+-
+ import junit.framework.TestCase;
+ 
+ /**
+@@ -28,7 +26,7 @@ import junit.framework.TestCase;
+ public class OptionGroupTest extends TestCase
+ {
+     private Options _options = null;
+-    private Parser parser = new PosixParser();
++    private CommandLineParser parser = new PosixParser();
+ 
+     public void setUp()
+     {
+@@ -188,18 +186,6 @@ public class OptionGroupTest extends TestCase
+         assertTrue( "Confirm NO extra args", cl.getArgList().size() == 0);
+     }
+ 
+-    public void testTwoOptionsFromGroupWithProperties() throws Exception
+-    {
+-        String[] args = new String[] { "-f" };
+-        
+-        Properties properties = new Properties();
+-        properties.put("d", "true");
+-        
+-        CommandLine cl = parser.parse( _options, args, properties);
+-        assertTrue(cl.hasOption("f"));
+-        assertTrue(!cl.hasOption("d"));
+-    }
+-
+     public void testValidLongOnlyOptions() throws Exception
+     {
+         CommandLine cl1 = parser.parse(_options, new String[]{"--export"});
+diff --git a/src/test/java/org/apache/commons/cli/ParserTestCase.java b/src/test/java/org/apache/commons/cli/ParserTestCase.java
+index c996fcb..effebdb 100644
+--- a/src/test/java/org/apache/commons/cli/ParserTestCase.java
++++ b/src/test/java/org/apache/commons/cli/ParserTestCase.java
+@@ -998,47 +998,4 @@ public abstract class ParserTestCase extends TestCase
+         CommandLine cmd = parse(parser, opts, null, properties);
+         assertTrue(cmd.hasOption("f"));
+     }
+-
+-    public void testPropertyOptionUnexpected() throws Exception
+-    {
+-        Options opts = new Options();
+-        
+-        Properties properties = new Properties();
+-        properties.setProperty("f", "true");
+-        
+-        try {
+-            parse(parser, opts, null, properties);
+-            fail("UnrecognizedOptionException expected");
+-        } catch (UnrecognizedOptionException e) {
+-            // expected
+-        }
+-    }
+-
+-    public void testPropertyOptionGroup() throws Exception
+-    {
+-        Options opts = new Options();
+-        
+-        OptionGroup group1 = new OptionGroup();
+-        group1.addOption(new Option("a", null));
+-        group1.addOption(new Option("b", null));
+-        opts.addOptionGroup(group1);
+-        
+-        OptionGroup group2 = new OptionGroup();
+-        group2.addOption(new Option("x", null));
+-        group2.addOption(new Option("y", null));
+-        opts.addOptionGroup(group2);
+-        
+-        String[] args = new String[] { "-a" };
+-        
+-        Properties properties = new Properties();
+-        properties.put("b", "true");
+-        properties.put("x", "true");
+-        
+-        CommandLine cmd = parse(parser, opts, args, properties);
+-        
+-        assertTrue(cmd.hasOption("a"));
+-        assertFalse(cmd.hasOption("b"));
+-        assertTrue(cmd.hasOption("x"));
+-        assertFalse(cmd.hasOption("y"));
+-    }
+ }

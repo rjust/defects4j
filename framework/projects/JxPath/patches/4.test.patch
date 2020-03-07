@@ -1,0 +1,179 @@
+diff --git a/src/test/org/apache/commons/jxpath/JXPathTestSuite.java b/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
+index 6828ca3..60735c2 100644
+--- a/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
++++ b/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
+@@ -30,7 +30,6 @@ import org.apache.commons.jxpath.ri.compiler.CoreOperationTest;
+ import org.apache.commons.jxpath.ri.compiler.ExtensionFunctionTest;
+ import org.apache.commons.jxpath.ri.compiler.VariableTest;
+ import org.apache.commons.jxpath.ri.model.MixedModelTest;
+-import org.apache.commons.jxpath.ri.model.XMLSpaceTest;
+ import org.apache.commons.jxpath.ri.model.beans.BeanModelTest;
+ import org.apache.commons.jxpath.ri.model.container.ContainerModelTest;
+ import org.apache.commons.jxpath.ri.model.dom.DOMModelTest;
+@@ -90,7 +89,6 @@ public class JXPathTestSuite extends TestCase {
+         suite.addTestSuite(MixedModelTest.class);
+         suite.addTestSuite(BasicTypeConverterTest.class);
+         suite.addTestSuite(RecursiveAxesTest.class);
+-        suite.addTestSuite(XMLSpaceTest.class);
+         return suite;
+     }
+ }
+\ No newline at end of file
+diff --git a/src/test/org/apache/commons/jxpath/XmlSpace.xml b/src/test/org/apache/commons/jxpath/XmlSpace.xml
+deleted file mode 100644
+index dabaaf5..0000000
+--- a/src/test/org/apache/commons/jxpath/XmlSpace.xml
++++ /dev/null
+@@ -1,47 +0,0 @@
+-<?xml version="1.0" ?>
+-<!--
+-   Licensed to the Apache Software Foundation (ASF) under one or more
+-  contributor license agreements.  See the NOTICE file distributed with
+-  this work for additional information regarding copyright ownership.
+-  The ASF licenses this file to You under the Apache License, Version 2.0
+-  (the "License"); you may not use this file except in compliance with
+-  the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-   Unless required by applicable law or agreed to in writing, software
+-   distributed under the License is distributed on an "AS IS" BASIS,
+-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-   See the License for the specific language governing permissions and
+-   limitations under the License.
+--->
+-
+-<!DOCTYPE test [
+-  <!ELEMENT test (text)>
+-  <!ELEMENT text ANY>
+-  <!ATTLIST text xml:space (default|preserve) 'default'>
+-]>
+-
+-<test>
+-	<text id="unspecified"> foo </text>
+-	<text id="default" xml:space="default"> foo </text>
+-	<text id="preserve" xml:space="preserve"> foo </text>
+-	<text id="nested">
+-		<text> foo </text>
+-		<text>;</text>
+-		<text xml:space="default"> bar </text>
+-		<text>;</text>
+-		<text xml:space="preserve"> baz </text>
+-	</text>
+-	<text id="nested-with-comments">
+-		<text> foo </text>
+-		<!-- comment 1 -->
+-		<text>;</text>
+-		<!-- comment 2 -->
+-		<text xml:space="default"> bar </text>
+-		<!-- comment 3 -->
+-		<text>;</text>
+-		<!-- comment 4 -->
+-		<text xml:space="preserve"> baz </text>
+-	</text>
+-</test>
+\ No newline at end of file
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/XMLSpaceTest.java b/src/test/org/apache/commons/jxpath/ri/model/XMLSpaceTest.java
+deleted file mode 100644
+index bbedc43..0000000
+--- a/src/test/org/apache/commons/jxpath/ri/model/XMLSpaceTest.java
++++ /dev/null
+@@ -1,97 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.commons.jxpath.ri.model;
+-
+-import org.apache.commons.jxpath.JXPathContext;
+-import org.apache.commons.jxpath.JXPathTestCase;
+-import org.apache.commons.jxpath.xml.DocumentContainer;
+-
+-/**
+- * Test for text trimming from JXPATH-83.
+- *
+- * @author Matt Benson
+- * @version $Revision$ $Date$
+- */
+-public class XMLSpaceTest extends JXPathTestCase {
+-    protected JXPathContext context;
+-
+-    /**
+-     * Construct a new instance of this test case.
+-     *
+-     * @param name Name of the test case
+-     */
+-    public XMLSpaceTest(String name) {
+-        super(name);
+-    }
+-
+-    protected DocumentContainer createDocumentContainer(String model) {
+-        return new DocumentContainer(JXPathTestCase.class
+-                .getResource("XmlSpace.xml"), model);
+-    }
+-
+-    protected JXPathContext createContext(String model) {
+-        JXPathContext context = JXPathContext
+-                .newContext(createDocumentContainer(model));
+-        return context;
+-    }
+-
+-    protected void doTest(String id, String model, String expectedValue) {
+-        JXPathContext context = JXPathContext
+-                .newContext(createDocumentContainer(model));
+-        assertEquals(context.getValue("test/text[@id='" + id + "']"), expectedValue);
+-    }
+-
+-    public void testUnspecifiedDOM() {
+-        doTest("unspecified", DocumentContainer.MODEL_DOM, "foo");
+-    }
+-
+-    public void testDefaultDOM() {
+-        doTest("default", DocumentContainer.MODEL_DOM, "foo");
+-    }
+-
+-    public void testPreserveDOM() {
+-        doTest("preserve", DocumentContainer.MODEL_DOM, " foo ");
+-    }
+-
+-    public void testNestedDOM() {
+-        doTest("nested", DocumentContainer.MODEL_DOM, "foo;bar; baz ");
+-    }
+-
+-    public void testNestedWithCommentsDOM() {
+-        doTest("nested-with-comments", DocumentContainer.MODEL_DOM, "foo;bar; baz ");
+-    }
+-
+-    public void testUnspecifiedJDOM() {
+-        doTest("unspecified", DocumentContainer.MODEL_JDOM, "foo");
+-    }
+-
+-    public void testDefaultJDOM() {
+-        doTest("default", DocumentContainer.MODEL_JDOM, "foo");
+-    }
+-
+-    public void testPreserveJDOM() {
+-        doTest("preserve", DocumentContainer.MODEL_JDOM, " foo ");
+-    }
+-
+-    public void testNestedJDOM() {
+-        doTest("nested", DocumentContainer.MODEL_JDOM, "foo;bar; baz ");
+-    }
+-
+-    public void testNestedWithCommentsJDOM() {
+-        doTest("nested-with-comments", DocumentContainer.MODEL_JDOM, "foo;bar; baz ");
+-    }
+-}
+\ No newline at end of file

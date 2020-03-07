@@ -1,0 +1,168 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId198Test.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/ExternalTypeId198Test.java
+similarity index 60%
+rename from src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId198Test.java
+rename to src/test/java/com/fasterxml/jackson/databind/jsontype/ExternalTypeId198Test.java
+index c34793f19..effef5820 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId198Test.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/ExternalTypeId198Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.jsontype.ext;
++package com.fasterxml.jackson.databind.jsontype;
+ 
+ import com.fasterxml.jackson.annotation.JsonCreator;
+ import com.fasterxml.jackson.annotation.JsonSubTypes;
+@@ -33,38 +33,38 @@ public class ExternalTypeId198Test extends BaseMapTest
+     }
+ 
+     public static class Kick extends Attack {
+-        @JsonCreator
+-        public Kick(String side) {
+-            super(side);
+-        }
++      @JsonCreator
++      public Kick(String side) {
++        super(side);
++      }
+     }
+ 
+     public static class Punch extends Attack {
+-        @JsonCreator
+-        public Punch(String side) {
+-            super(side);
+-        }
++      @JsonCreator
++      public Punch(String side) {
++        super(side);
++      }
+     }
+ 
+     final ObjectMapper MAPPER = new ObjectMapper();
+ 
+     public void testFails() throws Exception {
+-        String json = "{ \"name\": \"foo\", \"attack\":\"right\" } }";
++      String json = "{ \"name\": \"foo\", \"attack\":\"right\" } }";
+ 
+-        Character character = MAPPER.readValue(json, Character.class);
++      Character character = MAPPER.readValue(json, Character.class);
+ 
+-        assertNotNull(character);
+-        assertNotNull(character.attack);
+-        assertEquals("foo", character.name);
++      assertNotNull(character);
++      assertNotNull(character.attack);
++      assertEquals("foo", character.name);
+     }
+ 
+     public void testWorks() throws Exception {
+-        String json = "{ \"name\": \"foo\", \"preferredAttack\": \"KICK\", \"attack\":\"right\" } }";
++      String json = "{ \"name\": \"foo\", \"preferredAttack\": \"KICK\", \"attack\":\"right\" } }";
+ 
+-        Character character = MAPPER.readValue(json, Character.class);
++      Character character = MAPPER.readValue(json, Character.class);
+ 
+-        assertNotNull(character);
+-        assertNotNull(character.attack);
+-        assertEquals("foo", character.name);
++      assertNotNull(character);
++      assertNotNull(character.attack);
++      assertEquals("foo", character.name);
+     }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+similarity index 99%
+rename from src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java
+rename to src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+index 3c54a387a..7bdcd09b9 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.jsontype.ext;
++package com.fasterxml.jackson.databind.jsontype;
+ 
+ import java.math.BigDecimal;
+ import java.util.*;
+@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+ // Tests for External type id, one that exists at same level as typed Object,
+ // that is, property is not within typed object but a member of its parent.
+-public class ExternalTypeIdTest extends BaseMapTest
++public class TestExternalId extends BaseMapTest
+ {
+     static class ExternalBean
+     {
+diff --git a/src/test/java/com/fasterxml/jackson/failing/ExternalTypeId96Test.java b/src/test/java/com/fasterxml/jackson/failing/ExternalId96Test.java
+similarity index 97%
+rename from src/test/java/com/fasterxml/jackson/failing/ExternalTypeId96Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/ExternalId96Test.java
+index 0e6fd536d..0d19357bd 100644
+--- a/src/test/java/com/fasterxml/jackson/failing/ExternalTypeId96Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/ExternalId96Test.java
+@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+ // Tests for External type id, one that exists at same level as typed Object,
+ // that is, property is not within typed object but a member of its parent.
+-public class ExternalTypeId96Test extends BaseMapTest
++public class ExternalId96Test extends BaseMapTest
+ {
+     // for [databind#96]
+     static class ExternalBeanWithDefault
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId999Test.java b/src/test/java/com/fasterxml/jackson/failing/ExternalTypeId999Test.java
+similarity index 61%
+rename from src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId999Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/ExternalTypeId999Test.java
+index a81f25191..1c7404f99 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeId999Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/ExternalTypeId999Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.jsontype.ext;
++package com.fasterxml.jackson.failing;
+ 
+ import com.fasterxml.jackson.annotation.*;
+ import com.fasterxml.jackson.core.type.TypeReference;
+@@ -18,8 +18,7 @@ public class ExternalTypeId999Test extends BaseMapTest
+     {
+         final String type;
+ 
+-        @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+-                visible = true,
++        @JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME,
+                 include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+         @JsonSubTypes({
+                 @JsonSubTypes.Type(FooPayload.class),
+@@ -30,26 +29,24 @@ public class ExternalTypeId999Test extends BaseMapTest
+         public Message(@JsonProperty("type") String type,
+                 @JsonProperty("payload") P payload)
+         {
++            if (payload == null) {
++                throw new RuntimeException("'payload' is null");
++            }
++            if (type == null) {
++                throw new RuntimeException("'type' is null");
++            }
+             this.type = type;
+             this.payload = payload;
+         }
+     }
+ 
+-    private final ObjectMapper MAPPER = objectMapper();
+ 
+     public void testExternalTypeId() throws Exception
+     {
+-        TypeReference<?> type = new TypeReference<Message<FooPayload>>() { };
+-
+-        Message<?> msg = MAPPER.readValue(aposToQuotes("{ 'type':'foo', 'payload': {} }"), type);
+-        assertNotNull(msg);
+-        assertNotNull(msg.payload);
+-        assertEquals("foo", msg.type);
+-
+-        // and then with different order
+-        msg = MAPPER.readValue(aposToQuotes("{'payload': {}, 'type':'foo' }"), type);
++        ObjectMapper objectMapper = new ObjectMapper();
++        Message<?> msg = objectMapper.readValue(
++                "{ \"type\": \"foo\", \"payload\": {} }",
++                new TypeReference<Message<FooPayload>>() { });
+         assertNotNull(msg);
+-        assertNotNull(msg.payload);
+-        assertEquals("foo", msg.type);
+     }
+ }

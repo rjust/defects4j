@@ -1,0 +1,44 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+index 46910eb45..41ffafb2b 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+@@ -352,7 +352,7 @@ public final class TypeFactory
+         // also: if we start from untyped, not much to save
+         do { // bogus loop to be able to break
+             if (rawBase == Object.class) {
+-                newType = _fromClass(null, subclass, EMPTY_BINDINGS);
++                newType = _fromClass(null, subclass, TypeBindings.emptyBindings());
+                 break;
+             }
+             if (!rawBase.isAssignableFrom(subclass)) {
+@@ -363,7 +363,7 @@ public final class TypeFactory
+ 
+             // (1) Original target type has no generics -- just resolve subtype
+             if (baseType.getBindings().isEmpty()) {
+-                newType = _fromClass(null, subclass, EMPTY_BINDINGS);     
++                newType = _fromClass(null, subclass, TypeBindings.emptyBindings());     
+                 break;
+             }
+             // (2) A small set of "well-known" List/Map subtypes where can take a short-cut
+@@ -893,7 +893,7 @@ public final class TypeFactory
+         int len = parameterClasses.length;
+         JavaType[] pt = new JavaType[len];
+         for (int i = 0; i < len; ++i) {
+-            pt[i] = _fromClass(null, parameterClasses[i], EMPTY_BINDINGS);
++            pt[i] = _fromClass(null, parameterClasses[i], null);
+         }
+         return constructParametricType(parametrized, pt);
+     }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java
+index 1817e0aad..c3697f5e5 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java
+@@ -56,7 +56,7 @@ public class TypeParser
+             // can be comma that separates types, or closing '>'
+             tokens.pushBack(token);
+         }
+-        return _factory._fromClass(null, base, TypeBindings.emptyBindings());
++        return _factory._fromClass(null, base, null);
+     }
+ 
+     protected List<JavaType> parseTypes(MyTokenizer tokens)

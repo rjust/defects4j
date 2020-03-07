@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java b/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java
+index 513a83d90..f9cc5cb19 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java
++++ b/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java
+@@ -109,7 +109,7 @@ public final class AnnotationMap implements Annotations
+             _annotations = new HashMap<Class<? extends Annotation>,Annotation>();
+         }
+         Annotation previous = _annotations.put(ann.annotationType(), ann);
+-        return (previous == null) || !previous.equals(ann);
++        return (previous != null) && previous.equals(ann);
+     }
+ }
+ 

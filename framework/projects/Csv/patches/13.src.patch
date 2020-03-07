@@ -1,0 +1,28 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVFormat.java b/src/main/java/org/apache/commons/csv/CSVFormat.java
+index 8c71f3a..847f30a 100644
+--- a/src/main/java/org/apache/commons/csv/CSVFormat.java
++++ b/src/main/java/org/apache/commons/csv/CSVFormat.java
+@@ -316,7 +316,7 @@ public final class CSVFormat implements Serializable {
+      *      http://dev.mysql.com/doc/refman/5.1/en/load-data.html</a>
+      */
+     public static final CSVFormat MYSQL = DEFAULT.withDelimiter(TAB).withEscape(BACKSLASH).withIgnoreEmptyLines(false)
+-            .withQuote(null).withRecordSeparator(LF).withNullString("\\N");
++            .withQuote(null).withRecordSeparator(LF);
+ 
+     /**
+      * Returns true if the given character is a line break character.
+diff --git a/src/main/java/org/apache/commons/csv/CSVPrinter.java b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+index 0e9a2de..ac4234b 100644
+--- a/src/main/java/org/apache/commons/csv/CSVPrinter.java
++++ b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+@@ -136,9 +136,7 @@ public final class CSVPrinter implements Flushable, Closeable {
+         if (!newRecord) {
+             out.append(format.getDelimiter());
+         }
+-        if (object == null) {
+-            out.append(value);
+-        } else if (format.isQuoteCharacterSet()) {
++        if (format.isQuoteCharacterSet()) {
+             // the original object is needed so can check for Number
+             printAndQuote(object, value, offset, len);
+         } else if (format.isEscapeCharacterSet()) {

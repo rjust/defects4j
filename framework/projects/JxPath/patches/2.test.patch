@@ -1,0 +1,41 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/compiler/ExtensionFunctionTest.java b/src/test/org/apache/commons/jxpath/ri/compiler/ExtensionFunctionTest.java
+index 4181487..12d5873 100644
+--- a/src/test/org/apache/commons/jxpath/ri/compiler/ExtensionFunctionTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/compiler/ExtensionFunctionTest.java
+@@ -46,7 +46,6 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
+ public class ExtensionFunctionTest extends JXPathTestCase {
+     private Functions functions;
+     private JXPathContext context;
+-    private TestBean testBean;
+ 
+     public static void main(String[] args) {
+         TestRunner.run(ExtensionFunctionTest.class);
+@@ -63,8 +62,7 @@ public class ExtensionFunctionTest extends JXPathTestCase {
+ 
+     public void setUp() {
+         if (context == null) {
+-            testBean = new TestBean();
+-            context = JXPathContext.newContext(testBean);
++            context = JXPathContext.newContext(new TestBean());
+             Variables vars = context.getVariables();
+             vars.declareVariable("test", new TestFunctions(4, "test"));
+ 
+@@ -339,11 +337,6 @@ public class ExtensionFunctionTest extends JXPathTestCase {
+             "test:nodeSet()/name",
+             list("Name 1", "Name 2"));
+ 
+-        assertXPathValueIterator(
+-            context,
+-            "test:nodeSet()",
+-            list(testBean.getBeans()[0], testBean.getBeans()[1]));
+-
+         assertXPathPointerIterator(
+             context,
+             "test:nodeSet()/name",
+@@ -386,4 +379,4 @@ public class ExtensionFunctionTest extends JXPathTestCase {
+             return 0;
+         }
+     }
+-}
++}
+\ No newline at end of file

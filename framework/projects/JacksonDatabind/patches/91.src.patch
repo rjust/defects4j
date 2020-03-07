@@ -1,0 +1,22 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java b/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
+index ded6b68fd..aae7e87f5 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
+@@ -538,16 +538,8 @@ public final class DeserializerCache
+             // First: value types may have both value and type handlers
+             JavaType ct = t.getContentType();
+             if (ct != null) {
+-                if ((ct.getValueHandler() != null) || (ct.getTypeHandler() != null)) {
+-                    return true;
+-                }
+-            }
++                return (ct.getValueHandler() != null) || (ct.getTypeHandler() != null);
+             // Second: map(-like) types may have value handler for key (but not type; keys are untyped)
+-            if (t.isMapLikeType()) {
+-                JavaType kt = t.getKeyType();
+-                if (kt.getValueHandler() != null) {
+-                    return true;
+-                }
+             }
+         }
+         return false;

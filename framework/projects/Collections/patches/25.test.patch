@@ -1,0 +1,102 @@
+diff --git a/src/test/java/org/apache/commons/collections4/IteratorUtilsTest.java b/src/test/java/org/apache/commons/collections4/IteratorUtilsTest.java
+index e72b8e12..926fe9ef 100644
+--- a/src/test/java/org/apache/commons/collections4/IteratorUtilsTest.java
++++ b/src/test/java/org/apache/commons/collections4/IteratorUtilsTest.java
+@@ -23,8 +23,6 @@ import static org.junit.Assert.*;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Collection;
+-import java.util.Collections;
+-import java.util.Comparator;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.ListIterator;
+@@ -52,20 +50,8 @@ public class IteratorUtilsTest {
+      */
+     private List<Integer> collectionA = null;
+ 
+-    /**
+-     * Collection of even {@link Integer}s
+-     */
+-    private List<Integer> collectionEven = null;
+-
+-    /**
+-     * Collection of odd {@link Integer}s
+-     */
+-    private List<Integer> collectionOdd = null;
+-
+     private Iterable<Integer> iterableA = null;
+ 
+-    private Collection<Integer> emptyCollection = new ArrayList<Integer>(1);
+-
+     @Before
+     public void setUp() {
+         collectionA = new ArrayList<Integer>();
+@@ -81,9 +67,6 @@ public class IteratorUtilsTest {
+         collectionA.add(4);
+ 
+         iterableA = collectionA;
+-
+-        collectionEven = Arrays.asList(2, 4, 6, 8, 10, 12);
+-        collectionOdd = Arrays.asList(1, 3, 5, 7, 9, 11);
+     }
+ 
+     @Test
+@@ -917,57 +900,6 @@ public class IteratorUtilsTest {
+         };
+     }
+ 
+-    /**
+-     * Tests methods collatedIterator(...)
+-     */
+-    @Test
+-    public void testCollatedIterator() {
+-        try {
+-            IteratorUtils.collatedIterator(null, collectionOdd.iterator(), null);
+-            fail("expecting NullPointerException");
+-        } catch (NullPointerException npe) {
+-            // expected
+-        }
+-
+-        try {
+-            IteratorUtils.collatedIterator(null, null, collectionEven.iterator());
+-            fail("expecting NullPointerException");
+-        } catch (NullPointerException npe) {
+-            // expected
+-        }
+-
+-        // natural ordering
+-        Iterator<Integer> it = 
+-                IteratorUtils.collatedIterator(null, collectionOdd.iterator(), collectionEven.iterator());
+-
+-        List<Integer> result = IteratorUtils.toList(it);
+-        assertEquals(12, result.size());
+-
+-        List<Integer> combinedList = new ArrayList<Integer>();
+-        combinedList.addAll(collectionOdd);
+-        combinedList.addAll(collectionEven);
+-        Collections.sort(combinedList);
+-
+-        assertEquals(combinedList, result);
+-
+-        it = IteratorUtils.collatedIterator(null, collectionOdd.iterator(), emptyCollection.iterator());
+-        result = IteratorUtils.toList(it);
+-        assertEquals(collectionOdd, result);
+-
+-        final Comparator<Integer> reverseComparator =
+-                ComparatorUtils.reversedComparator(ComparatorUtils.<Integer>naturalComparator());
+-
+-        Collections.reverse((List<Integer>) collectionOdd);
+-        Collections.reverse((List<Integer>) collectionEven);
+-        Collections.reverse(combinedList);
+-
+-        it = IteratorUtils.collatedIterator(reverseComparator,
+-                                            collectionOdd.iterator(),
+-                                            collectionEven.iterator());
+-        result = IteratorUtils.toList(it);
+-        assertEquals(combinedList, result);
+-    }
+-
+     // -----------------------------------------------------------------------
+     @Test
+     public void apply() {

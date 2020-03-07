@@ -31,7 +31,7 @@ layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
-initialize-revisions.pl -p project_id -w work_dir [ -b bug_id]
+initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] 
 
 =head1 OPTIONS
 
@@ -44,6 +44,10 @@ The id of the project for which the meta data should be generated.
 =item B<-w F<work_dir>>
 
 The working directory used for the bug-mining process.
+
+=item B<-s F<subproject>>
+
+The subproject to be mined (if not the root directory)
 
 =item B<-b C<bug_id>>
 
@@ -67,13 +71,14 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:b:w:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:s:', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
 my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 my $WORK_DIR = abs_path($cmd_opts{w});
+my $SUBPROJ = $cmd_opts{s};
 
 # Check format of target bug id
 if (defined $BID) {
@@ -120,6 +125,11 @@ sub _init_version {
     # minimized patch to obtain the buggy version.
     $project->{_vcs}->checkout_vid("${vid}", $work_dir) or die "Cannot checkout $vid version";
 
+    if (defined $SUBPROJ) {
+        $work_dir .= "/$SUBPROJ/";
+        $project->{prog_root} = $work_dir;
+    }
+
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
     if (-e "$work_dir/build.xml") {
         my $cmd = " cd $work_dir" .
@@ -128,7 +138,7 @@ sub _init_version {
     } elsif (-e "$work_dir/pom.xml") {
         # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
         my $cmd = " cd $work_dir" .
-                  " && mvn ant:ant -Doverwrite=true 2>&1" .
+                  " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
                   " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
                   " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
                   " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
@@ -138,10 +148,14 @@ sub _init_version {
         $cmd = " cd $work_dir" .
                " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
         Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
+	
+        # Fix broken dependency links
+        my $fix_dep = "cd $work_dir && sed \'s\/https:\\/\\/oss\\.sonatype\\.org\\/content\\/repositories\\/snapshots\\//http:\\/\\/central\\.maven\\.org\\/maven2\\/\/g\' maven-build.xml >> temp && mv temp maven-build.xml";
+        Utils::exec_cmd($fix_dep, "Fixing broken dependency links.");
 
         # Get dependencies if it is maven-ant project
         my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
-        Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml");
+        Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml.");
     } else {
         # TODO add support for other build systems
         die "Unsupported build system";

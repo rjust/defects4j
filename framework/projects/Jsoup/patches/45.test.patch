@@ -1,0 +1,15 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 6fd4630..d8b640d 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -870,10 +870,4 @@ public class HtmlParserTest {
+         assertEquals("<form action=\"/submit\"> <hr> <label>This is a searchable index. Enter search keywords: <input name=\"isindex\"></label> <hr> </form>",
+                 StringUtil.normaliseWhitespace(doc.body().html()));
+     }
+-
+-    @Test public void testReinsertionModeForThCelss() {
+-        String body = "<body> <table> <tr> <th> <table><tr><td></td></tr></table> <div> <table><tr><td></td></tr></table> </div> <div></div> <div></div> <div></div> </th> </tr> </table> </body>";
+-        Document doc = Jsoup.parse(body);
+-        assertEquals(1, doc.body().children().size());
+-    }
+ }

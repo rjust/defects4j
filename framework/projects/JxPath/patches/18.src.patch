@@ -1,0 +1,57 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java b/src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java
+index 4193b3a..4198333 100644
+--- a/src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java
++++ b/src/java/org/apache/commons/jxpath/ri/axes/AttributeContext.java
+@@ -16,12 +16,10 @@
+  */
+ package org.apache.commons.jxpath.ri.axes;
+ 
+-import org.apache.commons.jxpath.ri.Compiler;
+ import org.apache.commons.jxpath.ri.EvalContext;
+ import org.apache.commons.jxpath.ri.QName;
+ import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
+ import org.apache.commons.jxpath.ri.compiler.NodeTest;
+-import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
+ import org.apache.commons.jxpath.ri.model.NodeIterator;
+ import org.apache.commons.jxpath.ri.model.NodePointer;
+ 
+@@ -32,7 +30,6 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
+  * @version $Revision$ $Date$
+  */
+ public class AttributeContext extends EvalContext {
+-    private static final NodeNameTest WILDCARD_TEST = new NodeNameTest(new QName(null, "*"));
+ 
+     private NodeTest nodeTest;
+     private boolean setStarted = false;
+@@ -75,20 +72,12 @@ public class AttributeContext extends EvalContext {
+         super.setPosition(getCurrentPosition() + 1);
+         if (!setStarted) {
+             setStarted = true;
+-            NodeNameTest nodeNameTest = null;
+-            if (nodeTest instanceof NodeTypeTest) {
+-                if (((NodeTypeTest) nodeTest).getNodeType() == Compiler.NODE_TYPE_NODE) {
+-                    nodeNameTest = WILDCARD_TEST;
+-                }
+-            }
+-            else if (nodeTest instanceof NodeNameTest) {
+-                nodeNameTest = (NodeNameTest) nodeTest;
+-            }
+-            if (nodeNameTest == null) {
++            if (!(nodeTest instanceof NodeNameTest)) {
+                 return false;
+             }
+-            iterator = parentContext.getCurrentNodePointer().attributeIterator(
+-                    nodeNameTest.getNodeName());
++            QName name = ((NodeNameTest) nodeTest).getNodeName();
++            iterator =
++                parentContext.getCurrentNodePointer().attributeIterator(name);
+         }
+         if (iterator == null) {
+             return false;
+@@ -99,4 +88,4 @@ public class AttributeContext extends EvalContext {
+         currentNodePointer = iterator.getNodePointer();
+         return true;
+     }
+-}
+\ No newline at end of file
++}

@@ -1,0 +1,52 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/convert/TestConvertingSerializer.java b/src/test/java/com/fasterxml/jackson/databind/convert/TestConvertingSerializer.java
+index 6104782c6..e9e467dde 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/convert/TestConvertingSerializer.java
++++ b/src/test/java/com/fasterxml/jackson/databind/convert/TestConvertingSerializer.java
+@@ -122,33 +122,7 @@ public class TestConvertingSerializer
+             jsonGenerator.writeString("Target");
+         }
+     }
+-
+-    // [Issue#731]
+-    public static class DummyBean {
+-        public final int a, b;
+-        public DummyBean(int v1, int v2) {
+-            a = v1 * 2;
+-            b = v2 * 2;
+-        }
+-    }
+-
+-    @JsonSerialize(converter = UntypedConvertingBeanConverter.class)
+-    static class ConvertingBeanWithUntypedConverter {
+-        public int x, y;
+-        public ConvertingBeanWithUntypedConverter(int v1, int v2) {
+-            x = v1;
+-            y = v2;
+-        }
+-    }
+-
+-    static class UntypedConvertingBeanConverter extends StdConverter<ConvertingBeanWithUntypedConverter, Object>
+-    {
+-        @Override
+-        public Object convert(ConvertingBeanWithUntypedConverter cb) {
+-            return new DummyBean(cb.x, cb.y);
+-        }
+-    }
+-
++    
+     /*
+     /**********************************************************
+     /* Test methods
+@@ -194,12 +168,4 @@ public class TestConvertingSerializer
+         String json = objectWriter().writeValueAsString(new Bean359());
+         assertEquals("{\"stuff\":[\"Target\"]}", json);
+     }
+-
+-    // [databind#731]: Problems converting from java.lang.Object ("unknown")
+-    public void testIssue731() throws Exception
+-    {
+-        String json = objectWriter().writeValueAsString(new ConvertingBeanWithUntypedConverter(1, 2));
+-        // must be  {"a":2,"b":4}
+-        assertEquals("{\"a\":2,\"b\":4}", json);
+-    }
+ }

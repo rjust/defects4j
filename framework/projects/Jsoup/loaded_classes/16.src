@@ -1,0 +1,14 @@
+org.jsoup.helper.StringUtil
+org.jsoup.helper.Validate
+org.jsoup.nodes.Attribute
+org.jsoup.nodes.Attributes
+org.jsoup.nodes.Document
+org.jsoup.nodes.DocumentType
+org.jsoup.nodes.Element
+org.jsoup.nodes.Entities
+org.jsoup.nodes.Node
+org.jsoup.nodes.TextNode
+org.jsoup.parser.Tag
+org.jsoup.select.Evaluator
+org.jsoup.select.NodeTraversor
+org.jsoup.select.NodeVisitor

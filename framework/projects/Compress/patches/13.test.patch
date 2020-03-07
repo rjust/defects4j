@@ -1,0 +1,80 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+deleted file mode 100644
+index 54589767..00000000
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
++++ /dev/null
+@@ -1,51 +0,0 @@
+-/*
+- *  Licensed to the Apache Software Foundation (ASF) under one or more
+- *  contributor license agreements.  See the NOTICE file distributed with
+- *  this work for additional information regarding copyright ownership.
+- *  The ASF licenses this file to You under the Apache License, Version 2.0
+- *  (the "License"); you may not use this file except in compliance with
+- *  the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- *  Unless required by applicable law or agreed to in writing, software
+- *  distributed under the License is distributed on an "AS IS" BASIS,
+- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- *  See the License for the specific language governing permissions and
+- *  limitations under the License.
+- *
+- */
+-
+-package org.apache.commons.compress.archivers.zip;
+-
+-import java.io.File;
+-import java.io.FileInputStream;
+-import java.net.URI;
+-import java.net.URL;
+-import org.junit.Test;
+-
+-import static org.junit.Assert.assertEquals;
+-
+-public class ZipArchiveInputStreamTest {
+-
+-    /**
+-     * @see https://issues.apache.org/jira/browse/COMPRESS-176
+-     */
+-    @Test
+-    public void winzipBackSlashWorkaround() throws Exception {
+-        URL zip = getClass().getResource("/test-winzip.zip");
+-        ZipArchiveInputStream in = null;
+-        try {
+-            in = new ZipArchiveInputStream(new FileInputStream(new File(new URI(zip.toString()))));
+-            ZipArchiveEntry zae = in.getNextZipEntry();
+-            zae = in.getNextZipEntry();
+-            zae = in.getNextZipEntry();
+-            assertEquals("\u00e4/", zae.getName());
+-        } finally {
+-            if (in != null) {
+-                in.close();
+-            }
+-        }
+-    }
+-
+-}
+\ No newline at end of file
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+index d4f3c4e6..f7bc8bc8 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+@@ -139,17 +139,6 @@ public class ZipFileTest extends TestCase {
+         }
+     }
+ 
+-    /**
+-     * @see https://issues.apache.org/jira/browse/COMPRESS-176
+-     */
+-    public void testWinzipBackSlashWorkaround() throws Exception {
+-        URL zip = getClass().getResource("/test-winzip.zip");
+-        File archive = new File(new URI(zip.toString()));
+-        zf = new ZipFile(archive);
+-        assertNull(zf.getEntry("\u00e4\\\u00fc.txt"));
+-        assertNotNull(zf.getEntry("\u00e4/\u00fc.txt"));
+-    }
+-
+     /*
+      * ordertest.zip has been handcrafted.
+      *

@@ -1,0 +1,77 @@
+diff --git a/src/test/org/apache/commons/cli/ParserTestCase.java b/src/test/org/apache/commons/cli/ParserTestCase.java
+index e62375b..0aef0c6 100644
+--- a/src/test/org/apache/commons/cli/ParserTestCase.java
++++ b/src/test/org/apache/commons/cli/ParserTestCase.java
+@@ -144,7 +144,7 @@ public abstract class ParserTestCase extends TestCase
+         assertTrue( "Confirm MissingArgumentException caught", caught );
+     }
+ 
+-    public void testDoubleDash1() throws Exception
++    public void testDoubleDash() throws Exception
+     {
+         String[] args = new String[] { "--copt",
+                                        "--",
+@@ -574,63 +574,7 @@ public abstract class ParserTestCase extends TestCase
+             fail("expected to catch MissingOptionException");
+         }
+     }
+-    
+-    public void testMissingRequiredGroup() throws Exception
+-    {
+-        OptionGroup group = new OptionGroup();
+-        group.addOption(OptionBuilder.create("a"));
+-        group.addOption(OptionBuilder.create("b"));
+-        group.setRequired(true);
+-
+-        Options options = new Options();
+-        options.addOptionGroup(group);
+-        options.addOption(OptionBuilder.isRequired().create("c"));
+-
+-        try
+-        {
+-            parser.parse(options, new String[] { "-c" });
+-            fail("MissingOptionException not thrown");
+-        }
+-        catch (MissingOptionException e)
+-        {
+-            assertEquals(1, e.getMissingOptions().size());
+-            assertTrue(e.getMissingOptions().get(0) instanceof OptionGroup);
+-        }
+-        catch (ParseException e)
+-        {
+-            fail("Expected to catch MissingOptionException");
+-        }
+-    }
+-    
+-    public void testOptionGroup() throws Exception
+-    {
+-        OptionGroup group = new OptionGroup();
+-        group.addOption(OptionBuilder.create("a"));
+-        group.addOption(OptionBuilder.create("b"));
+-        
+-        Options options = new Options();
+-        options.addOptionGroup(group);
+-        
+-        parser.parse(options, new String[] { "-b" });
+-        
+-        assertEquals("selected option", "b", group.getSelected());
+-    }
+ 
+-    public void testOptionGroupLong() throws Exception
+-    {
+-        OptionGroup group = new OptionGroup();
+-        group.addOption(OptionBuilder.withLongOpt("foo").create());
+-        group.addOption(OptionBuilder.withLongOpt("bar").create());
+-        
+-        Options options = new Options();
+-        options.addOptionGroup(group);
+-        
+-        CommandLine cl = parser.parse(options, new String[] { "--bar" });
+-        
+-        assertTrue(cl.hasOption("bar"));
+-        assertEquals("selected option", "bar", group.getSelected());
+-    }
+-    
+     public void testReuseOptionsTwice() throws Exception
+     {
+         Options opts = new Options();

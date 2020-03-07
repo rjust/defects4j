@@ -1,0 +1,51 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java b/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
+index 6c9d6b3cb..e04380c51 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
++++ b/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
+@@ -403,26 +403,10 @@ public class StdDateFormat
+                 // Milliseconds partial or missing; and even seconds are optional
+                 len = dateStr.length();
+                 // remove 'T', '+'/'-' and 4-digit timezone-offset
+-                int timeLen = len - dateStr.lastIndexOf('T') - 6;
+-                if (timeLen < 12) { // 8 for hh:mm:ss, 4 for .sss
+-                    int offset = len - 5; // insertion offset, before tz-offset
++                c = dateStr.charAt(len-9);
++                if (Character.isDigit(c)) {
+                     StringBuilder sb = new StringBuilder(dateStr);
+-                    switch (timeLen) {
+-                    case 11:
+-                        sb.insert(offset, '0'); break;
+-                    case 10:
+-                        sb.insert(offset, "00"); break;
+-                    case 9: // is this legal? (just second fraction marker)
+-                        sb.insert(offset, "000"); break;
+-                    case 8:
+-                        sb.insert(offset, ".000"); break;
+-                    case 7: // not legal to have single-digit second
+-                        break;
+-                    case 6: // probably not legal, but let's allow
+-                        sb.insert(offset, "00.000");
+-                    case 5: // is legal to omit seconds
+-                        sb.insert(offset, ":00.000");
+-                    }
++                    sb.insert(len-5, ".000");
+                     dateStr = sb.toString();
+                 }
+                 df = _formatISO8601;
+@@ -434,15 +418,8 @@ public class StdDateFormat
+                 StringBuilder sb = new StringBuilder(dateStr);
+                 // And possible also millisecond part if missing
+                 int timeLen = len - dateStr.lastIndexOf('T') - 1;
+-                if (timeLen < 12) { // missing, or partial
+-                    switch (timeLen) {
+-                    case 11: sb.append('0');
+-                    case 10: sb.append('0');
+-                    case 9: sb.append('0');
+-                        break;
+-                    default:
++                if (timeLen <= 8) {
+                         sb.append(".000");
+-                    }
+                 }
+                 sb.append('Z');
+                 dateStr = sb.toString();

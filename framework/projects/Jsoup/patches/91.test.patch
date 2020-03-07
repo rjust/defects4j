@@ -1,0 +1,164 @@
+diff --git a/src/test/java/org/jsoup/integration/ConnectTest.java b/src/test/java/org/jsoup/integration/ConnectTest.java
+index 386ff43..b36b973 100644
+--- a/src/test/java/org/jsoup/integration/ConnectTest.java
++++ b/src/test/java/org/jsoup/integration/ConnectTest.java
+@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
+ import org.jsoup.UncheckedIOException;
+ import org.jsoup.integration.servlets.Deflateservlet;
+ import org.jsoup.integration.servlets.EchoServlet;
+-import org.jsoup.integration.servlets.FileServlet;
+ import org.jsoup.integration.servlets.HelloServlet;
+ import org.jsoup.integration.servlets.InterruptedServlet;
+ import org.jsoup.integration.servlets.RedirectServlet;
+@@ -419,7 +418,7 @@ public class ConnectTest {
+     }
+ 
+     @Test
+-    public void handlesEmtpyStreamDuringBufferedRead() throws IOException {
++    public void handlesEmtpyStreamDuringBufferdRead() throws IOException {
+         Connection.Response res = Jsoup.connect(InterruptedServlet.Url)
+             .timeout(200)
+             .execute();
+@@ -478,65 +477,4 @@ public class ConnectTest {
+         assertEquals("POST", ihVal("Method", doc));
+         assertEquals("there", ihVal("Hello", doc));
+     }
+-
+-    @Test public void getUtf8Bom() throws IOException {
+-        Connection con = Jsoup.connect(FileServlet.Url);
+-        con.data(FileServlet.LocationParam, "/bomtests/bom_utf8.html");
+-        Document doc = con.get();
+-
+-        assertEquals("UTF-8", con.response().charset());
+-        assertEquals("OK", doc.title());
+-    }
+-
+-    @Test
+-    public void testBinaryThrowsExceptionWhenTypeIgnored() {
+-        Connection con = Jsoup.connect(FileServlet.Url);
+-        con.data(FileServlet.LocationParam, "/htmltests/thumb.jpg");
+-        con.data(FileServlet.ContentTypeParam, "image/jpeg");
+-        con.ignoreContentType(true);
+-
+-        boolean threw = false;
+-        try {
+-            con.execute();
+-            Document doc = con.response().parse();
+-        } catch (IOException e) {
+-            threw = true;
+-            assertEquals("Input is binary and unsupported", e.getMessage());
+-        }
+-        assertTrue(threw);
+-    }
+-
+-    @Test
+-    public void testBinaryResultThrows() {
+-        Connection con = Jsoup.connect(FileServlet.Url);
+-        con.data(FileServlet.LocationParam, "/htmltests/thumb.jpg");
+-        con.data(FileServlet.ContentTypeParam, "text/html");
+-
+-        boolean threw = false;
+-        try {
+-            con.execute();
+-            Document doc = con.response().parse();
+-        } catch (IOException e) {
+-            threw = true;
+-            assertEquals("Input is binary and unsupported", e.getMessage());
+-        }
+-        assertTrue(threw);
+-    }
+-
+-    @Test
+-    public void testBinaryContentTypeThrowsException() {
+-        Connection con = Jsoup.connect(FileServlet.Url);
+-        con.data(FileServlet.LocationParam, "/htmltests/thumb.jpg");
+-        con.data(FileServlet.ContentTypeParam, "image/jpeg");
+-
+-        boolean threw = false;
+-        try {
+-            con.execute();
+-            Document doc = con.response().parse();
+-        } catch (IOException e) {
+-            threw = true;
+-            assertEquals("Unhandled content type. Must be text/*, application/xml, or application/xhtml+xml", e.getMessage());
+-        }
+-        assertTrue(threw);
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/integration/ParseTest.java b/src/test/java/org/jsoup/integration/ParseTest.java
+index c133649..dcf35ac 100644
+--- a/src/test/java/org/jsoup/integration/ParseTest.java
++++ b/src/test/java/org/jsoup/integration/ParseTest.java
+@@ -66,17 +66,11 @@ public class ParseTest {
+     }
+ 
+     @Test
+-    public void testBinaryThrowsException() throws IOException {
++    public void testBinary() throws IOException {
+         File in = getFile("/htmltests/thumb.jpg");
+-
+-        boolean threw = false;
+-        try {
+-            Document doc = Jsoup.parse(in, "UTF-8");
+-        } catch (IOException e) {
+-            threw = true;
+-            assertEquals("Input is binary and unsupported", e.getMessage());
+-        }
+-        assertTrue(threw);
++        Document doc = Jsoup.parse(in, "UTF-8");
++        // nothing useful, but did not blow up
++        assertTrue(doc.text().contains("gd-jpeg"));
+     }
+ 
+     @Test
+diff --git a/src/test/java/org/jsoup/integration/servlets/FileServlet.java b/src/test/java/org/jsoup/integration/servlets/FileServlet.java
+deleted file mode 100644
+index 5a727cc..0000000
+--- a/src/test/java/org/jsoup/integration/servlets/FileServlet.java
++++ /dev/null
+@@ -1,45 +0,0 @@
+-package org.jsoup.integration.servlets;
+-
+-import org.jsoup.integration.ParseTest;
+-import org.jsoup.integration.TestServer;
+-
+-import javax.servlet.ServletException;
+-import javax.servlet.ServletOutputStream;
+-import javax.servlet.http.HttpServletRequest;
+-import javax.servlet.http.HttpServletResponse;
+-import java.io.File;
+-import java.io.IOException;
+-import java.nio.file.Files;
+-import java.nio.file.Path;
+-
+-public class FileServlet extends BaseServlet {
+-    public static final String Url = TestServer.map(FileServlet.class);
+-    public static final String ContentTypeParam = "contentType";
+-    public static final String LocationParam = "loc";
+-    public static final String DefaultType = "text/html";
+-
+-    @Override
+-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+-        String contentType = req.getParameter(ContentTypeParam);
+-        if (contentType == null)
+-            contentType = DefaultType;
+-        String location = req.getParameter(LocationParam);
+-
+-        File file = ParseTest.getFile(location);
+-        if (file.exists()) {
+-            res.setContentType(contentType);
+-            res.setStatus(HttpServletResponse.SC_OK);
+-
+-            ServletOutputStream out = res.getOutputStream();
+-            Files.copy(file.toPath(), out);
+-            out.flush();
+-        } else {
+-            res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+-        }
+-    }
+-
+-    @Override
+-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+-        doGet(req, res);
+-    }
+-}

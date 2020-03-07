@@ -1,0 +1,54 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
+index 7afcc55f6..7f55a3f29 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java
+@@ -7,7 +7,6 @@ import java.util.Date;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.ser.impl.PropertySerializerMap;
+-import com.fasterxml.jackson.databind.util.EnumValues;
+ 
+ @SuppressWarnings("serial")
+ public class StdKeySerializers
+@@ -80,8 +79,7 @@ public class StdKeySerializers
+                 return new Dynamic();
+             }
+             if (rawKeyType.isEnum()) {
+-                return EnumKeySerializer.construct(rawKeyType,
+-                        EnumValues.constructFromName(config, (Class<Enum<?>>) rawKeyType));
++                return new Default(Default.TYPE_ENUM, rawKeyType);
+             }
+         }
+         return DEFAULT_KEY_SERIALIZER;
+@@ -214,31 +212,7 @@ public class StdKeySerializers
+      *
+      * @since 2.8
+      */
+-    public static class EnumKeySerializer extends StdSerializer<Object>
+-    {
+-        protected final EnumValues _values;
+ 
+-        protected EnumKeySerializer(Class<?> enumType, EnumValues values) {
+-            super(enumType, false);
+-            _values = values;
+-        }
+ 
+-        public static EnumKeySerializer construct(Class<?> enumType,
+-                EnumValues enumValues)
+-        {
+-            return new EnumKeySerializer(enumType, enumValues);
+-        }
+         
+-        @Override
+-        public void serialize(Object value, JsonGenerator g, SerializerProvider serializers)
+-                throws IOException
+-        {
+-            if (serializers.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+-                g.writeFieldName(value.toString());
+-                return;
+-            }
+-            Enum<?> en = (Enum<?>) value;
+-            g.writeFieldName(_values.serializedValueFor(en));
+-        }
+-    }
+ }

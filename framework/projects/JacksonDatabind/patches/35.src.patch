@@ -1,0 +1,26 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsWrapperTypeDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsWrapperTypeDeserializer.java
+index 659762bd0..0b954f686 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsWrapperTypeDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsWrapperTypeDeserializer.java
+@@ -86,17 +86,15 @@ public class AsWrapperTypeDeserializer
+             }
+         }
+         // first, sanity checks
+-        JsonToken t = p.getCurrentToken();
+-        if (t == JsonToken.START_OBJECT) {
++        if (p.getCurrentToken() != JsonToken.START_OBJECT) {
++            throw ctxt.wrongTokenException(p, JsonToken.START_OBJECT,
++                    "need JSON Object to contain As.WRAPPER_OBJECT type information for class "+baseTypeName());
++        }
+             // should always get field name, but just in case...
+             if (p.nextToken() != JsonToken.FIELD_NAME) {
+                 throw ctxt.wrongTokenException(p, JsonToken.FIELD_NAME,
+                         "need JSON String that contains type id (for subtype of "+baseTypeName()+")");
+             }
+-        } else if (t != JsonToken.FIELD_NAME) {
+-            throw ctxt.wrongTokenException(p, JsonToken.START_OBJECT,
+-                    "need JSON Object to contain As.WRAPPER_OBJECT type information for class "+baseTypeName());
+-        }
+         final String typeId = p.getText();
+         JsonDeserializer<Object> deser = _findDeserializer(ctxt, typeId);
+         p.nextToken();

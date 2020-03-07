@@ -1,0 +1,26 @@
+diff --git a/src/main/java/org/apache/commons/cli/Option.java b/src/main/java/org/apache/commons/cli/Option.java
+index 66c7ef9..11a3685 100644
+--- a/src/main/java/org/apache/commons/cli/Option.java
++++ b/src/main/java/org/apache/commons/cli/Option.java
+@@ -69,7 +69,7 @@ public class Option implements Cloneable, Serializable
+     private int numberOfArgs = UNINITIALIZED;
+ 
+     /** the type of this Option */
+-    private Class type = String.class;
++    private Class type;
+ 
+     /** the list of argument values **/
+     private List values = new ArrayList();
+diff --git a/src/main/java/org/apache/commons/cli/OptionBuilder.java b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+index 6fd1b43..f9eb13a 100644
+--- a/src/main/java/org/apache/commons/cli/OptionBuilder.java
++++ b/src/main/java/org/apache/commons/cli/OptionBuilder.java
+@@ -81,7 +81,7 @@ public final class OptionBuilder
+         description = null;
+         argName = null;
+         longopt = null;
+-        type = String.class;
++        type = null;
+         required = false;
+         numberOfArgs = Option.UNINITIALIZED;
+         optionalArg = false;

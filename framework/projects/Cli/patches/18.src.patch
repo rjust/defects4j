@@ -1,0 +1,32 @@
+diff --git a/src/java/org/apache/commons/cli/PosixParser.java b/src/java/org/apache/commons/cli/PosixParser.java
+index 08a9280..8f03474 100644
+--- a/src/java/org/apache/commons/cli/PosixParser.java
++++ b/src/java/org/apache/commons/cli/PosixParser.java
+@@ -125,7 +125,7 @@ public class PosixParser extends Parser {
+             // single hyphen
+             else if ("-".equals(token))
+             {
+-                tokens.add(token);
++                processSingleHyphen(token);
+             }
+             else if (token.startsWith("-"))
+             {
+@@ -210,6 +210,10 @@ public class PosixParser extends Parser {
+             tokens.add(value);
+         }
+     }
++    private void processSingleHyphen(String hyphen)
++    {
++        tokens.add(hyphen);
++    }
+ 
+     /**
+      * <p>If an {@link Option} exists for <code>token</code> then
+@@ -234,7 +238,6 @@ public class PosixParser extends Parser {
+         else if (stopAtNonOption)
+         {
+             eatTheRest = true;
+-            tokens.add(token);
+         }
+     }
+ 

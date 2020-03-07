@@ -1,0 +1,10 @@
+com.fasterxml.jackson.core.async.AsyncTestBase
+com.fasterxml.jackson.core.BaseTest
+com.fasterxml.jackson.core.json.async.AsyncNumberCoercionTest
+com.fasterxml.jackson.core.read.NumberCoercionTest
+com.fasterxml.jackson.core.read.NumberOverflowTest
+com.fasterxml.jackson.core.read.NumberParsingTest
+com.fasterxml.jackson.core.testsupport.AsyncReaderWrapper
+com.fasterxml.jackson.core.testsupport.AsyncReaderWrapperForByteArray
+com.fasterxml.jackson.core.testsupport.MockDataInput
+com.fasterxml.jackson.core.testsupport.ThrottledInputStream

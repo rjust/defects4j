@@ -1,0 +1,22 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/struct/SingleValueAsArrayTest.java b/src/test/java/com/fasterxml/jackson/failing/SingleValueAsArray1421Test.java
+similarity index 95%
+rename from src/test/java/com/fasterxml/jackson/databind/struct/SingleValueAsArrayTest.java
+rename to src/test/java/com/fasterxml/jackson/failing/SingleValueAsArray1421Test.java
+index 1903b2ee1..ef787c3cc 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/struct/SingleValueAsArrayTest.java
++++ b/src/test/java/com/fasterxml/jackson/failing/SingleValueAsArray1421Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.struct;
++package com.fasterxml.jackson.failing;
+ 
+ import java.io.IOException;
+ import java.util.ArrayList;
+@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
+ 
+ import com.fasterxml.jackson.databind.*;
+ 
+-public class SingleValueAsArrayTest extends BaseMapTest
++public class SingleValueAsArray1421Test extends BaseMapTest
+ {
+     private static final String JSON = "[{\"message\":\"messageHere\"}]";
+ 

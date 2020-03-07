@@ -1,0 +1,57 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index e7d689e..33766b0 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -57,13 +57,10 @@ public class HtmlParserTest {
+ 
+     @Test public void parsesQuiteRoughAttributes() {
+         String html = "<p =a>One<a <p>Something</p>Else";
+-        // this (used to; now gets cleaner) gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
++        // this gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
+         Document doc = Jsoup.parse(html);
+-
+-        // NOTE: per spec this should be the test case. but impacts too many ppl
+-        // assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
+-
+-        assertEquals("<p =a>One<a></a></p><p><a>Something</a></p><a>Else</a>", TextUtil.stripNewlines(doc.body().html()));
++        assertEquals("<p =a>One<a <p>Something</a></p>\n" +
++            "<a <p>Else</a>", doc.body().html());
+ 
+         doc = Jsoup.parse("<p .....>");
+         assertEquals("<p .....></p>", doc.body().html());
+diff --git a/src/test/java/org/jsoup/parser/TokeniserStateTest.java b/src/test/java/org/jsoup/parser/TokeniserStateTest.java
+index b50965e..28bd552 100644
+--- a/src/test/java/org/jsoup/parser/TokeniserStateTest.java
++++ b/src/test/java/org/jsoup/parser/TokeniserStateTest.java
+@@ -1,7 +1,8 @@
+ package org.jsoup.parser;
+ 
++import static org.junit.Assert.*;
++
+ import org.jsoup.Jsoup;
+-import org.jsoup.TextUtil;
+ import org.jsoup.nodes.Comment;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+@@ -11,9 +12,6 @@ import org.junit.Test;
+ 
+ import java.util.Arrays;
+ 
+-import static org.junit.Assert.assertArrayEquals;
+-import static org.junit.Assert.assertEquals;
+-
+ public class TokeniserStateTest {
+ 
+     final char[] whiteSpace = { '\t', '\n', '\r', '\f', ' ' };
+@@ -199,11 +197,4 @@ public class TokeniserStateTest {
+             }
+         }
+     }
+-
+-    @Test public void handlesLessInTagThanAsNewTag() {
+-        // out of spec, but clear author intent
+-        String html = "<p\n<p<div id=one <span>Two";
+-        Document doc = Jsoup.parse(html);
+-        assertEquals("<p></p><p></p><div id=\"one\"><span>Two</span></div>", TextUtil.stripNewlines(doc.body().html()));
+-    }
+ }

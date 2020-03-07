@@ -1,0 +1,6 @@
+org.jsoup.integration.ConnectTest
+org.jsoup.integration.ParseTest
+org.jsoup.integration.servlets.BaseServlet
+org.jsoup.integration.servlets.EchoServlet
+org.jsoup.integration.servlets.FileServlet
+org.jsoup.integration.TestServer

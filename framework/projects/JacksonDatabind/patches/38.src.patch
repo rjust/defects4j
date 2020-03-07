@@ -1,0 +1,90 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
+index e0a785672..39c103822 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java
+@@ -1,6 +1,5 @@
+ package com.fasterxml.jackson.databind.type;
+ 
+-import java.lang.reflect.TypeVariable;
+ 
+ import com.fasterxml.jackson.databind.JavaType;
+ 
+@@ -48,14 +47,7 @@ public final class CollectionType
+     public static CollectionType construct(Class<?> rawType, JavaType elemT) {
+         // First: may need to fabricate TypeBindings (needed for refining into
+         // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 1)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, elemT);
+-        }
+-        return new CollectionType(rawType, bindings,
++        return new CollectionType(rawType, null,
+                 // !!! TODO: Wrong, does have supertypes, but:
+                 _bogusSuperClass(rawType), null, elemT,
+                 null, null, false);
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
+index e71abb683..a11767f44 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/MapType.java
+@@ -1,6 +1,5 @@
+ package com.fasterxml.jackson.databind.type;
+ 
+-import java.lang.reflect.TypeVariable;
+ 
+ import com.fasterxml.jackson.databind.JavaType;
+ 
+@@ -45,15 +44,8 @@ public final class MapType extends MapLikeType
+     {
+         // First: may need to fabricate TypeBindings (needed for refining into
+         // concrete collection types, as per [databind#1102])
+-        TypeVariable<?>[] vars = rawType.getTypeParameters();
+-        TypeBindings bindings;
+-        if ((vars == null) || (vars.length != 2)) {
+-            bindings = TypeBindings.emptyBindings();
+-        } else {
+-            bindings = TypeBindings.create(rawType, keyT, valueT);
+-        }
+         // !!! TODO: Wrong, does have supertypes
+-        return new MapType(rawType, bindings, _bogusSuperClass(rawType), null,
++        return new MapType(rawType, null, _bogusSuperClass(rawType), null,
+                 keyT, valueT, null, null, false);
+     }
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+index 1174710df..ceb0117a7 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+@@ -113,9 +113,8 @@ public class SimpleType // note: until 2.6 was final
+         if (cls.isArray()) {
+             throw new IllegalArgumentException("Can not construct SimpleType for an array (class: "+cls.getName()+")");
+         }
+-        TypeBindings b = TypeBindings.emptyBindings();
+-        return new SimpleType(cls, b,
+-                _buildSuperClass(cls.getSuperclass(), b), null, null, null, false);
++        return new SimpleType(cls, TypeBindings.emptyBindings(),
++                _bogusSuperClass(cls), null, null, null, false);
+     }
+ 
+     @Override
+@@ -249,18 +248,6 @@ public class SimpleType // note: until 2.6 was final
+      * 
+      * @since 2.7 -- remove when not needed (2.8?)
+      */
+-    private static JavaType _buildSuperClass(Class<?> superClass, TypeBindings b)
+-    {
+-        if (superClass == null) {
+-            return null;
+-        }
+-        if (superClass == Object.class) {
+-            return TypeFactory.unknownType();
+-        }
+-        JavaType superSuper = _buildSuperClass(superClass.getSuperclass(), b);
+-        return new SimpleType(superClass, b,
+-                superSuper, null, null, null, false);
+-    }
+ 
+     /*
+     /**********************************************************

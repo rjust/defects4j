@@ -1,0 +1,16 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 51b19304..5d4c0a82 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -244,10 +244,9 @@ public ZipArchiveEntry getNextZipEntry() throws IOException {
+         if (sig.equals(ZipLong.CFH_SIG) || sig.equals(ZipLong.AED_SIG)) {
+             hitCentralDirectory = true;
+             skipRemainderOfArchive();
+-            return null;
+         }
+         if (!sig.equals(ZipLong.LFH_SIG)) {
+-            throw new ZipException(String.format("Unexpected record signature: 0X%X", sig.getValue()));
++            return null;
+         }
+ 
+         int off = WORD;

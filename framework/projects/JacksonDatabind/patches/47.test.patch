@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonSerialize.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonSerialize.java
+index 01cabf2f1..5af31f8f4 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonSerialize.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonSerialize.java
+@@ -149,7 +149,7 @@ public class TestJsonSerialize
+         try {
+             serializeAsString(MAPPER, new BrokenClass());
+         } catch (Exception e) {
+-            verifyException(e, "types not related");
++            verifyException(e, "not a super-type of");
+         }
+     }
+ 

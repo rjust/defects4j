@@ -1,0 +1,30 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java b/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
+index 3dddd771a..c788c62cb 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
++++ b/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java
+@@ -247,15 +247,7 @@ public class StdDateFormat
+      * and not via underlying {@link Calendar} instance like base class
+      * does.
+      */
+-    @Override // since 2.7
+-    public void setLenient(boolean enabled) {
+-        Boolean newValue = enabled;
+-        if (_lenient != newValue) {
+-            _lenient = newValue;
+             // and since leniency settings may have been used:
+-            _clearFormats();
+-        }
+-    }
+ 
+     @Override // since 2.7
+     public boolean isLenient() {
+@@ -562,9 +554,6 @@ public class StdDateFormat
+                 df.setTimeZone(tz);
+             }
+         }
+-        if (lenient != null) {
+-            df.setLenient(lenient.booleanValue());
+-        }
+         return df;
+     }
+ 

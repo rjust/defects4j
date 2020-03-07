@@ -1,0 +1,52 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java b/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+index 8a737aade..a0cbf1615 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java
+@@ -1754,7 +1754,7 @@ public abstract class BasicDeserializerFactory
+         Class<?> subclass = intr.findDeserializationType(a, type);
+         if (subclass != null) {
+             try {
+-                type = (T) ctxt.getTypeFactory().constructSpecializedType(type, subclass);
++                type = (T) type.narrowBy(subclass);
+             } catch (IllegalArgumentException iae) {
+                 throw new JsonMappingException("Failed to narrow type "+type+" with concrete-type annotation (value "+subclass.getName()+"), method '"+a.getName()+"': "+iae.getMessage(), null, iae);
+             }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java b/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
+index c6f12c10b..d79c8c883 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java
+@@ -474,7 +474,7 @@ public final class DeserializerCache
+         Class<?> subclass = intr.findDeserializationType(a, type);
+         if (subclass != null) {
+             try {
+-                type = ctxt.getTypeFactory().constructSpecializedType(type, subclass);
++                type = type.narrowBy(subclass);
+             } catch (IllegalArgumentException iae) {
+                 throw new JsonMappingException("Failed to narrow type "+type+" with concrete-type annotation (value "+subclass.getName()+"), method '"+a.getName()+"': "+iae.getMessage(), null, iae);
+             }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java
+index ef865d1ab..b991c7aa2 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java
++++ b/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java
+@@ -174,7 +174,7 @@ public abstract class TypeDeserializerBase
+                      *   important for some reason?
+                      *   Disabling the check will break 2 Enum-related tests.
+                      */
+-                    type = ctxt.getTypeFactory().constructSpecializedType(_baseType, type.getRawClass());
++                    type = _baseType.narrowBy(type.getRawClass());
+                 }
+                 deser = ctxt.findContextualValueDeserializer(type, _property);
+             }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java b/src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java
+index ff707118c..82de4d230 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java
++++ b/src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java
+@@ -77,7 +77,7 @@ public class SimpleAbstractTypeResolver
+             return null;
+         }
+         // 09-Aug-2015, tatu: Instead of direct call via JavaType, better use TypeFactory
+-        return config.getTypeFactory().constructSpecializedType(type, dst);
++        return type.narrowBy(dst);
+     }
+ 
+     

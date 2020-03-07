@@ -1,0 +1,15 @@
+org.apache.commons.compress.ArchiveUtilsTest
+org.apache.commons.compress.DetectArchiverTestCase
+org.apache.commons.compress.IOMethodsTest
+org.apache.commons.compress.archivers.ArTestCase
+org.apache.commons.compress.archivers.ArchiveOutputStreamTest
+org.apache.commons.compress.archivers.CpioTestCase
+org.apache.commons.compress.archivers.JarTestCase
+org.apache.commons.compress.archivers.TarTestCase
+org.apache.commons.compress.archivers.ZipTestCase
+org.apache.commons.compress.archivers.cpio.CpioArchiveInputStreamTest
+org.apache.commons.compress.archivers.zip.Maven221MultiVolumeTest
+org.apache.commons.compress.archivers.zip.UTF8ZipFilesTest
+org.apache.commons.compress.changes.ChangeSetTestCase
+org.apache.commons.compress.compressors.BZip2TestCase
+org.apache.commons.compress.compressors.GZipTestCase

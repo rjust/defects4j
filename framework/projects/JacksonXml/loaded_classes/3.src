@@ -1,0 +1,6 @@
+com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser
+com.fasterxml.jackson.dataformat.xml.deser.XmlReadContext
+com.fasterxml.jackson.dataformat.xml.deser.XmlTokenStream
+com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator
+com.fasterxml.jackson.dataformat.xml.XmlFactory
+com.fasterxml.jackson.dataformat.xml.XmlMapper

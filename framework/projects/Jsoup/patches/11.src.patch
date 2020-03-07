@@ -1,0 +1,58 @@
+diff --git a/src/main/java/org/jsoup/select/Selector.java b/src/main/java/org/jsoup/select/Selector.java
+index e370de8..13341ce 100644
+--- a/src/main/java/org/jsoup/select/Selector.java
++++ b/src/main/java/org/jsoup/select/Selector.java
+@@ -107,8 +107,6 @@ public class Selector {
+         if (tq.matchesAny(combinators)) { // if starts with a combinator, use root as elements
+             elements.add(root);
+             combinator(tq.consume().toString());
+-        } else if (tq.matches(":has(")) {
+-            elements.addAll(root.getAllElements());
+         } else {
+             addElements(findElements()); // chomp first element matcher off queue 
+         }            
+@@ -180,8 +178,6 @@ public class Selector {
+             return matches(false);
+         } else if (tq.matches(":matchesOwn(")) {
+             return matches(true);
+-        } else if (tq.matches(":not(")) {
+-            return not();
+         } else { // unhandled
+             throw new SelectorParseException("Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());
+         }
+@@ -306,13 +302,7 @@ public class Selector {
+     }
+ 
+     // :not(selector)
+-    private Elements not() {
+-        tq.consume(":not");
+-        String subQuery = tq.chompBalanced('(', ')');
+-        Validate.notEmpty(subQuery, ":not(selector) subselect must not be empty");
+ 
+-        return filterOut(root.getAllElements(), select(subQuery, root));
+-    }
+ 
+     // direct child descendants
+     private static Elements filterForChildren(Collection<Element> parents, Collection<Element> candidates) {
+@@ -406,21 +396,6 @@ public class Selector {
+     }
+ 
+     // exclude set. package open so that Elements can implement .not() selector.
+-    static Elements filterOut(Collection<Element> elements, Collection<Element> outs) {
+-        Elements output = new Elements();
+-        for (Element el: elements) {
+-            boolean found = false;
+-            for (Element out: outs) {
+-                if (el.equals(out)) {
+-                    found = true;
+-                    break;
+-                }
+-            }
+-            if (!found)
+-                output.add(el);
+-        }
+-        return output;
+-    }
+ 
+     public static class SelectorParseException extends IllegalStateException {
+         public SelectorParseException(String msg, Object... params) {

@@ -1,0 +1,50 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
+index 71d11c83f..ae5f43175 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
+@@ -1166,7 +1166,7 @@ public class ObjectReader
+     @SuppressWarnings("unchecked")
+     @Override
+     public <T extends TreeNode> T readTree(JsonParser p) throws IOException {
+-        return (T) _bindAsTreeOrNull(p);
++        return (T) _bindAsTree(p);
+     }
+ 
+     @Override
+@@ -1704,36 +1704,6 @@ public class ObjectReader
+      * Same as {@link #_bindAsTree} except end-of-input is reported by returning
+      * {@code null}, not "missing node"
+      */
+-    protected final JsonNode _bindAsTreeOrNull(JsonParser p) throws IOException
+-    {
+-        _config.initialize(p);
+-        if (_schema != null) {
+-            p.setSchema(_schema);
+-        }
+-        JsonToken t = p.getCurrentToken();
+-        if (t == null) {
+-            t = p.nextToken();
+-            if (t == null) {
+-                return null;
+-            }
+-        }
+-        final JsonNode resultNode;
+-        if (t == JsonToken.VALUE_NULL) {
+-            resultNode = _config.getNodeFactory().nullNode();
+-        } else {
+-            final DeserializationContext ctxt = createDeserializationContext(p);
+-            final JsonDeserializer<Object> deser = _findTreeDeserializer(ctxt);
+-            if (_unwrapRoot) {
+-                resultNode = (JsonNode) _unwrapAndDeserialize(p, ctxt, JSON_NODE_TYPE, deser);
+-            } else {
+-                resultNode = (JsonNode) deser.deserialize(p, ctxt);
+-                if (_config.isEnabled(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)) {
+-                    _verifyNoTrailingTokens(p, ctxt, JSON_NODE_TYPE);
+-                }
+-            }
+-        }
+-        return resultNode;
+-    }
+     
+     /**
+      * @since 2.1
