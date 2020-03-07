@@ -1,0 +1,44 @@
+diff --git a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
+index 483534dc..90fe1736 100644
+--- a/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
++++ b/src/test/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollectionTest.java
+@@ -21,7 +21,6 @@ import java.util.Arrays;
+ import java.util.Collection;
+ 
+ import org.apache.commons.collections4.BoundedCollection;
+-import org.apache.commons.collections4.Unmodifiable;
+ import org.apache.commons.collections4.list.FixedSizeList;
+ 
+ /**
+@@ -44,7 +43,7 @@ public class UnmodifiableBoundedCollectionTest<E> extends AbstractCollectionTest
+     }
+ 
+     @Override
+-    public BoundedCollection<E> makeFullCollection() {
++    public Collection<E> makeFullCollection() {
+         final E[] allElements = getFullElements();
+         final BoundedCollection<E> coll = FixedSizeList.<E>fixedSizeList(new ArrayList<E>(Arrays.asList(allElements)));
+         return UnmodifiableBoundedCollection.unmodifiableBoundedCollection(coll);
+@@ -81,22 +80,4 @@ public class UnmodifiableBoundedCollectionTest<E> extends AbstractCollectionTest
+     public String getCompatibilityVersion() {
+         return "4";
+     }
+-    
+-    //-----------------------------------------------------------------------
+-
+-    public void testUnmodifiable() {
+-        assertTrue(makeObject() instanceof Unmodifiable);
+-        assertTrue(makeFullCollection() instanceof Unmodifiable);
+-    }
+-    
+-    public void testDecorateFactory() {
+-        final BoundedCollection<E> coll = makeFullCollection();
+-        assertSame(coll, UnmodifiableBoundedCollection.unmodifiableBoundedCollection(coll));
+-
+-        try {
+-            UnmodifiableBoundedCollection.unmodifiableBoundedCollection(null);
+-            fail();
+-        } catch (final IllegalArgumentException ex) {}
+-    }
+-    
+ }

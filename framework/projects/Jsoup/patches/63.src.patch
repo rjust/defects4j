@@ -1,0 +1,62 @@
+diff --git a/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java b/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
+index 3fe076a..c9963b9 100644
+--- a/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
++++ b/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
+@@ -224,11 +224,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
+         insertNode(el);
+         if (startTag.isSelfClosing()) {
+             if (tag.isKnownTag()) {
+-                if (!tag.isEmpty())
+-                    tokeniser.error("Tag cannot be self closing; not a void tag");
++                if (tag.isSelfClosing()) tokeniser.acknowledgeSelfClosingFlag();
+             }
+-            else // unknown tag, remember this is self closing for output
++            else {
+                 tag.setSelfClosing();
++                tokeniser.acknowledgeSelfClosingFlag();
++            }
+         }
+         return el;
+     }
+diff --git a/src/main/java/org/jsoup/parser/Tokeniser.java b/src/main/java/org/jsoup/parser/Tokeniser.java
+index b047940..29fe4cc 100644
+--- a/src/main/java/org/jsoup/parser/Tokeniser.java
++++ b/src/main/java/org/jsoup/parser/Tokeniser.java
+@@ -33,6 +33,7 @@ final class Tokeniser {
+     Token.Doctype doctypePending = new Token.Doctype(); // doctype building up
+     Token.Comment commentPending = new Token.Comment(); // comment building up
+     private String lastStartTag; // the last start tag emitted, to test appropriate end tag
++    private boolean selfClosingFlagAcknowledged = true;
+ 
+     Tokeniser(CharacterReader reader, ParseErrorList errors) {
+         this.reader = reader;
+@@ -40,6 +41,10 @@ final class Tokeniser {
+     }
+ 
+     Token read() {
++        if (!selfClosingFlagAcknowledged) {
++            error("Self closing flag not acknowledged");
++            selfClosingFlagAcknowledged = true;
++        }
+         while (!isEmitPending)
+             state.read(this, reader);
+ 
+@@ -68,6 +73,8 @@ final class Tokeniser {
+         if (token.type == Token.TokenType.StartTag) {
+             Token.StartTag startTag = (Token.StartTag) token;
+             lastStartTag = startTag.tagName;
++            if (startTag.selfClosing)
++                selfClosingFlagAcknowledged = false;
+         } else if (token.type == Token.TokenType.EndTag) {
+             Token.EndTag endTag = (Token.EndTag) token;
+             if (endTag.attributes != null)
+@@ -114,6 +121,9 @@ final class Tokeniser {
+         this.state = state;
+     }
+ 
++    void acknowledgeSelfClosingFlag() {
++        selfClosingFlagAcknowledged = true;
++    }
+     final private int[] codepointHolder = new int[1]; // holder to not have to keep creating arrays
+     final private int[] multipointHolder = new int[2];
+     int[] consumeCharacterReference(Character additionalAllowedCharacter, boolean inAttribute) {

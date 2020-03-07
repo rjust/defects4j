@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/jsoup/nodes/Node.java b/src/main/java/org/jsoup/nodes/Node.java
+index b6bdb93..01a4cd1 100644
+--- a/src/main/java/org/jsoup/nodes/Node.java
++++ b/src/main/java/org/jsoup/nodes/Node.java
+@@ -442,8 +442,8 @@ public abstract class Node implements Cloneable {
+             Node in = children[i];
+             reparentChild(in);
+             childNodes.add(index, in);
+-            reindexChildren(index);
+         }
++        reindexChildren(index);
+     }
+ 
+     protected void ensureChildNodes() {

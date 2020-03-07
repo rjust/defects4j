@@ -1,0 +1,174 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
+index b0313af36..15e97cfa2 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
+@@ -4,8 +4,11 @@ import java.io.*;
+ import java.util.*;
+ import java.util.concurrent.ConcurrentHashMap;
+ 
+-import com.fasterxml.jackson.annotation.*;
++import com.fasterxml.jackson.annotation.JsonInclude;
++import com.fasterxml.jackson.annotation.JsonPropertyOrder;
++import com.fasterxml.jackson.annotation.JsonTypeInfo;
+ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
++import com.fasterxml.jackson.annotation.JsonTypeName;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+@@ -125,32 +128,6 @@ public class TestMapSerialization
+     @JsonTypeInfo(use = Id.CLASS)
+     public static class Mixin691 { }
+ 
+-    // For [databind#47]
+-    
+-    public static class Wat
+-    {
+-        private final String wat;
+-
+-        @JsonCreator
+-        Wat(String wat) {
+-            this.wat = wat;
+-        }
+-
+-        @JsonValue
+-        public String getWat() {
+-            return wat;
+-        }
+-
+-        @Override
+-        public String toString() {
+-            return "(String)[Wat: " + wat + "]";
+-        }
+-    }
+-
+-    // For [databind#47]
+-    @SuppressWarnings("serial")
+-    static class WatMap extends HashMap<Wat,Boolean> { }
+-
+     /*
+     /**********************************************************
+     /* Test methods
+@@ -313,14 +290,5 @@ public class TestMapSerialization
+         String json = mapper.writeValueAsString(map);
+         assertEquals("{\"@class\":\"java.util.HashMap\",\"NULL\":null}", json);
+     }
+-
+-    public void testMapJsonValueKey47() throws Exception
+-    {
+-        WatMap input = new WatMap();
+-        input.put(new Wat("3"), true);
+-
+-        ObjectMapper mapper = new ObjectMapper();
+-        String json = mapper.writeValueAsString(input);
+-        assertEquals(aposToQuotes("{'3':true}"), json);
+-    }    
+ }
++
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestJavaType.java b/src/test/java/com/fasterxml/jackson/databind/type/TestJavaType.java
+index cef1c9258..aec92c59f 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestJavaType.java
++++ b/src/test/java/com/fasterxml/jackson/databind/type/TestJavaType.java
+@@ -1,6 +1,5 @@
+ package com.fasterxml.jackson.databind.type;
+ 
+-import java.lang.reflect.Method;
+ import java.util.*;
+ 
+ import com.fasterxml.jackson.databind.BaseMapTest;
+@@ -24,31 +23,6 @@ public class TestJavaType
+         private MyEnum2(int value) { }
+     }
+ 
+-    // [databind#728]
+-    static class Issue728 {
+-        public <C extends CharSequence> C method(C input) { return null; }
+-    }
+-    public void testLocalType728() throws Exception
+-    {
+-        TypeFactory tf = TypeFactory.defaultInstance();
+-        Method m = Issue728.class.getMethod("method", CharSequence.class);
+-        assertNotNull(m);
+-
+-        // Start with return type
+-        // first type-erased
+-        JavaType t = tf.constructType(m.getReturnType());
+-        assertEquals(CharSequence.class, t.getRawClass());
+-        // then generic
+-        t = tf.constructType(m.getGenericReturnType());
+-        assertEquals(CharSequence.class, t.getRawClass());
+-
+-        // then parameter type
+-        t = tf.constructType(m.getParameterTypes()[0]);
+-        assertEquals(CharSequence.class, t.getRawClass());
+-        t = tf.constructType(m.getGenericParameterTypes()[0]);
+-        assertEquals(CharSequence.class, t.getRawClass());
+-    }
+-
+     /*
+     /**********************************************************
+     /* Test methods
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestLocalType609.java b/src/test/java/com/fasterxml/jackson/failing/TestLocalType609.java
+similarity index 95%
+rename from src/test/java/com/fasterxml/jackson/databind/type/TestLocalType609.java
+rename to src/test/java/com/fasterxml/jackson/failing/TestLocalType609.java
+index 6d208b612..ca7f5117a 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestLocalType609.java
++++ b/src/test/java/com/fasterxml/jackson/failing/TestLocalType609.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.type;
++package com.fasterxml.jackson.failing;
+ 
+ import com.fasterxml.jackson.databind.*;
+ 
+diff --git a/src/test/java/com/fasterxml/jackson/failing/TestMapJsonValueKey47.java b/src/test/java/com/fasterxml/jackson/failing/TestMapJsonValueKey47.java
+new file mode 100644
+index 000000000..9b03bba08
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/failing/TestMapJsonValueKey47.java
+@@ -0,0 +1,46 @@
++package com.fasterxml.jackson.failing;
++
++import java.util.HashMap;
++
++import com.fasterxml.jackson.annotation.JsonCreator;
++import com.fasterxml.jackson.annotation.JsonValue;
++import com.fasterxml.jackson.databind.BaseMapTest;
++import com.fasterxml.jackson.databind.ObjectMapper;
++
++// [Issue#47]
++public class TestMapJsonValueKey47 extends BaseMapTest
++{
++    public static class Wat
++    {
++        private final String wat;
++
++        @JsonCreator
++        Wat(String wat) {
++            this.wat = wat;
++        }
++
++        @JsonValue
++        public String getWat() {
++            return wat;
++        }
++
++        @Override
++        public String toString() {
++            return "(String)[Wat: " + wat + "]";
++        }
++    }
++
++    @SuppressWarnings("serial")
++    static class WatMap extends HashMap<Wat,Boolean> { }
++    
++    public void testMapJsonValueKey()
++    throws Exception
++    {
++        WatMap input = new WatMap();
++        input.put(new Wat("3"), true);
++
++        ObjectMapper mapper = new ObjectMapper();
++        String json = mapper.writeValueAsString(input);
++        assertEquals(aposToQuotes("{'3':true}"), json);
++    }
++}

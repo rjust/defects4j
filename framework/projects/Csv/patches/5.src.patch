@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVPrinter.java b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+index a8aa33f..3255360 100644
+--- a/src/main/java/org/apache/commons/csv/CSVPrinter.java
++++ b/src/main/java/org/apache/commons/csv/CSVPrinter.java
+@@ -322,9 +322,7 @@ public final class CSVPrinter implements Flushable, Closeable {
+      */
+     public void println() throws IOException {
+         final String recordSeparator = format.getRecordSeparator();
+-        if (recordSeparator != null) {
+             out.append(recordSeparator);
+-        }
+         newRecord = true;
+     }
+ 

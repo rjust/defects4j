@@ -1,0 +1,40 @@
+diff --git a/src/test/java/org/jsoup/integration/UrlConnectTest.java b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+index 6a4a20f..02e97ad 100644
+--- a/src/test/java/org/jsoup/integration/UrlConnectTest.java
++++ b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+@@ -658,13 +658,4 @@ public class UrlConnectTest {
+         assertTrue(System.currentTimeMillis() - start < 1000);
+     }
+ 
+-    @Test public void handles966() throws IOException {
+-        // http://szshb.nxszs.gov.cn/
+-        // https://github.com/jhy/jsoup/issues/966
+-
+-        Document doc = Jsoup.connect("http://szshb.nxszs.gov.cn/").get();
+-
+-        assertEquals("石嘴山市环境保护局", doc.title());
+-    }
+-
+ }
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index d7d7bd8..afd2ee2 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -1068,17 +1068,4 @@ public class HtmlParserTest {
+             assertTrue(template.childNodes().size() > 1);
+         }
+   }
+-
+-  @Test public void testHandlesDeepSpans() {
+-        StringBuilder sb = new StringBuilder();
+-        for (int i = 0; i < 200; i++) {
+-            sb.append("<span>");
+-        }
+-
+-        sb.append("<p>One</p>");
+-
+-        Document doc = Jsoup.parse(sb.toString());
+-        assertEquals(200, doc.select("span").size());
+-        assertEquals(1, doc.select("p").size());
+-  }
+ }

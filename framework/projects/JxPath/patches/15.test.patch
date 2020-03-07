@@ -1,0 +1,15 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+index 541cbb6..6691ed5 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+@@ -828,9 +828,4 @@ public abstract class XMLModelTestCase extends JXPathTestCase {
+                 "Box of oranges",
+                 "/vendor[1]/product[1]/goods:name[1]");
+     }
+-
+-    public void testUnion() {
+-        assertXPathValue(context, "/vendor[1]/contact[1] | /vendor[1]/contact[4]", "John");
+-        assertXPathValue(context, "/vendor[1]/contact[4] | /vendor[1]/contact[1]", "John");
+-    }
+ }
+\ No newline at end of file

@@ -1,0 +1,41 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/Expression.java b/src/java/org/apache/commons/jxpath/ri/compiler/Expression.java
+index 355c8e3..5f7dcd0 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/Expression.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/Expression.java
+@@ -16,7 +16,6 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
+-import org.apache.commons.jxpath.NodeSet;
+ import org.apache.commons.jxpath.Pointer;
+ import org.apache.commons.jxpath.ri.EvalContext;
+ import org.apache.commons.jxpath.ri.model.NodePointer;
+@@ -75,9 +74,6 @@ public abstract class Expression {
+         if (result instanceof EvalContext) {
+             return new ValueIterator((EvalContext) result);
+         }
+-        if (result instanceof NodeSet) {
+-            return new ValueIterator(((NodeSet) result).getPointers().iterator());
+-        }
+         return ValueUtils.iterate(result);
+     }
+ 
+@@ -89,11 +85,6 @@ public abstract class Expression {
+         if (result instanceof EvalContext) {
+             return (EvalContext) result;
+         }
+-        if (result instanceof NodeSet) {
+-            return new PointerIterator(((NodeSet) result).getPointers().iterator(),
+-                    new QName(null, "value"),
+-                    context.getRootContext().getCurrentNodePointer().getLocale());
+-        }
+         return new PointerIterator(ValueUtils.iterate(result),
+                 new QName(null, "value"),
+                 context.getRootContext().getCurrentNodePointer().getLocale());
+@@ -151,4 +142,4 @@ public abstract class Expression {
+             throw new UnsupportedOperationException();
+         }
+     }
+-}
+\ No newline at end of file
++}

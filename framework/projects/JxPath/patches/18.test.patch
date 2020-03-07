@@ -1,0 +1,18 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+index 2421b4a..0520027 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+@@ -558,13 +558,6 @@ public abstract class XMLModelTestCase extends JXPathTestCase {
+                 //use a set because DOM returns attrs sorted by name, JDOM by occurrence order:
+                 set("10%", "20%"));
+ 
+-        // attribute::node()
+-        assertXPathValueIterator(
+-                context,
+-                "vendor/product/price:amount/attribute::node()",
+-                //use a set because DOM returns attrs sorted by name, JDOM by occurrence order:
+-                set("10%", "20%"));
+-        
+         // attribute:: select non-ns'd attributes only
+         assertXPathValueIterator(
+             context,

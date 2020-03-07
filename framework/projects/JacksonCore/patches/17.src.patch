@@ -1,0 +1,81 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+index a638519a..4f4394c8 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java
+@@ -525,33 +525,17 @@ public class UTF8JsonGenerator
+         final char[] buf = _charBuffer;
+ 
+         // minor optimization: see if we can just get and copy
+-        if (len <= buf.length) {
+-            text.getChars(offset, offset+len, buf, 0);
+-            _writeRawSegment(buf, 0, len);
+-            return;
+-        }
+ 
+         // If not, need segmented approach. For speed, let's also use input buffer
+         // size that is guaranteed to fit in output buffer; each char can expand to
+         // at most 3 bytes, so at most 1/3 of buffer size.
+-        final int maxChunk = (_outputEnd >> 2) + (_outputEnd >> 4); // == (1/4 + 1/16) == 5/16
+-        final int maxBytes = maxChunk * 3;
+ 
+         while (len > 0) {
+-            int len2 = Math.min(maxChunk, len);
++            int len2 = Math.min(buf.length, len);
+             text.getChars(offset, offset+len2, buf, 0);
+-            if ((_outputTail + maxBytes) > _outputEnd) {
+-                _flushBuffer();
+-            }
++            writeRaw(buf, 0, len2);
+             // If this is NOT the last segment and if the last character looks like
+             // split surrogate second half, drop it
+-            if (len > 0) {
+-                char ch = buf[len2-1];
+-                if ((ch >= SURR1_FIRST) && (ch <= SURR1_LAST)) {
+-                    --len2;
+-                }
+-            }
+-            _writeRawSegment(buf, 0, len2);
+             offset += len2;
+             len -= len2;
+         }
+@@ -685,30 +669,6 @@ public class UTF8JsonGenerator
+      *
+      * @since 2.8.2
+      */
+-    private void _writeRawSegment(char[] cbuf, int offset, int end) throws IOException
+-    {
+-        main_loop:
+-        while (offset < end) {
+-            inner_loop:
+-            while (true) {
+-                int ch = (int) cbuf[offset];
+-                if (ch > 0x7F) {
+-                    break inner_loop;
+-                }
+-                _outputBuffer[_outputTail++] = (byte) ch;
+-                if (++offset >= end) {
+-                    break main_loop;
+-                }
+-            }
+-            char ch = cbuf[offset++];
+-            if (ch < 0x800) { // 2-byte?
+-                _outputBuffer[_outputTail++] = (byte) (0xc0 | (ch >> 6));
+-                _outputBuffer[_outputTail++] = (byte) (0x80 | (ch & 0x3f));
+-            } else {
+-                offset = _outputRawMultiByteChar(ch, cbuf, offset, end);
+-            }
+-        }
+-    }
+ 
+     /*
+     /**********************************************************
+@@ -1924,8 +1884,7 @@ public class UTF8JsonGenerator
+             if (ch <= SURR2_LAST) { // yes, outside of BMP
+                 // Do we have second part?
+                 if (inputOffset >= inputEnd || cbuf == null) { // nope... have to note down
+-                    _reportError(String.format(
+-"Split surrogate on writeRaw() input (last character): first character 0x%4x", ch));
++                    _reportError("Split surrogate on writeRaw() input (last character)");
+                 }
+                 _outputSurrogates(ch, cbuf[inputOffset]);
+                 return inputOffset+1;

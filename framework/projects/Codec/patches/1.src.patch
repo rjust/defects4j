@@ -1,0 +1,39 @@
+diff --git a/src/java/org/apache/commons/codec/language/Caverphone.java b/src/java/org/apache/commons/codec/language/Caverphone.java
+index ea439852..07122953 100644
+--- a/src/java/org/apache/commons/codec/language/Caverphone.java
++++ b/src/java/org/apache/commons/codec/language/Caverphone.java
+@@ -56,7 +56,7 @@ public class Caverphone implements StringEncoder {
+         }
+ 
+         // 1. Convert to lowercase
+-        txt = txt.toLowerCase(java.util.Locale.ENGLISH);
++        txt = txt.toLowerCase();
+ 
+         // 2. Remove anything not A-Z
+         txt = txt.replaceAll("[^a-z]", "");
+diff --git a/src/java/org/apache/commons/codec/language/Metaphone.java b/src/java/org/apache/commons/codec/language/Metaphone.java
+index a90e0ae3..88fea672 100644
+--- a/src/java/org/apache/commons/codec/language/Metaphone.java
++++ b/src/java/org/apache/commons/codec/language/Metaphone.java
+@@ -85,7 +85,7 @@ public class Metaphone implements StringEncoder {
+         }
+         // single character is itself
+         if (txt.length() == 1) {
+-            return txt.toUpperCase(java.util.Locale.ENGLISH) ;
++            return txt.toUpperCase() ;
+         }
+       
+         char[] inwd = txt.toUpperCase(java.util.Locale.ENGLISH).toCharArray() ;
+diff --git a/src/java/org/apache/commons/codec/language/SoundexUtils.java b/src/java/org/apache/commons/codec/language/SoundexUtils.java
+index 2b04c085..1c6b983a 100644
+--- a/src/java/org/apache/commons/codec/language/SoundexUtils.java
++++ b/src/java/org/apache/commons/codec/language/SoundexUtils.java
+@@ -50,7 +50,7 @@ final class SoundexUtils {
+             }
+         }
+         if (count == len) {
+-            return str.toUpperCase(java.util.Locale.ENGLISH);
++            return str.toUpperCase();
+         }
+         return new String(chars, 0, count).toUpperCase(java.util.Locale.ENGLISH);
+     }

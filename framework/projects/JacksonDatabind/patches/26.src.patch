@@ -1,0 +1,17 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java b/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
+index acaa17809..2093b7bcb 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java
+@@ -36,11 +36,9 @@ import com.fasterxml.jackson.databind.util.NameTransformer;
+  */
+ @JacksonStdImpl // since 2.6. NOTE: sub-classes typically are not
+ public class BeanPropertyWriter extends PropertyWriter
+-    implements BeanProperty,
+-        java.io.Serializable // since 2.6.2
++    implements BeanProperty
+ {
+     // as of 2.6.2
+-    private static final long serialVersionUID = 4603296144163950020L;
+ 
+     /**
+      * Marker object used to indicate "do not serialize if empty"

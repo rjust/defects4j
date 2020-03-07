@@ -1,0 +1,166 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java
+index 6752f2022..b888ab97c 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java
+@@ -299,11 +299,8 @@ name, i, t.getRawClass()));
+      *
+      * @since 2.8
+      */
+-    public Object asKey(Class<?> rawBase) {
+         // safe to pass _types array without copy since it is not exposed via
+         // any access, nor modified by this class
+-        return new AsKey(rawBase, _types, _hashCode);
+-    }
+ 
+     /*
+     /**********************************************************************
+@@ -428,46 +425,6 @@ name, i, t.getRawClass()));
+      *
+      * @since 2.8
+      */
+-    final static class AsKey {
+-        private final Class<?> _raw;
+-        private final JavaType[] _params;
+-        private final int _hash;
+-
+-        public AsKey(Class<?> raw, JavaType[] params, int hash) {
+-            _raw = raw ;
+-            _params = params;
+-            _hash = hash;
+-        }
+ 
+-        @Override
+-        public int hashCode() { return _hash; }
+-
+-        @Override
+-        public boolean equals(Object o) {
+-            if (o == this) return true;
+-            if (o == null) return false;
+-            if (o.getClass() != getClass()) return false;
+-            AsKey other = (AsKey) o;
+-
+-            if ((_hash == other._hash) && (_raw == other._raw)) {
+-                final JavaType[] otherParams = other._params;
+-                final int len = _params.length;
+-
+-                if (len == otherParams.length) {
+-                    for (int i = 0; i < len; ++i) {
+-                        if (!_params[i].equals(otherParams[i])) {
+-                            return false;
+-                        }
+-                    }
+-                    return true;
+-                }
+-            }
+-            return false;
+-        }
+ 
+-        @Override
+-        public String toString() {
+-            return _raw.getName()+"<>";
+-        }
+-    }
+ }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+index a27097e4a..098cd2e35 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+@@ -114,7 +114,7 @@ public final class TypeFactory
+      * actual generic types), we will use small cache to avoid repetitive
+      * resolution of core types
+      */
+-    protected final LRUMap<Object,JavaType> _typeCache = new LRUMap<Object,JavaType>(16, 100);
++    protected final LRUMap<Class<?>, JavaType> _typeCache = new LRUMap<Class<?>, JavaType>(16, 100);
+ 
+     /*
+     /**********************************************************
+@@ -382,15 +382,24 @@ public final class TypeFactory
+             //  for a case where this code does get invoked: not ideal
+             // 29-Jun-2016, tatu: As to bindings, this works for [databind#1215], but
+             //  not certain it would reliably work... but let's hope for best for now
+-            TypeBindings tb = _bindingsForSubtype(baseType, typeParamCount, subclass);
+             if (baseType.isInterface()) {
+-                newType = baseType.refine(subclass, tb, null, new JavaType[] { baseType });
++                newType = baseType.refine(subclass, TypeBindings.emptyBindings(), null, new JavaType[] { baseType });
+             } else {
+-                newType = baseType.refine(subclass, tb, baseType, NO_TYPES);
++                newType = baseType.refine(subclass, TypeBindings.emptyBindings(), baseType, NO_TYPES);
+             }
+             // Only SimpleType returns null, but if so just resolve regularly
+             if (newType == null) {
+-                newType = _fromClass(null, subclass, tb);
++                TypeBindings tb = null;
++                if (baseType.containedTypeCount() == typeParamCount) {
++                    if (typeParamCount == 1) {
++                        tb = TypeBindings.create(subclass, baseType.containedType(0));
++                    } else if (typeParamCount == 2) {
++                        tb = TypeBindings.create(subclass, baseType.containedType(0),
++                                baseType.containedType(1));
++                    }
++                }
++                newType = _fromClass(null, subclass,
++                        (tb == null) ? TypeBindings.emptyBindings() : tb);
+             }
+         } while (false);
+ 
+@@ -444,28 +453,9 @@ public final class TypeFactory
+         */
+     }
+ 
+-    private TypeBindings _bindingsForSubtype(JavaType baseType, int typeParamCount, Class<?> subclass)
+-    {
+         // But otherwise gets bit tricky, as we need to partially resolve the type hierarchy
+         // (hopefully passing null Class for root is ok)
+-        int baseCount = baseType.containedTypeCount();
+-        if (baseCount == typeParamCount) {
+-            if (typeParamCount == 1) {
+-                return TypeBindings.create(subclass, baseType.containedType(0));
+-            }
+-            if (typeParamCount == 2) {
+-                return TypeBindings.create(subclass, baseType.containedType(0),
+-                        baseType.containedType(1));
+-            }
+-            List<JavaType> types = new ArrayList<JavaType>(baseCount);
+-            for (int i = 0; i < baseCount; ++i) {
+-                types.add(baseType.containedType(i));
+-            }
+-            return TypeBindings.create(subclass, types);
+-        }
+         // Otherwise, two choices: match N first, or empty. Do latter, for now
+-        return TypeBindings.emptyBindings();
+-    }
+ 
+     /**
+      * Method similar to {@link #constructSpecializedType}, but that creates a
+@@ -1167,16 +1157,12 @@ public final class TypeFactory
+             return result;
+         }
+         // Barring that, we may have recently constructed an instance
+-        final Object key;
+-        if ((bindings == null) || bindings.isEmpty()) {
+-            key = rawType;
+-            result = _typeCache.get(key); // ok, cache object is synced
+-        } else {
+-            key = bindings.asKey(rawType);
+-        }
+-        result = _typeCache.get(key); // ok, cache object is synced
++        boolean cachable = (bindings == null) || bindings.isEmpty();
++        if (cachable) {
++            result = _typeCache.get(rawType);
+         if (result != null) {
+             return result;
++            }
+         }
+ 
+         // 15-Oct-2015, tatu: recursive reference?
+@@ -1236,7 +1222,9 @@ public final class TypeFactory
+             }
+         }
+         context.resolveSelfReferences(result);
+-        _typeCache.putIfAbsent(key, result); // cache object syncs
++        if (cachable) {
++            _typeCache.putIfAbsent(rawType, result);
++        }
+         return result;
+     }
+ 

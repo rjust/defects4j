@@ -1,0 +1,12 @@
+com.google.gson.DefaultDateTypeAdapter
+com.google.gson.internal.bind.JsonTreeReader
+com.google.gson.internal.bind.JsonTreeWriter
+com.google.gson.internal.JsonReaderInternalAccess
+com.google.gson.JsonIOException
+com.google.gson.JsonParseException
+com.google.gson.JsonSyntaxException
+com.google.gson.stream.JsonReader
+com.google.gson.stream.JsonToken
+com.google.gson.stream.JsonWriter
+com.google.gson.stream.MalformedJsonException
+com.google.gson.TypeAdapter

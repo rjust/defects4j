@@ -1,0 +1,12 @@
+org.jsoup.integration.ParseTest
+org.jsoup.integration.UrlConnectTest
+org.jsoup.nodes.DocumentTest
+org.jsoup.nodes.ElementTest
+org.jsoup.nodes.NodeTest
+org.jsoup.nodes.TextNodeTest
+org.jsoup.parser.AttributeParseTest
+org.jsoup.parser.ParserTest
+org.jsoup.parser.TagTest
+org.jsoup.safety.CleanerTest
+org.jsoup.select.ElementsTest
+org.jsoup.select.SelectorTest

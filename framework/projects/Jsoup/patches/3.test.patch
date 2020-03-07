@@ -1,0 +1,43 @@
+diff --git a/src/test/java/org/jsoup/nodes/ElementTest.java b/src/test/java/org/jsoup/nodes/ElementTest.java
+index d835314..7fc4ac5 100644
+--- a/src/test/java/org/jsoup/nodes/ElementTest.java
++++ b/src/test/java/org/jsoup/nodes/ElementTest.java
+@@ -210,22 +210,6 @@ public class ElementTest {
+         assertEquals("<html><head></head><body><div id=\"1\"><p>Hello</p><p>there</p><p class=\"second\">now</p></div></body></html>",
+                 TextUtil.stripNewlines(doc.html()));
+     }
+-
+-    @Test public void testAppendRowToTable() {
+-        Document doc = Jsoup.parse("<table><tr><td>1</td></tr></table>");
+-        Element table = doc.select("table").first();
+-        table.append("<tr><td>2</td></tr>");
+-
+-        assertEquals("<table><tr><td>1</td></tr><tr><td>2</td></tr></table>", TextUtil.stripNewlines(doc.body().html()));
+-    }
+-
+-        @Test public void testPrependRowToTable() {
+-        Document doc = Jsoup.parse("<table><tr><td>1</td></tr></table>");
+-        Element table = doc.select("table").first();
+-        table.prepend("<tr><td>2</td></tr>");
+-
+-        assertEquals("<table><tr><td>2</td></tr><tr><td>1</td></tr></table>", TextUtil.stripNewlines(doc.body().html()));
+-    }
+     
+     @Test public void testPrependElement() {
+         Document doc = Jsoup.parse("<div id=1><p>Hello</p></div>");
+diff --git a/src/test/java/org/jsoup/parser/ParserTest.java b/src/test/java/org/jsoup/parser/ParserTest.java
+index d5a40bc..8102530 100644
+--- a/src/test/java/org/jsoup/parser/ParserTest.java
++++ b/src/test/java/org/jsoup/parser/ParserTest.java
+@@ -169,11 +169,6 @@ public class ParserTest {
+         assertEquals("<table><tr><td>Hello</td><td><p>There</p><p>now</p></td></tr></table>", TextUtil.stripNewlines(doc.body().html()));
+     }
+ 
+-    @Test public void handlesNestedImplicitTable() {
+-        Document doc = Jsoup.parse("<table><td>1</td></tr> <td>2</td></tr> <td> <table><td>3</td> <td>4</td></table> <tr><td>5</table>");
+-        assertEquals("<table><tr><td>1</td></tr> <tr><td>2</td></tr> <tr><td> <table><tr><td>3</td> <td>4</td></tr></table> </td></tr><tr><td>5</td></tr></table>", TextUtil.stripNewlines(doc.body().html()));
+-    }
+-
+     @Test public void handlesBaseTags() {
+         String h = "<a href=1>#</a><base href='/2/'><a href='3'>#</a><base href='http://bar'><a href=4>#</a>";
+         Document doc = Jsoup.parse(h, "http://foo/");

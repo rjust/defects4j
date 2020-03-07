@@ -1,0 +1,34 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
+index 05098fd73..e684b10a2 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java
+@@ -1473,7 +1473,7 @@ public class ObjectReader
+             result = NullNode.instance;
+         } else {
+             DeserializationContext ctxt = createDeserializationContext(jp, _config);
+-            JsonDeserializer<Object> deser = _findTreeDeserializer(ctxt);
++            JsonDeserializer<Object> deser = _findRootDeserializer(ctxt, JSON_NODE_TYPE);
+             if (_unwrapRoot) {
+                 result = (JsonNode) _unwrapAndDeserialize(jp, ctxt, JSON_NODE_TYPE, deser);
+             } else {
+@@ -1574,20 +1574,7 @@ public class ObjectReader
+     /**
+      * @since 2.6
+      */
+-    protected JsonDeserializer<Object> _findTreeDeserializer(DeserializationContext ctxt)
+-        throws JsonMappingException
+-    {
+-        JsonDeserializer<Object> deser = _rootDeserializers.get(JSON_NODE_TYPE);
+-        if (deser == null) {
+             // Nope: need to ask provider to resolve it
+-            deser = ctxt.findRootValueDeserializer(JSON_NODE_TYPE);
+-            if (deser == null) { // can this happen?
+-                throw new JsonMappingException("Can not find a deserializer for type "+JSON_NODE_TYPE);
+-            }
+-            _rootDeserializers.put(JSON_NODE_TYPE, deser);
+-        }
+-        return deser;
+-    }
+ 
+     /**
+      * Method called to locate deserializer ahead of time, if permitted

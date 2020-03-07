@@ -1,0 +1,21 @@
+diff --git a/src/test/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java b/src/test/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java
+index 08bf81b..4c577ac 100644
+--- a/src/test/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java
++++ b/src/test/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java
+@@ -23,6 +23,7 @@ import junit.framework.TestCase;
+ import org.apache.commons.cli2.Argument;
+ import org.apache.commons.cli2.Group;
+ import org.apache.commons.cli2.OptionException;
++import org.apache.commons.cli2.resource.ResourceConstants;
+ import org.apache.commons.cli2.builder.ArgumentBuilder;
+ import org.apache.commons.cli2.builder.DefaultOptionBuilder;
+ import org.apache.commons.cli2.builder.GroupBuilder;
+@@ -73,7 +74,7 @@ public class BugLoopingOptionLookAlikeTest extends TestCase {
+             parser.parse(new String[] { "testfile.txt", "testfile.txt", "testfile.txt", "testfile.txt" });
+             fail("OptionException");
+         } catch (OptionException e) {
+-            assertEquals("Unexpected testfile.txt while processing ", e.getMessage());
++            assertEquals(ResourceConstants.ARGUMENT_UNEXPECTED_VALUE, e.getMessageKey());
+         }
+     }    
+ }

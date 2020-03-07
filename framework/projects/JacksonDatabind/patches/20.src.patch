@@ -1,0 +1,20 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java b/src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java
+index 1ca18f142..147ac71a1 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java
++++ b/src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java
+@@ -1,7 +1,6 @@
+ package com.fasterxml.jackson.databind.node;
+ 
+ import com.fasterxml.jackson.annotation.JsonAutoDetect;
+-import com.fasterxml.jackson.annotation.JsonIgnore;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.databind.JsonNode;
+ import com.fasterxml.jackson.databind.SerializerProvider;
+@@ -322,7 +321,6 @@ public class ObjectNode
+      *
+      * @since 2.1
+      */
+-    @JsonIgnore // work-around for [databind#815]
+     public JsonNode setAll(Map<String,? extends JsonNode> properties)
+     {
+         for (Map.Entry<String,? extends JsonNode> en : properties.entrySet()) {

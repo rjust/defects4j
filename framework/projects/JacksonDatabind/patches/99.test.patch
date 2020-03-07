@@ -1,0 +1,20 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
+index ab0ff60bf..d543454dd 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
++++ b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
+@@ -232,14 +232,8 @@ public class TestTypeFactory
+                 can);
+         assertEquals(t, tf.constructFromCanonical(can));
+ 
+-        // [databind#2109]: also ReferenceTypes
+-        t = tf.constructType(new TypeReference<AtomicReference<Long>>() { });
+-        can = t.toCanonical();
+-        assertEquals("java.util.concurrent.atomic.AtomicReference<java.lang.Long>",
+-                can);
+-        assertEquals(t, tf.constructFromCanonical(can));
+-
+         // [databind#1941]: allow "raw" types too
++
+         t = tf.constructFromCanonical("java.util.List");
+         assertEquals(List.class, t.getRawClass());
+         assertEquals(CollectionType.class, t.getClass());

@@ -1,0 +1,68 @@
+diff --git a/src/test/java/org/jsoup/nodes/ElementTest.java b/src/test/java/org/jsoup/nodes/ElementTest.java
+index 7f7eef6..60addb9 100644
+--- a/src/test/java/org/jsoup/nodes/ElementTest.java
++++ b/src/test/java/org/jsoup/nodes/ElementTest.java
+@@ -528,15 +528,4 @@ public class ElementTest {
+         List<DataNode> pData = p.dataNodes();
+         assertEquals(0, pData.size());
+     }
+-
+-    @Test public void elementIsNotASiblingOfItself() {
+-        Document doc = Jsoup.parse("<div><p>One<p>Two<p>Three</div>");
+-        Element p2 = doc.select("p").get(1);
+-
+-        assertEquals("Two", p2.text());
+-        Elements els = p2.siblingElements();
+-        assertEquals(2, els.size());
+-        assertEquals("<p>One</p>", els.get(0).outerHtml());
+-        assertEquals("<p>Three</p>", els.get(1).outerHtml());
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/nodes/NodeTest.java b/src/test/java/org/jsoup/nodes/NodeTest.java
+index 16fad9c..2db32db 100644
+--- a/src/test/java/org/jsoup/nodes/NodeTest.java
++++ b/src/test/java/org/jsoup/nodes/NodeTest.java
+@@ -3,12 +3,9 @@ package org.jsoup.nodes;
+ import org.jsoup.Jsoup;
+ import org.jsoup.TextUtil;
+ import org.jsoup.parser.Tag;
+-import org.jsoup.select.Elements;
+ import org.jsoup.select.NodeVisitor;
+ import org.junit.Test;
+ 
+-import java.util.List;
+-
+ import static org.junit.Assert.*;
+ /**
+  Tests Nodes
+@@ -181,30 +178,4 @@ public class NodeTest {
+         });
+         assertEquals("<div><p><#text></#text></p></div>", accum.toString());
+     }
+-
+-    @Test public void orphanNodeReturnsNullForSiblingElements() {
+-        Node node = new Element(Tag.valueOf("p"), "");
+-        Element el = new Element(Tag.valueOf("p"), "");
+-
+-        assertEquals(0, node.siblingIndex());
+-        assertEquals(0, node.siblingNodes().size());
+-
+-        assertNull(node.previousSibling());
+-        assertNull(node.nextSibling());
+-
+-        assertEquals(0, el.siblingElements().size());
+-        assertNull(el.previousElementSibling());
+-        assertNull(el.nextElementSibling());
+-    }
+-
+-    @Test public void nodeIsNotASiblingOfItself() {
+-        Document doc = Jsoup.parse("<div><p>One<p>Two<p>Three</div>");
+-        Element p2 = doc.select("p").get(1);
+-
+-        assertEquals("Two", p2.text());
+-        List<Node> nodes = p2.siblingNodes();
+-        assertEquals(2, nodes.size());
+-        assertEquals("<p>One</p>", nodes.get(0).outerHtml());
+-        assertEquals("<p>Three</p>", nodes.get(1).outerHtml());
+-    }
+ }

@@ -1,0 +1,17 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVParserTest.java b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+index f5b6cb8..75531b5 100644
+--- a/src/test/java/org/apache/commons/csv/CSVParserTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+@@ -661,12 +661,6 @@ public class CSVParserTest {
+         CSVFormat.DEFAULT.withHeader().withIgnoreEmptyHeaders(true).parse(in).iterator();
+     }
+ 
+-    @Test
+-    public void testHeaderMissingWithNull() throws Exception {
+-        final Reader in = new StringReader("a,,c,,d\n1,2,3,4\nx,y,z,zz");
+-        CSVFormat.DEFAULT.withHeader().withNullString("").withIgnoreEmptyHeaders(true).parse(in).iterator();
+-    }
+-
+     @Test
+     public void testHeaderComment() throws Exception {
+         final Reader in = new StringReader("# comment\na,b,c\n1,2,3\nx,y,z");

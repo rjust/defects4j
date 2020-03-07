@@ -1,0 +1,6 @@
+com.fasterxml.jackson.core.async.AsyncTestBase
+com.fasterxml.jackson.core.BaseTest
+com.fasterxml.jackson.core.json.async.AsyncLocationTest
+com.fasterxml.jackson.core.testsupport.AsyncReaderWrapper
+com.fasterxml.jackson.core.testsupport.AsyncReaderWrapperForByteArray
+com.fasterxml.jackson.core.testsupport.ThrottledInputStream

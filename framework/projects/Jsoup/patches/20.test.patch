@@ -1,0 +1,31 @@
+diff --git a/src/test/java/org/jsoup/helper/DataUtilTest.java b/src/test/java/org/jsoup/helper/DataUtilTest.java
+index d106df5..fd681c0 100644
+--- a/src/test/java/org/jsoup/helper/DataUtilTest.java
++++ b/src/test/java/org/jsoup/helper/DataUtilTest.java
+@@ -1,14 +1,8 @@
+ package org.jsoup.helper;
+ 
+ import static org.junit.Assert.assertEquals;
+-
+-import org.jsoup.nodes.Document;
+-import org.jsoup.parser.Parser;
+ import org.junit.Test;
+ 
+-import java.nio.ByteBuffer;
+-import java.nio.charset.Charset;
+-
+ public class DataUtilTest {
+     @Test
+     public void testCharset() {
+@@ -24,11 +18,4 @@ public class DataUtilTest {
+         assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html;charset=\"utf-8\""));
+         assertEquals("ISO-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=\"ISO-8859-1\""));
+     }
+-    
+-    @Test public void discardsSpuriousByteOrderMark() {
+-        String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
+-        ByteBuffer buffer = Charset.forName("UTF-8").encode(html);
+-        Document doc = DataUtil.parseByteData(buffer, "UTF-8", "http://foo.com/", Parser.htmlParser());
+-        assertEquals("One", doc.head().text());
+-    }
+ }

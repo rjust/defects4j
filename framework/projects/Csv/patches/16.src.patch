@@ -1,0 +1,40 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVParser.java b/src/main/java/org/apache/commons/csv/CSVParser.java
+index 7e9d7d4..1e3106e 100644
+--- a/src/main/java/org/apache/commons/csv/CSVParser.java
++++ b/src/main/java/org/apache/commons/csv/CSVParser.java
+@@ -286,7 +286,6 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+ 
+     private final Lexer lexer;
+ 
+-    private final CSVRecordIterator csvRecordIterator;
+     
+     /** A record buffer for getRecord(). Grows as necessary and is reused. */
+     private final List<String> recordList = new ArrayList<>();
+@@ -355,7 +354,6 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+ 
+         this.format = format;
+         this.lexer = new Lexer(format, new ExtendedBufferedReader(reader));
+-        this.csvRecordIterator = new CSVRecordIterator();
+         this.headerMap = this.initializeHeader();
+         this.characterOffset = characterOffset;
+         this.recordNumber = recordNumber - 1;
+@@ -522,10 +520,7 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+      */
+     @Override
+     public Iterator<CSVRecord> iterator() {
+-        return csvRecordIterator;
+-    }
+-    
+-    class CSVRecordIterator implements Iterator<CSVRecord> {
++        return new Iterator<CSVRecord>() {
+         private CSVRecord current;
+   
+         private CSVRecord getNextRecord() {
+@@ -573,6 +568,7 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+             throw new UnsupportedOperationException();
+         }
+     };
++    }
+ 
+     /**
+      * Parses the next record from the current point in the stream.

@@ -1,0 +1,185 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java b/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
+index fcf0c3b93..b7cec0b80 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
+@@ -669,7 +669,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         if (text == null) {
+             writeNull();
+         } else {
+-            _appendValue(JsonToken.VALUE_STRING, text);
++            _append(JsonToken.VALUE_STRING, text);
+         }
+     }
+ 
+@@ -683,7 +683,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         if (text == null) {
+             writeNull();
+         } else {
+-            _appendValue(JsonToken.VALUE_STRING, text);
++            _append(JsonToken.VALUE_STRING, text);
+         }
+     }
+     
+@@ -728,7 +728,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+ 
+     @Override
+     public void writeRawValue(String text) throws IOException {
+-        _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, new RawValue(text));
++        _append(JsonToken.VALUE_EMBEDDED_OBJECT, new RawValue(text));
+     }
+ 
+     @Override
+@@ -736,12 +736,12 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         if (offset > 0 || len != text.length()) {
+             text = text.substring(offset, offset+len);
+         }
+-        _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, new RawValue(text));
++        _append(JsonToken.VALUE_EMBEDDED_OBJECT, new RawValue(text));
+     }
+ 
+     @Override
+     public void writeRawValue(char[] text, int offset, int len) throws IOException {
+-        _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, new String(text, offset, len));
++        _append(JsonToken.VALUE_EMBEDDED_OBJECT, new String(text, offset, len));
+     }
+ 
+     /*
+@@ -752,27 +752,27 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+ 
+     @Override
+     public void writeNumber(short i) throws IOException {
+-        _appendValue(JsonToken.VALUE_NUMBER_INT, Short.valueOf(i));
++        _append(JsonToken.VALUE_NUMBER_INT, Short.valueOf(i));
+     }
+ 
+     @Override
+     public void writeNumber(int i) throws IOException {
+-        _appendValue(JsonToken.VALUE_NUMBER_INT, Integer.valueOf(i));
++        _append(JsonToken.VALUE_NUMBER_INT, Integer.valueOf(i));
+     }
+ 
+     @Override
+     public void writeNumber(long l) throws IOException {
+-        _appendValue(JsonToken.VALUE_NUMBER_INT, Long.valueOf(l));
++        _append(JsonToken.VALUE_NUMBER_INT, Long.valueOf(l));
+     }
+ 
+     @Override
+     public void writeNumber(double d) throws IOException {
+-        _appendValue(JsonToken.VALUE_NUMBER_FLOAT, Double.valueOf(d));
++        _append(JsonToken.VALUE_NUMBER_FLOAT, Double.valueOf(d));
+     }
+ 
+     @Override
+     public void writeNumber(float f) throws IOException {
+-        _appendValue(JsonToken.VALUE_NUMBER_FLOAT, Float.valueOf(f));
++        _append(JsonToken.VALUE_NUMBER_FLOAT, Float.valueOf(f));
+     }
+ 
+     @Override
+@@ -780,7 +780,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         if (dec == null) {
+             writeNull();
+         } else {
+-            _appendValue(JsonToken.VALUE_NUMBER_FLOAT, dec);
++            _append(JsonToken.VALUE_NUMBER_FLOAT, dec);
+         }
+     }
+ 
+@@ -789,7 +789,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         if (v == null) {
+             writeNull();
+         } else {
+-            _appendValue(JsonToken.VALUE_NUMBER_INT, v);
++            _append(JsonToken.VALUE_NUMBER_INT, v);
+         }
+     }
+ 
+@@ -798,17 +798,17 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         /* 03-Dec-2010, tatu: related to [JACKSON-423], should try to keep as numeric
+          *   identity as long as possible
+          */
+-        _appendValue(JsonToken.VALUE_NUMBER_FLOAT, encodedValue);
++        _append(JsonToken.VALUE_NUMBER_FLOAT, encodedValue);
+     }
+ 
+     @Override
+     public void writeBoolean(boolean state) throws IOException {
+-        _appendValue(state ? JsonToken.VALUE_TRUE : JsonToken.VALUE_FALSE);
++        _append(state ? JsonToken.VALUE_TRUE : JsonToken.VALUE_FALSE);
+     }
+ 
+     @Override
+     public void writeNull() throws IOException {
+-        _appendValue(JsonToken.VALUE_NULL);
++        _append(JsonToken.VALUE_NULL);
+     }
+ 
+     /*
+@@ -826,7 +826,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+         }
+         Class<?> raw = value.getClass();
+         if (raw == byte[].class || (value instanceof RawValue)) {
+-            _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, value);
++            _append(JsonToken.VALUE_EMBEDDED_OBJECT, value);
+             return;
+         }
+         if (_objectCodec == null) {
+@@ -834,7 +834,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+              *   err out, or just embed? For now, do latter.
+              */
+ //          throw new JsonMappingException("No ObjectCodec configured for TokenBuffer, writeObject() called");
+-            _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, value);
++            _append(JsonToken.VALUE_EMBEDDED_OBJECT, value);
+         } else {
+             _objectCodec.writeValue(this, value);
+         }
+@@ -850,7 +850,7 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+ 
+         if (_objectCodec == null) {
+             // as with 'writeObject()', is codec optional?
+-            _appendValue(JsonToken.VALUE_EMBEDDED_OBJECT, node);
++            _append(JsonToken.VALUE_EMBEDDED_OBJECT, node);
+         } else {
+             _objectCodec.writeTree(this, node);
+         }
+@@ -1088,19 +1088,6 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+      *
+      * @since 2.6.4
+      */
+-    protected final void _appendValue(JsonToken type)
+-    {
+-        _writeContext.writeValue();
+-        Segment next = _hasNativeId
+-                ? _last.append(_appendAt, type, _objectId, _typeId)
+-                : _last.append(_appendAt, type);
+-        if (next == null) {
+-            ++_appendAt;
+-        } else {
+-            _last = next;
+-            _appendAt = 1; // since we added first at 0
+-        }
+-    }
+ 
+     /**
+      * Similar to {@link #_append(JsonToken,Object)} but also updates context with
+@@ -1108,19 +1095,6 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+      *
+      * @since 2.6.4
+      */
+-    protected final void _appendValue(JsonToken type, Object value)
+-    {
+-        _writeContext.writeValue();
+-        Segment next = _hasNativeId
+-                ? _last.append(_appendAt, type, value, _objectId, _typeId)
+-                : _last.append(_appendAt, type, value);
+-        if (next == null) {
+-            ++_appendAt;
+-        } else {
+-            _last = next;
+-            _appendAt = 1;
+-        }
+-    }
+     
+     protected final void _appendRaw(int rawType, Object value)
+     {

@@ -1,0 +1,40 @@
+diff --git a/src/test/java/org/jsoup/parser/CharacterReaderTest.java b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+index 69fd7d4..8cee06e 100644
+--- a/src/test/java/org/jsoup/parser/CharacterReaderTest.java
++++ b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+@@ -60,21 +60,4 @@ public class CharacterReaderTest {
+         r.rewindToMark();
+         assertEquals('n', r.consume());
+     }
+-
+-    @Test public void handleCarriageReturnAsLineFeed() {
+-        String in = "one \r two \r\n three";
+-        CharacterReader r = new CharacterReader(in);
+-
+-        String first = r.consumeTo('\n');
+-        assertEquals("one ", first);
+-        assertEquals("\n two \n three", r.consumeToEnd());
+-    }
+-
+-    @Test public void consumeToEnd() {
+-        String in = "one two three";
+-        CharacterReader r = new CharacterReader(in);
+-        String toEnd = r.consumeToEnd();
+-        assertEquals(in, toEnd);
+-        assertTrue(r.isEmpty());
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/parser/ParserTest.java b/src/test/java/org/jsoup/parser/ParserTest.java
+index 786522a..0c12b5d 100644
+--- a/src/test/java/org/jsoup/parser/ParserTest.java
++++ b/src/test/java/org/jsoup/parser/ParserTest.java
+@@ -613,9 +613,4 @@ public class ParserTest {
+         Document doc = Jsoup.parse("<p id=\u0000>Blah \u0000</p>");
+         assertEquals("<p id=\"\uFFFD\">Blah \u0000</p>", doc.body().html()); // replaced in attr, NOT replaced in data
+     }
+-
+-    @Test public void handlesNewlinesAndWhitespaceInTag() {
+-        Document doc = Jsoup.parse("<a \n href=\"one\" \r\n id=\"two\" \f >");
+-        assertEquals("<a href=\"one\" id=\"two\"></a>", doc.body().html());
+-    }
+ }

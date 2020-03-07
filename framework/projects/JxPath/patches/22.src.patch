@@ -1,0 +1,23 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+index f1a1b2b..bbf57ff 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java
+@@ -686,14 +686,14 @@
+                 if (aNode.getNodeType() == Node.ELEMENT_NODE) {
+                     Attr attr = ((Element) aNode).getAttributeNode(qname);
+                     if (attr != null) {
+-                        uri = attr.getValue();
+-                        break;
++                        return attr.getValue();
+                     }
+                 }
+                 aNode = aNode.getParentNode();
+             }
++            return null;
+         }
+-        return "".equals(uri) ? null : uri;
++        return uri;
+     }
+ 
+     public Object getValue() {
+

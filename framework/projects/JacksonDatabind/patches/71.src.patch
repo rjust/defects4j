@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+index 8bddce4d7..d95749a21 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+@@ -72,7 +72,7 @@ public class StdKeyDeserializer extends KeyDeserializer
+         int kind;
+ 
+         // first common types:
+-        if (raw == String.class || raw == Object.class || raw == CharSequence.class) {
++        if (raw == String.class || raw == Object.class) {
+             return StringKD.forType(raw);
+         } else if (raw == UUID.class) {
+             kind = TYPE_UUID;

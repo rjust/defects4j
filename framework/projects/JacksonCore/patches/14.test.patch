@@ -1,0 +1,49 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/io/TestIOContext.java b/src/test/java/com/fasterxml/jackson/core/io/TestIOContext.java
+index 475abb5e..3bad5910 100644
+--- a/src/test/java/com/fasterxml/jackson/core/io/TestIOContext.java
++++ b/src/test/java/com/fasterxml/jackson/core/io/TestIOContext.java
+@@ -24,7 +24,7 @@ public class TestIOContext
+         try {
+             ctxt.releaseReadIOBuffer(new byte[1]);
+         } catch (IllegalArgumentException e) {
+-            verifyException(e, "smaller than original");
++            verifyException(e, "not owned");
+         }
+         // but call with null is a NOP for convenience
+         ctxt.releaseReadIOBuffer(null);
+@@ -40,7 +40,7 @@ public class TestIOContext
+         try {
+             ctxt.releaseWriteEncodingBuffer(new byte[1]);
+         } catch (IllegalArgumentException e) {
+-            verifyException(e, "smaller than original");
++            verifyException(e, "not owned");
+         }
+         ctxt.releaseWriteEncodingBuffer(null);
+ 
+@@ -55,7 +55,7 @@ public class TestIOContext
+         try {
+             ctxt.releaseTokenBuffer(new char[1]);
+         } catch (IllegalArgumentException e) {
+-            verifyException(e, "smaller than original");
++            verifyException(e, "not owned");
+         }
+         ctxt.releaseTokenBuffer(null);
+ 
+@@ -70,7 +70,7 @@ public class TestIOContext
+         try {
+             ctxt.releaseConcatBuffer(new char[1]);
+         } catch (IllegalArgumentException e) {
+-            verifyException(e, "smaller than original");
++            verifyException(e, "not owned");
+         }
+         ctxt.releaseConcatBuffer(null);
+ 
+@@ -85,7 +85,7 @@ public class TestIOContext
+         try {
+             ctxt.releaseNameCopyBuffer(new char[1]);
+         } catch (IllegalArgumentException e) {
+-            verifyException(e, "smaller than original");
++            verifyException(e, "not owned");
+         }
+         ctxt.releaseNameCopyBuffer(null);
+     }

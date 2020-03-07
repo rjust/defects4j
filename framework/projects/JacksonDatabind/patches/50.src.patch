@@ -1,0 +1,93 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+index 8360b5118..21bd1288d 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java
+@@ -6,7 +6,6 @@ import java.util.*;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.deser.impl.*;
+-import com.fasterxml.jackson.databind.deser.impl.ReadableObjectId.Referring;
+ import com.fasterxml.jackson.databind.util.NameTransformer;
+ import com.fasterxml.jackson.databind.util.TokenBuffer;
+ 
+@@ -385,7 +384,6 @@ public class BeanDeserializer
+         TokenBuffer unknown = null;
+ 
+         JsonToken t = p.getCurrentToken();
+-        List<BeanReferring> referrings = null;
+         for (; t == JsonToken.FIELD_NAME; t = p.nextToken()) {
+             String propName = p.getCurrentName();
+             p.nextToken(); // to point to value
+@@ -428,18 +426,10 @@ public class BeanDeserializer
+             // regular property? needs buffering
+             SettableBeanProperty prop = _beanProperties.find(propName);
+             if (prop != null) {
+-                try {
+                     buffer.bufferProperty(prop, _deserializeWithErrorWrapping(p, ctxt, prop));
+-                } catch (UnresolvedForwardReference reference) {
+                     // 14-Jun-2016, tatu: As per [databind#1261], looks like we need additional
+                     //    handling of forward references here. Not exactly sure why existing
+                     //    facilities did not cover, but this does appear to solve the problem
+-                    BeanReferring referring = handleUnresolvedReference(p, prop, buffer, reference);
+-                    if (referrings == null) {
+-                        referrings = new ArrayList<BeanReferring>();
+-                    }
+-                    referrings.add(referring);
+-                }
+                 continue;
+             }
+             // Things marked as ignorable should not be passed to any setter
+@@ -472,11 +462,6 @@ public class BeanDeserializer
+             wrapInstantiationProblem(e, ctxt);
+             bean = null; // never gets here
+         }
+-        if (referrings != null) {
+-            for (BeanReferring referring : referrings) {
+-               referring.setBean(bean);
+-            }
+-        }
+         if (unknown != null) {
+             // polymorphic?
+             if (bean.getClass() != _beanType.getRawClass()) {
+@@ -491,16 +476,6 @@ public class BeanDeserializer
+     /**
+      * @since 2.8
+      */
+-    private BeanReferring handleUnresolvedReference(JsonParser p,
+-            SettableBeanProperty prop, PropertyValueBuffer buffer,
+-            UnresolvedForwardReference reference)
+-        throws JsonMappingException
+-    {
+-        BeanReferring referring = new BeanReferring(reference, prop.getType().getRawClass(),
+-                buffer, prop);
+-        reference.getRoid().appendReferring(referring);
+-        return referring;
+-    }
+ 
+     protected final Object _deserializeWithErrorWrapping(JsonParser p,
+             DeserializationContext ctxt, SettableBeanProperty prop)
+@@ -955,24 +930,7 @@ public class BeanDeserializer
+     /**
+      * @since 2.8
+      */
+-    static class BeanReferring extends Referring {
+-        private final SettableBeanProperty _prop;
+-        private Object _bean;
+ 
+-        public void setBean(Object bean) {
+-            _bean = bean;
+-        }
+ 
+-        BeanReferring(UnresolvedForwardReference ref,
+-                Class<?> valueType, PropertyValueBuffer buffer, SettableBeanProperty prop)
+-        {
+-            super(ref, valueType);
+-            _prop = prop;
+-        }
+ 
+-        @Override
+-        public void handleResolvedForwardReference(Object id, Object value) throws IOException {
+-            _prop.set(_bean, value);
+-        }
+-    }
+ }

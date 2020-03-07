@@ -1,0 +1,39 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestArrayDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestArrayDeserialization.java
+index e7b5a8c40..ea3fb7011 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestArrayDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestArrayDeserialization.java
+@@ -20,6 +20,12 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
+ public class TestArrayDeserialization
+     extends BaseMapTest
+ {
++    /*
++    /**********************************************************
++    /* Helper classes
++    /**********************************************************
++     */
++
+     public final static class Bean1
+     {
+         int _x, _y;
+@@ -246,7 +252,7 @@ public class TestArrayDeserialization
+             "a", "b", "abcd", "", "???", "\"quoted\"", "lf: \n",
+         };
+         StringWriter sw = new StringWriter();
+-        JsonGenerator jg = MAPPER.getFactory().createGenerator(sw);
++        JsonGenerator jg = new JsonFactory().createGenerator(sw);
+         jg.writeStartArray();
+         for (String str : STRS) {
+             jg.writeString(str);
+@@ -261,12 +267,6 @@ public class TestArrayDeserialization
+         for (int i = 0; i < STRS.length; ++i) {
+             assertEquals(STRS[i], result[i]);
+         }
+-
+-        // [#479]: null handling was busted in 2.4.0
+-        result = MAPPER.readValue(" [ null ]", String[].class);
+-        assertNotNull(result);
+-        assertEquals(1, result.length);
+-        assertNull(result[0]);
+     }
+ 
+     public void testCharArray() throws Exception

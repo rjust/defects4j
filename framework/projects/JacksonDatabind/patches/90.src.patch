@@ -1,0 +1,32 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java b/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java
+index fceac96e9..b721f6909 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java
+@@ -69,7 +69,7 @@ public abstract class ValueInstantiator
+      */
+     public boolean canInstantiate() {
+         return canCreateUsingDefault()
+-                || canCreateUsingDelegate() || canCreateUsingArrayDelegate()
++                || canCreateUsingDelegate() 
+                 || canCreateFromObjectWith() || canCreateFromString()
+                 || canCreateFromInt() || canCreateFromLong()
+                 || canCreateFromDouble() || canCreateFromBoolean();
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
+index 97057703a..917bdfe82 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java
+@@ -229,14 +229,6 @@ public class StdValueInstantiator
+         return (_withArgsCreator != null);
+     }
+ 
+-    @Override
+-    public boolean canInstantiate() {
+-        return canCreateUsingDefault()
+-                || canCreateUsingDelegate() || canCreateUsingArrayDelegate()
+-                || canCreateFromObjectWith() || canCreateFromString()
+-                || canCreateFromInt() || canCreateFromLong()
+-                || canCreateFromDouble() || canCreateFromBoolean();
+-    }
+ 
+     @Override
+     public JavaType getDelegateType(DeserializationConfig config) {

@@ -1,0 +1,11 @@
+org.apache.commons.codec.binary.StringUtils
+org.apache.commons.codec.BinaryDecoder
+org.apache.commons.codec.BinaryEncoder
+org.apache.commons.codec.Decoder
+org.apache.commons.codec.DecoderException
+org.apache.commons.codec.Encoder
+org.apache.commons.codec.EncoderException
+org.apache.commons.codec.net.QuotedPrintableCodec
+org.apache.commons.codec.net.Utils
+org.apache.commons.codec.StringDecoder
+org.apache.commons.codec.StringEncoder

@@ -1,0 +1,28 @@
+diff --git a/src/main/java/org/jsoup/nodes/Entities.java b/src/main/java/org/jsoup/nodes/Entities.java
+index ad825d3..4d016ff 100644
+--- a/src/main/java/org/jsoup/nodes/Entities.java
++++ b/src/main/java/org/jsoup/nodes/Entities.java
+@@ -61,7 +61,7 @@ public class Entities {
+                 } catch (NumberFormatException e) {
+                 } // skip
+             } else {
+-                String name = m.group(1);
++                String name = m.group(1).toLowerCase();
+                 if (full.containsKey(name))
+                     charval = full.get(name);
+             }
+@@ -2232,12 +2232,12 @@ public class Entities {
+ 
+         for (Object[] entity : baseArray) {
+             Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+-            baseByVal.put(c, ((String) entity[0]));
++            baseByVal.put(c, ((String) entity[0]).toLowerCase());
+         }
+         for (Object[] entity : fullArray) {
+             Character c = Character.valueOf((char) ((Integer) entity[1]).intValue());
+             full.put((String) entity[0], c);
+-            fullByVal.put(c, ((String) entity[0]));
++            fullByVal.put(c, ((String) entity[0]).toLowerCase());
+         }
+     }
+ 

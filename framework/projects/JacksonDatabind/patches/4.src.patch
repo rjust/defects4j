@@ -1,0 +1,42 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
+index be9bf4491..d4a0b0562 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
+@@ -56,7 +56,6 @@ public final class StringArrayDeserializer
+         int ix = 0;
+         JsonToken t;
+ 
+-        try {
+             while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {
+                 // Ok: no need to convert Strings, but must recognize nulls
+                 String value;
+@@ -73,10 +72,7 @@ public final class StringArrayDeserializer
+                 }
+                 chunk[ix++] = value;
+             }
+-        } catch (Exception e) {
+             // note: pass String.class, not String[].class, as we need element type for error info
+-            throw JsonMappingException.wrapWithPath(e, String.class, ix);
+-        }
+         String[] result = buffer.completeAndClearBuffer(chunk, ix, String.class);
+         ctxt.returnObjectBuffer(buffer);
+         return result;
+@@ -94,7 +90,6 @@ public final class StringArrayDeserializer
+         int ix = 0;
+         JsonToken t;
+ 
+-        try {
+             while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {
+                 // Ok: no need to convert Strings, but must recognize nulls
+                 String value = (t == JsonToken.VALUE_NULL) ? deser.getNullValue() : deser.deserialize(jp, ctxt);
+@@ -104,10 +99,7 @@ public final class StringArrayDeserializer
+                 }
+                 chunk[ix++] = value;
+             }
+-        } catch (Exception e) {
+             // note: pass String.class, not String[].class, as we need element type for error info
+-            throw JsonMappingException.wrapWithPath(e, String.class, ix);
+-        }
+         String[] result = buffer.completeAndClearBuffer(chunk, ix, String.class);
+         ctxt.returnObjectBuffer(buffer);
+         return result;

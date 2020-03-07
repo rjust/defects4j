@@ -1,0 +1,49 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/TestNumericValues.java b/src/test/java/com/fasterxml/jackson/core/json/TestNumericValues.java
+index af61f1e2..fb99205b 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/TestNumericValues.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/TestNumericValues.java
+@@ -1,8 +1,5 @@
+ package com.fasterxml.jackson.core.json;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.IOException;
+-import java.io.StringReader;
+ import java.math.BigDecimal;
+ import java.math.BigInteger;
+ 
+@@ -553,35 +550,6 @@ public class TestNumericValues
+         jp.close();
+     }
+ 
+-    // [core#317]
+-    public void testLongerFloatingPoint() throws Exception
+-    {
+-        StringBuilder input = new StringBuilder();
+-        for (int i = 1; i < 201; i++) {
+-            input.append(1);
+-        }
+-        input.append(".0");
+-        final String DOC = input.toString();
+-
+-        // test out with both Reader and ByteArrayInputStream
+-        JsonParser p;
+-
+-        p = FACTORY.createParser(new StringReader(DOC));
+-        _testLongerFloat(p, DOC);
+-        p.close();
+-        
+-        p = FACTORY.createParser(new ByteArrayInputStream(DOC.getBytes("UTF-8")));
+-        _testLongerFloat(p, DOC);
+-        p.close();
+-    }
+-
+-    private void _testLongerFloat(JsonParser p, String text) throws IOException
+-    {
+-        assertToken(JsonToken.VALUE_NUMBER_FLOAT, p.nextToken());
+-        assertEquals(text, p.getText());
+-        assertNull(p.nextToken());
+-    }
+-
+     /*
+     /**********************************************************
+     /* Helper methods

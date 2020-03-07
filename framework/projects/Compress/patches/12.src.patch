@@ -1,0 +1,19 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index 34e73554..bb670f30 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -195,13 +195,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             return null;
+         }
+ 
+-        try {
+-            currEntry = new TarArchiveEntry(headerBuf);
+-        } catch (IllegalArgumentException e) {
+-            IOException ioe = new IOException("Error detected parsing the header");
+-            ioe.initCause(e);
+-            throw ioe;
+-        }
++        currEntry = new TarArchiveEntry(headerBuf);
+         entryOffset = 0;
+         entrySize = currEntry.getSize();
+ 

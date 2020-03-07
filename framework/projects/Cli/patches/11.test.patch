@@ -1,0 +1,25 @@
+diff --git a/src/test/org/apache/commons/cli/HelpFormatterTest.java b/src/test/org/apache/commons/cli/HelpFormatterTest.java
+index 77048e0..0697dc2 100644
+--- a/src/test/org/apache/commons/cli/HelpFormatterTest.java
++++ b/src/test/org/apache/commons/cli/HelpFormatterTest.java
+@@ -257,20 +257,4 @@ public class HelpFormatterTest extends TestCase
+         assertEquals("usage: app -a | -b | -c" + EOL, out.toString());
+     }
+ 
+-    public void testPrintOptionWithEmptyArgNameUsage() {
+-        Option option = new Option("f", true, null);
+-        option.setArgName("");
+-        option.setRequired(true);
+-
+-        Options options = new Options();
+-        options.addOption(option);
+-
+-        StringWriter out = new StringWriter();
+-
+-        HelpFormatter formatter = new HelpFormatter();
+-        formatter.printUsage(new PrintWriter(out), 80, "app", options);
+-
+-        assertEquals("usage: app -f" + EOL, out.toString());
+-    }
+-
+ }

@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/jsoup/parser/Parser.java b/src/main/java/org/jsoup/parser/Parser.java
+index 38eb6f0..4af0a68 100644
+--- a/src/main/java/org/jsoup/parser/Parser.java
++++ b/src/main/java/org/jsoup/parser/Parser.java
+@@ -203,8 +203,7 @@ public class Parser {
+         if (key.length() != 0)
+             return Attribute.createFromEncoded(key, value);
+         else {
+-            if (value.length() == 0) // no key, no val; unknown char, keep popping so not get stuck
+-                tq.advance();
++            tq.consume();
+                 
+             return null;
+         }

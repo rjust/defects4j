@@ -1,0 +1,120 @@
+diff --git a/gson/src/main/java/com/google/gson/stream/JsonReader.java b/gson/src/main/java/com/google/gson/stream/JsonReader.java
+index 838355cb..214df65e 100644
+--- a/gson/src/main/java/com/google/gson/stream/JsonReader.java
++++ b/gson/src/main/java/com/google/gson/stream/JsonReader.java
+@@ -571,6 +571,9 @@ public class JsonReader implements Closeable {
+       checkLenient();
+       return peeked = PEEKED_SINGLE_QUOTED;
+     case '"':
++      if (stackSize == 1) {
++        checkLenient();
++      }
+       return peeked = PEEKED_DOUBLE_QUOTED;
+     case '[':
+       return peeked = PEEKED_BEGIN_ARRAY;
+@@ -579,6 +582,9 @@ public class JsonReader implements Closeable {
+     default:
+       pos--; // Don't consume the first character in a literal value.
+     }
++    if (stackSize == 1) {
++      checkLenient();
++    }
+ 
+     int result = peekKeyword();
+     if (result != PEEKED_NONE) {
+diff --git a/gson/src/main/java/com/google/gson/stream/JsonWriter.java b/gson/src/main/java/com/google/gson/stream/JsonWriter.java
+index 9bf2d22a..d76f7c10 100644
+--- a/gson/src/main/java/com/google/gson/stream/JsonWriter.java
++++ b/gson/src/main/java/com/google/gson/stream/JsonWriter.java
+@@ -322,7 +322,7 @@ public class JsonWriter implements Closeable, Flushable {
+    * bracket.
+    */
+   private JsonWriter open(int empty, String openBracket) throws IOException {
+-    beforeValue();
++    beforeValue(true);
+     push(empty);
+     out.write(openBracket);
+     return this;
+@@ -415,7 +415,7 @@ public class JsonWriter implements Closeable, Flushable {
+       return nullValue();
+     }
+     writeDeferredName();
+-    beforeValue();
++    beforeValue(false);
+     string(value);
+     return this;
+   }
+@@ -432,7 +432,7 @@ public class JsonWriter implements Closeable, Flushable {
+       return nullValue();
+     }
+     writeDeferredName();
+-    beforeValue();
++    beforeValue(false);
+     out.append(value);
+     return this;
+   }
+@@ -451,7 +451,7 @@ public class JsonWriter implements Closeable, Flushable {
+         return this; // skip the name and the value
+       }
+     }
+-    beforeValue();
++    beforeValue(false);
+     out.write("null");
+     return this;
+   }
+@@ -463,7 +463,7 @@ public class JsonWriter implements Closeable, Flushable {
+    */
+   public JsonWriter value(boolean value) throws IOException {
+     writeDeferredName();
+-    beforeValue();
++    beforeValue(false);
+     out.write(value ? "true" : "false");
+     return this;
+   }
+@@ -480,7 +480,7 @@ public class JsonWriter implements Closeable, Flushable {
+       throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
+     }
+     writeDeferredName();
+-    beforeValue();
++    beforeValue(false);
+     out.append(Double.toString(value));
+     return this;
+   }
+@@ -492,7 +492,7 @@ public class JsonWriter implements Closeable, Flushable {
+    */
+   public JsonWriter value(long value) throws IOException {
+     writeDeferredName();
+-    beforeValue();
++    beforeValue(false);
+     out.write(Long.toString(value));
+     return this;
+   }
+@@ -515,7 +515,7 @@ public class JsonWriter implements Closeable, Flushable {
+         && (string.equals("-Infinity") || string.equals("Infinity") || string.equals("NaN"))) {
+       throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
+     }
+-    beforeValue();
++    beforeValue(false);
+     out.append(string);
+     return this;
+   }
+@@ -610,7 +610,7 @@ public class JsonWriter implements Closeable, Flushable {
+    * closing bracket or another element.
+    */
+   @SuppressWarnings("fallthrough")
+-  private void beforeValue() throws IOException {
++  private void beforeValue(boolean root) throws IOException {
+     switch (peek()) {
+     case NONEMPTY_DOCUMENT:
+       if (!lenient) {
+@@ -619,6 +619,10 @@ public class JsonWriter implements Closeable, Flushable {
+       }
+       // fall-through
+     case EMPTY_DOCUMENT: // first in document
++      if (!lenient && !root) {
++        throw new IllegalStateException(
++            "JSON must start with an array or an object.");
++      }
+       replaceTop(NONEMPTY_DOCUMENT);
+       break;
+ 
