@@ -34,7 +34,7 @@ create_bugs_table.pl -- populate bugs table with id, name, and number of bugs pe
 
 =head1 DESCRIPTION
 
-Finds all commit-db files and outputs a table for all bugs.
+Determines all active and deprecated bugs ids and outputs a table in Markdown format.
 
 =cut
 use warnings;
@@ -50,10 +50,6 @@ use lib abs_path("$FindBin::Bin/../core");
 use Constants;
 use Project;
 
-#
-# Process arguments and issue usage message if necessary.
-#
-
 # Read all project modules
 opendir(my $dir, "$CORE_DIR/Project") or die "Cannot open directory: $!";
 my @files = readdir($dir);
@@ -63,22 +59,68 @@ closedir($dir);
 # of bugs.
 my $total = 0;
 my @projects = ();
-for my $file (@files) {
+for my $file (sort @files) {
     $file =~ "^([^.]+)\.pm\$" or next;
     my $pid=$1;
     my $project = Project::create_project($pid);
     my $name = $project->{prog_name};
-    my @bug_ids = $project->get_bug_ids();
-    my $num_bugs = scalar(@bug_ids);
+    my @active_bug_ids = $project->get_bug_ids();
+    my $num_bugs = scalar(@active_bug_ids);
+
+    # Read all bug ids from meta data (trigger tests)
+    opendir(my $dir, "$PROJECTS_DIR/$pid/trigger_tests") or die "Cannot open directory: $!";
+    my @all_bug_ids = grep(/\d+/, readdir($dir));
+    closedir($dir);
+
+    my @deprecated = (scalar(@all_bug_ids)==scalar(@active_bug_ids) ? () : _diff(@all_bug_ids, @active_bug_ids));
+
     # Cache id, name, and number of bugs; update total number of bugs
-    push(@projects, [$pid, $name, $num_bugs]);
+    push(@projects, [$pid, $name, $num_bugs, _range(@active_bug_ids), _range(@deprecated)]);
     $total += $num_bugs;
 }
 
 # Print the summary as a markdown table
 print("Defects4J contains $total bugs from the following open-source projects:\n\n");
-print("| Identifier      | Project name               | Number of bugs |\n");
-print("|-----------------|----------------------------|---------------:|\n");
+print("| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\\*) |\n");
+print("|-----------------|----------------------------|---------------:|---------------------|-------------------------| \n");
 for (@projects) {
-    printf("| %-15s | %-26s |      %3d       |\n", $_->[0], $_->[1], $_->[2]);
+    printf("| %-15s | %-26s |      %3d       | %-19s | %-23s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
+}
+
+#
+# Compute and format bug id ranges
+#
+sub _range {
+  my @ids = @_;
+  if(scalar(@ids)==0) {
+    return("None");
+  }
+  my @ranges;
+  for (@ids) {
+     if (@ranges && $_ == $ranges[-1][1]+1) {
+        ++$ranges[-1][1];
+     } else {
+        push(@ranges, [$_, $_ ]);
+     }
+  }
+
+  return(join(',', map { $_->[0] == $_->[1] ? $_->[0] : "$_->[0]-$_->[1]" } @ranges));
+}
+
+#
+# Compute the difference between two arrays
+#
+sub _diff {
+  my (@all, @active) = @_;
+
+  my @diff;
+  my @count = ();
+  foreach (@all, @active) {
+    $count[$_]++;
+  }
+  for my $i (1..$#count) {
+    push(@diff, $i) unless($count[$i] == 2);
+  }
+
+  return(@diff);
 }

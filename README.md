@@ -10,25 +10,31 @@ The projects
 ---------------
 Defects4J contains 835 bugs from the following open-source projects:
 
-| Identifier      | Project name               | Number of bugs |
-|-----------------|----------------------------|---------------:|
-| Chart           | jfreechart                 |       26       |
-| Cli             | commons-cli                |       39       |
-| Closure         | closure-compiler           |      174       |
-| Codec           | commons-codec              |       18       |
-| Collections     | commons-collections        |        4       |
-| Compress        | commons-compress           |       47       |
-| Csv             | commons-csv                |       16       |
-| Gson            | gson                       |       18       |
-| JacksonCore     | jackson-core               |       26       |
-| JacksonDatabind | jackson-databind           |      112       |
-| JacksonXml      | jackson-dataformat-xml     |        6       |
-| Jsoup           | jsoup                      |       93       |
-| JxPath          | commons-jxpath             |       22       |
-| Lang            | commons-lang               |       64       |
-| Math            | commons-math               |      106       |
-| Mockito         | mockito                    |       38       |
-| Time            | joda-time                  |       26       |
+| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\*) |
+|-----------------|----------------------------|---------------:|---------------------|-------------------------| 
+| Chart           | jfreechart                 |       26       | 1-26                | None                    |
+| Cli             | commons-cli                |       39       | 1-5,7-40            | 6                       |
+| Closure         | closure-compiler           |      174       | 1-62,64-92,94-176   | 63,93                   |
+| Codec           | commons-codec              |       18       | 1-18                | None                    |
+| Collections     | commons-collections        |        4       | 25-28               | 1-24                    |
+| Compress        | commons-compress           |       47       | 1-47                | None                    |
+| Csv             | commons-csv                |       16       | 1-16                | None                    |
+| Gson            | gson                       |       18       | 1-18                | None                    |
+| JacksonCore     | jackson-core               |       26       | 1-26                | None                    |
+| JacksonDatabind | jackson-databind           |      112       | 1-112               | None                    |
+| JacksonXml      | jackson-dataformat-xml     |        6       | 1-6                 | None                    |
+| Jsoup           | jsoup                      |       93       | 1-93                | None                    |
+| JxPath          | commons-jxpath             |       22       | 1-22                | None                    |
+| Lang            | commons-lang               |       64       | 1,3-65              | 2                       |
+| Math            | commons-math               |      106       | 1-106               | None                    |
+| Mockito         | mockito                    |       38       | 1-38                | None                    |
+| Time            | joda-time                  |       26       | 1-20,22-27          | 21                      |
+
+\* Due to behavioral changes introduced under Java 8, some bugs are no longer
+reproducible. These bugs have been removed from the commit-db, but their
+metadata is still available in the project directory. As publications using
+Defects4J artifacts refer to bugs by their specific bug id, we do not re-number
+active bug ids of existing bugs.
 
 The bugs
 ---------------
