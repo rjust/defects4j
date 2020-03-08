@@ -10,7 +10,7 @@ The projects
 ---------------
 Defects4J contains 835 bugs from the following open-source projects:
 
-| Identifier      | Project name               | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\*) | 
+| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\*) |
 |-----------------|----------------------------|---------------:|---------------------|-------------------------| 
 | Chart           | jfreechart                 |       26       | 1-26                | None                    |
 | Cli             | commons-cli                |       39       | 1-5,7-40            | 6                       |
@@ -30,11 +30,11 @@ Defects4J contains 835 bugs from the following open-source projects:
 | Mockito         | mockito                    |       38       | 1-38                | None                    |
 | Time            | joda-time                  |       26       | 1-20,22-27          | 21                      |
 
-\* Due to behavioral changes introduced under Java 8, some bugs no longer fail.
-These bugs have been removed from the commit-db, but their metadata is still 
-available in the project directory. As publications on Defects4J refer to bugs 
-by their specific bug ID, we do not re-number existing bugs when one is
-deprecated. 
+\* Due to behavioral changes introduced under Java 8, some bugs are no longer
+reproducible. These bugs have been removed from the commit-db, but their
+metadata is still available in the project directory. As publications using
+Defects4J artifacts refer to bugs by their specific bug id, we do not re-number
+active bug ids of existing bugs.
 
 The bugs
 ---------------
