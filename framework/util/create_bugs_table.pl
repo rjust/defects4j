@@ -81,7 +81,7 @@ for my $file (sort @files) {
 
 # Print the summary as a markdown table
 print("Defects4J contains $total bugs from the following open-source projects:\n\n");
-print("| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\\*) | \n");
+print("| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\\*) |\n");
 print("|-----------------|----------------------------|---------------:|---------------------|-------------------------| \n");
 for (@projects) {
     printf("| %-15s | %-26s |      %3d       | %-19s | %-23s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
