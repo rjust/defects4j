@@ -34,7 +34,7 @@ create_bugs_table.pl -- populate bugs table with id, name, and number of bugs pe
 
 =head1 DESCRIPTION
 
-Finds all commit-db files and outputs a table for all bugs.
+Determines all active and deprecated bugs ids and outputs a table in Markdown format.
 
 =cut
 use warnings;
@@ -50,10 +50,6 @@ use lib abs_path("$FindBin::Bin/../core");
 use Constants;
 use Project;
 
-#
-# Process arguments and issue usage message if necessary.
-#
-
 # Read all project modules
 opendir(my $dir, "$CORE_DIR/Project") or die "Cannot open directory: $!";
 my @files = readdir($dir);
@@ -68,60 +64,63 @@ for my $file (sort @files) {
     my $pid=$1;
     my $project = Project::create_project($pid);
     my $name = $project->{prog_name};
-    my @bug_ids = $project->get_bug_ids();
-    my $num_bugs = scalar(@bug_ids);
-    my $in_use = "";
-    my $deprecated = "";
+    my @active_bug_ids = $project->get_bug_ids();
+    my $num_bugs = scalar(@active_bug_ids);
 
-    my $prev_bug = 0;
-    my $in_use_low = 1;
-    my $in_use_high = 1;
-    my $deprecated_low = 1;
-    my $deprecated_high = 1;
+    # Read all bug ids from meta data (trigger tests)
+    opendir(my $dir, "$PROJECTS_DIR/$pid/trigger_tests") or die "Cannot open directory: $!";
+    my @all_bug_ids = grep(/\d+/, readdir($dir));
+    closedir($dir);
 
-    for my $bug (@bug_ids) {
-        if ($bug != $prev_bug + 1) {
-            if ($in_use_low eq $in_use_high) {
-                $in_use .= $in_use_low.",";
-            } else {
-                $in_use .= $in_use_low."-".$in_use_high.",";
-            }
-            $in_use_low = $bug;
-
-            $deprecated_low = $prev_bug + 1;
-            $deprecated_high = $bug - 1;
-
-            if ($deprecated_low eq $deprecated_high) {
-                $deprecated .= $deprecated_low.","; 
-            } else{ 
-                $deprecated .= $deprecated_low."-".$deprecated_high.",";
-            }
-            $prev_bug = $bug - 1;
-        }
-        $prev_bug +=1;
-        $in_use_high = $bug;
-    }
-
-    if ($deprecated eq "") {
-        $deprecated = "None,";
-    }
-    $deprecated = substr($deprecated, 0, -1);
-
-    if ($in_use_low eq $in_use_high) {
-        $in_use .= $in_use_low;
-    } else {
-        $in_use .= $in_use_low."-".$in_use_high;
-    }
+    my @deprecated = (scalar(@all_bug_ids)==scalar(@active_bug_ids) ? () : _diff(@all_bug_ids, @active_bug_ids));
 
     # Cache id, name, and number of bugs; update total number of bugs
-    push(@projects, [$pid, $name, $num_bugs, $in_use, $deprecated]);
+    push(@projects, [$pid, $name, $num_bugs, _range(@active_bug_ids), _range(@deprecated)]);
     $total += $num_bugs;
 }
 
 # Print the summary as a markdown table
 print("Defects4J contains $total bugs from the following open-source projects:\n\n");
-print("| Identifier      | Project name               | Number of Bugs | Bug IDs in Use      | Deprecated Bug IDs (\\*) | \n");
+print("| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\\*) | \n");
 print("|-----------------|----------------------------|---------------:|---------------------|-------------------------| \n");
 for (@projects) {
     printf("| %-15s | %-26s |      %3d       | %-19s | %-23s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
+}
+
+#
+# Compute and format bug id ranges
+#
+sub _range {
+  my @ids = @_;
+  if(scalar(@ids)==0) {
+    return("None");
+  }
+  my @ranges;
+  for (@ids) {
+     if (@ranges && $_ == $ranges[-1][1]+1) {
+        ++$ranges[-1][1];
+     } else {
+        push(@ranges, [$_, $_ ]);
+     }
+  }
+
+  return(join(',', map { $_->[0] == $_->[1] ? $_->[0] : "$_->[0]-$_->[1]" } @ranges));
+}
+
+#
+# Compute the difference between two arrays
+#
+sub _diff {
+  my (@all, @active) = @_;
+
+  my @diff;
+  my @count = ();
+  foreach (@all, @active) {
+    $count[$_]++;
+  }
+  for my $i (1..$#count) {
+    push(@diff, $i) unless($count[$i] == 2);
+  }
+
+  return(@diff);
 }
