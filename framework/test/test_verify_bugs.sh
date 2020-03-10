@@ -5,6 +5,9 @@
 # that the provided information about triggering tests is correct.
 # This script must be run from its own directory (`framework/tests/`).
 #
+# By default, this script runs only relevant tests. Set the -A flag to run all
+# tests.
+#
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
 #   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
@@ -26,9 +29,14 @@ usage() {
     exit 1
 }
 
+# Run only relevant tests by default
+TEST_FLAG="-r"
+
 # Check arguments
-while getopts ":p:b:" opt; do
+while getopts ":p:b:A" opt; do
     case $opt in
+        A) TEST_FLAG=""
+            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -60,8 +68,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/commit-db)
-    BUGS="$(seq 1 1 $num_bugs)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/commit-db)"
 fi
 
 # Create log file
@@ -96,7 +103,7 @@ for bid in $(echo $BUGS); do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test -r -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 

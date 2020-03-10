@@ -67,7 +67,7 @@ for pid in "${projects[@]}"; do
         vid=${bid}$type
 
         # Run Randoop
-        run_randoop.pl -p $pid -v $vid -n 1 -o $randoop_dir -b 100 || die "run Randoop on $pid-$vid"
+        gen_tests.pl -g randoop -p $pid -v $vid -n 1 -o $randoop_dir -b 100 || die "run Randoop on $pid-$vid"
     done
 
     suite_dir=$randoop_dir/$pid/$suite_src/$suite_num

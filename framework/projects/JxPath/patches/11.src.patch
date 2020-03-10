@@ -1,0 +1,64 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
+index f9785f6..f4c2ac6 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
+@@ -19,7 +19,6 @@ package org.apache.commons.jxpath.ri.model.dom;
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+-import org.apache.commons.jxpath.ri.NamespaceResolver;
+ import org.apache.commons.jxpath.ri.QName;
+ import org.apache.commons.jxpath.ri.model.NodeIterator;
+ import org.apache.commons.jxpath.ri.model.NodePointer;
+@@ -109,9 +108,7 @@ public class DOMAttributeIterator implements NodeIterator {
+         String testNS = null;
+ 
+         if (testPrefix != null) {
+-            NamespaceResolver nsr = parent.getNamespaceResolver();
+-            testNS = nsr == null ? null : nsr.getNamespaceURI(testPrefix);
+-            testNS = testNS == null ? parent.getNamespaceURI(testPrefix) : testNS;
++            testNS = parent.getNamespaceURI(testPrefix);
+         }
+ 
+         if (testNS != null) {
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
+index 84c0afd..cfa6da3 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
+@@ -20,7 +20,6 @@ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+ 
+-import org.apache.commons.jxpath.ri.NamespaceResolver;
+ import org.apache.commons.jxpath.ri.QName;
+ import org.apache.commons.jxpath.ri.model.NodeIterator;
+ import org.apache.commons.jxpath.ri.model.NodePointer;
+@@ -50,21 +49,12 @@ public class JDOMAttributeIterator implements NodeIterator {
+                     ns = Namespace.XML_NAMESPACE;
+                 }
+                 else {
+-                    NamespaceResolver nsr = parent.getNamespaceResolver();
+-                    if (nsr != null) {
+-                        String uri = nsr.getNamespaceURI(prefix);
+-                        if (uri != null) {
+-                            ns = Namespace.getNamespace(prefix, uri);
+-                        }
+-                    }
+-                    if (ns == null) {
+                         ns = element.getNamespace(prefix);
+                         if (ns == null) {
+                             // TBD: no attributes
+                             attributes = Collections.EMPTY_LIST;
+                             return;
+                         }
+-                    }
+                 }
+             }
+             else {
+@@ -121,4 +111,4 @@ public class JDOMAttributeIterator implements NodeIterator {
+         this.position = position;
+         return position >= 1 && position <= attributes.size();
+     }
+-}
+\ No newline at end of file
++}

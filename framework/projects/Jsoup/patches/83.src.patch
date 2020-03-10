@@ -1,0 +1,45 @@
+diff --git a/src/main/java/org/jsoup/parser/CharacterReader.java b/src/main/java/org/jsoup/parser/CharacterReader.java
+index 6993524..80dffcd 100644
+--- a/src/main/java/org/jsoup/parser/CharacterReader.java
++++ b/src/main/java/org/jsoup/parser/CharacterReader.java
+@@ -251,7 +251,7 @@ public final class CharacterReader {
+ 
+         while (bufPos < remaining) {
+             final char c = val[bufPos];
+-            if (c == '\t'|| c ==  '\n'|| c ==  '\r'|| c ==  '\f'|| c ==  ' '|| c ==  '/'|| c ==  '>'|| c == '<' || c ==  TokeniserState.nullChar)
++            if (c == '\t'|| c ==  '\n'|| c ==  '\r'|| c ==  '\f'|| c ==  ' '|| c ==  '/'|| c ==  '>'|| c ==  TokeniserState.nullChar)
+                 break;
+             bufPos++;
+         }
+diff --git a/src/main/java/org/jsoup/parser/TokeniserState.java b/src/main/java/org/jsoup/parser/TokeniserState.java
+index 95b326c..4980f15 100644
+--- a/src/main/java/org/jsoup/parser/TokeniserState.java
++++ b/src/main/java/org/jsoup/parser/TokeniserState.java
+@@ -158,9 +158,6 @@ enum TokeniserState {
+                 case '/':
+                     t.transition(SelfClosingStartTag);
+                     break;
+-                case '<': // NOTE: out of spec, but clear author intent
+-                    t.error(this);
+-                    r.unconsume();
+                     // intended fall through to next >
+                 case '>':
+                     t.emitTagPending();
+@@ -564,9 +561,6 @@ enum TokeniserState {
+                 case '/':
+                     t.transition(SelfClosingStartTag);
+                     break;
+-                case '<': // NOTE: out of spec, but clear (spec has this as a part of the attribute name)
+-                    t.error(this);
+-                    r.unconsume();
+                     // intended fall through as if >
+                 case '>':
+                     t.emitTagPending();
+@@ -584,6 +578,7 @@ enum TokeniserState {
+                     break;
+                 case '"':
+                 case '\'':
++                case '<':
+                 case '=':
+                     t.error(this);
+                     t.tagPending.newAttribute();

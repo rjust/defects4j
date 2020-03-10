@@ -1,0 +1,37 @@
+diff --git a/src/main/java/org/apache/commons/collections4/IteratorUtils.java b/src/main/java/org/apache/commons/collections4/IteratorUtils.java
+index b3b1be0f..40f99898 100644
+--- a/src/main/java/org/apache/commons/collections4/IteratorUtils.java
++++ b/src/main/java/org/apache/commons/collections4/IteratorUtils.java
+@@ -602,9 +602,7 @@ public class IteratorUtils {
+     public static <E> Iterator<E> collatedIterator(final Comparator<? super E> comparator,
+                                                    final Iterator<? extends E> iterator1,
+                                                    final Iterator<? extends E> iterator2) {
+-        @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
+-        return new CollatingIterator<E>(comp, iterator1, iterator2);
++        return new CollatingIterator<E>(comparator, iterator1, iterator2);
+     }
+ 
+     /**
+@@ -625,9 +623,7 @@ public class IteratorUtils {
+      */
+     public static <E> Iterator<E> collatedIterator(final Comparator<? super E> comparator,
+                                                    final Iterator<? extends E>... iterators) {
+-        @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
+-        return new CollatingIterator<E>(comp, iterators);
++        return new CollatingIterator<E>(comparator, iterators);
+     }
+ 
+     /**
+@@ -649,9 +645,7 @@ public class IteratorUtils {
+      */
+     public static <E> Iterator<E> collatedIterator(final Comparator<? super E> comparator,
+                                                    final Collection<Iterator<? extends E>> iterators) {
+-        @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
+-        return new CollatingIterator<E>(comp, iterators);
++        return new CollatingIterator<E>(comparator, iterators);
+     }
+ 
+     // Object Graph

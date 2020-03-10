@@ -1,0 +1,24 @@
+diff --git a/src/main/java/org/apache/commons/collections/list/TreeList.java b/src/main/java/org/apache/commons/collections/list/TreeList.java
+index 390ed338..50c20a53 100644
+--- a/src/main/java/org/apache/commons/collections/list/TreeList.java
++++ b/src/main/java/org/apache/commons/collections/list/TreeList.java
+@@ -900,14 +900,16 @@ public class TreeList<E> extends AbstractList<E> {
+             if (currentIndex == -1) {
+                 throw new IllegalStateException();
+             }
+-            parent.remove(currentIndex);
+-            if (nextIndex != currentIndex) {
++            if (nextIndex == currentIndex) {
++                next = next.next();
++                parent.remove(currentIndex);
++            } else {
+                 // remove() following next()
++                parent.remove(currentIndex);
+                 nextIndex--;
+             }
+             // the AVL node referenced by next may have become stale after a remove
+             // reset it now: will be retrieved by next call to next()/previous() via nextIndex
+-            next = null;
+             current = null;
+             currentIndex = -1;
+             expectedModCount++;

@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/Zip64ExtendedInformationExtraField.java b/src/main/java/org/apache/commons/compress/archivers/zip/Zip64ExtendedInformationExtraField.java
+index fbcec484..134871be 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/Zip64ExtendedInformationExtraField.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/Zip64ExtendedInformationExtraField.java
+@@ -256,7 +256,7 @@ public class Zip64ExtendedInformationExtraField implements ZipExtraField {
+                 + (hasCompressedSize ? DWORD : 0)
+                 + (hasRelativeHeaderOffset ? DWORD : 0)
+                 + (hasDiskStart ? WORD : 0);
+-            if (rawCentralDirectoryData.length < expectedLength) {
++            if (rawCentralDirectoryData.length != expectedLength) {
+                 throw new ZipException("central directory zip64 extended"
+                                        + " information extra field's length"
+                                        + " doesn't match central directory"

@@ -1,0 +1,428 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+index 2057c40..cf49a6d 100644
+--- a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+@@ -18,7 +18,6 @@
+ package org.apache.commons.csv;
+ 
+ import static org.apache.commons.csv.Constants.CR;
+-import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertFalse;
+ 
+@@ -36,7 +35,6 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Random;
+ 
+-import org.apache.commons.lang3.ObjectUtils;
+ import org.junit.Test;
+ 
+ /**
+@@ -46,8 +44,6 @@ import org.junit.Test;
+  */
+ public class CSVPrinterTest {
+ 
+-    private static final int ITERATIONS_FOR_RANDOM_TEST = 50000;
+-    
+     private final String recordSeparator = CSVFormat.DEFAULT.getRecordSeparator();
+ 
+     private static String printable(final String s) {
+@@ -69,14 +65,21 @@ public class CSVPrinterTest {
+         final int nLines = r.nextInt(4) + 1;
+         final int nCol = r.nextInt(3) + 1;
+         // nLines=1;nCol=2;
+-        final String[][] lines = generateLines(nLines, nCol);
++        final String[][] lines = new String[nLines][];
++        for (int i = 0; i < nLines; i++) {
++            final String[] line = new String[nCol];
++            lines[i] = line;
++            for (int j = 0; j < nCol; j++) {
++                line[j] = randStr();
++            }
++        }
+ 
+         final StringWriter sw = new StringWriter();
+         final CSVPrinter printer = new CSVPrinter(sw, format);
+ 
+         for (int i = 0; i < nLines; i++) {
+             // for (int j=0; j<lines[i].length; j++) System.out.println("### VALUE=:" + printable(lines[i][j]));
+-            printer.printRecord((Object[]) lines[i]);
++            printer.printRecord((Object[])lines[i]);
+         }
+ 
+         printer.flush();
+@@ -87,26 +90,10 @@ public class CSVPrinterTest {
+         final CSVParser parser = CSVParser.parse(result, format);
+         final List<CSVRecord> parseResult = parser.getRecords();
+ 
+-        String[][] expected = lines.clone();
+-        for (int i = 0; i < expected.length; i++) {
+-            expected[i] = expectNulls(expected[i], format);
+-        }
+-        Utils.compare("Printer output :" + printable(result), expected, parseResult);
++        Utils.compare("Printer output :" + printable(result), lines, parseResult);
+         parser.close();
+     }
+ 
+-    private String[][] generateLines(final int nLines, final int nCol) {
+-        final String[][] lines = new String[nLines][];
+-        for (int i = 0; i < nLines; i++) {
+-            final String[] line = new String[nCol];
+-            lines[i] = line;
+-            for (int j = 0; j < nCol; j++) {
+-                line[j] = randStr();
+-            }
+-        }
+-        return lines;
+-    }
+-
+     private void doRandom(final CSVFormat format, final int iter) throws Exception {
+         for (int i = 0; i < iter; i++) {
+             doOneRandom(format);
+@@ -124,37 +111,37 @@ public class CSVPrinterTest {
+             char ch;
+             final int what = r.nextInt(20);
+             switch (what) {
+-            case 0:
+-                ch = '\r';
+-                break;
+-            case 1:
+-                ch = '\n';
+-                break;
+-            case 2:
+-                ch = '\t';
+-                break;
+-            case 3:
+-                ch = '\f';
+-                break;
+-            case 4:
+-                ch = ' ';
+-                break;
+-            case 5:
+-                ch = ',';
+-                break;
+-            case 6:
+-                ch = '"';
+-                break;
+-            case 7:
+-                ch = '\'';
+-                break;
+-            case 8:
+-                ch = '\\';
+-                break;
+-            default:
+-                ch = (char) r.nextInt(300);
+-                break;
+-            // default: ch = 'a'; break;
++                case 0:
++                    ch = '\r';
++                    break;
++                case 1:
++                    ch = '\n';
++                    break;
++                case 2:
++                    ch = '\t';
++                    break;
++                case 3:
++                    ch = '\f';
++                    break;
++                case 4:
++                    ch = ' ';
++                    break;
++                case 5:
++                    ch = ',';
++                    break;
++                case 6:
++                    ch = '"';
++                    break;
++                case 7:
++                    ch = '\'';
++                    break;
++                case 8:
++                    ch = '\\';
++                    break;
++                default:
++                    ch = (char) r.nextInt(300);
++                    break;
++                // default: ch = 'a'; break;
+             }
+             buf[i] = ch;
+         }
+@@ -202,8 +189,8 @@ public class CSVPrinterTest {
+     public void testExcelPrintAllIterableOfLists() throws IOException {
+         final StringWriter sw = new StringWriter();
+         final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.EXCEL);
+-        printer.printRecords(
+-                Arrays.asList(new List[] { Arrays.asList("r1c1", "r1c2"), Arrays.asList("r2c1", "r2c2") }));
++        printer.printRecords(Arrays.asList(new List[] { Arrays.asList("r1c1", "r1c2"),
++                Arrays.asList("r2c1", "r2c2") }));
+         assertEquals("r1c1,r1c2" + recordSeparator + "r2c1,r2c2" + recordSeparator, sw.toString());
+         printer.close();
+     }
+@@ -314,131 +301,6 @@ public class CSVPrinterTest {
+         printer.close();
+     }
+ 
+-    @Test
+-    public void testMySqlNullStringDefault() throws IOException {
+-        assertEquals("\\N", CSVFormat.MYSQL.getNullString());
+-    }
+-
+-    @Test
+-    public void testMySqlNullOutput() throws IOException {
+-        Object[] s = new String[] { "NULL", null };
+-        CSVFormat format = CSVFormat.MYSQL.withQuote('"').withNullString("NULL").withQuoteMode(QuoteMode.NON_NUMERIC);
+-        StringWriter writer = new StringWriter();
+-        CSVPrinter printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        String expected = "\"NULL\"\tNULL\n";
+-        assertEquals(expected, writer.toString());
+-        String[] record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(new Object[2], record0);
+-
+-        s = new String[] { "\\N", null };
+-        format = CSVFormat.MYSQL.withNullString("\\N");
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\\\\N\t\\N\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "\\N", "A" };
+-        format = CSVFormat.MYSQL.withNullString("\\N");
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\\\\N\tA\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "\n", "A" };
+-        format = CSVFormat.MYSQL.withNullString("\\N");
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\\n\tA\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "", null };
+-        format = CSVFormat.MYSQL.withNullString("NULL");
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\tNULL\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "", null };
+-        format = CSVFormat.MYSQL;
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\t\\N\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "\\N", "", "\u000e,\\\r" };
+-        format = CSVFormat.MYSQL;
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\\\\N\t\t\u000e,\\\\\\r\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "NULL", "\\\r" };
+-        format = CSVFormat.MYSQL;
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "NULL\t\\\\\\r\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-
+-        s = new String[] { "\\\r" };
+-        format = CSVFormat.MYSQL;
+-        writer = new StringWriter();
+-        printer = new CSVPrinter(writer, format);
+-        printer.printRecord(s);
+-        printer.close();
+-        expected = "\\\\\\r\n";
+-        assertEquals(expected, writer.toString());
+-        record0 = toFirstRecordValues(expected, format);
+-        assertArrayEquals(expectNulls(s, format), record0);
+-    }
+-
+-    /**
+-     * Converts an input CSV array into expected output values WRT NULLs. NULL strings are converted to null values
+-     * because the parser will convert these strings to null.
+-     */
+-    private <T> T[] expectNulls(T[] original, CSVFormat csvFormat) {
+-        T[] fixed = original.clone();
+-        for (int i = 0; i < fixed.length; i++) {
+-            if (ObjectUtils.equals(csvFormat.getNullString(), fixed[i])) {
+-                fixed[i] = null;
+-            }
+-        }
+-        return fixed;
+-    }
+-
+-    private String[] toFirstRecordValues(final String expected, CSVFormat format) throws IOException {
+-        return CSVParser.parse(expected, format).getRecords().get(0).values();
+-    }
+-
+     @Test
+     public void testPrinter1() throws IOException {
+         final StringWriter sw = new StringWriter();
+@@ -567,28 +429,11 @@ public class CSVPrinterTest {
+     }
+ 
+     @Test
+-    public void testRandomDefault() throws Exception {
+-        doRandom(CSVFormat.DEFAULT, ITERATIONS_FOR_RANDOM_TEST);
+-    }
+-
+-    @Test
+-    public void testRandomExcel() throws Exception {
+-        doRandom(CSVFormat.EXCEL, ITERATIONS_FOR_RANDOM_TEST);
+-    }
+-
+-    @Test
+-    public void testRandomMySql() throws Exception {
+-        doRandom(CSVFormat.MYSQL, ITERATIONS_FOR_RANDOM_TEST);
+-    }
+-
+-    @Test
+-    public void testRandomTdf() throws Exception {
+-        doRandom(CSVFormat.TDF, ITERATIONS_FOR_RANDOM_TEST);
+-    }
+-
+-    @Test
+-    public void testRandomRfc4180() throws Exception {
+-        doRandom(CSVFormat.RFC4180, ITERATIONS_FOR_RANDOM_TEST);
++    public void testRandom() throws Exception {
++        final int iter = 10000;
++        doRandom(CSVFormat.DEFAULT, iter);
++        doRandom(CSVFormat.EXCEL, iter);
++        doRandom(CSVFormat.MYSQL, iter);
+     }
+ 
+     @Test
+@@ -651,42 +496,6 @@ public class CSVPrinterTest {
+         printer.close();
+     }
+ 
+-    @Test
+-    public void testEscapeBackslash() throws IOException {
+-        StringWriter sw = new StringWriter();
+-        final char quoteChar = '\'';
+-        final String eol = "\r\n";
+-        CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(quoteChar));
+-        printer.print("\\");
+-        printer.close();
+-        assertEquals("'\\'", sw.toString());
+-
+-        sw = new StringWriter();
+-        printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(quoteChar));
+-        printer.print("\\\r");
+-        printer.close();
+-        assertEquals("'\\\r'", sw.toString());
+-
+-        sw = new StringWriter();
+-        printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(quoteChar));
+-        printer.print("X\\\r");
+-        printer.close();
+-        assertEquals("'X\\\r'", sw.toString());
+-
+-        sw = new StringWriter();
+-        printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(quoteChar));
+-        printer.printRecord(new Object[] { "\\\r" });
+-        printer.close();
+-        assertEquals("'\\\r'" + eol, sw.toString());
+-
+-        sw = new StringWriter();
+-        printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(quoteChar));
+-        printer.print("\\\\");
+-        printer.close();
+-        assertEquals("'\\\\'", sw.toString());
+-
+-    }
+-
+     @Test
+     public void testPlainEscaped() throws IOException {
+         final StringWriter sw = new StringWriter();
+@@ -740,7 +549,8 @@ public class CSVPrinterTest {
+     @Test
+     public void testHeader() throws IOException {
+         final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null).withHeader("C1", "C2", "C3"));
++        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null)
++                .withHeader("C1", "C2", "C3"));
+         printer.printRecord("a", "b", "c");
+         printer.printRecord("x", "y", "z");
+         assertEquals("C1,C2,C3\r\na,b,c\r\nx,y,z\r\n", sw.toString());
+@@ -759,10 +569,10 @@ public class CSVPrinterTest {
+ 
+     @Test
+     public void testSkipHeaderRecordTrue() throws IOException {
+-        // functionally identical to testHeaderNotSet, used to test CSV-153
++    	// functionally identical to testHeaderNotSet, used to test CSV-153
+         final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw,
+-                CSVFormat.DEFAULT.withQuote(null).withHeader("C1", "C2", "C3").withSkipHeaderRecord(true));
++        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null)
++                .withHeader("C1", "C2", "C3").withSkipHeaderRecord(true));
+         printer.printRecord("a", "b", "c");
+         printer.printRecord("x", "y", "z");
+         assertEquals("a,b,c\r\nx,y,z\r\n", sw.toString());
+@@ -771,10 +581,10 @@ public class CSVPrinterTest {
+ 
+     @Test
+     public void testSkipHeaderRecordFalse() throws IOException {
+-        // functionally identical to testHeader, used to test CSV-153
++    	// functionally identical to testHeader, used to test CSV-153
+         final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw,
+-                CSVFormat.DEFAULT.withQuote(null).withHeader("C1", "C2", "C3").withSkipHeaderRecord(false));
++        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuote(null)
++                .withHeader("C1", "C2", "C3").withSkipHeaderRecord(false));
+         printer.printRecord("a", "b", "c");
+         printer.printRecord("x", "y", "z");
+         assertEquals("C1,C2,C3\r\na,b,c\r\nx,y,z\r\n", sw.toString());
+@@ -787,8 +597,7 @@ public class CSVPrinterTest {
+         final Date now = new Date();
+         final CSVFormat format = CSVFormat.EXCEL;
+         final CSVPrinter csvPrinter = printWithHeaderComments(sw, now, format);
+-        assertEquals("# Generated by Apache Commons CSV 1.1\r\n# " + now + "\r\nCol1,Col2\r\nA,B\r\nC,D\r\n",
+-                sw.toString());
++        assertEquals("# Generated by Apache Commons CSV 1.1\r\n# " + now + "\r\nCol1,Col2\r\nA,B\r\nC,D\r\n", sw.toString());
+         csvPrinter.close();
+     }
+ 
+@@ -798,8 +607,7 @@ public class CSVPrinterTest {
+         final Date now = new Date();
+         final CSVFormat format = CSVFormat.TDF;
+         final CSVPrinter csvPrinter = printWithHeaderComments(sw, now, format);
+-        assertEquals("# Generated by Apache Commons CSV 1.1\r\n# " + now + "\r\nCol1\tCol2\r\nA\tB\r\nC\tD\r\n",
+-                sw.toString());
++        assertEquals("# Generated by Apache Commons CSV 1.1\r\n# " + now + "\r\nCol1\tCol2\r\nA\tB\r\nC\tD\r\n", sw.toString());
+         csvPrinter.close();
+     }
+ 

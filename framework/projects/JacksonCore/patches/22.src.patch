@@ -1,0 +1,75 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+index 4459e7fa..4dc7c9ac 100644
+--- a/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
++++ b/src/main/java/com/fasterxml/jackson/core/filter/FilteringParserDelegate.java
+@@ -414,7 +414,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                 }
+                 _itemFilter = f;
+                 if (f == TokenFilter.INCLUDE_ALL) {
+-                    if (_verifyAllowedMatches() && _includePath) {
++                    if (_includePath) {
+                         return (_currToken = t);
+                     }
+                 }
+@@ -437,9 +437,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                 f = _headContext.checkValue(f);
+                 if ((f == TokenFilter.INCLUDE_ALL)
+                         || ((f != null) && f.includeValue(delegate))) {
+-                    if (_verifyAllowedMatches()) {
+                         return (_currToken = t);
+-                    }
+                 }
+             }
+             // Otherwise not included (leaves must be explicitly included)
+@@ -574,7 +572,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                     }
+                     _itemFilter = f;
+                     if (f == TokenFilter.INCLUDE_ALL) {
+-                        if (_verifyAllowedMatches() && _includePath) {
++                        if (_includePath) {
+                             return (_currToken = t);
+                         }
+ //                        if (_includeImmediateParent) { ...
+@@ -599,9 +597,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                     f = _headContext.checkValue(f);
+                     if ((f == TokenFilter.INCLUDE_ALL)
+                             || ((f != null) && f.includeValue(delegate))) {
+-                        if (_verifyAllowedMatches()) {
+                             return (_currToken = t);
+-                        }
+                     }
+                 }
+                 // Otherwise not included (leaves must be explicitly included)
+@@ -718,7 +714,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                         continue main_loop;
+                     }
+                     _itemFilter = f;
+-                    if (f == TokenFilter.INCLUDE_ALL && _verifyAllowedMatches()) {
++                    if (f == TokenFilter.INCLUDE_ALL) {
+                         return _nextBuffered(buffRoot);
+                     }
+                 }
+@@ -733,9 +729,7 @@ public class FilteringParserDelegate extends JsonParserDelegate
+                     f = _headContext.checkValue(f);
+                     if ((f == TokenFilter.INCLUDE_ALL)
+                             || ((f != null) && f.includeValue(delegate))) {
+-                        if (_verifyAllowedMatches()) {
+                             return _nextBuffered(buffRoot);
+-                        }
+                     }
+                 }
+                 // Otherwise not included (leaves must be explicitly included)
+@@ -774,13 +768,6 @@ public class FilteringParserDelegate extends JsonParserDelegate
+         }
+     }
+ 
+-    private final boolean _verifyAllowedMatches() throws IOException {
+-        if (_matchCount == 0 || _allowMultipleMatches) {
+-            ++_matchCount;
+-            return true;
+-        }
+-        return false;
+-    }
+ 
+     @Override
+     public JsonToken nextValue() throws IOException {

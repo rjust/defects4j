@@ -1,0 +1,71 @@
+diff --git a/src/main/java/org/jsoup/safety/Cleaner.java b/src/main/java/org/jsoup/safety/Cleaner.java
+index 27af7a7..9e06b9c 100644
+--- a/src/main/java/org/jsoup/safety/Cleaner.java
++++ b/src/main/java/org/jsoup/safety/Cleaner.java
+@@ -3,8 +3,6 @@ package org.jsoup.safety;
+ import org.jsoup.helper.Validate;
+ import org.jsoup.nodes.*;
+ import org.jsoup.parser.Tag;
+-import org.jsoup.select.NodeTraversor;
+-import org.jsoup.select.NodeVisitor;
+ 
+ import java.util.List;
+ 
+@@ -69,17 +67,11 @@ public class Cleaner {
+     /**
+      Iterates the input and copies trusted nodes (tags, attributes, text) into the destination.
+      */
+-    private final class CleaningVisitor implements NodeVisitor {
+-        private int numDiscarded = 0;
+-        private final Element root;
+-        private Element destination; // current element to append nodes to
+-
+-        private CleaningVisitor(Element root, Element destination) {
+-            this.root = root;
+-            this.destination = destination;
+-        }
++    private int copySafeNodes(Element root, Element destination) {
++        List<Node> sourceChildren = root.childNodes();
++        int numDiscarded = 0;
+ 
+-        public void head(Node source, int depth) {
++        for (Node source : sourceChildren) {
+             if (source instanceof Element) {
+                 Element sourceEl = (Element) source;
+ 
+@@ -89,31 +82,20 @@ public class Cleaner {
+                     destination.appendChild(destChild);
+ 
+                     numDiscarded += meta.numAttribsDiscarded;
+-                    destination = destChild;
+-                } else if (source != root) { // not a safe tag, so don't add. don't count root against discarded.
++                    numDiscarded += copySafeNodes(sourceEl, destChild);
++                } else {
+                     numDiscarded++;
++                    numDiscarded += copySafeNodes(sourceEl, destination);
+                 }
+             } else if (source instanceof TextNode) {
+                 TextNode sourceText = (TextNode) source;
+                 TextNode destText = new TextNode(sourceText.getWholeText(), source.baseUri());
+                 destination.appendChild(destText);
+-            } else { // else, we don't care about comments, xml proc instructions, etc
+-                numDiscarded++;
+             }
+         }
++        return numDiscarded;
+ 
+-        public void tail(Node source, int depth) {
+-            if (source instanceof Element && whitelist.isSafeTag(source.nodeName())) {
+-                destination = destination.parent(); // would have descended, so pop destination stack
+-            }
+-        }
+-    }
+ 
+-    private int copySafeNodes(Element source, Element dest) {
+-        CleaningVisitor cleaningVisitor = new CleaningVisitor(source, dest);
+-        NodeTraversor traversor = new NodeTraversor(cleaningVisitor);
+-        traversor.traverse(source);
+-        return cleaningVisitor.numDiscarded;
+     }
+ 
+     private ElementMeta createSafeElement(Element sourceEl) {

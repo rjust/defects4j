@@ -1,0 +1,204 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
+index 4d8c2c4..ac22fa1 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
+@@ -16,6 +16,8 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
++import org.apache.commons.jxpath.ri.InfoSetUtil;
+ /**
+  * Implementation of Expression for the operation "&gt;".
+  *
+@@ -28,8 +30,10 @@
+         super(new Expression[] { arg1, arg2 });
+     }
+ 
+-    protected boolean evaluateCompare(int compare) {
+-        return compare > 0;
++    public Object computeValue(EvalContext context) {
++        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++        return l > r ? Boolean.TRUE : Boolean.FALSE;
+     }
+ 
+     public String getSymbol() {
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
+index c3d5720..5592aef 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
+@@ -16,6 +16,8 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
++import org.apache.commons.jxpath.ri.InfoSetUtil;
+ /**
+  * Implementation of Expression for the operation "&gt;=".
+  *
+@@ -29,8 +31,10 @@
+         super(new Expression[] { arg1, arg2 });
+     }
+ 
+-    protected boolean evaluateCompare(int compare) {
+-        return compare >= 0;
++    public Object computeValue(EvalContext context) {
++        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++        return l >= r ? Boolean.TRUE : Boolean.FALSE;
+     }
+ 
+     public String getSymbol() {
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
+index 4c0d9ce..1c8c03d 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
+@@ -16,6 +16,8 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
++import org.apache.commons.jxpath.ri.InfoSetUtil;
+ /**
+  * Implementation of Expression for the operation "&lt;".
+  *
+@@ -28,8 +30,10 @@
+         super(new Expression[] { arg1, arg2 });
+     }
+ 
+-    protected boolean evaluateCompare(int compare) {
+-        return compare < 0;
++    public Object computeValue(EvalContext context) {
++        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++        return l < r ? Boolean.TRUE : Boolean.FALSE;
+     }
+ 
+     public String getSymbol() {
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
+index 7940ecb..6061d3c 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
+@@ -16,6 +16,8 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
++import org.apache.commons.jxpath.ri.EvalContext;
++import org.apache.commons.jxpath.ri.InfoSetUtil;
+ /**
+  * Implementation of Expression for the operation "&lt;=".
+  *
+@@ -29,8 +31,10 @@
+         super(new Expression[] { arg1, arg2 });
+     }
+ 
+-    protected boolean evaluateCompare(int compare) {
+-        return compare <= 0;
++    public Object computeValue(EvalContext context) {
++        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++        return l <= r ? Boolean.TRUE : Boolean.FALSE;
+     }
+ 
+     public String getSymbol() {
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+index bbb070d..0000000 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+@@ -16,15 +16,6 @@
+  */
+ package org.apache.commons.jxpath.ri.compiler;
+ 
+-import java.util.Collection;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-
+-import org.apache.commons.jxpath.ri.EvalContext;
+-import org.apache.commons.jxpath.ri.InfoSetUtil;
+-import org.apache.commons.jxpath.ri.axes.InitialContext;
+-import org.apache.commons.jxpath.ri.axes.SelfContext;
+-
+ /**
+  * Base implementation of Expression for the operations "&gt;", "&gt;=", "&lt;", "&lt;=".
+  *
+@@ -37,11 +28,6 @@
+         super(args);
+     }
+ 
+-    public final Object computeValue(EvalContext context) {
+-        return compute(args[0].computeValue(context), args[1]
+-                .computeValue(context)) ? Boolean.TRUE : Boolean.FALSE;
+-    }
+-
+     protected final int getPrecedence() {
+         return 3;
+     }
+@@ -50,67 +36,4 @@
+         return false;
+     }
+ 
+-    protected abstract boolean evaluateCompare(int compare);
+-
+-    private boolean compute(Object left, Object right) {
+-        left = reduce(left);
+-        right = reduce(right);
+-
+-        if (left instanceof InitialContext) {
+-            ((InitialContext) left).reset();
+-        }
+-        if (right instanceof InitialContext) {
+-            ((InitialContext) right).reset();
+-        }
+-        if (left instanceof Iterator && right instanceof Iterator) {
+-            return findMatch((Iterator) left, (Iterator) right);
+-        }
+-        if (left instanceof Iterator) {
+-            return containsMatch((Iterator) left, right);
+-        }
+-        if (right instanceof Iterator) {
+-            return containsMatch((Iterator) right, left);
+-        }
+-        return evaluateCompare(compare(left, right));
+-    }
+-
+-    private Object reduce(Object o) {
+-        if (o instanceof SelfContext) {
+-            o = ((EvalContext) o).getSingleNodePointer();
+-        }
+-        if (o instanceof Collection) {
+-            o = ((Collection) o).iterator();
+-        }
+-        return o;
+-    }
+-
+-    private boolean containsMatch(Iterator it, Object value) {
+-        while (it.hasNext()) {
+-            Object element = it.next();
+-            if (evaluateCompare(compare(element, value))) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-
+-    private boolean findMatch(Iterator lit, Iterator rit) {
+-        HashSet left = new HashSet();
+-        while (lit.hasNext()) {
+-            left.add(lit.next());
+-        }
+-        while (rit.hasNext()) {
+-            if (containsMatch(left.iterator(), rit.next())) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-
+-    private int compare(Object l, Object r) {
+-        double ld = InfoSetUtil.doubleValue(l);
+-        double rd = InfoSetUtil.doubleValue(r);
+-        return ld == rd ? 0 : ld < rd ? -1 : 1;
+-    }
+-
+ }

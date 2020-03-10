@@ -1,0 +1,44 @@
+diff --git a/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java b/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
+index 041dcbd..6ada343 100644
+--- a/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
++++ b/src/main/java/org/jsoup/parser/HtmlTreeBuilder.java
+@@ -357,11 +357,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
+     }
+ 
+     void clearStackToTableBodyContext() {
+-        clearStackToContext("tbody", "tfoot", "thead", "template");
++        clearStackToContext("tbody", "tfoot", "thead");
+     }
+ 
+     void clearStackToTableRowContext() {
+-        clearStackToContext("tr", "template");
++        clearStackToContext("tr");
+     }
+ 
+     private void clearStackToContext(String... nodeNames) {
+diff --git a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index c4924e4..aaf6041 100644
+--- a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -1033,9 +1033,7 @@ enum HtmlTreeBuilderState {
+                 case StartTag:
+                     Token.StartTag startTag = t.asStartTag();
+                     String name = startTag.normalName();
+-                    if (name.equals("template")) {
+-                        tb.insert(startTag);
+-                    } else if (name.equals("tr")) {
++                    if (name.equals("tr")) {
+                         tb.clearStackToTableBodyContext();
+                         tb.insert(startTag);
+                         tb.transition(InRow);
+@@ -1095,9 +1093,7 @@ enum HtmlTreeBuilderState {
+                 Token.StartTag startTag = t.asStartTag();
+                 String name = startTag.normalName();
+ 
+-                if (name.equals("template")) {
+-                    tb.insert(startTag);
+-                } else if (StringUtil.in(name, "th", "td")) {
++                if (StringUtil.in(name, "th", "td")) {
+                     tb.clearStackToTableRowContext();
+                     tb.insert(startTag);
+                     tb.transition(InCell);

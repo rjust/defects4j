@@ -1,8 +1,8 @@
-org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction
-org.apache.commons.math.MathException
-org.apache.commons.math.ConvergenceException
 org.apache.commons.math.analysis.BrentSolver
-org.apache.commons.math.MaxIterationsExceededException
+org.apache.commons.math.analysis.DifferentiableUnivariateRealFunction
+org.apache.commons.math.analysis.UnivariateRealFunction
 org.apache.commons.math.analysis.UnivariateRealSolver
 org.apache.commons.math.analysis.UnivariateRealSolverImpl
-org.apache.commons.math.analysis.UnivariateRealFunction
+org.apache.commons.math.ConvergenceException
+org.apache.commons.math.MathException
+org.apache.commons.math.MaxIterationsExceededException

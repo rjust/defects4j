@@ -1,0 +1,24 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
+index 01dfb3fe..bb08897e 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarUtilsTest.java
+@@ -116,19 +116,4 @@ public class TarUtilsTest extends TestCase {
+         } catch (IllegalArgumentException expected) {
+         }
+     }
+-    
+-    public void testRoundTripNames(){
+-        checkName("");
+-        checkName("The quick brown fox\n");
+-        checkName("\177");
+-        // checkName("\0"); // does not work, because NUL is ignored
+-        // COMPRESS-114
+-        checkName("0302-0601-3±±±F06±W220±ZB±LALALA±±±±±±±±±±CAN±±DC±±±04±060302±MOE.model");
+-    }
+-
+-    private void checkName(String string) {
+-        byte buff[] = new byte[100];
+-        int len = TarUtils.formatNameBytes(string, buff, 0, buff.length);
+-        assertEquals(string, TarUtils.parseName(buff, 0, len));
+-    }
+ }

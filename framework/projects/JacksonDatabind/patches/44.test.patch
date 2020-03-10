@@ -1,0 +1,40 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
+index 20d0ae701..332cabf7c 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
+@@ -160,7 +160,7 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         assertEquals(Arrays.asList("a", "b"), ((MyInter) inter).blah);
+     }
+ 
+-    // [databind#148]
++    // [Databind#148]
+     public void testDefaultAsNoClass() throws Exception
+     {
+         Object ob = MAPPER.readerFor(DefaultWithNoClass.class).readValue("{ }");
+@@ -178,7 +178,7 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         assertNull(ob);
+     }
+ 
+-    // [databind#148]
++    // [Databind#148]
+     public void testBadTypeAsNull() throws Exception
+     {
+         ObjectMapper mapper = new ObjectMapper();
+@@ -189,7 +189,7 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         assertNull(ob);
+     }
+ 
+-    // [databind#511]
++    // [Databind#511]
+     public void testInvalidTypeId511() throws Exception {
+         ObjectReader reader = MAPPER.reader().without(
+                 DeserializationFeature.FAIL_ON_INVALID_SUBTYPE,
+@@ -203,7 +203,7 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         assertNotNull(badResult);
+     }
+ 
+-    // [databind#656]
++    // [Databind#656]
+     public void testDefaultImplWithObjectWrapper() throws Exception
+     {
+         BaseFor656 value = MAPPER.readValue(aposToQuotes("{'foobar':{'a':3}}"), BaseFor656.class);

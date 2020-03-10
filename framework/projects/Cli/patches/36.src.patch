@@ -1,0 +1,44 @@
+diff --git a/src/main/java/org/apache/commons/cli/OptionGroup.java b/src/main/java/org/apache/commons/cli/OptionGroup.java
+index dc6d5db..322053f 100644
+--- a/src/main/java/org/apache/commons/cli/OptionGroup.java
++++ b/src/main/java/org/apache/commons/cli/OptionGroup.java
+@@ -19,8 +19,8 @@ package org.apache.commons.cli;
+ 
+ import java.io.Serializable;
+ import java.util.Collection;
++import java.util.HashMap;
+ import java.util.Iterator;
+-import java.util.LinkedHashMap;
+ import java.util.Map;
+ 
+ /**
+@@ -34,7 +34,7 @@ public class OptionGroup implements Serializable
+     private static final long serialVersionUID = 1L;
+     
+     /** hold the options */
+-    private final Map<String, Option> optionMap = new LinkedHashMap<String, Option>();
++    private final Map<String, Option> optionMap = new HashMap<String, Option>();
+ 
+     /** the name of the selected option */
+     private String selected;
+diff --git a/src/main/java/org/apache/commons/cli/Options.java b/src/main/java/org/apache/commons/cli/Options.java
+index 796fe5c..0ee4eea 100644
+--- a/src/main/java/org/apache/commons/cli/Options.java
++++ b/src/main/java/org/apache/commons/cli/Options.java
+@@ -21,6 +21,7 @@ import java.io.Serializable;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.Collections;
++import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.LinkedHashMap;
+ import java.util.List;
+@@ -57,7 +58,7 @@ public class Options implements Serializable
+     private final List<Object> requiredOpts = new ArrayList<Object>();
+ 
+     /** a map of the option groups */
+-    private final Map<String, OptionGroup> optionGroups = new LinkedHashMap<String, OptionGroup>();
++    private final Map<String, OptionGroup> optionGroups = new HashMap<String, OptionGroup>();
+ 
+     /**
+      * Add the specified option group.

@@ -1,0 +1,14 @@
+org.apache.commons.cli2.bug.BugCLI123Test
+org.apache.commons.cli2.CLITestCase
+org.apache.commons.cli2.commandline.DefaultingCommandLineTest
+org.apache.commons.cli2.commandline.PreferencesCommandLineTest
+org.apache.commons.cli2.commandline.PropertiesCommandLineTest
+org.apache.commons.cli2.commandline.WriteableCommandLineImplTest
+org.apache.commons.cli2.CommandLineTestCase
+org.apache.commons.cli2.option.ArgumentTest
+org.apache.commons.cli2.option.ArgumentTestCase
+org.apache.commons.cli2.option.CommandTest
+org.apache.commons.cli2.option.DefaultOptionTest
+org.apache.commons.cli2.option.OptionTestCase
+org.apache.commons.cli2.option.ParentTestCase
+org.apache.commons.cli2.WriteableCommandLineTestCase

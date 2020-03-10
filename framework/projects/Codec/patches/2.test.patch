@@ -1,0 +1,95 @@
+diff --git a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+index 8de915b1..37957325 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+@@ -42,18 +42,6 @@ public class Base64InputStreamTest extends TestCase {
+         super(name);
+     }
+ 
+-    /**
+-     * Test the Base64InputStream implementation against empty input.
+-     *
+-     * @throws Exception for some failure scenarios.
+-     */    
+-    public void testBase64EmptyInputStream() throws Exception {
+-        byte[] emptyEncoded = new byte[0];
+-        byte[] emptyDecoded = new byte[0];
+-        testByteByByte(emptyEncoded, emptyDecoded, 76, CRLF);
+-        testByChunk(emptyEncoded, emptyDecoded, 76, CRLF);
+-    }
+-
+     /**
+      * Test the Base64InputStream implementation.
+      *
+diff --git a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+index 85264f96..2a73dae4 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+@@ -42,24 +42,12 @@ public class Base64OutputStreamTest extends TestCase {
+         super(name);
+     }
+ 
+-    /**
+-     * Test the Base64OutputStream implementation against empty input.
+-     *
+-     * @throws Exception for some failure scenarios.
+-     */
+-    public void testBase64EmptyOutputStream() throws Exception {
+-        byte[] emptyEncoded = new byte[0];
+-        byte[] emptyDecoded = new byte[0];
+-        testByteByByte(emptyEncoded, emptyDecoded, 76, CRLF);
+-        testByChunk(emptyEncoded, emptyDecoded, 76, CRLF);
+-    }    
+-
+     /**
+      * Test the Base64OutputStream implementation
+      *
+      * @throws Exception for some failure scenarios.
+      */
+-    public void testBase64OutputStreamByteByByte() throws Exception {
++    public void testBase64InputStreamByteByByte() throws Exception {
+         // Hello World test.
+         byte[] encoded = "SGVsbG8gV29ybGQ=\r\n".getBytes("UTF-8");
+         byte[] decoded = "Hello World".getBytes("UTF-8");
+@@ -87,7 +75,7 @@ public class Base64OutputStreamTest extends TestCase {
+      *
+      * @throws Exception for some failure scenarios.
+      */
+-    public void testBase64OutputStreamByChunk() throws Exception {
++    public void testBase64InputStreamByChunk() throws Exception {
+         // Hello World test.
+         byte[] encoded = "SGVsbG8gV29ybGQ=\r\n".getBytes("UTF-8");
+         byte[] decoded = "Hello World".getBytes("UTF-8");
+diff --git a/src/test/org/apache/commons/codec/binary/Base64Test.java b/src/test/org/apache/commons/codec/binary/Base64Test.java
+index a1b6eb01..aaa2f246 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64Test.java
++++ b/src/test/org/apache/commons/codec/binary/Base64Test.java
+@@ -29,7 +29,7 @@ import org.apache.commons.codec.EncoderException;
+ import junit.framework.TestCase;
+ 
+ /**
+- * Test cases for Base64 class.
++ * Testcases for Base64 class.
+  * 
+  * @author Apache Software Foundation
+  * @version $Id$
+@@ -830,19 +830,6 @@ public class Base64Test extends TestCase {
+         }
+     }
+ 
+-    /**
+-     * Test encode and decode of empty byte array.
+-     */
+-    public void testEmptyBase64() {
+-        byte[] empty = new byte[0];
+-        byte[] result = Base64.encodeBase64(empty);
+-        assertEquals("empty base64 encode", 0, result.length);
+-
+-        empty = new byte[0];
+-        result = Base64.decodeBase64(empty);        
+-        assertEquals("empty base64 decode", 0, result.length);        
+-    }
+-
+     // -------------------------------------------------------- Private Methods
+ 
+     private String toString(byte[] data) {

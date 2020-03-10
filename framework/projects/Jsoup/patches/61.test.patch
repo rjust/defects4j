@@ -1,0 +1,56 @@
+diff --git a/src/test/java/org/jsoup/select/ElementsTest.java b/src/test/java/org/jsoup/select/ElementsTest.java
+index 6fbec69..771d33c 100644
+--- a/src/test/java/org/jsoup/select/ElementsTest.java
++++ b/src/test/java/org/jsoup/select/ElementsTest.java
+@@ -3,7 +3,6 @@ package org.jsoup.select;
+ import org.jsoup.Jsoup;
+ import org.jsoup.TextUtil;
+ import org.jsoup.nodes.Document;
+-import org.jsoup.nodes.Element;
+ import org.jsoup.nodes.FormElement;
+ import org.jsoup.nodes.Node;
+ import org.junit.Test;
+@@ -94,22 +93,6 @@ public class ElementsTest {
+         assertEquals("blue", els.get(0).className());
+         assertEquals("red green blue mellow", els.get(1).className());
+     }
+-
+-    @Test public void hasClassCaseInsensitive() {
+-        Elements els = Jsoup.parse("<p Class=One>One <p class=Two>Two <p CLASS=THREE>THREE").select("p");
+-        Element one = els.get(0);
+-        Element two = els.get(1);
+-        Element thr = els.get(2);
+-
+-        assertTrue(one.hasClass("One"));
+-        assertTrue(one.hasClass("ONE"));
+-
+-        assertTrue(two.hasClass("TWO"));
+-        assertTrue(two.hasClass("Two"));
+-
+-        assertTrue(thr.hasClass("ThreE"));
+-        assertTrue(thr.hasClass("three"));
+-    }
+     
+     @Test public void text() {
+         String h = "<div><p>Hello<p>there<p>world</div>";
+diff --git a/src/test/java/org/jsoup/select/SelectorTest.java b/src/test/java/org/jsoup/select/SelectorTest.java
+index 3666de7..c04a42a 100644
+--- a/src/test/java/org/jsoup/select/SelectorTest.java
++++ b/src/test/java/org/jsoup/select/SelectorTest.java
+@@ -48,16 +48,6 @@ public class SelectorTest {
+         assertEquals(1, els2.size());
+     }
+ 
+-    @Test public void testByClassCaseInsensitive() {
+-        String html = "<p Class=foo>One <p Class=Foo>Two <p class=FOO>Three <p class=farp>Four";
+-        Elements elsFromClass = Jsoup.parse(html).select("P.Foo");
+-        Elements elsFromAttr = Jsoup.parse(html).select("p[class=foo]");
+-
+-        assertEquals(elsFromAttr.size(), elsFromClass.size());
+-        assertEquals(3, elsFromClass.size());
+-        assertEquals("Two", elsFromClass.get(1).text());
+-    }
+-
+     @Test public void testByAttribute() {
+         String h = "<div Title=Foo /><div Title=Bar /><div Style=Qux /><div title=Bam /><div title=SLAM />" +
+                 "<div data-name='with spaces'/>";

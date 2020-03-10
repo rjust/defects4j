@@ -1,0 +1,102 @@
+diff --git a/src/java/org/apache/commons/cli2/WriteableCommandLine.java b/src/java/org/apache/commons/cli2/WriteableCommandLine.java
+index 8bd6752..d6aaf49 100644
+--- a/src/java/org/apache/commons/cli2/WriteableCommandLine.java
++++ b/src/java/org/apache/commons/cli2/WriteableCommandLine.java
+@@ -99,7 +99,6 @@ public interface WriteableCommandLine extends CommandLine {
+      *
+      * @return the current option
+      */
+-    Option getCurrentOption();
+ 
+     /**
+      * Sets the current option. This method is called by concrete option
+@@ -108,5 +107,4 @@ public interface WriteableCommandLine extends CommandLine {
+      *
+      * @param currentOption the new current option
+      */
+-    void setCurrentOption(Option currentOption);
+ }
+diff --git a/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java b/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
+index 8c5e29b..88d3286 100644
+--- a/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
++++ b/src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java
+@@ -48,8 +48,6 @@ public class WriteableCommandLineImpl
+     private final Map defaultSwitches = new HashMap();
+     private final List normalised;
+     private final Set prefixes;
+-    private Option currentOption;
+-    private String checkForOption;
+ 
+     /**
+      * Creates a new WriteableCommandLineImpl rooted on the specified Option, to
+@@ -62,16 +60,9 @@ public class WriteableCommandLineImpl
+                                     final List arguments) {
+         this.prefixes = rootOption.getPrefixes();
+         this.normalised = arguments;
+-        setCurrentOption(rootOption);
+     }
+ 
+-    public Option getCurrentOption() {
+-        return currentOption;
+-    }
+ 
+-    public void setCurrentOption(Option currentOption) {
+-        this.currentOption = currentOption;
+-    }
+ 
+     public void addOption(Option option) {
+         options.add(option);
+@@ -240,35 +231,18 @@ public class WriteableCommandLineImpl
+      */
+     public boolean looksLikeOption(final String trigger)
+     {
+-        if (checkForOption != null)
+-        {
+             // this is a reentrant call
+-            return !checkForOption.equals(trigger);
+-        }
+ 
+-        checkForOption = trigger;
+-        try
+-        {
+             for (final Iterator i = prefixes.iterator(); i.hasNext();)
+             {
+                 final String prefix = (String) i.next();
+ 
+                 if (trigger.startsWith(prefix))
+                 {
+-                    if (getCurrentOption().canProcess(this, trigger)
+-                            || getCurrentOption().findOption(trigger) != null)
+-                    {
+                         return true;
+-                    }
+                 }
+             }
+-
+             return false;
+-        }
+-        finally
+-        {
+-            checkForOption = null;
+-        }
+     }
+ 
+     public String toString() {
+diff --git a/src/java/org/apache/commons/cli2/option/GroupImpl.java b/src/java/org/apache/commons/cli2/option/GroupImpl.java
+index fc5a82d..75d87f7 100644
+--- a/src/java/org/apache/commons/cli2/option/GroupImpl.java
++++ b/src/java/org/apache/commons/cli2/option/GroupImpl.java
+@@ -510,13 +510,7 @@ public class GroupImpl
+      */
+     private boolean looksLikeOption(final WriteableCommandLine commandLine,
+             final String trigger) {
+-        Option oldOption = commandLine.getCurrentOption();
+-        try {
+-            commandLine.setCurrentOption(this);
+             return commandLine.looksLikeOption(trigger);
+-        } finally {
+-            commandLine.setCurrentOption(oldOption);
+-        }
+     }
+ }
+ 

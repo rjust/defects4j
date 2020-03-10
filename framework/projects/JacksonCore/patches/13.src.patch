@@ -1,0 +1,19 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java b/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
+index 1270eae4..fb8f21cd 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/JsonGeneratorImpl.java
+@@ -124,14 +124,6 @@ public abstract class JsonGeneratorImpl extends GeneratorBase
+         return this;
+     }
+ 
+-    @Override
+-    public JsonGenerator disable(Feature f) {
+-        super.disable(f);
+-        if (f == Feature.QUOTE_FIELD_NAMES) {
+-            _cfgUnqNames = true;
+-        }
+-        return this;
+-    }
+ 
+     @Override
+     protected void _checkStdFeatureChanges(int newFeatureFlags, int changedFeatures) {

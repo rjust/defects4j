@@ -1,0 +1,32 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/SqlDateSerializationTest.java b/src/test/java/com/fasterxml/jackson/databind/ser/jdk/SqlDateSerializationTest.java
+index 3f8dbbaf6..2ae4ff88f 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/jdk/SqlDateSerializationTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/jdk/SqlDateSerializationTest.java
+@@ -94,14 +94,4 @@ public class SqlDateSerializationTest extends BaseMapTest
+         assertEquals(aposToQuotes("{'dateOfBirth':'1980.04.14'}"),
+                 mapper.writeValueAsString(i));
+     }
+-
+-    // [databind#2064]
+-    public void testSqlDateConfigOverride() throws Exception
+-    {
+-        ObjectMapper mapper = newObjectMapper();
+-        mapper.configOverride(java.sql.Date.class)
+-            .setFormat(JsonFormat.Value.forPattern("yyyy+MM+dd"));        
+-        assertEquals("\"1980+04+14\"",
+-            mapper.writeValueAsString(java.sql.Date.valueOf("1980-04-14")));
+-    }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/failing/NodeContext2049Test.java b/src/test/java/com/fasterxml/jackson/failing/NodeContext2049Test.java
+index f60b9f381..ab198d492 100644
+--- a/src/test/java/com/fasterxml/jackson/failing/NodeContext2049Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/NodeContext2049Test.java
+@@ -134,7 +134,7 @@ public class NodeContext2049Test extends BaseMapTest
+     private ObjectMapper objectMapper;
+     {
+         objectMapper = new ObjectMapper();
+-        objectMapper.registerModule(new com.fasterxml.jackson.databind.Module() {
++        objectMapper.registerModule(new Module() {
+               @Override
+               public String getModuleName() {
+                    return "parentSetting";

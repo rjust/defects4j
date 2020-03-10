@@ -1,0 +1,8 @@
+org.apache.commons.cli.BasicParserTest
+org.apache.commons.cli.BugsTest
+org.apache.commons.cli.GnuParserTest
+org.apache.commons.cli.HelpFormatterTest
+org.apache.commons.cli.OptionGroupTest
+org.apache.commons.cli.OptionsTest
+org.apache.commons.cli.PosixParserTest
+org.apache.commons.cli.bug.BugCLI162Test

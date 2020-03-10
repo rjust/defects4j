@@ -1,0 +1,11 @@
+com.fasterxml.jackson.databind.TestJDKSerialization
+com.fasterxml.jackson.databind.deser.NullHandlingTest
+com.fasterxml.jackson.databind.deser.creators.DelegatingExternalProperty1003Test
+com.fasterxml.jackson.databind.jsontype.TestCustomTypeIdResolver
+com.fasterxml.jackson.databind.jsontype.TestVisibleTypeId
+com.fasterxml.jackson.databind.jsontype.ext.ExternalTypeId198Test
+com.fasterxml.jackson.databind.jsontype.ext.ExternalTypeId999Test
+com.fasterxml.jackson.databind.jsontype.ext.ExternalTypeIdTest
+com.fasterxml.jackson.databind.jsontype.ext.ExternalTypeIdWithEnum1328Test
+com.fasterxml.jackson.databind.jsontype.ext.MultipleExternalIds291Test
+com.fasterxml.jackson.databind.jsontype.ext.TestSubtypesExternalPropertyMissingProperty

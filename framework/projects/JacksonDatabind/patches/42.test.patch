@@ -1,0 +1,91 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+index 590c3e15a..561d1a27a 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+@@ -32,6 +32,7 @@ public class TestJdkTypes extends BaseMapTest
+         public double doubleValue = -1.0;
+     }
+ 
++    // for [JACKSON-616]
+     static class WrappersBean
+     {
+         public Boolean booleanValue;
+@@ -139,17 +140,19 @@ public class TestJdkTypes extends BaseMapTest
+         assertEquals(usd, new ObjectMapper().readValue(quote("USD"), Currency.class));
+     }
+ 
++    /**
++     * Test for [JACKSON-419]
++     */
+     public void testLocale() throws IOException
+     {
+         assertEquals(new Locale("en"), MAPPER.readValue(quote("en"), Locale.class));
+         assertEquals(new Locale("es", "ES"), MAPPER.readValue(quote("es_ES"), Locale.class));
+-        assertEquals(new Locale("FI", "fi", "savo"),
+-                MAPPER.readValue(quote("fi_FI_savo"), Locale.class));
+-        // [databind#1123]
+-        Locale loc = MAPPER.readValue(quote(""), Locale.class);
+-        assertSame(Locale.ROOT, loc);
++        assertEquals(new Locale("FI", "fi", "savo"), MAPPER.readValue(quote("fi_FI_savo"), Locale.class));
+     }
+ 
++    /**
++     * Test for [JACKSON-420] (add DeserializationConfig.FAIL_ON_NULL_FOR_PRIMITIVES)
++     */
+     public void testNullForPrimitives() throws IOException
+     {
+         // by default, ok to rely on defaults
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
+index de40bc4a9..aa2329c09 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
+@@ -20,8 +20,12 @@ public class TestJdkTypes
+     extends com.fasterxml.jackson.databind.BaseMapTest
+ {
+     private final ObjectMapper MAPPER = objectMapper();
+-
+-    public void testBigDecimal() throws Exception
++    
++    /**
++     * Unit test to catch bug [JACKSON-8].
++     */
++    public void testBigDecimal()
++        throws Exception
+     {
+         Map<String, Object> map = new HashMap<String, Object>();
+         String PI_STR = "3.14159265";
+@@ -30,7 +34,8 @@ public class TestJdkTypes
+         assertEquals("{\"pi\":3.14159265}", str);
+     }
+     
+-    public void testBigDecimalAsPlainString() throws Exception
++    public void testBigDecimalAsPlainString()
++        throws Exception
+     {
+         final ObjectMapper mapper = new ObjectMapper();
+ 
+@@ -41,7 +46,10 @@ public class TestJdkTypes
+         String str = mapper.writeValueAsString(map);
+         assertEquals("{\"pi\":3.00000000}", str);
+     }
+-
++    
++    /**
++     * Unit test related to [JACKSON-155]
++     */
+     public void testFile() throws IOException
+     {
+         // this may get translated to different representation on Windows, maybe Mac:
+@@ -73,11 +81,9 @@ public class TestJdkTypes
+         assertEquals(quote("en"), MAPPER.writeValueAsString(new Locale("en")));
+         assertEquals(quote("es_ES"), MAPPER.writeValueAsString(new Locale("es", "ES")));
+         assertEquals(quote("fi_FI_savo"), MAPPER.writeValueAsString(new Locale("FI", "fi", "savo")));
+-
+-        // [databind#1123]
+-        assertEquals(quote(""), MAPPER.writeValueAsString(Locale.ROOT));
+     }
+ 
++    // [JACKSON-484]
+     public void testInetAddress() throws IOException
+     {
+         assertEquals(quote("127.0.0.1"), MAPPER.writeValueAsString(InetAddress.getByName("127.0.0.1")));

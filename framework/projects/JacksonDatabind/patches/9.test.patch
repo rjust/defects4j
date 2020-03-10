@@ -1,0 +1,17 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
+index 16fc24569..a9c36e456 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestMapSerialization.java
+@@ -247,12 +247,4 @@ public class TestMapSerialization
+             .add("c", "bar"));
+         assertEquals(aposToQuotes("{'stuff':{'a':'foo','c':'bar'}}"), json);
+     }
+-
+-    public void testClassKey() throws IOException
+-    {
+-        Map<Class<?>,Integer> map = new LinkedHashMap<Class<?>,Integer>();
+-        map.put(String.class, 2);
+-        String json = MAPPER.writeValueAsString(map);
+-        assertEquals(aposToQuotes("{'java.lang.String':2}"), json);
+-    }
+ }

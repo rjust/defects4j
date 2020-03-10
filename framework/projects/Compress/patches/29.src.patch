@@ -1,0 +1,148 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
+index c73e665f..6bd8f031 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
++++ b/src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java
+@@ -294,11 +294,7 @@ public class ArchiveStreamFactory {
+             }
+         }
+         if (JAR.equalsIgnoreCase(archiverName)) {
+-            if (entryEncoding != null) {
+-                return new JarArchiveOutputStream(out, entryEncoding);
+-            } else {
+                 return new JarArchiveOutputStream(out);
+-            }
+         }
+         if (CPIO.equalsIgnoreCase(archiverName)) {
+             if (entryEncoding != null) {
+@@ -361,11 +357,7 @@ public class ArchiveStreamFactory {
+                     return new CpioArchiveInputStream(in);
+                 }
+             } else if (ArjArchiveInputStream.matches(signature, signatureLength)) {
+-                if (entryEncoding != null) {
+-                    return new ArjArchiveInputStream(in, entryEncoding);
+-                } else {
+                     return new ArjArchiveInputStream(in);
+-                }
+             } else if (SevenZFile.matches(signature, signatureLength)) {
+                 throw new StreamingNotSupportedException(SEVEN_Z);
+             }
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+index 915b56e5..1ad5f10e 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java
+@@ -94,7 +94,6 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     /**
+      * Construct the cpio input stream with a blocksize of {@link
+@@ -153,7 +152,6 @@ public class CpioArchiveInputStream extends ArchiveInputStream implements
+     public CpioArchiveInputStream(final InputStream in, int blockSize, String encoding) {
+         this.in = in;
+         this.blockSize = blockSize;
+-        this.encoding = encoding;
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+index fc829ffa..d2d12826 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java
+@@ -95,7 +95,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     /**
+      * Construct the cpio output stream with a specified format, a
+@@ -160,7 +159,6 @@ public class CpioArchiveOutputStream extends ArchiveOutputStream implements
+         }
+         this.entryFormat = format;
+         this.blockSize = blockSize;
+-        this.encoding = encoding;
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+     }
+ 
+diff --git a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+index 09431a40..84c78396 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java
+@@ -77,7 +77,6 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     /**
+      * Constructor using the platform's default encoding for file
+@@ -102,7 +101,6 @@ public class DumpArchiveInputStream extends ArchiveInputStream {
+         throws ArchiveException {
+         this.raw = new TapeInputStream(is);
+         this.hasHitEOF = false;
+-        this.encoding = encoding;
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+ 
+         try {
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index c5570071..b3cd0d61 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -76,7 +76,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     /**
+      * Constructor for TarInputStream.
+@@ -140,7 +139,6 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+                                  String encoding) {
+         this.is = is;
+         this.hasHitEOF = false;
+-        this.encoding = encoding;
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.recordSize = recordSize;
+         this.blockSize = blockSize;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+index 43525c8c..96ec740c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java
+@@ -87,7 +87,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     private boolean addPaxHeadersForNonAsciiNames = false;
+     private static final ZipEncoding ASCII =
+@@ -153,7 +152,6 @@ public class TarArchiveOutputStream extends ArchiveOutputStream {
+     public TarArchiveOutputStream(OutputStream os, int blockSize,
+                                   int recordSize, String encoding) {
+         out = new CountingOutputStream(os);
+-        this.encoding = encoding;
+         this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+ 
+         this.assemLen = 0;
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+index 7a69141c..711c149a 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java
+@@ -62,7 +62,6 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+     private final ZipEncoding zipEncoding;
+ 
+     // the provided encoding (for unit tests)
+-    final String encoding;
+ 
+     /** Whether to look for and use Unicode extra fields. */
+     private final boolean useUnicodeExtraFields;
+@@ -182,7 +181,6 @@ public class ZipArchiveInputStream extends ArchiveInputStream {
+                                  String encoding,
+                                  boolean useUnicodeExtraFields,
+                                  boolean allowStoredEntriesWithDataDescriptor) {
+-        this.encoding = encoding;
+         zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+         this.useUnicodeExtraFields = useUnicodeExtraFields;
+         in = new PushbackInputStream(inputStream, buf.capacity());

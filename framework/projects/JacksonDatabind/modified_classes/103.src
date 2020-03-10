@@ -1,0 +1,16 @@
+com.fasterxml.jackson.databind.DatabindContext
+com.fasterxml.jackson.databind.DeserializationContext
+com.fasterxml.jackson.databind.JsonMappingException
+com.fasterxml.jackson.databind.SerializerProvider
+com.fasterxml.jackson.databind.deser.BasicDeserializerFactory
+com.fasterxml.jackson.databind.deser.BeanDeserializerFactory
+com.fasterxml.jackson.databind.deser.DeserializerCache
+com.fasterxml.jackson.databind.deser.SettableAnyProperty
+com.fasterxml.jackson.databind.deser.SettableBeanProperty
+com.fasterxml.jackson.databind.deser.std.StdDeserializer
+com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer
+com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
+com.fasterxml.jackson.databind.introspect.BasicBeanDescription
+com.fasterxml.jackson.databind.ser.DefaultSerializerProvider
+com.fasterxml.jackson.databind.ser.PropertyBuilder
+com.fasterxml.jackson.databind.util.ClassUtil

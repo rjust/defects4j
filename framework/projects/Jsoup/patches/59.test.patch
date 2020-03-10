@@ -1,0 +1,29 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 4ab9359..b37dadd 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -941,9 +941,4 @@ public class HtmlParserTest {
+         Document doc = parser.parseInput("<div id=1><SPAN ID=2>", "");
+         assertEquals("<html> <head></head> <body> <div id=\"1\"> <SPAN ID=\"2\"></SPAN> </div> </body> </html>", StringUtil.normaliseWhitespace(doc.outerHtml()));
+     }
+-
+-    @Test public void handlesControlCodeInAttributeName() {
+-        Document doc = Jsoup.parse("<p><a \06=foo>One</a><a/\06=bar><a foo\06=bar>Two</a></p>");
+-        assertEquals("<p><a>One</a><a></a><a foo=\"bar\">Two</a></p>", doc.body().html());
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/safety/CleanerTest.java b/src/test/java/org/jsoup/safety/CleanerTest.java
+index 9bc78e6..8f159ce 100644
+--- a/src/test/java/org/jsoup/safety/CleanerTest.java
++++ b/src/test/java/org/jsoup/safety/CleanerTest.java
+@@ -277,10 +277,4 @@ public class CleanerTest {
+         w.addAttributes("a", "href");
+         w.removeProtocols("a", "href", "javascript"); // with no protocols enforced, this was a noop. Now validates.
+     }
+-
+-    @Test public void handlesControlCharactersAfterTagName() {
+-        String html = "<a/\06>";
+-        String clean = Jsoup.clean(html, Whitelist.basic());
+-        assertEquals("<a rel=\"nofollow\"></a>", clean);
+-    }
+ }

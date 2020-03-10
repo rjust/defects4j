@@ -1,0 +1,46 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/beans/NullPropertyPointer.java b/src/java/org/apache/commons/jxpath/ri/model/beans/NullPropertyPointer.java
+index b9c02bf..8cbd118 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/beans/NullPropertyPointer.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/beans/NullPropertyPointer.java
+@@ -16,8 +16,6 @@
+  */
+ package org.apache.commons.jxpath.ri.model.beans;
+ 
+-import org.apache.commons.jxpath.AbstractFactory;
+-import org.apache.commons.jxpath.JXPathAbstractFactoryException;
+ import org.apache.commons.jxpath.JXPathContext;
+ import org.apache.commons.jxpath.JXPathInvalidAccessException;
+ import org.apache.commons.jxpath.ri.QName;
+@@ -108,9 +106,6 @@ public class NullPropertyPointer extends PropertyPointer {
+             return newParent.createAttribute(context, getName());
+         }
+         else {
+-            if (parent instanceof NullPointer && parent.equals(newParent)) {
+-                throw createBadFactoryException(context.getFactory());
+-            }
+             // Consider these two use cases:
+             // 1. The parent pointer of NullPropertyPointer is 
+             //    a PropertyOwnerPointer other than NullPointer. When we call 
+@@ -140,9 +135,6 @@ public class NullPropertyPointer extends PropertyPointer {
+             return pointer;
+         }
+         else {
+-            if (parent instanceof NullPointer && parent.equals(newParent)) {
+-                throw createBadFactoryException(context.getFactory());
+-            }
+             if (newParent instanceof PropertyOwnerPointer) {
+                 PropertyOwnerPointer pop = (PropertyOwnerPointer) newParent;
+                 newParent = pop.getPropertyPointer();
+@@ -229,10 +221,4 @@ public class NullPropertyPointer extends PropertyPointer {
+         }
+         return string;
+     }
+-
+-    private JXPathAbstractFactoryException createBadFactoryException(AbstractFactory factory) {
+-        return new JXPathAbstractFactoryException("Factory " + factory
+-                + " reported success creating object for path: " + asPath()
+-                + " but object was null.  Terminating to avoid stack recursion.");
+-    }
+-}
+\ No newline at end of file
++}

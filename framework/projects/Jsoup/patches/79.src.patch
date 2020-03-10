@@ -1,0 +1,24 @@
+diff --git a/src/main/java/org/jsoup/nodes/LeafNode.java b/src/main/java/org/jsoup/nodes/LeafNode.java
+index ea3605d..0e068b5 100644
+--- a/src/main/java/org/jsoup/nodes/LeafNode.java
++++ b/src/main/java/org/jsoup/nodes/LeafNode.java
+@@ -2,11 +2,9 @@ package org.jsoup.nodes;
+ 
+ import org.jsoup.helper.Validate;
+ 
+-import java.util.Collections;
+ import java.util.List;
+ 
+ abstract class LeafNode extends Node {
+-    private static final List<Node> EmptyNodes = Collections.emptyList();
+ 
+     Object value; // either a string value, or an attribute map (in the rare case multiple attributes are set)
+ 
+@@ -93,6 +91,6 @@ abstract class LeafNode extends Node {
+ 
+     @Override
+     protected List<Node> ensureChildNodes() {
+-        return EmptyNodes;
++        throw new UnsupportedOperationException("Leaf Nodes do not have child nodes.");
+     }
+ }

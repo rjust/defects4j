@@ -171,7 +171,7 @@ while (1) {
     # Is the list of triggering test still the same?
     my $local_trigger_tests = "$TMP_DIR/trigger_tests";
     system(">$local_trigger_tests");
-    $project->run_tests($local_trigger_tests);
+    $project->run_relevant_tests($local_trigger_tests);
 
     system("grep \"^--- \" $trigger_tests | sort > $local_trigger_tests.sorted.original");
     system("grep \"^--- \" $local_trigger_tests | sort > $local_trigger_tests.sorted.minimal");

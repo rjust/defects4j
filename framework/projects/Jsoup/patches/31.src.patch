@@ -1,0 +1,42 @@
+diff --git a/src/main/java/org/jsoup/parser/Token.java b/src/main/java/org/jsoup/parser/Token.java
+index 1679007..2d5643b 100644
+--- a/src/main/java/org/jsoup/parser/Token.java
++++ b/src/main/java/org/jsoup/parser/Token.java
+@@ -168,7 +168,6 @@ abstract class Token {
+ 
+     static class Comment extends Token {
+         final StringBuilder data = new StringBuilder();
+-        boolean bogus = false;
+ 
+         Comment() {
+             type = TokenType.Comment;
+diff --git a/src/main/java/org/jsoup/parser/TokeniserState.java b/src/main/java/org/jsoup/parser/TokeniserState.java
+index cad7933..2a46cf2 100644
+--- a/src/main/java/org/jsoup/parser/TokeniserState.java
++++ b/src/main/java/org/jsoup/parser/TokeniserState.java
+@@ -1091,7 +1091,6 @@ enum TokeniserState {
+             // rewind to capture character that lead us here
+             r.unconsume();
+             Token.Comment comment = new Token.Comment();
+-            comment.bogus = true;
+             comment.data.append(r.consumeTo('>'));
+             // todo: replace nullChar with replaceChar
+             t.emit(comment);
+diff --git a/src/main/java/org/jsoup/parser/XmlTreeBuilder.java b/src/main/java/org/jsoup/parser/XmlTreeBuilder.java
+index dd2cb9f..11eae8b 100644
+--- a/src/main/java/org/jsoup/parser/XmlTreeBuilder.java
++++ b/src/main/java/org/jsoup/parser/XmlTreeBuilder.java
+@@ -64,13 +64,6 @@ public class XmlTreeBuilder extends TreeBuilder {
+     void insert(Token.Comment commentToken) {
+         Comment comment = new Comment(commentToken.getData(), baseUri);
+         Node insert = comment;
+-        if (commentToken.bogus) { // xml declarations are emitted as bogus comments (which is right for html, but not xml)
+-            String data = comment.getData();
+-            if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
+-                String declaration = data.substring(1);
+-                insert = new XmlDeclaration(declaration, comment.baseUri(), data.startsWith("!"));
+-            }
+-        }
+         insertNode(insert);
+     }
+ 

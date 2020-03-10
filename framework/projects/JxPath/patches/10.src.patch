@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+index a09afa8..b968cd5 100644
+--- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
++++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
+@@ -39,7 +39,7 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
+     }
+ 
+     public final Object computeValue(EvalContext context) {
+-        return compute(args[0].compute(context), args[1].compute(context))
++        return compute(args[0].computeValue(context), args[1].computeValue(context)) 
+                 ? Boolean.TRUE : Boolean.FALSE;
+     }
+ 

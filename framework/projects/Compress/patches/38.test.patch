@@ -1,0 +1,26 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStreamTest.java
+index 161ee12a..015748b6 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStreamTest.java
+@@ -313,21 +313,6 @@ public class TarArchiveInputStreamTest {
+         }
+     }
+ 
+-    /**
+-     * @link "https://issues.apache.org/jira/browse/COMPRESS-356"
+-     */
+-    @Test
+-    public void survivesPaxHeaderWithNameEndingInSlash() throws Exception {
+-        final TarArchiveInputStream is = getTestStream("/COMPRESS-356.tar");
+-        try {
+-            final TarArchiveEntry entry = is.getNextTarEntry();
+-            assertEquals("package/package.json", entry.getName());
+-            assertNull(is.getNextTarEntry());
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+     private TarArchiveInputStream getTestStream(final String name) {
+         return new TarArchiveInputStream(
+                 TarArchiveInputStreamTest.class.getResourceAsStream(name));

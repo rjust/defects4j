@@ -1,0 +1,30 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+index c0bad368..64c798dc 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+@@ -1415,10 +1415,6 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         int fractLen = 0;
+         // And then see if we get other parts
+         if (c == '.') { // yes, fraction
+-            if (outPtr >= outBuf.length) {
+-                outBuf = _textBuffer.finishCurrentSegment();
+-                outPtr = 0;
+-            }
+             outBuf[outPtr++] = c;
+ 
+             fract_loop:
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+index 9296543e..872ffce5 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+@@ -1541,10 +1541,6 @@ public class UTF8StreamJsonParser
+ 
+         // And then see if we get other parts
+         if (c == INT_PERIOD) { // yes, fraction
+-            if (outPtr >= outBuf.length) {
+-                outBuf = _textBuffer.finishCurrentSegment();
+-                outPtr = 0;
+-            }
+             outBuf[outPtr++] = (char) c;
+ 
+             fract_loop:

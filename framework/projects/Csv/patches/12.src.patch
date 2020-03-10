@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVFormat.java b/src/main/java/org/apache/commons/csv/CSVFormat.java
+index 0338732..66dcbf8 100644
+--- a/src/main/java/org/apache/commons/csv/CSVFormat.java
++++ b/src/main/java/org/apache/commons/csv/CSVFormat.java
+@@ -216,7 +216,7 @@ public final class CSVFormat implements Serializable {
+      * Note: this is currently like {@link #RFC4180} plus {@link #withAllowMissingColumnNames(boolean) withAllowMissingColumnNames(true)}.
+      * </p>
+      */
+-    public static final CSVFormat EXCEL = DEFAULT.withIgnoreEmptyLines(false).withAllowMissingColumnNames(true);
++    public static final CSVFormat EXCEL = DEFAULT.withIgnoreEmptyLines(false);
+ 
+     /**
+      * Tab-delimited format.

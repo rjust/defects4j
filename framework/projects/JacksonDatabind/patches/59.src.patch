@@ -1,0 +1,91 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/JavaType.java b/src/main/java/com/fasterxml/jackson/databind/JavaType.java
+index 292cc3939..4ac467b34 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/JavaType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/JavaType.java
+@@ -137,18 +137,6 @@ public abstract class JavaType
+      *
+      * @since 2.8.4
+      */
+-    public JavaType withHandlersFrom(JavaType src) {
+-        JavaType type = this;
+-        Object h = src.getTypeHandler();
+-        if (h != _typeHandler) {
+-            type = type.withTypeHandler(h);
+-        }
+-        h = src.getValueHandler();
+-        if (h != _valueHandler) {
+-            type = type.withValueHandler(h);
+-        }
+-        return type;
+-    }
+ 
+     /**
+      * Mutant factory method that may be called on structured types
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
+index f35516036..be19bdfcd 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java
+@@ -133,18 +133,6 @@ public class CollectionLikeType extends TypeBase
+                 _valueHandler, _typeHandler, _asStatic);
+     }
+ 
+-    @Override
+-    public JavaType withHandlersFrom(JavaType src) {
+-        JavaType type = super.withHandlersFrom(src);
+-        JavaType srcCt = src.getContentType();
+-        if (srcCt != null) {
+-            JavaType ct = _elementType.withHandlersFrom(srcCt);
+-            if (ct != _elementType) {
+-                type = type.withContentType(ct);
+-            }
+-        }
+-        return type;
+-    }
+     
+     @Override
+     public CollectionLikeType withStaticTyping() {
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
+index f1d1ee088..e10ae4ca3 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java
+@@ -145,28 +145,7 @@ public class MapLikeType extends TypeBase {
+                 _valueHandler, _typeHandler, _asStatic);
+     }
+ 
+-    @Override
+-    public JavaType withHandlersFrom(JavaType src) {
+-        JavaType type = super.withHandlersFrom(src);
+-        JavaType srcKeyType = src.getKeyType();
+         // "withKeyType()" not part of JavaType, hence must verify:
+-        if (type instanceof MapLikeType) {
+-            if (srcKeyType != null) {
+-                JavaType ct = _keyType.withHandlersFrom(srcKeyType);
+-                if (ct != _keyType) {
+-                    type = ((MapLikeType) type).withKeyType(ct);
+-                }
+-            }
+-        }
+-        JavaType srcCt = src.getContentType();
+-        if (srcCt != null) {
+-            JavaType ct = _valueType.withHandlersFrom(srcCt);
+-            if (ct != _valueType) {
+-                type = type.withContentType(ct);
+-            }
+-        }
+-        return type;
+-    }
+ 
+     @Override
+     public MapLikeType withStaticTyping() {
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+index b8acda873..8bf10e83f 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java
+@@ -425,7 +425,6 @@ public final class TypeFactory
+ 
+         // 25-Sep-2016, tatu: As per [databind#1384] also need to ensure handlers get
+         //   copied as well
+-        newType = newType.withHandlersFrom(baseType);
+         return newType;
+ 
+         // 20-Oct-2015, tatu: Old simplistic approach

@@ -1,4 +1,4 @@
-Defects4J -- version 1.5.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
+Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.org/rjust/defects4j.svg?branch=master)](https://travis-ci.org/rjust/defects4j)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -8,16 +8,33 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 438 bugs from the following open-source projects:
+Defects4J contains 835 bugs from the following open-source projects:
 
-| Identifier | Project name         | Number of bugs |
-|------------|----------------------|----------------|
-| Chart      | JFreeChart           |  26            |
-| Closure    | Closure compiler     | 176            |
-| Lang       | Apache commons-lang  |  65            |
-| Math       | Apache commons-math  | 106            |
-| Mockito    | Mockito              |  38            |
-| Time       | Joda-Time            |  27            |
+| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\*) |
+|-----------------|----------------------------|---------------:|---------------------|-------------------------| 
+| Chart           | jfreechart                 |       26       | 1-26                | None                    |
+| Cli             | commons-cli                |       39       | 1-5,7-40            | 6                       |
+| Closure         | closure-compiler           |      174       | 1-62,64-92,94-176   | 63,93                   |
+| Codec           | commons-codec              |       18       | 1-18                | None                    |
+| Collections     | commons-collections        |        4       | 25-28               | 1-24                    |
+| Compress        | commons-compress           |       47       | 1-47                | None                    |
+| Csv             | commons-csv                |       16       | 1-16                | None                    |
+| Gson            | gson                       |       18       | 1-18                | None                    |
+| JacksonCore     | jackson-core               |       26       | 1-26                | None                    |
+| JacksonDatabind | jackson-databind           |      112       | 1-112               | None                    |
+| JacksonXml      | jackson-dataformat-xml     |        6       | 1-6                 | None                    |
+| Jsoup           | jsoup                      |       93       | 1-93                | None                    |
+| JxPath          | commons-jxpath             |       22       | 1-22                | None                    |
+| Lang            | commons-lang               |       64       | 1,3-65              | 2                       |
+| Math            | commons-math               |      106       | 1-106               | None                    |
+| Mockito         | mockito                    |       38       | 1-38                | None                    |
+| Time            | joda-time                  |       26       | 1-20,22-27          | 21                      |
+
+\* Due to behavioral changes introduced under Java 8, some bugs are no longer
+reproducible. These bugs have been removed from the commit-db, but their
+metadata is still available in the project directory. As publications using
+Defects4J artifacts refer to bugs by their specific bug id, we do not re-number
+active bug ids of existing bugs.
 
 The bugs
 ---------------
@@ -36,53 +53,22 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
-Looking for additional bugs?
------------------------------
-A number of additional bugs are available in "work-in-progress" status.
-These bugs meet the same properties as the ones above, but have only been
-minimized by one of the maintainers. Metadata and patch content can 
-potentially change before these bugs are migrated into the master repository. 
-These bugs may be used in experiments, but should not be considered as 
-"stable" as the bugs in the master repository. If you use these bugs, please 
-acknowledge their "beta status" in any publications.
-
-**Branch [commons-compress-collections](https://github.com/rjust/defects4j/tree/commons-compress-collections):**
-
-| Identifier | Project name               | Number of bugs |
-|------------|----------------------------|----------------|
-| Collections| Apache commons-collections |  28            |
-| Compress   | Apache commons-compress    |  47            |
-
-**Branch [additional-projects-4](https://github.com/rjust/defects4j/tree/additional-projects-4):**
-
-| Identifier      | Project name           | Number of bugs |
-|-----------------|------------------------|----------------|
-| Cli             | Apache commons-cli     |  40            |
-| Codec           | Apache commons-codec   |  18            |
-| Csv             | Apache commons-csv     |  16            |
-| Gson            | Google Gson            |  18            |
-| JacksonCore     | Jackson JSON parser    |  26            |
-| JacksonDatabind | Jackson data bindings  | 112            |
-| JacksonXml      | Jackson XML extension  |   6            |
-| JxPath          | Apache commons-jxpath  |  22            |
-| Jsoup           | jsoup HTML Parser      |  93            |
 
 Setting up Defects4J
 ================
 
 Requirements
 ----------------
- - Java 1.7 (see below)
+ - Java 1.8 (version 1.5.0 and older requires Java 1.7)
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
 
 #### Java version
-
-* `master` branch requires Java 8.
-* `version 2.0.0`: will require Java 8.
-* `version 1.5.0` and lower: requires Java 1.7 
-
+All bugs have been reproduced and triggering tests verified, using the latest
+version of Java 1.8.
+Note that using Java 1.9+ might result in unexpected failing tests on a fixed
+program version. 
 
 #### Perl dependencies
 All required Perl modules are listed in `cpanfile`. On many Unix platforms,

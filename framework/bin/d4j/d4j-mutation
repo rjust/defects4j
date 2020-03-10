@@ -127,12 +127,6 @@ my $res = Utils::check_vid($vid);
 my $bid = $res->{bid};
 my $type= $res->{type};
 
-# TODO remove triggering test if we compute mutation score for the buggy version?
-if ($type eq "b") {
-    print(STDERR "Mutation analysis on buggy program version not (yet) supported!\n");
-    exit 1;
-}
-
 # The mutation operators that should be enabled
 my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
 
@@ -162,6 +156,16 @@ if (defined $TEST_SUITE) {
 
 if (! $mut_result) {
     system("cat $log_file");
+
+    # Provide more details if mutation analysis failed on a buggy version
+    if ($type eq "b") {
+      print(STDERR "-"x75 . "\n" .
+                   "Mutation analysis failed on a buggy program version!\n" .
+                   "You may need to exclude failing tests from the analysis, e.g., by setting\n" .
+                   "the 'haltonfailure' flag to false in 'defects4j.build.xml'.\n" .
+                   "(If this failure is unexpected, please file a bug report.)\n");
+    }
+
     exit 1;
 }
 open(RES, "<$WORK_DIR/summary.csv") or die "Cannot read mutation analysis result file $!";

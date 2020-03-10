@@ -1,0 +1,46 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
+index 0e293c52b..36e6901bc 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestPolymorphicWithDefaultImpl.java
+@@ -129,16 +129,6 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         public BaseClass value;
+     }
+ 
+-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY,
+-            property = "type")
+-    static class AsProperty {
+-
+-    }
+-
+-    static class AsPropertyWrapper {
+-        public AsProperty value;
+-    }
+-
+     /*
+     /**********************************************************
+     /* Unit tests, deserialization
+@@ -257,24 +247,6 @@ public class TestPolymorphicWithDefaultImpl extends BaseMapTest
+         assertNull(w.value);
+     }
+ 
+-    public void testWithoutEmptyStringAsNullObject1533() throws Exception
+-    {
+-    	ObjectMapper mapper = new ObjectMapper().disable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+-        try {
+-            mapper.readValue("{ \"value\": \"\" }", AsPropertyWrapper.class);
+-            fail("Expected " + JsonMappingException.class);
+-        } catch (JsonMappingException e) {
+-            // expected
+-        }
+-    }
+-
+-    public void testWithEmptyStringAsNullObject1533() throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper().enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+-        AsPropertyWrapper wrapper = mapper.readValue("{ \"value\": \"\" }", AsPropertyWrapper.class);
+-        assertNull(wrapper.value);
+-    }
+-
+     /*
+     /**********************************************************
+     /* Unit tests, serialization

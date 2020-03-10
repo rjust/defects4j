@@ -1,10 +1,10 @@
+org.apache.commons.math3.analysis.differentiation.DerivativeStructure
 org.apache.commons.math3.analysis.differentiation.DSCompiler
 org.apache.commons.math3.exception.DimensionMismatchException
-org.apache.commons.math3.FieldElement
-org.apache.commons.math3.exception.util.ExceptionContextProvider
-org.apache.commons.math3.Field
 org.apache.commons.math3.exception.MathIllegalArgumentException
 org.apache.commons.math3.exception.MathIllegalNumberException
-org.apache.commons.math3.util.FastMath
-org.apache.commons.math3.analysis.differentiation.DerivativeStructure
 org.apache.commons.math3.exception.NumberIsTooLargeException
+org.apache.commons.math3.exception.util.ExceptionContextProvider
+org.apache.commons.math3.Field
+org.apache.commons.math3.FieldElement
+org.apache.commons.math3.util.FastMath

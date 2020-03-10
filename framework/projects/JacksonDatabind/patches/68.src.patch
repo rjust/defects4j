@@ -1,0 +1,161 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
+index 3c686044f..0b36b0b04 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java
+@@ -1189,10 +1189,9 @@ public abstract class BeanDeserializerBase
+     protected Object deserializeFromObjectUsingNonDefault(JsonParser p,
+             DeserializationContext ctxt) throws IOException
+     {
+-        final JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+-        if (delegateDeser != null) {
++        if (_delegateDeserializer != null) {
+             return _valueInstantiator.createUsingDelegate(ctxt,
+-                    delegateDeser.deserialize(p, ctxt));
++                    _delegateDeserializer.deserialize(p, ctxt));
+         }
+         if (_propertyBasedCreator != null) {
+             return _deserializeUsingPropertyBased(p, ctxt);
+@@ -1218,13 +1217,12 @@ public abstract class BeanDeserializerBase
+         if (_objectIdReader != null) {
+             return deserializeFromObjectId(p, ctxt);
+         }
+-        final JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+         switch (p.getNumberType()) {
+         case INT:
+-            if (delegateDeser != null) {
++            if (_delegateDeserializer != null) {
+                 if (!_valueInstantiator.canCreateFromInt()) {
+                     Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                            delegateDeser.deserialize(p, ctxt));
++                            _delegateDeserializer.deserialize(p, ctxt));
+                     if (_injectables != null) {
+                         injectValues(ctxt, bean);
+                     }
+@@ -1233,10 +1232,10 @@ public abstract class BeanDeserializerBase
+             }
+             return _valueInstantiator.createFromInt(ctxt, p.getIntValue());
+         case LONG:
+-            if (delegateDeser != null) {
++            if (_delegateDeserializer != null) {
+                 if (!_valueInstantiator.canCreateFromInt()) {
+                     Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                            delegateDeser.deserialize(p, ctxt));
++                            _delegateDeserializer.deserialize(p, ctxt));
+                     if (_injectables != null) {
+                         injectValues(ctxt, bean);
+                     }
+@@ -1246,9 +1245,9 @@ public abstract class BeanDeserializerBase
+             return _valueInstantiator.createFromLong(ctxt, p.getLongValue());
+         }
+         // actually, could also be BigInteger, so:
+-        if (delegateDeser != null) {
++        if (_delegateDeserializer != null) {
+             Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                    delegateDeser.deserialize(p, ctxt));
++                    _delegateDeserializer.deserialize(p, ctxt));
+             if (_injectables != null) {
+                 injectValues(ctxt, bean);
+             }
+@@ -1268,11 +1267,10 @@ public abstract class BeanDeserializerBase
+         /* Bit complicated if we have delegating creator; may need to use it,
+          * or might not...
+          */
+-        JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+-        if (delegateDeser != null) {
++        if (_delegateDeserializer != null) {
+             if (!_valueInstantiator.canCreateFromString()) {
+                 Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                        delegateDeser.deserialize(p, ctxt));
++                        _delegateDeserializer.deserialize(p, ctxt));
+                 if (_injectables != null) {
+                     injectValues(ctxt, bean);
+                 }
+@@ -1291,11 +1289,10 @@ public abstract class BeanDeserializerBase
+         NumberType t = p.getNumberType();
+         // no separate methods for taking float...
+         if ((t == NumberType.DOUBLE) || (t == NumberType.FLOAT)) {
+-            JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+-            if (delegateDeser != null) {
++            if (_delegateDeserializer != null) {
+                 if (!_valueInstantiator.canCreateFromDouble()) {
+                     Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                            delegateDeser.deserialize(p, ctxt));
++                            _delegateDeserializer.deserialize(p, ctxt));
+                     if (_injectables != null) {
+                         injectValues(ctxt, bean);
+                     }
+@@ -1305,10 +1302,9 @@ public abstract class BeanDeserializerBase
+             return _valueInstantiator.createFromDouble(ctxt, p.getDoubleValue());
+         }
+         // actually, could also be BigDecimal, so:
+-        JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+-        if (delegateDeser != null) {
++        if (_delegateDeserializer != null) {
+             return _valueInstantiator.createUsingDelegate(ctxt,
+-                    delegateDeser.deserialize(p, ctxt));
++                    _delegateDeserializer.deserialize(p, ctxt));
+         }
+         return ctxt.handleMissingInstantiator(handledType(), p,
+                 "no suitable creator method found to deserialize from Number value (%s)",
+@@ -1320,11 +1316,10 @@ public abstract class BeanDeserializerBase
+      */
+     public Object deserializeFromBoolean(JsonParser p, DeserializationContext ctxt) throws IOException
+     {
+-        JsonDeserializer<Object> delegateDeser = _delegateDeserializer();
+-        if (delegateDeser != null) {
++        if (_delegateDeserializer != null) {
+             if (!_valueInstantiator.canCreateFromBoolean()) {
+                 Object bean = _valueInstantiator.createUsingDelegate(ctxt,
+-                        delegateDeser.deserialize(p, ctxt));
++                        _delegateDeserializer.deserialize(p, ctxt));
+                 if (_injectables != null) {
+                     injectValues(ctxt, bean);
+                 }
+@@ -1338,15 +1333,30 @@ public abstract class BeanDeserializerBase
+     public Object deserializeFromArray(JsonParser p, DeserializationContext ctxt) throws IOException
+     {
+         // note: can not call `_delegateDeserializer()` since order reversed here:
+-        JsonDeserializer<Object> delegateDeser = _arrayDelegateDeserializer;
++        if (_arrayDelegateDeserializer != null) {
++            try {
++                Object bean = _valueInstantiator.createUsingArrayDelegate(ctxt, _arrayDelegateDeserializer.deserialize(p, ctxt));
++                if (_injectables != null) {
++                    injectValues(ctxt, bean);
++                }
++                return bean;
++            } catch (Exception e) {
++                return wrapInstantiationProblem(e, ctxt);
++            }
++        }
+         // fallback to non-array delegate
+-        if ((delegateDeser != null) || ((delegateDeser = _delegateDeserializer) != null)) {
++        if (_delegateDeserializer != null) {
++            try {
+             Object bean = _valueInstantiator.createUsingArrayDelegate(ctxt,
+-                    delegateDeser.deserialize(p, ctxt));
++                    _delegateDeserializer.deserialize(p, ctxt));
+             if (_injectables != null) {
+                 injectValues(ctxt, bean);
+             }
+             return bean;
++            } catch (Exception e) {
++                wrapInstantiationProblem(e, ctxt);
++                return null;
++            }
+         }
+         if (ctxt.isEnabled(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)) {
+             JsonToken t = p.nextToken();
+@@ -1387,13 +1397,6 @@ public abstract class BeanDeserializerBase
+     /**
+      * @since 2.9
+      */
+-    private final JsonDeserializer<Object> _delegateDeserializer() {
+-        JsonDeserializer<Object> deser = _delegateDeserializer;
+-        if (deser == null) {
+-            deser = _arrayDelegateDeserializer;
+-        }
+-        return deser;
+-    }
+ 
+     /*
+     /**********************************************************

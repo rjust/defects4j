@@ -1,0 +1,41 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 7803a86..5cc5e92 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -736,10 +736,4 @@ public class HtmlParserTest {
+         doc.outputSettings().escapeMode(Entities.EscapeMode.extended); // modifies output only to clarify test
+         assertEquals(StringUtil.normaliseWhitespace("&amp; &quot; &reg; &amp;icy &amp;hopf &icy; &hopf;"), doc.body().html());
+     }
+-
+-    @Test public void handlesXmlDeclarationAsBogusComment() {
+-        String html = "<?xml encoding='UTF-8' ?><body>One</body>";
+-        Document doc = Jsoup.parse(html);
+-        assertEquals("<!--?xml encoding='UTF-8' ?--> <html> <head></head> <body> One </body> </html>", StringUtil.normaliseWhitespace(doc.outerHtml()));
+-    }
+ }
+diff --git a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+index babbf6c..4fd2676 100644
+--- a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
++++ b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+@@ -2,7 +2,6 @@ package org.jsoup.parser;
+ 
+ import org.jsoup.Jsoup;
+ import org.jsoup.TextUtil;
+-import org.jsoup.helper.StringUtil;
+ import org.jsoup.nodes.Document;
+ import org.junit.Ignore;
+ import org.junit.Test;
+@@ -93,13 +92,4 @@ public class XmlTreeBuilderTest {
+         Document xmlDoc = Jsoup.parse("<br>one</br>", "", Parser.xmlParser());
+         assertEquals("<br>one</br>", xmlDoc.html());
+     }
+-
+-    @Test public void handlesXmlDeclarationAsDeclaration() {
+-        String html = "<?xml encoding='UTF-8' ?><body>One</body><!-- comment -->";
+-        Document doc = Jsoup.parse(html, "", Parser.xmlParser());
+-        assertEquals("<?xml encoding='UTF-8' ?> <body> One </body> <!-- comment -->",
+-                StringUtil.normaliseWhitespace(doc.outerHtml()));
+-        assertEquals("#declaration", doc.childNode(0).nodeName());
+-        assertEquals("#comment", doc.childNode(2).nodeName());
+-    }
+ }
