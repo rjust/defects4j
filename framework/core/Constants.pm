@@ -235,7 +235,8 @@ our $CONFIG_PID = "pid";
 our $CONFIG_VID = "vid";
 
 # Filename which stores build properties
-our $PROP_FILE       = "defects4j.build.properties";
+our $PROP_FILE = "defects4j.build.properties";
+
 # Keys of stored properties
 our $PROP_EXCLUDE         = "d4j.tests.exclude";
 our $PROP_INSTRUMENT      = "d4j.classes.instrument";
@@ -248,11 +249,16 @@ our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
 our $PROP_PID             = "d4j.project.id";
 our $PROP_BID             = "d4j.bug.id";
 
+# Tags for local git repo in working directory
 our $TAG_POST_FIX         = "POST_FIX_REVISION";
 our $TAG_POST_FIX_COMP    = "POST_FIX_COMPILABLE";
 our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
+
+# Filenames for test results
+our $FILE_ALL_TESTS     = "all_tests";
+our $FILE_FAILING_TESTS = "failing_tests";
 
 our @EXPORT = qw(
 $SCRIPT_DIR
@@ -296,6 +302,9 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$FILE_ALL_TESTS
+$FILE_FAILING_TESTS
 
 $DEBUG
 );

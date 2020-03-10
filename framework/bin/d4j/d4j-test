@@ -114,9 +114,9 @@ unless(defined $config) {
 my $project = Project::create_project($config->{$CONFIG_PID});
 $project->{prog_root} = $WORK_DIR;
 
-# Clean temporary file that holds test results
-my $tmp = "$WORK_DIR/failing_tests";
-`>$tmp`;
+# Clean temporary files that hold test results
+my $fail_tests = "$WORK_DIR/$FILE_FAILING_TESTS";
+Utils::clean_test_results($WORK_DIR);
 
 # Run the test suite, according to the provided flags
 if (defined $TEST_SUITE){
@@ -124,18 +124,18 @@ if (defined $TEST_SUITE){
     my $test_dir = "$WORK_DIR/.test_suite";
     Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
     $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
-    $project->run_ext_tests($test_dir, "*.java", $tmp, $SINGLE_TEST) or die "Cannot run tests!";
+    $project->run_ext_tests($test_dir, "*.java", $fail_tests, $SINGLE_TEST) or die "Cannot run tests!";
 } elsif ($REL_TESTS) {
     # Compile and run only relevant developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $project->run_relevant_tests($tmp) or die "Cannot run tests!";
+    $project->run_relevant_tests($fail_tests) or die "Cannot run tests!";
 } else {
     # Compile and run developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $project->run_tests($tmp, $SINGLE_TEST) or die "Cannot run tests!";
+    $project->run_tests($fail_tests, $SINGLE_TEST) or die "Cannot run tests!";
 }
 
-my $trigger = Utils::get_failing_tests($tmp) or die "Cannot determine triggering tests!";
+my $trigger = Utils::get_failing_tests($fail_tests) or die "Cannot determine triggering tests!";
 my $count = scalar(@{$trigger->{methods}}) + scalar(@{$trigger->{classes}});
 
 print "Failing tests: $count\n";

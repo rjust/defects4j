@@ -413,7 +413,7 @@ sub append_to_file_unless_matches {
 
 =item B<files_in_commit> C<files_in_commit(repo_dir,commit)>
 
-This utility method takes C<commit> and get the files it changes
+Returns an array of files changed in C<commit>.
 
 =cut
 sub files_in_commit {
@@ -451,6 +451,28 @@ sub bug_report_info {
     close IN;
 
     return $bug_report_info;
+}
+
+=pod
+
+=item B<clean_test_results> C<clean_test_results(work_dir)>
+
+Remove any old test results in the provided C<work_dir>.
+
+=cut
+sub clean_test_results {
+    my ($work_dir) = @_;
+
+    # Remove the files that list all tests and failing tests
+    my $fail_tests = "$work_dir/$FILE_FAILING_TESTS";
+    my $all_tests = "$work_dir/$FILE_ALL_TESTS";
+
+    if (-e "$fail_tests") {
+        unlink("$fail_tests") == 1 or die("Cannot delete 'failing_tests': $!")
+    }
+    if (-e "$all_tests") {
+        unlink("$all_tests") == 1 or die("Cannot delete 'all_tests': $!")
+    }
 }
 
 1;
