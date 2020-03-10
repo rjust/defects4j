@@ -172,10 +172,11 @@ the given version id C<vid>. Format of C<vid>: C<\d+[bf]>.
 sub lookup {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-    $vid =~ /^(\d+)([bf])$/ or die "Unexpected version id: $vid";
-    defined $self->{_cache}->{$1}->{$2} or die "Version id does not exist: $vid!";
-    return $self->{_cache}->{$1}->{$2};
+    my $result = Utils::check_vid($vid);
+    my $bid  = $result->{bid};
+    my $type = $result->{type};
+    defined $self->{_cache}->{$bid}->{$type} or confess("Version id does not exist: '$vid'\n");
+    return $self->{_cache}->{$bid}->{$type};
 }
 
 =pod
@@ -224,7 +225,6 @@ sub get_bug_ids {
 
 Given a valid version id (C<vid>), this subroutine returns true if C<vid> exists
 in the C<commit-db> and false otherwise.
-Format of C<vid>: C<\d+[bf]>
 This subroutine dies if C<vid> is invalid.
 
 =cut
@@ -241,7 +241,6 @@ sub contains_version_id {
 
 Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
 the corresponding revision with C<revision_id> to F<work_dir>.
-Format of C<vid>: C<\d+[bf]>.
 
 B<Always performs a clean checkout, i.e., the working directory is deleted before the
 checkout, if it already exists>.
@@ -393,12 +392,12 @@ sub rev_date {
 #
 sub _build_db_cache {
     my $db = shift;
-    open (IN, "<$db") or die "Cannot open commit-db $db: $!";
+    open (IN, "<$db") or die "Cannot open commit-db '$db': $!";
     my $cache = {};
     while (<IN>) {
         chomp;
         /(\d+),([^,]+),([^,]+)/ or die "Corrupted commit-db!";
-        $cache->{$1} = {b => $2, f => $3, line => $_};
+        $cache->{$1} = {'b.min' => $2, 'b.orig' => $2, b => $2, f => $3, line => $_};
     }
     close IN;
 
