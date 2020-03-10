@@ -115,10 +115,8 @@ my $project = Project::create_project($config->{$CONFIG_PID});
 $project->{prog_root} = $WORK_DIR;
 
 # Clean temporary files that hold test results
-my $fail_tests = "$WORK_DIR/failing_tests";
-my $all_tests = "$WORK_DIR/all_tests";
-system(">$fail_tests");
-system(">$all_tests");
+my $fail_tests = "$WORK_DIR/$FILE_FAILING_TESTS";
+Utils::clean_test_results($WORK_DIR);
 
 # Run the test suite, according to the provided flags
 if (defined $TEST_SUITE){

@@ -130,10 +130,8 @@ my $src_dir = $project->src_dir($vid);
 my $classes = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
 
 # Clean temporary files that hold test results
-my $fail_tests = "$WORK_DIR/failing_tests";
-my $all_tests = "$WORK_DIR/all_tests";
-system(">$fail_tests");
-system(">$all_tests");
+my $fail_tests = "$WORK_DIR/$FILE_FAILING_TESTS";
+Utils::clean_test_results($WORK_DIR);
 
 # Run the test suite, according to the provided flags
 my $cov_results;
