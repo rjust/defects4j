@@ -49,10 +49,15 @@ sub _checkout_cmd {
     return "git clone $self->{repo} ${work_dir} 2>&1 && cd $work_dir && git checkout $revision_id 2>&1";
 }
 
+# TODO: Can we always use patch or git apply instead of a VCS-specific apply command?
 sub _apply_cmd {
     @_ == 3 or confess($ARG_ERROR);
     my ($self, $work_dir, $patch_file) = @_;
-    return "cd $work_dir && git apply $patch_file 2>&1";
+    # Some of the Git patches include a top-level directory that should be stripped.
+    # (Note that -p1 is the default for git apply -- a/src/...)
+    return "cd $work_dir; if git apply --check $patch_file 2>&1; " .
+            "then git apply $patch_file 2>&1; " .
+            "else git apply -p2 $patch_file 2>&1; fi";
 }
 
 sub _diff_cmd {
