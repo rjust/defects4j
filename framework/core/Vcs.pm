@@ -50,28 +50,6 @@ Returns the command to checkout C<revision_id> to the working directory F<work_d
 
 =cut
 sub _checkout_cmd { die $ABSTRACT_METHOD; }
-=pod
-
-  _apply_cmd(work_dir, patch_file)
-
-Returns the command to apply the patch (F<patch_file>) to the working directory
-(F<work_dir>). Since the file path of some patches needs to be stripped, this
-command tries a few dry-runs for the most likely settings before giving up.
-
-=cut
-sub _apply_cmd {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
-    # -p1 is the default for git apply (a/src/...) and the most likely option.
-    # Try -p0 and -p2 as well before giving up.
-    my @try = (1, 0, 2);
-    for my $n (@try) {
-        if (system("cd $work_dir; git apply -p$n --check $patch_file >/dev/null 2>&1") == 0) {
-            return("cd $work_dir; git apply -p$n $patch_file 2>&1");
-        }
-    }
-    confess("Patch is not applicable (tried -p0..2)!\n");
-}
 
 =pod
 
@@ -377,6 +355,29 @@ sub apply_patch {
     my ($self, $work_dir, $patch_file) = @_;
     my $cmd = $self->_apply_cmd($work_dir, $patch_file);
     return Utils::exec_cmd($cmd, "Apply patch");
+}
+
+=pod
+
+  _apply_cmd(work_dir, patch_file)
+
+Returns the command to apply the patch (F<patch_file>) to the working directory
+(F<work_dir>). Since the file path of some patches needs to be stripped, this
+command tries a few dry-runs for the most likely settings before giving up.
+
+=cut
+sub _apply_cmd {
+    @_ == 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file) = @_;
+    # -p1 is the default for git apply (a/src/...) and the most likely option.
+    # Try -p0 and -p2 as well before giving up.
+    my @try = (1, 0, 2);
+    for my $n (@try) {
+        if (system("cd $work_dir; git apply -p$n --check $patch_file >/dev/null 2>&1") == 0) {
+            return("cd $work_dir; git apply -p$n $patch_file 2>&1");
+        }
+    }
+    confess("Patch is not applicable (tried -p0..2)!\n");
 }
 
 =pod
