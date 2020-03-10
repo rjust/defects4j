@@ -9,6 +9,7 @@ addons:
     packages:
       - maven
       - diffstat
+      - patchutils
 
 cache:
   directories:
