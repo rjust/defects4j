@@ -49,12 +49,6 @@ sub _checkout_cmd {
     return "git clone $self->{repo} ${work_dir} 2>&1 && cd $work_dir && git checkout $revision_id 2>&1";
 }
 
-sub _apply_cmd {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
-    return "cd $work_dir && git apply $patch_file 2>&1";
-}
-
 sub _diff_cmd {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
