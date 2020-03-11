@@ -1,0 +1,43 @@
+diff --git a/src/java/org/apache/commons/collections/map/MultiValueMap.java b/src/java/org/apache/commons/collections/map/MultiValueMap.java
+index 8bddee9f..d02c7be8 100644
+--- a/src/java/org/apache/commons/collections/map/MultiValueMap.java
++++ b/src/java/org/apache/commons/collections/map/MultiValueMap.java
+@@ -206,11 +206,11 @@ public class MultiValueMap extends AbstractMapDecorator implements MultiMap {
+         Collection coll = getCollection(key);
+         if (coll == null) {
+             coll = createCollection(1);  // might produce a non-empty collection
+-            coll.add(value);
++            result = coll.add(value);
+             if (coll.size() > 0) {
+                 // only add if non-zero size to maintain class state
+                 getMap().put(key, coll);
+-                result = true;  // map definitely changed
++                result = false;
+             }
+         } else {
+             result = coll.add(value);
+@@ -307,20 +307,19 @@ public class MultiValueMap extends AbstractMapDecorator implements MultiMap {
+         if (values == null || values.size() == 0) {
+             return false;
+         }
+-        boolean result = false;
+         Collection coll = getCollection(key);
+         if (coll == null) {
+             coll = createCollection(values.size());  // might produce a non-empty collection
+-            coll.addAll(values);
++            boolean result = coll.addAll(values);
+             if (coll.size() > 0) {
+                 // only add if non-zero size to maintain class state
+                 getMap().put(key, coll);
+-                result = true;  // map definitely changed
++                result = false;
+             }
++            return result;
+         } else {
+-            result = coll.addAll(values);
++            return coll.addAll(values);
+         }
+-        return result;
+     }
+ 
+     /**

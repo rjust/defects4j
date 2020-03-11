@@ -1,0 +1,21 @@
+diff --git a/src/java/org/apache/commons/cli/Parser.java b/src/java/org/apache/commons/cli/Parser.java
+index 16d0795..cf53a90 100644
+--- a/src/java/org/apache/commons/cli/Parser.java
++++ b/src/java/org/apache/commons/cli/Parser.java
+@@ -16,7 +16,6 @@
+  */
+ package org.apache.commons.cli;
+ 
+-import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Enumeration;
+ import java.util.Iterator;
+@@ -44,7 +43,7 @@ public abstract class Parser implements CommandLineParser {
+ 
+     protected void setOptions(final Options options) {
+         this.options = options;
+-        this.requiredOptions = new ArrayList(options.getRequiredOptions());
++        this.requiredOptions = options.getRequiredOptions();
+     }
+ 
+     protected Options getOptions() {

@@ -1,0 +1,17 @@
+diff --git a/src/java/org/apache/commons/cli/PosixParser.java b/src/java/org/apache/commons/cli/PosixParser.java
+index 12d3146..2590de7 100644
+--- a/src/java/org/apache/commons/cli/PosixParser.java
++++ b/src/java/org/apache/commons/cli/PosixParser.java
+@@ -302,9 +302,8 @@ public class PosixParser extends Parser {
+             }
+             else
+             {
+-                tokens.add(token);
+-                break;
++                tokens.add("-" + ch);
+             }
+         }
+     }
+-}
+\ No newline at end of file
++}

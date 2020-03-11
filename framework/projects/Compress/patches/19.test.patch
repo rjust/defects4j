@@ -1,0 +1,23 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+index 79b5061e..e4d17a18 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipFileTest.java
+@@ -226,18 +226,6 @@ public class ZipFileTest extends TestCase {
+         assertEquals(2, numberOfEntries);
+     }
+ 
+-    /**
+-     * @see https://issues.apache.org/jira/browse/COMPRESS-228
+-     */
+-    public void testExcessDataInZip64ExtraField() throws Exception {
+-        File archive = getFile("COMPRESS-228.zip");
+-        zf = new ZipFile(archive);
+-        // actually, if we get here, the test already has passed
+-
+-        ZipArchiveEntry ze = zf.getEntry("src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java");
+-        assertEquals(26101, ze.getSize());
+-    }
+-
+     /*
+      * ordertest.zip has been handcrafted.
+      *

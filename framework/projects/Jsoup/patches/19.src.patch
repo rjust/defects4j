@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/jsoup/safety/Whitelist.java b/src/main/java/org/jsoup/safety/Whitelist.java
+index 4d14dce..51349da 100644
+--- a/src/main/java/org/jsoup/safety/Whitelist.java
++++ b/src/main/java/org/jsoup/safety/Whitelist.java
+@@ -339,8 +339,6 @@ public class Whitelist {
+         // try to resolve relative urls to abs, and optionally update the attribute so output html has abs.
+         // rels without a baseuri get removed
+         String value = el.absUrl(attr.getKey());
+-        if (value.length() == 0)
+-            value = attr.getValue(); // if it could not be made abs, run as-is to allow custom unknown protocols
+         if (!preserveRelativeLinks)
+             attr.setValue(value);
+         

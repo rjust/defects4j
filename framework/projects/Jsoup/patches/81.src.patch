@@ -1,0 +1,24 @@
+diff --git a/src/main/java/org/jsoup/helper/DataUtil.java b/src/main/java/org/jsoup/helper/DataUtil.java
+index 3aaa0ed..0d52d38 100644
+--- a/src/main/java/org/jsoup/helper/DataUtil.java
++++ b/src/main/java/org/jsoup/helper/DataUtil.java
+@@ -2,7 +2,6 @@ package org.jsoup.helper;
+ 
+ import org.jsoup.UncheckedIOException;
+ import org.jsoup.internal.ConstrainableInputStream;
+-import org.jsoup.nodes.Comment;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+ import org.jsoup.nodes.Node;
+@@ -134,11 +133,6 @@ public final class DataUtil {
+                 XmlDeclaration decl = null;
+                 if (first instanceof XmlDeclaration)
+                     decl = (XmlDeclaration) first;
+-                else if (first instanceof Comment) {
+-                    Comment comment = (Comment) first;
+-                    if (comment.isXmlDeclaration())
+-                        decl = comment.asXmlDeclaration();
+-                }
+                 if (decl != null) {
+                     if (decl.name().equalsIgnoreCase("xml"))
+                         foundCharset = decl.attr("encoding");

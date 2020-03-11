@@ -1,0 +1,48 @@
+diff --git a/src/main/java/org/jsoup/nodes/Document.java b/src/main/java/org/jsoup/nodes/Document.java
+index 47632fc..2f37b29 100644
+--- a/src/main/java/org/jsoup/nodes/Document.java
++++ b/src/main/java/org/jsoup/nodes/Document.java
+@@ -2,7 +2,6 @@ package org.jsoup.nodes;
+ 
+ import org.jsoup.helper.Validate;
+ import org.jsoup.parser.Tag;
+-import org.jsoup.select.Elements;
+ 
+ import java.nio.charset.Charset;
+ import java.nio.charset.CharsetEncoder;
+@@ -111,8 +110,6 @@ public class Document extends Element {
+         normaliseTextNodes(htmlEl);
+         normaliseTextNodes(this);
+ 
+-        normaliseStructure("head", htmlEl);
+-        normaliseStructure("body", htmlEl);
+         
+         return this;
+     }
+@@ -137,26 +134,7 @@ public class Document extends Element {
+     }
+ 
+     // merge multiple <head> or <body> contents into one, delete the remainder, and ensure they are owned by <html>
+-    private void normaliseStructure(String tag, Element htmlEl) {
+-        Elements elements = this.getElementsByTag(tag);
+-        Element master = elements.first(); // will always be available as created above if not existent
+-        if (elements.size() > 1) { // dupes, move contents to master
+-            List<Node> toMove = new ArrayList<Node>();
+-            for (int i = 1; i < elements.size(); i++) {
+-                Node dupe = elements.get(i);
+-                for (Node node : dupe.childNodes)
+-                    toMove.add(node);
+-                dupe.remove();
+-            }
+-
+-            for (Node dupe : toMove)
+-                master.appendChild(dupe);
+-        }
+         // ensure parented by <html>
+-        if (!master.parent().equals(htmlEl)) {
+-            htmlEl.appendChild(master); // includes remove()            
+-        }
+-    }
+ 
+     // fast method to get first by tag name, used for html, head, body finders
+     private Element findFirstElementByTagName(String tag, Node node) {

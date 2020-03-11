@@ -1,0 +1,205 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/ParserSequenceTest.java b/src/test/java/com/fasterxml/jackson/core/json/ParserSequenceTest.java
+index f555186f..738fa25d 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/ParserSequenceTest.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/ParserSequenceTest.java
+@@ -3,7 +3,6 @@ package com.fasterxml.jackson.core.json;
+ import com.fasterxml.jackson.core.*;
+ import com.fasterxml.jackson.core.util.JsonParserSequence;
+ 
+-@SuppressWarnings("resource")
+ public class ParserSequenceTest
+     extends com.fasterxml.jackson.core.BaseTest
+ {
+@@ -44,22 +43,8 @@ public class ParserSequenceTest
+         assertTrue(seq.isClosed());
+ 
+         seq.close();
+-    }
+-
+-    // for [jackson-core#296]
+-    public void testInitialized() throws Exception
+-    {
+-        JsonParser p1 = JSON_FACTORY.createParser("1 2");
+-        JsonParser p2 = JSON_FACTORY.createParser("3 false");
+-        // consume '1', move to '2'
+-        assertToken(JsonToken.VALUE_NUMBER_INT, p1.nextToken());
+-        assertToken(JsonToken.VALUE_NUMBER_INT, p1.nextToken());
+-
+-        JsonParserSequence seq = JsonParserSequence.createFlattened(p1, p2);
+-        assertToken(JsonToken.VALUE_NUMBER_INT, seq.nextToken());
+-        assertEquals(2, seq.getIntValue());
+-        assertToken(JsonToken.VALUE_NUMBER_INT, seq.nextToken());
+-        assertEquals(3, seq.getIntValue());
+-        seq.close();
++        // redundant, but call to remove IDE warnings
++        p1.close();
++        p2.close();
+     }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/StringGenerationTest.java b/src/test/java/com/fasterxml/jackson/core/json/StringGenerationTest.java
+index 4fd67c19..86d991fa 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/StringGenerationTest.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/StringGenerationTest.java
+@@ -287,7 +287,7 @@ public class StringGenerationTest
+             }
+             offset += act.length();
+         }
+-        assertEquals(JsonToken.END_ARRAY, p.currentToken());
++        assertEquals(JsonToken.END_ARRAY, p.getCurrentToken());
+         p.close();
+     }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/TestParserOverrides.java b/src/test/java/com/fasterxml/jackson/core/json/TestParserOverrides.java
+index 244effd7..d382428a 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/TestParserOverrides.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/TestParserOverrides.java
+@@ -45,14 +45,14 @@ public class TestParserOverrides extends com.fasterxml.jackson.core.BaseTest
+         JsonParser jp = useStream ?
+                 jf.createParser(new ByteArrayInputStream(DOC.getBytes("UTF-8")))
+                 : jf.createParser(DOC);
+-        assertNull(jp.currentToken());
++        assertNull(jp.getCurrentToken());
+         jp.clearCurrentToken();
+-        assertNull(jp.currentToken());
++        assertNull(jp.getCurrentToken());
+         assertNull(jp.getEmbeddedObject());
+         assertToken(JsonToken.START_ARRAY, jp.nextToken());
+-        assertToken(JsonToken.START_ARRAY, jp.currentToken());
++        assertToken(JsonToken.START_ARRAY, jp.getCurrentToken());
+         jp.clearCurrentToken();
+-        assertNull(jp.currentToken());
++        assertNull(jp.getCurrentToken());
+         // Also: no codec defined by default
+         try {
+             jp.readValueAsTree();
+@@ -69,7 +69,7 @@ public class TestParserOverrides extends com.fasterxml.jackson.core.BaseTest
+         JsonParser jp = useStream ?
+                 jf.createParser(new ByteArrayInputStream(DOC.getBytes("UTF-8")))
+                 : jf.createParser(new StringReader(DOC));
+-        assertNull(jp.currentToken());
++        assertNull(jp.getCurrentToken());
+         assertToken(JsonToken.START_OBJECT, jp.nextToken());
+         assertToken(JsonToken.FIELD_NAME, jp.nextToken());
+         assertEquals("first", jp.getCurrentName());
+@@ -94,7 +94,9 @@ public class TestParserOverrides extends com.fasterxml.jackson.core.BaseTest
+ 
+         assertToken(JsonToken.END_OBJECT, jp.nextToken());
+         jp.clearCurrentToken();
+-        assertNull(jp.currentToken());
++        assertNull(jp.getCurrentToken());
+         jp.close();
+     }
++    
++
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/TestRootValues.java b/src/test/java/com/fasterxml/jackson/core/json/TestRootValues.java
+index 625d2845..585dbbee 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/TestRootValues.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/TestRootValues.java
+@@ -45,7 +45,7 @@ public class TestRootValues
+         // Should fail, right away
+         try {
+         	p.nextToken();
+-        	fail("Ought to fail! Instead, got token: "+p.currentToken());
++        	fail("Ought to fail! Instead, got token: "+p.getCurrentToken());
+         } catch (JsonParseException e) {
+         	verifyException(e, "unexpected character");
+         }
+diff --git a/src/test/java/com/fasterxml/jackson/core/main/TestGeneratorCopy.java b/src/test/java/com/fasterxml/jackson/core/main/TestGeneratorCopy.java
+index e9e26f25..853ecb75 100644
+--- a/src/test/java/com/fasterxml/jackson/core/main/TestGeneratorCopy.java
++++ b/src/test/java/com/fasterxml/jackson/core/main/TestGeneratorCopy.java
+@@ -26,7 +26,7 @@ public class TestGeneratorCopy
+         while ((t = jp.nextToken()) != null) {
+             gen.copyCurrentEvent(jp);
+             // should not change parser state:
+-            assertToken(t, jp.currentToken());
++            assertToken(t, jp.getCurrentToken());
+         }
+         jp.close();
+         gen.close();
+@@ -46,14 +46,14 @@ public class TestGeneratorCopy
+         assertToken(JsonToken.VALUE_NUMBER_INT, jp.nextToken());
+         gen.copyCurrentEvent(jp);
+         // should not change parser state:
+-        assertToken(JsonToken.VALUE_NUMBER_INT, jp.currentToken());
++        assertToken(JsonToken.VALUE_NUMBER_INT, jp.getCurrentToken());
+         assertEquals(123, jp.getIntValue());
+ 
+         // And then let's copy the array
+         assertToken(JsonToken.START_ARRAY, jp.nextToken());
+         gen.copyCurrentStructure(jp);
+         // which will advance parser to matching close Array
+-        assertToken(JsonToken.END_ARRAY, jp.currentToken());
++        assertToken(JsonToken.END_ARRAY, jp.getCurrentToken());
+         jp.close();
+         gen.close();
+ 
+@@ -72,7 +72,7 @@ public class TestGeneratorCopy
+         assertToken(JsonToken.START_OBJECT, jp.nextToken());
+         gen.copyCurrentStructure(jp);
+         // which will advance parser to matching end Object
+-        assertToken(JsonToken.END_OBJECT, jp.currentToken());
++        assertToken(JsonToken.END_OBJECT, jp.getCurrentToken());
+         jp.close();
+         gen.close();
+ 
+diff --git a/src/test/java/com/fasterxml/jackson/core/read/JsonParserTest.java b/src/test/java/com/fasterxml/jackson/core/read/JsonParserTest.java
+index 55442e10..498bb9fa 100644
+--- a/src/test/java/com/fasterxml/jackson/core/read/JsonParserTest.java
++++ b/src/test/java/com/fasterxml/jackson/core/read/JsonParserTest.java
+@@ -226,7 +226,7 @@ public class JsonParserTest
+         // First, skipping of the whole thing
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         p.skipChildren();
+-        assertEquals(JsonToken.END_ARRAY, p.currentToken());
++        assertEquals(JsonToken.END_ARRAY, p.getCurrentToken());
+         if (!isInputData) {
+             JsonToken t = p.nextToken();
+             if (t != null) {
+@@ -242,27 +242,27 @@ public class JsonParserTest
+         assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+         p.skipChildren();
+         // shouldn't move
+-        assertToken(JsonToken.VALUE_NUMBER_INT, p.currentToken());
++        assertToken(JsonToken.VALUE_NUMBER_INT, p.getCurrentToken());
+         assertEquals(1, p.getIntValue());
+ 
+         assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+         // then skip array
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         p.skipChildren();
+-        assertToken(JsonToken.END_ARRAY, p.currentToken());
++        assertToken(JsonToken.END_ARRAY, p.getCurrentToken());
+ 
+         assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+         assertToken(JsonToken.START_OBJECT, p.nextToken());
+         p.skipChildren();
+-        assertToken(JsonToken.END_OBJECT, p.currentToken());
++        assertToken(JsonToken.END_OBJECT, p.getCurrentToken());
+ 
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         p.skipChildren();
+-        assertToken(JsonToken.END_ARRAY, p.currentToken());
++        assertToken(JsonToken.END_ARRAY, p.getCurrentToken());
+ 
+         assertToken(JsonToken.START_OBJECT, p.nextToken());
+         p.skipChildren();
+-        assertToken(JsonToken.END_OBJECT, p.currentToken());
++        assertToken(JsonToken.END_OBJECT, p.getCurrentToken());
+ 
+         assertToken(JsonToken.END_ARRAY, p.nextToken());
+ 
+diff --git a/src/test/java/com/fasterxml/jackson/core/util/TestDelegates.java b/src/test/java/com/fasterxml/jackson/core/util/TestDelegates.java
+index 8fe7db33..9cce04ac 100644
+--- a/src/test/java/com/fasterxml/jackson/core/util/TestDelegates.java
++++ b/src/test/java/com/fasterxml/jackson/core/util/TestDelegates.java
+@@ -18,7 +18,7 @@ public class TestDelegates extends com.fasterxml.jackson.core.BaseTest
+         JsonParser parser = JSON_F.createParser("[ 1, true, null, { } ]");
+         JsonParserDelegate del = new JsonParserDelegate(parser);
+         
+-        assertNull(del.currentToken());
++        assertNull(del.getCurrentToken());
+         assertToken(JsonToken.START_ARRAY, del.nextToken());
+         assertEquals("[", del.getText());
+         assertToken(JsonToken.VALUE_NUMBER_INT, del.nextToken());

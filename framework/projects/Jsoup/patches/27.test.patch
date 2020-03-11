@@ -1,0 +1,48 @@
+diff --git a/src/test/java/org/jsoup/helper/DataUtilTest.java b/src/test/java/org/jsoup/helper/DataUtilTest.java
+index a810ac7..d106df5 100644
+--- a/src/test/java/org/jsoup/helper/DataUtilTest.java
++++ b/src/test/java/org/jsoup/helper/DataUtilTest.java
+@@ -12,19 +12,17 @@ import java.nio.charset.Charset;
+ public class DataUtilTest {
+     @Test
+     public void testCharset() {
+-        assertEquals("utf-8", DataUtil.getCharsetFromContentType("text/html;charset=utf-8 "));
++        assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html;charset=utf-8 "));
+         assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html; charset=UTF-8"));
+         assertEquals("ISO-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=ISO-8859-1"));
+         assertEquals(null, DataUtil.getCharsetFromContentType("text/html"));
+         assertEquals(null, DataUtil.getCharsetFromContentType(null));
+-        assertEquals(null, DataUtil.getCharsetFromContentType("text/html;charset=Unknown"));
+     }
+ 
+     @Test public void testQuotedCharset() {
+-        assertEquals("utf-8", DataUtil.getCharsetFromContentType("text/html; charset=\"utf-8\""));
+-        assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html;charset=\"UTF-8\""));
++        assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html; charset=\"utf-8\""));
++        assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html;charset=\"utf-8\""));
+         assertEquals("ISO-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=\"ISO-8859-1\""));
+-        assertEquals(null, DataUtil.getCharsetFromContentType("text/html; charset=\"Unsupported\""));
+     }
+     
+     @Test public void discardsSpuriousByteOrderMark() {
+diff --git a/src/test/java/org/jsoup/integration/UrlConnectTest.java b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+index 6379c15..a78d729 100644
+--- a/src/test/java/org/jsoup/integration/UrlConnectTest.java
++++ b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+@@ -183,16 +183,4 @@ public class UrlConnectTest {
+         Document doc = Jsoup.connect(echoURL).cookies(cookies).get();
+         assertEquals("uid=jhy; token=asdfg123", ihVal("HTTP_COOKIE", doc));
+     }
+-
+-    @Test
+-    public void handlesDodgyCharset() throws IOException {
+-        // tests that when we get back "UFT8", that it is recognised as unsupported, and falls back to default instead
+-        String url = "http://direct.infohound.net/tools/bad-charset.pl";
+-        Connection.Response res = Jsoup.connect(url).execute();
+-        assertEquals("text/html; charset=UFT8", res.header("Content-Type")); // from the header
+-        assertEquals(null, res.charset()); // tried to get from header, not supported, so returns null
+-        Document doc = res.parse(); // would throw an error if charset unsupported
+-        assertTrue(doc.text().contains("Hello!"));
+-        assertEquals("UTF-8", res.charset()); // set from default on parse
+-    }
+ }

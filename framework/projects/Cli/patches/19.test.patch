@@ -1,0 +1,26 @@
+diff --git a/src/test/org/apache/commons/cli/PosixParserTest.java b/src/test/org/apache/commons/cli/PosixParserTest.java
+index b487f2f..00f4844 100644
+--- a/src/test/org/apache/commons/cli/PosixParserTest.java
++++ b/src/test/org/apache/commons/cli/PosixParserTest.java
+@@ -100,21 +100,6 @@ public class PosixParserTest extends TestCase
+         }
+     }
+ 
+-    public void testUnrecognizedOption2() throws Exception
+-    {
+-        String[] args = new String[] { "-z", "-abtoast", "foo", "bar" };
+-
+-        try
+-        {
+-            parser.parse(options, args);
+-            fail("UnrecognizedOptionException wasn't thrown");
+-        }
+-        catch (UnrecognizedOptionException e)
+-        {
+-            assertEquals("-z", e.getOption());
+-        }
+-    }
+-
+     public void testMissingArg() throws Exception
+     {
+         String[] args = new String[] { "-acb" };

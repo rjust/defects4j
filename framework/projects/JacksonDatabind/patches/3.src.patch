@@ -1,0 +1,22 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
+index 5475ba564..fdfeecb2e 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java
+@@ -63,7 +63,7 @@ public final class StringArrayDeserializer
+             if (t == JsonToken.VALUE_STRING) {
+                 value = jp.getText();
+             } else if (t == JsonToken.VALUE_NULL) {
+-                value = null; // since we have established that '_elementDeserializer == null' earlier
++                value = _elementDeserializer.getNullValue();
+             } else {
+                 value = _parseString(jp, ctxt);
+             }
+@@ -92,7 +92,7 @@ public final class StringArrayDeserializer
+         
+         while ((t = jp.nextToken()) != JsonToken.END_ARRAY) {
+             // Ok: no need to convert Strings, but must recognize nulls
+-            String value = (t == JsonToken.VALUE_NULL) ? deser.getNullValue() : deser.deserialize(jp, ctxt);
++            String value = (t == JsonToken.VALUE_NULL) ? null : deser.deserialize(jp, ctxt);
+             if (ix >= chunk.length) {
+                 chunk = buffer.appendCompletedChunk(chunk);
+                 ix = 0;

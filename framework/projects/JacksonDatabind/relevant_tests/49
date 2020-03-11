@@ -1,0 +1,12 @@
+com.fasterxml.jackson.databind.TestJDKSerialization
+com.fasterxml.jackson.databind.jsontype.WrapperObjectWithObjectIdTest
+com.fasterxml.jackson.databind.objectid.AlwaysAsReferenceFirstTest
+com.fasterxml.jackson.databind.objectid.JSOGDeserialize622Test
+com.fasterxml.jackson.databind.objectid.ObjectId825Test
+com.fasterxml.jackson.databind.objectid.TestAbstractWithObjectId
+com.fasterxml.jackson.databind.objectid.TestObjectId
+com.fasterxml.jackson.databind.objectid.TestObjectId154
+com.fasterxml.jackson.databind.objectid.TestObjectIdDeserialization
+com.fasterxml.jackson.databind.objectid.TestObjectIdSerialization
+com.fasterxml.jackson.databind.objectid.TestObjectIdWithEquals
+com.fasterxml.jackson.databind.objectid.TestObjectIdWithPolymorphic

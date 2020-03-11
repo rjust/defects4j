@@ -1,0 +1,31 @@
+diff --git a/src/test/java/org/apache/commons/codec/language/SoundexTest.java b/src/test/java/org/apache/commons/codec/language/SoundexTest.java
+index cebfc0be..87fe4eb5 100644
+--- a/src/test/java/org/apache/commons/codec/language/SoundexTest.java
++++ b/src/test/java/org/apache/commons/codec/language/SoundexTest.java
+@@ -228,8 +228,6 @@ public class SoundexTest extends StringEncoderAbstractTest<Soundex> {
+         // for the F). It is not coded A-226.
+         Assert.assertEquals("A261", this.getStringEncoder().encode("Ashcraft"));
+         Assert.assertEquals("A261", this.getStringEncoder().encode("Ashcroft"));
+-        Assert.assertEquals("Y330", this.getStringEncoder().encode("yehudit"));
+-        Assert.assertEquals("Y330", this.getStringEncoder().encode("yhwdyt"));
+     }
+ 
+     /**
+@@ -390,17 +388,4 @@ public class SoundexTest extends StringEncoderAbstractTest<Soundex> {
+             Assert.assertEquals("", this.getStringEncoder().encode("\u00f6"));
+         }
+     }
+-    
+-    /**
+-     * Tests example from http://en.wikipedia.org/wiki/Soundex#American_Soundex as of 2015-03-22.
+-     */
+-    @Test
+-    public void testWikipediaAmericanSoundex() {
+-        Assert.assertEquals("R163", this.getStringEncoder().encode("Robert"));        
+-        Assert.assertEquals("R163", this.getStringEncoder().encode("Rupert"));        
+-        Assert.assertEquals("A261", this.getStringEncoder().encode("Ashcraft"));        
+-        Assert.assertEquals("A261", this.getStringEncoder().encode("Ashcroft"));        
+-        Assert.assertEquals("T522", this.getStringEncoder().encode("Tymczak"));        
+-        Assert.assertEquals("P236", this.getStringEncoder().encode("Pfister"));        
+-    }
+ }

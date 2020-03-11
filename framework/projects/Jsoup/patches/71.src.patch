@@ -1,0 +1,83 @@
+diff --git a/src/main/java/org/jsoup/nodes/PseudoTextElement.java b/src/main/java/org/jsoup/nodes/PseudoTextElement.java
+deleted file mode 100644
+index cacec3f..0000000
+--- a/src/main/java/org/jsoup/nodes/PseudoTextElement.java
++++ /dev/null
+@@ -1,24 +0,0 @@
+-package org.jsoup.nodes;
+-
+-import org.jsoup.parser.Tag;
+-
+-import java.io.IOException;
+-
+-/**
+- * Represents a {@link TextNode} as an {@link Element}, to enable text nodes to be selected with
+- * the {@link org.jsoup.select.Selector} {@code :matchText} syntax.
+- */
+-public class PseudoTextElement extends Element {
+-
+-    public PseudoTextElement(Tag tag, String baseUri, Attributes attributes) {
+-        super(tag, baseUri, attributes);
+-    }
+-
+-    @Override
+-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+-    }
+-
+-    @Override
+-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+-    }
+-}
+diff --git a/src/main/java/org/jsoup/select/Evaluator.java b/src/main/java/org/jsoup/select/Evaluator.java
+index 735606f..86b43d9 100644
+--- a/src/main/java/org/jsoup/select/Evaluator.java
++++ b/src/main/java/org/jsoup/select/Evaluator.java
+@@ -6,8 +6,6 @@ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.DocumentType;
+ import org.jsoup.nodes.Element;
+ import org.jsoup.nodes.Node;
+-import org.jsoup.nodes.PseudoTextElement;
+-import org.jsoup.nodes.TextNode;
+ import org.jsoup.nodes.XmlDeclaration;
+ 
+ import java.util.List;
+@@ -753,26 +751,6 @@ public abstract class Evaluator {
+         }
+     }
+ 
+-    public static final class MatchText extends Evaluator {
+ 
+-        @Override
+-        public boolean matches(Element root, Element element) {
+-            if (element instanceof PseudoTextElement)
+-                return true;
+-
+-            List<TextNode> textNodes = element.textNodes();
+-            for (TextNode textNode : textNodes) {
+-                PseudoTextElement pel = new PseudoTextElement(
+-                    org.jsoup.parser.Tag.valueOf(element.tagName()), element.baseUri(), element.attributes());
+-                textNode.replaceWith(pel);
+-                pel.appendChild(textNode);
+-            }
+-            return false;
+-        }
+ 
+-        @Override
+-        public String toString() {
+-            return ":matchText";
+-        }
+-    }
+ }
+diff --git a/src/main/java/org/jsoup/select/QueryParser.java b/src/main/java/org/jsoup/select/QueryParser.java
+index 99e5147..e00f46e 100644
+--- a/src/main/java/org/jsoup/select/QueryParser.java
++++ b/src/main/java/org/jsoup/select/QueryParser.java
+@@ -200,8 +200,6 @@ public class QueryParser {
+         	evals.add(new Evaluator.IsEmpty());
+         else if (tq.matchChomp(":root"))
+         	evals.add(new Evaluator.IsRoot());
+-        else if (tq.matchChomp(":matchText"))
+-            evals.add(new Evaluator.MatchText());
+ 		else // unhandled
+             throw new Selector.SelectorParseException("Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());
+ 

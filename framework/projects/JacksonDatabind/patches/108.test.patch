@@ -1,0 +1,65 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/FullStreamReadTest.java b/src/test/java/com/fasterxml/jackson/databind/FullStreamReadTest.java
+index ed39d81ad..7a2ae7c65 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/FullStreamReadTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/FullStreamReadTest.java
+@@ -17,10 +17,6 @@ public class FullStreamReadTest extends BaseMapTest
+ 
+     private final static String JSON_FAIL_ARRAY = JSON_OK_ARRAY + " [ ]";
+ 
+-    private final static String JSON_OK_NULL = " null  ";
+-    private final static String JSON_OK_NULL_WITH_COMMENT = " null /* stuff */ ";
+-    private final static String JSON_FAIL_NULL = JSON_OK_NULL + " false";
+-    
+     /*
+     /**********************************************************
+     /* Test methods, config
+@@ -42,16 +38,6 @@ public class FullStreamReadTest extends BaseMapTest
+         _verifyCollection(MAPPER.readValue(JSON_OK_ARRAY, List.class));
+         _verifyCollection(MAPPER.readValue(JSON_OK_ARRAY_WITH_COMMENT, List.class));
+         _verifyCollection(MAPPER.readValue(JSON_FAIL_ARRAY, List.class));
+-
+-        // ditto for getting `null` and some other token
+-
+-        assertTrue(MAPPER.readTree(JSON_OK_NULL).isNull());
+-        assertTrue(MAPPER.readTree(JSON_OK_NULL_WITH_COMMENT).isNull());
+-        assertTrue(MAPPER.readTree(JSON_FAIL_NULL).isNull());
+-
+-        assertNull(MAPPER.readValue(JSON_OK_NULL, Object.class));
+-        assertNull(MAPPER.readValue(JSON_OK_NULL_WITH_COMMENT, Object.class));
+-        assertNull(MAPPER.readValue(JSON_FAIL_NULL, Object.class));
+     }
+ 
+     public void testMapperFailOnTrailing() throws Exception
+@@ -106,11 +92,6 @@ public class FullStreamReadTest extends BaseMapTest
+                 .readValue(JSON_OK_ARRAY_WITH_COMMENT));
+     }
+ 
+-    public void testMapperFailOnTrailingWithNull() throws Exception
+-    {
+-        // !!! TODO
+-    }
+-    
+     public void testReaderAcceptTrailing() throws Exception
+     {
+         ObjectReader R = MAPPER.reader();
+diff --git a/src/test/java/com/fasterxml/jackson/databind/node/EmptyContentAsTreeTest.java b/src/test/java/com/fasterxml/jackson/databind/node/EmptyContentAsTreeTest.java
+index 020ced618..459bff294 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/node/EmptyContentAsTreeTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/node/EmptyContentAsTreeTest.java
+@@ -56,6 +56,7 @@ public class EmptyContentAsTreeTest extends BaseMapTest
+     }
+ 
+     // [databind#1406]
++    /*
+     public void testNullFromEOFWithParserAndReader() throws Exception
+     {
+         try (JsonParser p = MAPPER.getFactory().createParser(EMPTY0)) {
+@@ -88,7 +89,7 @@ public class EmptyContentAsTreeTest extends BaseMapTest
+             _assertNullTree(MAPPER.reader().readTree(p));
+         }
+     }
+-
++*/
+     // [databind#2211]: when passing content sources OTHER than `JsonParser`,
+     // return "missing node" instead of alternate (return `null`, throw exception).
+     public void testMissingNodeForEOFOtherMapper() throws Exception

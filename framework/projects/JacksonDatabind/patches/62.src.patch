@@ -1,0 +1,19 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
+index 33d8878e3..7f58b7ad8 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java
+@@ -181,14 +181,6 @@ public class CollectionDeserializer
+                             +") returned true for 'canCreateUsingDelegate()', but null for 'getDelegateType()'");
+                 }
+                 delegateDeser = findDeserializer(ctxt, delegateType, property);
+-            } else if (_valueInstantiator.canCreateUsingArrayDelegate()) {
+-                JavaType delegateType = _valueInstantiator.getArrayDelegateType(ctxt.getConfig());
+-                if (delegateType == null) {
+-                    throw new IllegalArgumentException("Invalid array-delegate-creator definition for "+_collectionType
+-                            +": value instantiator ("+_valueInstantiator.getClass().getName()
+-                            +") returned true for 'canCreateUsingArrayDelegate()', but null for 'getArrayDelegateType()'");
+-                }
+-                delegateDeser = findDeserializer(ctxt, delegateType, property);
+             }
+         }
+         // [databind#1043]: allow per-property allow-wrapping of single overrides:

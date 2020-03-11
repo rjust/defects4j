@@ -1,0 +1,66 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVLexerTest.java b/src/test/java/org/apache/commons/csv/CSVLexerTest.java
+index a4ac74f..c7c58ca 100644
+--- a/src/test/java/org/apache/commons/csv/CSVLexerTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVLexerTest.java
+@@ -36,6 +36,7 @@ import java.io.IOException;
+ import java.io.StringReader;
+ 
+ import org.junit.Before;
++import org.junit.Ignore;
+ import org.junit.Test;
+ 
+ /**
+@@ -310,42 +311,48 @@ public class CSVLexerTest {
+         assertThat(lexer.nextToken(new Token()), hasContent("character" + LF + "Escaped"));
+     }
+ 
+-    @Test // TODO is this correct? Do we expect TAB to be un/escaped?
++    @Test
+     public void testEscapedTab() throws Exception {
+         final Lexer lexer = getLexer("character\\" + TAB + "Escaped", formatWithEscaping);
+         assertThat(lexer.nextToken(new Token()), hasContent("character" + TAB + "Escaped"));
+     }
+ 
+-    @Test // TODO is this correct? Do we expect BACKSPACE to be un/escaped?
++    @Test
+     public void testEscapeBackspace() throws Exception {
+         final Lexer lexer = getLexer("character\\" + BACKSPACE + "Escaped", formatWithEscaping);
+         assertThat(lexer.nextToken(new Token()), hasContent("character" + BACKSPACE + "Escaped"));
+     }
+ 
+-    @Test // TODO is this correct? Do we expect FF to be un/escaped?
++    @Test
+     public void testEscapeFF() throws Exception {
+         final Lexer lexer = getLexer("character\\" + FF + "Escaped", formatWithEscaping);
+         assertThat(lexer.nextToken(new Token()), hasContent("character" + FF + "Escaped"));
+     }
+ 
++    // FIXME this should work after CSV-58 is resolved. Currently the result will be "charactera\NEscaped"
+     @Test
++    @Ignore
+     public void testEscapedMySqlNullValue() throws Exception {
+         // MySQL uses \N to symbolize null values. We have to restore this
+         final Lexer lexer = getLexer("character\\NEscaped", formatWithEscaping);
+         assertThat(lexer.nextToken(new Token()), hasContent("character\\NEscaped"));
+     }
+ 
++    // FIXME this should work after CSV-58 is resolved. Currently the result will be "characteraEscaped"
+     @Test
++    @Ignore
+     public void testEscapedCharacter() throws Exception {
+         final Lexer lexer = getLexer("character\\aEscaped", formatWithEscaping);
+         assertThat(lexer.nextToken(new Token()), hasContent("character\\aEscaped"));
+     }
+ 
++    // FIXME this should work after CSV-58 is resolved. Currently the result will be "characterCREscaped"
+     @Test
++    @Ignore
+     public void testEscapedControlCharacter() throws Exception {
+-        // we are explicitly using an escape different from \ here
++        // we are explicitly using an escape different from \ here, because \r is the character sequence for CR
+         final Lexer lexer = getLexer("character!rEscaped", CSVFormat.newBuilder().withEscape('!').build());
+-        assertThat(lexer.nextToken(new Token()), hasContent("character" + CR + "Escaped"));
++        assertThat(lexer.nextToken(new Token()), hasContent("character!rEscaped"));
+     }
+ 
+     @Test

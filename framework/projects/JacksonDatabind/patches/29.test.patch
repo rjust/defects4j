@@ -1,0 +1,61 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+index 0e5707f67..509ded50e 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+@@ -23,7 +23,7 @@ public class TestExternalId extends BaseMapTest
+         }
+     }
+ 
+-    // for [databind#96]
++    // for [Issue#96]
+     static class ExternalBeanWithDefault
+     {
+         @JsonTypeInfo(use=Id.CLASS, include=As.EXTERNAL_PROPERTY, property="extType",
+@@ -158,6 +158,8 @@ public class TestExternalId extends BaseMapTest
+         public Base getBase() { return base; }
+     }
+ 
++    // [JACKSON-831]: should allow a property to map id to as well
++    
+     interface Pet {}
+ 
+     static class Dog implements Pet {
+@@ -180,7 +182,7 @@ public class TestExternalId extends BaseMapTest
+         }
+     }    
+ 
+-    // for [databind#118]
++    // for [Issue#118]
+     static class ExternalTypeWithNonPOJO {
+         @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+                 property = "type",
+@@ -197,7 +199,7 @@ public class TestExternalId extends BaseMapTest
+         public ExternalTypeWithNonPOJO(Object o) { value = o; }
+     }    
+ 
+-    // for [databind#119]
++    // for [Issue#119]
+     static class AsValueThingy {
+         public long rawDate;
+ 
+@@ -279,20 +281,6 @@ public class TestExternalId extends BaseMapTest
+                 mapper.writeValueAsString(new FunkyExternalBean()));
+     }
+ 
+-    // for [databind#942]
+-    public void testExternalTypeIdWithNull() throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        mapper.registerSubtypes(ValueBean.class);
+-        ExternalBean b;
+-        b = mapper.readValue(aposToQuotes("{'bean':null,'extType':'vbean'}"),
+-                ExternalBean.class);
+-        assertNotNull(b);
+-        b = mapper.readValue(aposToQuotes("{'extType':'vbean','bean':null}"),
+-                ExternalBean.class);
+-        assertNotNull(b);
+-    }
+-
+     /*
+     /**********************************************************
+     /* Unit tests, deserialization

@@ -213,10 +213,24 @@ foreach my $bid (@bids) {
     }
 
     # Save dependent tests to $DEP_TEST_FILE
+    
+    # Get contents of current dependent tests file
+    my @old_dep_tests;
+
+    if (-e $DEP_TEST_FILE){
+        open my $contents, '<', $DEP_TEST_FILE or die "Cannot open dependent tests file: $!\n";
+        my @old_dep_tests = <$contents>;
+        close $contents;    
+    }
+
     my @dependent_tests = grep { !($_ ~~  @{$list}) } @fail_in_order;
     for my $dependent_test (@dependent_tests) {
-        print " ## Warning: Dependent test ($dependent_test) is being added to list.\n";
-        system("echo '--- $dependent_test' >> $DEP_TEST_FILE");
+        # Add the test unless it is already in the list.
+        unless ($dependent_test ~~ @old_dep_tests) {
+            print " ## Warning: Dependent test ($dependent_test) is being added to list.\n";
+            system("echo '--- $dependent_test' >> $DEP_TEST_FILE");
+            push @old_dep_tests, $dependent_test;
+        }
     }
 
     # Add data

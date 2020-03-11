@@ -1,0 +1,77 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java b/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
+index 2fd10fb56..caa09c304 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java
+@@ -2507,9 +2507,6 @@ public class ObjectMapper
+     {
+         if (fromValue == null) return null;
+         TokenBuffer buf = new TokenBuffer(this, false);
+-        if (isEnabled(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)) {
+-            buf = buf.forceUseOfBigDecimal(true);
+-        }
+         JsonNode result;
+         try {
+             writeValue(buf, fromValue);
+@@ -3426,9 +3423,6 @@ public class ObjectMapper
+         
+         // Then use TokenBuffer, which is a JsonGenerator:
+         TokenBuffer buf = new TokenBuffer(this, false);
+-        if (isEnabled(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)) {
+-            buf = buf.forceUseOfBigDecimal(true);
+-        }
+         try {
+             // inlined 'writeValue' with minor changes:
+             // first: disable wrapping when writing
+diff --git a/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java b/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
+index fc3600ad9..39d9e7186 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java
+@@ -77,7 +77,6 @@ public class TokenBuffer
+      *
+      * @since 2.7
+      */
+-    protected boolean _forceBigDecimal;
+     
+     /*
+     /**********************************************************
+@@ -186,17 +185,11 @@ public class TokenBuffer
+         _hasNativeTypeIds = p.canReadTypeId();
+         _hasNativeObjectIds = p.canReadObjectId();
+         _mayHaveNativeIds = _hasNativeTypeIds | _hasNativeObjectIds;
+-        _forceBigDecimal = (ctxt == null) ? false
+-                : ctxt.isEnabled(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+     }
+ 
+     /**
+      * @since 2.7
+      */
+-    public TokenBuffer forceUseOfBigDecimal(boolean b) {
+-        _forceBigDecimal = b;
+-        return this;
+-    }
+ 
+     @Override
+     public Version version() {
+@@ -963,14 +956,11 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+             }
+             break;
+         case VALUE_NUMBER_FLOAT:
+-            if (_forceBigDecimal) {
+                 /* 10-Oct-2015, tatu: Ideally we would first determine whether underlying
+                  *   number is already decoded into a number (in which case might as well
+                  *   access as number); or is still retained as text (in which case we
+                  *   should further defer decoding that may not need BigDecimal):
+                  */
+-                writeNumber(p.getDecimalValue());
+-            } else {
+                 switch (p.getNumberType()) {
+                 case BIG_DECIMAL:
+                     writeNumber(p.getDecimalValue());
+@@ -980,7 +970,6 @@ sb.append("NativeObjectIds=").append(_hasNativeObjectIds).append(",");
+                     break;
+                 default:
+                     writeNumber(p.getDoubleValue());
+-                }
+             }
+             break;
+         case VALUE_TRUE:

@@ -1,0 +1,9 @@
+com.fasterxml.jackson.core.io.IOContext
+com.fasterxml.jackson.core.JsonFactory
+com.fasterxml.jackson.core.JsonGenerator
+com.fasterxml.jackson.core.JsonParseException
+com.fasterxml.jackson.core.JsonParser
+com.fasterxml.jackson.core.JsonProcessingException
+com.fasterxml.jackson.core.JsonToken
+com.fasterxml.jackson.core.util.BufferRecycler
+com.fasterxml.jackson.core.Versioned

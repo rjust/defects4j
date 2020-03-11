@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithRecursiveTypes.java b/src/test/java/com/fasterxml/jackson/failing/TestTypeFactoryWithRecursiveTypes.java
+similarity index 95%
+rename from src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithRecursiveTypes.java
+rename to src/test/java/com/fasterxml/jackson/failing/TestTypeFactoryWithRecursiveTypes.java
+index 50c524938..fa9e78109 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithRecursiveTypes.java
++++ b/src/test/java/com/fasterxml/jackson/failing/TestTypeFactoryWithRecursiveTypes.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.type;
++package com.fasterxml.jackson.failing;
+ 
+ import java.io.IOException;
+ 

@@ -1,0 +1,8 @@
+org.apache.commons.codec.binary.Base64
+org.apache.commons.codec.binary.Base64InputStream
+org.apache.commons.codec.BinaryDecoder
+org.apache.commons.codec.BinaryEncoder
+org.apache.commons.codec.Decoder
+org.apache.commons.codec.DecoderException
+org.apache.commons.codec.Encoder
+org.apache.commons.codec.EncoderException

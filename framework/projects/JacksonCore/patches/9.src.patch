@@ -1,0 +1,72 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java b/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
+index fbca28ed..37c6503c 100644
+--- a/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
++++ b/src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java
+@@ -389,9 +389,6 @@ public abstract class ParserMinimalBase extends JsonParser
+         if (_currToken == JsonToken.VALUE_STRING) {
+             return getText();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         return getValueAsString(null);
+     }
+     
+@@ -400,9 +397,6 @@ public abstract class ParserMinimalBase extends JsonParser
+         if (_currToken == JsonToken.VALUE_STRING) {
+             return getText();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         if (_currToken == null || _currToken == JsonToken.VALUE_NULL || !_currToken.isScalarValue()) {
+             return defaultValue;
+         }
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+index 4f0f753f..b5b0051c 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+@@ -250,9 +250,6 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+             }
+             return _textBuffer.contentsAsString();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         return super.getValueAsString(null);
+     }
+     
+@@ -266,9 +263,6 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+             }
+             return _textBuffer.contentsAsString();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         return super.getValueAsString(defValue);
+     }
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+index 2b83d188..2fe36835 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+@@ -302,9 +302,6 @@ public class UTF8StreamJsonParser
+             }
+             return _textBuffer.contentsAsString();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         return super.getValueAsString(null);
+     }
+     
+@@ -319,9 +316,6 @@ public class UTF8StreamJsonParser
+             }
+             return _textBuffer.contentsAsString();
+         }
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return getCurrentName();
+-        }
+         return super.getValueAsString(defValue);
+     }
+ 

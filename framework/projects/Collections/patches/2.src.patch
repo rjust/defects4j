@@ -1,0 +1,55 @@
+diff --git a/src/java/org/apache/commons/collections/ExtendedProperties.java b/src/java/org/apache/commons/collections/ExtendedProperties.java
+index 7046bc8d..bdfd0ade 100644
+--- a/src/java/org/apache/commons/collections/ExtendedProperties.java
++++ b/src/java/org/apache/commons/collections/ExtendedProperties.java
+@@ -175,7 +175,6 @@ public class ExtendedProperties extends Hashtable {
+      * This is the name of the property that can point to other
+      * properties file for including other properties files.
+      */
+-    private String includePropertyName = null;
+ 
+     /**
+      * This is the default name of the property that can point to other
+@@ -511,13 +510,7 @@ public class ExtendedProperties extends Hashtable {
+      * @return the property name which includes another property
+      */
+     public String getInclude() {
+-        if (includePropertyName == null) {
+             return include;  // backwards compatability
+-        }
+-        if ("".equals(includePropertyName)) {
+-            return null;  // hack to allow backwards compatability
+-        }
+-        return includePropertyName;
+     }
+ 
+     /**
+@@ -532,10 +525,7 @@ public class ExtendedProperties extends Hashtable {
+      * @param inc  the property name which includes another property, empty converted to null
+      */
+     public void setInclude(String inc) {
+-        if (inc == null) {
+-            inc = "";  // hack to allow backwards compatability
+-        }
+-        includePropertyName = inc;
++        include = inc;
+     }
+ 
+     /**
+@@ -579,7 +569,6 @@ public class ExtendedProperties extends Hashtable {
+         }
+ 
+         try {
+-            String includeProperty = getInclude();
+             while (true) {
+                 String line = reader.readProperty();
+                 if (line == null) {
+@@ -596,7 +585,7 @@ public class ExtendedProperties extends Hashtable {
+                         continue;
+                     }
+ 
+-                    if (includeProperty != null && key.equalsIgnoreCase(includeProperty)) {
++                    if (getInclude() != null && key.equalsIgnoreCase(getInclude())) {
+                         // Recursively load properties files.
+                         File file = null;
+ 

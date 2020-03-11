@@ -1,6 +1,6 @@
-org.mockito.StateMaster
 org.mockito.configuration.MockitoConfiguration
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
+org.mockitousage.bugs.InheritedGenericsPolimorphicCallTest
 org.mockitoutil.Assertor
 org.mockitoutil.TestBase
-org.mockitousage.bugs.InheritedGenericsPolimorphicCallTest

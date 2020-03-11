@@ -1,0 +1,5 @@
+com.fasterxml.jackson.databind.BaseMapTest
+com.fasterxml.jackson.databind.BaseTest
+com.fasterxml.jackson.databind.convert.TestMapConversions
+com.fasterxml.jackson.databind.deser.TestMapDeserialization
+com.fasterxml.jackson.databind.type.TestTypeFactory

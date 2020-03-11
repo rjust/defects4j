@@ -1,0 +1,36 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+index e27d6a9dc..c27ea729e 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/FromStringDeserializer.java
+@@ -228,13 +228,13 @@ public abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>
+                 return Pattern.compile(value);
+             case STD_LOCALE:
+                 {
+-                    int ix = _firstHyphenOrUnderscore(value);
++                    int ix = value.indexOf('_');
+                     if (ix < 0) { // single argument
+                         return new Locale(value);
+                     }
+                     String first = value.substring(0, ix);
+                     value = value.substring(ix+1);
+-                    ix = _firstHyphenOrUnderscore(value);
++                    ix = value.indexOf('_');
+                     if (ix < 0) { // two pieces
+                         return new Locale(first, value);
+                     }
+@@ -289,15 +289,5 @@ public abstract class FromStringDeserializer<T> extends StdScalarDeserializer<T>
+         }
+ 
+ 
+-        protected int _firstHyphenOrUnderscore(String str)
+-        {
+-            for (int i = 0, end = str.length(); i < end; ++i) {
+-                char c = str.charAt(i);
+-                if (c == '_' || c == '-') {
+-                    return i;
+-                }
+-            }
+-            return -1;
+-        }
+     }
+ }

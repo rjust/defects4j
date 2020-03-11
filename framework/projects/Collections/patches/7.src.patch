@@ -1,0 +1,155 @@
+diff --git a/src/java/org/apache/commons/collections/ExtendedProperties.java b/src/java/org/apache/commons/collections/ExtendedProperties.java
+index 8c302f8e..dba80b88 100644
+--- a/src/java/org/apache/commons/collections/ExtendedProperties.java
++++ b/src/java/org/apache/commons/collections/ExtendedProperties.java
+@@ -640,7 +640,7 @@ public class ExtendedProperties extends Hashtable {
+      */
+     public Object getProperty(String key) {
+         // first, try to get from the 'user value' store
+-        Object obj = super.get(key);
++        Object obj = this.get(key);
+ 
+         if (obj == null) {
+             // if there isn't a value there, get it from the
+@@ -706,7 +706,7 @@ public class ExtendedProperties extends Hashtable {
+         if (!containsKey(key)) {
+             keysAsListed.add(key);
+         }
+-        super.put(key, value);
++        put(key, value);
+     }
+ 
+     /**
+@@ -728,7 +728,7 @@ public class ExtendedProperties extends Hashtable {
+             List values = new Vector(2);
+             values.add(current);
+             values.add(value);
+-            super.put(key, values);
++            put(key, values);
+             
+         } else if (current instanceof List) {
+             // already a list - just add the new token
+@@ -739,7 +739,7 @@ public class ExtendedProperties extends Hashtable {
+             if (!containsKey(key)) {
+                 keysAsListed.add(key);
+             }
+-            super.put(key, value);
++            put(key, value);
+         }
+     }
+ 
+@@ -832,7 +832,7 @@ public class ExtendedProperties extends Hashtable {
+                     break;
+                 }
+             }
+-            super.remove(key);
++            remove(key);
+         }
+     }
+ 
+@@ -1091,7 +1091,7 @@ public class ExtendedProperties extends Hashtable {
+         } else if (value instanceof String) {
+             Vector values = new Vector(1);
+             values.add(value);
+-            super.put(key, values);
++            put(key, values);
+             return values;
+             
+         } else if (value == null) {
+@@ -1143,7 +1143,7 @@ public class ExtendedProperties extends Hashtable {
+         } else if (value instanceof String) {
+             List values = new ArrayList(1);
+             values.add(value);
+-            super.put(key, values);
++            put(key, values);
+             return values;
+             
+         } else if (value == null) {
+@@ -1209,7 +1209,7 @@ public class ExtendedProperties extends Hashtable {
+         } else if (value instanceof String) {
+             String s = testBoolean((String) value);
+             Boolean b = new Boolean(s);
+-            super.put(key, b);
++            put(key, b);
+             return b;
+             
+         } else if (value == null) {
+@@ -1303,7 +1303,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Byte b = new Byte((String) value);
+-            super.put(key, b);
++            put(key, b);
+             return b;
+             
+         } else if (value == null) {
+@@ -1373,7 +1373,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Short s = new Short((String) value);
+-            super.put(key, s);
++            put(key, s);
+             return s;
+             
+         } else if (value == null) {
+@@ -1471,7 +1471,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Integer i = new Integer((String) value);
+-            super.put(key, i);
++            put(key, i);
+             return i;
+             
+         } else if (value == null) {
+@@ -1541,7 +1541,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Long l = new Long((String) value);
+-            super.put(key, l);
++            put(key, l);
+             return l;
+             
+         } else if (value == null) {
+@@ -1611,7 +1611,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Float f = new Float((String) value);
+-            super.put(key, f);
++            put(key, f);
+             return f;
+             
+         } else if (value == null) {
+@@ -1681,7 +1681,7 @@ public class ExtendedProperties extends Hashtable {
+             
+         } else if (value instanceof String) {
+             Double d = new Double((String) value);
+-            super.put(key, d);
++            put(key, d);
+             return d;
+             
+         } else if (value == null) {
+@@ -1723,12 +1723,6 @@ public class ExtendedProperties extends Hashtable {
+      * @param value for the property
+      * @return old value of the property
+      */
+-    public Object put(Object key, Object value) {
+-        String strKey = String.valueOf(key);
+-        Object ret = getProperty(strKey);
+-        addProperty(strKey, value);
+-        return ret;
+-    }
+ 
+     /**
+      * Add a map full of key/value pairs to the ExtendedProperties. 
+@@ -1759,11 +1753,5 @@ public class ExtendedProperties extends Hashtable {
+      * @param key specifying the property
+      * @return old value of the property
+      */
+-    public Object remove(Object key) {
+-        String strKey = String.valueOf(key);
+-        Object ret = getProperty(strKey);
+-        clearProperty(strKey);
+-        return ret;
+-    }
+ 
+ }

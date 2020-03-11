@@ -1,0 +1,14 @@
+diff --git a/src/java/org/apache/commons/cli/Util.java b/src/java/org/apache/commons/cli/Util.java
+index 94e97e3..2d88c30 100644
+--- a/src/java/org/apache/commons/cli/Util.java
++++ b/src/java/org/apache/commons/cli/Util.java
+@@ -33,9 +33,6 @@ class Util {
+      */
+     static String stripLeadingHyphens(String str)
+     {
+-        if (str == null) {
+-            return null;
+-        }
+         if (str.startsWith("--"))
+         {
+             return str.substring(2, str.length());

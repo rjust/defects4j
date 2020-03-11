@@ -1,0 +1,42 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+index 63aeba72..df1f63ce 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java
+@@ -1031,7 +1031,7 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
+ 
+         final long localHeaderStart = streamCompressor.getTotalBytesWritten();
+         final byte[] localHeader = createLocalFileHeader(ze, name, encodable, phased, localHeaderStart);
+-        metaData.put(ze, new EntryMetaData(localHeaderStart, usesDataDescriptor(ze.getMethod(), phased)));
++        metaData.put(ze, new EntryMetaData(localHeaderStart, usesDataDescriptor(ze.getMethod())));
+         entry.localDataStart = localHeaderStart + LFH_CRC_OFFSET; // At crc offset
+         writeCounted(localHeader);
+         entry.dataStart = streamCompressor.getTotalBytesWritten();
+@@ -1072,7 +1072,7 @@ private void writeLocalFileHeader(final ZipArchiveEntry ze, final boolean phased
+ 
+         //store method in local variable to prevent multiple method calls
+         final int zipMethod = ze.getMethod();
+-        final boolean dataDescriptor = usesDataDescriptor(zipMethod, phased);
++        final boolean dataDescriptor = usesDataDescriptor(zipMethod);
+ 
+         putShort(versionNeededToExtract(zipMethod, hasZip64Extra(ze), dataDescriptor), buf, LFH_VERSION_NEEDED_OFFSET);
+ 
+@@ -1168,7 +1168,7 @@ private void addUnicodeExtraFields(final ZipArchiveEntry ze, final boolean encod
+      * @throws IOException on error
+      */
+     protected void writeDataDescriptor(final ZipArchiveEntry ze) throws IOException {
+-        if (!usesDataDescriptor(ze.getMethod(), false)) {
++        if (ze.getMethod() != DEFLATED || channel != null) {
+             return;
+         }
+         writeCounted(DD_SIG);
+@@ -1489,8 +1489,8 @@ private int versionNeededToExtract(final int zipMethod, final boolean zip64, fin
+         return versionNeededToExtractMethod(zipMethod);
+     }
+ 
+-    private boolean usesDataDescriptor(final int zipMethod, boolean phased) {
+-        return !phased && zipMethod == DEFLATED && channel == null;
++    private boolean usesDataDescriptor(final int zipMethod) {
++        return zipMethod == DEFLATED && channel == null;
+     }
+ 
+     private int versionNeededToExtractMethod(int zipMethod) {

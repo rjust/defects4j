@@ -1,0 +1,231 @@
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/misc/RootNameTest.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/misc/RootNameTest.java
+deleted file mode 100644
+index 5c143c5..0000000
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/misc/RootNameTest.java
++++ /dev/null
+@@ -1,83 +0,0 @@
+-package com.fasterxml.jackson.dataformat.xml.misc;
+-
+-import java.io.IOException;
+-
+-import com.fasterxml.jackson.databind.ObjectWriter;
+-import com.fasterxml.jackson.dataformat.xml.*;
+-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+-
+-public class RootNameTest extends XmlTestBase
+-{
+-    static class RootBeanBase
+-    {
+-        public String value;
+-
+-        protected RootBeanBase() { this("123"); }
+-        public RootBeanBase(String v) {
+-            value = v;
+-        }
+-    }
+-
+-    @JacksonXmlRootElement(localName="root")
+-    static class RootBean extends RootBeanBase
+-    {
+-        protected RootBean() { super(); }
+-    }
+-
+-    @JacksonXmlRootElement(localName="nsRoot", namespace="http://foo")
+-    static class NsRootBean
+-    {
+-        public String value = "abc";
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Unit tests
+-    /**********************************************************
+-     */
+-
+-    protected XmlMapper _xmlMapper = new XmlMapper();
+-
+-    // Unit test to verify that root name is properly set
+-    public void testRootNameAnnotation() throws IOException
+-    {
+-        String xml = _xmlMapper.writeValueAsString(new StringBean());
+-        
+-        // Hmmh. Looks like JDK Stax may adds bogus ns declaration. As such,
+-        // let's just check that name starts ok...
+-        if (!xml.startsWith("<StringBean")) {
+-            fail("Expected root name of 'StringBean'; but XML document is ["+xml+"]");
+-        }
+-
+-        // and then see that basic non-namespace root is ok
+-        xml = _xmlMapper.writeValueAsString(new RootBean());
+-        assertEquals("<root><value>123</value></root>", xml);
+-
+-        // and namespace one too
+-        xml = _xmlMapper.writeValueAsString(new NsRootBean());
+-        if (xml.indexOf("nsRoot") < 0) { // verify localName
+-            fail("Expected root name of 'nsRoot'; but XML document is ["+xml+"]");
+-        }
+-        // and NS declaration
+-        if (xml.indexOf("http://foo") < 0) {
+-            fail("Expected NS declaration for 'http://foo', not found, XML document is ["+xml+"]");
+-        }
+-    }
+-
+-    public void testDynamicRootName() throws IOException
+-    {
+-        String xml;
+-
+-        ObjectWriter w = _xmlMapper.writer().withRootName("rudy");
+-
+-        xml = w.writeValueAsString(new StringBean("foo"));
+-        assertEquals("<rudy><text>foo</text></rudy>", xml);
+-
+-        xml = w.writeValueAsString(new StringBean(null));
+-        assertEquals("<rudy><text/></rudy>", xml);
+-
+-        // and even with null will respect configured root name
+-        xml = w.writeValueAsString(null);
+-        assertEquals("<rudy/>", xml);
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestSerialization.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestSerialization.java
+index ac85f66..0a32b0c 100644
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestSerialization.java
+@@ -11,10 +11,17 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+ import com.fasterxml.jackson.dataformat.xml.XmlTestBase;
+ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
++import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+ 
+ @SuppressWarnings("serial")
+ public class TestSerialization extends XmlTestBase
+ {
++    /*
++    /**********************************************************
++    /* Helper types
++    /**********************************************************
++     */
++
+     static class StringBean2
+     {
+         public String text = "foobar";
+@@ -49,13 +56,25 @@ public class TestSerialization extends XmlTestBase
+         public MapBean() { }
+         public MapBean(Map<String,Integer> v) { map = v; }
+     }
+-
++    
+     static class NsElemBean
+     {
+         @JacksonXmlProperty(namespace="http://foo")
+         public String text = "blah";
+     }
+ 
++    @JacksonXmlRootElement(localName="root")
++    static class RootBean
++    {
++        public String value = "123";
++    }
++
++    @JacksonXmlRootElement(localName="nsRoot", namespace="http://foo")
++    static class NsRootBean
++    {
++        public String value = "abc";
++    }
++
+     static class CDataStringBean
+     {
+         @JacksonXmlCData
+@@ -80,15 +99,54 @@ public class TestSerialization extends XmlTestBase
+     }
+ 
+     static class CustomMap extends LinkedHashMap<String, Integer> { }
++    
++    /*
++    /**********************************************************
++    /* Set up
++    /**********************************************************
++     */
++
++    protected XmlMapper _xmlMapper;
+ 
++    // let's actually reuse XmlMapper to make things bit faster
++    @Override
++    public void setUp() throws Exception {
++        super.setUp();
++        _xmlMapper = new XmlMapper();
++    }
++    
+     /*
+     /**********************************************************
+     /* Unit tests
+     /**********************************************************
+      */
+ 
+-    protected XmlMapper _xmlMapper = new XmlMapper();
++    // Unit test to verify that root name is properly set
++    public void testRootName() throws IOException
++    {
++        String xml = _xmlMapper.writeValueAsString(new StringBean());
++        
++        // Hmmh. Looks like JDK Stax may adds bogus ns declaration. As such,
++        // let's just check that name starts ok...
++        if (!xml.startsWith("<StringBean")) {
++            fail("Expected root name of 'StringBean'; but XML document is ["+xml+"]");
++        }
++
++        // and then see that basic non-namespace root is ok
++        xml = _xmlMapper.writeValueAsString(new RootBean());
++        assertEquals("<root><value>123</value></root>", xml);
+ 
++        // and namespace one too
++        xml = _xmlMapper.writeValueAsString(new NsRootBean());
++        if (xml.indexOf("nsRoot") < 0) { // verify localName
++            fail("Expected root name of 'nsRoot'; but XML document is ["+xml+"]");
++        }
++        // and NS declaration
++        if (xml.indexOf("http://foo") < 0) {
++            fail("Expected NS declaration for 'http://foo', not found, XML document is ["+xml+"]");
++        }
++    }
++    
+     public void testSimpleAttribute() throws IOException
+     {
+         String xml = _xmlMapper.writeValueAsString(new AttributeBean());
+@@ -96,6 +154,13 @@ public class TestSerialization extends XmlTestBase
+         assertEquals("<AttributeBean attr=\"something\"/>", xml);
+     }
+ 
++    public void testSimpleAttrAndElem() throws IOException
++    {
++        String xml = _xmlMapper.writeValueAsString(new AttrAndElem());
++        xml = removeSjsxpNamespace(xml);
++        assertEquals("<AttrAndElem id=\"42\"><elem>whatever</elem></AttrAndElem>", xml);
++    }
++
+     public void testSimpleNsElem() throws IOException
+     {
+         String xml = _xmlMapper.writeValueAsString(new NsElemBean());
+@@ -103,13 +168,6 @@ public class TestSerialization extends XmlTestBase
+         // here we assume woodstox automatic prefixes, not very robust but:
+         assertEquals("<NsElemBean><wstxns1:text xmlns:wstxns1=\"http://foo\">blah</wstxns1:text></NsElemBean>", xml);
+     }
+-    
+-    public void testSimpleAttrAndElem() throws IOException
+-    {
+-        String xml = _xmlMapper.writeValueAsString(new AttrAndElem());
+-        xml = removeSjsxpNamespace(xml);
+-        assertEquals("<AttrAndElem id=\"42\"><elem>whatever</elem></AttrAndElem>", xml);
+-    }
+ 
+     @SuppressWarnings("boxing")
+     public void testMap() throws IOException
+@@ -167,7 +225,7 @@ public class TestSerialization extends XmlTestBase
+         assertEquals("<CDataStringArrayBean><value><value><![CDATA[<some<data\"]]></value><value><![CDATA[abc]]></value></value></CDataStringArrayBean>", xml);
+     }
+     
+-    // for [dataformat-xml#41]
++    // for [Issue#41]
+     public void testCustomSerializer() throws Exception
+     {
+         JacksonXmlModule module = new JacksonXmlModule();

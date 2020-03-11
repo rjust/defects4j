@@ -1,0 +1,15 @@
+org.apache.commons.collections4.Get
+org.apache.commons.collections4.IterableGet
+org.apache.commons.collections4.IterableMap
+org.apache.commons.collections4.IterableSortedMap
+org.apache.commons.collections4.MapIterator
+org.apache.commons.collections4.OrderedIterator
+org.apache.commons.collections4.OrderedMap
+org.apache.commons.collections4.OrderedMapIterator
+org.apache.commons.collections4.Put
+org.apache.commons.collections4.Trie
+org.apache.commons.collections4.trie.AbstractBitwiseTrie
+org.apache.commons.collections4.trie.AbstractPatriciaTrie
+org.apache.commons.collections4.trie.analyzer.StringKeyAnalyzer
+org.apache.commons.collections4.trie.KeyAnalyzer
+org.apache.commons.collections4.trie.PatriciaTrie

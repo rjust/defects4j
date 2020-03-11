@@ -270,9 +270,37 @@ sub _append {
     my ($src, $dst) = @_;
     print "\t... appending $src -> $dst\n";
     $dst =~ m[^(.*)/.*$];
+
     system ("mkdir -p $1") == 0 or die "could not mkdir dest $1: $!";
-    if (-e $src) {
+    if (-e $dst and -e $src) {
+        open(SRC_FILE, '<', $src) or die "Cannot open src file ($src): $!";
+        my @src_lines = <SRC_FILE>;
+        close SRC_FILE;
+        open(DST_FILE, '<', $dst) or die "Cannot open dst file ($dst): $!";
+        my @dst_lines = <DST_FILE>;
+        close DST_FILE;
+
+        # Identify new lines to add to the file (do not re-append existing entries)
+        my @new_lines = ();
+        my %seen = ();
+        foreach my $item (@dst_lines) {
+            $seen{$item}++;
+        }
+
+        foreach my $item (@src_lines) {
+            push(@new_lines, $item) unless $seen{$item}++;
+        }
+
+        open(my $DST_FILE, '>>', $dst) or die "Cannot open dst file ($dst)' $!"; 
+        foreach my $line (@new_lines) {
+            print $DST_FILE $line; 
+        }
+        close $DST_FILE;
+
+        print "\t... OK\n";
+    } elsif (-e $src) {
         system("cat $src >> $dst") == 0 or die "could not append $src: $!";
         print "\t... OK\n";
+
     }
 }

@@ -1,0 +1,42 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
+index 99b5127b..bf87a874 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/UTF8ZipFilesTest.java
+@@ -21,7 +21,6 @@ package org.apache.commons.compress.archivers.zip;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.IOException;
+-import java.io.InputStream;
+ import java.io.UnsupportedEncodingException;
+ import java.net.URI;
+ import java.net.URISyntaxException;
+@@ -129,26 +128,14 @@ public class UTF8ZipFilesTest extends AbstractTestCase {
+         ZipFile zf = null;
+         try {
+             zf = new ZipFile(archive, null, true);
+-            assertCanRead(zf, ASCII_TXT);
+-            assertCanRead(zf, EURO_FOR_DOLLAR_TXT);
+-            assertCanRead(zf, OIL_BARREL_TXT);
++            assertNotNull(zf.getEntry(ASCII_TXT));
++            assertNotNull(zf.getEntry(EURO_FOR_DOLLAR_TXT));
++            assertNotNull(zf.getEntry(OIL_BARREL_TXT));
+         } finally {
+             ZipFile.closeQuietly(zf);
+         }
+     }
+ 
+-    private void assertCanRead(ZipFile zf, String fileName) throws IOException {
+-        ZipArchiveEntry entry = zf.getEntry(fileName);
+-        assertNotNull("Entry doesn't exist", entry);
+-        InputStream is = zf.getInputStream(entry);
+-        assertNotNull("InputStream is null", is);
+-        try {
+-            is.read();
+-        } finally {
+-            is.close();
+-        }
+-    }
+-
+     public void testReadWinZipArchiveForStream() throws IOException,
+                                                       URISyntaxException {
+         URL zip = getClass().getResource("/utf8-winzip-test.zip");

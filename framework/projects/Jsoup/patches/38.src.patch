@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+index 2df4323..b012f20 100644
+--- a/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
++++ b/src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java
+@@ -452,10 +452,7 @@ enum HtmlTreeBuilderState {
+                         tb.insertEmpty(startTag);
+                         tb.framesetOk(false);
+                     } else if (name.equals("image")) {
+-                        if (tb.getFromStack("svg") == null)
+                             return tb.process(startTag.name("img")); // change <image> to <img>, unless in svg
+-                        else
+-                            tb.insert(startTag);
+                     } else if (name.equals("isindex")) {
+                         // how much do we care about the early 90s?
+                         tb.error(this);

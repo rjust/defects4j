@@ -1,0 +1,78 @@
+diff --git a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+index 19866716..2b4db893 100644
+--- a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
++++ b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+@@ -15,21 +15,6 @@
+  */
+ package com.google.gson.functional;
+ 
+-import com.google.gson.Gson;
+-import com.google.gson.GsonBuilder;
+-import com.google.gson.JsonArray;
+-import com.google.gson.JsonDeserializationContext;
+-import com.google.gson.JsonDeserializer;
+-import com.google.gson.JsonElement;
+-import com.google.gson.JsonNull;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParseException;
+-import com.google.gson.JsonPrimitive;
+-import com.google.gson.JsonSyntaxException;
+-import com.google.gson.TypeAdapter;
+-import com.google.gson.reflect.TypeToken;
+-import com.google.gson.stream.JsonReader;
+-import com.google.gson.stream.JsonWriter;
+ import java.io.IOException;
+ import java.lang.reflect.Constructor;
+ import java.lang.reflect.Type;
+@@ -55,8 +40,24 @@ import java.util.Set;
+ import java.util.TimeZone;
+ import java.util.TreeSet;
+ import java.util.UUID;
++
+ import junit.framework.TestCase;
+ 
++import com.google.gson.Gson;
++import com.google.gson.GsonBuilder;
++import com.google.gson.JsonArray;
++import com.google.gson.JsonDeserializationContext;
++import com.google.gson.JsonDeserializer;
++import com.google.gson.JsonElement;
++import com.google.gson.JsonNull;
++import com.google.gson.JsonObject;
++import com.google.gson.JsonParseException;
++import com.google.gson.JsonPrimitive;
++import com.google.gson.TypeAdapter;
++import com.google.gson.reflect.TypeToken;
++import com.google.gson.stream.JsonReader;
++import com.google.gson.stream.JsonWriter;
++
+ /**
+  * Functional test for Json serialization and deserialization for common classes for which default
+  * support is provided in Gson. The tests for Map types are available in {@link MapTest}.
+@@ -478,8 +479,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
+     Gson gson = new GsonBuilder()
+         .setDateFormat(pattern)
+         .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+-          public Date deserialize(JsonElement json, Type typeOfT,
+-              JsonDeserializationContext context)
++          public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+               throws JsonParseException {
+             return new Date(1315806903103L);
+           }
+@@ -618,16 +618,6 @@ public class DefaultTypeAdaptersTest extends TestCase {
+     assertEquals(JsonNull.INSTANCE, gson.fromJson("null", JsonNull.class));
+   }
+ 
+-  public void testJsonElementTypeMismatch() {
+-    try {
+-      gson.fromJson("\"abc\"", JsonObject.class);
+-      fail();
+-    } catch (JsonSyntaxException expected) {
+-      assertEquals("Expected a com.google.gson.JsonObject but was com.google.gson.JsonPrimitive",
+-          expected.getMessage());
+-    }
+-  }
+-
+   private static class ClassWithBigDecimal {
+     BigDecimal value;
+     ClassWithBigDecimal(String value) {

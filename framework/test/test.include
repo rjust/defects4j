@@ -98,6 +98,14 @@ num_lines() {
     wc -l < $1
 }
 
+# Determine and print all bug ids found in the provided commit-db
+# get_bugs_ids <commit-db>
+get_bug_ids() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <commit-db>"
+    cut -f1 -d',' $1 | tr '\n' ' '
+}
+
+
 ################################################################################
 # Determine and print all test suites that exist in the provided suite_dir
 # get_test_suites <pid> <suite_dir>

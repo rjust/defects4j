@@ -1,0 +1,149 @@
+diff --git a/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java b/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
+index a192940f..72c9aa4c 100644
+--- a/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
++++ b/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
+@@ -195,6 +195,14 @@ public final class JsonReaderTest extends TestCase {
+     }
+   }
+ 
++  public void testNoTopLevelObject() {
++    try {
++      new JsonReader(reader("true")).nextBoolean();
++      fail();
++    } catch (IOException expected) {
++    }
++  }
++
+   public void testCharacterUnescaping() throws IOException {
+     String json = "[\"a\","
+         + "\"a\\\"\","
+@@ -1219,37 +1227,44 @@ public final class JsonReaderTest extends TestCase {
+     }
+   }
+ 
+-  public void testTopLevelValueTypes() throws IOException {
+-    JsonReader reader1 = new JsonReader(reader("true"));
+-    assertTrue(reader1.nextBoolean());
+-    assertEquals(JsonToken.END_DOCUMENT, reader1.peek());
+-
+-    JsonReader reader2 = new JsonReader(reader("false"));
+-    assertFalse(reader2.nextBoolean());
+-    assertEquals(JsonToken.END_DOCUMENT, reader2.peek());
+-
+-    JsonReader reader3 = new JsonReader(reader("null"));
+-    assertEquals(JsonToken.NULL, reader3.peek());
+-    reader3.nextNull();
+-    assertEquals(JsonToken.END_DOCUMENT, reader3.peek());
++  public void testStrictTopLevelString() {
++    JsonReader reader = new JsonReader(reader("\"a\""));
++    try {
++      reader.nextString();
++      fail();
++    } catch (IOException expected) {
++    }
++  }
+ 
+-    JsonReader reader4 = new JsonReader(reader("123"));
+-    assertEquals(123, reader4.nextInt());
+-    assertEquals(JsonToken.END_DOCUMENT, reader4.peek());
++  public void testLenientTopLevelString() throws IOException {
++    JsonReader reader = new JsonReader(reader("\"a\""));
++    reader.setLenient(true);
++    assertEquals("a", reader.nextString());
++    assertEquals(JsonToken.END_DOCUMENT, reader.peek());
++  }
+ 
+-    JsonReader reader5 = new JsonReader(reader("123.4"));
+-    assertEquals(123.4, reader5.nextDouble());
+-    assertEquals(JsonToken.END_DOCUMENT, reader5.peek());
++  public void testStrictTopLevelValueType() {
++    JsonReader reader = new JsonReader(reader("true"));
++    try {
++      reader.nextBoolean();
++      fail();
++    } catch (IOException expected) {
++    }
++  }
+ 
+-    JsonReader reader6 = new JsonReader(reader("\"a\""));
+-    assertEquals("a", reader6.nextString());
+-    assertEquals(JsonToken.END_DOCUMENT, reader6.peek());
++  public void testLenientTopLevelValueType() throws IOException {
++    JsonReader reader = new JsonReader(reader("true"));
++    reader.setLenient(true);
++    assertEquals(true, reader.nextBoolean());
+   }
+ 
+-  public void testTopLevelValueTypeWithSkipValue() throws IOException {
++  public void testStrictTopLevelValueTypeWithSkipValue() {
+     JsonReader reader = new JsonReader(reader("true"));
+-    reader.skipValue();
+-    assertEquals(JsonToken.END_DOCUMENT, reader.peek());
++    try {
++      reader.skipValue();
++      fail();
++    } catch (IOException expected) {
++    }
+   }
+ 
+   public void testStrictNonExecutePrefix() {
+@@ -1509,7 +1524,7 @@ public final class JsonReaderTest extends TestCase {
+     } catch (MalformedJsonException expected) {
+     }
+   }
+-
++  
+   public void testVeryLongQuotedString() throws IOException {
+     char[] stringChars = new char[1024 * 16];
+     Arrays.fill(stringChars, 'x');
+diff --git a/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java b/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
+index 91763d18..4cfd55a7 100644
+--- a/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
++++ b/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
+@@ -25,44 +25,11 @@ import junit.framework.TestCase;
+ @SuppressWarnings("resource")
+ public final class JsonWriterTest extends TestCase {
+ 
+-  public void testTopLevelValueTypes() throws IOException {
+-    StringWriter string1 = new StringWriter();
+-    JsonWriter writer1 = new JsonWriter(string1);
+-    writer1.value(true);
+-    writer1.close();
+-    assertEquals("true", string1.toString());
+-
+-    StringWriter string2 = new StringWriter();
+-    JsonWriter writer2 = new JsonWriter(string2);
+-    writer2.nullValue();
+-    writer2.close();
+-    assertEquals("null", string2.toString());
+-
+-    StringWriter string3 = new StringWriter();
+-    JsonWriter writer3 = new JsonWriter(string3);
+-    writer3.value(123);
+-    writer3.close();
+-    assertEquals("123", string3.toString());
+-
+-    StringWriter string4 = new StringWriter();
+-    JsonWriter writer4 = new JsonWriter(string4);
+-    writer4.value(123.4);
+-    writer4.close();
+-    assertEquals("123.4", string4.toString());
+-
+-    StringWriter string5 = new StringWriter();
+-    JsonWriter writert = new JsonWriter(string5);
+-    writert.value("a");
+-    writert.close();
+-    assertEquals("\"a\"", string5.toString());
+-  }
+-
+-  public void testInvalidTopLevelTypes() throws IOException {
++  public void testWrongTopLevelType() throws IOException {
+     StringWriter stringWriter = new StringWriter();
+     JsonWriter jsonWriter = new JsonWriter(stringWriter);
+-    jsonWriter.name("hello");
+     try {
+-      jsonWriter.value("world");
++      jsonWriter.value("a");
+       fail();
+     } catch (IllegalStateException expected) {
+     }

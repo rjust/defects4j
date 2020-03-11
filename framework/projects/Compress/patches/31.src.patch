@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 94e175c2..40e7871f 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -132,6 +132,9 @@ public class TarUtils {
+ 
+         for ( ;start < end; start++) {
+             final byte currentByte = buffer[start];
++            if (currentByte == 0) {
++                break;
++            }
+             // CheckStyle:MagicNumber OFF
+             if (currentByte < '0' || currentByte > '7'){
+                 throw new IllegalArgumentException(

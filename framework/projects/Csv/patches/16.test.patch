@@ -1,0 +1,67 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVParserTest.java b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+index 1e1d7a6..07e06bc 100644
+--- a/src/test/java/org/apache/commons/csv/CSVParserTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+@@ -989,62 +989,6 @@ public class CSVParserTest {
+         Assert.assertEquals(3, record.size());
+     }
+ 
+-    @Test
+-    public void testIteratorSequenceBreaking() throws IOException {
+-        final String fiveRows = "1\n2\n3\n4\n5\n";
+-
+-        // Iterator hasNext() shouldn't break sequence
+-        CSVParser parser = CSVFormat.DEFAULT.parse(new StringReader(fiveRows));
+-        int recordNumber = 0;
+-        Iterator<CSVRecord> iter = parser.iterator();
+-        recordNumber = 0;
+-        while (iter.hasNext()) {
+-            CSVRecord record = iter.next();
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-            if (recordNumber >= 2) {
+-                break;
+-            }
+-        }
+-        iter.hasNext();
+-        while (iter.hasNext()) {
+-            CSVRecord record = iter.next();
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-        }
+-
+-        // Consecutive enhanced for loops shouldn't break sequence
+-        parser = CSVFormat.DEFAULT.parse(new StringReader(fiveRows));
+-        recordNumber = 0;
+-        for (CSVRecord record : parser) {
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-            if (recordNumber >= 2) {
+-                break;
+-            }
+-        }
+-        for (CSVRecord record : parser) {
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-        }
+-
+-        // Consecutive enhanced for loops with hasNext() peeking shouldn't break sequence
+-        parser = CSVFormat.DEFAULT.parse(new StringReader(fiveRows));
+-        recordNumber = 0;
+-        for (CSVRecord record : parser) {
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-            if (recordNumber >= 2) {
+-                break;
+-            }
+-        }
+-        parser.iterator().hasNext();
+-        for (CSVRecord record : parser) {
+-            recordNumber++;
+-            assertEquals(String.valueOf(recordNumber), record.get(0));
+-        }
+-    }
+-    
+     private void validateLineNumbers(final String lineSeparator) throws IOException {
+         try (final CSVParser parser = CSVParser.parse("a" + lineSeparator + "b" + lineSeparator + "c",
+                 CSVFormat.DEFAULT.withRecordSeparator(lineSeparator))) {

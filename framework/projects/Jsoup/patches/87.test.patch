@@ -1,0 +1,19 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 0003a9e..6503797 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -1125,14 +1125,6 @@ public class HtmlParserTest {
+         assertEquals("<r> <x> A </x> <y> B </y> </r>", StringUtil.normaliseWhitespace(doc.body().html()));
+     }
+ 
+-    @Test public void preservedCaseLinksCantNest() {
+-        String html = "<A>ONE <A>Two</A></A>";
+-        Document doc = Parser.htmlParser()
+-            .settings(ParseSettings.preserveCase)
+-            .parseInput(html, "");
+-        assertEquals("<A> ONE </A> <A> Two </A>", StringUtil.normaliseWhitespace(doc.body().html()));
+-    }
+-
+     @Test public void normalizesDiscordantTags() {
+         Document document = Jsoup.parse("<div>test</DIV><p></p>");
+         assertEquals("<div>\n test\n</div>\n<p></p>", document.body().html());

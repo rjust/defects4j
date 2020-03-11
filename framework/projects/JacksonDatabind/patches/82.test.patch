@@ -1,0 +1,155 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertiesDeser1575Test.java b/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertiesDeser1575Test.java
+index e35e09b40..b2b215fd2 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertiesDeser1575Test.java
++++ b/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertiesDeser1575Test.java
+@@ -27,4 +27,19 @@ public class IgnorePropertiesDeser1575Test extends BaseMapTest
+         Person result = mapper.readValue(st, Person.class);
+         assertEquals("admin", result.name);
+     }
++
++    /*
++    public void testIgnorePropSer1575() throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        Person input = new Person();
++        input.name = "Bob";
++
++        // 24-Mar-2017, tatu: This shouldn't cause issues... but does as of now:
++        
++//        input.personZ = input;
++        String json = mapper.writeValueAsString(input);
++        assertNotNull(json);
++    }
++    */
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeserTest.java b/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeser1217Test.java
+similarity index 59%
+rename from src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeserTest.java
+rename to src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeser1217Test.java
+index 08b882d7e..d42e4f5a7 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeserTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/filter/IgnorePropertyOnDeser1217Test.java
+@@ -1,13 +1,11 @@
+ package com.fasterxml.jackson.databind.filter;
+ 
+ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+ import com.fasterxml.jackson.databind.BaseMapTest;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+-public class IgnorePropertyOnDeserTest extends BaseMapTest
++public class IgnorePropertyOnDeser1217Test extends BaseMapTest
+ {
+-    // [databind#1217]
+     static class IgnoreObject {
+         public int x = 1;
+         public int y = 2;
+@@ -21,20 +19,6 @@ public class IgnorePropertyOnDeserTest extends BaseMapTest
+         public IgnoreObject obj2;
+     }
+ 
+-    // [databind#1595]
+-    @JsonIgnoreProperties(value = {"name"}, allowSetters = true)
+-    @JsonPropertyOrder(alphabetic=true)
+-    static class Simple1595 {
+-        private int id;
+-        private String name;
+-
+-        public int getId() { return id; }
+-        public void setId(int id) { this.id = id; }
+-
+-        public String getName() { return name; }
+-        public void setName(String name) { this.name = name; }
+-    }
+-
+     /*
+     /****************************************************************
+     /* Unit tests
+@@ -42,9 +26,8 @@ public class IgnorePropertyOnDeserTest extends BaseMapTest
+      */
+     
+     private final ObjectMapper MAPPER = new ObjectMapper();
+-
+-    // [databind#1217]
+-    public void testIgnoreOnProperty1217() throws Exception
++    
++    public void testIgnoreOnProperty() throws Exception
+     {
+         TestIgnoreObject result = MAPPER.readValue(
+                 aposToQuotes("{'obj':{'x': 10, 'y': 20}, 'obj2':{'x': 10, 'y': 20}}"),
+@@ -65,7 +48,7 @@ public class IgnorePropertyOnDeserTest extends BaseMapTest
+         assertEquals(2, result1.obj2.y);
+     }
+ 
+-    public void testIgnoreViaConfigOverride1217() throws Exception
++    public void testIgnoreViaConfigOverride() throws Exception
+     {
+         ObjectMapper mapper = new ObjectMapper();
+         mapper.configOverride(Point.class)
+@@ -75,17 +58,4 @@ public class IgnorePropertyOnDeserTest extends BaseMapTest
+         assertEquals(1, p.x);
+         assertEquals(0, p.y);
+     }
+-
+-    // [databind#1595]
+-    public void testIgnoreGetterNotSetter1595() throws Exception
+-    {
+-        ObjectMapper mapper = new ObjectMapper();
+-        Simple1595 config = new Simple1595();
+-        config.setId(123);
+-        config.setName("jack");
+-        String json = mapper.writeValueAsString(config);
+-        assertEquals(aposToQuotes("{'id':123}"), json);
+-        Simple1595 des = mapper.readValue(aposToQuotes("{'id':123,'name':'jack'}"), Simple1595.class);
+-        assertEquals("jack", des.getName());
+-    }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/filter/JsonIgnoreProperties1595Test.java b/src/test/java/com/fasterxml/jackson/databind/filter/JsonIgnoreProperties1595Test.java
+new file mode 100644
+index 000000000..b886e0a34
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/filter/JsonIgnoreProperties1595Test.java
+@@ -0,0 +1,43 @@
++package com.fasterxml.jackson.databind.filter;
++
++import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
++import com.fasterxml.jackson.annotation.JsonPropertyOrder;
++import com.fasterxml.jackson.databind.*;
++
++public class JsonIgnoreProperties1595Test extends BaseMapTest
++{
++    @JsonIgnoreProperties(value = {"name"}, allowSetters = true)
++    @JsonPropertyOrder(alphabetic=true)
++    static class Simple {
++        private int id;
++        private String name;
++
++        public int getId() {
++            return id;
++        }
++
++        public void setId(int id) {
++            this.id = id;
++        }
++
++        public String getName() {
++            return name;
++        }
++
++        public void setName(String name) {
++            this.name = name;
++        }
++    }
++
++    public void testIgnoreGetterNotSetter1595() throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        Simple config = new Simple();
++        config.setId(123);
++        config.setName("jack");
++        String json = mapper.writeValueAsString(config);
++        assertEquals(aposToQuotes("{'id':123}"), json);
++        Simple des = mapper.readValue(aposToQuotes("{'id':123,'name':'jack'}"), Simple.class);
++        assertEquals("jack", des.getName());
++    }
++}
