@@ -102,7 +102,7 @@ num_lines() {
 # get_bugs_ids <commit-db>
 get_bug_ids() {
     [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <commit-db>"
-    cut -f1 -d',' $1 | tr '\n' ' '
+    tail -n +2 $1 | cut -f1 -d',' | tr '\n' ' '
 }
 
 

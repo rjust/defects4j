@@ -395,6 +395,8 @@ sub _build_db_cache {
     my $db = shift;
     open (IN, "<$db") or die "Cannot open commit-db $db: $!";
     my $cache = {};
+    
+    my $header = <IN>;
     while (<IN>) {
         chomp;
         /(\d+),([^,]+),([^,]+)/ or die "Corrupted commit-db!";

@@ -145,6 +145,7 @@ foreach my $id (@ids) {
     if (-e $output_commit_db) {
         open FH, $output_commit_db or die "could not open output commit-db";
         my $exists_line = 0;
+        my $header = <FH>;
         while (my $line = <FH>) {
             chomp $line;
             $line =~ /^(\d+),(.*),(.*),(.*),(.*)$/ or die "could not parse line";
@@ -164,6 +165,12 @@ foreach my $id (@ids) {
     print "\t... adding as new commit-id $max_number\n";
 
     open FH, ">>$output_commit_db" or die "could not open output commit-db for writing";
+
+    # If this is the first bug to be promoted, print the header to the active-bugs.csv file.
+    if ($max_number == 1) {
+        print FH $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL."\n";
+    }
+
     print FH "$max_number,$v1,$v2,$issue_id,$issue_url\n";
     close FH;
     for my $rev ($v1, $v2) {

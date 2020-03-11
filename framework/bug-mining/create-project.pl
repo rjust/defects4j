@@ -121,7 +121,7 @@ system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRI
 
 # Create active-bugs.csv and print header
 my $active_header = $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL;
-system("touch $project_dir/commit-db");
+system("echo $active_header > $project_dir/commit-db");
 
 # Create deprecated-bugs.csv and print header
 my $deprecated_header = $active_header.",".$BUGS_CSV_DEPRECATED_WHEN.",".$BUGS_CSV_DEPRECATED_WHY;
