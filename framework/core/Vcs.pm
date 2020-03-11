@@ -372,12 +372,17 @@ sub _apply_cmd {
     # -p1 is the default for git apply (a/src/...) and the most likely option.
     # Try -p0 and -p2 as well before giving up.
     my @try = (1, 0, 2);
+    my $log = "";
     for my $n (@try) {
-        if (system("cd $work_dir; git apply -p$n --check $patch_file >/dev/null 2>&1") == 0) {
+        my $cmd = "cd $work_dir; git apply -p$n --check $patch_file 2>&1";
+        $log .= "* $cmd\n";
+        $log .= `$cmd`;
+        if ($? == 0) {
             return("cd $work_dir; git apply -p$n $patch_file 2>&1");
         }
     }
-    confess("Patch is not applicable (tried -p0..2)!\n");
+    confess("Cannot determine how to apply patch!\n" .
+            "All attempts failed:\n$log" . "-" x 70 . "\n");
 }
 
 =pod
