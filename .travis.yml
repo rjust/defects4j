@@ -54,6 +54,8 @@ jobs:
       name: "test export 4"
     - script: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
+    - script: carton exec ./test_version_ids.sh
+      name: test_version_ids.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
     # take a long time to finish).
     - stage: verify-bugs
