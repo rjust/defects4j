@@ -256,6 +256,18 @@ our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
+# Columns in active-bugs.csv and deprecated-bugs.csv
+our $BUGS_CSV_BUGID = "BugID";
+our $BUGS_CSV_COMMIT_BUGGY = "BuggyCommit";
+our $BUGS_CSV_COMMIT_FIXED = "FixedCommit";
+our $BUGS_CSV_ISSUE_ID = "IssueID";
+our $BUGS_CSV_ISSUE_URL = "IssueURL";
+our $BUGS_CSV_DEPRECATED_WHEN = "D4JVersionDeprecated";
+our $BUGS_CSV_DEPRECATED_WHY = "ReasonDeprecated";
+
+# Reasons for deprecation
+our $DEPRECATED_JVM8 = "JVM8-NonReproducable";
+
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
 our $FILE_FAILING_TESTS = "failing_tests";
@@ -302,6 +314,16 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$BUGS_CSV_BUGID
+$BUGS_CSV_COMMIT_BUGGY
+$BUGS_CSV_COMMIT_FIXED
+$BUGS_CSV_ISSUE_ID
+$BUGS_CSV_ISSUE_URL
+$BUGS_CSV_DEPRECATED_WHEN
+$BUGS_CSV_DEPRECATED_WHY
+
+$DEPRECATED_JVM8
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS
