@@ -92,6 +92,7 @@ test_create_project() {
     [ -s "$work_dir/$project_build_patch" ] || die "build.xml.patch does not exist or it is empty"
     [ -s "$work_dir/$project_build_xml" ] || die "Project build file does not exist or it is empty"
     [ -f "$work_dir/framework/projects/$project_id/commit-db" ] || die "commit-db does not exist"
+    [ -f "$work_dir/framework/projects/$project_id/deprecated-bugs.csv" ] || die "deprecated-bugs.csv does not exist"
     [ -s "$work_dir/project_repos/README" ] || die "README file in $work_dir/project_repos does not exist or it is empty"
 
     # Check whether content of expected files is correct
@@ -358,8 +359,9 @@ test_promote_to_db() {
     local project_build_xml="projects/$project_id/$project_id.build.xml"
     _check_output "$HERE/../$project_build_xml" "$work_dir/framework/$project_build_xml"
 
-    [ -s "$HERE/../projects/$project_id/commit-db" ] || die "Commit-db does not exit or it is empty"
-    [ -s "$HERE/../projects/$project_id/dir-layout.csv" ] || die "dir-layout.csv does not exit or it is empty"
+    [ -s "$HERE/../projects/$project_id/commit-db" ] || die "Commit-db does not exist or it is empty"
+    [ -s "$HERE/../projects/$project_id/deprecated-bugs.csv" ] || die "deprecated-bugs.csv does not exist or it is missing the header"
+    [ -s "$HERE/../projects/$project_id/dir-layout.csv" ] || die "dir-layout.csv does not exist or it is empty"
 }
 
 #

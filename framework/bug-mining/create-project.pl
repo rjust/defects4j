@@ -118,7 +118,14 @@ my $REL_CLASSES = "$project_dir/loaded_classes";
 my $core_dir = "$WORK_DIR/framework/core/Project";
 
 system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRIGGER_DIR $RELEVANT_DIR $MOD_CLASSES $REL_CLASSES");
+
+# Create active-bugs.csv and print header
+my $active_header = $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL;
 system("touch $project_dir/commit-db");
+
+# Create deprecated-bugs.csv and print header
+my $deprecated_header = $active_header.",".$BUGS_CSV_DEPRECATED_WHEN.",".$BUGS_CSV_DEPRECATED_WHY;
+system("echo $deprecated_header > $project_dir/deprecated-bugs.csv");
 
 # Copy module template and set project id and name
 open(IN, "<$module_template") or die "Cannot open template file: $!";
