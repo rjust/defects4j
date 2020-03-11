@@ -48,7 +48,7 @@ The working directory used for the bug-mining process.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the commit-db, are considered.
+Per default all bug ids, listed in the active-bugs.csv, are considered.
 
 =head1 DESCRIPTION
 

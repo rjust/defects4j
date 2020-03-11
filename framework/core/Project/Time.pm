@@ -53,7 +53,7 @@ sub new {
     my $name = "joda-time";
     my $vcs = Vcs::Git->new($PID,
                             "$REPO_DIR/$name.git",
-                            "$PROJECTS_DIR/$PID/commit-db",
+                            "$PROJECTS_DIR/$PID/active-bugs.csv",
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs);

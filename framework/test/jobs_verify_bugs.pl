@@ -34,7 +34,7 @@ jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh s
 
 =head1 DESCRIPTION
 
-Parses all commit-db files and outputs a list of invocations of the
+Parses all active-bugs.csv files and outputs a list of invocations of the
 test_verify_bugs.sh script. Running this list of jobs, e.g., using GNU parallel,
 reproduces every bug with all available tests.
 

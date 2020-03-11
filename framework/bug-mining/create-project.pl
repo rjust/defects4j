@@ -101,7 +101,7 @@ my $build_patch_file  = "$WORK_DIR/framework/projects/$PID/build.xml.patch";
 # Directory to which the remote repository is cloned.
 my $repo_dir    = "$WORK_DIR/project_repos";
 
-# Initialize working directory and create empty commit-db
+# Initialize working directory and create empty active-bugs.csv
 my $project_dir = "$WORK_DIR/framework/projects/$PID";
 
 my $ISSUES_DIR = "$WORK_DIR/issues";
@@ -121,7 +121,7 @@ system("mkdir -p $project_dir $core_dir $ISSUES_DIR $PATCH_DIR $FAILING_DIR $TRI
 
 # Create active-bugs.csv and print header
 my $active_header = $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL;
-system("echo $active_header > $project_dir/commit-db");
+system("echo $active_header > $project_dir/active-bugs.csv");
 
 # Create deprecated-bugs.csv and print header
 my $deprecated_header = $active_header.",".$BUGS_CSV_DEPRECATED_WHEN.",".$BUGS_CSV_DEPRECATED_WHY;

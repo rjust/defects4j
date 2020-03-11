@@ -50,7 +50,7 @@ sub new {
     my $name = "commons-math";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$PROJECTS_DIR/$PID/commit-db");
+                             "$PROJECTS_DIR/$PID/active-bugs.csv");
 
     return $class->SUPER::new($PID, $name, $vcs);
 }

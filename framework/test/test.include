@@ -98,10 +98,10 @@ num_lines() {
     wc -l < $1
 }
 
-# Determine and print all bug ids found in the provided commit-db
-# get_bugs_ids <commit-db>
+# Determine and print all bug ids found in the provided active-bugs.csv
+# get_bugs_ids <active-bugs.csv>
 get_bug_ids() {
-    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <commit-db>"
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <active-bugs.csv>"
     tail -n +2 $1 | cut -f1 -d',' | tr '\n' ' '
 }
 

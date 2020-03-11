@@ -46,7 +46,7 @@ test_ExportTestClassesDir() {
     rm -rf "$test_dir"; mkdir -p "$test_dir"
 
     # Iterate over all bugs
-    local bids=$(tail -n +2 "$BASE_DIR/framework/projects/$pid/commit-db" | cut -f1 -d',')
+    local bids=$(tail -n +2 "$BASE_DIR/framework/projects/$pid/active-bugs.csv" | cut -f1 -d',')
     for bid in $bids; do
         local work_dir="$test_dir/$pid/$bid"
         mkdir -p "$work_dir"

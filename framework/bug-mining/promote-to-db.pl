@@ -40,7 +40,7 @@ metadata:
   - framework/projects/<PROJECT_ID>/trigger_tests
   - framework/projects/<PROJECT_ID>/build.xml.patch
   - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
-  - framework/projects/<PROJECT_ID>/commit-db
+  - framework/projects/<PROJECT_ID>/active-bugs.csv
   - framework/projects/<PROJECT_ID>/deprecated-bugs.csv	
   - framework/projects/<PROJECT_ID>/dir-layout.csv
   - project_repos/<PROJECT_NAME>.git
@@ -62,7 +62,7 @@ The id of the project for which the revision pairs are to be promoted.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the commit-db, are considered.
+Per default all bug ids, listed in the active-bugs.csv, are considered.
 
 =item B<-w C<work_dir>>
 
@@ -141,9 +141,9 @@ foreach my $id (@ids) {
 
     # find number
     my $max_number = 0;
-    my $output_commit_db = "$OUTPUT_DIR/$PID/commit-db";
+    my $output_commit_db = "$OUTPUT_DIR/$PID/active-bugs.csv";
     if (-e $output_commit_db) {
-        open FH, $output_commit_db or die "could not open output commit-db";
+        open FH, $output_commit_db or die "could not open output active-bugs.csv";
         my $exists_line = 0;
         my $header = <FH>;
         while (my $line = <FH>) {
@@ -164,7 +164,7 @@ foreach my $id (@ids) {
     ++$max_number;
     print "\t... adding as new commit-id $max_number\n";
 
-    open FH, ">>$output_commit_db" or die "could not open output commit-db for writing";
+    open FH, ">>$output_commit_db" or die "could not open output active-bugs.csv for writing";
 
     # If this is the first bug to be promoted, print the header to the active-bugs.csv file.
     if ($max_number == 1) {

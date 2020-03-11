@@ -123,15 +123,15 @@ A Vcs object has to be instantiated with:
 
 =item * Repository url
 
-=item * File name of the commit database (commit-db), see below for details
+=item * File name of the commit database (active-bugs.csv), see below for details
 
 =item * Reference to post-checkout hook (optional) -- if provided, this method is called after each checkout.
 
 =back
 
-=head2 commit-db
+=head2 active-bugs.csv
 
-The commit-db (csv) file has the structure: C<bug_id,revision_buggy,revision_fixed>.
+The active-bugs.csv (csv) file has the structure: C<bug_id,revision_buggy,revision_fixed>.
 
 Example for Svn:
 
@@ -165,7 +165,7 @@ sub new {
 
   $vcs->lookup(vid)
 
-Queries the commit database (commit-db) and returns the C<revision_id> for
+Queries the commit database (active-bugs.csv) and returns the C<revision_id> for
 the given version id C<vid>. Format of C<vid>: C<\d+[bf]>.
 
 =cut
@@ -198,7 +198,7 @@ sub lookup_vid {
 
   $vcs->num_revision_pairs()
 
-Returns the number of revision pairs in the C<commit-db>.
+Returns the number of revision pairs in the C<active-bugs.csv>.
 
 =cut
 sub num_revision_pairs {
@@ -210,7 +210,7 @@ sub num_revision_pairs {
 
   $project->get_bug_ids()
 
-Returns an array of all bug ids in the C<commit-db>.
+Returns an array of all bug ids in the C<active-bugs.csv>.
 
 =cut
 sub get_bug_ids {
@@ -223,7 +223,7 @@ sub get_bug_ids {
   $vcs->B<contains_version_id> C<contains_version_id(vid)
 
 Given a valid version id (C<vid>), this subroutine returns true if C<vid> exists
-in the C<commit-db> and false otherwise.
+in the C<active-bugs.csv> and false otherwise.
 Format of C<vid>: C<\d+[bf]>
 This subroutine dies if C<vid> is invalid.
 
@@ -239,7 +239,7 @@ sub contains_version_id {
 
   $vcs->checkout_vid(vid, work_dir)
 
-Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
+Performs a lookup of C<vid> in the C<active-bugs.csv> followed by a checkout of
 the corresponding revision with C<revision_id> to F<work_dir>.
 Format of C<vid>: C<\d+[bf]>.
 
@@ -389,17 +389,17 @@ sub rev_date {
 # Helper subroutines
 
 #
-# Read commit-db and build cache
+# Read active-bugs.csv and build cache
 #
 sub _build_db_cache {
     my $db = shift;
-    open (IN, "<$db") or die "Cannot open commit-db $db: $!";
+    open (IN, "<$db") or die "Cannot open active-bugs.csv $db: $!";
     my $cache = {};
     
     my $header = <IN>;
     while (<IN>) {
         chomp;
-        /(\d+),([^,]+),([^,]+)/ or die "Corrupted commit-db!";
+        /(\d+),([^,]+),([^,]+)/ or die "Corrupted active-bugs.csv!";
         $cache->{$1} = {b => $2, f => $3, line => $_};
     }
     close IN;
