@@ -31,10 +31,18 @@ Defects4J contains 835 bugs from the following open-source projects:
 | Time            | joda-time                  |       26       | 1-20,22-27          | 21                      |
 
 \* Due to behavioral changes introduced under Java 8, some bugs are no longer
-reproducible. These bugs have been removed from `active-bugs.csv`, but their
-metadata is retained in the project directory, and they can be accessed 
-through `deprecated.bugs.csv`. As publications using Defects4J artifacts 
-refer to bugs by their specific bug id, we do not re-number the active bug ids.
+reproducible. Hence, Defects4J distinguishes between active and deprecated bugs:
+
+- Active bugs can be accessed through `active-bugs.csv`.
+
+- Deprecated bugs are removed from `active-bugs.csv`, but their metadata is
+  retained in the project directory.
+
+- Deprecated bugs can be accessed through `deprecated-bugs.csv`, which also
+  details when and why a bug was deprecated.
+
+We do not re-enumerate active bugs because publications using Defects4J artifacts
+usually refer to bugs by their specific bug id.
 
 The bugs
 ---------------
