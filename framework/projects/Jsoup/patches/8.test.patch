@@ -1,0 +1,19 @@
+diff --git a/src/test/java/org/jsoup/nodes/ElementTest.java b/src/test/java/org/jsoup/nodes/ElementTest.java
+index de658e6..ddc1d42 100644
+--- a/src/test/java/org/jsoup/nodes/ElementTest.java
++++ b/src/test/java/org/jsoup/nodes/ElementTest.java
+@@ -413,14 +413,5 @@ public class ElementTest {
+ 
+     }
+ 
+-    @Test public void parentlessToString() {
+-        Document doc = Jsoup.parse("<img src='foo'>");
+-        Element img = doc.select("img").first();
+-        assertEquals("\n<img src=\"foo\" />", img.toString());
+-
+-        img.remove(); // lost its parent
+-        assertEquals("<img src=\"foo\" />", img.toString());
+-    }
+-
+ 
+ }

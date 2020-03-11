@@ -1,0 +1,36 @@
+diff --git a/src/test/java/org/jsoup/parser/CharacterReaderTest.java b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+index 1325eb2..2a0084e 100644
+--- a/src/test/java/org/jsoup/parser/CharacterReaderTest.java
++++ b/src/test/java/org/jsoup/parser/CharacterReaderTest.java
+@@ -256,17 +256,5 @@ public class CharacterReaderTest {
+         assertEquals("Two", two);
+     }
+ 
+-    @Test
+-    public void consumeToNonexistentEndWhenAtAnd() {
+-        CharacterReader r = new CharacterReader("<!");
+-        assertTrue(r.matchConsume("<!"));
+-        assertTrue(r.isEmpty());
+-
+-        String after = r.consumeTo('>');
+-        assertEquals("", after);
+-
+-        assertTrue(r.isEmpty());
+-    }
+-
+ 
+ }
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 8e91a6a..d7d7bd8 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -1081,9 +1081,4 @@ public class HtmlParserTest {
+         assertEquals(200, doc.select("span").size());
+         assertEquals(1, doc.select("p").size());
+   }
+-
+-  @Test public void commentAtEnd() throws Exception {
+-      Document doc = Jsoup.parse("<!");
+-      assertTrue(doc.childNode(0) instanceof Comment);
+-  }
+ }

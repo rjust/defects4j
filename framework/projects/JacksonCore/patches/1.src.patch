@@ -1,0 +1,49 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java b/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
+index eb463b99..01c18d94 100644
+--- a/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
++++ b/src/main/java/com/fasterxml/jackson/core/io/NumberInput.java
+@@ -292,11 +292,7 @@ public final class NumberInput
+ 
+     public static BigDecimal parseBigDecimal(String numStr) throws NumberFormatException
+     {
+-        try {
+             return new BigDecimal(numStr);
+-        } catch (NumberFormatException e) {
+-            throw _badBigDecimal(numStr);
+-        }
+     }
+ 
+     public static BigDecimal parseBigDecimal(char[] buffer) throws NumberFormatException {
+@@ -306,14 +302,7 @@ public final class NumberInput
+     public static BigDecimal parseBigDecimal(char[] buffer, int offset, int len)
+             throws NumberFormatException
+     {
+-        try {
+             return new BigDecimal(buffer, offset, len);
+-        } catch (NumberFormatException e) {
+-            throw _badBigDecimal(new String(buffer, offset, len));
+-        }
+     }
+ 
+-    private static NumberFormatException _badBigDecimal(String str) {
+-        return new NumberFormatException("Value \""+str+"\" can not be represented as BigDecimal");
+-    }
+ }
+diff --git a/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java b/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+index bab80e0a..a05410d6 100644
+--- a/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
++++ b/src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java
+@@ -387,11 +387,11 @@ public final class TextBuffer
+             return NumberInput.parseBigDecimal(_resultArray);
+         }
+         // Or a shared buffer?
+-        if ((_inputStart >= 0) && (_inputBuffer != null)) {
++        if (_inputStart >= 0) {
+             return NumberInput.parseBigDecimal(_inputBuffer, _inputStart, _inputLen);
+         }
+         // Or if not, just a single buffer (the usual case)
+-        if ((_segmentSize == 0) && (_currentSegment != null)) {
++        if (_segmentSize == 0) {
+             return NumberInput.parseBigDecimal(_currentSegment, 0, _currentSize);
+         }
+         // If not, let's just get it aggregated...

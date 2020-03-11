@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+index f0d60cb8..61b908f0 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java
+@@ -459,9 +459,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
+             int read = 0;
+             while((ch = i.read()) != -1) {
+                 read++;
+-                if (ch == '\n') { // blank line in header
+-                    break;
+-                } else if (ch == ' '){ // End of length string
++                if (ch == ' '){
+                     // Get keyword
+                     final ByteArrayOutputStream coll = new ByteArrayOutputStream();
+                     while((ch = i.read()) != -1) {

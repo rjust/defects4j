@@ -1,0 +1,25 @@
+diff --git a/src/test/org/apache/commons/codec/binary/Base64Test.java b/src/test/org/apache/commons/codec/binary/Base64Test.java
+index 0da85d05..428b54a5 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64Test.java
++++ b/src/test/org/apache/commons/codec/binary/Base64Test.java
+@@ -336,19 +336,13 @@ public class Base64Test extends TestCase {
+         testEncodeOverMaxSize(1);
+         testEncodeOverMaxSize(2);
+     }
+-    
+-    public void testCodec112() { // size calculation assumes always chunked
+-        byte[] in = new byte[] {0};
+-        byte[] out=Base64.encodeBase64(in);
+-        Base64.encodeBase64(in, false, false, out.length);
+-    }
+ 
+     private void testEncodeOverMaxSize(int maxSize) throws Exception {
+         try {
+             Base64.encodeBase64(Base64TestData.DECODED, true, false, maxSize);
+             fail("Expected " + IllegalArgumentException.class.getName());
+         } catch (IllegalArgumentException e) {
+-            // Expected
++            // Expceted
+         }
+     }
+ 

@@ -1,0 +1,16 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 95f4932..8f22c3a 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -1156,11 +1156,4 @@ public class HtmlParserTest {
+       Document doc = Jsoup.parse("<!");
+       assertTrue(doc.childNode(0) instanceof Comment);
+   }
+-
+-  @Test public void preSkipsFirstNewline() {
+-        Document doc = Jsoup.parse("<pre>\n\nOne\nTwo\n</pre>");
+-        Element pre = doc.selectFirst("pre");
+-        assertEquals("One\nTwo", pre.text());
+-        assertEquals("\nOne\nTwo\n", pre.wholeText());
+-  }
+ }

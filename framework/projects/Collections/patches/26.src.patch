@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/collections4/keyvalue/MultiKey.java b/src/main/java/org/apache/commons/collections4/keyvalue/MultiKey.java
+index 2b08d8a7..794677c5 100644
+--- a/src/main/java/org/apache/commons/collections4/keyvalue/MultiKey.java
++++ b/src/main/java/org/apache/commons/collections4/keyvalue/MultiKey.java
+@@ -274,7 +274,7 @@ public class MultiKey<K> implements Serializable {
+      * only stable for the same process).
+      * @return the instance with recalculated hash code
+      */
+-    protected Object readResolve() {
++    private Object readResolve() {
+         calculateHashCode(keys);
+         return this;
+     }

@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/codec/binary/Base32.java b/src/main/java/org/apache/commons/codec/binary/Base32.java
+index e40d6525..185a662b 100644
+--- a/src/main/java/org/apache/commons/codec/binary/Base32.java
++++ b/src/main/java/org/apache/commons/codec/binary/Base32.java
+@@ -96,7 +96,7 @@ public class Base32 extends BaseNCodec {
+             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20-2f
+              0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, // 30-3f 2-7
+             -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, // 40-4f A-O
+-            25, 26, 27, 28, 29, 30, 31,                                     // 50-57 P-V
++            25, 26, 27, 28, 29, 30, 31, 32,
+     };
+ 
+     /**

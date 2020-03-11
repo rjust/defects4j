@@ -1,0 +1,17 @@
+diff --git a/src/main/java/org/apache/commons/cli/HelpFormatter.java b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+index 7d8a901..6b74e4e 100644
+--- a/src/main/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/main/java/org/apache/commons/cli/HelpFormatter.java
+@@ -934,7 +934,11 @@ public class HelpFormatter
+         
+         // if we didn't find one, simply chop at startPos+width
+         pos = startPos + width;
+-        
++        while ((pos <= text.length()) && ((c = text.charAt(pos)) != ' ')
++               && (c != '\n') && (c != '\r'))
++        {
++            ++pos;
++        }        
+         return pos == text.length() ? -1 : pos;
+     }
+ 

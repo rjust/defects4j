@@ -1,0 +1,34 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java b/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java
+index 58487eb03..e01b7dda7 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java
++++ b/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java
+@@ -777,12 +777,6 @@ public final class DeserializationConfig
+         if (!isEnabled(MapperFeature.AUTO_DETECT_CREATORS)) {
+             vchecker = vchecker.withCreatorVisibility(Visibility.NONE);
+         }
+-        if (!isEnabled(MapperFeature.AUTO_DETECT_GETTERS)) {
+-            vchecker = vchecker.withGetterVisibility(Visibility.NONE);
+-        }
+-        if (!isEnabled(MapperFeature.AUTO_DETECT_IS_GETTERS)) {
+-            vchecker = vchecker.withIsGetterVisibility(Visibility.NONE);
+-        }
+         if (!isEnabled(MapperFeature.AUTO_DETECT_FIELDS)) {
+             vchecker = vchecker.withFieldVisibility(Visibility.NONE);
+         }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java b/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java
+index bf0c3f08b..da192ee35 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java
++++ b/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java
+@@ -862,12 +862,6 @@ public final class SerializationConfig
+     {
+         VisibilityChecker<?> vchecker = super.getDefaultVisibilityChecker();
+         // then global overrides (disabling)
+-        if (!isEnabled(MapperFeature.AUTO_DETECT_SETTERS)) {
+-            vchecker = vchecker.withSetterVisibility(Visibility.NONE);
+-        }
+-        if (!isEnabled(MapperFeature.AUTO_DETECT_CREATORS)) {
+-            vchecker = vchecker.withCreatorVisibility(Visibility.NONE);
+-        }
+         if (!isEnabled(MapperFeature.AUTO_DETECT_GETTERS)) {
+             vchecker = vchecker.withGetterVisibility(Visibility.NONE);
+         }

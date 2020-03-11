@@ -1,0 +1,18 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/filter/ProblemHandlerTest.java b/src/test/java/com/fasterxml/jackson/databind/filter/ProblemHandlerTest.java
+index 1a9f396f9..82ab7807a 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/filter/ProblemHandlerTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/filter/ProblemHandlerTest.java
+@@ -242,10 +242,11 @@ public class ProblemHandlerTest extends BaseMapTest
+         assertEquals(SingleValuedEnum.A, result);
+ 
+         // also, write [databind#1629] try this
++        UUID defaultUUID = UUID.nameUUIDFromBytes("abc".getBytes());
+         mapper = new ObjectMapper()
+-                .addHandler(new WeirdStringHandler(null));
++                .addHandler(new WeirdStringHandler(defaultUUID));
+         UUID result2 = mapper.readValue(quote("not a uuid!"), UUID.class);
+-        assertNull(result2);
++        assertEquals(defaultUUID, result2);
+     }
+ 
+     public void testInvalidTypeId() throws Exception

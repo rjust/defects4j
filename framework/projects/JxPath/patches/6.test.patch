@@ -1,0 +1,16 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/compiler/VariableTest.java b/src/test/org/apache/commons/jxpath/ri/compiler/VariableTest.java
+index ed1165c..77aee9d 100644
+--- a/src/test/org/apache/commons/jxpath/ri/compiler/VariableTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/compiler/VariableTest.java
+@@ -272,10 +272,4 @@ public class VariableTest extends JXPathTestCase {
+         assertXPathValue(context, "count($a | /document/vendor/location)", new Double(3));
+         assertXPathValue(context, "count($a | /list)", new Double(7)); //$o + list which contains six discrete values (one is duped, wrapped in a Container)
+     }
+-
+-    public void testIterateVariable() throws Exception {
+-        assertXPathValueIterator(context, "$d", list("a", "b"));
+-        assertXPathValue(context, "$d = 'a'", Boolean.TRUE);
+-        assertXPathValue(context, "$d = 'b'", Boolean.TRUE);
+-    }
+ }
+\ No newline at end of file

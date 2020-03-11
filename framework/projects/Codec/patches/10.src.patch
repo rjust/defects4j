@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/codec/language/Caverphone.java b/src/java/org/apache/commons/codec/language/Caverphone.java
+index 28505574..5ac7e9ce 100644
+--- a/src/java/org/apache/commons/codec/language/Caverphone.java
++++ b/src/java/org/apache/commons/codec/language/Caverphone.java
+@@ -73,7 +73,7 @@ public class Caverphone implements StringEncoder {
+         txt = txt.replaceAll("^gn", "2n");
+ 
+         // End 
+-        txt = txt.replaceAll("mb$", "m2");
++        txt = txt.replaceAll("^mb", "m2");
+ 
+         // 4. Handle replacements
+         txt = txt.replaceAll("cq", "2q");

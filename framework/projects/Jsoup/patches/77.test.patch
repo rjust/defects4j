@@ -1,0 +1,34 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 0a76bb9..95f4932 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -1105,11 +1105,6 @@ public class HtmlParserTest {
+         assertEquals("<r> <x> A </x> <y> B </y> </r>", StringUtil.normaliseWhitespace(doc.body().html()));
+     }
+ 
+-    @Test public void normalizesDiscordantTags() {
+-        Document document = Jsoup.parse("<div>test</DIV><p></p>");
+-        assertEquals("<div>\n test\n</div>\n<p></p>", document.body().html());
+-    }
+-
+     @Test public void selfClosingVoidIsNotAnError() {
+         String html = "<p>test<br/>test<br/></p>";
+         Parser parser = Parser.htmlParser().setTrackErrors(5);
+diff --git a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+index cb5bb14..40be145 100644
+--- a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
++++ b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+@@ -191,13 +191,6 @@ public class XmlTreeBuilderTest {
+         assertEquals("<test id=\"1\">Check</test>", TextUtil.stripNewlines(doc.html()));
+     }
+ 
+-    @Test public void normalizesDiscordantTags() {
+-        Parser parser = Parser.xmlParser().settings(ParseSettings.htmlDefault);
+-        Document document = Jsoup.parse("<div>test</DIV><p></p>", "", parser);
+-        assertEquals("<div>\n test\n</div>\n<p></p>", document.html());
+-        // was failing -> toString() = "<div>\n test\n <p></p>\n</div>"
+-    }
+-
+     @Test public void roundTripsCdata() {
+         String xml = "<div id=1><![CDATA[\n<html>\n <foo><&amp;]]></div>";
+         Document doc = Jsoup.parse(xml, "", Parser.xmlParser());

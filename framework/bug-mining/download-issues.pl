@@ -61,8 +61,8 @@ organization the repo is under, e.g., apache.
 
 =item B<-q C<query>>
 
-The query sent to the issue tracker. Suitable defaults for supported trackers
-are chosen so they identify only bugs.
+The query (i.e., filter for bug type or label) sent to the issue tracker.
+Suitable defaults for supported trackers are chosen so they identify only bugs.
 
 =item B<-u C<tracker-uri>>
 

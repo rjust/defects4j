@@ -1,0 +1,36 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+index cc6ab51e7..590c3e15a 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+@@ -68,7 +68,7 @@ public class TestJdkTypes extends BaseMapTest
+         }
+     }
+ 
+-    // [databind#429]
++    // [Issue#429]
+     static class StackTraceBean {
+         public final static int NUM = 13;
+ 
+@@ -145,9 +145,6 @@ public class TestJdkTypes extends BaseMapTest
+         assertEquals(new Locale("es", "ES"), MAPPER.readValue(quote("es_ES"), Locale.class));
+         assertEquals(new Locale("FI", "fi", "savo"),
+                 MAPPER.readValue(quote("fi_FI_savo"), Locale.class));
+-        assertEquals(new Locale("en", "US"),
+-                MAPPER.readValue(quote("en-US"), Locale.class));
+-
+         // [databind#1123]
+         Locale loc = MAPPER.readValue(quote(""), Locale.class);
+         assertSame(Locale.ROOT, loc);
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
+index 9aea068ff..de40bc4a9 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java
+@@ -74,8 +74,6 @@ public class TestJdkTypes
+         assertEquals(quote("es_ES"), MAPPER.writeValueAsString(new Locale("es", "ES")));
+         assertEquals(quote("fi_FI_savo"), MAPPER.writeValueAsString(new Locale("FI", "fi", "savo")));
+ 
+-        assertEquals(quote("en_US"), MAPPER.writeValueAsString(Locale.US));
+-
+         // [databind#1123]
+         assertEquals(quote(""), MAPPER.writeValueAsString(Locale.ROOT));
+     }

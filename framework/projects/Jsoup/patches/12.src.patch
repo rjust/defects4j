@@ -1,0 +1,34 @@
+diff --git a/src/main/java/org/jsoup/select/Selector.java b/src/main/java/org/jsoup/select/Selector.java
+index 691b1cf..d54ba64 100644
+--- a/src/main/java/org/jsoup/select/Selector.java
++++ b/src/main/java/org/jsoup/select/Selector.java
+@@ -136,7 +136,7 @@ public class Selector {
+     
+     private void combinator(char combinator) {
+         tq.consumeWhitespace();
+-        String subQuery = consumeSubQuery(); // support multi > childs
++        String subQuery = tq.consumeToAny(combinators);
+         
+         Elements output;
+         if (combinator == '>')
+@@ -153,20 +153,6 @@ public class Selector {
+         elements.clear(); elements.addAll(output);
+     }
+ 
+-    private String consumeSubQuery() {
+-        StringBuilder sq = new StringBuilder();
+-        while (!tq.isEmpty()) {
+-            if (tq.matches("("))
+-                sq.append("(").append(tq.chompBalanced('(', ')')).append(")");
+-            else if (tq.matches("["))
+-                sq.append("[").append(tq.chompBalanced('[', ']')).append("]");
+-            else if (tq.matchesAny(combinators))
+-                break;
+-            else
+-                sq.append(tq.consume());
+-        }
+-        return sq.toString();
+-    }
+     
+     private Elements findElements() {
+         if (tq.matchChomp("#")) {

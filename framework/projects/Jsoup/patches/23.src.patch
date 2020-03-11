@@ -1,0 +1,43 @@
+diff --git a/src/main/java/org/jsoup/parser/CharacterReader.java b/src/main/java/org/jsoup/parser/CharacterReader.java
+index 4db4d79..e07f7de 100644
+--- a/src/main/java/org/jsoup/parser/CharacterReader.java
++++ b/src/main/java/org/jsoup/parser/CharacterReader.java
+@@ -115,25 +115,7 @@ class CharacterReader {
+         return input.substring(start, pos);
+     }
+ 
+-    String consumeLetterThenDigitSequence() {
+-        int start = pos;
+-        while (!isEmpty()) {
+-            char c = input.charAt(pos);
+-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+-                pos++;
+-            else
+-                break;
+-        }
+-        while (!isEmpty()) {
+-            char c = input.charAt(pos);
+-            if (c >= '0' && c <= '9')
+-                pos++;
+-            else
+-                break;
+-        }
+ 
+-        return input.substring(start, pos);
+-    }
+ 
+     String consumeHexSequence() {
+         int start = pos;
+diff --git a/src/main/java/org/jsoup/parser/Tokeniser.java b/src/main/java/org/jsoup/parser/Tokeniser.java
+index d53a49b..d1e3ee6 100644
+--- a/src/main/java/org/jsoup/parser/Tokeniser.java
++++ b/src/main/java/org/jsoup/parser/Tokeniser.java
+@@ -132,7 +132,7 @@ class Tokeniser {
+             }
+         } else { // named
+             // get as many letters as possible, and look for matching entities. unconsume backwards till a match is found
+-            String nameRef = reader.consumeLetterThenDigitSequence();
++            String nameRef = reader.consumeLetterSequence();
+             String origNameRef = new String(nameRef); // for error reporting. nameRef gets chomped looking for matches
+             boolean looksLegit = reader.matches(';');
+             boolean found = false;

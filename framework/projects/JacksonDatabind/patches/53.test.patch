@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TypeRefinementForMap1215Test.java b/src/test/java/com/fasterxml/jackson/failing/TypeRefinementForMap1215Test.java
+similarity index 97%
+rename from src/test/java/com/fasterxml/jackson/databind/jsontype/TypeRefinementForMap1215Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/TypeRefinementForMap1215Test.java
+index d2639b11c..7601d17fd 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TypeRefinementForMap1215Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/TypeRefinementForMap1215Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.jsontype;
++package com.fasterxml.jackson.failing;
+ 
+ import java.util.LinkedHashMap;
+ import java.util.Map;

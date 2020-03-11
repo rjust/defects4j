@@ -1,0 +1,71 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java b/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
+index a530e4b20..b3030afdc 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java
+@@ -162,20 +162,18 @@ public class CreatorCollector
+             SettableBeanProperty[] injectables)
+     {
+         if (creator.getParameterType(0).isCollectionLikeType()) {
+-            if (verifyNonDup(creator, C_ARRAY_DELEGATE, explicit)) {
++            verifyNonDup(creator, C_ARRAY_DELEGATE, explicit);
+                 _arrayDelegateArgs = injectables;
+-            }
+         } else {
+-            if (verifyNonDup(creator, C_DELEGATE, explicit)) {
++            verifyNonDup(creator, C_DELEGATE, explicit);
+                 _delegateArgs = injectables;
+-            }
+         }
+     }
+     
+     public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit,
+             SettableBeanProperty[] properties)
+     {
+-        if (verifyNonDup(creator, C_PROPS, explicit)) {
++        verifyNonDup(creator, C_PROPS, explicit);
+             // Better ensure we have no duplicate names either...
+             if (properties.length > 1) {
+                 HashMap<String,Integer> names = new HashMap<String,Integer>();
+@@ -194,7 +192,6 @@ public class CreatorCollector
+                 }
+             }
+             _propertyBasedArgs = properties;
+-        }
+     }
+ 
+     public void addIncompeteParameter(AnnotatedParameter parameter) {
+@@ -299,7 +296,7 @@ public class CreatorCollector
+     /**
+      * @return True if specified Creator is to be used
+      */
+-    protected boolean verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
++    protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+     {
+         final int mask = (1 << typeIndex);
+         _hasNonDefaultCreator = true;
+@@ -310,7 +307,7 @@ public class CreatorCollector
+             if ((_explicitCreators & mask) != 0) { // already had explicitly annotated, leave as-is
+                 // but skip, if new one not annotated
+                 if (!explicit) {
+-                    return false;
++                    return;
+                 }
+                 // both explicit: verify
+                 verify = true;
+@@ -332,7 +329,7 @@ public class CreatorCollector
+                 // otherwise, which one to choose?
+                 if (newType.isAssignableFrom(oldType)) {
+                     // new type more generic, use old
+-                    return false;
++                    return;
+                 }
+                 // new type more specific, use it
+             }
+@@ -341,7 +338,6 @@ public class CreatorCollector
+             _explicitCreators |= mask;
+         }
+         _creators[typeIndex] = _fixAccess(newOne);
+-        return true;
+     }
+ 
+     /*

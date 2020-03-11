@@ -1,0 +1,289 @@
+diff --git a/src/test/java/org/jsoup/helper/DataUtilTest.java b/src/test/java/org/jsoup/helper/DataUtilTest.java
+index 3db6d2a..a810ac7 100644
+--- a/src/test/java/org/jsoup/helper/DataUtilTest.java
++++ b/src/test/java/org/jsoup/helper/DataUtilTest.java
+@@ -1,5 +1,7 @@
+ package org.jsoup.helper;
+ 
++import static org.junit.Assert.assertEquals;
++
+ import org.jsoup.nodes.Document;
+ import org.jsoup.parser.Parser;
+ import org.junit.Test;
+@@ -7,8 +9,6 @@ import org.junit.Test;
+ import java.nio.ByteBuffer;
+ import java.nio.charset.Charset;
+ 
+-import static org.junit.Assert.assertEquals;
+-
+ public class DataUtilTest {
+     @Test
+     public void testCharset() {
+@@ -25,35 +25,12 @@ public class DataUtilTest {
+         assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html;charset=\"UTF-8\""));
+         assertEquals("ISO-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=\"ISO-8859-1\""));
+         assertEquals(null, DataUtil.getCharsetFromContentType("text/html; charset=\"Unsupported\""));
+-        assertEquals("UTF-8", DataUtil.getCharsetFromContentType("text/html; charset='UTF-8'"));
+     }
+-
++    
+     @Test public void discardsSpuriousByteOrderMark() {
+         String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
+         ByteBuffer buffer = Charset.forName("UTF-8").encode(html);
+         Document doc = DataUtil.parseByteData(buffer, "UTF-8", "http://foo.com/", Parser.htmlParser());
+         assertEquals("One", doc.head().text());
+     }
+-
+-    @Test
+-    public void shouldNotThrowExceptionOnEmptyCharset() {
+-        assertEquals(null, DataUtil.getCharsetFromContentType("text/html; charset="));
+-        assertEquals(null, DataUtil.getCharsetFromContentType("text/html; charset=;"));
+-    }
+-
+-    @Test
+-    public void shouldSelectFirstCharsetOnWeirdMultileCharsetsInMetaTags() {
+-        assertEquals("ISO-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=ISO-8859-1, charset=1251"));
+-    }
+-
+-    @Test
+-    public void shouldCorrectCharsetForDuplicateCharsetString() {
+-        assertEquals("iso-8859-1", DataUtil.getCharsetFromContentType("text/html; charset=charset=iso-8859-1"));
+-    }
+-
+-    @Test
+-    public void shouldReturnNullForIllegalCharsetNames() {
+-        assertEquals(null, DataUtil.getCharsetFromContentType("text/html; charset=$HJKDF§$/("));
+-    }
+-
+ }
+diff --git a/src/test/java/org/jsoup/integration/ParseTest.java b/src/test/java/org/jsoup/integration/ParseTest.java
+index ed026d2..240bacc 100644
+--- a/src/test/java/org/jsoup/integration/ParseTest.java
++++ b/src/test/java/org/jsoup/integration/ParseTest.java
+@@ -4,13 +4,13 @@ import org.jsoup.Jsoup;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Element;
+ import org.jsoup.select.Elements;
++import static org.junit.Assert.*;
+ import org.junit.Test;
+ 
+-import java.io.*;
++import java.io.File;
++import java.io.IOException;
+ import java.net.URISyntaxException;
+ 
+-import static org.junit.Assert.*;
+-
+ /**
+  * Integration test: parses from real-world example HTML.
+  *
+@@ -22,9 +22,9 @@ public class ParseTest {
+     public void testSmhBizArticle() throws IOException {
+         File in = getFile("/htmltests/smh-biz-article-1.html");
+         Document doc = Jsoup.parse(in, "UTF-8",
+-                "http://www.smh.com.au/business/the-boards-next-fear-the-female-quota-20100106-lteq.html");
++            "http://www.smh.com.au/business/the-boards-next-fear-the-female-quota-20100106-lteq.html");
+         assertEquals("The board’s next fear: the female quota",
+-                doc.title()); // note that the apos in the source is a literal ’ (8217), not escaped or '
++            doc.title()); // note that the apos in the source is a literal ’ (8217), not escaped or '
+         assertEquals("en", doc.select("html").attr("xml:lang"));
+ 
+         Elements articleBody = doc.select(".articleBody > *");
+@@ -46,8 +46,8 @@ public class ParseTest {
+ 
+         Element hs = doc.select("a[href*=naughty-corners-are-a-bad-idea]").first();
+         assertEquals(
+-                "http://www.heraldsun.com.au/news/naughty-corners-are-a-bad-idea-for-kids/story-e6frf7jo-1225817899003",
+-                hs.attr("href"));
++            "http://www.heraldsun.com.au/news/naughty-corners-are-a-bad-idea-for-kids/story-e6frf7jo-1225817899003",
++            hs.attr("href"));
+         assertEquals(hs.attr("href"), hs.attr("abs:href"));
+     }
+ 
+@@ -59,10 +59,10 @@ public class ParseTest {
+         Elements results = doc.select("h3.r > a");
+         assertEquals(12, results.size());
+         assertEquals(
+-                "http://news.google.com/news?hl=en&q=ipod&um=1&ie=UTF-8&ei=uYlKS4SbBoGg6gPf-5XXCw&sa=X&oi=news_group&ct=title&resnum=1&ved=0CCIQsQQwAA",
+-                results.get(0).attr("href"));
++            "http://news.google.com/news?hl=en&q=ipod&um=1&ie=UTF-8&ei=uYlKS4SbBoGg6gPf-5XXCw&sa=X&oi=news_group&ct=title&resnum=1&ved=0CCIQsQQwAA",
++            results.get(0).attr("href"));
+         assertEquals("http://www.apple.com/itunes/",
+-                results.get(1).attr("href"));
++            results.get(1).attr("href"));
+     }
+ 
+     @Test
+@@ -80,7 +80,7 @@ public class ParseTest {
+         assertEquals("Yahoo! JAPAN", doc.title());
+         Element a = doc.select("a[href=t/2322m2]").first();
+         assertEquals("http://www.yahoo.co.jp/_ylh=X3oDMTB0NWxnaGxsBF9TAzIwNzcyOTYyNjUEdGlkAzEyBHRtcGwDZ2Ex/t/2322m2",
+-                a.attr("abs:href")); // session put into <base>
++            a.attr("abs:href")); // session put into <base>
+         assertEquals("全国、人気の駅ランキング", a.text());
+     }
+ 
+@@ -89,7 +89,7 @@ public class ParseTest {
+         // tests <meta http-equiv="Content-Type" content="text/html;charset=gb2312">
+         File in = getFile("/htmltests/baidu-cn-home.html");
+         Document doc = Jsoup.parse(in, null,
+-                "http://www.baidu.com/"); // http charset is gb2312, but NOT specifying it, to test http-equiv parse
++            "http://www.baidu.com/"); // http charset is gb2312, but NOT specifying it, to test http-equiv parse
+         Element submit = doc.select("#su").first();
+         assertEquals("百度一下", submit.attr("value"));
+ 
+@@ -105,7 +105,7 @@ public class ParseTest {
+ 
+         doc.outputSettings().charset("ascii");
+         assertEquals("<title>&#x767e;&#x5ea6;&#x4e00;&#x4e0b;&#xff0c;&#x4f60;&#x5c31;&#x77e5;&#x9053;      </title>",
+-                doc.select("title").outerHtml());
++            doc.select("title").outerHtml());
+     }
+ 
+     @Test
+@@ -113,7 +113,7 @@ public class ParseTest {
+         // tests <meta charset> when preceded by another <meta>
+         File in = getFile("/htmltests/baidu-variant.html");
+         Document doc = Jsoup.parse(in, null,
+-                "http://www.baidu.com/"); // http charset is gb2312, but NOT specifying it, to test http-equiv parse
++            "http://www.baidu.com/"); // http charset is gb2312, but NOT specifying it, to test http-equiv parse
+         // check auto-detect from meta
+         assertEquals("GB2312", doc.outputSettings().charset().displayName());
+         assertEquals("<title>百度一下，你就知道</title>", doc.select("title").outerHtml());
+@@ -140,16 +140,6 @@ public class ParseTest {
+         assertEquals("新", doc.text());
+     }
+ 
+-    @Test
+-    public void testBrokenHtml5CharsetWithASingleDoubleQuote() throws IOException {
+-        InputStream in = inputStreamFrom("<html>\n" +
+-                "<head><meta charset=UTF-8\"></head>\n" +
+-                "<body></body>\n" +
+-                "</html>");
+-        Document doc = Jsoup.parse(in, null, "http://example.com/");
+-        assertEquals("UTF-8", doc.outputSettings().charset().displayName());
+-    }
+-
+     @Test
+     public void testNytArticle() throws IOException {
+         // has tags like <nyt_text>
+@@ -159,7 +149,7 @@ public class ParseTest {
+         Element headline = doc.select("nyt_headline[version=1.0]").first();
+         assertEquals("As BP Lays Out Future, It Will Not Include Hayward", headline.text());
+     }
+-
++    
+     @Test
+     public void testYahooArticle() throws IOException {
+         File in = getFile("/htmltests/yahoo-article-1.html");
+@@ -172,17 +162,9 @@ public class ParseTest {
+         try {
+             File file = new File(ParseTest.class.getResource(resourceName).toURI());
+             return file;
+-        } catch (URISyntaxException e) {
+-            throw new IllegalStateException(e);
+         }
+-    }
+-
+-    private InputStream inputStreamFrom(String s) {
+-        try {
+-            return new ByteArrayInputStream(s.getBytes("UTF-8"));
+-        } catch (UnsupportedEncodingException e) {
+-            throw new RuntimeException(e);
++        catch (URISyntaxException e) {
++            throw new IllegalStateException(e);
+         }
+     }
+-
+ }
+diff --git a/src/test/java/org/jsoup/integration/UrlConnectTest.java b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+index 1b7e34f..d831664 100644
+--- a/src/test/java/org/jsoup/integration/UrlConnectTest.java
++++ b/src/test/java/org/jsoup/integration/UrlConnectTest.java
+@@ -1,21 +1,19 @@
+ package org.jsoup.integration;
+ 
+-import org.jsoup.Connection;
+ import org.jsoup.HttpStatusException;
+-import org.jsoup.Jsoup;
+ import org.jsoup.UnsupportedMimeTypeException;
+-import org.jsoup.nodes.Document;
+-import org.junit.Ignore;
+ import org.junit.Test;
++import org.junit.Ignore;
++import static org.junit.Assert.*;
++import org.jsoup.nodes.Document;
++import org.jsoup.Jsoup;
++import org.jsoup.Connection;
+ 
+-import java.io.IOException;
+ import java.net.MalformedURLException;
+ import java.net.URL;
++import java.io.IOException;
+ import java.util.Map;
+ 
+-import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertTrue;
+-
+ /**
+  Tests the URL connection. Not enabled by default, so tests don't require network connection.
+ 
+@@ -156,13 +154,6 @@ public class UrlConnectTest {
+         assertTrue(doc.title().contains("Google"));
+     }
+ 
+-    @Test
+-    public void gracefullyHandleBrokenLocationRedirect() throws IOException {
+-        Connection con = Jsoup.connect("http://aag-ye.com"); // has Location: http:/temp/AAG_New/en/index.php
+-        con.get(); // would throw exception on error
+-        assertTrue(true);
+-    }
+-
+     @Test
+     public void throwsExceptionOnError() {
+         String url = "http://direct.infohound.net/tools/404";
+@@ -269,44 +260,4 @@ public class UrlConnectTest {
+         assertEquals(actualDocText, largeRes.parse().text().length());
+         assertEquals(actualDocText, unlimitedRes.parse().text().length());
+     }
+-
+-    @Test
+-    public void shouldWorkForCharsetInExtraAttribute() throws IOException {
+-        Connection.Response res = Jsoup.connect("https://www.creditmutuel.com/groupe/fr/").execute();
+-        Document doc = res.parse(); // would throw an error if charset unsupported
+-        assertEquals("ISO-8859-1", res.charset());
+-    }
+-
+-    // The following tests were added to test specific domains if they work. All code paths
+-    // which make the following test green are tested in other unit or integration tests, so the following lines
+-    // could be deleted
+-
+-    @Test
+-    public void shouldSelectFirstCharsetOnWeirdMultileCharsetsInMetaTags() throws IOException {
+-        Connection.Response res = Jsoup.connect("http://aamo.info/").execute();
+-        res.parse(); // would throw an error if charset unsupported
+-        assertEquals("ISO-8859-1", res.charset());
+-    }
+-
+-    @Test
+-    public void shouldParseBrokenHtml5MetaCharsetTagCorrectly() throws IOException {
+-        Connection.Response res = Jsoup.connect("http://9kuhkep.net").execute();
+-        res.parse(); // would throw an error if charset unsupported
+-        assertEquals("UTF-8", res.charset());
+-    }
+-
+-    @Test
+-    public void shouldEmptyMetaCharsetCorrectly() throws IOException {
+-        Connection.Response res = Jsoup.connect("http://aastmultimedia.com").execute();
+-        res.parse(); // would throw an error if charset unsupported
+-        assertEquals("UTF-8", res.charset());
+-    }
+-
+-    @Test
+-    public void shouldWorkForDuplicateCharsetInTag() throws IOException {
+-        Connection.Response res = Jsoup.connect("http://aaptsdassn.org").execute();
+-        Document doc = res.parse(); // would throw an error if charset unsupported
+-        assertEquals("ISO-8859-1", res.charset());
+-    }
+-
+ }

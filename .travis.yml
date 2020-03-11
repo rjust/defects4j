@@ -43,8 +43,14 @@ jobs:
       name: test_gen_tests.sh
     - script: carton exec ./test_fix_test_suite.sh
       name: test_fix_test_suite.sh
-    - script: carton exec ./test_export_command.sh
-      name: test_export_command.sh
+    - script: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
+      name: "test export 1" 
+    - script: carton exec ./test_export_command.sh -p Codec -p Collections -p Compress -p Csv -p JacksonDatabind
+      name: "test export 2"
+    - script: carton exec ./test_export_command.sh -p Gson -p JacksonCore -p JacksonXml -p Jsoup -p JxPath
+      name: "test export 3"  
+    - script: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
+      name: "test export 4"
     - script: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
     # Verify that all bugs are reproducible (run multiple jobs for projects that
@@ -53,6 +59,9 @@ jobs:
 ## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart
       name: "Chart"
+## Cli
+    - script: carton exec ./test_verify_bugs.sh -p Cli
+      name: "Cli"
 ## Closure
     - script: carton exec ./test_verify_bugs.sh -p Closure -b1..10
       name: "Closure 1-10"
@@ -92,11 +101,59 @@ jobs:
       name: "Closure 161-169"
     - script: carton exec ./test_verify_bugs.sh -p Closure -b170..176
       name: "Closure 170-176"
+## Codec
+    - script: carton exec ./test_verify_bugs.sh -p Codec -b1..18
+      name: "Codec"
+## Collections
+    - script: carton exec ./test_verify_bugs.sh -p Collections -b25..28
+      name: "Collections"
+## Compress
+    - script: carton exec ./test_verify_bugs.sh -p Compress
+      name: "Compress"
+## Csv
+    - script: carton exec ./test_verify_bugs.sh -p Csv -b1..16
+      name: "Csv"
+## Gson
+    - script: carton exec ./test_verify_bugs.sh -p Gson -b1..18
+      name: "Gson"
+## JacksonCore
+    - script: carton exec ./test_verify_bugs.sh -p JacksonCore
+      name: "JacksonCore"
+## JacksonDatabind
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..14
+      name: "JacksonDatabind 1-14"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b15..28
+      name: "JacksonDatabind 15-28"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b29..43
+      name: "JacksonDatabind 29-43"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b44..57
+      name: "JacksonDatabind 44-57"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b58..67
+      name: "JacksonDatabind 58-67"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b68..76
+      name: "JacksonDatabind 68-76"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b77..86
+      name: "JacksonDatabind 77-86"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b87..96
+      name: "JacksonDatabind 87-96"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b97..104
+      name: "JacksonDatabind 97-104"
+    - script: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b105..112
+      name: "JacksonDatabind 105-112"
+## JacksonXml
+    - script: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..6
+      name: "JacksonXml"
+## Jsoup
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b1..50
+      name: "Jsoup 1-50"
+    - script: carton exec ./test_verify_bugs.sh -p Jsoup -b51..93
+      name: "Jsoup 51-93"
+## JxPath
+    - script: carton exec ./test_verify_bugs.sh -p JxPath
+      name: "JxPath"
 ## Lang
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b1..32
-      name: "Lang 1-32"
-    - script: carton exec ./test_verify_bugs.sh -p Lang -b33..65
-      name: "Lang 33-65"
+    - script: carton exec ./test_verify_bugs.sh -p Lang
+      name: "Lang"
 ## Math
     - script: carton exec ./test_verify_bugs.sh -p Math -b1..18
       name: "Math 1-18"

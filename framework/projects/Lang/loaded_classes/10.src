@@ -1,6 +1,6 @@
-org.apache.commons.lang3.time.FastDateParser
-org.apache.commons.lang3.time.FormatCache
 org.apache.commons.lang3.time.DateParser
-org.apache.commons.lang3.time.FastDatePrinter
 org.apache.commons.lang3.time.DatePrinter
 org.apache.commons.lang3.time.FastDateFormat
+org.apache.commons.lang3.time.FastDateParser
+org.apache.commons.lang3.time.FastDatePrinter
+org.apache.commons.lang3.time.FormatCache

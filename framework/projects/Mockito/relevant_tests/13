@@ -1,5 +1,4 @@
 org.concurrentmockito.ThreadVerifiesContinuoslyInteractingMockTest
-org.concurrentmockito.ThreadsRunAllTestsHalfManualTest
 org.concurrentmockito.ThreadsShareAMockTest
 org.concurrentmockito.ThreadsShareGenerouslyStubbedMockTest
 org.concurrentmockito.VerificationInOrderFromMultipleThreadsTest
@@ -49,7 +48,6 @@ org.mockitousage.annotation.SpyAnnotationInitializedInBaseClassTest
 org.mockitousage.annotation.SpyAnnotationTest
 org.mockitousage.annotation.SpyInjectionTest
 org.mockitousage.annotation.WrongSetOfAnnotationsTest
-org.mockitousage.basicapi.MockingMultipleInterfacesTest
 org.mockitousage.basicapi.MocksCreationTest
 org.mockitousage.basicapi.MocksSerializationTest
 org.mockitousage.basicapi.ReplacingObjectMethodsTest

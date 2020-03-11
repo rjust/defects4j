@@ -1,0 +1,25 @@
+diff --git a/src/test/org/apache/commons/collections/TestExtendedProperties.java b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+index ba6e514e..07f5231b 100644
+--- a/src/test/org/apache/commons/collections/TestExtendedProperties.java
++++ b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+@@ -428,20 +428,4 @@ public class TestExtendedProperties extends TestCase {
+         assertEquals(3, props.size());
+     }
+ 
+-    public void testCollections299() {
+-        Properties defaults = new Properties();
+-        defaults.put("objectTrue", Boolean.TRUE);
+-
+-        Properties properties = new Properties(defaults);
+-        properties.put("objectFalse", Boolean.FALSE);
+-
+-        ExtendedProperties extended = ExtendedProperties.convertProperties(properties);
+-
+-        assertNull(extended.getString("objectTrue"));
+-        assertNull(extended.getString("objectFalse"));
+-
+-        assertNull(extended.get("objectTrue"));
+-        assertNull(extended.get("objectFalse"));
+-    }
+-
+ }

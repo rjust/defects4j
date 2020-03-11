@@ -1,0 +1,68 @@
+diff --git a/src/test/java/org/apache/commons/cli/CommandLineTest.java b/src/test/java/org/apache/commons/cli/CommandLineTest.java
+index f7fc7ff..fed4ac3 100644
+--- a/src/test/java/org/apache/commons/cli/CommandLineTest.java
++++ b/src/test/java/org/apache/commons/cli/CommandLineTest.java
+@@ -61,16 +61,4 @@ public class CommandLineTest extends TestCase
+         
+         assertEquals(3, cmd.getOptions().length);
+     }
+-
+-    public void testGetParsedOptionValue() throws Exception {
+-        Options options = new Options();
+-        options.addOption(OptionBuilder.hasArg().withType(Number.class).create("i"));
+-        options.addOption(OptionBuilder.hasArg().create("f"));
+-        
+-        CommandLineParser parser = new DefaultParser();
+-        CommandLine cmd = parser.parse(options, new String[] { "-i", "123", "-f", "foo" });
+-        
+-        assertEquals(123, ((Number) cmd.getParsedOptionValue("i")).intValue());
+-        assertEquals("foo", cmd.getParsedOptionValue("f"));
+-    }
+ }
+diff --git a/src/test/java/org/apache/commons/cli/OptionBuilderTest.java b/src/test/java/org/apache/commons/cli/OptionBuilderTest.java
+index c69789b..0d2f8f3 100644
+--- a/src/test/java/org/apache/commons/cli/OptionBuilderTest.java
++++ b/src/test/java/org/apache/commons/cli/OptionBuilderTest.java
+@@ -26,14 +26,14 @@ public class OptionBuilderTest extends TestCase {
+                                      .hasArg( )
+                                      .isRequired( )
+                                      .hasArgs( )
+-                                     .withType( Float.class )
++                                     .withType( new Float( 10 ) )
+                                      .withDescription( "this is a simple option" )
+                                      .create( 's' );
+ 
+         assertEquals( "s", simple.getOpt() );
+         assertEquals( "simple option", simple.getLongOpt() );
+         assertEquals( "this is a simple option", simple.getDescription() );
+-        assertEquals( simple.getType(), Float.class );
++        assertEquals( simple.getType().getClass(), Float.class );
+         assertTrue( simple.hasArg() );
+         assertTrue( simple.isRequired() );
+         assertTrue( simple.hasArgs() );
+@@ -44,14 +44,14 @@ public class OptionBuilderTest extends TestCase {
+                                      .hasArg( )
+                                      .isRequired( )
+                                      .hasArgs( )
+-                                     .withType( Float.class )
++                                     .withType( new Float( 10 ) )
+                                      .withDescription( "this is a simple option" )
+                                      .create( 's' );
+ 
+         assertEquals( "s", simple.getOpt() );
+         assertEquals( "simple option", simple.getLongOpt() );
+         assertEquals( "this is a simple option", simple.getDescription() );
+-        assertEquals( simple.getType(), Float.class );
++        assertEquals( simple.getType().getClass(), Float.class );
+         assertTrue( simple.hasArg() );
+         assertTrue( simple.isRequired() );
+         assertTrue( simple.hasArgs() );
+@@ -64,7 +64,7 @@ public class OptionBuilderTest extends TestCase {
+         assertEquals( "d", simple.getOpt() );
+         assertEquals( "dimple option", simple.getLongOpt() );
+         assertEquals( "this is a dimple option", simple.getDescription() );
+-        assertEquals( String.class, simple.getType() );
++        assertNull( simple.getType() );
+         assertTrue( simple.hasArg() );
+         assertTrue( !simple.isRequired() );
+         assertTrue( !simple.hasArgs() );

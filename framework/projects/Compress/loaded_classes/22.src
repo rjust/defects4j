@@ -1,0 +1,7 @@
+org.apache.commons.compress.compressors.bzip2.BlockSort
+org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
+org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
+org.apache.commons.compress.compressors.bzip2.BZip2Constants
+org.apache.commons.compress.compressors.bzip2.CRC
+org.apache.commons.compress.compressors.CompressorInputStream
+org.apache.commons.compress.compressors.CompressorOutputStream

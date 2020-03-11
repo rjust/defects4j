@@ -1,0 +1,51 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestEnumSerialization.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestEnumSerialization.java
+index e13f3ea22..c7f889744 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestEnumSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestEnumSerialization.java
+@@ -432,14 +432,6 @@ public class TestEnumSerialization
+         assertEquals("[\"aleph\"]",
+                 MAPPER.writeValueAsString(EnumSet.of(EnumWithJsonProperty.A)));
+     }
+-
+-    // [databind#1322]
+-    public void testEnumsWithJsonPropertyAsKey() throws Exception
+-    {
+-        EnumMap<EnumWithJsonProperty,String> input = new EnumMap<EnumWithJsonProperty,String>(EnumWithJsonProperty.class);
+-        input.put(EnumWithJsonProperty.A, "b");
+-        assertEquals("{\"aleph\":\"b\"}", MAPPER.writeValueAsString(input));
+-    }
+ }
+ 
+ // [JACKSON-757], non-inner enum
+diff --git a/src/test/java/com/fasterxml/jackson/failing/EnumSerialization1322Test.java b/src/test/java/com/fasterxml/jackson/failing/EnumSerialization1322Test.java
+new file mode 100644
+index 000000000..14203c83b
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/failing/EnumSerialization1322Test.java
+@@ -0,0 +1,26 @@
++package com.fasterxml.jackson.failing;
++
++import java.util.EnumMap;
++
++import com.fasterxml.jackson.annotation.JsonProperty;
++import com.fasterxml.jackson.databind.BaseMapTest;
++import com.fasterxml.jackson.databind.ObjectMapper;
++
++public class EnumSerialization1322Test extends BaseMapTest
++{
++    // for [databind#1322]
++    protected enum EnumWithJsonProperty {
++        @JsonProperty("aleph")
++        A;
++    }
++
++    private final ObjectMapper MAPPER = new ObjectMapper();
++    
++    // [databind#1322]
++    public void testEnumsWithJsonPropertyAsKey() throws Exception
++    {
++        EnumMap<EnumWithJsonProperty,String> input = new EnumMap<EnumWithJsonProperty,String>(EnumWithJsonProperty.class);
++        input.put(EnumWithJsonProperty.A, "b");
++        assertEquals("{\"aleph\":\"b\"}", MAPPER.writeValueAsString(input));
++    }
++}

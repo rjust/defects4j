@@ -1,0 +1,14 @@
+org.apache.commons.compress.ChainingTestCase
+org.apache.commons.compress.archivers.SevenZTestCase
+org.apache.commons.compress.archivers.sevenz.SevenZFileTest
+org.apache.commons.compress.archivers.sevenz.SevenZMethodConfigurationTest
+org.apache.commons.compress.archivers.sevenz.SevenZOutputFileTest
+org.apache.commons.compress.compressors.BZip2TestCase
+org.apache.commons.compress.compressors.DeflateTestCase
+org.apache.commons.compress.compressors.DetectCompressorTestCase
+org.apache.commons.compress.compressors.FramedSnappyTestCase
+org.apache.commons.compress.compressors.GZipTestCase
+org.apache.commons.compress.compressors.XZTestCase
+org.apache.commons.compress.compressors.ZTestCase
+org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStreamTest
+org.apache.commons.compress.compressors.bzip2.PythonTruncatedBzip2Test

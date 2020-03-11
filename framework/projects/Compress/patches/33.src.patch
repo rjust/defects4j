@@ -1,0 +1,42 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+index 8dc3c525..935283aa 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
++++ b/src/main/java/org/apache/commons/compress/compressors/CompressorStreamFactory.java
+@@ -237,9 +237,6 @@ public class CompressorStreamFactory {
+                 return new ZCompressorInputStream(in);
+             }
+ 
+-            if (DeflateCompressorInputStream.matches(signature, signatureLength)) {
+-                return new DeflateCompressorInputStream(in);
+-            }
+ 
+             if (XZUtils.matches(signature, signatureLength) &&
+                 XZUtils.isXZCompressionAvailable()) {
+diff --git a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
+index b8ed1981..98d8ec12 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/deflate/DeflateCompressorInputStream.java
+@@ -30,11 +30,6 @@ import org.apache.commons.compress.compressors.CompressorInputStream;
+  * @since 1.9
+  */
+ public class DeflateCompressorInputStream extends CompressorInputStream {
+-    private static final int MAGIC_1 = 0x78;
+-    private static final int MAGIC_2a = 0x01;
+-    private static final int MAGIC_2b = 0x5e;
+-    private static final int MAGIC_2c = 0x9c;
+-    private static final int MAGIC_2d = 0xda;
+     
+     private final InputStream in;
+ 
+@@ -108,11 +103,4 @@ public class DeflateCompressorInputStream extends CompressorInputStream {
+      * 
+      * @since 1.9
+      */
+-    public static boolean matches(byte[] signature, int length) {
+-        return length > 3 && signature[0] == MAGIC_1 && (
+-                signature[1] == (byte) MAGIC_2a ||
+-                signature[1] == (byte) MAGIC_2b ||
+-                signature[1] == (byte) MAGIC_2c ||
+-                signature[1] == (byte) MAGIC_2d);
+-    }
+ }

@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/cli/HelpFormatter.java b/src/java/org/apache/commons/cli/HelpFormatter.java
+index 9a841fd..183cae3 100644
+--- a/src/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/java/org/apache/commons/cli/HelpFormatter.java
+@@ -629,7 +629,7 @@ public class HelpFormatter {
+         }
+ 
+         // if the Option has a value
+-        if (option.hasArg() && option.hasArgName())
++        if (option.hasArg() && (option.getArgName() != null))
+         {
+             buff.append(" <").append(option.getArgName()).append(">");
+         }

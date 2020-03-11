@@ -1,0 +1,102 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializer.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializer.java
+index 56b30737f..dc4906ebf 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializer.java
+@@ -34,7 +34,6 @@ public class NumberSerializer
+     /**
+      * Copied from `jackson-core` class `GeneratorBase`
+      */
+-    protected final static int MAX_BIG_DECIMAL_SCALE = 9999;
+     
+     protected final boolean _isInt;
+ 
+@@ -56,9 +55,6 @@ public class NumberSerializer
+             switch (format.getShape()) {
+             case STRING:
+                 // [databind#2264]: Need special handling for `BigDecimal`
+-                if (((Class<?>) handledType()) == BigDecimal.class) {
+-                    return bigDecimalAsStringSerializer();
+-                }
+                 return ToStringSerializer.instance;
+             default:
+             }
+@@ -114,57 +110,14 @@ public class NumberSerializer
+     /**
+      * @since 2.10
+      */
+-    public static JsonSerializer<?> bigDecimalAsStringSerializer() {
+-        return BigDecimalAsStringSerializer.BD_INSTANCE;
+-    }
+     
+-    final static class BigDecimalAsStringSerializer
+-        extends ToStringSerializerBase
+-    {
+-        final static BigDecimalAsStringSerializer BD_INSTANCE = new BigDecimalAsStringSerializer();
+-        
+-        public BigDecimalAsStringSerializer() {
+-            super(BigDecimal.class);
+-        }
+ 
+-        @Override
+-        public boolean isEmpty(SerializerProvider prov, Object value) {
+-            return valueToString(value).isEmpty();
+-        }
+ 
+-        @Override
+-        public void serialize(Object value, JsonGenerator gen, SerializerProvider provider)
+-            throws IOException
+-        {
+-            final String text;
+-            if (gen.isEnabled(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)) {
+-                final BigDecimal bd = (BigDecimal) value;
+                 // 24-Aug-2016, tatu: [core#315] prevent possible DoS vector, so we need this
+-                if (!_verifyBigDecimalRange(gen, bd)) {
+                     // ... but wouldn't it be nice to trigger error via generator? Alas,
+                     // no method to do that. So we'll do...
+-                    final String errorMsg = String.format(
+-                            "Attempt to write plain `java.math.BigDecimal` (see JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN) with illegal scale (%d): needs to be between [-%d, %d]",
+-                            bd.scale(), MAX_BIG_DECIMAL_SCALE, MAX_BIG_DECIMAL_SCALE);
+-                    provider.reportMappingProblem(errorMsg);
+-                }
+-                text = bd.toPlainString();
+-            } else {
+-                text = value.toString();
+-            }
+-            gen.writeString(text);
+-        }
+ 
+-        @Override
+-        public String valueToString(Object value) {
+             // should never be called
+-            throw new IllegalStateException();
+-        }
+ 
+         // 24-Aug-2016, tatu: [core#315] prevent possible DoS vector, so we need this
+-        protected boolean _verifyBigDecimalRange(JsonGenerator gen, BigDecimal value) throws IOException {
+-            int scale = value.scale();
+-            return ((scale >= -MAX_BIG_DECIMAL_SCALE) && (scale <= MAX_BIG_DECIMAL_SCALE));
+-        }
+-    }
+ }
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
+index 8fd2b875f..8af633d5b 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java
+@@ -2,7 +2,6 @@ package com.fasterxml.jackson.databind.ser.std;
+ 
+ import java.io.IOException;
+ import java.lang.reflect.Type;
+-import java.math.BigDecimal;
+ import java.util.Map;
+ 
+ import com.fasterxml.jackson.annotation.JsonFormat;
+@@ -98,9 +97,6 @@ public class NumberSerializers {
+             if (format != null) {
+                 switch (format.getShape()) {
+                 case STRING:
+-                    if (((Class<?>) handledType()) == BigDecimal.class) {
+-                        return NumberSerializer.bigDecimalAsStringSerializer();
+-                    }
+                     return ToStringSerializer.instance;
+                 default:
+                 }

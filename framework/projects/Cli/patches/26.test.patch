@@ -1,0 +1,38 @@
+diff --git a/src/test/org/apache/commons/cli/OptionBuilderTest.java b/src/test/org/apache/commons/cli/OptionBuilderTest.java
+index b445a67..868d263 100644
+--- a/src/test/org/apache/commons/cli/OptionBuilderTest.java
++++ b/src/test/org/apache/commons/cli/OptionBuilderTest.java
+@@ -145,33 +145,6 @@ public class OptionBuilderTest extends TestCase {
+         catch (IllegalArgumentException e)
+         {
+             // expected
+-            
+-            // implicitly reset the builder
+-            OptionBuilder.create( "opt" );
+         }
+     }
+-
+-    public void testBuilderIsResettedAlways() {
+-        try
+-        {
+-            OptionBuilder.withDescription("JUnit").create('"');
+-            fail("IllegalArgumentException expected");
+-        }
+-        catch (IllegalArgumentException e)
+-        {
+-            // expected
+-        }
+-        assertNull("we inherited a description", OptionBuilder.create('x').getDescription());
+-
+-        try
+-        {
+-            OptionBuilder.withDescription("JUnit").create();
+-            fail("IllegalArgumentException expected");
+-        }
+-        catch (IllegalArgumentException e)
+-        {
+-            // expected
+-        }
+-        assertNull("we inherited a description", OptionBuilder.create('x').getDescription());
+-    }
+ }

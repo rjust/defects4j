@@ -1,0 +1,20 @@
+diff --git a/src/test/java/org/jsoup/nodes/FormElementTest.java b/src/test/java/org/jsoup/nodes/FormElementTest.java
+index a2221e8..982b183 100644
+--- a/src/test/java/org/jsoup/nodes/FormElementTest.java
++++ b/src/test/java/org/jsoup/nodes/FormElementTest.java
+@@ -30,7 +30,6 @@ public class FormElementTest {
+                 "<input name='seven' type='radio' value='on' checked><input name='seven' type='radio' value='off'>" +
+                 "<input name='eight' type='checkbox' checked><input name='nine' type='checkbox' value='unset'>" +
+                 "<input name='ten' value='text' disabled>" +
+-                "<input name='eleven' value='text' type='button'>" +
+                 "</form>";
+         Document doc = Jsoup.parse(html);
+         FormElement form = (FormElement) doc.select("form").first();
+@@ -45,7 +44,6 @@ public class FormElementTest {
+         assertEquals("eight=on", data.get(5).toString()); // default
+         // nine should not appear, not checked checkbox
+         // ten should not appear, disabled
+-        // eleven should not appear, button
+     }
+ 
+     @Test public void formDataUsesFirstAttribute() {

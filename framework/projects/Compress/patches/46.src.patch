@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestamp.java b/src/main/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestamp.java
+index f0508740..f7a74406 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestamp.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/X5455_ExtendedTimestamp.java
+@@ -526,7 +526,8 @@ private static ZipLong dateToZipLong(final Date d) {
+     }
+ 
+     private static ZipLong unixTimeToZipLong(long l) {
+-        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
++        final long TWO_TO_32 = 0x100000000L;
++        if (l >= TWO_TO_32) {
+             throw new IllegalArgumentException("X5455 timestamps must fit in a signed 32 bit integer: " + l);
+         }
+         return new ZipLong(l);

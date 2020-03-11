@@ -1,0 +1,6 @@
+org.apache.commons.jxpath.JXPathTestCase
+org.apache.commons.jxpath.ri.model.dom.DOMModelTest
+org.apache.commons.jxpath.ri.model.dom.TestDOMFactory
+org.apache.commons.jxpath.ri.model.jdom.JDOMModelTest
+org.apache.commons.jxpath.ri.model.jdom.TestJDOMFactory
+org.apache.commons.jxpath.ri.model.XMLModelTestCase

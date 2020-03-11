@@ -1,0 +1,5 @@
+com.fasterxml.jackson.databind.BaseMapTest
+com.fasterxml.jackson.databind.BaseTest
+com.fasterxml.jackson.databind.deser.exc.ExceptionPathTest
+com.fasterxml.jackson.databind.deser.exc.TestExceptionHandlingWithDefaultDeserialization
+com.fasterxml.jackson.databind.deser.exc.TestExceptionHandlingWithJsonCreatorDeserialization

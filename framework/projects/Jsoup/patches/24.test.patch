@@ -1,0 +1,23 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index 2e4c877..76ac270 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -679,18 +679,4 @@ public class HtmlParserTest {
+         Document node = Jsoup.parseBodyFragment(html);
+         assertEquals("<html><head></head><body><table><tbody><tr><td>text</td><!-- Comment --></tr></tbody></table></body></html>", TextUtil.stripNewlines(node.outerHtml()));
+     }
+-
+-    @Test public void handlesQuotesInCommentsInScripts() {
+-        String html = "<script>\n" +
+-                "  <!--\n" +
+-                "    document.write('</scr' + 'ipt>');\n" +
+-                "  // -->\n" +
+-                "</script>";
+-        Document node = Jsoup.parseBodyFragment(html);
+-        assertEquals("<script>\n" +
+-                "  <!--\n" +
+-                "    document.write('</scr' + 'ipt>');\n" +
+-                "  // -->\n" +
+-                "</script>", node.body().html());
+-    }
+ }

@@ -1,0 +1,42 @@
+diff --git a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+index 1df095d7..fd1fc1f7 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+@@ -46,24 +46,6 @@ public class Base64InputStreamTest extends TestCase {
+         super(name);
+     }
+ 
+-    /**
+-     * Test for the CODEC-101 bug:  InputStream.read(byte[]) should never return 0
+-     * because Java's builtin InputStreamReader hates that.
+-     *
+-     * @throws Exception for some failure scenarios.
+-     */
+-    public void testCodec101() throws Exception {
+-        byte[] codec101 = StringUtils.getBytesUtf8(Base64TestData.CODEC_101_MULTIPLE_OF_3);
+-        ByteArrayInputStream bais = new ByteArrayInputStream(codec101);
+-        Base64InputStream in = new Base64InputStream(bais);
+-        byte[] result = new byte[8192];
+-        int c = in.read(result);
+-        assertTrue("Codec101: First read successful [c=" + c + "]", c > 0);
+-
+-        c = in.read(result);
+-        assertTrue("Codec101: Second read should report end-of-stream [c=" + c + "]", c < 0);
+-    }
+-
+     /**
+      * Test the Base64InputStream implementation against the special NPE inducing input
+      * identified in the CODEC-98 bug.
+diff --git a/src/test/org/apache/commons/codec/binary/Base64TestData.java b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+index c69bb2ac..84bb5bf7 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64TestData.java
++++ b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+@@ -32,8 +32,6 @@ import java.util.Random;
+  */
+ public class Base64TestData {
+ 
+-    public static final String CODEC_101_MULTIPLE_OF_3 = "123";
+-
+     public static final String CODEC_98_NPE
+         = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM";
+ 

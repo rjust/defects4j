@@ -1,0 +1,95 @@
+diff --git a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+index fd1fc1f7..2171f84e 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64InputStreamTest.java
+@@ -46,26 +46,6 @@ public class Base64InputStreamTest extends TestCase {
+         super(name);
+     }
+ 
+-    /**
+-     * Test the Base64InputStream implementation against the special NPE inducing input
+-     * identified in the CODEC-98 bug.
+-     *
+-     * @throws Exception for some failure scenarios.
+-     */
+-    public void testCodec98NPE() throws Exception {
+-        byte[] codec98 = StringUtils.getBytesUtf8(Base64TestData.CODEC_98_NPE);
+-        ByteArrayInputStream data = new ByteArrayInputStream(codec98);
+-        Base64InputStream stream = new Base64InputStream(data);
+-
+-        // This line causes an NPE in commons-codec-1.4.jar:
+-        byte[] decodedBytes = Base64TestData.streamToBytes(stream, new byte[1024]);
+-
+-        String decoded = StringUtils.newStringUtf8(decodedBytes);
+-        assertEquals(
+-            "codec-98 NPE Base64InputStream", Base64TestData.CODEC_98_NPE_DECODED, decoded
+-        );
+-    }
+-
+     /**
+      * Tests the Base64InputStream implementation against empty input.
+      * 
+diff --git a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+index fd64ce66..bf692621 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
++++ b/src/test/org/apache/commons/codec/binary/Base64OutputStreamTest.java
+@@ -46,29 +46,6 @@ public class Base64OutputStreamTest extends TestCase {
+         super(name);
+     }
+ 
+-    /**
+-     * Test the Base64OutputStream implementation against the special NPE inducing input
+-     * identified in the CODEC-98 bug.
+-     *
+-     * @throws Exception for some failure scenarios.
+-     */
+-    public void testCodec98NPE() throws Exception {
+-        byte[] codec98 = StringUtils.getBytesUtf8(Base64TestData.CODEC_98_NPE);
+-        byte[] codec98_1024 = new byte[1024];
+-        System.arraycopy(codec98, 0, codec98_1024, 0, codec98.length);
+-        ByteArrayOutputStream data = new ByteArrayOutputStream(1024);
+-        Base64OutputStream stream = new Base64OutputStream(data, false);
+-        stream.write(codec98_1024, 0, 1024);
+-        stream.close();
+-
+-        byte[] decodedBytes = data.toByteArray();
+-        String decoded = StringUtils.newStringUtf8(decodedBytes);
+-        assertEquals(
+-            "codec-98 NPE Base64OutputStream", Base64TestData.CODEC_98_NPE_DECODED, decoded
+-        );
+-    }
+-    
+-
+     /**
+      * Test the Base64OutputStream implementation against empty input.
+      * 
+diff --git a/src/test/org/apache/commons/codec/binary/Base64TestData.java b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+index 84bb5bf7..f4be0f4b 100644
+--- a/src/test/org/apache/commons/codec/binary/Base64TestData.java
++++ b/src/test/org/apache/commons/codec/binary/Base64TestData.java
+@@ -32,13 +32,6 @@ import java.util.Random;
+  */
+ public class Base64TestData {
+ 
+-    public static final String CODEC_98_NPE
+-        = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM";
+-
+-    public static final String CODEC_98_NPE_DECODED
+-        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123";
+-
+-
+     // OpenSSL doesn't include the final \n, but it would be annoying beyond belief
+     // to further parameterize commons-codec to support this pointless variation.
+     final static String ENCODED_64_CHARS_PER_LINE
+@@ -140,10 +133,7 @@ public class Base64TestData {
+ 
+     static byte[] streamToBytes(final InputStream in) throws IOException {
+         // new byte[7] is obviously quite slow, but helps exercise the code.
+-        return streamToBytes(in, new byte[7]);
+-    }
+-
+-    static byte[] streamToBytes(final InputStream in, byte[] buf) throws IOException {
++        byte[] buf = new byte[7];
+         try {
+             int[] status = fill(buf, 0, in);
+             int size = status[SIZE_KEY];

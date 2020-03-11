@@ -1,0 +1,46 @@
+diff --git a/src/test/java/org/apache/commons/cli/PatternOptionBuilderTest.java b/src/test/java/org/apache/commons/cli/PatternOptionBuilderTest.java
+index 3a33eb7..b9e7a15 100644
+--- a/src/test/java/org/apache/commons/cli/PatternOptionBuilderTest.java
++++ b/src/test/java/org/apache/commons/cli/PatternOptionBuilderTest.java
+@@ -19,13 +19,11 @@ package org.apache.commons.cli;
+ 
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertFalse;
+-import static org.junit.Assert.assertNotNull;
+ import static org.junit.Assert.assertNull;
+ import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.fail;
+ 
+ import java.io.File;
+-import java.io.FileInputStream;
+ import java.net.URL;
+ import java.util.Calendar;
+ import java.util.Date;
+@@ -161,23 +159,13 @@ public class PatternOptionBuilderTest
+     @Test
+     public void testExistingFilePattern() throws Exception
+     {
+-        final Options options = PatternOptionBuilder.parsePattern("g<");
+-        final CommandLineParser parser = new PosixParser();
+-        final CommandLine line = parser.parse(options, new String[] { "-g", "src/test/resources/existing-readable.file" });
+-
+-        final Object parsedReadableFileStream = line.getOptionObject("g");
+-
+-        assertNotNull("option g not parsed", parsedReadableFileStream);
+-        assertTrue("option g not FileInputStream", parsedReadableFileStream instanceof FileInputStream);
+-    }
+-
+-    @Test
+-    public void testExistingFilePatternFileNotExist() throws Exception {
+         final Options options = PatternOptionBuilder.parsePattern("f<");
+         final CommandLineParser parser = new PosixParser();
+-        final CommandLine line = parser.parse(options, new String[] { "-f", "non-existing.file" });
++        final CommandLine line = parser.parse(options, new String[] { "-f", "test.properties" });
++
++        assertEquals("f value", new File("test.properties"), line.getOptionObject("f"));
+ 
+-        assertNull("option f parsed", line.getOptionObject("f"));
++        // todo test if an error is returned if the file doesn't exists (when it's implemented)
+     }
+ 
+     @Test

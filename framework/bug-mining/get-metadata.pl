@@ -200,14 +200,14 @@ foreach my $bid (@bids) {
 
     # Write list of loaded classes
     open(OUT, ">$LOADED/$bid.src") or die "Cannot write loaded classes!";
-    foreach (keys %src) {
+    foreach (sort { "\L$a" cmp "\L$b" } keys %src) {
         print OUT "$_\n";
     }
     close(OUT);
 
     # Write list of loaded test classes
     open(OUT, ">$LOADED/$bid.test") or die "Cannot write loaded test classes!";
-    foreach (keys %test) {
+    foreach (sort { "\L$a" cmp "\L$b" } keys %test) {
         print OUT "$_\n";
     }
     close(OUT);

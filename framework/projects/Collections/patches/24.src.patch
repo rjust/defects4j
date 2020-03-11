@@ -1,0 +1,33 @@
+diff --git a/src/main/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollection.java b/src/main/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollection.java
+index 52e5b813..5a9a9a50 100644
+--- a/src/main/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollection.java
++++ b/src/main/java/org/apache/commons/collections4/collection/UnmodifiableBoundedCollection.java
+@@ -20,7 +20,6 @@ import java.util.Collection;
+ import java.util.Iterator;
+ 
+ import org.apache.commons.collections4.BoundedCollection;
+-import org.apache.commons.collections4.Unmodifiable;
+ import org.apache.commons.collections4.iterators.UnmodifiableIterator;
+ 
+ /**
+@@ -41,7 +40,7 @@ import org.apache.commons.collections4.iterators.UnmodifiableIterator;
+  * @version $Id$
+  */
+ public final class UnmodifiableBoundedCollection<E> extends AbstractCollectionDecorator<E>
+-        implements BoundedCollection<E>, Unmodifiable {
++        implements BoundedCollection<E> {
+ 
+     /** Serialization version */
+     private static final long serialVersionUID = -7112672385450340330L;
+@@ -56,11 +55,6 @@ public final class UnmodifiableBoundedCollection<E> extends AbstractCollectionDe
+      * @since 4.0
+      */
+     public static <E> BoundedCollection<E> unmodifiableBoundedCollection(final BoundedCollection<? extends E> coll) {
+-        if (coll instanceof Unmodifiable) {
+-            @SuppressWarnings("unchecked") // safe to upcast
+-            final BoundedCollection<E> tmpColl = (BoundedCollection<E>) coll;
+-            return tmpColl;
+-        }
+         return new UnmodifiableBoundedCollection<E>(coll);
+     }
+ 

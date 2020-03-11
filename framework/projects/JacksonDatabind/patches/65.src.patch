@@ -1,0 +1,37 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+index 5e353d388..b43c09215 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java
+@@ -125,8 +125,7 @@ public class StdKeyDeserializer extends KeyDeserializer
+                 return result;
+             }
+         } catch (Exception re) {
+-            return ctxt.handleWeirdKey(_keyClass, key, "not a valid representation, problem: (%s) %s",
+-                    re.getClass().getName(), re.getMessage());
++            return ctxt.handleWeirdKey(_keyClass, key, "not a valid representation, problem: %s", re.getMessage());
+         }
+         if (_keyClass.isEnum() && ctxt.getConfig().isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
+             return null;
+diff --git a/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java b/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java
+index 7f8e76d04..27a115fc3 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java
++++ b/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java
+@@ -522,7 +522,7 @@ public class BasicBeanDescription extends BeanDescription
+         // So, of all single-arg static methods:
+         for (AnnotatedMethod am : _classInfo.getStaticMethods()) {
+             // 24-Oct-2016, tatu: Better ensure it only takes 1 arg, no matter what
+-            if (isFactoryMethod(am) && am.getParameterCount() == 1) {
++            if (isFactoryMethod(am)) {
+                 // And must take one of expected arg types (or supertype)
+                 Class<?> actualArgType = am.getRawParameterType(0);
+                 for (Class<?> expArgType : expArgTypes) {
+@@ -555,9 +555,7 @@ public class BasicBeanDescription extends BeanDescription
+         final String name = am.getName();
+         // 24-Oct-2016, tatu: As per [databind#1429] must ensure takes exactly one arg
+         if ("valueOf".equals(name)) {
+-            if (am.getParameterCount() == 1) {
+                 return true;
+-            }
+         }
+         // [databind#208] Also accept "fromString()", if takes String or CharSequence
+         if ("fromString".equals(name)) {
