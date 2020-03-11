@@ -360,7 +360,8 @@ sub checkout_vid {
     my $cmd = "cd $work_dir" .
               " && git init 2>&1" .
               " && git config user.name defects4j 2>&1" .
-              " && git config user.email defects4j\@localhost 2>&1";
+              " && git config user.email defects4j\@localhost 2>&1" .
+              " && git config core.autocrlf false";
     Utils::exec_cmd($cmd, "Init local repository")
             or confess("Couldn't init local git repository!");
 
