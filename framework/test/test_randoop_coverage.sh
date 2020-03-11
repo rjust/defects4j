@@ -29,12 +29,14 @@ export PATH=$PATH:$D4J_DIR/framework/bin
 
 defects4j info -p Lang
 
-### 2. Use the HEAD version of Randoop from GitHub
-if [ -d /tmp/randoop ] ; then
-  git -C /tmp/randoop pull -q > /dev/null 2>&1
+### 2. Use an appropirate version of Randoop:  a branch corresponding to your
+### Defects4J branch if it exists, or by default the HEAD version from GitHub.
+if [ -d "/tmp/plume-scripts" ] ; then
+  git -C /tmp/plume-scripts pull -q > /dev/null 2>&1
 else
-  git -C /tmp clone --depth 1 -q https://github.com/randoop/randoop.git
+  git -C /tmp clone --depth 1 -q https://github.com/plume-lib/plume-scripts.git
 fi
+/tmp/plume-scripts/git-clone-related randoop randoop /tmp/randoop
 (cd /tmp/randoop && ./gradlew assemble)
 (cd "$D4J_DIR/framework/lib/test_generation/generation" && /tmp/randoop/scripts/replace-randoop-jars.sh "-current")
 
