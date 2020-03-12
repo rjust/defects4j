@@ -1,4 +1,4 @@
-BugID,BuggyCommit,FixedCommit,IssueID,IssueURL
+bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
 1,a1bb6f2dcb82eb9f880f87c480d6086a8e0bee34,88f44d87d4c2251d7cf55d9aa9c3452a397ae19b,223,https://github.com/FasterXML/jackson-databind/issues/223
 2,01797b0794ac384f5f5ef49cc0cfab8347ae7930,9c5fec2302237ede0e797c13c0663a6bb52c798c,467,https://github.com/FasterXML/jackson-databind/issues/467
 3,fd9b65dc45657bb7cd236df5396b901f36469c76,fa1d99255915f21c868f28307fd6e3adb2029ea0,479,https://github.com/FasterXML/jackson-databind/issues/479

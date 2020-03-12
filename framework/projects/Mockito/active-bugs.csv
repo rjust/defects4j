@@ -1,4 +1,4 @@
-BugID,BuggyCommit,FixedCommit,IssueID,IssueURL
+bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
 1,837fd054a0da2c8706732dcd4bc880a64b957c78,4e9d7607825c3c668fd43f19507bfead566c528c,188,https://github.com/mockito/mockito/issues/188
 2,d30450fa1172d79cc051b2fe8064744c2ac7a003,80452c7a42777513c35fd30c4e12bcd7ee438fb9,197,https://github.com/mockito/mockito/issues/197
 3,4e9d7607825c3c668fd43f19507bfead566c528c,3eec7451d6c83c280743c39b39c77a179abb30f9,188,https://github.com/mockito/mockito/issues/188

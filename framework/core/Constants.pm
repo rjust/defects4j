@@ -261,13 +261,13 @@ our $BUGS_CSV_ACTIVE = "active-bugs.csv";
 our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
 
 # Columns in active-bugs and deprecated-bugs csvs
-our $BUGS_CSV_BUGID = "BugID";
-our $BUGS_CSV_COMMIT_BUGGY = "BuggyCommit";
-our $BUGS_CSV_COMMIT_FIXED = "FixedCommit";
-our $BUGS_CSV_ISSUE_ID = "IssueID";
-our $BUGS_CSV_ISSUE_URL = "IssueURL";
-our $BUGS_CSV_DEPRECATED_WHEN = "D4JVersionDeprecated";
-our $BUGS_CSV_DEPRECATED_WHY = "ReasonDeprecated";
+our $BUGS_CSV_BUGID = "bug_id";
+our $BUGS_CSV_COMMIT_BUGGY = "revision_id_buggy";
+our $BUGS_CSV_COMMIT_FIXED = "revision_id_fixed";
+our $BUGS_CSV_ISSUE_ID = "bug_report_id";
+our $BUGS_CSV_ISSUE_URL = "bug_report_url";
+our $BUGS_CSV_DEPRECATED_WHEN = "deprecated_version";
+our $BUGS_CSV_DEPRECATED_WHY = "deprecated_reason";
 
 # Reasons for deprecation
 our $DEPRECATED_JVM8 = "JVM8-NonReproducable";

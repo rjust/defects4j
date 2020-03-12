@@ -1,4 +1,4 @@
-BugID,BuggyCommit,FixedCommit,IssueID,IssueURL
+bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
 1,81f38e1985bdfafdbe02e32dfb5ccb200fc64eae,2d7683ed820116b77cba9b4b290cd7ce7dfa5cf4,180,https://github.com/FasterXML/jackson-dataformat-xml/issues/180
 2,a96d27d4c74707965b257b6ecced4d337357545e,37eb331acce08142ad027f127c355f9b462fe9e0,196,https://github.com/FasterXML/jackson-dataformat-xml/issues/196
 3,23ab583c46a6a20b0c1232ebb91b16d4058c7502,79a4b57f2bbe08ce46e6dabb0a8b76f4a787141c,204,https://github.com/FasterXML/jackson-dataformat-xml/issues/204
