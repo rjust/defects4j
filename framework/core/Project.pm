@@ -51,7 +51,7 @@ A specific project instance can be created with C<create_project(project_id)>.
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
-                              "$PROJECTS_DIR/$PID/active-bugs.csv");
+                              "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
 
     return $class->SUPER::new($PID, $name, $vcs);
 }

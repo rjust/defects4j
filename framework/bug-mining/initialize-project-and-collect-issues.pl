@@ -132,7 +132,7 @@ my $FETCHING_LIMIT = $cmd_opts{l};
 my $REGEXP = $cmd_opts{e};
 my $GIT_LOG_FILE = "$WORK_DIR/gitlog";
 my $REPOSITORY_DIR = "$WORK_DIR/project_repos/$NAME.git";
-my $COMMIT_DB_FILE = "$WORK_DIR/framework/projects/$PID/active-bugs.csv";
+my $COMMIT_DB_FILE = "$WORK_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE";
 my $VCS_TYPE = $cmd_opts{v} // "git";
 
 # Configure project for Defects4J
@@ -179,10 +179,10 @@ Utils::exec_cmd("./vcs-log-xref.pl -e '$REGEXP'"
 # have already been mined.
 if (-e "$CORE_DIR/Project/$PID.pm") {
     # Remove exiting ids
-    system("tail -n +2 $PROJECTS_DIR/$PID/active-bugs.csv | cut -f 2- -d',' > $COMMIT_DB_FILE.orig");
+    system("tail -n +2 $PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE | cut -f 2- -d',' > $COMMIT_DB_FILE.orig");
     # Find all versions that have not been mined
     system("grep -vFf $COMMIT_DB_FILE.orig $COMMIT_DB_FILE > $COMMIT_DB_FILE.filter && mv $COMMIT_DB_FILE.filter $COMMIT_DB_FILE");
-    # Print header to active-bugs.csv
+    # Print header to the active bugs csv
     my $active_header = $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL;
     system("echo $active_header > $COMMIT_DB_FILE.new && cat $COMMIT_DB_FILE >> $COMMIT_DB_FILE.new && mv $COMMIT_DB_FILE.new $COMMIT_DB_FILE");
 }

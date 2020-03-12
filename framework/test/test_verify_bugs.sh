@@ -68,7 +68,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/active-bugs.csv)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
 # Create log file
@@ -93,9 +93,9 @@ work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
-    # Skip all bug ids that do not exist in the active-bugs.csv
-    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/active-bugs.csv"; then
-        warn "Skipping bug ID that is not listed in active-bugs.csv: $PID-$bid"
+    # Skip all bug ids that do not exist in the active-bugs csv
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
+        warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
         continue
     fi
 

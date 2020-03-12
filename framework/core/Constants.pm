@@ -256,7 +256,11 @@ our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
-# Columns in active-bugs.csv and deprecated-bugs.csv
+# Filenames for bugs csv files
+our $BUGS_CSV_ACTIVE = "active-bugs.csv";
+our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
+
+# Columns in active-bugs and deprecated-bugs csvs
 our $BUGS_CSV_BUGID = "BugID";
 our $BUGS_CSV_COMMIT_BUGGY = "BuggyCommit";
 our $BUGS_CSV_COMMIT_FIXED = "FixedCommit";
@@ -314,6 +318,9 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$BUGS_CSV_ACTIVE
+$BUGS_CSV_DEPRECATED
 
 $BUGS_CSV_BUGID
 $BUGS_CSV_COMMIT_BUGGY

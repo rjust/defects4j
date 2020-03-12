@@ -34,7 +34,7 @@ jobs_gen_tests.pl -- output a list of invocations of the test_gen_tests.sh scrip
 
 =head1 DESCRIPTION
 
-Parses all active-bugs.csv files and outputs a list of invocations of the
+Parses all active-bugs csv files and outputs a list of invocations of the
 test_gen_tests.sh script. Running this list of jobs, e.g., using GNU parallel,
 runs every supported test generator on every bug.
 

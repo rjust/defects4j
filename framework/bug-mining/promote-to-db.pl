@@ -40,8 +40,8 @@ metadata:
   - framework/projects/<PROJECT_ID>/trigger_tests
   - framework/projects/<PROJECT_ID>/build.xml.patch
   - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
-  - framework/projects/<PROJECT_ID>/active-bugs.csv
-  - framework/projects/<PROJECT_ID>/deprecated-bugs.csv	
+  - framework/projects/<PROJECT_ID>/$BUGS_CSV_ACTIVE
+  - framework/projects/<PROJECT_ID>/$BUGS_CSV_DEPRECATED	
   - framework/projects/<PROJECT_ID>/dir-layout.csv
   - project_repos/<PROJECT_NAME>.git
 and updates the project_repos/README file with information of when the project
@@ -62,7 +62,7 @@ The id of the project for which the revision pairs are to be promoted.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the active-bugs.csv, are considered.
+Per default all bug ids, listed in the $BUGS_CSV_ACTIVE, are considered.
 
 =item B<-w C<work_dir>>
 
@@ -126,7 +126,7 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "modified_classes/<id>.src", "modified_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>", "relevant_tests/<id>");
-my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib", "deprecated-bugs.csv");
+my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib", $BUGS_CSV_DEPRECATED);
 my @generic_files_to_append = ("dependent_tests", "dir-layout.csv");
 
 my @ids = _get_bug_ids($BID);
@@ -141,9 +141,9 @@ foreach my $id (@ids) {
 
     # find number
     my $max_number = 0;
-    my $output_commit_db = "$OUTPUT_DIR/$PID/active-bugs.csv";
+    my $output_commit_db = "$OUTPUT_DIR/$PID/$BUGS_CSV_ACTIVE";
     if (-e $output_commit_db) {
-        open FH, $output_commit_db or die "could not open output active-bugs.csv";
+        open FH, $output_commit_db or die "could not open output active-bugs csv";
         my $exists_line = 0;
         my $header = <FH>;
         while (my $line = <FH>) {
@@ -164,9 +164,9 @@ foreach my $id (@ids) {
     ++$max_number;
     print "\t... adding as new commit-id $max_number\n";
 
-    open FH, ">>$output_commit_db" or die "could not open output active-bugs.csv for writing";
+    open FH, ">>$output_commit_db" or die "could not open output active-bugs csv for writing";
 
-    # If this is the first bug to be promoted, print the header to the active-bugs.csv file.
+    # If this is the first bug to be promoted, print the header to the active-bugs csv file.
     if ($max_number == 1) {
         print FH $BUGS_CSV_BUGID.",".$BUGS_CSV_COMMIT_BUGGY.",".$BUGS_CSV_COMMIT_FIXED.",".$BUGS_CSV_ISSUE_ID.",".$BUGS_CSV_ISSUE_URL."\n";
     }

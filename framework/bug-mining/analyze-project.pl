@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-analyze-project.pl -- Determine all suitable candidates listed in the active-bugs.csv.
+analyze-project.pl -- Determine all suitable candidates listed in the active-bugs csv.
 
 =head1 SYNOPSIS
 
@@ -57,7 +57,7 @@ commons-lang project is LANG.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the active-bugs.csv, are considered.
+Per default all bug ids, listed in the active-bugs csv, are considered.
 
 =back
 

@@ -60,7 +60,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/active-bugs.csv)
+    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)
     BUGS="$(seq 1 1 $num_bugs)"
 fi
 
@@ -83,9 +83,9 @@ mkdir -p $work_dir
 rm -rf "$work_dir/*"
 
 for bid in $(echo $BUGS); do
-    # Skip all bug ids that do not exist in the active-bugs.csv
-    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/active-bugs.csv"; then
-        warn "Skipping bug ID that is not listed in active-bugs.csv: $PID-$bid"
+    # Skip all bug ids that do not exist in the active-bugs csv
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
+        warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
         continue
     fi
 

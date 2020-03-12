@@ -438,7 +438,7 @@ sub bug_report_info {
 
     my $bug_report_info = {id=>"NA", url=>"NA"};
 
-    my $commit_db = "$PROJECTS_DIR/$pid/active-bugs.csv";
+    my $commit_db = "$PROJECTS_DIR/$pid/$BUGS_CSV_ACTIVE";
     open (IN, "<$commit_db") or die "Cannot open $commit_db file: $!";
     my $header = <IN>;
     while (<IN>) {
