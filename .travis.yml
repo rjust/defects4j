@@ -14,10 +14,6 @@ cache:
   directories:
     - /home/travis/.java/
 
-branches:
-  except:
-  - html_docs
-
 before_install:
   - JDK_OS="$TRAVIS_OS_NAME"
   - JDK_ARCH="x64"
