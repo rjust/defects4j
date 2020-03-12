@@ -45,8 +45,26 @@ test_vids() {
 
   defects4j checkout -p $pid -v ${bid}b.orig -w $work_dir 
   (cd $work_dir && git diff D4J_${pid}_${bid}_FIXED_VERSION | filterdiff -x '*/.defects4j.config' | diffstat -t > $work_dir/diff.1.stats)
-  (cd $work_dir && git diff ${tag_2} ${tag_1} -- $src_dir | diffstat -t > $work_dir/diff.2.stats)
+  # Special case for older versions of JodaTime
+  if [ "$pid" == "Time" ] && git cat-file -e $tag_1:JodaTime 2>/dev/null; then
+    (cd $work_dir && git diff ${tag_2} ${tag_1} -- "JodaTime/$src_dir" | diffstat -t > $work_dir/diff.2.stats)
+  else
+    (cd $work_dir && git diff ${tag_2} ${tag_1} -- $src_dir | diffstat -t > $work_dir/diff.2.stats)
+  fi
+  perl -E "print '-' x 75, \"\\n\""
+  cat $work_dir/diff.*.stats
+  perl -E "print '-' x 75, \"\\n\""
   cmp -s $work_dir/diff.1.stats $work_dir/diff.2.stats || die "verify changed files between ${pid}-${bid}b.orig and ${pid}-${bid}f"
+
+  # Run the tests on the original buggy version and verify triggering tests
+  defects4j test -r -w $work_dir
+  triggers=$(num_triggers "$work_dir/failing_tests")
+  expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
+  [ $triggers -eq $expected ] \
+          || die "verify number of triggering tests: $pid-$vid (expected: $expected, actual: $triggers)"
+  for t in $(get_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid"); do
+      grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
+  done
 }
 ################################################################################
 
