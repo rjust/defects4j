@@ -57,6 +57,8 @@ test_vids() {
   cmp -s $work_dir/diff.1.stats $work_dir/diff.2.stats || die "verify changed files between ${pid}-${bid}b.orig and ${pid}-${bid}f"
 
   # Run the tests on the original buggy version and verify triggering tests
+  # Mockito require an explicit call to compile before calling test
+  defects4j compile -w $work_dir
   defects4j test -r -w $work_dir
   triggers=$(num_triggers "$work_dir/failing_tests")
   expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
