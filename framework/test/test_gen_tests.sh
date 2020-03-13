@@ -60,8 +60,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)
-    BUGS="$(seq 1 1 $num_bugs)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
 # Create log file

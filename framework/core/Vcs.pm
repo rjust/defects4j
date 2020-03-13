@@ -123,7 +123,7 @@ A Vcs object has to be instantiated with:
 
 =head2 active-bugs csv
 
-The active-bugs (csv) file has the structure: C<bug_id,revision_buggy,revision_fixed>.
+The active-bugs (csv) file has the structure: C<bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url>.
 
 Example for Svn:
 
@@ -419,7 +419,7 @@ sub _build_db_cache {
     my $header = <IN>;
     while (<IN>) {
         chomp;
-        /(\d+),([^,]+),([^,]+)/ or die "Corrupted active-bugs csv!";
+        /(\d+),([^,]+),([^,]+),([^,]+),([^,]+)/ or die "Corrupted active-bugs csv!";
         $cache->{$1} = {b => $2, f => $3, line => $_};
     }
     close IN;

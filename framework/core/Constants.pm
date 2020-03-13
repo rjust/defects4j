@@ -270,7 +270,9 @@ our $BUGS_CSV_DEPRECATED_WHEN = "deprecated_version";
 our $BUGS_CSV_DEPRECATED_WHY = "deprecated_reason";
 
 # Reasons for deprecation
-our $DEPRECATED_JVM8 = "JVM8-NonReproducable";
+our $DEPRECATED_DUPLICATE = "Duplicate";
+our $DEPRECATED_JVM8_REPRO = "JVM8_Not_Reproducible";
+our $DEPRECATED_JVM8_COMPILE = "JVM8_Does_Not_Compile";
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
@@ -330,7 +332,9 @@ $BUGS_CSV_ISSUE_URL
 $BUGS_CSV_DEPRECATED_WHEN
 $BUGS_CSV_DEPRECATED_WHY
 
-$DEPRECATED_JVM8
+$DEPRECATED_DUPLICATE
+$DEPRECATED_JVM8_REPRO
+$DEPRECATED_JVM8_COMPILE
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS
