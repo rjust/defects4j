@@ -26,11 +26,11 @@
 
 =head1 NAME
 
-merge_tests.pl -- Replace test methods from a set of test classes with a different version.
+merge_tests.pl -- replace test methods with a different version.
 
 =head1 SYNOPSIS
 
-merge_tests.pl log_file target_src_dir other_src_dir [test_name]
+  merge_tests.pl log_file target_src_dir other_src_dir [test_name]
 
 =head1 DESCRIPTION
 
@@ -40,7 +40,7 @@ of the corresponding source file in C<other_src_dir>. The source file of the tes
 class is backed up prior to the first modification.
 
 If F<test_name> is specified, only that test is replaced. F<test_name> must be in
-the format of classname::methodname.
+the format of C<classname::methodname>.
 
 =cut
 

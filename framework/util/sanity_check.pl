@@ -32,10 +32,6 @@ sanity_check.pl -- perform sanity check for a project or project version.
 
   sanity_check.pl -p project_id [-b bug_id] [-t tmp_dir]
 
-=head1 DESCRIPTION
-
-Checks out each project version, and runs the sanity check on it. Dies if any run fails.
-
 =head1 OPTIONS
 
 =over 4
@@ -55,6 +51,11 @@ The temporary root directory to be used to check out revisions (optional).
 The default is F</tmp>.
 
 =back
+
+=head1 DESCRIPTION
+
+Checks out each project version, and runs the sanity check on it.
+This script stops as soon as an error occurs.
 
 =cut
 use warnings;

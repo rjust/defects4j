@@ -28,19 +28,11 @@
 
 get_gradle_dependencies.pl -- obtain a list of all gradle versions used in the
 entire history of a particular project and collect all gradle dependencies
-required to compile all bugs of the provided project.
+required to compile all bugs of that project.
 
 =head1 SYNOPSIS
 
   get_gradle_dependencies.pl -p project_id
-
-=head1 DESCRIPTION
-
-Extract all references to gradle distributions from the project's version
-control history and collect all gradle dependencies required to compile all bugs
-of the provided project.
-
-B<TODO: This script currently expects the repository to be a git repository!>
 
 =head1 OPTIONS
 
@@ -52,6 +44,14 @@ The id of the project for which the list of gradle dependencies is extracted and
 all gradle dependencies are collected.
 
 =back
+
+=head1 DESCRIPTION
+
+Extracts all references to gradle distributions from the project's version
+control history and collects all gradle dependencies required to compile all
+bugs that project.
+
+B<TODO: This script currently only works for git repositories!>
 
 =cut
 use warnings;
