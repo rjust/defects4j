@@ -30,13 +30,7 @@ create_mml.pl -- create a Major-compatible MML file, which defines program mutat
 
 =head1 SYNOPSIS
 
-  create_mml.pl -p project_id -c classes_list -o out_dir -b bug_id
-
-=head1 DESCRIPTION
-
-Generates an MML file for the given C<bug_id>. The file F<classes_list> has to proivde the
-list of classes that should be mutated.
-The generated MML file is named F<C<bug_id>.mml> and written to F<out_dir>.
+  create_mml.pl -p project_id  -b bug_id -c classes_list -o out_dir
 
 =head1 OPTIONS
 
@@ -60,6 +54,12 @@ The file contains all classes that should be mutated -- one class per line.
 The output directory to which the generated MML files are written.
 
 =back
+
+=head1 DESCRIPTION
+
+Generates an MML file for the given C<bug_id>. The file F<classes_list> has to proivde the
+list of classes that should be mutated.
+The generated MML file is named F<C<bug_id>.mml> and written to F<out_dir>.
 
 =cut
 use warnings;
