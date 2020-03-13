@@ -62,6 +62,8 @@ Defects4J sets the timezone to America/Los_Angeles to ensure that all defects
 are reproducible and that test suites are generated and executed using the same
 timezone setting.
 
+=back
+
 =cut
 # TODO: Extract all exported environment variables into a user-visible
 # config file.
@@ -69,7 +71,15 @@ $ENV{'TZ'} = "America/Los_Angeles";
 
 =pod
 
-=head2 Exported properties (I<default value>)
+=head2 Exported properties
+
+This module exports the following properties. The default value for each
+property appears in parentheses (I<default value>).
+
+The default value for each property can be overridden by setting and exporting
+an evironment variable with the same name, prior to calling Defects4J.
+For example, the default value for C<PROJECTS_DIR> can be overridden with:
+C<export PROJECTS_DIR=my_project_directory>.
 
 =over 4
 
@@ -184,18 +194,18 @@ our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_s
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
 =cut
-our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
+our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} // "$SCRIPT_DIR/projects/defects4j.build.xml");
 
 =pod
 
 =item C<GRADLE_LOCAL_HOME_DIR>
 
-The directory name of the local gradle repository (.gradle_local_home).
+The directory name of the local gradle repository (I<.gradle_local_home>).
 
 =back
 
 =cut
-our $GRADLE_LOCAL_HOME_DIR = ".gradle_local_home";
+our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_home");
 
 #
 # Check whether Defects4J has been properly initialized:
