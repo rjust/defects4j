@@ -63,22 +63,22 @@ Utils::exec_cmd("mkdir -p $OUT_DIR && rm -rf $OUT_DIR/* && mkdir $OUT_DIR/d4j",
 
 # Create list of commands
 opendir(my $dir, "$CMD_DIR") or die "Cannot open d4j (command) directory: $!";
-my @cmds = grep(/d4j/, readdir($dir));
+my @cmds = sort(grep(/d4j/, readdir($dir)));
 closedir($dir);
 
 # Create list of core modules
 opendir($dir, "$CORE_DIR") or die "Cannot open core directory: $!";
-my @mods = grep(/\.pm/, readdir($dir));
+my @mods = sort(grep(/\.pm/, readdir($dir)));
 closedir($dir);
 
 # Create list of bin scripts
 opendir($dir, "$SCRIPT_DIR/bin") or die "Cannot open bin directory: $!";
-my @bins = grep(/\.pl/, readdir($dir));
+my @bins = sort(grep(/\.pl/, readdir($dir)));
 closedir($dir);
 
 # Create list of util scripts
 opendir($dir, "$UTIL_DIR") or die "Cannot open util directory: $!";
-my @utils = grep(/\.pl/, readdir($dir));
+my @utils = sort(grep(/\.pl/, readdir($dir)));
 closedir($dir);
 
 
@@ -171,13 +171,34 @@ sub _list_entries {
         my $name = $1;
         # Strip "d4j-" from commands
         my $cmd  = $name; $cmd =~ s/^d4j-//;
-        open(my $fh, ">", \$buffer);
-        podselect({-output => $fh, -sections => ["NAME"]}, "$dir/$file");
-        close($fh);
-        if($buffer =~ /$file -- ([^\v]+)/s) {
+        # Extract NAME and DESCRIPTION sections
+        my $sec_name  = _extract_section("$dir/$file", "NAME");
+        my $sec_descr = _extract_section("$dir/$file", "DESCRIPTION");
+        if(length($sec_name) == 0) {
+          return;
+        }
+        # Check whether NAME entry has the expected format.
+        if( $sec_name =~ /$file -- (.+)/s) {
             print($fh_out "<li><a href=\"${path}${name}.html\" class=\"podlinkpod\" >$cmd</a>: $1</li>\n");
         } else {
-            warn("### $file lacks documentation!");
+            print(STDERR "### Unexpected format of NAME section: $dir/$file\n");
         }
     }
+}
+
+#
+# Extract a raw pod section; issue a warning if it does not exist.
+#
+sub _extract_section {
+    my ($file, $section) = @_;
+
+    my $buffer = "";
+    open(my $fh, ">", \$buffer);
+    podselect({-output => $fh, -sections => ["$section"]}, "$file");
+    close($fh);
+    if(length($buffer) == 0) {
+      print(STDERR "### No $section section found: $file.\n");
+    }
+
+    return($buffer);
 }
