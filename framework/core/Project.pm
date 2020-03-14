@@ -546,7 +546,12 @@ sub compile_ext_tests {
     my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
     if (!$ret) {
       exec("ls -al $dir") or die("Couldn't exec: ls -al $dir");
-      exec("cat $dir/*.java") or die("Couldn't exec: cat $dir/*.java");
+      my @files = <$dir/*>;
+      foreach my $file (@files) {
+	open (FILE, '<', "$file") or die "could not open $file";
+	print <FILE>;
+	close (FILE);
+      }
     }
     return $ret;
 }
