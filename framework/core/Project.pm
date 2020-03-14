@@ -543,7 +543,12 @@ sub compile_ext_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $dir, $log_file) = @_;
 
-    return $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
+    my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
+    if (!$ret) {
+      exec("ls -al $dir") or die("Couldn't exec: ls -al $dir");
+      exec("cat $dir/*.java") or die("Couldn't exec: cat $dir/*.java");
+    }
+    return $ret;
 }
 
 =pod
