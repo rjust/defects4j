@@ -545,13 +545,17 @@ sub compile_ext_tests {
 
     my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
     if (!$ret) {
+      exec("echo Here is the ls output");
       exec("ls -al $dir") or die("Couldn't exec: ls -al $dir");
+      exec("echo That was the ls output");
       opendir(my $dh, $dir) || die "Can't opendir $dir: $!";
       my @java_files = grep { /\.java$/ } readdir($dh);
       closedir($dh);
       foreach my $file (@java_files) {
 	my $absfile = "$dir/$file";
-        print "$absfile:\n";
+	exec("echo $absfile via cat:");
+	exec("cat $absfile")
+        print "$absfile via Perl:\n";
         open (FILE, '<', "$absfile") or die "could not open $absfile";
         print <FILE>;
         close (FILE);
