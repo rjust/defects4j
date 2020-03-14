@@ -26,8 +26,7 @@
 
 =head1 NAME
 
-get_modified_classes.pl -- Determine the set of classes modified by the patch of a given
-defect.
+get_modified_classes.pl -- determine the set of classes modified by the src patch.
 
 =head1 SYNOPSIS
 
@@ -52,8 +51,12 @@ stdout. Note that all diagnostic messages are sent to stderr.
 
 =back
 
-=cut
+=head1 DESCRIPTION
 
+Determines the set of classes modified by the src patch.
+This script use diffstat, which is part of the patchutils library.
+
+=cut
 use warnings;
 use strict;
 use FindBin;
