@@ -3,6 +3,7 @@
 #
 # This script tests the test generation using Randoop, using the instructons at
 # https://github.com/rjust/defects4j/blob/master/framework/test/README.md#randoop-coverage-on-the-defects4j-defects
+# Any arguments to this script are passed through to the `randoop_coverage.sh` script.
 #
 ################################################################################
 
@@ -41,6 +42,6 @@ fi
 ### 3. Run the test generation and coverage analysis:
 # TODO: Currently, this does not generate tests for all the defects, just five in each project.
 cd "$D4J_DIR/framework/test"
-./randoop_coverage.sh
+./randoop_coverage.sh "$@"
 
 ../util/show_coverage.pl
