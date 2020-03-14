@@ -554,7 +554,7 @@ sub compile_ext_tests {
       foreach my $file (@java_files) {
 	my $absfile = "$dir/$file";
 	exec("echo $absfile via cat:");
-	exec("cat $absfile")
+	exec("cat $absfile");
         print "$absfile via Perl:\n";
         open (FILE, '<', "$absfile") or die "could not open $absfile";
         print <FILE>;
