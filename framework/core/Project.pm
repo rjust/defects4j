@@ -548,9 +548,8 @@ sub compile_ext_tests {
       exec("ls -al $dir") or die("Couldn't exec: ls -al $dir");
       my @files = <$dir/*>;
       foreach my $file (@files) {
-	open (FILE, '<', "$file") or die "could not open $file";
-	print <FILE>;
-	close (FILE);
+	exec("echo Printing $file") or die("Couldn't echo");
+	exec("cat $file") or die("Couldn't exec: cat $file");
       }
     }
     return $ret;
