@@ -3,6 +3,7 @@
 #
 # This script tests the test generation using Randoop, using the instructons at
 # https://github.com/rjust/defects4j/blob/master/framework/test/README.md#randoop-coverage-on-the-defects4j-defects
+# Any arguments to this script are passed through to the `randoop_coverage.sh` script.
 #
 ################################################################################
 
