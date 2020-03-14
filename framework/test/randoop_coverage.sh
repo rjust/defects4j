@@ -50,7 +50,7 @@ else
 fi
 
 echo "Projects: ${projects[@]}"
-echo "Bids: ${bids[@]}"
+echo "Bug ids: ${bids[@]}"
 
 # We want the 'fixed' version of the sample.
 type=f
