@@ -569,7 +569,7 @@ sub is_continuous_integration {
   return (
     # Azure Pipelines
     defined $ENV{"AZURE_HTTP_USER_AGENT"}
-    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH")
+    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH"}
     # CircleCI
     || defined $ENV{"CIRCLE_COMPARE_URL"}
     # Travis CI
