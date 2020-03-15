@@ -573,8 +573,8 @@ sub is_continuous_integration {
     # CircleCI
     || defined $ENV{"CIRCLE_COMPARE_URL"}
     # Travis CI
-    || (defined $ENV{"CIRCLE_COMPARE_URL"}
-        && $ENV{"CIRCLE_COMPARE_URL"} eq "true")
+    || (defined $ENV{"TRAVIS"}
+        && $ENV{"TRAVIS"} eq "true")
     );
 }
 
