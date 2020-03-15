@@ -559,6 +559,7 @@ sub compile_ext_tests {
 }
 
 =pod
+
   $project->is_continuous_integration()
 
 Returns true if this process is running under continuous integration.
