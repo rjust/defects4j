@@ -549,7 +549,7 @@ sub compile_ext_tests {
       my @java_files = grep { /\.java$/ } readdir($dh);
       closedir($dh);
       foreach my $file (@java_files) {
-	my $absfile = "$dir/$file";
+        my $absfile = "$dir/$file";
         open (FILE, '<', "$absfile") or die "could not open $absfile";
         print <FILE>;
         close (FILE);
@@ -574,7 +574,7 @@ sub is_continuous_integration {
     || defined $ENV{"CIRCLE_COMPARE_URL"}
     # Travis CI
     || (defined $ENV{"CIRCLE_COMPARE_URL"}
-	&& $ENV{"CIRCLE_COMPARE_URL"} eq "true")
+        && $ENV{"CIRCLE_COMPARE_URL"} eq "true")
     );
 }
 
