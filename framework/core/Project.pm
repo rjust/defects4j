@@ -566,12 +566,12 @@ Returns true if this process is running under continuous integration.
 =cut
 sub is_continuous_integration {
   return (
-    // Azure Pipelines
+    # Azure Pipelines
     defined $ENV{"AZURE_HTTP_USER_AGENT"}
     || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH")
-    // CircleCI
+    # CircleCI
     || defined $ENV{"CIRCLE_COMPARE_URL"}
-    // Travis CI
+    # Travis CI
     || (defined $ENV{"CIRCLE_COMPARE_URL"}
 	&& $ENV{"CIRCLE_COMPARE_URL"} eq "true")
     );
