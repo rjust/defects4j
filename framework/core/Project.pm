@@ -544,7 +544,7 @@ sub compile_ext_tests {
     my ($self, $dir, $log_file) = @_;
 
     my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
-    if (!$ret) {
+    if (!$ret && &selt->is_continuous_integration()) {
       opendir(my $dh, $dir) || die "Can't opendir $dir: $!";
       my @java_files = grep { /\.java$/ } readdir($dh);
       closedir($dh);
@@ -556,6 +556,25 @@ sub compile_ext_tests {
       }
     }
     return $ret;
+}
+
+=pod
+  $project->is_continuous_integration()
+
+Returns true if this process is running under continuous integration.
+
+=cut
+sub is_continuous_integration {
+  return (
+    // Azure Pipelines
+    defined $ENV{"AZURE_HTTP_USER_AGENT"}
+    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH")
+    // CircleCI
+    || defined $ENV{"CIRCLE_COMPARE_URL"}
+    // Travis CI
+    || (defined $ENV{"CIRCLE_COMPARE_URL"}
+	&& $ENV{"CIRCLE_COMPARE_URL"} eq "true")
+    );
 }
 
 =pod
