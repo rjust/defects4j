@@ -544,7 +544,7 @@ sub compile_ext_tests {
     my ($self, $dir, $log_file) = @_;
 
     my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
-    if (!$ret && &selt->is_continuous_integration()) {
+    if (!$ret && $self->is_continuous_integration()) {
       opendir(my $dh, $dir) || die "Can't opendir $dir: $!";
       my @java_files = grep { /\.java$/ } readdir($dh);
       closedir($dh);
