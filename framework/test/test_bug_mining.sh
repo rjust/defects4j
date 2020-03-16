@@ -208,7 +208,7 @@ test_initialize_revisions() {
     _check_output "$work_dir/$src_patch" "$RESOURCES_OUTPUT_DIR/$src_patch"
     _check_output "$work_dir/$test_patch" "$RESOURCES_OUTPUT_DIR/$test_patch"
 
-    local layout="framework/projects/$project_id/dir-layout.csv"
+    local layout="framework/projects/$project_id/$LAYOUT_FILE"
     _check_output "$work_dir/$layout" "$RESOURCES_OUTPUT_DIR/$layout"
 }
 
@@ -361,7 +361,7 @@ test_promote_to_db() {
 
     [ -s "$HERE/../projects/$project_id/$BUGS_CSV_ACTIVE" ] || die "active-bugs csv does not exist or it is empty"
     [ -s "$HERE/../projects/$project_id/$BUGS_CSV_DEPRECATED" ] || die "deprecated-bugs csv does not exist or it is missing the header"
-    [ -s "$HERE/../projects/$project_id/dir-layout.csv" ] || die "dir-layout.csv does not exist or it is empty"
+    [ -s "$HERE/../projects/$project_id/$LAYOUT_FILE" ] || die "$LAYOUT_FILE does not exist or it is empty"
 }
 
 #

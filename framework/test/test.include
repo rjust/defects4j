@@ -24,6 +24,9 @@ TMP_DIR="/tmp/test_d4j_$$_$(date +%s)"
 BUGS_CSV_ACTIVE="active-bugs.csv"
 BUGS_CSV_DEPRECATED="deprecated-bugs.csv"
 
+# Set filename of directory layout csv.
+LAYOUT_FILE="dir-layout.csv" 
+
 # By default exit on first error
 HALT_ON_ERROR=1
 

@@ -266,6 +266,9 @@ our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
 
+# Filename for directory layout csv
+our $LAYOUT_FILE = "dir-layout.csv";
+
 # Filenames for bugs csv files
 our $BUGS_CSV_ACTIVE = "active-bugs.csv";
 our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
@@ -330,6 +333,8 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$LAYOUT_FILE
 
 $BUGS_CSV_ACTIVE
 $BUGS_CSV_DEPRECATED

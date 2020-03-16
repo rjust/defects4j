@@ -42,7 +42,7 @@ metadata:
   - framework/projects/<PROJECT_ID>/<PROJECT_ID>.build.xml
   - framework/projects/<PROJECT_ID>/$BUGS_CSV_ACTIVE
   - framework/projects/<PROJECT_ID>/$BUGS_CSV_DEPRECATED	
-  - framework/projects/<PROJECT_ID>/dir-layout.csv
+  - framework/projects/<PROJECT_ID>/$LAYOUT_FILE
   - project_repos/<PROJECT_NAME>.git
 and updates the project_repos/README file with information of when the project
 repository was cloned.
@@ -127,7 +127,7 @@ my @id_specific_files = ("loaded_classes/<id>.src", "loaded_classes/<id>.test",
                             "patches/<id>.src.patch", "patches/<id>.test.patch",
                             "trigger_tests/<id>", "relevant_tests/<id>");
 my @generic_files_and_directories_to_replace = ("build.xml.patch", "${PID}.build.xml", "lib", $BUGS_CSV_DEPRECATED);
-my @generic_files_to_append = ("dependent_tests", "dir-layout.csv");
+my @generic_files_to_append = ("dependent_tests", $LAYOUT_FILE);
 
 my @ids = _get_bug_ids($BID);
 foreach my $id (@ids) {
