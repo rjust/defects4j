@@ -22,6 +22,7 @@ if [ ! -f test.include ]; then
 fi
 source test.include
 init
+export TMP_DIR
 
 # Don't exit on first error
 HALT_ON_ERROR=0
@@ -81,3 +82,5 @@ done
 
 # delete tmp file directory
 rm -rf $randoop_dir
+
+../util/show_coverage.pl "$TMP_DIR"/coverage
