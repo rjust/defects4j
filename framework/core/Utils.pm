@@ -249,6 +249,15 @@ sub read_config_file {
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
+If C<vid> is not valid we terminate with an error message. Otherwise, we return
+a hash mapping C<{bid> to the bug-id parsed from C<vid> and C<type> to the type
+(C<b> or C<f>) of ther version.
+
+For instance, to check that this is a valid bug and extract the bug-id on
+success, write:
+
+  my bid = Utils::check_vid(vid)->{bid};
+
 =cut
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
