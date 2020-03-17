@@ -57,6 +57,7 @@ use strict;
 use Constants;
 use Project;
 use Getopt::Std;
+use Carp qw(confess);
 
 #
 # Issue usage message and quit
@@ -84,16 +85,7 @@ my $bug_report_url;
 
 # Check version id
 if (defined $BID) {
-    if ( ! -e "${project_dir}/trigger_tests/${BID}" ) {
-        print("${PID}-${BID} is a non-existent bug\n");
-        exit 1;
-    }
-
-    my @bug_ids = $project->{_vcs}->get_bug_ids;
-    if ( ! grep( /^$BID$/, @bug_ids) ) {
-        print("${PID}-${BID} is a deprecated bug\n");
-        exit 1;
-    }
+    Utils::ensure_valid_bid($PID, $BID);
 
     $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
     # Obtain revison ID and date

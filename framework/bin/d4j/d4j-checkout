@@ -84,6 +84,8 @@ _usage() unless defined $cmd_opts{p} and defined $cmd_opts{v} and defined $cmd_o
 my $PID = $cmd_opts{p};
 my $VID = $cmd_opts{v};
 
+Utils::ensure_valid_vid($PID, $VID);
+
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w});
 
 # Instantiate project and set working directory
