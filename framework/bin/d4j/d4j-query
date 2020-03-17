@@ -1,0 +1,206 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-query -- query the metadata for a project to obtain CSV-formatted results.
+
+=head1 SYNOPSIS
+
+  d4j-query -p project_id [-q query] [-h] [-d] [-a]
+
+=head1 DESCRIPTION
+
+This script is intended to query the metadata for a project to obtain 
+information that would be useful for automation or analysis of the framework.
+A user-provided list of columns determines what data is returned. By default,
+the list of available active bug IDs is returned.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -p C<project_id>
+
+The ID of the project for which metadata is requested. A project ID
+must be provided to use this utility.
+
+=item -q C<query>
+
+A comma-separated list of fields, encased in quotation marks. For example,
+C<-q "bug_id,bug_report_id"> returns the list of bug IDs and issue tracker IDs
+for the requested system.
+
+=item -h
+
+List the available fields.
+
+=item -d
+
+Include only deprecated bugs. By default, only active bugs are queried.
+
+=item -a
+
+Include both active and deprecated bugs. By default, only active bugs are 
+queried.
+
+=head1 EXAMPLES
+
+TODO: Add examples
+
+=back
+
+=cut
+
+use strict;
+use warnings;
+use experimental 'smartmatch';
+
+use Constants;
+use Utils;
+use Project;
+use Getopt::Std;
+use List::MoreUtils qw(first_index);
+
+##########################################################
+# Helper Subroutines
+##########################################################
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 -p project_id [-q query] [-h] [-d] [-a]\n";
+    exit 1;
+}
+
+#
+# Gathers requested data from a designated bugs CSV file.
+# Returns a hash RESULTS [bug_id] = DATA [field] [value]
+# That is, we associate fields with their respective bug_id. 
+#
+
+sub _read_bug_csv {
+    my ($filename, @fields) = @_; 
+    open (IN, "<$filename") or die "Cannot open $filename";
+    my %results;
+
+    my @header = split /,/, <IN>;
+    my %cols;
+    my $bug_id_col = -1;
+
+    if ($BUGS_CSV_BUGID ~~ @header) {
+        $bug_id_col = first_index { $_ eq $BUGS_CSV_BUGID } @header;
+    } else {
+        die "Bug IDs are not included in $filename.";
+    }
+
+    # Associate fields with columns using the header
+    foreach my $item (@fields) {
+        if ($item ~~ @header){
+            $cols{$item} = first_index { $_ eq $item } @header;
+        } else {
+            $cols{$item} = -1;
+        }
+    }
+
+    # Read contents of file, associate each line with the bug ID.
+    while (my $line = <IN>) {
+        my @columns = split /,/, $line;
+        my $bug_id = $columns[$bug_id_col];
+        foreach my $item (@fields) {
+            if ($cols{$item} != -1) {
+                $results{$bug_id}{$item} = $columns[$cols{$item}];
+            } else {
+                $results{$bug_id}{$item} = "NA";
+            }
+        }
+    }
+    close IN;
+
+    return %results;
+}
+
+##########################################################
+# Core Logic
+##########################################################
+
+# All fields should be defined in Constants
+my @ALL_FIELDS = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXED, $BUGS_CSV_ISSUE_ID, $BUGS_CSV_ISSUE_URL, $BUGS_CSV_DEPRECATED_WHEN, $BUGS_CSV_DEPRECATED_WHY);
+
+# Process command line options
+my %cmd_opts;
+getopts('p:q:hda', \%cmd_opts) or _usage();
+
+_usage() unless defined $cmd_opts{p};
+
+my $PID = $cmd_opts{p};
+my $QUERY = defined $cmd_opts{q} ? $cmd_opts{q} : $BUGS_CSV_BUGID;
+my $ONLY_DEP = defined $cmd_opts{d} ? 1 : 0;
+my $ALL_BUGS = defined $cmd_opts{a} ? 1 : 0;
+my $ACTIVE_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE";
+my $DEPRECATED_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_DEPRECATED";
+
+if (defined $cmd_opts{h}) {
+    my $joined_fields = join(", ", @ALL_FIELDS);
+    print "Available fields: $joined_fields\n";
+    exit 1;
+}
+
+if ($ONLY_DEP and $ALL_BUGS) {
+    die "Only dependencies (-d) and all bugs (-a) cannot be concurrently set.";
+}
+
+# Check query for unavailable fields
+
+my @requested = split /,/, $QUERY or die "Unable to parse query: $QUERY";
+
+foreach my $field (@requested) {
+    unless ($field ~~ @ALL_FIELDS) {
+        die "Requested field \"$field\" in query \"$QUERY\" is invalid.";
+    }
+}
+
+# Gather results for the requested fields
+
+# TODO: Read in active and deprecated depending on state of flags. Merge results together.
+# TODO: Incorporate other metadata (loaded and modified classes, trigger and relevant tests)
+# TODO: Add test case for CI system
+# TODO: Add examples to documentation
+
+my %results = _read_bug_csv($ACTIVE_BUGS, @requested);
+
+# Print the results in CSV format
+
+foreach my $bug_id (sort { $a <=> $b } keys %results) {
+    my $output = $bug_id;
+    foreach my $field (@requested) {
+        if ($field ne $BUGS_CSV_BUGID) {
+            $output = $output.",".$results{$bug_id}{$field};
+        }
+    }
+    print "$output\n";
+}
+
+1;

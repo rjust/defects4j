@@ -129,6 +129,15 @@ export a version-specific property.
 =cut
 $cmd_descr{export}="export a version-specific property";
 
+=pod
+
+=item * L<B<query>|d4j::d4j-query/>
+
+query the metadata for a particular project for automation purposes.
+
+=cut
+$cmd_descr{query}="query the metadata for a particular project for automation purposes";
+
 #
 # Issue usage message and quit
 #
