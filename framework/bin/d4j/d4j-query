@@ -88,7 +88,7 @@ version and the list of modified classes".
 =item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes" -a>
 
 Returns all bug IDs (active and deprecated), and for each, the revision hash 
-of the buggy version and the list of modified classes".
+of the buggy version and the list of modified classes.
 
 =item -C<d4j-query -p Collections -q "deprecated_reason" -a>
 
