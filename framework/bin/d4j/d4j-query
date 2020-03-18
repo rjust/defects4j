@@ -78,12 +78,12 @@ Returns the list of available fields that can be queried.
 =item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes">
 
 Returns all active bug IDs, and for each, the revision hash of the buggy 
-version and the list of modified classes".
+version and the list of modified classes.
 
 =item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes" -d>
 
 Returns all deprecated bug IDs, and for each, the revision hash of the buggy 
-version and the list of modified classes".
+version and the list of modified classes.
 
 =item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes" -a>
 
