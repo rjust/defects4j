@@ -287,6 +287,13 @@ our $DEPRECATED_DUPLICATE = "Duplicate";
 our $DEPRECATED_JVM8_REPRO = "JVM8_Not_Reproducible";
 our $DEPRECATED_JVM8_COMPILE = "JVM8_Does_Not_Compile";
 
+# Additional metadata fields that can be queried by d4j-query
+our $METADATA_LOADED_CLASSES_SRC = "loaded_classes_src";
+our $METADATA_LOADED_CLASSES_TEST = "loaded_classes_test";
+our $METADATA_MODIFIED_CLASSES = "modified_classes";
+our $METADATA_RELEVANT_TESTS = "relevant_tests";
+our $METADATA_TRIGGER_TESTS = "trigger_tests"; 
+
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
 our $FILE_FAILING_TESTS = "failing_tests";
@@ -350,6 +357,12 @@ $BUGS_CSV_DEPRECATED_WHY
 $DEPRECATED_DUPLICATE
 $DEPRECATED_JVM8_REPRO
 $DEPRECATED_JVM8_COMPILE
+
+$METADATA_LOADED_CLASSES_SRC
+$METADATA_LOADED_CLASSES_TEST
+$METADATA_MODIFIED_CLASSES
+$METADATA_RELEVANT_TESTS
+$METADATA_TRIGGER_TESTS
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS
