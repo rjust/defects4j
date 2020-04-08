@@ -23,6 +23,7 @@ if [ ! -f test.include ]; then
 fi
 source test.include
 init
+export TMP_DIR
 
 # Don't exit on first error
 HALT_ON_ERROR=0
@@ -34,7 +35,7 @@ master_coverage=$TMP_DIR/coverage
 randoop_dir=$TMP_DIR/randoop
 
 if [ -z "$1" ] ; then
-    # Default = 6 out of 16 projects
+    # Default = generate tests for 6 projects
     projects=( Chart Closure Lang Math Mockito Time )
     # Default = first 5 bug ids only
     bids=( 1 2 3 4 5 )
@@ -82,3 +83,5 @@ done
 
 # delete tmp file directory
 rm -rf $randoop_dir
+
+../util/show_coverage.pl "$TMP_DIR"/coverage
