@@ -1,0 +1,137 @@
+
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-env -- print environtment information for debugging
+
+
+=head1 SYNOPSIS
+
+  d4j-env
+
+=head1 DESCRIPTION
+
+This script displays environment information to help with debugging
+
+=cut
+use warnings;
+use strict;
+
+=pod
+
+=item C<d4j::d4j-env::indent_lines(lines, amount)>
+
+Indent the lines of a multiline string by a given amount (default 4)
+
+=cut
+sub indent_lines($;$) {
+    my $lines = shift;
+    my $amount = shift;
+
+    if (! defined $amount) {
+        $amount = 4;
+    }
+
+    my $indent = ' ' x $amount;
+    "${indent}".join("\n${indent}", split(/\n/, $lines));
+}
+
+=pod
+
+=item C<d4j::d4j-env::print_entry(key, val)>
+
+Print a key-value pair for a single line value in a formatted fashion. For
+instance:
+
+    SHELL................./bin/bash
+
+=cut
+sub print_entry {
+    my $key = shift;
+    my $val = shift;
+    $val =~ s/^\s+|\s+$//g;
+    my $val_start_col = shift;
+    if (! defined $val_start_col) {
+        $val_start_col = 30;
+    }
+    my $num_seps = $val_start_col - length($key);
+    print("$key" . ('.' x $num_seps) . "${val}\n");
+
+}
+
+=pod
+
+=item C<d4j::d4j-env::print_multiline_entry(key, val)>
+
+Print a key-value pair for a multiple line value in a formatted fashion. For
+instance:
+
+    Java Version:
+      openjdk version "1.8.0_232"
+      OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
+      OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
+
+=cut
+sub print_multiline_entry($;$) {
+    my $key = shift;
+    my $val = shift;
+    print("$key:\n" . indent_lines("$val", 2) . "\n");
+}
+
+=pod
+
+=item C<d4j::d4j-env::print_environment_var(var)>
+
+Lookup an environment variable's value and print it to stdout in a formatted
+fashion.
+
+=cut
+sub print_environment_var {
+    my $key = shift;
+    my $val = "<UNINITIALIZED>";
+    if (exists $ENV{$key}) {
+        $val = "$ENV{$key}";
+    }
+    print_entry ($key, $val);
+}
+
+# General environment
+print_environment_var("PWD");
+print_environment_var("SHELL");
+print_environment_var("TZ");
+
+# Java environment
+print_environment_var("JAVA_HOME");
+print_entry("Java Exec", `which java`);
+print_entry("Java Exec Resolved", `realpath \$(which java)`);
+print_multiline_entry("Java Version", `java -version 2>&1`);
+
+# VCS
+print_entry("Git version", `git --version`);
+print_entry("SVN version", `svn --version --quiet`);
+print_entry("Perl version", $^V);
+
+1;

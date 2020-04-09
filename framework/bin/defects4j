@@ -129,6 +129,17 @@ export a version-specific property.
 =cut
 $cmd_descr{export}="export a version-specific property";
 
+=pod
+
+=item * L<B<env>|d4j::d4j-env/>
+
+print environment information
+
+=back
+
+=cut
+$cmd_descr{env}="print environment of defects4j execution";
+
 #
 # Issue usage message and quit
 #
