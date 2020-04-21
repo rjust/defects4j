@@ -124,7 +124,7 @@ for bid in $(echo $BUGS); do
     done
 
     vid=${bid}b
-    # Run Randoop and generate error-revealing tests
+    # Run Randoop to generate error-revealing tests (other tools cannot do so)
     gen_tests.pl -g randoop -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
     # We expect Randoop to not crash; it may or may not create an error-revealing test for this version
     ret=$?

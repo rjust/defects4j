@@ -48,7 +48,7 @@ our @ISA = qw(Exporter);
 my $dir = dirname(abs_path(__FILE__));
 
 # Enable debugging and verbose output
-our $DEBUG = 0;
+our $DEBUG = $ENV{'D4J_DEBUG'} // 0;
 
 =pod
 
@@ -232,8 +232,6 @@ unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
 # Append Major's executables to the PATH -> ant may not be installed by default
 $ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
-# set name of mml file that provides definitions of used mutation operators
-$ENV{MML}="$MAJOR_ROOT/mml/all_mutants.mml.bin" unless defined $ENV{'MML'};
 
 # Constant strings used for errors
 our $ARG_ERROR       = "Invalid number of arguments!";

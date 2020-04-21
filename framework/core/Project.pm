@@ -765,7 +765,11 @@ sub mutate {
     $ENV{MML} = $mml_bin;
 
     # Mutate and compile sources
-    if (! $self->_call_major("mutate")) {
+    my $ret = $self->_call_major("mutate");
+
+    delete($ENV{MML});
+
+    if (! $ret) {
         return -1;
     }
 
@@ -1029,9 +1033,14 @@ sub _call_major {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
+    # Prepend path with Major's executables
+    my $path = $ENV{PATH};
     $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
     $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
-    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    my $ret = $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    # Reset path for downstream calls to ant
+    $ENV{PATH} = $path;
+    return($ret);
 }
 
 #
