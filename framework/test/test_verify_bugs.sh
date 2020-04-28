@@ -118,6 +118,10 @@ for bid in $(echo $BUGS); do
         # Expected number of failing tests for each buggy version is equal
         # to the number of provided triggering tests
         expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
+
+        # Fail if there are no trigger tests
+        [ $expected -gt 0 ] || die "Metadata error: There are no trigger tests for $PID-$vid"
+
         [ $triggers -eq $expected ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
