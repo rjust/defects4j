@@ -220,22 +220,19 @@ if [ "$PIDS" == "" ]; then
 fi
 
 for PID in $PIDS; do
-    # Run all test cases (and log all results), regardless of whether errors occur
     HALT_ON_ERROR=0
-
+    # Run all test cases (and log all results), regardless of whether errors occur
     test_ExportTestClassesDir $PID || die "Test 'test_ExportTestClassesDir' has failed!"
     test_ExportClassesDir $PID || die "Test 'test_ExportClassesDir' has failed!"
-
-    HALT_ON_ERROR=1
-
-    # Print a summary of what went wrong
-    if [ "$ERROR" -ne "0" ]; then
-        printf '=%.s' $(seq 1 80) 1>&2
-        echo 1>&2
-        echo "The following errors occurred:" 1>&2
-        cat $LOG 1>&2
-    fi
-
-    # Indicate whether an error occurred
-    exit "$ERROR"
 done
+
+# Print a summary of what went wrong
+if [ "$ERROR" -ne "0" ]; then
+    printf '=%.s' $(seq 1 80) 1>&2
+    echo 1>&2
+    echo "The following errors occurred:" 1>&2
+    cat $LOG 1>&2
+fi
+
+# Indicate whether an error occurred
+exit "$ERROR"
