@@ -1,0 +1,99 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-bugs -- Lists all bug IDs for a project
+
+=head1 SYNOPSIS
+
+  d4j-bugs -p project_id [-d] [-a]
+
+=head1 DESCRIPTION
+
+This script is a high level shortcut intended to give developers access
+to a list of bug IDs for a chosen project. By default, the list of 
+available active bug IDs is returned.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -p C<project_id>
+
+The ID of the project for which metadata is requested. A project ID
+must be provided to use this utility.
+
+=item -d
+
+Include only deprecated bugs. By default, only active bugs are listed.
+
+=item -a
+
+Include both active and deprecated bugs. By default, only active bugs 
+are listed.
+
+=back
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use Utils;
+use Project;
+use Getopt::Std;
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 -p project_id [-d] [-a]\n";
+    exit 1;
+}
+
+# Process command line options
+my %cmd_opts;
+getopts('p:da', \%cmd_opts) or _usage();
+
+_usage() unless defined $cmd_opts{p};
+
+my $PID = $cmd_opts{p};
+my $ONLY_DEP = defined $cmd_opts{d} ? 1 : 0;
+my $ALL_BUGS = defined $cmd_opts{a} ? 1 : 0;
+
+if ($ONLY_DEP and $ALL_BUGS) {
+    die "Only dependencies (-d) and all bugs (-a) cannot be concurrently set.";
+}
+
+if ($ALL_BUGS) {
+    system('../defects4j','query','-p',$PID,'-a');
+} elsif ($ONLY_DEP) {
+    system('../defects4j','query','-p',$PID,'-d');
+} else {
+    system('../defects4j','query','-p',$PID);
+}
+
+1;
