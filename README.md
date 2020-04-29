@@ -146,6 +146,7 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 | [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)           | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
 | [export](http://defects4j.org/html_doc/d4j/d4j-export.html)               | Export version-specific properties such as classpaths, directories, or lists of tests             |
+| [query](http://defects4j.org/html_doc/d4j/d4j-query.html)                 | Query the metadata to generate a CSV file of requested information for a specific project         |
 
 
 Export version-specific properties
@@ -166,6 +167,31 @@ directory to export a version-specific property:
 | tests.all        | List of all developer-written test classes                                          |
 | tests.relevant   | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
 | tests.trigger    | List of test methods that trigger (expose) the bug                                  |
+
+Export project-specific metadata
+--------------------------------
+Use `defects4j query -p <project_id> -q <field_list> [-d] [-a]` to generate
+a CSV file containing the requested metadata for each bug in a project:
+
+| Property              | Description                                                                         |
+|-----------------------|-------------------------------------------------------------------------------------|
+| bug.id                | Assigned bug IDs (included in all results)                                          |
+| revision.id.buggy     | Commit hashes for the buggy version of each bug                                     |
+| revision.id.fixed     | Commit hashes for the fixed version of each bug                                     |
+| report.id             | Bug report ID from the version tracker for each bug                                 |
+| report.url            | Bug report URL from the version tracker for each bug                                |
+| classes.modified      | Classes modified by the bug fix                                                     |
+| classes.relevant.src  | Source classes loaded by the JVM when executing all triggering tests                |
+| classes.relevant.test | Test classes loaded by the JVM when executing all triggering tests                  |
+| tests.relevant        | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
+| tests.trigger         | List of test methods that trigger (expose) the bug                                  |
+| deprecated.version    | (for deprecated bugs only) Version of Defects4J where a bug was deprecated          |
+| deprecated.reason     | (for deprecated bugs only) Reason for deprecation                                   |
+
+By default, `defects4j query` returns information on active bugs. The `[-d]`
+flag returns information only on deprecated bugs, while the `[-a]` flag returns
+information for all active and deprecated bugs.
+
 
 Test execution framework
 --------------------------

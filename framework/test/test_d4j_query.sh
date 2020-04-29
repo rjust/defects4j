@@ -22,30 +22,30 @@ result=`diff $HERE/temp $HERE/resources/output/d4j-query/2`
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision_id_buggy,modified_classes" >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.buggy,classes.modified" >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/3`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"revision_id_buggy,modified_classes\"\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"revision.buggy,classes.modified\"\" failed: $result"
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision_id_buggy,modified_classes" -d >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.buggy,classes.modified" -d >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/4`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"revision_id_buggy,modified_classes\" -d\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"revision.buggy,classes.modified\" -d\" failed: $result"
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision_id_buggy,modified_classes" -a >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.buggy,classes.modified" -a >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/5`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"revision_id_buggy,modified_classes\" -a\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"revision.buggy,classes.modified\" -a\" failed: $result"
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "deprecated_reason" -a >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "deprecated.reason" -a >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/6`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"deprecated_reason\" -a\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"deprecated.reason\" -a\" failed: $result"
 
 rm $HERE"/temp"

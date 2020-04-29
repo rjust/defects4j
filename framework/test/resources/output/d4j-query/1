@@ -1,1 +1,1 @@
-Available fields: bug_id, revision_id_buggy, revision_id_fixed, bug_report_id, bug_report_url, deprecated_version, deprecated_reason, loaded_classes_src, loaded_classes_test, modified_classes, relevant_tests, trigger_tests
+Available fields: bug.id, revision.buggy, revision.fixed, report.id, report.url, deprecated.version, deprecated.reason, classes.relevant.src, classes.relevant.test, classes.modified, tests.relevant, tests.trigger

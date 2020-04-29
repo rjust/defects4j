@@ -272,25 +272,25 @@ our $BUGS_CSV_ACTIVE = "active-bugs.csv";
 our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
 
 # Columns in active-bugs and deprecated-bugs csvs
-our $BUGS_CSV_BUGID = "bug_id";
-our $BUGS_CSV_COMMIT_BUGGY = "revision_id_buggy";
-our $BUGS_CSV_COMMIT_FIXED = "revision_id_fixed";
-our $BUGS_CSV_ISSUE_ID = "bug_report_id";
-our $BUGS_CSV_ISSUE_URL = "bug_report_url";
-our $BUGS_CSV_DEPRECATED_WHEN = "deprecated_version";
-our $BUGS_CSV_DEPRECATED_WHY = "deprecated_reason";
+our $BUGS_CSV_BUGID = "bug.id";
+our $BUGS_CSV_COMMIT_BUGGY = "revision.buggy";
+our $BUGS_CSV_COMMIT_FIXED = "revision.fixed";
+our $BUGS_CSV_ISSUE_ID = "report.id";
+our $BUGS_CSV_ISSUE_URL = "report.url";
+our $BUGS_CSV_DEPRECATED_WHEN = "deprecated.version";
+our $BUGS_CSV_DEPRECATED_WHY = "deprecated.reason";
 
 # Reasons for deprecation
 our $DEPRECATED_DUPLICATE = "Duplicate";
-our $DEPRECATED_JVM8_REPRO = "JVM8_Not_Reproducible";
-our $DEPRECATED_JVM8_COMPILE = "JVM8_Does_Not_Compile";
+our $DEPRECATED_JVM8_REPRO = "JVM8.Not.Reproducible";
+our $DEPRECATED_JVM8_COMPILE = "JVM8.Does.Not.Compile";
 
 # Additional metadata fields that can be queried by d4j-query
-our $METADATA_LOADED_CLASSES_SRC = "loaded_classes_src";
-our $METADATA_LOADED_CLASSES_TEST = "loaded_classes_test";
-our $METADATA_MODIFIED_CLASSES = "modified_classes";
-our $METADATA_RELEVANT_TESTS = "relevant_tests";
-our $METADATA_TRIGGER_TESTS = "trigger_tests"; 
+our $METADATA_LOADED_CLASSES_SRC = "classes.relevant.src";
+our $METADATA_LOADED_CLASSES_TEST = "classes.relevant.test";
+our $METADATA_MODIFIED_CLASSES = "classes.modified";
+our $METADATA_RELEVANT_TESTS = "tests.relevant";
+our $METADATA_TRIGGER_TESTS = "tests.trigger"; 
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";

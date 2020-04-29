@@ -1,4 +1,4 @@
-bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
+bug.id,revision.buggy,revision.fixed,report.id,report.url
 1,9c0cabead7cf075308b11362172ae1a48d41321c,52d82d1dfff8c2b2ded9d843e0b03017af6d747c,CODEC-65,https://issues.apache.org/jira/browse/CODEC-65
 2,2f7454a01e4c2992bffc3d86137e632e80c5027f,b8c2d9d9dc9aab45f83cf49ac93cfa8546e4c08e,CODEC-77,https://issues.apache.org/jira/browse/CODEC-77
 3,d7b01850ef418b1d261cdb2029f8f85ab4031553,a5dfe5cbc95d7f3ce0b4829756690c2cb8439f4c,CODEC-84,https://issues.apache.org/jira/browse/CODEC-84

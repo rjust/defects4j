@@ -1,4 +1,4 @@
-bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
+bug.id,revision.buggy,revision.fixed,report.id,report.url
 1,a9e5c9f99bcc16d734251f682758004a3ecc3a1b,b40ac81d4a81736e2b7536b14db4ad070b598d2e,98,https://github.com/FasterXML/jackson-core/issues/98
 2,098ece8564ed5d37f483c3bfb45be897ed8974cd,38d6e35d1f1a9b48193804925517500de8efee1f,105,https://github.com/FasterXML/jackson-core/issues/105
 3,7ee38785ecdd2f5a56a41302d4482675ce0d7e68,911cca0254267decd90a4b6a9c0610549309a451,111,https://github.com/FasterXML/jackson-core/issues/111

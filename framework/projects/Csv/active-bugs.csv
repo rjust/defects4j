@@ -1,4 +1,4 @@
-bug_id,revision_id_buggy,revision_id_fixed,bug_report_id,bug_report_url
+bug.id,revision.buggy,revision.fixed,report.id,report.url
 1,0833f45bffd40f44ba6f294d84e9bac8a9ba0a37,de1838ea067f3fbc4c7c21b9eeae077c739ecb73,CSV-75,https://issues.apache.org/jira/browse/CSV-75
 2,5744ee8a1698687fe4acc0c269cbbbb1e234b06d,a0d975933d6fe9eb5f359088de43508c1d3109bf,CSV-96,https://issues.apache.org/jira/browse/CSV-96
 3,e31980892ce9873047db98ab8ef1b3259607b988,2c6120826245f89fedf2f936ab4a0c3edd8717f3,CSV-58,https://issues.apache.org/jira/browse/CSV-58

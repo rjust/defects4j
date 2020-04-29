@@ -49,7 +49,7 @@ must be provided to use this utility.
 =item -q C<query>
 
 A comma-separated list of fields, encased in quotation marks. For example,
-C<-q "bug_id,bug_report_id"> returns the list of bug IDs and issue tracker IDs
+C<-q "bug.id,report.id"> returns the list of bug IDs and issue tracker IDs
 for the requested system.
 
 =item -h
@@ -75,22 +75,22 @@ Returns the list of active bug IDs for project Collections.
 
 Returns the list of available fields that can be queried.
 
-=item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes">
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified">
 
 Returns all active bug IDs, and for each, the revision hash of the buggy 
 version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes" -d>
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -d>
 
 Returns all deprecated bug IDs, and for each, the revision hash of the buggy 
 version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "revision_id_buggy,modified_classes" -a>
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -a>
 
 Returns all bug IDs (active and deprecated), and for each, the revision hash 
 of the buggy version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "deprecated_reason" -a>
+=item -C<d4j-query -p Collections -q "deprecated.reason" -a>
 
 Returns all bug IDs (active and deprecated) along with the reason for 
 deprecation. For active bugs, the deprecation reason will be "NA", as 
