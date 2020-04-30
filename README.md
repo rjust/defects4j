@@ -171,8 +171,9 @@ directory to export a version-specific property:
 
 Export project-specific metadata
 --------------------------------
-Use `defects4j query -p <project_id> -q <field_list> [-d] [-a]` to generate
-a CSV file containing a set of requested metadata for each bug in a project.
+Use `defects4j query -p <project_id> -q <field_list> [-o <output_file>] [-d] [-a]` 
+to generate a CSV file containing a set of requested metadata for each bug 
+in a project.
 
 By default, `defects4j query` returns a list of active bug IDs for a project.
 To request specific metadata, the `-q` flag should be provided with a 
