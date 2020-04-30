@@ -28,7 +28,7 @@ d4j-query -- query the metadata for a project to obtain CSV-formatted results.
 
 =head1 SYNOPSIS
 
-  d4j-query -p project_id [-q query] [-h] [-d] [-a]
+  d4j-query -p project_id [-q query] [-o output_file] [-h] [-d] [-a]
 
 =head1 DESCRIPTION
 
@@ -51,6 +51,10 @@ must be provided to use this utility.
 A comma-separated list of fields, encased in quotation marks. For example,
 C<-q "bug.id,report.id"> returns the list of bug IDs and issue tracker IDs
 for the requested system.
+
+=item -o C<output_file>
+
+A file to output the extracted CSV to. By default, prints to the screen.
 
 =item -h
 
@@ -198,27 +202,38 @@ sub _read_class_list {
 #
 # Reads in a list of tests and stack traces (trigger/failing tests)
 # and returns the results as a single string, associated with
-# the requested bug IDs.
+# the requested bug IDs. The first argument determines whether
+# the root cause is included or not.
 #
 
 sub _read_stack_traces {
-    my ($base_dir, @bugs) = @_; 
+    my ($include_root, $base_dir, @bugs) = @_; 
     my %results;
 
     foreach my $bug_id (@bugs) {
         my $filename = "$PROJECTS_DIR/$base_dir/$bug_id";
         open (IN, "<$filename") or die "Cannot open $filename";
         my $list = "";
+        my $cause = 0;
 
         # Read contents of file
         while (my $line = <IN>) {
             chomp $line;
-            if (grep /--- /, $line) {
-                $line =~ s/--- //; 
+            if (grep /^--- /, $line) {
+                $line =~ s/^--- //; 
                 if ($list eq "") {
                     $list = $line;
                 } else {
                     $list = $list.";".$line;
+                }
+                $cause = 1;
+                next;
+            }
+            if ($cause == 1){
+                $cause = 0;
+                if ($include_root == 1){
+                    $line =~ s/\"//g;
+                    $list = $list." --> $line";
                 }
             }
         }
@@ -234,16 +249,17 @@ sub _read_stack_traces {
 ##########################################################
 
 # All fields should be defined in Constants
-my @ALL_FIELDS = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXED, $BUGS_CSV_ISSUE_ID, $BUGS_CSV_ISSUE_URL, $BUGS_CSV_DEPRECATED_WHEN, $BUGS_CSV_DEPRECATED_WHY, $METADATA_LOADED_CLASSES_SRC, $METADATA_LOADED_CLASSES_TEST, $METADATA_MODIFIED_CLASSES, $METADATA_RELEVANT_TESTS, $METADATA_TRIGGER_TESTS);
+my @ALL_FIELDS = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXED, $BUGS_CSV_ISSUE_ID, $BUGS_CSV_ISSUE_URL, $BUGS_CSV_DEPRECATED_WHEN, $BUGS_CSV_DEPRECATED_WHY, $METADATA_LOADED_CLASSES_SRC, $METADATA_LOADED_CLASSES_TEST, $METADATA_MODIFIED_CLASSES, $METADATA_RELEVANT_TESTS, $METADATA_TRIGGER_TESTS, $METADATA_TRIGGER_CAUSE, $METADATA_PROJECT_ID, $METADATA_PROJECT_NAME, $METADATA_BUILD_FILE, $METADATA_VCS, $METADATA_REPOSITORY, $METADATA_COMMIT_DB, $METADATA_DATE_BUGGY, $METADATA_DATE_FIXED);
 
 # Process command line options
 my %cmd_opts;
-getopts('p:q:hda', \%cmd_opts) or _usage();
+getopts('p:q:o:hda', \%cmd_opts) or _usage();
 
 _usage() unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
 my $QUERY = defined $cmd_opts{q} ? $cmd_opts{q} : $BUGS_CSV_BUGID;
+my $OUTPUT_FILE = defined $cmd_opts{o} ? $cmd_opts{o} : "none";
 my $ONLY_DEP = defined $cmd_opts{d} ? 1 : 0;
 my $ALL_BUGS = defined $cmd_opts{a} ? 1 : 0;
 my $ACTIVE_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE";
@@ -273,13 +289,29 @@ foreach my $field (@requested) {
 
 # First, get results from the active and deprecated-bugs CSV files.
 my %results;
+my $project = Project::create_project($PID);
+my @necessary = @requested;
+push @necessary, $BUGS_CSV_COMMIT_BUGGY;
+push @necessary, $BUGS_CSV_COMMIT_FIXED;
 
 if (!$ONLY_DEP or $ALL_BUGS) {
-    %results = _read_bug_csv($ACTIVE_BUGS, @requested);
+    %results = _read_bug_csv($ACTIVE_BUGS, @necessary);
+
+    if (grep $_ eq $METADATA_COMMIT_DB, @requested) {
+        foreach my $bug_id (keys %results) {
+            $results{$bug_id}{$METADATA_COMMIT_DB} = $ACTIVE_BUGS;
+        }
+    }
 }
 
 if ($ONLY_DEP or $ALL_BUGS) {
-    my %dep_results = _read_bug_csv($DEPRECATED_BUGS, @requested);
+    my %dep_results = _read_bug_csv($DEPRECATED_BUGS, @necessary);
+    if (grep $_ eq $METADATA_COMMIT_DB, @requested) {
+        foreach my $bug_id (keys %dep_results) {
+            $dep_results{$bug_id}{$METADATA_COMMIT_DB} = $DEPRECATED_BUGS;
+        }
+    }
+
     foreach my $bug_id (sort { $a <=> $b } keys %dep_results) {
         $results{$bug_id} = $dep_results{$bug_id};
     }
@@ -320,14 +352,70 @@ if (grep $_ eq $METADATA_RELEVANT_TESTS, @requested) {
 }
 
 if (grep $_ eq $METADATA_TRIGGER_TESTS, @requested) {
-    my %metadata = _read_stack_traces("$PID/trigger_tests", keys %results);
+    my %metadata = _read_stack_traces(0, "$PID/trigger_tests", keys %results);
 
     foreach my $bug_id (keys %metadata) {
         $results{$bug_id}{$METADATA_TRIGGER_TESTS} = $metadata{$bug_id};
     }
 }
 
+if (grep $_ eq $METADATA_TRIGGER_CAUSE, @requested) {
+    my %metadata = _read_stack_traces(1, "$PID/trigger_tests", keys %results);
+
+    foreach my $bug_id (keys %metadata) {
+        $results{$bug_id}{$METADATA_TRIGGER_CAUSE} = $metadata{$bug_id};
+    }
+}
+
+if (grep $_ eq $METADATA_PROJECT_ID, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_PROJECT_ID} = $PID;
+    }
+}
+
+if (grep $_ eq $METADATA_PROJECT_NAME, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_PROJECT_NAME} = $project->{prog_name};
+    }
+}
+
+if (grep $_ eq $METADATA_BUILD_FILE, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_BUILD_FILE} = $PROJECTS_DIR."/".$PID."/".$PID.".build.xml";
+    }
+}
+
+if (grep $_ eq $METADATA_VCS, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_VCS} = ref $project->{_vcs};
+    }
+}
+
+if (grep $_ eq $METADATA_REPOSITORY, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_REPOSITORY} = $project->{_vcs}->{repo};
+    }
+}
+
+if (grep $_ eq $METADATA_DATE_BUGGY, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_DATE_BUGGY} = $project->{_vcs}->rev_date($results{$bug_id}{$BUGS_CSV_COMMIT_BUGGY});
+    }
+}
+
+if (grep $_ eq $METADATA_DATE_FIXED, @requested) {
+    foreach my $bug_id (keys %results) {
+        $results{$bug_id}{$METADATA_DATE_FIXED} = $project->{_vcs}->rev_date($results{$bug_id}{$BUGS_CSV_COMMIT_FIXED});
+    }
+}
+
 # Print the results in CSV format
+
+my $file;
+
+if ($OUTPUT_FILE ne "none") {
+    open($file, '>', $OUTPUT_FILE) or die "Could not open file '$OUTPUT_FILE' $!";
+}
 
 foreach my $bug_id (sort { $a <=> $b } keys %results) {
     my $output = $bug_id;
@@ -336,7 +424,15 @@ foreach my $bug_id (sort { $a <=> $b } keys %results) {
             $output = $output.",".$results{$bug_id}{$field};
         }
     }
-    print "$output\n";
+    if ($OUTPUT_FILE eq "none") {
+        print "$output\n";
+    } else {
+        print $file "$output\n";
+    }
+}
+
+if ($OUTPUT_FILE ne "none") {
+    close $file;
 }
 
 1;

@@ -286,11 +286,20 @@ our $DEPRECATED_JVM8_REPRO = "JVM8.Not.Reproducible";
 our $DEPRECATED_JVM8_COMPILE = "JVM8.Does.Not.Compile";
 
 # Additional metadata fields that can be queried by d4j-query
+our $METADATA_PROJECT_ID = "project.id";
+our $METADATA_PROJECT_NAME = "project.name";
+our $METADATA_BUILD_FILE = "build.file";
+our $METADATA_VCS = "vcs";
+our $METADATA_REPOSITORY = "repository";
 our $METADATA_LOADED_CLASSES_SRC = "classes.relevant.src";
 our $METADATA_LOADED_CLASSES_TEST = "classes.relevant.test";
 our $METADATA_MODIFIED_CLASSES = "classes.modified";
 our $METADATA_RELEVANT_TESTS = "tests.relevant";
 our $METADATA_TRIGGER_TESTS = "tests.trigger"; 
+our $METADATA_TRIGGER_CAUSE = "tests.trigger.cause";
+our $METADATA_COMMIT_DB = "commit.db";
+our $METADATA_DATE_BUGGY = "revision.buggy.date";
+our $METADATA_DATE_FIXED = "revision.fixed.date";
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
@@ -361,6 +370,15 @@ $METADATA_LOADED_CLASSES_TEST
 $METADATA_MODIFIED_CLASSES
 $METADATA_RELEVANT_TESTS
 $METADATA_TRIGGER_TESTS
+$METADATA_TRIGGER_CAUSE
+$METADATA_PROJECT_ID
+$METADATA_PROJECT_NAME
+$METADATA_BUILD_FILE
+$METADATA_VCS
+$METADATA_REPOSITORY
+$METADATA_COMMIT_DB
+$METADATA_DATE_BUGGY
+$METADATA_DATE_FIXED
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS
