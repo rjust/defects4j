@@ -117,8 +117,6 @@ our $TAB_CODE_EVOLUTION = ($ENV{TAB_CODE_EVOLUTION} or "code_evolution");
 
 =item C<TAB_REVIEW>
 
-=back
-
 The name of the database table for the results of patch review (I<review>)
 
 =cut
