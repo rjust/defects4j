@@ -28,7 +28,7 @@ d4j-mutation -- run mutation analysis for a checked-out project version.
 
 =head1 SYNOPSIS
 
-  d4j-mutation [-w work_dir] [-r | [-t single_test] [-s test_suite]] [-i instrument_classes] [-e exclude_file]
+  d4j-mutation [-w work_dir] [-r | [-t single_test] [-s test_suite]] [-i instrument_classes] [-e exclude_file] [-m mutation_operators_file]
 
 =head1 DESCRIPTION
 
@@ -71,6 +71,11 @@ fully-qualified class names -- one class per line.
 The file that contains the list of all mutant ids (one per row) to exclude (optional).
 By default no exclude file is used and therefore no mutant is excluded.
 
+=item -m F<mutation_operators_file>
+
+The file that contains the list of mutation operators (separated by space or newline) to apply (optional).
+By default all mutation operators are applied: AOR, LOR, SOR, COR, ROR, ORU, LVR, STD.
+
 =back
 
 =head1 Test suites
@@ -104,7 +109,7 @@ use Getopt::Std;
 use Pod::Usage;
 
 my %cmd_opts;
-getopts('t:w:rs:i:e:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
+getopts('t:w:rs:i:e:m:', \%cmd_opts) or pod2usage( { -verbose => 1, -input => __FILE__} );
 
 my $WORK_DIR    = Utils::get_abs_path($cmd_opts{w} // ".");
 my $REL_TESTS   = defined $cmd_opts{r} ? 1 : 0;
@@ -112,6 +117,7 @@ my $SINGLE_TEST = $cmd_opts{t};
 my $TEST_SUITE  = $cmd_opts{s};
 my $INSTRUMENT  = $cmd_opts{i};
 my $EXCL        = $cmd_opts{e};
+my $MUT_OPS_FILE= $cmd_opts{m};
 if ((defined $SINGLE_TEST || defined $TEST_SUITE) && $REL_TESTS==1) {
     pod2usage( { -verbose => 1, -input => __FILE__} );
 }
@@ -129,6 +135,9 @@ my $type= $res->{type};
 
 # The mutation operators that should be enabled
 my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+if (defined($MUT_OPS_FILE)) {
+    @MUT_OPS = Mutation::parse_mutation_operators($MUT_OPS_FILE);
+}
 
 # Instantiate project and set working directory
 my $project = Project::create_project($pid);

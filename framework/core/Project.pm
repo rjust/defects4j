@@ -752,8 +752,9 @@ sub mutate {
     }
     close(IN);
     # Update properties
-    my $list = join(",", @classes);
-    my $config = {$PROP_MUTATE => $list};
+    my $list_classes = join(",", @classes);
+    my $list_mut_ops = join(",", @{$mut_ops});
+    my $config = {$PROP_MUTATE => $list_classes, $PROP_MUT_OPS => $list_mut_ops};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Create mutation definitions (mml file)

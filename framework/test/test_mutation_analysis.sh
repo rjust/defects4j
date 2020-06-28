@@ -91,6 +91,21 @@ defects4j mutation -w "$pid_bid_dir" -r -e "$exclude_file" || die "Mutation anal
 _check_mutation_result 42 0 0
 
 ##########################################################################
+# Test mutation analysis when explicitly providing a subset of operators
+
+# Remove the summary file to ensure it is regenerated
+rm -f "$summary_file"
+
+# Use three mutation operators (test space and newline separation)
+mut_ops_file="$pid_bid_dir/mut_ops.txt"
+echo "AOR LVR" > "$mut_ops_file"
+echo "ROR" >> "$mut_ops_file"
+
+defects4j mutation -w "$pid_bid_dir" -r -m "$mut_ops_file" || die "Mutation analysis (subset of mutation operators) failed!"
+_check_mutation_result 36 36 30
+
+
+##########################################################################
 # Test mutation analysis when explicitly providing the class(es) to mutate
 
 # Remove the summary file to ensure it is regenerated
