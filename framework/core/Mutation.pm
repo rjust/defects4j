@@ -161,6 +161,30 @@ sub mutation_analysis_ext {
     return _build_mut_map($project, $base_map);
 }
 
+=pod
+
+  Mutation::parse_mutation_operators(file_name)
+
+Parses the provided text file and returns an array with mutation operator names
+(i.e., "AOR", "ROR", etc.).
+
+=cut
+sub parse_mutation_operators {
+    @_ == 1 or die $ARG_ERROR;
+    my ($file_name) = @_;
+
+    my @ops = ();
+
+    open(IN, "<$file_name") or die "Cannot open mut-ops file ($file_name): $!";
+    while(my $line = <IN>) {
+        chomp($line);
+        my @tmp = split(" ", $line);
+        push(@ops, @tmp);
+    }
+    close(IN);
+
+    return @ops;
+}
 
 =pod
 
