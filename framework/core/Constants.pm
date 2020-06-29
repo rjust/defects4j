@@ -273,8 +273,8 @@ our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
 
 # Columns in active-bugs and deprecated-bugs csvs
 our $BUGS_CSV_BUGID = "bug.id";
-our $BUGS_CSV_COMMIT_BUGGY = "revision.buggy";
-our $BUGS_CSV_COMMIT_FIXED = "revision.fixed";
+our $BUGS_CSV_COMMIT_BUGGY = "revision.id.buggy";
+our $BUGS_CSV_COMMIT_FIXED = "revision.id.fixed";
 our $BUGS_CSV_ISSUE_ID = "report.id";
 our $BUGS_CSV_ISSUE_URL = "report.url";
 our $BUGS_CSV_DEPRECATED_WHEN = "deprecated.version";
@@ -288,18 +288,18 @@ our $DEPRECATED_JVM8_COMPILE = "JVM8.Does.Not.Compile";
 # Additional metadata fields that can be queried by d4j-query
 our $METADATA_PROJECT_ID = "project.id";
 our $METADATA_PROJECT_NAME = "project.name";
-our $METADATA_BUILD_FILE = "build.file";
-our $METADATA_VCS = "vcs";
-our $METADATA_REPOSITORY = "repository";
+our $METADATA_BUILD_FILE = "project.build.file";
+our $METADATA_VCS = "project.vcs";
+our $METADATA_REPOSITORY = "project.repository";
+our $METADATA_COMMIT_DB = "project.commit.db";
 our $METADATA_LOADED_CLASSES_SRC = "classes.relevant.src";
 our $METADATA_LOADED_CLASSES_TEST = "classes.relevant.test";
 our $METADATA_MODIFIED_CLASSES = "classes.modified";
 our $METADATA_RELEVANT_TESTS = "tests.relevant";
 our $METADATA_TRIGGER_TESTS = "tests.trigger"; 
 our $METADATA_TRIGGER_CAUSE = "tests.trigger.cause";
-our $METADATA_COMMIT_DB = "commit.db";
-our $METADATA_DATE_BUGGY = "revision.buggy.date";
-our $METADATA_DATE_FIXED = "revision.fixed.date";
+our $METADATA_DATE_BUGGY = "revision.date.buggy";
+our $METADATA_DATE_FIXED = "revision.date.fixed";
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";

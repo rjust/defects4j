@@ -1,4 +1,4 @@
-bug.id,revision.buggy,revision.fixed,report.id,report.url
+bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url
 1,8f46f467a33ace44ccd9f394910940b6c48a3827,b0e1b80b6d4a10a9c9f46539bc4c7a3cce55886e,CLI-13,https://issues.apache.org/jira/browse/CLI-13
 2,b0e1b80b6d4a10a9c9f46539bc4c7a3cce55886e,2ff9573ffb08dd52ec3a55a49f2d77a1e94efbdf,CLI-51,https://issues.apache.org/jira/browse/CLI-51
 3,85248e8ae52232ed75c2b4c52d4071bdf192db37,d35f2fa7a06457469a617677eeb4c1dc21484006,cli-1,https://issues.apache.org/jira/browse/CLI-1

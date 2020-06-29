@@ -1,4 +1,4 @@
-bug.id,revision.buggy,revision.fixed,report.id,report.url
+bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url
 1,728b4e814ec88cab556533fa114be0efdde963be,004124ac5dbf5edbf925078652526267468821e7,COMPRESS-28,https://issues.apache.org/jira/browse/COMPRESS-28
 2,1cde8827c953a56b2fcabad676f8cf2ddd6ec182,d09177b98f4e956c1d366110f73c3341ea110bee,COMPRESS-11,https://issues.apache.org/jira/browse/COMPRESS-11
 3,ddbd61f0e75b7d98873b9a9bf6398218edcfd17b,d170f34fa65e19b604f5a9e04e6ed5f81d35658c,COMPRESS-64,https://issues.apache.org/jira/browse/COMPRESS-64

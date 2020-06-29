@@ -1,4 +1,4 @@
-bug.id,revision.buggy,revision.fixed,report.id,report.url
+bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url
 1,8612f9e5b88c1bea933ef9ab1e431f5db3006b48,9a62b06be5d0df8e833ff8583398cca386608cac,93,https://github.com/JodaOrg/joda-time/issues/93
 2,8d109fe1a999a11b4557536dd96f9210460a5936,8612f9e5b88c1bea933ef9ab1e431f5db3006b48,93,https://github.com/JodaOrg/joda-time/issues/93
 3,3ba9ba799b3261b7332a467a88be142c83b298fd,8d109fe1a999a11b4557536dd96f9210460a5936,77,https://github.com/JodaOrg/joda-time/issues/77

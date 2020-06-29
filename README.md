@@ -187,16 +187,16 @@ all active bug IDs, along with the bug report ID and bug report URL for each.
 | bug.id                | Assigned bug IDs (included in all results)                                          |
 | project.id            | Assigned project ID                                                                 |
 | project.name          | Original repository name                                                            |
+| project.build.file    | Location of the Defects4J build file for the project                                |
+| project.vcs           | Version control system used by the project                                          |
+| project.repository    | Location of the project repository                                                  |
+| project.commit.db     | Location of the CSV containing information on that bug                              |
 | revision.id.buggy     | Commit hashes for the buggy version of each bug                                     |
 | revision.id.fixed     | Commit hashes for the fixed version of each bug                                     |
-| revision.buggy.date   | Date of the buggy commit for each bug                                               |
-| revision.fixed.date   | Date of the fixed commit for each bug                                               |
+| revision.date.buggy   | Date of the buggy commit for each bug                                               |
+| revision.date.fixed   | Date of the fixed commit for each bug                                               |
 | report.id             | Bug report ID from the version tracker for each bug                                 |
 | report.url            | Bug report URL from the version tracker for each bug                                |
-| build.file            | Location of the Defects4J build file for the project                                |
-| vcs                   | Version control system used by the project                                          |
-| repository            | Location of the project repository                                                  |
-| commit.db             | Location of the CSV containing information on that bug                              |
 | classes.modified      | Classes modified by the bug fix                                                     |
 | classes.relevant.src  | Source classes loaded by the JVM when executing all triggering tests                |
 | classes.relevant.test | Test classes loaded by the JVM when executing all triggering tests                  |

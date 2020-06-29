@@ -1,4 +1,4 @@
-bug.id,revision.buggy,revision.fixed,report.id,report.url,deprecated.version,deprecated.reason
+bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
 1,b1cd358495cae3df8e0e32147ef433cce83390c8,f8aa3e033c1fde4a434864f666315b433498d32c,COLLECTIONS-217,https://issues.apache.org/jira/browse/COLLECTIONS-217,2.0.0,JVM8.Does.Not.Compile
 2,f8aa3e033c1fde4a434864f666315b433498d32c,3f09772b742d7886c5a18427c9838fb267cc335b,COLLECTIONS-214,https://issues.apache.org/jira/browse/COLLECTIONS-214,2.0.0,JVM8.Does.Not.Compile
 3,3f09772b742d7886c5a18427c9838fb267cc335b,66c4b99ddc7daea806c1318a40736d0f5c8fa7bd,COLLECTIONS-219,https://issues.apache.org/jira/browse/COLLECTIONS-219,2.0.0,JVM8.Does.Not.Compile
