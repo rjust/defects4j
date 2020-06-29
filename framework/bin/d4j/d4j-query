@@ -109,13 +109,8 @@ use strict;
 use warnings;
 
 use Constants;
-use Utils;
-use Project;
 use Getopt::Std;
-
-##########################################################
-# Helper Subroutines
-##########################################################
+use Query;
 
 #
 # Issue usage message and quit
@@ -125,133 +120,6 @@ sub _usage {
     exit 1;
 }
 
-#
-# Gathers requested data from a designated bugs CSV file.
-# Returns a hash RESULTS [bug_id] = DATA [field] [value]
-# That is, we associate fields with their respective bug_id. 
-#
-
-sub _read_bug_csv {
-    my ($filename, @fields) = @_; 
-    open (IN, "<$filename") or die "Cannot open $filename";
-  
-    my $head = <IN>;
-    chomp $head;
-    my @header = split /,/, $head;
-    my %cols;
-    my %results;
-
-    my ($bug_id_col) = grep { $header[$_] eq $BUGS_CSV_BUGID } (0 .. @header-1);
-    unless (defined $bug_id_col) {
-        die "Bug IDs are not included in $filename.";
-    }
-    
-
-    # Associate fields with columns using the header
-    foreach my $item (@fields) {
-        ($cols{$item}) = grep { $header[$_] eq $item } (0 .. @header -1);
-        unless (defined $cols{$item}) {
-            $cols{$item} = -1;
-        }
-    }
-
-    # Read contents of file, associate each line with the bug ID.
-    while (my $line = <IN>) {
-        chomp $line;
-        my @columns = split /,/, $line;
-        my $bug_id = $columns[$bug_id_col];
-        foreach my $item (@fields) {
-            if ($cols{$item} != -1) {
-                $results{$bug_id}{$item} = $columns[$cols{$item}];
-            } else {
-                $results{$bug_id}{$item} = "NA";
-            }
-        }
-    }
-    close IN;
-
-    return %results;
-}
-
-#
-# Reads in a class list (loaded/modified classes, relevant tests)
-# and returns the results as a single string, associated with
-# the requested bug IDs.
-#
-
-sub _read_class_list {
-    my ($base_dir, $ext, @bugs) = @_; 
-    my %results;
-
-    foreach my $bug_id (@bugs) {
-        my $filename = "$PROJECTS_DIR/$base_dir/$bug_id$ext";
-        open (IN, "<$filename") or die "Cannot open $filename";
-        my $list = <IN>;
-        chomp $list;
-
-        # Read contents of file
-        while (my $line = <IN>) {
-            chomp $line;
-            $list = $list.";".$line;
-        }
-        close IN;
-        $results{$bug_id} = "\"".$list."\"";
-    }
-    return %results;
-}
-
-#
-# Reads in a list of tests and stack traces (trigger/failing tests)
-# and returns the results as a single string, associated with
-# the requested bug IDs. The first argument determines whether
-# the root cause is included or not.
-#
-
-sub _read_stack_traces {
-    my ($include_root, $base_dir, @bugs) = @_; 
-    my %results;
-
-    foreach my $bug_id (@bugs) {
-        my $filename = "$PROJECTS_DIR/$base_dir/$bug_id";
-        open (IN, "<$filename") or die "Cannot open $filename";
-        my $list = "";
-        my $cause = 0;
-
-        # Read contents of file
-        while (my $line = <IN>) {
-            chomp $line;
-            if (grep /^--- /, $line) {
-                $line =~ s/^--- //; 
-                if ($list eq "") {
-                    $list = $line;
-                } else {
-                    $list = $list.";".$line;
-                }
-                $cause = 1;
-                next;
-            }
-            if ($cause == 1){
-                $cause = 0;
-                if ($include_root == 1){
-                    $line =~ s/\"//g;
-                    $list = $list." --> $line";
-                }
-            }
-        }
-        close IN;
-        $results{$bug_id} = "\"".$list."\"";
-    }
-    return %results;
-}
-
-
-##########################################################
-# Core Logic
-##########################################################
-
-# All fields should be defined in Constants
-my @ALL_FIELDS = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXED, $BUGS_CSV_ISSUE_ID, $BUGS_CSV_ISSUE_URL, $BUGS_CSV_DEPRECATED_WHEN, $BUGS_CSV_DEPRECATED_WHY, $METADATA_LOADED_CLASSES_SRC, $METADATA_LOADED_CLASSES_TEST, $METADATA_MODIFIED_CLASSES, $METADATA_RELEVANT_TESTS, $METADATA_TRIGGER_TESTS, $METADATA_TRIGGER_CAUSE, $METADATA_PROJECT_ID, $METADATA_PROJECT_NAME, $METADATA_BUILD_FILE, $METADATA_VCS, $METADATA_REPOSITORY, $METADATA_COMMIT_DB, $METADATA_DATE_BUGGY, $METADATA_DATE_FIXED);
-
 # Process command line options
 my %cmd_opts;
 getopts('p:q:o:HDA', \%cmd_opts) or _usage();
@@ -260,14 +128,13 @@ _usage() unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
 my $QUERY = defined $cmd_opts{q} ? $cmd_opts{q} : $BUGS_CSV_BUGID;
+my @requested = split /,/, $QUERY or die "Unable to parse query: $QUERY";
 my $OUTPUT_FILE = defined $cmd_opts{o} ? $cmd_opts{o} : "none";
 my $ONLY_DEP = defined $cmd_opts{D} ? 1 : 0;
 my $ALL_BUGS = defined $cmd_opts{A} ? 1 : 0;
-my $ACTIVE_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE";
-my $DEPRECATED_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_DEPRECATED";
 
 if (defined $cmd_opts{H}) {
-    my $joined_fields = join(", ", @ALL_FIELDS);
+    my $joined_fields = join(", ", Query::get_fields());
     print "Available fields: $joined_fields\n";
     exit 1;
 }
@@ -276,138 +143,13 @@ if ($ONLY_DEP and $ALL_BUGS) {
     die "Only deprecated bugs (-D) and all bugs (-A) cannot be concurrently set.";
 }
 
-# Check query for unavailable fields
-
-my @requested = split /,/, $QUERY or die "Unable to parse query: $QUERY";
-
-foreach my $field (@requested) {
-    unless (grep $_ eq $field, @ALL_FIELDS) {
-        die "Requested field \"$field\" in query \"$QUERY\" is invalid.";
-    }
-}
-
-# Gather results for the requested fields
-
-# First, get results from the active and deprecated-bugs CSV files.
 my %results;
-my $project = Project::create_project($PID);
-my @necessary = @requested;
-push @necessary, $BUGS_CSV_COMMIT_BUGGY;
-push @necessary, $BUGS_CSV_COMMIT_FIXED;
-
-if (!$ONLY_DEP or $ALL_BUGS) {
-    %results = _read_bug_csv($ACTIVE_BUGS, @necessary);
-
-    if (grep $_ eq $METADATA_COMMIT_DB, @requested) {
-        foreach my $bug_id (keys %results) {
-            $results{$bug_id}{$METADATA_COMMIT_DB} = $ACTIVE_BUGS;
-        }
-    }
-}
-
-if ($ONLY_DEP or $ALL_BUGS) {
-    my %dep_results = _read_bug_csv($DEPRECATED_BUGS, @necessary);
-    if (grep $_ eq $METADATA_COMMIT_DB, @requested) {
-        foreach my $bug_id (keys %dep_results) {
-            $dep_results{$bug_id}{$METADATA_COMMIT_DB} = $DEPRECATED_BUGS;
-        }
-    }
-
-    foreach my $bug_id (sort { $a <=> $b } keys %dep_results) {
-        $results{$bug_id} = $dep_results{$bug_id};
-    }
-}
-
-# Now, get results from other metadata and associate with bug ID
-
-if (grep $_ eq $METADATA_LOADED_CLASSES_SRC, @requested) {
-    my %metadata = _read_class_list("$PID/loaded_classes", ".src", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_LOADED_CLASSES_SRC} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_LOADED_CLASSES_TEST, @requested) {
-    my %metadata = _read_class_list("$PID/loaded_classes", ".test", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_LOADED_CLASSES_TEST} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_MODIFIED_CLASSES, @requested) {
-    my %metadata = _read_class_list("$PID/modified_classes", ".src", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_MODIFIED_CLASSES} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_RELEVANT_TESTS, @requested) {
-    my %metadata = _read_class_list("$PID/relevant_tests", "", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_RELEVANT_TESTS} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_TRIGGER_TESTS, @requested) {
-    my %metadata = _read_stack_traces(0, "$PID/trigger_tests", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_TRIGGER_TESTS} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_TRIGGER_CAUSE, @requested) {
-    my %metadata = _read_stack_traces(1, "$PID/trigger_tests", keys %results);
-
-    foreach my $bug_id (keys %metadata) {
-        $results{$bug_id}{$METADATA_TRIGGER_CAUSE} = $metadata{$bug_id};
-    }
-}
-
-if (grep $_ eq $METADATA_PROJECT_ID, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_PROJECT_ID} = $PID;
-    }
-}
-
-if (grep $_ eq $METADATA_PROJECT_NAME, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_PROJECT_NAME} = $project->{prog_name};
-    }
-}
-
-if (grep $_ eq $METADATA_BUILD_FILE, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_BUILD_FILE} = $PROJECTS_DIR."/".$PID."/".$PID.".build.xml";
-    }
-}
-
-if (grep $_ eq $METADATA_VCS, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_VCS} = ref $project->{_vcs};
-    }
-}
-
-if (grep $_ eq $METADATA_REPOSITORY, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_REPOSITORY} = $project->{_vcs}->{repo};
-    }
-}
-
-if (grep $_ eq $METADATA_DATE_BUGGY, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_DATE_BUGGY} = $project->{_vcs}->rev_date($results{$bug_id}{$BUGS_CSV_COMMIT_BUGGY});
-    }
-}
-
-if (grep $_ eq $METADATA_DATE_FIXED, @requested) {
-    foreach my $bug_id (keys %results) {
-        $results{$bug_id}{$METADATA_DATE_FIXED} = $project->{_vcs}->rev_date($results{$bug_id}{$BUGS_CSV_COMMIT_FIXED});
-    }
+if ($ONLY_DEP) {
+    %results = Query::query_metadata($PID, "D", @requested);
+} elsif ($ALL_BUGS) {
+    %results = Query::query_metadata($PID, "A", @requested);
+} else{
+    %results = Query::query_metadata($PID, "C", @requested);
 }
 
 # Print the results in CSV format

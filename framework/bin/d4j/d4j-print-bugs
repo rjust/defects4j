@@ -63,9 +63,8 @@ use strict;
 use warnings;
 
 use Constants;
-use Utils;
-use Project;
 use Getopt::Std;
+use Query;
 
 #
 # Issue usage message and quit
@@ -89,12 +88,18 @@ if ($ONLY_DEP and $ALL_BUGS) {
     die "Only deprecated bugs (-D) and all bugs (-A) cannot be concurrently set.";
 }
 
-if ($ALL_BUGS) {
-    system('../defects4j','query','-p',$PID,'-A');
-} elsif ($ONLY_DEP) {
-    system('../defects4j','query','-p',$PID,'-D');
-} else {
-    system('../defects4j','query','-p',$PID);
+my %results;
+my @requested = $BUGS_CSV_BUGID;
+if ($ONLY_DEP) {
+    %results = Query::query_metadata($PID, "D", @requested);
+} elsif ($ALL_BUGS) {
+    %results = Query::query_metadata($PID, "A", @requested);
+} else{
+    %results = Query::query_metadata($PID, "C", @requested);
+}
+
+foreach my $bug_id (sort { $a <=> $b } keys %results) {
+   print "$bug_id\n";
 }
 
 1;
