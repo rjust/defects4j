@@ -142,7 +142,7 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 | [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)           | Checkout a buggy or a fixed project version                                                       |
 | [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)             | Compile sources and developer-written tests of a buggy or a fixed project version                 |
 | [test](http://defects4j.org/html_doc/d4j/d4j-test.html)                   | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| [bugs](http://defects4j.org/html_doc/d4j/d4j-bugs.html)                   | Print the list of active bug IDs for a specific project                                           |
+| [print.bugs](http://defects4j.org/html_doc/d4j/d4j-print-bugs.html)       | Print the list of active bug IDs for a specific project                                           |
 | [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)           | Run mutation analysis on a buggy or a fixed project version                                       |
 | [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)           | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
@@ -206,8 +206,8 @@ all active bug IDs, along with the bug report ID and bug report URL for each.
 | deprecated.version    | (for deprecated bugs only) Version of Defects4J where a bug was deprecated          |
 | deprecated.reason     | (for deprecated bugs only) Reason for deprecation                                   |
 
-By default, `defects4j query` returns information on active bugs. The `[-d]`
-flag returns information only on deprecated bugs, while the `[-a]` flag returns
+By default, `defects4j query` returns information on active bugs. The `[-D]`
+flag returns information only on deprecated bugs, while the `[-A]` flag returns
 information for all active and deprecated bugs.
 
 

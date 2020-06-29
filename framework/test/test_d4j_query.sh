@@ -8,10 +8,10 @@ source test.include
 
 HERE=$(cd `dirname $0` && pwd)
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -h >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -H >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/1`
 
-[ "$result" == "" ] || die "query \"-p Collections\" -h failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections\" -H failed: $result"
 
 rm $HERE"/temp"
 
@@ -29,23 +29,23 @@ result=`diff $HERE/temp $HERE/resources/output/d4j-query/3`
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -d >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -D >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/4`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -d\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -D\" failed: $result"
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -a >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -A >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/5`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -a\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -A\" failed: $result"
 
 rm $HERE"/temp"
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "deprecated.reason" -a >> $HERE"/temp"
+$BASE_DIR/framework/bin/defects4j query -p Collections -q "deprecated.reason" -A >> $HERE"/temp"
 result=`diff $HERE/temp $HERE/resources/output/d4j-query/6`
 
-[ "$result" == "" ] || die "query \"-p Collections -q \"deprecated.reason\" -a\" failed: $result"
+[ "$result" == "" ] || die "query \"-p Collections -q \"deprecated.reason\" -A\" failed: $result"
 
 rm $HERE"/temp"

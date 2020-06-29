@@ -28,7 +28,7 @@ d4j-query -- query the metadata for a project to obtain CSV-formatted results.
 
 =head1 SYNOPSIS
 
-  d4j-query -p project_id [-q query] [-o output_file] [-h] [-d] [-a]
+  d4j-query -p project_id [-q query] [-o output_file] [-h] [-D|-A]
 
 =head1 DESCRIPTION
 
@@ -60,14 +60,15 @@ A file to output the extracted CSV to. By default, prints to the screen.
 
 List the available fields.
 
-=item -d
+=item -D
 
 Include only deprecated bugs. By default, only active bugs are queried.
+Cannot be used in conjunction with "all bugs" (-A).
 
-=item -a
+=item -A
 
 Include both active and deprecated bugs. By default, only active bugs are 
-queried.
+queried. Cannot be used in conjunction with "only deprecated bugs" (-D).
 
 =head1 EXAMPLES
 
@@ -84,17 +85,17 @@ Returns the list of available fields that can be queried.
 Returns all active bug IDs, and for each, the revision hash of the buggy 
 version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -d>
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -D>
 
 Returns all deprecated bug IDs, and for each, the revision hash of the buggy 
 version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -a>
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -A>
 
 Returns all bug IDs (active and deprecated), and for each, the revision hash 
 of the buggy version and the list of modified classes.
 
-=item -C<d4j-query -p Collections -q "deprecated.reason" -a>
+=item -C<d4j-query -p Collections -q "deprecated.reason" -A>
 
 Returns all bug IDs (active and deprecated) along with the reason for 
 deprecation. For active bugs, the deprecation reason will be "NA", as 
@@ -120,7 +121,7 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 -p project_id [-q query] [-h] [-d] [-a]\n";
+    print "usage: $0 -p project_id [-q query] [-o output_file] [-H] [-D|-A]\n";
     exit 1;
 }
 
@@ -253,26 +254,26 @@ my @ALL_FIELDS = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXE
 
 # Process command line options
 my %cmd_opts;
-getopts('p:q:o:hda', \%cmd_opts) or _usage();
+getopts('p:q:o:HDA', \%cmd_opts) or _usage();
 
 _usage() unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
 my $QUERY = defined $cmd_opts{q} ? $cmd_opts{q} : $BUGS_CSV_BUGID;
 my $OUTPUT_FILE = defined $cmd_opts{o} ? $cmd_opts{o} : "none";
-my $ONLY_DEP = defined $cmd_opts{d} ? 1 : 0;
-my $ALL_BUGS = defined $cmd_opts{a} ? 1 : 0;
+my $ONLY_DEP = defined $cmd_opts{D} ? 1 : 0;
+my $ALL_BUGS = defined $cmd_opts{A} ? 1 : 0;
 my $ACTIVE_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE";
 my $DEPRECATED_BUGS = "$PROJECTS_DIR/$PID/$BUGS_CSV_DEPRECATED";
 
-if (defined $cmd_opts{h}) {
+if (defined $cmd_opts{H}) {
     my $joined_fields = join(", ", @ALL_FIELDS);
     print "Available fields: $joined_fields\n";
     exit 1;
 }
 
 if ($ONLY_DEP and $ALL_BUGS) {
-    die "Only dependencies (-d) and all bugs (-a) cannot be concurrently set.";
+    die "Only deprecated bugs (-D) and all bugs (-A) cannot be concurrently set.";
 }
 
 # Check query for unavailable fields
