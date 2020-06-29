@@ -140,12 +140,12 @@ $cmd_descr{query}="query the metadata for a particular project for automation pu
 
 =pod
 
-=item * L<B<bugs>|d4j::d4j-bugs/>
+=item * L<B<print-bugs>|d4j::d4j-print-bugs/>
 
 print all active bug IDs for a project.
 
 =cut
-$cmd_descr{bugs}="print all active bug IDs for a project";
+$cmd_descr{"print-bugs"}="print all active bug IDs for a project";
 
 #
 # Issue usage message and quit
