@@ -76,7 +76,7 @@ my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 
 my $project = Project::create_project($PID);
-my $project_dir = "$SCRIPT_DIR/projects/$PID";
+my $project_dir = "$PROJECTS_DIR/$PID";
 
 my $revision_id;
 my $revision_date;

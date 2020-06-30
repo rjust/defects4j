@@ -278,7 +278,7 @@ sub ensure_valid_bid {
     my $pid = shift;
     my $bid = shift;
     my $project = Project::create_project($pid);
-    my $project_dir = "$SCRIPT_DIR/projects/$pid";
+    my $project_dir = "$PROJECTS_DIR/$pid";
 
     if ( ! -e "${project_dir}" ) {
         confess("Error: ${pid}-${bid} is a non-existent bug\n");
