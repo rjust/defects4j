@@ -25,12 +25,12 @@
 
 =head1 NAME
 
-d4j-env -- print environtment information for debugging
+d4j-print-env -- print environtment information for debugging
 
 
 =head1 SYNOPSIS
 
-  d4j-env
+  d4j-print-env
 
 =head1 DESCRIPTION
 
@@ -42,7 +42,7 @@ use strict;
 
 =pod
 
-=item C<d4j::d4j-env::indent_lines(lines, amount)>
+=item C<d4j::d4j-print-env::indent_lines(lines, amount)>
 
 Indent the lines of a multiline string by a given amount (default 4)
 
@@ -61,7 +61,7 @@ sub indent_lines($;$) {
 
 =pod
 
-=item C<d4j::d4j-env::print_entry(key, val)>
+=item C<d4j::d4j-print-env::print_entry(key, val)>
 
 Print a key-value pair for a single line value in a formatted fashion. For
 instance:
@@ -84,7 +84,7 @@ sub print_entry {
 
 =pod
 
-=item C<d4j::d4j-env::print_multiline_entry(key, val)>
+=item C<d4j::d4j-print-env::print_multiline_entry(key, val)>
 
 Print a key-value pair for a multiple line value in a formatted fashion. For
 instance:
@@ -103,7 +103,7 @@ sub print_multiline_entry($;$) {
 
 =pod
 
-=item C<d4j::d4j-env::print_environment_var(var)>
+=item C<d4j::d4j-print-env::print_environment_var(var)>
 
 Lookup an environment variable's value and print it to stdout in a formatted
 fashion.
