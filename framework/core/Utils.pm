@@ -249,9 +249,10 @@ sub read_config_file {
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
-If C<vid> is not valid we terminate with an error message. Otherwise, we return
-a hash mapping C<{bid> to the bug-id parsed from C<vid> and C<type> to the type
-(C<b> or C<f>) of ther version.
+This subroutine terminates with an error message if C<vid> is not valid.
+Otherwise, it returns a hash that maps C<bid> to the bug id that was parsed from
+the provided C<vid>, and C<type> to the version type (C<b> or C<f>) that was
+parsed from the provided C<vid>.
 
 For instance, to check that this is a valid bug and extract the bug-id on
 success, write:
@@ -270,8 +271,8 @@ sub check_vid {
   Utils::ensure_valid_bid(pid, bid)
 
 Ensure C<bid> represents a valid bug-id in project C<pid>, terminating with a
-helpful error message if not. A bug-id is valid for a project if the project
-exists and the bug-id both exists in the project and has not been deprecated.
+detailed error message if not. A bug-id is valid for a project if the project
+exists and the bug-id both exists in the project and is active.
 =cut
 sub ensure_valid_bid {
     @_ == 2 or die $ARG_ERROR;
@@ -281,7 +282,7 @@ sub ensure_valid_bid {
     my $project_dir = "$PROJECTS_DIR/$pid";
 
     if ( ! -e "${project_dir}" ) {
-        confess("Error: ${pid}-${bid} is a non-existent bug\n");
+        confess("Error: ${pid} is a non-existent project\n");
     }
 
     if ( ! -e "${project_dir}/trigger_tests/${bid}" ) {
@@ -298,10 +299,10 @@ sub ensure_valid_bid {
   Utils::ensure_valid_vid(pid, vid)
 
 Ensure C<vid> represents a valid version-id in project C<pid>, terminating with
-a helpful error message if not. A version-id is valid for a project if the
+a detailed error message if not. A version-id is valid for a project if the
 project exists, the version-id is of the form C<d+[bf]>, and the underlying
 bug-id, represented by the leading integer part of the version id, both exists
-in the project and has not been deprecated.
+in the project and is active.
 =cut
 
 sub ensure_valid_vid {
