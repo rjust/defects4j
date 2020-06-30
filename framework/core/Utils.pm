@@ -269,7 +269,7 @@ sub check_vid {
 =pod
   Utils::ensure_valid_bid(pid, bid)
 
-Ensure C<bid> represents a valid bug-id in project C<cid>, terminating with a
+Ensure C<bid> represents a valid bug-id in project C<pid>, terminating with a
 helpful error message if not. A bug-id is valid for a project if the project
 exists and the bug-id both exists in the project and has not been deprecated.
 =cut
@@ -297,7 +297,7 @@ sub ensure_valid_bid {
 =pod
   Utils::ensure_valid_vid(pid, vid)
 
-Ensure C<vid> represents a valid version-id in project C<cid>, terminating with
+Ensure C<vid> represents a valid version-id in project C<pid>, terminating with
 a helpful error message if not. A version-id is valid for a project if the
 project exists, the version-id is of the form C<d+[bf]>, and the underlying
 bug-id, represented by the leading integer part of the version id, both exists
