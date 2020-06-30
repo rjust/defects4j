@@ -30,6 +30,7 @@ use File::Basename;
 use Cwd qw(abs_path);
 
 use lib abs_path("$Bin/../core");
+use Constants;
 
 =pod
 
@@ -159,6 +160,10 @@ _d4j_usage() unless defined $cmd_descr{$cmd};
 
 # Add d4j-prefix to actual script name
 my $script = dirname(abs_path($0)) . "/d4j/d4j-$cmd";
+
+if ($DEBUG) {
+  require(dirname(abs_path($0)) . "/d4j/d4j-print-env")
+}
 
 # Fake $0 for executed script to report "defects4j cmd" in usage messages.
 $0 = basename($0) . " $cmd";
