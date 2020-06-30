@@ -105,6 +105,10 @@ get_bug_ids() {
     cut -f1 -d',' $1 | tr '\n' ' '
 }
 
+# Determine and print all project ids found in the Project directory.
+get_project_ids() {
+    echo $(cd $BASE_DIR/framework/core/Project && ls *.pm | sed -e's/.pm//g')
+}
 
 ################################################################################
 # Determine and print all test suites that exist in the provided suite_dir

@@ -310,7 +310,8 @@ Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
     my $vid = shift;
-    $vid =~ /^(\d+)([bf])$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
+    $vid =~ /^(\d+)(f|b|b\.min|b\.orig)$/
+            or confess("Wrong version_id: '$vid' -- expected: \\d+(f|b|b.min|b.orig)\n");
     return {valid => 1, bid => $1, type => $2};
 }
 
