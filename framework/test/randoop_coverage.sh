@@ -2,6 +2,7 @@
 ################################################################################
 #
 # This script generates coverage data for Randoop generated tests over the defects4j suite.
+# By default, it does so for just 6 projects and bug ids 1-5 in each project.
 # An optional first agument will replace the default project list.
 # An optional second agument will replace the default bid list.
 #
@@ -22,6 +23,7 @@ if [ ! -f test.include ]; then
 fi
 source test.include
 init
+export TMP_DIR
 
 # Don't exit on first error
 HALT_ON_ERROR=0
@@ -33,15 +35,15 @@ master_coverage=$TMP_DIR/coverage
 randoop_dir=$TMP_DIR/randoop
 
 if [ -z "$1" ] ; then
-# Generate tests for all projects
+    # Deafult = generate tests for 6 projects
     projects=( Chart Closure Lang Math Mockito Time )
-# Generate tests for all bids
+    # Default = first 5 bug ids only
     bids=( 1 2 3 4 5 )
 else
 # Generate tests for supplied project list
     projects=( $1 )
     if [ -z "$2" ] ; then
-# Generate tests for all bids
+        # Default = first 5 bug ids only
         bids=( 1 2 3 4 5 )
     else
 # Generate tests for supplied bid list
@@ -50,7 +52,7 @@ else
 fi
 
 echo "Projects: ${projects[@]}"
-echo "Bids: ${bids[@]}"
+echo "Bug ids: ${bids[@]}"
 
 # We want the 'fixed' version of the sample.
 type=f
@@ -81,3 +83,5 @@ done
 
 # delete tmp file directory
 rm -rf $randoop_dir
+
+../util/show_coverage.pl "$TMP_DIR"/coverage

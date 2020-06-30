@@ -48,7 +48,7 @@ our @ISA = qw(Exporter);
 my $dir = dirname(abs_path(__FILE__));
 
 # Enable debugging and verbose output
-our $DEBUG = 0;
+our $DEBUG = $ENV{'D4J_DEBUG'} // 0;
 
 =pod
 
@@ -62,6 +62,8 @@ Defects4J sets the timezone to America/Los_Angeles to ensure that all defects
 are reproducible and that test suites are generated and executed using the same
 timezone setting.
 
+=back
+
 =cut
 # TODO: Extract all exported environment variables into a user-visible
 # config file.
@@ -69,7 +71,15 @@ $ENV{'TZ'} = "America/Los_Angeles";
 
 =pod
 
-=head2 Exported properties (I<default value>)
+=head2 Exported properties
+
+This module exports the following properties. The default value for each
+property appears in parentheses (I<default value>).
+
+The default value for each property can be overridden by setting and exporting
+an evironment variable with the same name, prior to calling Defects4J.
+For example, the default value for C<PROJECTS_DIR> can be overridden with:
+C<export PROJECTS_DIR=my_project_directory>.
 
 =over 4
 
@@ -184,18 +194,18 @@ our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_s
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
 =cut
-our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} or "$SCRIPT_DIR/projects/defects4j.build.xml");
+our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} // "$SCRIPT_DIR/projects/defects4j.build.xml");
 
 =pod
 
 =item C<GRADLE_LOCAL_HOME_DIR>
 
-The directory name of the local gradle repository (.gradle_local_home).
+The directory name of the local gradle repository (I<.gradle_local_home>).
 
 =back
 
 =cut
-our $GRADLE_LOCAL_HOME_DIR = ".gradle_local_home";
+our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_home");
 
 #
 # Check whether Defects4J has been properly initialized:
@@ -222,8 +232,6 @@ unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
 # Append Major's executables to the PATH -> ant may not be installed by default
 $ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
-# set name of mml file that provides definitions of used mutation operators
-$ENV{MML}="$MAJOR_ROOT/mml/all_mutants.mml.bin" unless defined $ENV{'MML'};
 
 # Constant strings used for errors
 our $ARG_ERROR       = "Invalid number of arguments!";
@@ -235,11 +243,13 @@ our $CONFIG_PID = "pid";
 our $CONFIG_VID = "vid";
 
 # Filename which stores build properties
-our $PROP_FILE       = "defects4j.build.properties";
+our $PROP_FILE = "defects4j.build.properties";
+
 # Keys of stored properties
 our $PROP_EXCLUDE         = "d4j.tests.exclude";
 our $PROP_INSTRUMENT      = "d4j.classes.instrument";
 our $PROP_MUTATE          = "d4j.classes.mutate";
+our $PROP_MUT_OPS         = "d4j.major.mutops";
 our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
@@ -248,11 +258,16 @@ our $PROP_TESTS_TRIGGER   = "d4j.tests.trigger";
 our $PROP_PID             = "d4j.project.id";
 our $PROP_BID             = "d4j.bug.id";
 
+# Tags for local git repo in working directory
 our $TAG_POST_FIX         = "POST_FIX_REVISION";
 our $TAG_POST_FIX_COMP    = "POST_FIX_COMPILABLE";
 our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
+
+# Filenames for test results
+our $FILE_ALL_TESTS     = "all_tests";
+our $FILE_FAILING_TESTS = "failing_tests";
 
 our @EXPORT = qw(
 $SCRIPT_DIR
@@ -283,6 +298,7 @@ $PROP_FILE
 $PROP_EXCLUDE
 $PROP_INSTRUMENT
 $PROP_MUTATE
+$PROP_MUT_OPS
 $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
 $PROP_CLASSES_MODIFIED
@@ -296,6 +312,9 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$FILE_ALL_TESTS
+$FILE_FAILING_TESTS
 
 $DEBUG
 );

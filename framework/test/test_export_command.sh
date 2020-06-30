@@ -133,7 +133,60 @@ test_ExportTestClassesDir() {
     rm -rf "$test_dir"
 }
 
+test_ExportClassesDir() {
+    local pid=$1
+    local test_dir="$TMP_DIR/test_ExportClassesDir"
+    rm -rf "$test_dir"; mkdir -p "$test_dir"
 
+    # Iterate over all bugs
+    local bids=$(cut -f1 -d',' "$BASE_DIR/framework/projects/$pid/commit-db")
+    for bid in $bids; do
+        local work_dir="$test_dir/$pid/$bid"
+        mkdir -p "$work_dir"
+
+        defects4j checkout -p "$pid" -v "${bid}b" -w "$work_dir" || die "Checkout of $pid-$bid has failed"
+
+        local classes_dir=""
+        classes_dir=$(_run_export_command "$work_dir" "dir.bin.classes")
+        if [ $? -ne 0 ]; then
+            die "Export command of $pid-$bid has failed"
+        fi
+
+        local expected=""
+        if [ "$pid" == "Chart" ]; then
+            expected="build"
+        elif [ "$pid" == "Cli" ] || [ "$pid" == "Codec" ] || [ "$pid" == "Collections" ] || [ "$pid" == "Compress" ] || [ "$pid" == "Csv" ] || [ "$pid" == "Gson" ] || [ "$pid" == "JacksonCore" ] || [ "$pid" == "JacksonDatabind" ] || [ "$pid" == "JacksonXml" ] || [ "$pid" == "Jsoup" ] || [ "$pid" == "JxPath" ] || [ "$pid" == "Lang" ] || [ "$pid" == "Math" ]; then
+            expected="target/classes"
+        elif [ "$pid" == "Closure" ]; then
+            expected="build/classes"
+        elif [ "$pid" == "Mockito" ]; then
+            if [ "$bid" -ge "1" ] && [ "$bid" -le "11" ]; then
+                 expected="build/classes/main"
+            elif [ "$bid" -ge "12" ] && [ "$bid" -le "17" ]; then
+                expected="target/classes"
+            elif [ "$bid" -ge "18" ] && [ "$bid" -le "21" ]; then
+                expected="build/classes/main"
+            elif [ "$bid" -ge "22" ] && [ "$bid" -le "38" ]; then
+                expected="target/classes"
+            fi
+        elif [ "$pid" == "Time" ]; then
+            if [ "$bid" -ge "1" ] && [ "$bid" -le "11" ]; then
+                expected="target/classes"
+            elif [ "$bid" -ge "12" ] && [ "$bid" -le "27" ]; then
+                expected="build/classes"
+            fi
+        fi
+
+        # Assert
+        [ "$classes_dir" == "$expected" ] || die "Classes directory of $pid-$bid ('$classes_dir') is not the one expected ('$expected')"
+
+        # Clean up
+        rm -rf "$work_dir"
+    done
+
+    # Clean up
+    rm -rf "$test_dir"
+}
 # Print usage message and exit
 usage() {
     local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
@@ -167,21 +220,19 @@ if [ "$PIDS" == "" ]; then
 fi
 
 for PID in $PIDS; do
-    # Run all test cases (and log all results), regardless of whether errors occur
     HALT_ON_ERROR=0
-
+    # Run all test cases (and log all results), regardless of whether errors occur
     test_ExportTestClassesDir $PID || die "Test 'test_ExportTestClassesDir' has failed!"
-
-    HALT_ON_ERROR=1
-
-    # Print a summary of what went wrong
-    if [ "$ERROR" -ne "0" ]; then
-        printf '=%.s' $(seq 1 80) 1>&2
-        echo 1>&2
-        echo "The following errors occurred:" 1>&2
-        cat $LOG 1>&2
-    fi
-
-    # Indicate whether an error occurred
-    exit "$ERROR"
+    test_ExportClassesDir $PID || die "Test 'test_ExportClassesDir' has failed!"
 done
+
+# Print a summary of what went wrong
+if [ "$ERROR" -ne "0" ]; then
+    printf '=%.s' $(seq 1 80) 1>&2
+    echo 1>&2
+    echo "The following errors occurred:" 1>&2
+    cat $LOG 1>&2
+fi
+
+# Indicate whether an error occurred
+exit "$ERROR"

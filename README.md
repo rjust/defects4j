@@ -98,6 +98,10 @@ Steps to set up Defects4J
 4. Check installation:
     - `defects4j info -p Lang`
 
+On some platforms such as Windows, you might need to use `perl "fullpath"\defects4j`
+where these instructions say to use `defects4j`.
+
+
 Using Defects4J
 ================
 

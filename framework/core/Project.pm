@@ -360,7 +360,8 @@ sub checkout_vid {
     my $cmd = "cd $work_dir" .
               " && git init 2>&1" .
               " && git config user.name defects4j 2>&1" .
-              " && git config user.email defects4j\@localhost 2>&1";
+              " && git config user.email defects4j\@localhost 2>&1" .
+              " && git config core.autocrlf false 2>&1";
     Utils::exec_cmd($cmd, "Init local repository")
             or confess("Couldn't init local git repository!");
 
@@ -751,8 +752,9 @@ sub mutate {
     }
     close(IN);
     # Update properties
-    my $list = join(",", @classes);
-    my $config = {$PROP_MUTATE => $list};
+    my $list_classes = join(",", @classes);
+    my $list_mut_ops = join(",", @{$mut_ops});
+    my $config = {$PROP_MUTATE => $list_classes, $PROP_MUT_OPS => $list_mut_ops};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Create mutation definitions (mml file)
@@ -766,7 +768,11 @@ sub mutate {
     $ENV{MML} = $mml_bin;
 
     # Mutate and compile sources
-    if (! $self->_call_major("mutate")) {
+    my $ret = $self->_call_major("mutate");
+
+    delete($ENV{MML});
+
+    if (! $ret) {
         return -1;
     }
 
@@ -844,13 +850,13 @@ sub mutation_analysis_ext {
 
 =pod
 
-=head2 VCS related subroutines
+=head2 Vcs related subroutines
 
 The following delegate subroutines are implemented merely for convenience.
 
   $project->lookup(version_id)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub lookup {
@@ -862,7 +868,7 @@ sub lookup {
 
   $project->lookup_vid(revision_id)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub lookup_vid {
@@ -874,7 +880,7 @@ sub lookup_vid {
 
   $project->num_revision_pairs()
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub num_revision_pairs {
@@ -886,7 +892,7 @@ sub num_revision_pairs {
 
   $project->get_bug_ids()
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub get_bug_ids {
@@ -898,7 +904,7 @@ sub get_bug_ids {
 
   $project->contains_version_id(vid)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub contains_version_id {
@@ -910,7 +916,7 @@ sub contains_version_id {
 
   $project->diff(revision_id_1, revision_id_2 [, path])
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub diff {
@@ -921,7 +927,7 @@ sub diff {
 
   $project->export_diff(revision_id_1, revision_id_2, out_file [, path])
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub export_diff {
@@ -933,7 +939,7 @@ sub export_diff {
 
   $project->apply_patch(work_dir, patch_file)
 
-Delegate to the L<VCS> backend.
+Delegate to the L<Vcs> backend.
 
 =cut
 sub apply_patch {
@@ -1030,9 +1036,14 @@ sub _call_major {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
     $option_str = "-Dbuild.compiler=major.ant.MajorCompiler " . ($option_str // "");
+    # Prepend path with Major's executables
+    my $path = $ENV{PATH};
     $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
     $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
-    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    my $ret = $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    # Reset path for downstream calls to ant
+    $ENV{PATH} = $path;
+    return($ret);
 }
 
 #

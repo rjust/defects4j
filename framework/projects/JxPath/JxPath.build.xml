@@ -45,7 +45,7 @@ of the checked-out project version.
         <path refid="compile.classpath"/>
         <pathelement location="${d4j.workdir}/src/test"/>
     </path>
-
+    <property name="build.classes" value="${classes.dir}" />
     <property name="test.home" value="${d4j.workdir}/src/test" />
     <property name="test.dir" value="${test.home}" />
     <property name="build.home" value="${classes.dir}/.." />
