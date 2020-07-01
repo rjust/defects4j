@@ -28,7 +28,7 @@ d4j-query -- query the metadata for a project to obtain CSV-formatted results.
 
 =head1 SYNOPSIS
 
-  d4j-query -p project_id [-q query] [-o output_file] [-h] [-D|-A]
+  d4j-query -p pid [-q query] [-o output_file] [-h] [-D|-A]
 
 =head1 DESCRIPTION
 
@@ -41,7 +41,7 @@ the list of available active bug IDs is returned.
 
 =over 4
 
-=item -p C<project_id>
+=item -p C<pid>
 
 The ID of the project for which metadata is requested. A project ID
 must be provided to use this utility.

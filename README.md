@@ -142,10 +142,10 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 | [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)           | Checkout a buggy or a fixed project version                                                       |
 | [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)             | Compile sources and developer-written tests of a buggy or a fixed project version                 |
 | [test](http://defects4j.org/html_doc/d4j/d4j-test.html)                   | Run a single test method or a test suite on a buggy or a fixed project version                    |
-| [print.bugs](http://defects4j.org/html_doc/d4j/d4j-print-bugs.html)       | Print the list of active bug IDs for a specific project                                           |
 | [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)           | Run mutation analysis on a buggy or a fixed project version                                       |
 | [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)           | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
+| [bids](http://defects4j.org/html_doc/d4j/d4j-bids.html)                   | Print the list of active bug IDs for a specific project                                           |
 | [export](http://defects4j.org/html_doc/d4j/d4j-export.html)               | Export version-specific properties such as classpaths, directories, or lists of tests             |
 | [query](http://defects4j.org/html_doc/d4j/d4j-query.html)                 | Query the metadata to generate a CSV file of requested information for a specific project         |
 
