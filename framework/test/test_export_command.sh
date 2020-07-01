@@ -40,12 +40,14 @@ _run_export_command() {
 
 # ------------------------------------------------------------------- Test Cases
 
-test_ExportTestClassesDir() {
+test_export_properties() {
     local pid=$1
-    local test_dir="$TMP_DIR/test_ExportTestClassesDir"
+    local test_dir="$TMP_DIR/test_export_properties"
     rm -rf "$test_dir"; mkdir -p "$test_dir"
 
+    #################################################################
     # Iterate over all bugs
+    #################################################################
     local bids=$(cut -f1 -d',' "$BASE_DIR/framework/projects/$pid/commit-db")
     for bid in $bids; do
         local work_dir="$test_dir/$pid/$bid"
@@ -53,6 +55,9 @@ test_ExportTestClassesDir() {
 
         defects4j checkout -p "$pid" -v "${bid}b" -w "$work_dir" || die "Checkout of $pid-$bid has failed"
 
+        #################################################################
+        # Check "dir.bin.tests"
+        #################################################################
         local test_classes_dir=""
         test_classes_dir=$(_run_export_command "$work_dir" "dir.bin.tests")
         if [ $? -ne 0 ]; then
@@ -125,27 +130,9 @@ test_ExportTestClassesDir() {
         # Assert
         [ "$test_classes_dir" == "$expected" ] || die "Actual test classes directory of $pid-$bid ('$test_classes_dir') is not the one expected ('$expected')"
 
-        # Clean up
-        rm -rf "$work_dir"
-    done
-
-    # Clean up
-    rm -rf "$test_dir"
-}
-
-test_ExportClassesDir() {
-    local pid=$1
-    local test_dir="$TMP_DIR/test_ExportClassesDir"
-    rm -rf "$test_dir"; mkdir -p "$test_dir"
-
-    # Iterate over all bugs
-    local bids=$(cut -f1 -d',' "$BASE_DIR/framework/projects/$pid/commit-db")
-    for bid in $bids; do
-        local work_dir="$test_dir/$pid/$bid"
-        mkdir -p "$work_dir"
-
-        defects4j checkout -p "$pid" -v "${bid}b" -w "$work_dir" || die "Checkout of $pid-$bid has failed"
-
+        #################################################################
+        # Check "dir.bin.classes"
+        #################################################################
         local classes_dir=""
         classes_dir=$(_run_export_command "$work_dir" "dir.bin.classes")
         if [ $? -ne 0 ]; then
@@ -180,13 +167,18 @@ test_ExportClassesDir() {
         # Assert
         [ "$classes_dir" == "$expected" ] || die "Classes directory of $pid-$bid ('$classes_dir') is not the one expected ('$expected')"
 
+        #################################################################
         # Clean up
+        #################################################################
         rm -rf "$work_dir"
     done
 
+    #################################################################
     # Clean up
+    #################################################################
     rm -rf "$test_dir"
 }
+
 # Print usage message and exit
 usage() {
     local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
@@ -222,8 +214,7 @@ fi
 for PID in $PIDS; do
     HALT_ON_ERROR=0
     # Run all test cases (and log all results), regardless of whether errors occur
-    test_ExportTestClassesDir $PID || die "Test 'test_ExportTestClassesDir' has failed!"
-    test_ExportClassesDir $PID || die "Test 'test_ExportClassesDir' has failed!"
+    test_export_properties $PID || die "Test 'test_export_properties' has failed!"
 done
 
 # Print a summary of what went wrong
