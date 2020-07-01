@@ -51,10 +51,8 @@ instance:
 
 =cut
 sub print_entry {
-    my $key = shift;
-    my $val = shift;
+    my ($key, $val, $val_start_col) = @_;
     $val =~ s/^\s+|\s+$//g;
-    my $val_start_col = shift;
     if (! defined $val_start_col) {
         $val_start_col = 30;
     }
@@ -77,8 +75,7 @@ instance:
 
 =cut
 sub print_multiline_entry($;$) {
-    my $key = shift;
-    my $val = shift;
+    my ($key, $val) = @_;
     print("$key:\n" . "  ".join("\n  ", split(/\n/, "$val")) . "\n");
 }
 
