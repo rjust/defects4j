@@ -178,7 +178,7 @@ in a specific project.
 By default, `defects4j query` returns a list of active bug IDs for a project.
 To request specific metadata, the `-q` flag should be provided with a 
 comma-separated list of variables from the list below. For example, 
-`defects4j query -p Chart -q "report.id,report.url" will provide the a list of
+`defects4j query -p Chart -q "report.id,report.url"` will provide the a list of
 all active bug IDs, along with the bug report ID and bug report URL for each.
 
 
