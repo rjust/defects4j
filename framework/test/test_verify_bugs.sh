@@ -20,7 +20,7 @@ source test.include
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
+    local known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
     echo "Project ids:"
     for pid in $known_pids; do
