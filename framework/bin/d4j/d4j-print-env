@@ -40,6 +40,8 @@ This script displays environment information to help with debugging
 use warnings;
 use strict;
 
+use Constants;
+
 =pod
 
 =item C<d4j::d4j-print-env::print_entry(key, val)>
@@ -92,7 +94,7 @@ fashion.
 sub print_environment_var {
     @_ >= 1 || die $ARG_ERROR;
     my $key = shift;
-    my $val = "$ENV{$key}" || "(none)";
+    my $val = $ENV{$key} // "(none)";
     print_entry ($key, $val);
 }
 
