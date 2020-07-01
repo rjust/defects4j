@@ -75,7 +75,7 @@ instance:
       OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
 
 =cut
-sub print_multiline_entry($;$) {
+sub print_multiline_entry {
     @_ >= 2 || die $ARG_ERROR;
     my ($key, $val) = @_;
     print("$key:\n" . "  ".join("\n  ", split(/\n/, "$val")) . "\n");
