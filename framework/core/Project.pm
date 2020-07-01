@@ -69,9 +69,53 @@ Every submodule of Project represents one of the open source projects in the dat
 
 JFreeChart (L<Vcs::Svn> backend)
 
+=item * L<Cli|Project::Cli>
+
+Commons CLI (L<Vcs::Git> backend)
+
 =item * L<Closure|Project::Closure>
 
 Closure compiler (L<Vcs::Git> backend)
+
+=item * L<Codec|Project::Codec>
+
+Commons Codec (L<Vcs::Git> backend)
+
+=item * L<Collections|Project::Collections>
+
+Commons Collections (L<Vcs::Git> backend)
+
+=item * L<Compress|Project::Compress>
+
+Commons Compress (L<Vcs::Git> backend)
+
+=item * L<Csv|Project::Csv>
+
+Commons CSV (L<Vcs::Git> backend)
+
+=item * L<Gson|Project::Gson>
+
+Google Gson (L<Vcs::Git> backend)
+
+=item * L<JacksonCore|Project::JacksonCore>
+
+Jackson JSON Parser (L<Vcs::Git> backend)
+
+=item * L<JacksonDatabind|Project::JacksonDatabind>
+
+Jackson Data Bindings (L<Vcs::Git> backend)
+
+=item * L<JacksonXml|Project::JacksonXml>
+
+Jackson XML Parser (L<Vcs::Git> backend)
+
+=item * L<Jsoup|Project::Jsoup>
+
+Jsoup HTML Parser (L<Vcs::Git> backend)
+
+=item * L<JxPath|Project::JxPath>
+
+Commons JxPath (L<Vcs::Git> backend)
 
 =item * L<Lang|Project::Lang>
 
