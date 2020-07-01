@@ -78,7 +78,7 @@ instance:
 
 =cut
 sub print_multiline_entry {
-    @_ >= 2 || die $ARG_ERROR;
+    @_ == 2 || die $ARG_ERROR;
     my ($key, $val) = @_;
     print("$key:\n" . "  ".join("\n  ", split(/\n/, "$val")) . "\n");
 }
@@ -92,8 +92,8 @@ fashion.
 
 =cut
 sub print_environment_var {
-    @_ >= 1 || die $ARG_ERROR;
-    my $key = shift;
+    @_ == 1 || die $ARG_ERROR;
+    my ($key) = @_;
     my $val = $ENV{$key} // "(none)";
     print_entry ($key, $val);
 }
