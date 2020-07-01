@@ -42,25 +42,6 @@ use strict;
 
 =pod
 
-=item C<d4j::d4j-print-env::indent_lines(lines, amount)>
-
-Indent the lines of a multiline string by a given amount (default 4)
-
-=cut
-sub indent_lines($;$) {
-    my $lines = shift;
-    my $amount = shift;
-
-    if (! defined $amount) {
-        $amount = 4;
-    }
-
-    my $indent = ' ' x $amount;
-    "${indent}".join("\n${indent}", split(/\n/, $lines));
-}
-
-=pod
-
 =item C<d4j::d4j-print-env::print_entry(key, val)>
 
 Print a key-value pair for a single line value in a formatted fashion. For
@@ -98,7 +79,7 @@ instance:
 sub print_multiline_entry($;$) {
     my $key = shift;
     my $val = shift;
-    print("$key:\n" . indent_lines("$val", 2) . "\n");
+    print("$key:\n" . "  ".join("\n  ", split(/\n/, "$val")) . "\n");
 }
 
 =pod
