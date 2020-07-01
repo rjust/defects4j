@@ -325,6 +325,15 @@ Terms commonly used in Defects4J
 
 
 
+## Troubleshooting
+
+* If you encounter the following error when running `./initialize-project-and-collect-issues.pl`:
+
+   ```
+  Can't locate JSON/Parse.pm in @INC (you may need to install the JSON::Parse module)
+   ```
+   - Make sure that you have installed all of the perl dependencies listed in [cpanfile](https://github.com/rjust/defects4j/blob/master/cpanfile). As mentioned in the top-level [README](https://github.com/rjust/defects4j/blob/master/README.md), these can automatically installed by running: `cpanm --installdeps .`
+   
 ## Limitations of the bug-mining framework
 
 - Although some scripts in the bug-mining framework are agnostic to the version
