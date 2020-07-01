@@ -79,12 +79,8 @@ instance:
 =cut
 sub print_multiline_entry {
     @_ >= 2 || die $ARG_ERROR;
-    my ($key) = @_;
-    shift;
-    print("$key:\n");
-    foreach my $line (@_) {
-        print("  $line");
-    }
+    my ($key, @lines) = @_;
+    print("$key:\n  " . join("  ", @lines));
 }
 
 =pod
