@@ -51,6 +51,7 @@ instance:
 
 =cut
 sub print_entry {
+    @_ >= 2 || die $ARG_ERROR;
     my ($key, $val, $val_start_col) = @_;
     $val =~ s/^\s+|\s+$//g;
     if (! defined $val_start_col) {
@@ -75,6 +76,7 @@ instance:
 
 =cut
 sub print_multiline_entry($;$) {
+    @_ >= 2 || die $ARG_ERROR;
     my ($key, $val) = @_;
     print("$key:\n" . "  ".join("\n  ", split(/\n/, "$val")) . "\n");
 }
@@ -88,11 +90,9 @@ fashion.
 
 =cut
 sub print_environment_var {
+    @_ >= 1 || die $ARG_ERROR;
     my $key = shift;
-    my $val = "<UNINITIALIZED>";
-    if (exists $ENV{$key}) {
-        $val = "$ENV{$key}";
-    }
+    my $val = "$ENV{$key}" || "(none)";
     print_entry ($key, $val);
 }
 
