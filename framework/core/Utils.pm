@@ -306,12 +306,68 @@ sub bug_report_info {
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
+This subroutine terminates with an error message if C<vid> is not valid.
+Otherwise, it returns a hash that maps C<bid> to the bug id that was parsed from
+the provided C<vid>, and C<type> to the version type (C<b> or C<f>) that was
+parsed from the provided C<vid>.
+
+For instance, to check that this is a valid bug and extract the bug-id on
+success, write:
+
+  my bid = Utils::check_vid(vid)->{bid};
+
 =cut
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
     my $vid = shift;
     $vid =~ /^(\d+)([bf])$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
     return {valid => 1, bid => $1, type => $2};
+}
+
+=pod
+  Utils::ensure_valid_bid(pid, bid)
+
+Ensure C<bid> represents a valid bug-id in project C<pid>, terminating with a
+detailed error message if not. A bug-id is valid for a project if the project
+exists and the bug-id both exists in the project and is active.
+=cut
+sub ensure_valid_bid {
+    @_ == 2 or die $ARG_ERROR;
+    my $pid = shift;
+    my $bid = shift;
+    my $project = Project::create_project($pid);
+    my $project_dir = "$PROJECTS_DIR/$pid";
+
+    if ( ! -e "${project_dir}" ) {
+        confess("Error: ${pid} is a non-existent project\n");
+    }
+
+    if ( ! -e "${project_dir}/trigger_tests/${bid}" ) {
+        confess("Error: ${pid}-${bid} is a non-existent bug\n");
+    }
+
+    my @bug_ids = $project->get_bug_ids;
+    if ( ! grep( /^$bid$/, @bug_ids) ) {
+        confess("Error: ${pid}-${bid} is a deprecated bug\n");
+    }
+}
+
+=pod
+  Utils::ensure_valid_vid(pid, vid)
+
+Ensure C<vid> represents a valid version-id in project C<pid>, terminating with
+a detailed error message if not. A version-id is valid for a project if the
+project exists, the version-id is of the form C<d+[bf]>, and the underlying
+bug-id, represented by the leading integer part of the version id, both exists
+in the project and is active.
+=cut
+
+sub ensure_valid_vid {
+    @_ == 2 or die $ARG_ERROR;
+    my $pid = shift;
+    my $vid = shift;
+    my $bid = check_vid($vid)->{bid};
+    ensure_valid_bid($pid, $bid);
 }
 
 =pod
