@@ -124,6 +124,15 @@ $cmd_descr{info}="print information for a specific project or bug";
 
 export a version-specific property.
 
+=cut
+$cmd_descr{"pids"}="prints all available project ids";
+
+=pod
+
+=item * L<B<pids>|d4j::d4j-pids/>
+
+prints a list of all available project ids.
+
 =back
 
 =cut
