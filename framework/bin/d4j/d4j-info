@@ -57,7 +57,6 @@ use strict;
 use Constants;
 use Project;
 use Getopt::Std;
-use Carp qw(confess);
 
 #
 # Issue usage message and quit

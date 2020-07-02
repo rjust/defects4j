@@ -335,7 +335,7 @@ sub ensure_valid_bid {
     @_ == 2 or die $ARG_ERROR;
     my $pid = shift;
     my $bid = shift;
-    my $project = Project::create_project($pid);
+
     my $project_dir = "$PROJECTS_DIR/$pid";
 
     if ( ! -e "${project_dir}" ) {
@@ -346,6 +346,8 @@ sub ensure_valid_bid {
         confess("Error: ${pid}-${bid} is a non-existent bug\n");
     }
 
+    # Instantiate the project and get the list of all active bug ids
+    my $project = Project::create_project($pid);
     my @bug_ids = $project->get_bug_ids;
     if ( ! grep( /^$bid$/, @bug_ids) ) {
         confess("Error: ${pid}-${bid} is a deprecated bug\n");
