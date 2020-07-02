@@ -145,7 +145,7 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 | [mutation](http://defects4j.org/html_doc/d4j/d4j-mutation.html)           | Run mutation analysis on a buggy or a fixed project version                                       |
 | [coverage](http://defects4j.org/html_doc/d4j/d4j-coverage.html)           | Run code coverage analysis on a buggy or a fixed project version                                  |
 | [monitor.test](http://defects4j.org/html_doc/d4j/d4j-monitor.test.html)   | Monitor the class loader during the execution of a single test or a test suite                    |
-| [bids](http://defects4j.org/html_doc/d4j/d4j-bids.html)                   | Print the list of active bug IDs for a specific project                                           |
+| [bids](http://defects4j.org/html_doc/d4j/d4j-bids.html)                   | Print the list of active or deprecated bug IDs for a specific project                                           |
 | [export](http://defects4j.org/html_doc/d4j/d4j-export.html)               | Export version-specific properties such as classpaths, directories, or lists of tests             |
 | [query](http://defects4j.org/html_doc/d4j/d4j-query.html)                 | Query the metadata to generate a CSV file of requested information for a specific project         |
 
@@ -186,11 +186,11 @@ all active bug IDs, along with the bug report ID and bug report URL for each.
 |-----------------------|-------------------------------------------------------------------------------------|
 | bug.id                | Assigned bug IDs (included in all results)                                          |
 | project.id            | Assigned project ID                                                                 |
-| project.name          | Original repository name                                                            |
+| project.name          | Original project name                                                            |
 | project.build.file    | Location of the Defects4J build file for the project                                |
 | project.vcs           | Version control system used by the project                                          |
 | project.repository    | Location of the project repository                                                  |
-| project.commit.db     | Location of the CSV containing information on that bug                              |
+| project.bugs.csv      | Location of the CSV containing information on that bug                              |
 | revision.id.buggy     | Commit hashes for the buggy version of each bug                                     |
 | revision.id.fixed     | Commit hashes for the fixed version of each bug                                     |
 | revision.date.buggy   | Date of the buggy commit for each bug                                               |
