@@ -276,7 +276,8 @@ exists and the bug-id both exists in the project and is active.
 =cut
 sub ensure_valid_bid {
     @_ == 2 or die $ARG_ERROR;
-    my ($pid, $bid) = @_;
+    my $pid = shift;
+    my $bid = shift;
     my $project = Project::create_project($pid);
     my $project_dir = "$PROJECTS_DIR/$pid";
 
@@ -306,7 +307,8 @@ in the project and is active.
 
 sub ensure_valid_vid {
     @_ == 2 or die $ARG_ERROR;
-    my ($pid, $vid) = @_;
+    my $pid = shift;
+    my $vid = shift;
     my $bid = check_vid($vid)->{bid};
     ensure_valid_bid($pid, $bid);
 }
