@@ -48,7 +48,7 @@ test_export_properties() {
     #################################################################
     # Iterate over all bugs
     #################################################################
-    local bids=$(cut -f1 -d',' "$BASE_DIR/framework/projects/$pid/commit-db")
+    local bids="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
     for bid in $bids; do
         local work_dir="$test_dir/$pid/$bid"
         mkdir -p "$work_dir"

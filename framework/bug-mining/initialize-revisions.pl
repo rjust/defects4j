@@ -52,7 +52,7 @@ The subproject to be mined (if not the root directory)
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the commit-db, are considered.
+Per default all bug ids, listed in the active-bugs csv, are considered.
 
 =back
 

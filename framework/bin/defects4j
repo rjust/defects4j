@@ -138,6 +138,24 @@ prints a list of all available project ids.
 =cut
 $cmd_descr{export}="export a version-specific property";
 
+=pod
+
+=item * L<B<query>|d4j::d4j-query/>
+
+query the metadata for a particular project for automation purposes.
+
+=cut
+$cmd_descr{query}="query the metadata for a particular project for automation purposes";
+
+=pod
+
+=item * L<B<bids>|d4j::d4j-bids/>
+
+print all active bug IDs for a specific project.
+
+=cut
+$cmd_descr{bids}="print all active bug IDs for a specific project";
+
 #
 # Issue usage message and quit
 #

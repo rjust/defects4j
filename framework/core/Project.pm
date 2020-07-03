@@ -51,7 +51,7 @@ A specific project instance can be created with C<create_project(project_id)>.
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
-                              "$PROJECTS_DIR/$PID/commit-db");
+                              "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
 
     return $class->SUPER::new($PID, $name, $vcs);
 }
@@ -144,8 +144,6 @@ use Constants;
 use Utils;
 use Mutation;
 use Carp qw(confess);
-
-our $DIR_LAYOUT_CSV = "dir-layout.csv";
 
 =pod
 
@@ -1168,7 +1166,7 @@ sub _write_props {
 sub _cache_layout_map {
     my $self = shift;
     my $pid = $self->{pid};
-    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     return unless -e $map_file;
 
     open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
@@ -1190,7 +1188,7 @@ sub _add_to_layout_map {
     my ($self, $rev_id, $src_dir, $test_dir) = @_;
 
     my $pid = $self->{pid};
-    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     Utils::append_to_file_unless_matches($map_file, "${rev_id},${src_dir},${test_dir}\n", qr/^${rev_id}/);
 }
 

@@ -50,7 +50,7 @@ sub new {
     my $name = "jfreechart";
     my $vcs = Vcs::Svn->new($PID,
                             "file://$REPO_DIR/$name/trunk",
-                            "$PROJECTS_DIR/$PID/commit-db",
+                            "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
                             \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs);
