@@ -41,77 +41,8 @@ use warnings;
 use strict;
 
 use Constants;
+use Utils;
 
-=pod
-
-=item C<d4j::d4j-env::print_entry(key, val)>
-
-Print a key-value pair for a single line value in a formatted fashion. For
-instance:
-
-    SHELL................./bin/bash
-
-=cut
-sub print_entry {
-    @_ >= 2 || die $ARG_ERROR;
-    my ($key, $val, $val_start_col) = @_;
-    $val =~ s/^\s+|\s+$//g;
-    if (! defined $val_start_col) {
-        $val_start_col = 30;
-    }
-    my $num_seps = $val_start_col - length($key);
-    print("$key" . ('.' x $num_seps) . "${val}\n");
-
-}
-
-=pod
-
-=item C<d4j::d4j-env::print_multiline_entry(key, val)>
-
-Print a key-value pair for a multiple line value in a formatted fashion. For
-instance:
-
-    Java Version:
-      openjdk version "1.8.0_232"
-      OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
-      OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
-
-=cut
-sub print_multiline_entry {
-    @_ >= 2 || die $ARG_ERROR;
-    my ($key, @lines) = @_;
-    print("$key:\n  " . join("  ", @lines));
-}
-
-=pod
-
-=item C<d4j::d4j-env::print_environment_var(var)>
-
-Lookup an environment variable's value and print it to stdout in a formatted
-fashion.
-
-=cut
-sub print_environment_var {
-    @_ == 1 || die $ARG_ERROR;
-    my ($key) = @_;
-    my $val = $ENV{$key} // "(none)";
-    print_entry ($key, $val);
-}
-
-# General environment
-print_environment_var("PWD");
-print_environment_var("SHELL");
-print_environment_var("TZ");
-
-# Java environment
-print_environment_var("JAVA_HOME");
-print_entry("Java Exec", `which java`);
-print_entry("Java Exec Resolved", `realpath \$(which java)`);
-print_multiline_entry("Java Version", `java -version 2>&1`);
-
-# VCS
-print_entry("Git version", `git --version`);
-print_entry("SVN version", `svn --version --quiet`);
-print_entry("Perl version", $^V);
+Utils::print_env();
 
 1;
