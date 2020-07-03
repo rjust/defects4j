@@ -115,25 +115,26 @@ A Vcs object has to be instantiated with:
 
 =item * Repository url
 
-=item * File name of the commit database (commit-db), see below for details
+=item * File name of the commit database (L<BUGS_CSV_ACTIVE|Constants>), see below for details
 
 =item * Reference to post-checkout hook (optional) -- if provided, this method is called after each checkout.
 
 =back
 
-=head2 commit-db
+=head2 active-bugs csv
 
-The commit-db (csv) file has the structure: C<bug_id,revision_buggy,revision_fixed>.
+The L<BUGS_CSV_ACTIVE|Constants> file has the structure: L<BUGS_CSV_BUGID|Constants>, 
+L<BUGS_CSV_COMMIT_BUGGY|Constants>, L<BUGS_CSV_COMMIT_FIXED|Constants>, 
+L<BUGS_CSV_ISSUE_ID|Constants>, L<BUGS_CSV_ISSUE_URL|Constants>.
 
 Example for Svn:
 
-  1,1024,1025
-  2,1064,1065
+  1,2264,2266,983,https://sourceforge.net/p/jfreechart/bugs/983
+  2,2240,2242,959,https://sourceforge.net/p/jfreechart/bugs/959
 
 Example for Git:
-
-  1,788193a54e0f1aaa428ccfdd3bb45e32c311c18b,c96ae569bbe0167cfa15caa7f784fdb2e1ecdc12
-  2,ab333482c629d33d5484b4af6eb27918382ccc28,f77c5101df42f501d96d0363084dcc9c17400fce
+  1,a9e5c9f99bcc16d734251f682758004a3ecc3a1b,b40ac81d4a81736e2b7536b14db4ad070b598d2e,98,https://github.com/FasterXML/jackson-core/issues/98
+  2,098ece8564ed5d37f483c3bfb45be897ed8974cd,38d6e35d1f1a9b48193804925517500de8efee1f,105,https://github.com/FasterXML/jackson-core/issues/105
 
 =cut
 sub new {
@@ -157,8 +158,9 @@ sub new {
 
   $vcs->lookup(vid)
 
-Queries the commit database (commit-db) and returns the C<revision_id> for
-the given version id C<vid>. Format of C<vid>: C<\d+[bf]>.
+Queries the commit database (L<BUGS_CSV_ACTIVE|Constants>) and returns the C<revision_id> for
+the given version id C<vid>. Format of C<vid> checked 
+using L<Utils::check_vid(vid)|Utils/"Input validation">.
 
 =cut
 sub lookup {
@@ -190,7 +192,7 @@ sub lookup_vid {
 
   $vcs->num_revision_pairs()
 
-Returns the number of revision pairs in the C<commit-db>.
+Returns the number of revision pairs in the L<BUGS_CSV_ACTIVE|Constants> file.
 
 =cut
 sub num_revision_pairs {
@@ -202,7 +204,7 @@ sub num_revision_pairs {
 
   $project->get_bug_ids()
 
-Returns an array of all bug ids in the C<commit-db>.
+Returns an array of all bug ids in the L<BUGS_CSV_ACTIVE|Constants> file.
 
 =cut
 sub get_bug_ids {
@@ -215,8 +217,8 @@ sub get_bug_ids {
   $vcs->B<contains_version_id> C<contains_version_id(vid)
 
 Given a valid version id (C<vid>), this subroutine returns true if C<vid> exists
-in the C<commit-db> and false otherwise.
-Format of C<vid>: C<\d+[bf]>
+in the L<BUGS_CSV_ACTIVE|Constants> file and false otherwise.
+Format of C<vid> checked using L<Utils::check_vid(vid)|Utils/"Input validation">.
 This subroutine dies if C<vid> is invalid.
 
 =cut
@@ -231,9 +233,9 @@ sub contains_version_id {
 
   $vcs->checkout_vid(vid, work_dir)
 
-Performs a lookup of C<vid> in the C<commit-db> followed by a checkout of
+Performs a lookup of C<vid> in the L<BUGS_CSV_ACTIVE|Constants> file followed by a checkout of
 the corresponding revision with C<revision_id> to F<work_dir>.
-Format of C<vid>: C<\d+[bf]>.
+Format of C<vid> checked using L<Utils::check_vid(vid)|Utils/"Input validation">.
 
 B<Always performs a clean checkout, i.e., the working directory is deleted before the
 checkout, if it already exists>.
@@ -409,15 +411,17 @@ sub rev_date {
 # Helper subroutines
 
 #
-# Read commit-db and build cache
+# Read the L<BUGS_CSV_ACTIVE|Constants> file and build cache
 #
 sub _build_db_cache {
     my $db = shift;
-    open (IN, "<$db") or die "Cannot open commit-db $db: $!";
+    open (IN, "<$db") or die "Cannot open $BUGS_CSV_ACTIVE $db: $!";
     my $cache = {};
+    
+    my $header = <IN>;
     while (<IN>) {
         chomp;
-        /(\d+),([^,]+),([^,]+)/ or die "Corrupted commit-db!";
+        /(\d+),([^,]+),([^,]+),([^,]+),([^,]+)/ or die "Corrupted $BUGS_CSV_ACTIVE!";
         $cache->{$1} = {b => $2, f => $3, line => $_};
     }
     close IN;

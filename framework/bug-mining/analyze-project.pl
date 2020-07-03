@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-analyze-project.pl -- Determine all suitable candidates listed in the commit-db.
+analyze-project.pl -- Determine all suitable candidates listed in the active-bugs csv.
 
 =head1 SYNOPSIS
 
@@ -57,13 +57,13 @@ commons-lang project is LANG.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the commit-db, are considered.
+Per default all bug ids, listed in the active-bugs csv, are considered.
 
 =back
 
 =head1 DESCRIPTION
 
-Runs the following worflow for all candidate bugs in the project's C<commit-db>,
+Runs the following worflow for all candidate bugs in the project's C<active-bugs.csv>,
 or (if -b is specified) for a subset of candidates:
 
 =over 4

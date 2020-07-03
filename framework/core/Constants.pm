@@ -249,6 +249,7 @@ our $PROP_FILE = "defects4j.build.properties";
 our $PROP_EXCLUDE         = "d4j.tests.exclude";
 our $PROP_INSTRUMENT      = "d4j.classes.instrument";
 our $PROP_MUTATE          = "d4j.classes.mutate";
+our $PROP_MUT_OPS         = "d4j.major.mutops";
 our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
@@ -263,6 +264,43 @@ our $TAG_POST_FIX_COMP    = "POST_FIX_COMPILABLE";
 our $TAG_FIXED            = "FIXED_VERSION";
 our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
+
+# Filename for directory layout csv
+our $LAYOUT_FILE = "dir-layout.csv";
+
+# Filenames for bugs csv files
+our $BUGS_CSV_ACTIVE = "active-bugs.csv";
+our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
+
+# Columns in active-bugs and deprecated-bugs csvs
+our $BUGS_CSV_BUGID = "bug.id";
+our $BUGS_CSV_COMMIT_BUGGY = "revision.id.buggy";
+our $BUGS_CSV_COMMIT_FIXED = "revision.id.fixed";
+our $BUGS_CSV_ISSUE_ID = "report.id";
+our $BUGS_CSV_ISSUE_URL = "report.url";
+our $BUGS_CSV_DEPRECATED_WHEN = "deprecated.version";
+our $BUGS_CSV_DEPRECATED_WHY = "deprecated.reason";
+
+# Reasons for deprecation
+our $DEPRECATED_DUPLICATE = "Duplicate";
+our $DEPRECATED_JVM8_REPRO = "JVM8.Not.Reproducible";
+our $DEPRECATED_JVM8_COMPILE = "JVM8.Does.Not.Compile";
+
+# Additional metadata fields that can be queried by d4j-query
+our $METADATA_PROJECT_ID = "project.id";
+our $METADATA_PROJECT_NAME = "project.name";
+our $METADATA_BUILD_FILE = "project.build.file";
+our $METADATA_VCS = "project.vcs";
+our $METADATA_REPOSITORY = "project.repository";
+our $METADATA_COMMIT_DB = "project.bugs.csv";
+our $METADATA_LOADED_CLASSES_SRC = "classes.relevant.src";
+our $METADATA_LOADED_CLASSES_TEST = "classes.relevant.test";
+our $METADATA_MODIFIED_CLASSES = "classes.modified";
+our $METADATA_RELEVANT_TESTS = "tests.relevant";
+our $METADATA_TRIGGER_TESTS = "tests.trigger"; 
+our $METADATA_TRIGGER_CAUSE = "tests.trigger.cause";
+our $METADATA_DATE_BUGGY = "revision.date.buggy";
+our $METADATA_DATE_FIXED = "revision.date.fixed";
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
@@ -297,6 +335,7 @@ $PROP_FILE
 $PROP_EXCLUDE
 $PROP_INSTRUMENT
 $PROP_MUTATE
+$PROP_MUT_OPS
 $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
 $PROP_CLASSES_MODIFIED
@@ -310,6 +349,38 @@ $TAG_POST_FIX_COMP
 $TAG_FIXED
 $TAG_BUGGY
 $TAG_PRE_FIX
+
+$LAYOUT_FILE
+
+$BUGS_CSV_ACTIVE
+$BUGS_CSV_DEPRECATED
+
+$BUGS_CSV_BUGID
+$BUGS_CSV_COMMIT_BUGGY
+$BUGS_CSV_COMMIT_FIXED
+$BUGS_CSV_ISSUE_ID
+$BUGS_CSV_ISSUE_URL
+$BUGS_CSV_DEPRECATED_WHEN
+$BUGS_CSV_DEPRECATED_WHY
+
+$DEPRECATED_DUPLICATE
+$DEPRECATED_JVM8_REPRO
+$DEPRECATED_JVM8_COMPILE
+
+$METADATA_LOADED_CLASSES_SRC
+$METADATA_LOADED_CLASSES_TEST
+$METADATA_MODIFIED_CLASSES
+$METADATA_RELEVANT_TESTS
+$METADATA_TRIGGER_TESTS
+$METADATA_TRIGGER_CAUSE
+$METADATA_PROJECT_ID
+$METADATA_PROJECT_NAME
+$METADATA_BUILD_FILE
+$METADATA_VCS
+$METADATA_REPOSITORY
+$METADATA_COMMIT_DB
+$METADATA_DATE_BUGGY
+$METADATA_DATE_FIXED
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS

@@ -48,6 +48,7 @@ of the checked-out project version.
     </path>
     <property name="test.classes.dir" value="${build.home}/tests"/>
     <property name="classes.dir" value="${build.home}/classes"/>
+    <property name="build.classes" value="${classes.dir}" />
 
     <target name="compile.tests">
         <ant antfile="${basedir}/build.xml" target="compile.tests" inheritAll="true"/>

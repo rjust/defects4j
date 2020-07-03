@@ -51,7 +51,7 @@ A specific project instance can be created with C<create_project(project_id)>.
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
-                              "$PROJECTS_DIR/$PID/commit-db");
+                              "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
 
     return $class->SUPER::new($PID, $name, $vcs);
 }
@@ -69,9 +69,53 @@ Every submodule of Project represents one of the open source projects in the dat
 
 JFreeChart (L<Vcs::Svn> backend)
 
+=item * L<Cli|Project::Cli>
+
+Commons CLI (L<Vcs::Git> backend)
+
 =item * L<Closure|Project::Closure>
 
 Closure compiler (L<Vcs::Git> backend)
+
+=item * L<Codec|Project::Codec>
+
+Commons Codec (L<Vcs::Git> backend)
+
+=item * L<Collections|Project::Collections>
+
+Commons Collections (L<Vcs::Git> backend)
+
+=item * L<Compress|Project::Compress>
+
+Commons Compress (L<Vcs::Git> backend)
+
+=item * L<Csv|Project::Csv>
+
+Commons CSV (L<Vcs::Git> backend)
+
+=item * L<Gson|Project::Gson>
+
+Google Gson (L<Vcs::Git> backend)
+
+=item * L<JacksonCore|Project::JacksonCore>
+
+Jackson JSON Parser (L<Vcs::Git> backend)
+
+=item * L<JacksonDatabind|Project::JacksonDatabind>
+
+Jackson Data Bindings (L<Vcs::Git> backend)
+
+=item * L<JacksonXml|Project::JacksonXml>
+
+Jackson XML Parser (L<Vcs::Git> backend)
+
+=item * L<Jsoup|Project::Jsoup>
+
+Jsoup HTML Parser (L<Vcs::Git> backend)
+
+=item * L<JxPath|Project::JxPath>
+
+Commons JxPath (L<Vcs::Git> backend)
 
 =item * L<Lang|Project::Lang>
 
@@ -100,8 +144,6 @@ use Constants;
 use Utils;
 use Mutation;
 use Carp qw(confess);
-
-our $DIR_LAYOUT_CSV = "dir-layout.csv";
 
 =pod
 
@@ -752,8 +794,9 @@ sub mutate {
     }
     close(IN);
     # Update properties
-    my $list = join(",", @classes);
-    my $config = {$PROP_MUTATE => $list};
+    my $list_classes = join(",", @classes);
+    my $list_mut_ops = join(",", @{$mut_ops});
+    my $config = {$PROP_MUTATE => $list_classes, $PROP_MUT_OPS => $list_mut_ops};
     Utils::write_config_file("$work_dir/$PROP_FILE", $config);
 
     # Create mutation definitions (mml file)
@@ -1123,7 +1166,7 @@ sub _write_props {
 sub _cache_layout_map {
     my $self = shift;
     my $pid = $self->{pid};
-    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     return unless -e $map_file;
 
     open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
@@ -1145,7 +1188,7 @@ sub _add_to_layout_map {
     my ($self, $rev_id, $src_dir, $test_dir) = @_;
 
     my $pid = $self->{pid};
-    my $map_file = "$PROJECTS_DIR/$pid/$DIR_LAYOUT_CSV";
+    my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     Utils::append_to_file_unless_matches($map_file, "${rev_id},${src_dir},${test_dir}\n", qr/^${rev_id}/);
 }
 

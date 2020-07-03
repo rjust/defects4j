@@ -63,6 +63,7 @@ of the checked-out project version.
             <property name="d4j.test.dir"     value="${maven.build.testDir.0}"/>
           </else>
     </if>
+    <property name="build.classes" value="${d4j.workdir}/target/classes/" />
     <property name="test.home" value="${maven.build.testOutputDir}" />
     <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
         <isset property="maven.build.outputDir" />
