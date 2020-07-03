@@ -137,6 +137,10 @@ my $EXCL = $cmd_opts{e};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # The mutation operators that should be enabled
 my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
 

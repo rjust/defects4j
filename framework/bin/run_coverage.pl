@@ -134,6 +134,11 @@ my $INCL = $cmd_opts{f} // "*.java";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
+
 # Directory of class lists used for instrumentation step
 my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
 my $TARGET_CLASSES_DIR = "$SCRIPT_DIR/projects/$PID/$CLASSES";
