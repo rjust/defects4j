@@ -110,6 +110,10 @@ my $OUT_DIR = $cmd_opts{o};
 # Enable debugging if flag is set
 #$DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # List of loaded classes
 my $LOADED_CLASSES = "$SCRIPT_DIR/projects/$PID/loaded_classes/$BID.src";
 

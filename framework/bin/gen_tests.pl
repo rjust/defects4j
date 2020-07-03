@@ -198,6 +198,10 @@ my $MODE = (defined $cmd_opts{E}) ? "error-revealing" : "regression";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # Temporary directory for project checkout
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
