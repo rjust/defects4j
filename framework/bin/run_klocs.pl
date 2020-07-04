@@ -109,7 +109,7 @@ $TID =~ /^\d+$/ or die "Wrong test_id format (\\d+): $TID!";
 my $OUT_DIR = $cmd_opts{o};
 
 # Enable debugging if flag is set
-#$DEBUG = 1 if defined $cmd_opts{D};
+$DEBUG = 1 if defined $cmd_opts{D};
 
 if ($DEBUG) {
   Utils::print_env();
