@@ -287,8 +287,9 @@ the database and the requested C<table> if necessary.
 =cut
 
 sub get_db_handle {
-    my $table = shift @_ // die $ARG_ERROR;
-    my $db_dir = shift @_ // $DB_DIR;
+    @_ >= 2 or die $ARG_ERROR;
+    my ($table, $db_dir) = @_;
+    $db_dir //= $DB_DIR;
     my $dbh;
 
     defined $tables{$table} or die "Unknown table: $table!";
@@ -322,6 +323,7 @@ Returns a list of column names for C<table> or C<undef> if this table does not e
 =cut
 
 sub get_tab_columns {
-    my $table = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($table) = @_;
     return @{$tables{$table}};
 }
