@@ -139,6 +139,7 @@ Use [`framework/bin/defects4j`](http://defects4j.org/html_doc/defects4j.html) to
 | Command        | Description                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------------|
 | [info](http://defects4j.org/html_doc/d4j/d4j-info.html)                   | View configuration of a specific project or summary of a specific bug                             |
+| [env](http://defects4j.org/html_doc/d4j/d4j-env.html)                     | Print the environment of defects4j executions                                                     |
 | [checkout](http://defects4j.org/html_doc/d4j/d4j-checkout.html)           | Checkout a buggy or a fixed project version                                                       |
 | [compile](http://defects4j.org/html_doc/d4j/d4j-compile.html)             | Compile sources and developer-written tests of a buggy or a fixed project version                 |
 | [test](http://defects4j.org/html_doc/d4j/d4j-test.html)                   | Run a single test method or a test suite on a buggy or a fixed project version                    |
