@@ -305,7 +305,8 @@ exit($ret_code);
 ################################################################################
 # Check whether the requested generator is valid
 sub is_generator_valid {
-    my $tool = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($tool) = @_;
     my %all_tools;
     opendir(my $dir, "$TESTGEN_BIN_DIR") || die("Cannot read test generators: $!");
         while (readdir $dir) {
