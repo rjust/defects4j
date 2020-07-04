@@ -194,7 +194,7 @@ sub print_entry {
         $val_start_col = 30;
     }
     my $num_seps = $val_start_col - length($key);
-    print("$key" . ('.' x $num_seps) . "${val}\n");
+    print(STDERR "$key" . ('.' x $num_seps) . "${val}\n");
 
 }
 
@@ -204,7 +204,7 @@ sub print_entry {
 
 Print a key-value pair for a multi-line value. For
 instance, C<print_multiline_entry("Java Version", `java -version`)> will print
-something like the following to F<stdout>:
+something like the following to F<stderr>:
 
     Java Version:
       openjdk version "1.8.0_232"
@@ -215,14 +215,14 @@ something like the following to F<stdout>:
 sub print_multiline_entry {
     @_ >= 2 || die $ARG_ERROR;
     my ($key, @lines) = @_;
-    print("$key:\n  " . join("  ", @lines));
+    print(STDERR "$key:\n  " . join("  ", @lines));
 }
 
 =pod
 
 =item C<Utils::print_environment_var(var)>
 
-Lookup an environment variable's value and print it to F<stdout>.
+Lookup an environment variable's value and print it to F<stderr>.
 
 =cut
 sub print_environment_var {
@@ -236,12 +236,13 @@ sub print_environment_var {
 
 =item C<Utils::print_env>
 
-Print relevant environment variables to F<stdout>.
+Print relevant environment variables to F<stderr>.
 
 =cut
 sub print_env {
-    print("-"x80 . "\n");
-    print("                     Defects4j Execution Environment \n");
+    print(STDERR "-"x80 . "\n");
+    print(STDERR "                     Defects4j Execution Environment \n");
+    print(STDERR "-"x80 . "\n");
     # General environment
     print_environment_var("PWD");
     print_environment_var("SHELL");
@@ -257,7 +258,7 @@ sub print_env {
     print_entry("Git version", `git --version`);
     print_entry("SVN version", `svn --version --quiet`);
     print_entry("Perl version", $^V);
-    print("-"x80 . "\n");
+    print(STDERR "-"x80 . "\n");
 }
 
 =pod

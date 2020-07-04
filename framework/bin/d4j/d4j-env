@@ -42,6 +42,6 @@ use strict;
 
 use Utils;
 
-Utils::print_env();
+Utils::print_env() unless $DEBUG;
 
 1;
