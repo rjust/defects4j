@@ -99,7 +99,7 @@ The default is L<D4J_TMP_DIR|Constants>.
 sub get_tmp_dir {
     @_ == 1 or die $ARG_ERROR;
     my ($tmp_root) = @_;
-    $tmp_root = $tmp_root // $D4J_TMP_DIR;
+    $tmp_root //= $D4J_TMP_DIR;
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 
@@ -327,7 +327,7 @@ C<undef> otherwise.
 sub read_config_file {
     @_ >= 1 or die $ARG_ERROR;
     my ($file, $key_separator) = @_;
-    $key_separator = $key_separator // '=';
+    $key_separator //= '=';
 
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
