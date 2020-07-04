@@ -159,7 +159,7 @@ reference to it.
 
 sub create_project {
     @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
-    my $pid = shift;
+    my ($pid) = @_;
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -209,7 +209,8 @@ Prints all general and project-specific properties to STDOUT.
 =cut
 
 sub print_info {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     my $pid = $self->{pid};
     print "Summary of configuration for Project: $pid\n";
     print "-"x80 . "\n";
@@ -352,7 +353,8 @@ Checks whether the project is correctly configured.
 =cut
 
 sub sanity_check {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     return $self->_ant_call_comp("sanity.check");
 }
 
@@ -959,7 +961,8 @@ Delegate to the L<Vcs> backend.
 =cut
 
 sub num_revision_pairs {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     return $self->{_vcs}->num_revision_pairs();
 }
 
@@ -972,7 +975,8 @@ Delegate to the L<Vcs> backend.
 =cut
 
 sub get_bug_ids {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     return $self->{_vcs}->get_bug_ids();
 }
 
@@ -1209,7 +1213,8 @@ sub _write_props {
 # Cache the directory-layout map from the project directory, if it exists.
 #
 sub _cache_layout_map {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     my $pid = $self->{pid};
     my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     return unless -e $map_file;

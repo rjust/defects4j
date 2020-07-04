@@ -205,7 +205,8 @@ Returns the number of revision pairs in the L<BUGS_CSV_ACTIVE|Constants> file.
 =cut
 
 sub num_revision_pairs {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     return scalar keys %{$self->{_cache}};
 }
 
@@ -218,7 +219,8 @@ Returns an array of all bug ids in the L<BUGS_CSV_ACTIVE|Constants> file.
 =cut
 
 sub get_bug_ids {
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     return sort {$a <=> $b} keys %{$self->{_cache}};
 }
 
@@ -431,7 +433,8 @@ sub rev_date {
 # Read the L<BUGS_CSV_ACTIVE|Constants> file and build cache
 #
 sub _build_db_cache {
-    my $db = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($db) = @_;
     open (IN, "<$db") or die "Cannot open $BUGS_CSV_ACTIVE $db: $!";
     my $cache = {};
     
@@ -450,7 +453,8 @@ sub _build_db_cache {
 # Truncate revision id to 8 characters if necessary
 #
 sub _trunc_rev_id {
-    my $id = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($id) = @_;
     if (length($id) > 8) {
         $id = substr($id, 0, 8);
     }
