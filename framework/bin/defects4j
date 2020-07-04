@@ -113,20 +113,9 @@ $cmd_descr{"coverage"}="run code coverage analysis for a checked-out project ver
 
 =pod
 
-=item * L<B<info>|d4j::d4j-info/>
-
-print information for a specific project or bug.
-
-=cut
-$cmd_descr{info}="print information for a specific project or bug";
-
-=pod
-
 =item * L<B<pids>|d4j::d4j-pids/>
 
 prints a list of all available project ids.
-
-=back
 
 =cut
 $cmd_descr{"pids"}="prints all available project ids";
@@ -142,6 +131,24 @@ $cmd_descr{bids}="print all active bug IDs for a specific project";
 
 =pod
 
+=item * L<B<info>|d4j::d4j-info/>
+
+print information for a specific project or bug.
+
+=cut
+$cmd_descr{info}="print information for a specific project or bug";
+
+=pod
+
+=item * L<B<env>|d4j::d4j-env/>
+
+print environment of defects4j execution.
+
+=cut
+$cmd_descr{"env"}="print environment of defects4j execution";
+
+=pod
+
 =item * L<B<export>|d4j::d4j-export/>
 
 export a version-specific property.
@@ -149,20 +156,11 @@ export a version-specific property.
 =cut
 $cmd_descr{export}="export a version-specific property";
 
-=pod
-
-=item * L<B<env>|d4j::d4j-env/>
-
-print environment information
-
-=back
-
-=cut
-$cmd_descr{"env"}="print environment of defects4j execution";
-
 =item * L<B<query>|d4j::d4j-query/>
 
 query the metadata for a particular project for automation purposes.
+
+=back
 
 =cut
 $cmd_descr{query}="query the metadata for a particular project for automation purposes";

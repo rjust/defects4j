@@ -30,8 +30,8 @@ version-specific properties.
 =head1 DESCRIPTION
 
 This module provides an internal API for querying the metadata. This 
-functionality externally surfaces through the C<d4j-query> interface,
-as well as C<d4j-print-bugs>. 
+functionality externally surfaces through the L<query|d4j::d4j-query/> and
+L<bids|d4j::d4j-bids/> commands. 
 
 =cut
 package Query;
@@ -329,8 +329,9 @@ and returns the results as a single string, associated with
 the requested bug IDs. The first argument determines whether
 the root cause is included or not.
 
-=cut
+=back
 
+=cut
 sub _read_stack_traces {
     my ($include_root, $base_dir, @bugs) = @_; 
     my %results;

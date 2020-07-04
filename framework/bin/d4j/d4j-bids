@@ -28,7 +28,7 @@ d4j-bids -- Lists all bug IDs for a project
 
 =head1 SYNOPSIS
 
-  d4j-bids -p pid [-D|-A]
+  d4j-bids -p project_id [-D|-A]
 
 =head1 DESCRIPTION
 
@@ -40,20 +40,20 @@ available active bug IDs is returned.
 
 =over 4
 
-=item -p C<pid>
+=item -p C<project_id>
 
-The ID of the project for which metadata is requested. A project ID
-must be provided to use this utility.
+The ID of the project for which the list of bug IDs is requested. A project ID
+must be provided to use this utility script.
 
 =item -D
 
-Include only deprecated bugs. By default, only active bugs are queried.
+Include only deprecated bugs. By default, only IDs of active bugs are listed.
 Cannot be used in conjunction with "all bugs" (-A).
 
 =item -A
 
-Include both active and deprecated bugs. By default, only active bugs are 
-queried. Cannot be used in conjunction with "only deprecated bugs" (-D).
+Include both active and deprecated bugs. By default, only IDs of active bugs are 
+listed. Cannot be used in conjunction with "only deprecated bugs" (-D).
 
 =back
 
@@ -70,7 +70,7 @@ use Query;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 -p pid [-D|-A]\n";
+    print "usage: $0 -p project_id [-D|-A]\n";
     exit 1;
 }
 
@@ -85,7 +85,7 @@ my $ONLY_DEP = defined $cmd_opts{D} ? 1 : 0;
 my $ALL_BUGS = defined $cmd_opts{A} ? 1 : 0;
 
 if ($ONLY_DEP and $ALL_BUGS) {
-    die "Only deprecated bugs (-D) and all bugs (-A) cannot be concurrently set.";
+    die "-D (only deprecated bugs) and -A (all bugs) cannot be concurrently set.";
 }
 
 my %results;

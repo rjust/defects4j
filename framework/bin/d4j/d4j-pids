@@ -35,8 +35,6 @@ d4j-pids -- Lists all project IDs
 This script is a high level shortcut intended to give developers access
 to a list of project IDs.
 
-=back
-
 =cut
 
 use strict;

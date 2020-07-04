@@ -34,13 +34,12 @@ d4j-env -- print environtment information for debugging
 
 =head1 DESCRIPTION
 
-This script displays environment information to help with debugging
+This script prints environment information to help with debugging
 
 =cut
 use warnings;
 use strict;
 
-use Constants;
 use Utils;
 
 Utils::print_env();

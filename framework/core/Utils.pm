@@ -177,6 +177,91 @@ sub files_in_commit {
 
 =pod
 
+=item C<Utils::print_entry(key, val)>
+
+Print a key-value pair for a single-line value. For
+instance, C<print_entry("SHELL", "/bin/bash")> will print the following to
+F<stdout>:
+
+    SHELL................./bin/bash
+
+=cut
+sub print_entry {
+    @_ >= 2 || die $ARG_ERROR;
+    my ($key, $val, $val_start_col) = @_;
+    $val =~ s/^\s+|\s+$//g;
+    if (! defined $val_start_col) {
+        $val_start_col = 30;
+    }
+    my $num_seps = $val_start_col - length($key);
+    print("$key" . ('.' x $num_seps) . "${val}\n");
+
+}
+
+=pod
+
+=item C<Utils::print_multiline_entry(key, val [, vals...])>
+
+Print a key-value pair for a multi-line value. For
+instance, C<print_multiline_entry("Java Version", `java -version`)> will print
+something like the following to F<stdout>:
+
+    Java Version:
+      openjdk version "1.8.0_232"
+      OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
+      OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
+
+=cut
+sub print_multiline_entry {
+    @_ >= 2 || die $ARG_ERROR;
+    my ($key, @lines) = @_;
+    print("$key:\n  " . join("  ", @lines));
+}
+
+=pod
+
+=item C<Utils::print_environment_var(var)>
+
+Lookup an environment variable's value and print it to F<stdout>.
+
+=cut
+sub print_environment_var {
+    @_ == 1 || die $ARG_ERROR;
+    my ($key) = @_;
+    my $val = $ENV{$key} // "(none)";
+    print_entry ($key, $val);
+}
+
+=pod
+
+=item C<Utils::print_env>
+
+Print relevant environment variables to F<stdout>.
+
+=cut
+sub print_env {
+    print("-"x80 . "\n");
+    print("                     Defects4j Execution Environment \n");
+    # General environment
+    print_environment_var("PWD");
+    print_environment_var("SHELL");
+    print_environment_var("TZ");
+
+    # Java environment
+    print_environment_var("JAVA_HOME");
+    print_entry("Java Exec", `which java`);
+    print_entry("Java Exec Resolved", `realpath \$(which java)`);
+    print_multiline_entry("Java Version", `java -version 2>&1`);
+
+    # VCS
+    print_entry("Git version", `git --version`);
+    print_entry("SVN version", `svn --version --quiet`);
+    print_entry("Perl version", $^V);
+    print("-"x80 . "\n");
+}
+
+=pod
+
 =back
 
 =cut
@@ -326,11 +411,13 @@ sub check_vid {
 }
 
 =pod
-  Utils::ensure_valid_bid(pid, bid)
+
+=item C<Utils::ensure_valid_bid(pid, bid)>
 
 Ensure C<bid> represents a valid bug-id in project C<pid>, terminating with a
 detailed error message if not. A bug-id is valid for a project if the project
 exists and the bug-id both exists in the project and is active.
+
 =cut
 sub ensure_valid_bid {
     @_ == 2 or die $ARG_ERROR;
@@ -356,15 +443,16 @@ sub ensure_valid_bid {
 }
 
 =pod
-  Utils::ensure_valid_vid(pid, vid)
+
+=item C<Utils::ensure_valid_vid(pid, vid)>
 
 Ensure C<vid> represents a valid version-id in project C<pid>, terminating with
 a detailed error message if not. A version-id is valid for a project if the
 project exists, the version-id is of the form C<d+[bf]>, and the underlying
 bug-id, represented by the leading integer part of the version id, both exists
 in the project and is active.
-=cut
 
+=cut
 sub ensure_valid_vid {
     @_ == 2 or die $ARG_ERROR;
     my $pid = shift;
@@ -404,6 +492,8 @@ sub has_failing_tests {
 
     return 0;
 }
+
+=pod
 
 =item C<Utils::get_failing_tests(test_result_file)>
 
@@ -572,93 +662,5 @@ sub clean_test_results {
 =back
 
 =cut
-
-=pod
-
-=item C<Utils::print_entry(key, val)>
-
-Print a key-value pair for a single line value in a formatted fashion. For
-instance, C<print_entry("SHELL", "/bin/bash")> will print the following to
-stdout:
-
-    SHELL................./bin/bash
-
-=cut
-sub print_entry {
-    @_ >= 2 || die $ARG_ERROR;
-    my ($key, $val, $val_start_col) = @_;
-    $val =~ s/^\s+|\s+$//g;
-    if (! defined $val_start_col) {
-        $val_start_col = 30;
-    }
-    my $num_seps = $val_start_col - length($key);
-    print("$key" . ('.' x $num_seps) . "${val}\n");
-
-}
-
-=pod
-
-=item C<Utils::print_multiline_entry(key, val [, vals...])>
-
-Print a key-value pair for a multi-lined value in a formatted fashion. For
-instance, C<print_multiline_entry("Java Version", `java -version`)> will print
-something like the following to stdout:
-
-    Java Version:
-      openjdk version "1.8.0_232"
-      OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
-      OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
-
-=cut
-sub print_multiline_entry {
-    @_ >= 2 || die $ARG_ERROR;
-    my ($key, @lines) = @_;
-    print("$key:\n  " . join("  ", @lines));
-}
-
-=pod
-
-=item C<Utils::print_environment_var(var)>
-
-Lookup an environment variable's value and print it to stdout in a formatted
-fashion.
-
-=cut
-sub print_environment_var {
-    @_ == 1 || die $ARG_ERROR;
-    my ($key) = @_;
-    my $val = $ENV{$key} // "(none)";
-    print_entry ($key, $val);
-}
-
-=pod
-
-=item C<Utils::print_env>
-
-Lookup an environment variable's value and print it to stdout in a formatted
-fashion.
-
-=cut
-sub print_env {
-    print("-"x80 . "\n");
-    print("                     Defects4j Execution Environment \n");
-    # General environment
-    print_environment_var("PWD");
-    print_environment_var("SHELL");
-    print_environment_var("TZ");
-
-    # Java environment
-    print_environment_var("JAVA_HOME");
-    print_entry("Java Exec", `which java`);
-    print_entry("Java Exec Resolved", `realpath \$(which java)`);
-    print_multiline_entry("Java Version", `java -version 2>&1`);
-
-    # VCS
-    print_entry("Git version", `git --version`);
-    print_entry("SVN version", `svn --version --quiet`);
-    print_entry("Perl version", $^V);
-    print("-"x80 . "\n");
-}
-
 
 1;

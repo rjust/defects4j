@@ -28,7 +28,7 @@ d4j-query -- query the metadata for a project to obtain CSV-formatted results.
 
 =head1 SYNOPSIS
 
-  d4j-query -p pid [-q query] [-o output_file] [-h] [-D|-A]
+  d4j-query -p pid [-q query] [-o output_file] [-H] [-D|-A]
 
 =head1 DESCRIPTION
 
@@ -56,7 +56,7 @@ for the requested system.
 
 A file to output the extracted CSV to. By default, prints to the screen.
 
-=item -h
+=item -H
 
 List the available fields.
 
@@ -70,13 +70,17 @@ Cannot be used in conjunction with "all bugs" (-A).
 Include both active and deprecated bugs. By default, only active bugs are 
 queried. Cannot be used in conjunction with "only deprecated bugs" (-D).
 
+=back
+
 =head1 EXAMPLES
+
+=over 4
 
 =item -C<d4j-query -p Collections>
 
 Returns the list of active bug IDs for project Collections.
 
-=item -C<d4j-query -p Collections -h>
+=item -C<d4j-query -p Collections -H>
 
 Returns the list of available fields that can be queried.
 
