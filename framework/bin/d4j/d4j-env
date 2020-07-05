@@ -27,7 +27,6 @@
 
 d4j-env -- print environtment information for debugging
 
-
 =head1 SYNOPSIS
 
   d4j-env
@@ -37,6 +36,7 @@ d4j-env -- print environtment information for debugging
 This script prints environment information to help with debugging
 
 =cut
+
 use warnings;
 use strict;
 

@@ -105,6 +105,7 @@ F<out_dir/L<TAB_MUTATION|DB>>. The corresponding log files are stored in
 F<out_dir/L<TAB_MUTATION|DB>_log>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -191,6 +192,7 @@ each executed test suite are copied to:
 F<out_dir/L<TAB_MUTATION|DB>_log/project_id>.
 
 =cut
+
 # Log directory and file
 my $LOG_DIR = "$OUT_DIR/${TAB_MUTATION}_log/$PID";
 my $LOG_FILE = "$LOG_DIR/" . basename($0) . ".log";

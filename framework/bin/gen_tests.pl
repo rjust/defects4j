@@ -219,6 +219,7 @@ Upon success, the log of this script is appended to:
 F<out_dir/logs/C<project_id>.C<version_id>.log>.
 
 =cut
+
 # Log file in output directory
 my $LOG_DIR = "$OUT_DIR/logs";
 my $LOG_FILE = "$LOG_DIR/$PID.$VID.log";

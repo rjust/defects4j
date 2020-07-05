@@ -43,6 +43,7 @@ Log.pm -- a simple log file abstraction.
 This module provides a simple logging abstraction.
 
 =cut
+
 package Log;
 
 use warnings;
@@ -58,6 +59,7 @@ use POSIX qw(strftime);
 Open log file with open mode append (default) and return reference to log object.
 
 =cut
+
 sub create_log {
     @_ >= 1 or die "Invalid number of arguments";
     my ($file_name, $mode) = @_;
@@ -80,6 +82,7 @@ sub create_log {
 Log provided message.
 
 =cut
+
 sub log_msg {
     @_ == 2 or die "Invalid number of arguments";
     my ($self, $msg) = @_;
@@ -94,6 +97,7 @@ sub log_msg {
 Log provided message with the current timestamp and the name of calling script.
 
 =cut
+
 sub log_time {
     @_ == 2 or die "Invalid number of arguments";
     my ($self, $msg) = @_;
@@ -108,6 +112,7 @@ sub log_time {
 Log provided message and append content of file.
 
 =cut
+
 sub log_file {
     @_ == 3 or die "Invalid number of arguments";
     my ($self, $msg, $log_file) = @_;
@@ -127,6 +132,7 @@ sub log_file {
 Close log file.
 
 =cut
+
 sub close {
     @_ == 1 or die "Invalid number of arguments";
     my $self = shift;

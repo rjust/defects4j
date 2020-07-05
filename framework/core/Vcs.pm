@@ -49,6 +49,7 @@ a vcs-specific command:
 Returns the command to checkout C<revision_id> to the working directory F<work_dir>.
 
 =cut
+
 sub _checkout_cmd { die $ABSTRACT_METHOD; }
 
 =pod
@@ -60,6 +61,7 @@ The optional path C<path> is relative to the working directory and used to diff 
 certain files or directories.
 
 =cut
+
 sub _diff_cmd { die $ABSTRACT_METHOD; }
 
 =pod
@@ -69,6 +71,7 @@ sub _diff_cmd { die $ABSTRACT_METHOD; }
 Returns the date of the revision C<rev> or undef if the revision doesn't exist.
 
 =cut
+
 sub _rev_date_cmd { die $ABSTRACT_METHOD; }
 
 =pod
@@ -78,6 +81,7 @@ sub _rev_date_cmd { die $ABSTRACT_METHOD; }
 TODO
 
 =cut
+
 sub _get_parent_revisions { die $ABSTRACT_METHOD; }
 
 =head1 DESCRIPTION
@@ -95,6 +99,7 @@ This module provides a simple abstraction for version control systems.
 =back
 
 =cut
+
 package Vcs;
 
 use warnings;
@@ -137,6 +142,7 @@ Example for Git:
   2,098ece8564ed5d37f483c3bfb45be897ed8974cd,38d6e35d1f1a9b48193804925517500de8efee1f,105,https://github.com/FasterXML/jackson-core/issues/105
 
 =cut
+
 sub new {
     @_ >= 4 or die $ARG_ERROR;
     my ($class, $pid, $repo, $db, $hook) = @_;
@@ -163,6 +169,7 @@ the given version id C<vid>. Format of C<vid> checked
 using L<Utils::check_vid(vid)|Utils/"Input validation">.
 
 =cut
+
 sub lookup {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -179,6 +186,7 @@ sub lookup {
 Returns the C<version_id> for the given revision id.
 
 =cut
+
 sub lookup_vid {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $rev_id) = @_;
@@ -195,6 +203,7 @@ sub lookup_vid {
 Returns the number of revision pairs in the L<BUGS_CSV_ACTIVE|Constants> file.
 
 =cut
+
 sub num_revision_pairs {
     my $self = shift;
     return scalar keys %{$self->{_cache}};
@@ -207,6 +216,7 @@ sub num_revision_pairs {
 Returns an array of all bug ids in the L<BUGS_CSV_ACTIVE|Constants> file.
 
 =cut
+
 sub get_bug_ids {
     my $self = shift;
     return sort {$a <=> $b} keys %{$self->{_cache}};
@@ -222,6 +232,7 @@ Format of C<vid> checked using L<Utils::check_vid(vid)|Utils/"Input validation">
 This subroutine dies if C<vid> is invalid.
 
 =cut
+
 sub contains_version_id {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -241,6 +252,7 @@ B<Always performs a clean checkout, i.e., the working directory is deleted befor
 checkout, if it already exists>.
 
 =cut
+
 sub checkout_vid {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $vid, $work_dir) = @_;
@@ -307,6 +319,7 @@ between certain files or directories. Note that C<path> is relative to the worki
 directory.
 
 =cut
+
 sub diff {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $path) = @_;
@@ -331,6 +344,7 @@ The path argument is optional and can be used to compute a diff between certain
 files or directories. Note that F<path> is relative to the working directory.
 
 =cut
+
 sub export_diff {
     @_ >= 4 or die $ARG_ERROR;
     my ($self, $rev1, $rev2, $out_file, $path) = @_;
@@ -352,6 +366,7 @@ sub export_diff {
 Applies the patch provided in F<patch_file> to the working directory F<work_dir>.
 
 =cut
+
 sub apply_patch {
     @_ == 3 or confess($ARG_ERROR);
     my ($self, $work_dir, $patch_file) = @_;
@@ -368,6 +383,7 @@ Returns the command to apply the patch (F<patch_file>) to the working directory
 command tries a few dry-runs for the most likely settings before giving up.
 
 =cut
+
 sub _apply_cmd {
     @_ == 3 or confess($ARG_ERROR);
     my ($self, $work_dir, $patch_file) = @_;
@@ -394,6 +410,7 @@ sub _apply_cmd {
 Returns the date for the revision C<rev>.
 
 =cut
+
 sub rev_date {
     @_ == 2 or confess($ARG_ERROR);
     my ($self, $revision_id) = @_;

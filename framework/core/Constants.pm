@@ -33,6 +33,7 @@ Every property is initialized with a default value, which can be overriden by
 setting the corresponding environment variable.
 
 =cut
+
 package Constants;
 
 use 5.012;
@@ -65,6 +66,7 @@ timezone setting.
 =back
 
 =cut
+
 # TODO: Extract all exported environment variables into a user-visible
 # config file.
 $ENV{'TZ'} = "America/Los_Angeles";
@@ -88,6 +90,7 @@ C<export PROJECTS_DIR=my_project_directory>.
 The directory that contains all scripts and modules (I<parent of this module's directory>)
 
 =cut
+
 our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
 
 =item C<PROJECTS_DIR>
@@ -95,6 +98,7 @@ our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
 The directory that contains all project metadata (I<C<SCRIPT_DIR>/projects>)
 
 =cut
+
 our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
 
 =pod
@@ -104,6 +108,7 @@ our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
 The directory that contains all core modules (I<C<SCRIPT_DIR>/core>)
 
 =cut
+
 our $CORE_DIR = ($ENV{'CORE_DIR'} // abs_path("$SCRIPT_DIR/core"));
 
 =pod
@@ -113,6 +118,7 @@ our $CORE_DIR = ($ENV{'CORE_DIR'} // abs_path("$SCRIPT_DIR/core"));
 The directory that contains additional libraries (I<C<SCRIPT_DIR>/lib>).
 
 =cut
+
 our $LIB_DIR = ($ENV{'LIB_DIR'} // abs_path("$SCRIPT_DIR/lib"));
 
 =pod
@@ -122,6 +128,7 @@ our $LIB_DIR = ($ENV{'LIB_DIR'} // abs_path("$SCRIPT_DIR/lib"));
 The directory that contains util scripts (I<C<SCRIPT_DIR>/util>).
 
 =cut
+
 our $UTIL_DIR = ($ENV{'UTIL_DIR'} // abs_path("$SCRIPT_DIR/util"));
 
 =pod
@@ -131,6 +138,7 @@ our $UTIL_DIR = ($ENV{'UTIL_DIR'} // abs_path("$SCRIPT_DIR/util"));
 The base directory (I<C<SCRIPT_DIR>/..>)
 
 =cut
+
 our $BASE_DIR = ($ENV{'BASE_DIR'} // abs_path("$SCRIPT_DIR/../"));
 
 =pod
@@ -140,6 +148,7 @@ our $BASE_DIR = ($ENV{'BASE_DIR'} // abs_path("$SCRIPT_DIR/../"));
 The directory that contains project repositoriy clones (I<C<BASE_DIR>/project_repos>)
 
 =cut
+
 our $REPO_DIR = ($ENV{'REPO_DIR'} // "$BASE_DIR/project_repos");
 
 =pod
@@ -149,6 +158,7 @@ our $REPO_DIR = ($ENV{'REPO_DIR'} // "$BASE_DIR/project_repos");
 The temporary root directory, used to checkout a program version (I</tmp>)
 
 =cut
+
 our $D4J_TMP_DIR = ($ENV{'D4J_TMP_DIR'} // "/tmp");
 
 =pod
@@ -158,6 +168,7 @@ our $D4J_TMP_DIR = ($ENV{'D4J_TMP_DIR'} // "/tmp");
 The root directory of the Major mutation framework (I<C<BASE_DIR>/major>)
 
 =cut
+
 our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} // "$BASE_DIR/major");
 
 =pod
@@ -167,6 +178,7 @@ our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} // "$BASE_DIR/major");
 The directory of the libraries of the test generation tools (I<C<LIB_DIR>/test_generation/generation>)
 
 =cut
+
 our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/generation");
 
 =pod
@@ -176,6 +188,7 @@ our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/gen
 The directory of the wrapper scripts of the test generation tools (I<C<LIB_DIR>/test_generation/bin>)
 
 =cut
+
 our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin");
 
 =pod
@@ -185,6 +198,7 @@ our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin
 The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_systems>)
 
 =cut
+
 our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_systems");
 
 =pod
@@ -194,6 +208,7 @@ our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_s
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
 =cut
+
 our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} // "$SCRIPT_DIR/projects/defects4j.build.xml");
 
 =pod
@@ -205,6 +220,7 @@ The directory name of the local gradle repository (I<.gradle_local_home>).
 =back
 
 =cut
+
 our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_home");
 
 #

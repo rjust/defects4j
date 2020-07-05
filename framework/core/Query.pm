@@ -30,10 +30,11 @@ version-specific properties.
 =head1 DESCRIPTION
 
 This module provides an internal API for querying the metadata. This 
-functionality externally surfaces through the L<query|d4j::d4j-query/> and
-L<bids|d4j::d4j-bids/> commands. 
+functionality externally surfaces through the L<query|d4j::d4j-query> and
+L<bids|d4j::d4j-bids> commands. 
 
 =cut
+
 package Query;
 
 use strict;
@@ -56,6 +57,7 @@ is defined in L<Constants>. This method must be modified to add or remove legal
 fields. 
 
 =cut
+
 sub get_fields {
     # All fields should be defined in Constants
     my @fields = ($BUGS_CSV_BUGID, $BUGS_CSV_COMMIT_BUGGY, $BUGS_CSV_COMMIT_FIXED, $BUGS_CSV_ISSUE_ID, $BUGS_CSV_ISSUE_URL, $BUGS_CSV_DEPRECATED_WHEN, $BUGS_CSV_DEPRECATED_WHY, $METADATA_LOADED_CLASSES_SRC, $METADATA_LOADED_CLASSES_TEST, $METADATA_MODIFIED_CLASSES, $METADATA_RELEVANT_TESTS, $METADATA_TRIGGER_TESTS, $METADATA_TRIGGER_CAUSE, $METADATA_PROJECT_ID, $METADATA_PROJECT_NAME, $METADATA_BUILD_FILE, $METADATA_VCS, $METADATA_REPOSITORY, $METADATA_COMMIT_DB, $METADATA_DATE_BUGGY, $METADATA_DATE_FIXED);
@@ -71,6 +73,7 @@ If illegal fields are in the list, the query is killed. The list of legal
 fields is defined by C<Query::get_fields()>.
 
 =cut
+
 sub check_fields {
     my @requested = @_;
     my @all_fields = get_fields();
@@ -93,6 +96,7 @@ dictionary containing values for each requested metadata field.
 For examples of usage, see C<d4j-query> and C<d4j-print-bugs>. 
 
 =cut
+
 sub query_metadata {
     my ($pid, $flag, @requested) = @_;
     my $active_bugs = "$PROJECTS_DIR/$pid/$BUGS_CSV_ACTIVE";
@@ -233,6 +237,7 @@ sub query_metadata {
 =back
 
 =cut
+
 ################################################################################
 
 =pod
@@ -249,6 +254,7 @@ That is, we associate fields with their respective bug_id.
 Arguments: filename of bugs CSV file, a set of requested fields.
 
 =cut
+
 sub _read_bug_csv {
     my ($filename, @fields) = @_; 
     open (IN, "<$filename") or die "Cannot open $filename";
@@ -299,6 +305,7 @@ and returns the results as a single string, associated with
 the requested bug IDs.
 
 =cut
+
 sub _read_class_list {
     my ($base_dir, $ext, @bugs) = @_; 
     my %results;
@@ -332,6 +339,7 @@ the root cause is included or not.
 =back
 
 =cut
+
 sub _read_stack_traces {
     my ($include_root, $base_dir, @bugs) = @_; 
     my %results;

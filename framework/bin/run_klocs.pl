@@ -69,6 +69,7 @@ This script prepares a particular program version as if it was going to run Rand
 It then counts the program KLOCS to use later in calculating Randoop test coverage.
 
 =cut
+
 use strict;
 use warnings;
 
