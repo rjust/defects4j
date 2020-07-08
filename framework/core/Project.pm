@@ -47,7 +47,7 @@ A specific project instance can be created with C<create_project(project_id)>.
   my $PID = "MyID";
 
   sub new {
-    my $class = shift;
+    my ($class) = @_;
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
