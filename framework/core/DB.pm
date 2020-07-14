@@ -287,7 +287,7 @@ the database and the requested C<table> if necessary.
 =cut
 
 sub get_db_handle {
-    @_ >= 2 or die $ARG_ERROR;
+    @_ >= 1 or die $ARG_ERROR;
     my ($table, $db_dir) = @_;
     $db_dir //= $DB_DIR;
     my $dbh;

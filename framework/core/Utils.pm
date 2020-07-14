@@ -97,7 +97,6 @@ The default is L<D4J_TMP_DIR|Constants>.
 =cut
 
 sub get_tmp_dir {
-    @_ == 1 or die $ARG_ERROR;
     my ($tmp_root) = @_;
     $tmp_root //= $D4J_TMP_DIR;
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
