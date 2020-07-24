@@ -72,7 +72,8 @@ sub determine_layout {
 # Existing Ant build.xml and default.properties
 #
 sub _layout1 {
-    my $dir = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
     my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
     my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
 
@@ -88,7 +89,8 @@ sub _layout1 {
 # Generated build.xml (from mvn ant:ant) with maven-build.properties
 #
 sub _layout2 {
-    my $dir = shift;
+    @_ == 1 or $ARG_ERROR;
+    my ($dir) = @_;
     my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
     my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
 

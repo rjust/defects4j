@@ -99,28 +99,26 @@ for bid in $(echo $BUGS); do
         suite_dir="$work_dir/$tool/$suite_num"
 
         # Generate (regression) tests for the fixed version
-        for type in f; do
-            vid=${bid}$type
+        vid=${bid}f
 
-            # Run generator and the fix script on the generated test suite
-            if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
-                die "run $tool (regression) on $PID-$vid"
-                # Skip any remaining analyses (cannot be run), even if halt-on-error is false
-                continue
-            fi
-            fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
+        # Run generator and the fix script on the generated test suite
+        if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
+            die "run $tool (regression) on $PID-$vid"
+            # Skip any remaining analyses (cannot be run), even if halt-on-error is false
+            continue
+        fi
+        fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
 
-            # Run test suite and determine bug detection
-            test_bug_detection $PID "$suite_dir"
+        # Run test suite and determine bug detection
+        test_bug_detection $PID "$suite_dir"
 
-            # Run test suite and determine mutation score
-            test_mutation $PID "$suite_dir"
+        # Run test suite and determine mutation score
+        test_mutation $PID "$suite_dir"
 
-            # Run test suite and determine code coverage
-            test_coverage $PID "$suite_dir" 0
+        # Run test suite and determine code coverage
+        test_coverage $PID "$suite_dir" 0
 
-            rm -rf $work_dir/$tool
-        done
+        rm -rf $work_dir/$tool
     done
 
     vid=${bid}b

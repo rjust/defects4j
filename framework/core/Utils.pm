@@ -97,7 +97,8 @@ The default is L<D4J_TMP_DIR|Constants>.
 =cut
 
 sub get_tmp_dir {
-    my $tmp_root = shift // $D4J_TMP_DIR;
+    my ($tmp_root) = @_;
+    $tmp_root //= $D4J_TMP_DIR;
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 
@@ -111,7 +112,7 @@ Returns the absolute path to the directory F<dir>.
 
 sub get_abs_path {
     @_ == 1 or die $ARG_ERROR;
-    my $dir = shift;
+    my ($dir) = @_;
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
     return abs_path($dir);
@@ -127,7 +128,7 @@ Returns the directory of the absolute path of F<file>.
 
 sub get_dir {
     @_ == 1 or die $ARG_ERROR;
-    my $path = shift;
+    my ($path) = @_;
     my ($volume,$dir,$file) = File::Spec->splitpath($path);
     return get_abs_path($dir);
 }
@@ -324,8 +325,9 @@ C<undef> otherwise.
 
 sub read_config_file {
     @_ >= 1 or die $ARG_ERROR;
-    my $file = shift;
-    my $key_separator = shift // '=';
+    my ($file, $key_separator) = @_;
+    $key_separator //= '=';
+
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
         return undef;
@@ -424,7 +426,7 @@ success, write:
 
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
-    my $vid = shift;
+    my ($vid) = @_;
     $vid =~ /^(\d+)([bf])$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
     return {valid => 1, bid => $1, type => $2};
 }
@@ -441,8 +443,7 @@ exists and the bug-id both exists in the project and is active.
 
 sub ensure_valid_bid {
     @_ == 2 or die $ARG_ERROR;
-    my $pid = shift;
-    my $bid = shift;
+    my ($pid, $bid) = @_;
 
     my $project_dir = "$PROJECTS_DIR/$pid";
 
@@ -476,8 +477,7 @@ in the project and is active.
 
 sub ensure_valid_vid {
     @_ == 2 or die $ARG_ERROR;
-    my $pid = shift;
-    my $vid = shift;
+    my ($pid, $vid) = @_;
     my $bid = check_vid($vid)->{bid};
     ensure_valid_bid($pid, $bid);
 }
@@ -505,7 +505,7 @@ failing test methods. Returns 0 otherwise.
 
 sub has_failing_tests {
     @_ == 1 or die $ARG_ERROR;
-    my $file_name = shift;
+    my ($file_name) = @_;
 
     my $list = get_failing_tests($file_name) or die "Could not parse file";
     my @fail_methods = @{$list->{methods}};
@@ -535,7 +535,7 @@ C<methods>, and C<asserts>), which map to lists of failing tests:
 
 sub get_failing_tests {
     @_ == 1 or die $ARG_ERROR;
-    my $file_name = shift;
+    my ($file_name) = @_;
 
     my $list = {
         classes => [],
