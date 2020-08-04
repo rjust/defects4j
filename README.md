@@ -261,15 +261,15 @@ Publications
     FSE 2014 [[download]][fse14].
 
 * "Challenges in Using Search-Based Test Generation to Identify Real Faults in Mockito"
-   Gregory Gay.
+   Gregory Gay,
    SSBSE 2016 [[download]][ssbse16].
 
 * "Detecting Real Faults in the Gson Library Through Search-Based Unit Test Generation"
-   Gregory Gay.
+   Gregory Gay,
    SSBSE 2018 [[download]][ssbse18].
 
 * "Defects4J as a Challenge Case for the Search-Based Software Engineering Community"
-   Gregory Gay, René Just
+   Gregory Gay and René Just,
    SSBSE 2020 [[download]][ssbse20].
 
 [issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
