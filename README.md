@@ -264,9 +264,19 @@ Publications
    Gregory Gay.
    SSBSE 2016 [[download]][ssbse16].
 
+* "Detecting Real Faults in the Gson Library Through Search-Based Unit Test Generation"
+   Gregory Gay.
+   SSBSE 2018 [[download]][ssbse18].
+
+* "Defects4J as a Challenge Case for the Search-Based Software Engineering Community"
+   Gregory Gay, René Just
+   SSBSE 2020 [[download]][ssbse20].
+
 [issta14]: https://people.cs.umass.edu/~rjust/publ/defects4j_issta_2014.pdf
 [fse14]: https://people.cs.umass.edu/~rjust/publ/mutants_real_faults_fse_2014.pdf
 [ssbse16]: https://greg4cr.github.io/pdf/16mockito.pdf
+[ssbse18]: https://greg4cr.github.io/pdf/18gson.pdf
+[ssbse20]: https://greg4cr.github.io/pdf/20d4j.pdf
 
 [More publications](https://scholar.google.com/scholar?q=defects4j)
 
