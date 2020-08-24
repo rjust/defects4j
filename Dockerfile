@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 MAINTAINER ngocpq <phungquangngoc@gmail.com>
 
@@ -10,10 +10,7 @@ RUN \
   apt-get install software-properties-common -y && \
   apt-get update -y && \
   apt-get install -y openjdk-8-jdk \
-                ant \
-                maven \
                 git \
-                junit \
                 build-essential \
 				subversion \
 				perl \
@@ -24,28 +21,30 @@ RUN \
                 && \
   rm -rf /var/lib/apt/lists/*
 
-#############################################################################
-# Environment 
-#############################################################################
-
 # set java env
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
+# Set Timezone to America/Los_Angeles
+ENV TZ=America/Los_Angeles
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #############################################################################
 # Setup Defects4J
 #############################################################################
 
-# -----------Clone defects4j from github--------
+# ----------- Step 1. Clone defects4j from github --------------
 WORKDIR /
 RUN git clone https://github.com/rjust/defects4j.git defects4j
-ENV D4J_HOME /defects4j
 
-# -----------Install defects4j--------
-WORKDIR ${D4J_HOME}
+# ----------- Step 2. Initialize Defects4J ---------------------
+WORKDIR /defects4j
 
+# Install Perl dependencies
 RUN cpanm --installdeps .
 
+# Init defects4j
 RUN ./init.sh
 
-ENV PATH="${D4J_HOME}/framework/bin:${PATH}"  
+# ----------- Step 3. Add Defects4J's executables to PATH: ------
+ENV PATH="/defects4j/framework/bin:${PATH}"  
 #--------------
