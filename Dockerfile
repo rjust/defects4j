@@ -3,8 +3,9 @@ FROM ubuntu:20.04
 MAINTAINER ngocpq <phungquangngoc@gmail.com>
 
 #############################################################################
-# Setup base image 
+# Requirements
 #############################################################################
+
 RUN \
   apt-get update -y && \
   apt-get install software-properties-common -y && \
@@ -21,12 +22,16 @@ RUN \
                 && \
   rm -rf /var/lib/apt/lists/*
 
-# set java env
+# Java version
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
-# Set Timezone to America/Los_Angeles
+# Perl dependencies
+RUN cpanm --installdeps .
+
+# Timezone
 ENV TZ=America/Los_Angeles
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 
 #############################################################################
 # Setup Defects4J
@@ -38,11 +43,6 @@ RUN git clone https://github.com/rjust/defects4j.git defects4j
 
 # ----------- Step 2. Initialize Defects4J ---------------------
 WORKDIR /defects4j
-
-# Install Perl dependencies
-RUN cpanm --installdeps .
-
-# Init defects4j
 RUN ./init.sh
 
 # ----------- Step 3. Add Defects4J's executables to PATH: ------
