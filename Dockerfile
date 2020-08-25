@@ -25,9 +25,6 @@ RUN \
 # Java version
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
-# Perl dependencies
-RUN cpanm --installdeps .
-
 # Timezone
 ENV TZ=America/Los_Angeles
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -43,6 +40,7 @@ RUN git clone https://github.com/rjust/defects4j.git defects4j
 
 # ----------- Step 2. Initialize Defects4J ---------------------
 WORKDIR /defects4j
+RUN cpanm --installdeps .
 RUN ./init.sh
 
 # ----------- Step 3. Add Defects4J's executables to PATH: ------
