@@ -78,13 +78,6 @@ version of Java 1.8.
 Note that using Java 1.9+ might result in unexpected failing tests on a fixed
 program version. 
 
-#### Perl dependencies
-All required Perl modules are listed in `cpanfile`. On many Unix platforms,
-these required Perl modules are installed by default. If this is not the case,
-you can use cpan (or a cpan wrapper) to install them. For example, if you have
-cpanm installed, you can automatically install all modules by running:
-`cpanm --installdeps .`
-
 #### Timezone
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, set the `TZ`
@@ -97,7 +90,9 @@ Steps to set up Defects4J
     - `git clone https://github.com/rjust/defects4j`
 
 2. Initialize Defects4J (download the project repositories and external libraries, which are not included in the git repository for size purposes and to avoid redundancies):
+   If you do not have `cpanm` installed, use cpan or a cpan wrapper to install the perl modules listed in `cpanfile`.
     - `cd defects4j`
+    - `cpanm --installdeps .`
     - `./init.sh`
 
 3. Add Defects4J's executables to your PATH:
