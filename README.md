@@ -83,6 +83,11 @@ Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 If you are using the bugs outside of the Defects4J framework, set the `TZ`
 environment variable to `America/Los_Angeles` and export it.
 
+#### Perl dependencies
+All required Perl modules are listed in [cpanfile](https://github.com/rjust/defects4j/blob/master/cpanfile).
+On many Unix platforms, these required Perl modules are installed by default.
+If this is not the case, see instructions below for how to install them.
+
 Steps to set up Defects4J
 ----------------
 
