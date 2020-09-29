@@ -233,7 +233,8 @@ test_coverage() {
     if [ $all_flag -eq 1 ]; then
         # -A => collect coverage data for all methods, not just methods with defects
         # -I => report coverage for failing tests
-        run_coverage.pl -p $pid -d $suite_dir -o $db_dir -A -I || die "run coverage analysis"
+        # -D => display execution environment and do not delete the temporary check-out directory
+        run_coverage.pl -p $pid -d $suite_dir -o $db_dir -A -I -D || die "run coverage analysis"
       else
         run_coverage.pl -p $pid -d $suite_dir -o $db_dir || die "run coverage analysis"
     fi
