@@ -1,0 +1,27 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+index 5a09627..ae7aae2 100644
+--- a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+@@ -1033,20 +1033,11 @@ public class CSVPrinterTest {
+     }
+ 
+     @Test
+-    public void testDontQuoteEuroFirstChar() throws IOException {
++    public void testRfc4180QuoteSingleChar() throws IOException {
+         final StringWriter sw = new StringWriter();
+         try (final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.RFC4180)) {
+             printer.printRecord(EURO_CH, "Deux");
+-            assertEquals(EURO_CH + ",Deux" + recordSeparator, sw.toString());
+-        }
+-    }
+-
+-    @Test
+-    public void testQuoteCommaFirstChar() throws IOException {
+-        final StringWriter sw = new StringWriter();
+-        try (final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.RFC4180)) {
+-            printer.printRecord(",");
+-            assertEquals("\",\"" + recordSeparator, sw.toString());
++            assertEquals("\"" + EURO_CH + "\",Deux" + recordSeparator, sw.toString());
+         }
+     }
+ 

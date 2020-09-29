@@ -1,0 +1,25 @@
+diff --git a/src/main/java/org/apache/commons/collections/functors/EqualPredicate.java b/src/main/java/org/apache/commons/collections/functors/EqualPredicate.java
+index 00a28c2d..03588b74 100644
+--- a/src/main/java/org/apache/commons/collections/functors/EqualPredicate.java
++++ b/src/main/java/org/apache/commons/collections/functors/EqualPredicate.java
+@@ -81,7 +81,7 @@ public final class EqualPredicate<T> implements Predicate<T>, Serializable {
+     public EqualPredicate(T object) {
+         // do not use the DefaultEquator to keep backwards compatibility
+         // the DefaultEquator returns also true if the two object references are equal
+-        this(object, null);
++        this(object, new DefaultEquator<T>());
+     }
+ 
+     /**
+@@ -105,11 +105,7 @@ public final class EqualPredicate<T> implements Predicate<T>, Serializable {
+      * @return true if input object equals stored value
+      */
+     public boolean evaluate(T object) {
+-        if (equator != null) {
+             return equator.equate(iValue, object);
+-        } else {
+-            return iValue.equals(object);
+-        }
+     }
+ 
+     /**

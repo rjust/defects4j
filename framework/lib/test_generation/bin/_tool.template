@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# Wrapper script for <generator name>
+#
+# Environment variables exported by Defects4J's gen_tests.pl script:
+# D4J_HOME:                The root directory of the used Defects4J installation.
+# D4J_FILE_TARGET_CLASSES: File that lists all target classes (one per line).
+# D4J_DIR_OUTPUT:          Directory to which the generated test suite sources
+#                          should be written.
+# D4J_DIR_WORKDIR:         Defects4J working directory of the checked-out
+#                          project version.
+# D4J_DIR_TESTGEN_BIN:     Directory that provides all scripts and configs of
+#                          all test-generation tools (directory of this script).
+# D4J_DIR_TESTGEN_LIB:     Directory that provides the libraries of all
+#                          test-generation tools.
+# D4J_TOTAL_BUDGET:        The total budget (in seconds) that the tool should
+#                          spend at most for all target classes.
+# D4J_SEED:                The random seed.
+# D4J_TEST_MODE:           Test mode: "regression" or "error-revealing".
+# D4J_DEBUG:               Run in debug mode: 0 (no) or 1 (yes).
+
+# Check whether the D4J_DIR_TESTGEN_BIN variable is set
+if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
+    echo "Variable D4J_DIR_TESTGEN_BIN not set!"
+    exit 1
+fi
+
+# General helper functions
+source $D4J_DIR_TESTGEN_BIN/_tool.source
+
+# The classpath to compile and run the project
+project_cp=$(get_project_cp)
+
+# Read all additional configuration parameters
+add_config=$(parse_config $D4J_DIR_TESTGEN_BIN/<generator id>.config)
+
+# Make sure the provided test mode is supported
+if [ $D4J_TEST_MODE == "regression" ]; then
+    ...
+elif [ $D4J_TEST_MODE == "error-revealing" ]; then
+    ...
+else
+    die "Unsupported test mode: $D4J_TEST_MODE"
+fi
+
+# The command that invokes the test generator
+cmd="... $add_config"
+
+# Run the test-generation command
+if ! exec_cmd "$cmd"; then
+    exit 1
+fi

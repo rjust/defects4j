@@ -1,0 +1,94 @@
+diff --git a/test/com/google/javascript/jscomp/CompilerTypeTestCase.java b/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
+index 9bdc3616..43335837 100644
+--- a/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
++++ b/test/com/google/javascript/jscomp/CompilerTypeTestCase.java
+@@ -52,7 +52,7 @@ abstract class CompilerTypeTestCase extends BaseJSTypeTestCase {
+   protected void setUp() throws Exception {
+     compiler = new Compiler();
+     compiler.initCompilerOptionsIfTesting();
+-    compiler.getOptions().setWarningLevel(
++    compiler.options_.setWarningLevel(
+         DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.WARNING);
+     registry = compiler.getTypeRegistry();
+     initTypes();
+diff --git a/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java b/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java
+index 155f200e..9efeffbd 100644
+--- a/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java
++++ b/test/com/google/javascript/jscomp/CrossModuleCodeMotionTest.java
+@@ -652,35 +652,5 @@ public class CrossModuleCodeMotionTest extends CompilerTestCase {
+            // m2
+            "var a = (new f).cloneFun();"
+          });
+-  }
+-  
+-  public void testEmptyModule() {
+-    // When the dest module is empty, it might try to move the code to the
+-    // one of the modules that the empty module depends on. In some cases
+-    // this might ended up to be the same module as the definition of the code.
+-    // When that happens, CrossMooduleCodeMotion might report a code change
+-    // while nothing is moved. This should not be a problem if we know all
+-    // modules are non-empty.
+-    JSModule m1 = new JSModule("m1");
+-    m1.add(JSSourceFile.fromCode("m1", "function x() {}"));
+-    
+-    JSModule empty = new JSModule("empty");
+-    empty.addDependency(m1);
+-    
+-    JSModule m2 = new JSModule("m2");
+-    m2.add(JSSourceFile.fromCode("m2", "x()"));
+-    m2.addDependency(empty);
+-    
+-    JSModule m3 = new JSModule("m3");
+-    m3.add(JSSourceFile.fromCode("m3", "x()"));
+-    m3.addDependency(empty);
+-    
+-    test(new JSModule[] {m1,empty,m2,m3},
+-        new String[] {
+-          "",
+-          "function x() {}",
+-          "x()",
+-          "x()"
+-    });
+-  }
++  }  
+ }
+diff --git a/test/com/google/javascript/jscomp/TypeCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckTest.java
+index 87ef2b50..b0803b15 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckTest.java
+@@ -2728,7 +2728,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testSuperclassMatch() throws Exception {
+-    compiler.getOptions().setCodingConvention(new GoogleCodingConvention());
++    compiler.options_.setCodingConvention(new GoogleCodingConvention());
+     testTypes("/** @constructor */ var Foo = function() {};\n" +
+         "/** @constructor \n @extends Foo */ var Bar = function() {};\n" +
+         "Bar.inherits = function(x){};" +
+@@ -2736,7 +2736,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testSuperclassMatchWithMixin() throws Exception {
+-    compiler.getOptions().setCodingConvention(new GoogleCodingConvention());
++    compiler.options_.setCodingConvention(new GoogleCodingConvention());
+     testTypes("/** @constructor */ var Foo = function() {};\n" +
+         "/** @constructor */ var Baz = function() {};\n" +
+         "/** @constructor \n @extends Foo */ var Bar = function() {};\n" +
+@@ -2747,7 +2747,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testSuperclassMismatch1() throws Exception {
+-    compiler.getOptions().setCodingConvention(new GoogleCodingConvention());
++    compiler.options_.setCodingConvention(new GoogleCodingConvention());
+     testTypes("/** @constructor */ var Foo = function() {};\n" +
+         "/** @constructor \n @extends Object */ var Bar = function() {};\n" +
+         "Bar.inherits = function(x){};" +
+@@ -2756,7 +2756,7 @@ public class TypeCheckTest extends CompilerTypeTestCase {
+   }
+ 
+   public void testSuperclassMismatch2() throws Exception {
+-    compiler.getOptions().setCodingConvention(new GoogleCodingConvention());
++    compiler.options_.setCodingConvention(new GoogleCodingConvention());
+     testTypes("/** @constructor */ var Foo = function(){};\n" +
+         "/** @constructor */ var Bar = function(){};\n" +
+         "Bar.inherits = function(x){};" +

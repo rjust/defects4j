@@ -1,0 +1,22 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+index 63f66ea..ee460ba 100644
+--- a/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVPrinterTest.java
+@@ -485,17 +485,6 @@ public class CSVPrinterTest {
+         printer.close();
+     }
+ 
+-    @Test
+-    public void testHeader() throws IOException {
+-        final StringWriter sw = new StringWriter();
+-        final CSVPrinter printer = new CSVPrinter(sw, CSVFormat.DEFAULT.withQuoteChar(null)
+-                .withHeader("C1", "C2", "C3"));
+-        printer.printRecord("a", "b", "c");
+-        printer.printRecord("x", "y", "z");
+-        assertEquals("C1,C2,C3\r\na,b,c\r\nx,y,z\r\n", sw.toString());
+-        printer.close();
+-    }
+-
+     @Test
+     public void testEOLPlain() throws IOException {
+         final StringWriter sw = new StringWriter();

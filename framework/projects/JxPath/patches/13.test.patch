@@ -1,0 +1,53 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java b/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java
+index a3293bd..535d2b1 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java
+@@ -41,21 +41,17 @@ public class ExternalXMLNamespaceTest extends JXPathTestCase {
+     protected DocumentContainer createDocumentContainer(String model) {
+         DocumentContainer result = new DocumentContainer(JXPathTestCase.class
+                 .getResource("ExternalNS.xml"), model);
+-        // this setting only works for DOM, so no JDOM tests :|
++        //this setting only works for DOM, so no JDOM tests :|
+         result.setNamespaceAware(false);
+         return result;
+     }
+ 
+-    protected JXPathContext createContext(String model) {
++    protected void doTest(String xpath, String model, String expected) {
+         JXPathContext context = JXPathContext
+                 .newContext(createDocumentContainer(model));
+         context.registerNamespace("A", "foo");
+         context.registerNamespace("B", "bar");
+-        return context;
+-    }
+-
+-    protected void doTest(String xpath, String model, String expected) {
+-        assertXPathValue(createContext(model), xpath, expected);
++        assertXPathValue(context, xpath, expected);
+     }
+ 
+     protected void doTestAttribute(String model) {
+@@ -63,12 +59,7 @@ public class ExternalXMLNamespaceTest extends JXPathTestCase {
+     }
+ 
+     protected void doTestElement(String model) {
+-        doTest("/ElementA/B:ElementB", model, "MY VALUE");
+-    }
+-
+-    protected void doTestCreateAndSetAttribute(String model) {
+-        assertXPathCreatePathAndSetValue(createContext(model),
+-                "/ElementA/@A:newAttr", "newValue", "/ElementA[1]/@A:newAttr");
++         doTest("/ElementA/B:ElementB", model, "MY VALUE");
+     }
+ 
+     public void testAttributeDOM() {
+@@ -79,8 +70,4 @@ public class ExternalXMLNamespaceTest extends JXPathTestCase {
+         doTestElement(DocumentContainer.MODEL_DOM);
+     }
+ 
+-    public void testCreateAndSetAttributeDOM() {
+-        doTestCreateAndSetAttribute(DocumentContainer.MODEL_DOM);
+-    }
+-
+ }
+\ No newline at end of file

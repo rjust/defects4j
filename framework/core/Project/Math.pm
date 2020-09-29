@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,75 +44,65 @@ our @ISA = qw(Project);
 my $PID  = "Math";
 
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "commons-math";
-    my $src  = "src/main/java";
-    my $test = "src/test";
-    my $vcs = Vcs::Git->new($PID,
-                            "$REPO_DIR/$name.git",
-                            "$SCRIPT_DIR/projects/$PID/commit-db");
+    my $vcs  = Vcs::Git->new($PID,
+                             "$REPO_DIR/$name.git",
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
-
-sub src_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($vid);
-}
-
-sub test_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($vid);
-}
-
-sub _build_dir_map {
-    my $self = shift;
-
-    return if defined $self->{_dir_map};
-
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
-    }
-    close IN;
-    $self->{_dir_map}=$cache;
-}
-
 
 #
-# Remove loopoing tests in addition to the broken ones
+# Determines the directory layout for sources and tests
+#
+sub determine_layout {
+    @_ == 2 or die $ARG_ERROR;
+    my ($self, $rev_id) = @_;
+    my $dir = $self->{prog_root};
+    my $result = _layout1($dir) // _layout2($dir);
+    die "Unknown layout for revision: ${rev_id}" unless defined $result;
+    return $result;
+}
+
+#
+# Existing Ant build.xml and default.properties
+#
+sub _layout1 {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep 'name="source.home"' $dir/build.xml 2>/dev/null`; chomp $src;
+    my $test = `grep 'name="test.home"' $dir/build.xml 2>/dev/null`; chomp $test;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/.*"source\.home"\s*value\s*=\s*"(\S+)".*/$1/;
+    $test=~ s/.*"test\.home"\s*value\s*=\s*"(\S+)".*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Generated build.xml (from mvn ant:ant) with maven-build.properties
+#
+sub _layout2 {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep "<sourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $src;
+    my $test = `grep "<unitTestSourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $test;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/.*<sourceDirectory>\s*([^<]+)\s*<\/sourceDirectory>.*/$1/;
+    $test=~ s/.*<unitTestSourceDirectory>\s*([^<]+)\s*<\/unitTestSourceDirectory>.*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Remove looping tests in addition to the broken ones
 #
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
@@ -123,8 +113,8 @@ sub fix_tests {
 
     my $dir = $self->test_dir($vid);
 
-    # TODO: make this more precise
-    my $file = "$SCRIPT_DIR/projects/$PID/broken_tests";
+    # TODO: Check whether these tests should be excluded on a per-version basis
+    my $file = "$PROJECTS_DIR/$PID/broken_tests";
     if (-e $file) {
         $self->exclude_tests_in_file($file, $dir);
     }

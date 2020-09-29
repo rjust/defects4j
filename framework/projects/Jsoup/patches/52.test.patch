@@ -1,0 +1,98 @@
+diff --git a/src/test/java/org/jsoup/nodes/DocumentTest.java b/src/test/java/org/jsoup/nodes/DocumentTest.java
+index 95b9700..48c3ccf 100644
+--- a/src/test/java/org/jsoup/nodes/DocumentTest.java
++++ b/src/test/java/org/jsoup/nodes/DocumentTest.java
+@@ -312,7 +312,7 @@ public class DocumentTest {
+         doc.updateMetaCharsetElement(true);
+         doc.charset(Charset.forName(charsetUtf8));
+         
+-        final String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\"?>\n" +
++        final String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\">\n" +
+                                         "<root>\n" +
+                                         " node\n" +
+                                         "</root>";
+@@ -330,7 +330,7 @@ public class DocumentTest {
+         doc.updateMetaCharsetElement(true);
+         doc.charset(Charset.forName(charsetIso8859));
+         
+-        final String xmlCharsetISO = "<?xml version=\"1.0\" encoding=\"" + charsetIso8859 + "\"?>\n" +
++        final String xmlCharsetISO = "<?xml version=\"1.0\" encoding=\"" + charsetIso8859 + "\">\n" +
+                                         "<root>\n" +
+                                         " node\n" +
+                                         "</root>";
+@@ -348,7 +348,7 @@ public class DocumentTest {
+         doc.updateMetaCharsetElement(true);
+         doc.charset(Charset.forName(charsetUtf8));
+         
+-        final String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\"?>\n" +
++        final String xmlCharsetUTF8 = "<?xml version=\"1.0\" encoding=\"" + charsetUtf8 + "\">\n" +
+                                         "<root>\n" +
+                                         " node\n" +
+                                         "</root>";
+@@ -372,7 +372,7 @@ public class DocumentTest {
+     public void testMetaCharsetUpdateXmlDisabledNoChanges() {
+         final Document doc = createXmlDocument("dontTouch", "dontTouch", true);
+         
+-        final String xmlCharset = "<?xml version=\"dontTouch\" encoding=\"dontTouch\"?>\n" +
++        final String xmlCharset = "<?xml version=\"dontTouch\" encoding=\"dontTouch\">\n" +
+                                     "<root>\n" +
+                                     " node\n" +
+                                     "</root>";
+diff --git a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+index 0759c7b..cb8c6f7 100644
+--- a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
++++ b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+@@ -6,7 +6,6 @@ import org.jsoup.helper.StringUtil;
+ import org.jsoup.nodes.Document;
+ import org.jsoup.nodes.Node;
+ import org.jsoup.nodes.TextNode;
+-import org.jsoup.nodes.XmlDeclaration;
+ import org.junit.Ignore;
+ import org.junit.Test;
+ 
+@@ -18,8 +17,7 @@ import java.net.URISyntaxException;
+ import java.util.List;
+ 
+ import static org.jsoup.nodes.Document.OutputSettings.Syntax;
+-import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertFalse;
++import static org.junit.Assert.*;
+ 
+ /**
+  * Tests XmlTreeBuilder.
+@@ -105,7 +103,7 @@ public class XmlTreeBuilderTest {
+     @Test public void handlesXmlDeclarationAsDeclaration() {
+         String html = "<?xml encoding='UTF-8' ?><body>One</body><!-- comment -->";
+         Document doc = Jsoup.parse(html, "", Parser.xmlParser());
+-        assertEquals("<?xml encoding=\"UTF-8\"?> <body> One </body> <!-- comment -->",
++        assertEquals("<?xml encoding='UTF-8' ?> <body> One </body> <!-- comment -->",
+                 StringUtil.normaliseWhitespace(doc.outerHtml()));
+         assertEquals("#declaration", doc.childNode(0).nodeName());
+         assertEquals("#comment", doc.childNode(2).nodeName());
+@@ -132,26 +130,4 @@ public class XmlTreeBuilderTest {
+         Document xmlDoc = Jsoup.parse(html, "", Parser.xmlParser());
+         assertEquals("<img src=\"asdf\" onerror=\"alert(1)\" x=\"\" />", xmlDoc.html());
+     }
+-
+-    @Test
+-    public void testDetectCharsetEncodingDeclaration() throws IOException, URISyntaxException {
+-        File xmlFile = new File(XmlTreeBuilder.class.getResource("/htmltests/xml-charset.xml").toURI());
+-        InputStream inStream = new FileInputStream(xmlFile);
+-        Document doc = Jsoup.parse(inStream, null, "http://example.com/", Parser.xmlParser());
+-        assertEquals("ISO-8859-1", doc.charset().name());
+-        assertEquals("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?> <data>äöåéü</data>",
+-            TextUtil.stripNewlines(doc.html()));
+-    }
+-
+-    @Test
+-    public void testParseDeclarationAttributes() {
+-        String xml = "<?xml version='1' encoding='UTF-8' something='else'?><val>One</val>";
+-        Document doc = Jsoup.parse(xml, "", Parser.xmlParser());
+-        XmlDeclaration decl = (XmlDeclaration) doc.childNode(0);
+-        assertEquals("1", decl.attr("version"));
+-        assertEquals("UTF-8", decl.attr("encoding"));
+-        assertEquals("else", decl.attr("something"));
+-        assertEquals("version=\"1\" encoding=\"UTF-8\" something=\"else\"", decl.getWholeDeclaration());
+-        assertEquals("<?xml version=\"1\" encoding=\"UTF-8\" something=\"else\"?>", decl.outerHtml());
+-    }
+ }

@@ -1,0 +1,20 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/struct/EnumFormatShapeTest.java b/src/test/java/com/fasterxml/jackson/databind/struct/EnumFormatShapeTest.java
+index 8e7f13bee..c95f8e8d4 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/struct/EnumFormatShapeTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/struct/EnumFormatShapeTest.java
+@@ -104,13 +104,10 @@ public class EnumFormatShapeTest
+     }
+ 
+     // for [databind#1543]
+-    public void testEnumValueAsNumber() throws Exception {
++    public void testEnumAsNumber() throws Exception {
+         assertEquals(String.valueOf(Color.GREEN.ordinal()),
+                 MAPPER.writeValueAsString(Color.GREEN));
+-    }
+-
+-    public void testEnumPropertyAsNumber() throws Exception {
+-        assertEquals(String.format(aposToQuotes("{'color':%s}"), Color.GREEN.ordinal()),
++        assertEquals(String.format(aposToQuotes("{'color':'%s'}"), Color.GREEN.ordinal()),
+                 MAPPER.writeValueAsString(new ColorWrapper(Color.GREEN)));
+     }
+ }

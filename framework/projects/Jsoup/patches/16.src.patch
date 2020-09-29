@@ -1,0 +1,34 @@
+diff --git a/src/main/java/org/jsoup/nodes/DocumentType.java b/src/main/java/org/jsoup/nodes/DocumentType.java
+index f8c79f0..f9f77da 100644
+--- a/src/main/java/org/jsoup/nodes/DocumentType.java
++++ b/src/main/java/org/jsoup/nodes/DocumentType.java
+@@ -1,7 +1,6 @@
+ package org.jsoup.nodes;
+ 
+ import org.jsoup.helper.StringUtil;
+-import org.jsoup.helper.Validate;
+ 
+ /**
+  * A {@code <!DOCTPYE>} node.
+@@ -19,7 +18,6 @@ public class DocumentType extends Node {
+     public DocumentType(String name, String publicId, String systemId, String baseUri) {
+         super(baseUri);
+ 
+-        Validate.notEmpty(name);
+         attr("name", name);
+         attr("publicId", publicId);
+         attr("systemId", systemId);
+@@ -32,11 +30,11 @@ public class DocumentType extends Node {
+ 
+     @Override
+     void outerHtmlHead(StringBuilder accum, int depth, Document.OutputSettings out) {
+-        accum.append("<!DOCTYPE ").append(attr("name"));
++        accum.append("<!DOCTYPE html");
+         if (!StringUtil.isBlank(attr("publicId")))
+             accum.append(" PUBLIC \"").append(attr("publicId")).append("\"");
+         if (!StringUtil.isBlank(attr("systemId")))
+-            accum.append(" \"").append(attr("systemId")).append("\"");
++            accum.append(' ').append(attr("systemId")).append("\"");
+         accum.append('>');
+     }
+ 

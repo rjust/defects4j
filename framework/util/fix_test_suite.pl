@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ See L<Project|Project/"Available Project IDs"> module for available project IDs.
 =item -d F<suite_dir>
 
 The directory that contains the test suite archives.
-See L<Test suites|/"Test suites">.
+See L<Test Suites|/"Test Suites">.
 
 =item -f C<include_file_pattern>
 
@@ -102,6 +102,7 @@ archive in F<suite_dir>):
 =item * The entire test suite passes 5 times in a row.
 
 =cut
+
 my $RUNS = 5;
 
 =pod
@@ -117,6 +118,7 @@ the fixed version. The results of the fix are stored in the database table
 F<suite_dir/L<TAB_FIX|DB>>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -199,6 +201,7 @@ Examples:
 =back
 
 =cut
+
 my @list;
 opendir(DIR, $SUITE_DIR) or die "Could not open directory: $SUITE_DIR!";
 my @entries = readdir(DIR);
@@ -234,6 +237,7 @@ information (e.g., how many tests were removed) to fix_test_suite.summary.log
 in the test suite directory F<SUITE_DIR>.
 
 =cut
+
 my $COMPILE_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.compile.log");
 my $RUN_LOG     = Log::create_log("$SUITE_DIR/fix_test_suite.run.log");
 my $SUMMARY_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.summary.log");
@@ -438,7 +442,7 @@ sub _rm_classes {
             ++$num_uncompilable_test_classes;
         } else {
             # e.g., '--- org.foo.BarTest::test09'
-            my $test_canonical_name = "--- $class::$test_name";
+            my $test_canonical_name = "--- ${class}::${test_name}";
             # Skip already selected (to be removed) test cases
             if (! grep{/^$test_canonical_name$/} @uncompilable_tests) {
                 push(@uncompilable_tests, $test_canonical_name);

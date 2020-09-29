@@ -1,0 +1,31 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVFormat.java b/src/main/java/org/apache/commons/csv/CSVFormat.java
+index 772aaf0..22130bf 100644
+--- a/src/main/java/org/apache/commons/csv/CSVFormat.java
++++ b/src/main/java/org/apache/commons/csv/CSVFormat.java
+@@ -313,12 +313,6 @@ public final class CSVFormat implements Serializable {
+         if (header == null) {
+         	this.header = null;
+         } else {
+-        	Set<String> dupCheck = new HashSet<String>();
+-        	for(String hdr : header) {
+-        		if (!dupCheck.add(hdr)) {
+-        			throw new IllegalArgumentException("The header contains a duplicate entry: '" + hdr + "' in " + Arrays.toString(header));
+-        		}
+-        	}
+             this.header = header.clone();        	
+         }
+         this.skipHeaderRecord = skipHeaderRecord;
+@@ -668,6 +662,13 @@ public final class CSVFormat implements Serializable {
+             throw new IllegalStateException("No quotes mode set but no escape character is set");
+         }
+ 
++        if (header != null) {
++            final Set<String> set = new HashSet<String>(header.length);
++            set.addAll(Arrays.asList(header));
++            if (set.size() != header.length) {
++                throw new IllegalStateException("The header contains duplicate names: " + Arrays.toString(header));
++            }
++        }
+     }
+ 
+     /**

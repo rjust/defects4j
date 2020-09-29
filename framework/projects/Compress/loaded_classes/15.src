@@ -1,0 +1,16 @@
+org.apache.commons.compress.archivers.ArchiveEntry
+org.apache.commons.compress.archivers.zip.AbstractUnicodeExtraField
+org.apache.commons.compress.archivers.zip.AsiExtraField
+org.apache.commons.compress.archivers.zip.ExtraFieldUtils
+org.apache.commons.compress.archivers.zip.GeneralPurposeBit
+org.apache.commons.compress.archivers.zip.JarMarker
+org.apache.commons.compress.archivers.zip.UnicodeCommentExtraField
+org.apache.commons.compress.archivers.zip.UnicodePathExtraField
+org.apache.commons.compress.archivers.zip.UnixStat
+org.apache.commons.compress.archivers.zip.UnparseableExtraFieldData
+org.apache.commons.compress.archivers.zip.Zip64ExtendedInformationExtraField
+org.apache.commons.compress.archivers.zip.ZipArchiveEntry
+org.apache.commons.compress.archivers.zip.ZipEightByteInteger
+org.apache.commons.compress.archivers.zip.ZipExtraField
+org.apache.commons.compress.archivers.zip.ZipLong
+org.apache.commons.compress.archivers.zip.ZipShort

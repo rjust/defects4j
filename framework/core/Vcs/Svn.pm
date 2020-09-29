@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,15 +47,6 @@ sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
     return "svn -r ${revision_id} co $self->{repo} $work_dir";
-}
-# TODO: Can we always use patch instead of a VCS-specific apply command?
-sub _apply_cmd {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
-    # TODO: We currently have two different types of patches for SVN projects.
-    return "cd $work_dir; if patch -p0 -s --dry-run < $patch_file 2>&1; " .
-            "then patch -p0 -s < $patch_file 2>&1; " .
-            "else patch -p1 -s < $patch_file 2>&1; fi";
 }
 
 sub _diff_cmd {

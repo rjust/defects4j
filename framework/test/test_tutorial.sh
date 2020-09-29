@@ -34,7 +34,7 @@ cd $work_dir
 defects4j compile || die "compile program version $pid-$vid"
 
 # Run tests for buggy version and verify triggering tests
-defects4j test || die "test program version $pid-$vid"
+defects4j test -r || die "test program version $pid-$vid"
 actual=$(num_triggers "$work_dir/failing_tests")
 expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
 [ $actual -eq $expected ] || die "verify number of triggering tests"

@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/KeyDeser1429Test.java b/src/test/java/com/fasterxml/jackson/failing/KeyDeser1429Test.java
+similarity index 96%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/KeyDeser1429Test.java
+rename to src/test/java/com/fasterxml/jackson/failing/KeyDeser1429Test.java
+index 7922928a2..ffce81d4d 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/KeyDeser1429Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/KeyDeser1429Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser;
++package com.fasterxml.jackson.failing;
+ 
+ import java.util.Map;
+ 

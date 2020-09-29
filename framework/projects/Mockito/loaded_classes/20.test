@@ -1,8 +1,8 @@
-org.mockitousage.constructor.CreatingMocksWithConstructorTest
-org.mockitousage.annotation.SpyAnnotationTest
-org.mockito.StateMaster
 org.mockito.configuration.MockitoConfiguration
-org.mockitousage.configuration.SmartMock
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
+org.mockitousage.annotation.SpyAnnotationTest
+org.mockitousage.configuration.SmartMock
+org.mockitousage.constructor.CreatingMocksWithConstructorTest
 org.mockitoutil.Assertor
 org.mockitoutil.TestBase

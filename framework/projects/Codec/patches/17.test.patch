@@ -1,0 +1,21 @@
+diff --git a/src/test/java/org/apache/commons/codec/binary/StringUtilsTest.java b/src/test/java/org/apache/commons/codec/binary/StringUtilsTest.java
+index 8a6e2193..55e0cc2b 100644
+--- a/src/test/java/org/apache/commons/codec/binary/StringUtilsTest.java
++++ b/src/test/java/org/apache/commons/codec/binary/StringUtilsTest.java
+@@ -145,16 +145,6 @@ public class StringUtilsTest {
+         Assert.assertNull(StringUtils.newString(null, "UNKNOWN"));
+     }
+ 
+-    @Test
+-    public void testNewStringNullInput_CODEC229() {
+-        Assert.assertNull(StringUtils.newStringUtf8(null));
+-        Assert.assertNull(StringUtils.newStringIso8859_1(null));
+-        Assert.assertNull(StringUtils.newStringUsAscii(null));
+-        Assert.assertNull(StringUtils.newStringUtf16(null));
+-        Assert.assertNull(StringUtils.newStringUtf16Be(null));
+-        Assert.assertNull(StringUtils.newStringUtf16Le(null));
+-    }
+-
+     @Test
+     public void testNewStringIso8859_1() throws UnsupportedEncodingException {
+         final String charsetName = "ISO-8859-1";

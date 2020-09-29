@@ -1,0 +1,121 @@
+diff --git a/src/main/java/org/jsoup/nodes/Entities.java b/src/main/java/org/jsoup/nodes/Entities.java
+index a60fab8..cc72b7d 100644
+--- a/src/main/java/org/jsoup/nodes/Entities.java
++++ b/src/main/java/org/jsoup/nodes/Entities.java
+@@ -1,6 +1,5 @@
+ package org.jsoup.nodes;
+ 
+-import org.jsoup.parser.Parser;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -59,9 +58,6 @@ public class Entities {
+      * @return true if a known named entity in the base set
+      * @see #isNamedEntity(String)
+      */
+-    public static boolean isBaseNamedEntity(String name) {
+-        return base.containsKey(name);
+-    }
+ 
+     /**
+      * Get the Character value of the named entity
+@@ -104,7 +100,33 @@ public class Entities {
+      * @return
+      */
+     static String unescape(String string, boolean strict) {
+-        return Parser.unescapeEntities(string, strict);
++        if (!string.contains("&"))
++            return string;
++        Matcher m = strict? strictUnescapePattern.matcher(string) : unescapePattern.matcher(string);
++        StringBuffer accum = new StringBuffer(string.length());
++        while (m.find()) {
++            int charval = -1;
++            String num = m.group(3);
++            if (num != null) {
++                try {
++                    int base = m.group(2) != null ? 16 : 10;
++                    charval = Integer.valueOf(num, base);
++                } catch (NumberFormatException e) {
++                }
++            } else {
++                String name = m.group(1);
++                if (full.containsKey(name))
++                    charval = full.get(name);
++            }
++            if (charval != -1 || charval > 0xFFFF) {
++                String c = Character.toString((char) charval);
++                m.appendReplacement(accum, Matcher.quoteReplacement(c));
++            } else {
++                m.appendReplacement(accum, Matcher.quoteReplacement(m.group(0)));
++            }
++        }
++        m.appendTail(accum);
++        return accum.toString();
+     }
+ 
+     // xhtml has restricted entities
+diff --git a/src/main/java/org/jsoup/parser/Parser.java b/src/main/java/org/jsoup/parser/Parser.java
+index eebce38..ed700d9 100644
+--- a/src/main/java/org/jsoup/parser/Parser.java
++++ b/src/main/java/org/jsoup/parser/Parser.java
+@@ -130,10 +130,6 @@ public class Parser {
+      * @param inAttribute if the string is to be escaped in strict mode (as attributes are)
+      * @return an unescaped string
+      */
+-    public static String unescapeEntities(String string, boolean inAttribute) {
+-        Tokeniser tokeniser = new Tokeniser(new CharacterReader(string), ParseErrorList.noTracking());
+-        return tokeniser.unescapeEntities(inAttribute);
+-    }
+ 
+     /**
+      * @param bodyHtml HTML to parse
+diff --git a/src/main/java/org/jsoup/parser/Tokeniser.java b/src/main/java/org/jsoup/parser/Tokeniser.java
+index 3445855..cc9f470 100644
+--- a/src/main/java/org/jsoup/parser/Tokeniser.java
++++ b/src/main/java/org/jsoup/parser/Tokeniser.java
+@@ -133,14 +133,23 @@ class Tokeniser {
+         } else { // named
+             // get as many letters as possible, and look for matching entities.
+             String nameRef = reader.consumeLetterThenDigitSequence();
++            String origNameRef = new String(nameRef);
+             boolean looksLegit = reader.matches(';');
+             // found if a base named entity without a ;, or an extended entity with the ;.
+-            boolean found = (Entities.isBaseNamedEntity(nameRef) || (Entities.isNamedEntity(nameRef) && looksLegit));
++            boolean found = false;
++            while (nameRef.length() > 0 && !found) {
++                if (Entities.isNamedEntity(nameRef))
++                    found = true;
++                else {
++                    nameRef = nameRef.substring(0, nameRef.length()-1);
++                    reader.unconsume();
++                }
++            }
+ 
+             if (!found) {
+                 reader.rewindToMark();
+                 if (looksLegit) // named with semicolon
+-                    characterReferenceError(String.format("invalid named referenece '%s'", nameRef));
++                    characterReferenceError(String.format("invalid named referenece '%s'", origNameRef));
+                 return null;
+             }
+             if (inAttribute && (reader.matchesLetter() || reader.matchesDigit() || reader.matchesAny('=', '-', '_'))) {
+@@ -226,19 +235,4 @@ class Tokeniser {
+      * @param inAttribute
+      * @return unescaped string from reader
+      */
+-    String unescapeEntities(boolean inAttribute) {
+-        StringBuilder builder = new StringBuilder();
+-        while (!reader.isEmpty()) {
+-            builder.append(reader.consumeTo('&'));
+-            if (reader.matches('&')) {
+-                reader.consume();
+-                Character c = consumeCharacterReference(null, inAttribute);
+-                if (c == null)
+-                    builder.append('&');
+-                else
+-                    builder.append(c);
+-            }
+-        }
+-        return builder.toString();
+-    }
+ }

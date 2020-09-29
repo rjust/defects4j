@@ -1,0 +1,185 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-query -- query the metadata for a project to obtain CSV-formatted results.
+
+=head1 SYNOPSIS
+
+  d4j-query -p pid [-q query] [-o output_file] [-H] [-D|-A]
+
+=head1 DESCRIPTION
+
+This script is intended to query the metadata for a project to obtain 
+information that would be useful for automation or analysis of the framework.
+A user-provided list of columns determines what data is returned. By default,
+the list of available active bug IDs is returned.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -p C<pid>
+
+The ID of the project for which metadata is requested. A project ID
+must be provided to use this utility.
+
+=item -q C<query>
+
+A comma-separated list of fields, encased in quotation marks. For example,
+C<-q "bug.id,report.id"> returns the list of bug IDs and issue tracker IDs
+for the requested system.
+
+=item -o C<output_file>
+
+A file to output the extracted CSV to. By default, prints to the screen.
+
+=item -H
+
+List the available fields.
+
+=item -D
+
+Include only deprecated bugs. By default, only active bugs are queried.
+Cannot be used in conjunction with "all bugs" (-A).
+
+=item -A
+
+Include both active and deprecated bugs. By default, only active bugs are 
+queried. Cannot be used in conjunction with "only deprecated bugs" (-D).
+
+=back
+
+=head1 EXAMPLES
+
+=over 4
+
+=item -C<d4j-query -p Collections>
+
+Returns the list of active bug IDs for project Collections.
+
+=item -C<d4j-query -p Collections -H>
+
+Returns the list of available fields that can be queried.
+
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified">
+
+Returns all active bug IDs, and for each, the revision hash of the buggy 
+version and the list of modified classes.
+
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -D>
+
+Returns all deprecated bug IDs, and for each, the revision hash of the buggy 
+version and the list of modified classes.
+
+=item -C<d4j-query -p Collections -q "revision.buggy,classes.modified" -A>
+
+Returns all bug IDs (active and deprecated), and for each, the revision hash 
+of the buggy version and the list of modified classes.
+
+=item -C<d4j-query -p Collections -q "deprecated.reason" -A>
+
+Returns all bug IDs (active and deprecated) along with the reason for 
+deprecation. For active bugs, the deprecation reason will be "NA", as 
+those bugs do not have values for that field.
+
+=back
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+use Getopt::Std;
+use Query;
+
+#
+# Issue usage message and quit
+#
+sub _usage {
+    print "usage: $0 -p project_id [-q query] [-o output_file] [-H] [-D|-A]\n";
+    exit 1;
+}
+
+# Process command line options
+my %cmd_opts;
+getopts('p:q:o:HDA', \%cmd_opts) or _usage();
+
+_usage() unless defined $cmd_opts{p};
+
+my $PID = $cmd_opts{p};
+my $QUERY = defined $cmd_opts{q} ? $cmd_opts{q} : $BUGS_CSV_BUGID;
+my @requested = split /,/, $QUERY or die "Unable to parse query: $QUERY";
+my $OUTPUT_FILE = defined $cmd_opts{o} ? $cmd_opts{o} : "none";
+my $ONLY_DEP = defined $cmd_opts{D} ? 1 : 0;
+my $ALL_BUGS = defined $cmd_opts{A} ? 1 : 0;
+
+if (defined $cmd_opts{H}) {
+    my $joined_fields = join(", ", Query::get_fields());
+    print "Available fields: $joined_fields\n";
+    exit 1;
+}
+
+if ($ONLY_DEP and $ALL_BUGS) {
+    die "Only deprecated bugs (-D) and all bugs (-A) cannot be concurrently set.";
+}
+
+my %results;
+if ($ONLY_DEP) {
+    %results = Query::query_metadata($PID, "D", @requested);
+} elsif ($ALL_BUGS) {
+    %results = Query::query_metadata($PID, "A", @requested);
+} else{
+    %results = Query::query_metadata($PID, "C", @requested);
+}
+
+# Print the results in CSV format
+
+my $file;
+
+if ($OUTPUT_FILE ne "none") {
+    open($file, '>', $OUTPUT_FILE) or die "Could not open file '$OUTPUT_FILE' $!";
+}
+
+foreach my $bug_id (sort { $a <=> $b } keys %results) {
+    my $output = $bug_id;
+    foreach my $field (@requested) {
+        if ($field ne $BUGS_CSV_BUGID) {
+            $output = $output.",".$results{$bug_id}{$field};
+        }
+    }
+    if ($OUTPUT_FILE eq "none") {
+        print "$output\n";
+    } else {
+        print $file "$output\n";
+    }
+}
+
+if ($OUTPUT_FILE ne "none") {
+    close $file;
+}
+
+1;

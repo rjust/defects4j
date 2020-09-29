@@ -39,6 +39,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <!-- Check whether d4j.home is set -->
     <fail message="Property d4j.home not set!" unless="d4j.home" />
 
+    <!-- The default location for the projects meta data -->
+    <property name="d4j.dir.projects" value="${d4j.home}/framework/projects" />
+
     <taskdef resource="net/sf/antcontrib/antlib.xml"
             classpath="${d4j.home}/framework/lib/ant-contrib.jar"/>
 
@@ -57,6 +60,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Location of customized JUnit formatter-->
     <property name="formatter.jar" value="${d4j.home}/framework/lib/formatter.jar"/>
+    <!-- Directory of compiled test-gen classes -->
+    <property name="d4j.dir.classes.testgen" value="${d4j.workdir}/.classes_testgen"/>
     <!-- Directory of instrumented classes (e.g., for coverage analysis)-->
     <property name="d4j.dir.classes.instrumented" value="${d4j.workdir}/.classes_instrumented"/>
     <!-- Directory of mutated classes-->
@@ -74,7 +79,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <import file="${d4j.home}/framework/projects/defects4j.export.xml"/>
 
     <!-- Include project-specific build file -->
-    <import file="${d4j.home}/framework/projects/${d4j.project.id}/${d4j.project.id}.build.xml"/>
+    <import file="${d4j.dir.projects}/${d4j.project.id}/${d4j.project.id}.build.xml"/>
 
 
 <!--
@@ -140,7 +145,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <classpath>
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${junit.jar}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to runtime libraries of test generation tools -->
                 <path refid="d4j.lib.testgen.rt"/>
@@ -226,7 +231,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             <classpath>
                 <pathelement location="${d4j.dir.classes.mutated}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to runtime libraries of test generation tools -->
                 <path refid="d4j.lib.testgen.rt"/>
@@ -251,14 +256,15 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <echo message="classes.dir: ${classes.dir}" />
         <echo message="build.home: ${build.home}" />
 
-        <delete dir="${build.home}/gen-tests" quiet="true" />
-        <mkdir dir="${build.home}/gen-tests" />
+        <delete dir="${d4j.dir.classes.testgen}" quiet="true" />
+        <mkdir dir="${d4j.dir.classes.testgen}" />
         <javac srcdir="${d4j.test.dir}"
-               destdir="${build.home}/gen-tests"
+               destdir="${d4j.dir.classes.testgen}"
                debug="true"
                deprecation="false"
                optimize="false">
                <classpath>
+                    <pathelement path="${junit.jar}" />
                     <path refid="d4j.test.classpath" />
                     <pathelement path="${classes.dir}" />
                     <!-- Add dependencies to runtime libraries of test generation tools -->
@@ -284,8 +290,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <!-- Make sure that instrumented classes appear at the beginning of the
                      classpath -->
                 <pathelement location="${d4j.dir.classes.instrumented}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <pathelement path="${formatter.jar}" />
+                <pathelement path="${junit.jar}" />
                 <pathelement path="${classes.dir}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to code coverage tools -->
@@ -352,7 +359,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
                    build file should not rely on the current directory structure
               => D4J should provide properly filtered files in the working directory-->
-        <loadfile srcfile="${d4j.home}/framework/projects/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
+        <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
                  property="rel.files">
             <filterchain>
                 <tokenfilter>

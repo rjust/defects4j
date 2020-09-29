@@ -1,0 +1,17 @@
+org.apache.commons.collections4.comparators.ComparableComparator
+org.apache.commons.collections4.comparators.ReverseComparator
+org.apache.commons.collections4.ComparatorUtils
+org.apache.commons.collections4.iterators.AbstractEmptyIterator
+org.apache.commons.collections4.iterators.AbstractEmptyMapIterator
+org.apache.commons.collections4.iterators.CollatingIterator
+org.apache.commons.collections4.iterators.EmptyIterator
+org.apache.commons.collections4.iterators.EmptyListIterator
+org.apache.commons.collections4.iterators.EmptyMapIterator
+org.apache.commons.collections4.iterators.EmptyOrderedIterator
+org.apache.commons.collections4.iterators.EmptyOrderedMapIterator
+org.apache.commons.collections4.IteratorUtils
+org.apache.commons.collections4.MapIterator
+org.apache.commons.collections4.OrderedIterator
+org.apache.commons.collections4.OrderedMapIterator
+org.apache.commons.collections4.ResettableIterator
+org.apache.commons.collections4.ResettableListIterator

@@ -1,0 +1,38 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+index 5d1cdb19..853d6c84 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStreamTest.java
+@@ -21,12 +21,10 @@ package org.apache.commons.compress.archivers.zip;
+ import static org.apache.commons.compress.AbstractTestCase.getFile;
+ import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertFalse;
+ import static org.junit.Assert.assertTrue;
+ import static org.junit.Assert.fail;
+ 
+ import java.io.BufferedInputStream;
+-import java.io.ByteArrayInputStream;
+ import java.io.EOFException;
+ import java.io.File;
+ import java.io.FileInputStream;
+@@ -326,20 +324,6 @@ public class ZipArchiveInputStreamTest {
+                    ZipArchiveEntry.NameSource.NAME_WITH_EFS_FLAG);
+     }
+ 
+-    @Test
+-    public void properlyMarksEntriesAsUnreadableIfUncompressedSizeIsUnknown() throws Exception {
+-        // we never read any data
+-        try (ZipArchiveInputStream zis = new ZipArchiveInputStream(new ByteArrayInputStream(new byte[0]))) {
+-            ZipArchiveEntry e = new ZipArchiveEntry("test");
+-            e.setMethod(ZipMethod.DEFLATED.getCode());
+-            assertTrue(zis.canReadEntryData(e));
+-            e.setMethod(ZipMethod.ENHANCED_DEFLATED.getCode());
+-            assertTrue(zis.canReadEntryData(e));
+-            e.setMethod(ZipMethod.BZIP2.getCode());
+-            assertFalse(zis.canReadEntryData(e));
+-        }
+-    }
+-
+     private static byte[] readEntry(ZipArchiveInputStream zip, ZipArchiveEntry zae) throws IOException {
+         final int len = (int)zae.getSize();
+         final byte[] buff = new byte[len];

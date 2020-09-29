@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -129,8 +129,9 @@ my $src_dir = $project->src_dir($vid);
 # Classes to instrument for coverage analysis -- default is all modified classes
 my $classes = $INSTRUMENT // "$SCRIPT_DIR/projects/$pid/modified_classes/$bid.src";
 
-my $test_log = "$WORK_DIR/failing_tests";
-system(">$test_log");
+# Clean temporary files that hold test results
+my $fail_tests = "$WORK_DIR/$FILE_FAILING_TESTS";
+Utils::clean_test_results($WORK_DIR);
 
 # Run the test suite, according to the provided flags
 my $cov_results;
@@ -139,15 +140,15 @@ if (defined $TEST_SUITE) {
     my $test_dir = "$WORK_DIR/.test_suite";
     Utils::extract_test_suite($TEST_SUITE, $test_dir) or die;
     $project->compile_ext_tests($test_dir) or die "Cannot compile extracted test suite!";
-    $cov_results = Coverage::coverage_ext($project, $classes, $src_dir, $test_dir, "*.java", $test_log);
+    $cov_results = Coverage::coverage_ext($project, $classes, $src_dir, $test_dir, "*.java", $fail_tests, $SINGLE_TEST);
 } elsif ($REL_TESTS) {
     # Compile and run only relevant developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, $REL_TESTS);
+    $cov_results = Coverage::coverage($project, $classes, $src_dir, $fail_tests, $REL_TESTS);
 } else {
     # Compile and run developer-written tests
     $project->compile_tests() or die "Cannot compile test suite!";
-    $cov_results = Coverage::coverage($project, $classes, $src_dir, $test_log, undef, $SINGLE_TEST);
+    $cov_results = Coverage::coverage($project, $classes, $src_dir, $fail_tests, undef, $SINGLE_TEST);
 }
 defined $cov_results or die "Couldn't obtain coverage results!";
 
@@ -169,7 +170,7 @@ printf("%18s: %.1f%%\n", "Condition coverage", ($cov_results->{branches_total} =
 #printf("%17s: %.1f seconds\n", "Total run time", ($timeAnalysis));
 
 # Issue a warning if any test failed as this might give misleading results
-Utils::has_failing_tests($test_log)
-        and print(STDERR "WARNING: Some tests failed (see $test_log)!\n");
+Utils::has_failing_tests($fail_tests)
+        and print(STDERR "WARNING: Some tests failed (see $fail_tests)!\n");
 
 1;

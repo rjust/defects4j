@@ -1,0 +1,429 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/node/TestTreeMapperSerializer.java b/src/test/java/com/fasterxml/jackson/databind/node/TestTreeMapperSerializer.java
+new file mode 100644
+index 000000000..10f77a88b
+--- /dev/null
++++ b/src/test/java/com/fasterxml/jackson/databind/node/TestTreeMapperSerializer.java
+@@ -0,0 +1,213 @@
++package com.fasterxml.jackson.databind.node;
++
++import static org.junit.Assert.*;
++
++import java.io.*;
++
++import com.fasterxml.jackson.core.*;
++import com.fasterxml.jackson.databind.*;
++
++/**
++ * This unit test suite tries to verify that the trees ObjectMapper
++ * constructs can be serialized properly.
++ */
++public class TestTreeMapperSerializer extends NodeTestBase
++{
++    final static String FIELD1 = "first";
++    final static String FIELD2 = "Second?";
++    final static String FIELD3 = "foo'n \"bar\"";
++    final static String FIELD4 = "4";
++
++    final static String TEXT1 = "Some text & \"stuff\"";
++    final static String TEXT2 = "Some more text:\twith\nlinefeeds and all!";
++
++    final static double DOUBLE_VALUE = 9.25;
++
++    public void testFromArray() throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        ArrayNode root = mapper.createArrayNode();
++        root.add(TEXT1);
++        root.add(3);
++        ObjectNode obj = root.addObject();
++        obj.put(FIELD1, true);
++        obj.putArray(FIELD2);
++        root.add(false);
++
++        /* Ok, ready... let's serialize using one of two alternate
++         * methods: first preferred (using generator)
++         * (there are 2 variants here too)
++         */
++        for (int i = 0; i < 2; ++i) {
++            StringWriter sw = new StringWriter();
++            if (i == 0) {
++                JsonGenerator gen = new JsonFactory().createGenerator(sw);
++                root.serialize(gen, null);
++                gen.close();
++            } else {
++                mapper.writeValue(sw, root);
++            }
++            verifyFromArray(sw.toString());
++        }
++            
++        // And then convenient but less efficient alternative:
++        verifyFromArray(root.toString());
++    }
++
++    public void testFromMap()
++        throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        ObjectNode root = mapper.createObjectNode();
++        root.put(FIELD4, TEXT2);
++        root.put(FIELD3, -1);
++        root.putArray(FIELD2);
++        root.put(FIELD1, DOUBLE_VALUE);
++
++        /* Let's serialize using one of two alternate methods:
++         * first preferred (using generator)
++         * (there are 2 variants here too)
++         */
++        for (int i = 0; i < 2; ++i) {
++            StringWriter sw = new StringWriter();
++            if (i == 0) {
++                JsonGenerator gen = new JsonFactory().createGenerator(sw);
++                root.serialize(gen, null);
++                gen.close();
++            } else {
++                mapper.writeValue(sw, root);
++            }
++            verifyFromMap(sw.toString());
++        }
++
++        // And then convenient but less efficient alternative:
++        verifyFromMap(root.toString());
++    }
++
++    /**
++     * Unit test to check for regression of [JACKSON-18].
++     */
++    public void testSmallNumbers()
++        throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        ArrayNode root = mapper.createArrayNode();
++        for (int i = -20; i <= 20; ++i) {
++            JsonNode n = root.numberNode(i);
++            root.add(n);
++            // Hmmh. Not sure why toString() won't be triggered otherwise...
++            assertEquals(String.valueOf(i), n.toString());
++        }
++
++        // Loop over 2 different serialization methods
++        for (int type = 0; type < 2; ++type) {
++            StringWriter sw = new StringWriter();
++            if (type == 0) {
++                JsonGenerator gen = new JsonFactory().createGenerator(sw);
++                root.serialize(gen, null);
++                gen.close();
++            } else {
++                mapper.writeValue(sw, root);
++            }
++            
++            String doc = sw.toString();
++            JsonParser p = new JsonFactory().createParser(new StringReader(doc));
++            
++            assertEquals(JsonToken.START_ARRAY, p.nextToken());
++            for (int i = -20; i <= 20; ++i) {
++                assertEquals(JsonToken.VALUE_NUMBER_INT, p.nextToken());
++                assertEquals(i, p.getIntValue());
++                assertEquals(""+i, p.getText());
++            }
++            assertEquals(JsonToken.END_ARRAY, p.nextToken());
++            p.close();
++        }
++    }
++
++    public void testBinary() throws Exception
++    {
++        ObjectMapper mapper = new ObjectMapper();
++        final int LENGTH = 13045;
++        byte[] data = new byte[LENGTH];
++        for (int i = 0; i < LENGTH; ++i) {
++            data[i] = (byte) i;
++        }
++        StringWriter sw = new StringWriter();
++        mapper.writeValue(sw, BinaryNode.valueOf(data));
++
++        JsonParser p = new JsonFactory().createParser(sw.toString());
++        // note: can't determine it's binary from json alone:
++        assertToken(JsonToken.VALUE_STRING, p.nextToken());
++        assertArrayEquals(data, p.getBinaryValue());
++        p.close();
++    }
++
++    /*
++    ///////////////////////////////////////////////////////////////
++    // Internal methods
++    ///////////////////////////////////////////////////////////////
++     */
++
++    private void verifyFromArray(String input)
++        throws Exception
++    {
++        JsonParser p = new JsonFactory().createParser(new StringReader(input));
++        
++        assertEquals(JsonToken.START_ARRAY, p.nextToken());
++        
++        assertEquals(JsonToken.VALUE_STRING, p.nextToken());
++        assertEquals(TEXT1, getAndVerifyText(p));
++        
++        assertEquals(JsonToken.VALUE_NUMBER_INT, p.nextToken());
++        assertEquals(3, p.getIntValue());
++        
++        assertEquals(JsonToken.START_OBJECT, p.nextToken());
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD1, getAndVerifyText(p));
++        
++        assertEquals(JsonToken.VALUE_TRUE, p.nextToken());
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD2, getAndVerifyText(p));
++        
++        assertEquals(JsonToken.START_ARRAY, p.nextToken());
++        assertEquals(JsonToken.END_ARRAY, p.nextToken());
++        assertEquals(JsonToken.END_OBJECT, p.nextToken());
++        
++        assertEquals(JsonToken.VALUE_FALSE, p.nextToken());
++        
++        assertEquals(JsonToken.END_ARRAY, p.nextToken());
++        assertNull(p.nextToken());
++        p.close();
++    }
++
++    private void verifyFromMap(String input)
++        throws Exception
++    {
++        JsonParser p = new JsonFactory().createParser(input);
++        assertEquals(JsonToken.START_OBJECT, p.nextToken());
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD4, getAndVerifyText(p));
++        assertEquals(JsonToken.VALUE_STRING, p.nextToken());
++        assertEquals(TEXT2, getAndVerifyText(p));
++        
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD3, getAndVerifyText(p));
++        assertEquals(JsonToken.VALUE_NUMBER_INT, p.nextToken());
++        assertEquals(-1, p.getIntValue());
++        
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD2, getAndVerifyText(p));
++        assertEquals(JsonToken.START_ARRAY, p.nextToken());
++        assertEquals(JsonToken.END_ARRAY, p.nextToken());
++        
++        assertEquals(JsonToken.FIELD_NAME, p.nextToken());
++        assertEquals(FIELD1, getAndVerifyText(p));
++        assertEquals(JsonToken.VALUE_NUMBER_FLOAT, p.nextToken());
++        assertEquals(DOUBLE_VALUE, p.getDoubleValue(), 0);
++        
++        assertEquals(JsonToken.END_OBJECT, p.nextToken());
++        
++        assertNull(p.nextToken());
++        p.close();
++    }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/node/TestTreeTraversingParser.java b/src/test/java/com/fasterxml/jackson/databind/node/TestTreeTraversingParser.java
+index a4170d4cc..0573696ae 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/node/TestTreeTraversingParser.java
++++ b/src/test/java/com/fasterxml/jackson/databind/node/TestTreeTraversingParser.java
+@@ -1,7 +1,5 @@
+ package com.fasterxml.jackson.databind.node;
+ 
+-import java.io.IOException;
+-import java.math.BigInteger;
+ import java.util.*;
+ 
+ import static org.junit.Assert.*;
+@@ -9,10 +7,12 @@ import static org.junit.Assert.*;
+ import com.fasterxml.jackson.annotation.*;
+ 
+ import com.fasterxml.jackson.core.*;
+-import com.fasterxml.jackson.core.JsonParser.NumberType;
+-import com.fasterxml.jackson.core.exc.InputCoercionException;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
++import com.fasterxml.jackson.databind.node.BinaryNode;
++import com.fasterxml.jackson.databind.node.ObjectNode;
++import com.fasterxml.jackson.databind.node.POJONode;
++import com.fasterxml.jackson.databind.node.TextNode;
+ 
+ public class TestTreeTraversingParser
+     extends BaseMapTest
+@@ -37,15 +37,14 @@ public class TestTreeTraversingParser
+     /* Test methods
+     /**********************************************************
+      */
+-
+-    private final ObjectMapper MAPPER = newObjectMapper();
+-
++    
+     public void testSimple() throws Exception
+     {
+         // For convenience, parse tree from JSON first
+         final String JSON =
+             "{ \"a\" : 123, \"list\" : [ 12.25, null, true, { }, [ ] ] }";
+-        JsonNode tree = MAPPER.readTree(JSON);
++        ObjectMapper m = new ObjectMapper();
++        JsonNode tree = m.readTree(JSON);
+         JsonParser p = tree.traverse();
+ 
+         assertNull(p.getCurrentToken());
+@@ -110,19 +109,21 @@ public class TestTreeTraversingParser
+     public void testArray() throws Exception
+     {
+         // For convenience, parse tree from JSON first
+-        JsonParser p = MAPPER.readTree("[]").traverse();
++        ObjectMapper m = new ObjectMapper();
++
++        JsonParser p = m.readTree("[]").traverse();
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         assertToken(JsonToken.END_ARRAY, p.nextToken());
+         p.close();
+ 
+-        p = MAPPER.readTree("[[]]").traverse();
++        p = m.readTree("[[]]").traverse();
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         assertToken(JsonToken.END_ARRAY, p.nextToken());
+         assertToken(JsonToken.END_ARRAY, p.nextToken());
+         p.close();
+ 
+-        p = MAPPER.readTree("[[ 12.1 ]]").traverse();
++        p = m.readTree("[[ 12.1 ]]").traverse();
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         assertToken(JsonToken.START_ARRAY, p.nextToken());
+         assertToken(JsonToken.VALUE_NUMBER_FLOAT, p.nextToken());
+@@ -137,7 +138,8 @@ public class TestTreeTraversingParser
+         final String JSON =
+             "{\"coordinates\":[[[-3,\n1],[179.859681,51.175092]]]}"
+             ;
+-        JsonNode tree = MAPPER.readTree(JSON);
++        ObjectMapper m = new ObjectMapper();
++        JsonNode tree = m.readTree(JSON);
+         JsonParser p = tree.traverse();
+         assertToken(JsonToken.START_OBJECT, p.nextToken());
+         assertToken(JsonToken.FIELD_NAME, p.nextToken());
+@@ -168,7 +170,8 @@ public class TestTreeTraversingParser
+      */
+     public void testSpecDoc() throws Exception
+     {
+-        JsonNode tree = MAPPER.readTree(SAMPLE_DOC_JSON_SPEC);
++        ObjectMapper m = new ObjectMapper();
++        JsonNode tree = m.readTree(SAMPLE_DOC_JSON_SPEC);
+         JsonParser p = tree.traverse();
+         verifyJsonSpecSampleDoc(p, true);
+         p.close();
+@@ -242,12 +245,13 @@ public class TestTreeTraversingParser
+      */
+     public void testDataBind() throws Exception
+     {
+-        JsonNode tree = MAPPER.readTree
++        ObjectMapper m = new ObjectMapper();
++        JsonNode tree = m.readTree
+             ("{ \"name\" : \"Tatu\", \n"
+              +"\"magicNumber\" : 42,"
+              +"\"kids\" : [ \"Leo\", \"Lila\", \"Leia\" ] \n"
+              +"}");
+-        Person tatu = MAPPER.treeToValue(tree, Person.class);
++        Person tatu = m.treeToValue(tree, Person.class);
+         assertNotNull(tatu);
+         assertEquals(42, tatu.magicNumber);
+         assertEquals("Tatu", tatu.name);
+@@ -258,97 +262,16 @@ public class TestTreeTraversingParser
+         assertEquals("Leia", tatu.kids.get(2));
+     }
+ 
++    // [JACKSON-370]
+     public void testSkipChildrenWrt370() throws Exception
+     {
+-        ObjectNode n = MAPPER.createObjectNode();
++        ObjectMapper o = new ObjectMapper();
++        ObjectNode n = o.createObjectNode();
+         n.putObject("inner").put("value", "test");
+         n.putObject("unknown").putNull("inner");
+-        Jackson370Bean obj = MAPPER.readValue(n.traverse(), Jackson370Bean.class);
++        Jackson370Bean obj = o.readValue(n.traverse(), Jackson370Bean.class);
+         assertNotNull(obj.inner);
+         assertEquals("test", obj.inner.value);        
+     }
+-
+-    // // // Numeric coercion checks, [databind#2189]
+-
+-    public void testNumberOverflowInt() throws IOException
+-    {
+-        final long tooBig = 1L + Integer.MAX_VALUE;
+-        try (final JsonParser p = MAPPER.readTree("[ "+tooBig+" ]").traverse()) {
+-            assertToken(JsonToken.START_ARRAY, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+-            assertEquals(NumberType.LONG, p.getNumberType());
+-            try {
+-                p.getIntValue();
+-                fail("Expected failure for `int` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig+") out of range of int");
+-            }
+-        }
+-        try (final JsonParser p = MAPPER.readTree("{ \"value\" : "+tooBig+" }").traverse()) {
+-            assertToken(JsonToken.START_OBJECT, p.nextToken());
+-            assertToken(JsonToken.FIELD_NAME, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+-            assertEquals(NumberType.LONG, p.getNumberType());
+-            try {
+-                p.getIntValue();
+-                fail("Expected failure for `int` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig+") out of range of int");
+-            }
+-        }
+-        // But also from floating-point
+-        final String tooBig2 = "1.0e10";
+-        try (final JsonParser p = MAPPER.readTree("[ "+tooBig2+" ]").traverse()) {
+-            assertToken(JsonToken.START_ARRAY, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_FLOAT, p.nextToken());
+-            assertEquals(NumberType.DOUBLE, p.getNumberType());
+-            try {
+-                p.getIntValue();
+-                fail("Expected failure for `int` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig2+") out of range of int");
+-            }
+-        }
+-    }
+-
+-    public void testNumberOverflowLong() throws IOException
+-    {
+-        final BigInteger tooBig = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+-        try (final JsonParser p = MAPPER.readTree("[ "+tooBig+" ]").traverse()) {
+-            assertToken(JsonToken.START_ARRAY, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+-            assertEquals(NumberType.BIG_INTEGER, p.getNumberType());
+-            try {
+-                p.getLongValue();
+-                fail("Expected failure for `long` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig+") out of range of long");
+-            }
+-        }
+-        try (final JsonParser p = MAPPER.readTree("{ \"value\" : "+tooBig+" }").traverse()) {
+-            assertToken(JsonToken.START_OBJECT, p.nextToken());
+-            assertToken(JsonToken.FIELD_NAME, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_INT, p.nextToken());
+-            assertEquals(NumberType.BIG_INTEGER, p.getNumberType());
+-            try {
+-                p.getLongValue();
+-                fail("Expected failure for `long` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig+") out of range of long");
+-            }
+-        }
+-        // But also from floating-point
+-        final String tooBig2 = "1.0e30";
+-        try (final JsonParser p = MAPPER.readTree("[ "+tooBig2+" ]").traverse()) {
+-            assertToken(JsonToken.START_ARRAY, p.nextToken());
+-            assertToken(JsonToken.VALUE_NUMBER_FLOAT, p.nextToken());
+-            assertEquals(NumberType.DOUBLE, p.getNumberType());
+-            try {
+-                p.getLongValue();
+-                fail("Expected failure for `long` overflow");
+-            } catch (InputCoercionException e) {
+-                verifyException(e, "Numeric value ("+tooBig2+") out of range of long");
+-            }
+-        }
+-    }
+ }
++

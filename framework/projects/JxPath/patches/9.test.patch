@@ -1,0 +1,32 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java b/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
+index 4d5709c..bb28b3c 100644
+--- a/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/compiler/CoreOperationTest.java
+@@ -117,8 +117,9 @@ public class CoreOperationTest extends JXPathTestCase {
+         assertXPathValue(context, "$nan < $nan", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan >= $nan", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan <= $nan", Boolean.FALSE, Boolean.class);
++        //note that "<= and >=" implies a test of numerical, rather than object, equality. ;)
+         assertXPathValue(context, "$nan >= $nan and $nan <= $nan", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan = $nan", Boolean.FALSE, Boolean.class);
++        assertXPathValue(context, "$nan = $nan", Boolean.TRUE, Boolean.class);
+         assertXPathValue(context, "$nan != $nan", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan > 0", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan < 0", Boolean.FALSE, Boolean.class);
+@@ -126,13 +127,13 @@ public class CoreOperationTest extends JXPathTestCase {
+         assertXPathValue(context, "$nan <= 0", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan >= 0 and $nan <= 0", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan = 0", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan != 0", Boolean.FALSE, Boolean.class);
++        assertXPathValue(context, "$nan != 0", Boolean.TRUE, Boolean.class);
+         assertXPathValue(context, "$nan > 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan < 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan >= 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan <= 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan >= 1 and $nan <= 1", Boolean.FALSE, Boolean.class);
+         assertXPathValue(context, "$nan = 1", Boolean.FALSE, Boolean.class);
+-        assertXPathValue(context, "$nan != 1", Boolean.FALSE, Boolean.class);
++        assertXPathValue(context, "$nan != 1", Boolean.TRUE, Boolean.class);
+     }
+ }
+\ No newline at end of file

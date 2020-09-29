@@ -1,0 +1,68 @@
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
+index a979a10..a2ee4db 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java
+@@ -81,14 +81,18 @@ public class DOMAttributeIterator implements NodeIterator {
+         if (testLocalName.equals("*") || testLocalName.equals(nodeLocalName)) {
+             String testPrefix = name.getPrefix();
+ 
+-            if (testPrefix == null || equalStrings(testPrefix, nodePrefix)) {
++            if (equalStrings(testPrefix, nodePrefix)) {
+                 return true;
+             }
+-            if (nodePrefix == null) {
+-                return false;
++            String testNS = null;
++            if (testPrefix != null) {
++                testNS = parent.getNamespaceURI(testPrefix);
+             }
+-            return equalStrings(parent.getNamespaceURI(testPrefix), parent
+-                    .getNamespaceURI(nodePrefix));
++            String nodeNS = null;
++            if (nodePrefix != null) {
++                nodeNS = parent.getNamespaceURI(nodePrefix);
++            }
++            return equalStrings(testNS, nodeNS);
+         }
+         return false;
+     }
+@@ -148,4 +152,4 @@ public class DOMAttributeIterator implements NodeIterator {
+         this.position = position;
+         return position >= 1 && position <= attributes.size();
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
+index d7b7a30..db0b14d 100644
+--- a/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
++++ b/src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java
+@@ -67,9 +67,11 @@ public class JDOMAttributeIterator implements NodeIterator {
+             String lname = name.getName();
+             if (!lname.equals("*")) {
+                 attributes = new ArrayList();
++                if (ns != null) {
+                 Attribute attr = element.getAttribute(lname, ns);
+                 if (attr != null) {
+                     attributes.add(attr);
++                    }
+                 }
+             }
+             else {
+@@ -77,8 +79,7 @@ public class JDOMAttributeIterator implements NodeIterator {
+                 List allAttributes = element.getAttributes();
+                 for (int i = 0; i < allAttributes.size(); i++) {
+                     Attribute attr = (Attribute) allAttributes.get(i);
+-                    if (ns == Namespace.NO_NAMESPACE
+-                            || attr.getNamespace().equals(ns)) {
++                    if (attr.getNamespace().equals(ns)) {
+                         attributes.add(attr);
+                     }
+                 }
+@@ -113,4 +114,4 @@ public class JDOMAttributeIterator implements NodeIterator {
+         this.position = position;
+         return position >= 1 && position <= attributes.size();
+     }
+-}
+\ No newline at end of file
++}

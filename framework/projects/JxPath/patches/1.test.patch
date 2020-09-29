@@ -1,0 +1,26 @@
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/dom/DOMModelTest.java b/src/test/org/apache/commons/jxpath/ri/model/dom/DOMModelTest.java
+index fed71bb..1260ecf 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/dom/DOMModelTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/dom/DOMModelTest.java
+@@ -65,7 +65,6 @@ public class DOMModelTest extends XMLModelTestCase {
+         assertXPathNodeType(context, "/", Document.class);
+         assertXPathNodeType(context, "/vendor/location", Element.class);
+         assertXPathNodeType(context, "//location/@name", Attr.class);
+-        assertXPathNodeType(context, "//vendor", Element.class);
+     }
+     
+     protected String getXMLSignature(
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/jdom/JDOMModelTest.java b/src/test/org/apache/commons/jxpath/ri/model/jdom/JDOMModelTest.java
+index 6a73fda..058616d 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/jdom/JDOMModelTest.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/jdom/JDOMModelTest.java
+@@ -62,8 +62,7 @@ public class JDOMModelTest extends XMLModelTestCase {
+         assertXPathNodeType(context, "/", Document.class);
+         assertXPathNodeType(context, "/vendor/location", Element.class);
+         assertXPathNodeType(context, "//location/@name", Attribute.class);
+-        assertXPathNodeType(context, "//vendor", Element.class); //bugzilla #38586
+-    }
++    }    
+     
+     public void testID() {
+         // id() is not supported by JDOM

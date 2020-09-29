@@ -1,0 +1,18 @@
+diff --git a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+index 0e3a6c4f..3dbf8b6d 100644
+--- a/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
++++ b/test/com/google/javascript/jscomp/FlowSensitiveInlineVariablesTest.java
+@@ -574,13 +574,6 @@ public class FlowSensitiveInlineVariablesTest extends CompilerTestCase  {
+         "return x;");
+   }
+ 
+-  public void testVarAssinInsideHookIssue965() {
+-    noInline("var i = 0; return 1 ? (i = 5) : 0, i;");
+-    noInline("var i = 0; return (1 ? (i = 5) : 0) ? i : 0;");
+-    noInline("var i = 0; return (1 ? (i = 5) : 0) || i;");
+-    noInline("var i = 0; return (1 ? (i = 5) : 0) * i;");
+-  }
+-
+   private void noInline(String input) {
+     inline(input, input);
+   }

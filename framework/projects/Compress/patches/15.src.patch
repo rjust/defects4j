@@ -1,0 +1,23 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
+index 166ca75f..1833227c 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveEntry.java
+@@ -666,13 +666,13 @@ public class ZipArchiveEntry extends java.util.zip.ZipEntry
+         String myComment = getComment();
+         String otherComment = other.getComment();
+         if (myComment == null) {
+-            myComment = "";
+-        }
+-        if (otherComment == null) {
+-            otherComment = "";
++            if (otherComment != null) {
++                return false;
++            }
++        } else if (!myComment.equals(otherComment)) {
++            return false;
+         }
+         return getTime() == other.getTime()
+-            && myComment.equals(otherComment)
+             && getInternalAttributes() == other.getInternalAttributes()
+             && getPlatform() == other.getPlatform()
+             && getExternalAttributes() == other.getExternalAttributes()

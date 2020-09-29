@@ -114,3 +114,5 @@ org.joda.time.format.TestPeriodFormatterBuilder
 org.joda.time.format.TestTextFields
 org.joda.time.tz.TestBuilder
 org.joda.time.tz.TestCompiler
+org.joda.time.tz.TestFixedDateTimeZone
+org.joda.time.tz.TestUTCProvider

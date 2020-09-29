@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,7 @@
 
 =head1 NAME
 
-get_modified_classes.pl -- Determine the set of classes modified by the patch of a given
-defect.
+get_modified_classes.pl -- determine the set of classes modified by the src patch.
 
 =head1 SYNOPSIS
 
@@ -51,6 +50,11 @@ Write output to this file (optional). By default the script prints the modified 
 stdout. Note that all diagnostic messages are sent to stderr.
 
 =back
+
+=head1 DESCRIPTION
+
+Determines the set of classes modified by the src patch.
+This script use diffstat, which is part of the patchutils library.
 
 =cut
 
@@ -82,7 +86,7 @@ my $project = Project::create_project($PID);
 my $src_dir = $project->src_dir("${BID}f");
 
 # Directory that holds all patches for the given project ID
-my $patch = "$SCRIPT_DIR/projects/$PID/patches/$BID.src.patch";
+my $patch = "$PROJECTS_DIR/$PID/patches/$BID.src.patch";
 -e $patch or die "Cannot read patch: $patch";
 
 my $classes;
@@ -90,15 +94,19 @@ my $classes;
 # Run diffstat to determine the modified files
 Utils::exec_cmd("diffstat -l -p1 $patch", "Analyzing patch", \$classes);
 
+$classes = "" unless defined $classes and length $classes;
+
 # Translate Java file name into class name
 $classes =~ s/$src_dir\/?//g;
 $classes =~ s/\.java//g;
 $classes =~ s/\//\./g;
 
+my @sorted_classes = sort { "\L$a" cmp "\L$b" } $classes;
+
 if (defined $OUT_FILE) {
     open(OUT, ">$OUT_FILE") or die "Cannot write output file";
-        print(OUT $classes);
+        print(OUT @sorted_classes);
     close(OUT);
 } else {
-    print($classes);
+    print(@sorted_classes);
 }

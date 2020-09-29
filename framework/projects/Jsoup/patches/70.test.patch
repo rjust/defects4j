@@ -1,0 +1,18 @@
+diff --git a/src/test/java/org/jsoup/nodes/ElementTest.java b/src/test/java/org/jsoup/nodes/ElementTest.java
+index 546f309..91c095c 100644
+--- a/src/test/java/org/jsoup/nodes/ElementTest.java
++++ b/src/test/java/org/jsoup/nodes/ElementTest.java
+@@ -104,13 +104,6 @@ public class ElementTest {
+         assertEquals("<pre><code>code\n\ncode</code></pre>", doc.body().html());
+     }
+ 
+-    @Test public void testKeepsPreTextAtDepth() {
+-        String h = "<pre><code><span><b>code\n\ncode</b></span></code></pre>";
+-        Document doc = Jsoup.parse(h);
+-        assertEquals("code\n\ncode", doc.text());
+-        assertEquals("<pre><code><span><b>code\n\ncode</b></span></code></pre>", doc.body().html());
+-    }
+-
+     @Test public void testBrHasSpace() {
+         Document doc = Jsoup.parse("<p>Hello<br>there</p>");
+         assertEquals("Hello there", doc.text());

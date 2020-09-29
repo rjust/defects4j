@@ -1,0 +1,11 @@
+org.apache.commons.compress.archivers.ArchiveEntry
+org.apache.commons.compress.archivers.ArchiveInputStream
+org.apache.commons.compress.archivers.tar.TarArchiveEntry
+org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+org.apache.commons.compress.archivers.tar.TarBuffer
+org.apache.commons.compress.archivers.tar.TarConstants
+org.apache.commons.compress.archivers.tar.TarUtils
+org.apache.commons.compress.archivers.zip.FallbackZipEncoding
+org.apache.commons.compress.archivers.zip.ZipEncoding
+org.apache.commons.compress.archivers.zip.ZipEncodingHelper
+org.apache.commons.compress.utils.ArchiveUtils

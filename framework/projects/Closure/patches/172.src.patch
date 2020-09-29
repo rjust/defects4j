@@ -1,0 +1,18 @@
+diff --git a/src/com/google/javascript/jscomp/TypedScopeCreator.java b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+index 4acb363a..d5a59476 100644
+--- a/src/com/google/javascript/jscomp/TypedScopeCreator.java
++++ b/src/com/google/javascript/jscomp/TypedScopeCreator.java
+@@ -1667,13 +1667,7 @@ final class TypedScopeCreator implements ScopeCreator {
+ 
+       // Prototypes of constructors and interfaces are always declared.
+       if (qName != null && qName.endsWith(".prototype")) {
+-        String className = qName.substring(0, qName.lastIndexOf(".prototype"));
+-        Var slot = scope.getSlot(className);
+-        JSType classType = slot == null ? null : slot.getType();
+-        if (classType != null
+-            && (classType.isConstructor() || classType.isInterface())) {
+           return false;
+-        }
+       }
+ 
+       boolean inferred = true;

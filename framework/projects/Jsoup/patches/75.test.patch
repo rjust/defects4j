@@ -1,0 +1,17 @@
+diff --git a/src/test/java/org/jsoup/nodes/ElementTest.java b/src/test/java/org/jsoup/nodes/ElementTest.java
+index c5b4f0a..7c73713 100644
+--- a/src/test/java/org/jsoup/nodes/ElementTest.java
++++ b/src/test/java/org/jsoup/nodes/ElementTest.java
+@@ -1310,12 +1310,4 @@ public class ElementTest {
+         assertFalse(doc.body().html().contains("class=\"\""));
+     }
+ 
+-    @Test
+-    public void booleanAttributeOutput() {
+-        Document doc = Jsoup.parse("<img src=foo noshade='' nohref async=async autofocus=false>");
+-        Element img = doc.selectFirst("img");
+-
+-        assertEquals("<img src=\"foo\" noshade nohref async autofocus=\"false\">", img.outerHtml());
+-    }
+-
+ }

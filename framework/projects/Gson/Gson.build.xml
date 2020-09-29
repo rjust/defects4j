@@ -1,0 +1,94 @@
+<!--
+Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+################################################################################
+               This is the project-specific build file for Gson.
+
+It defines project-specific properties and targets, and imports the build file
+of the checked-out project version.
+#############################################################################-->
+<project name="D4j-Gson" basedir="${d4j.workdir}/gson">
+
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
+
+    <!-- Do not download maven dependencies -->
+    <property name="maven.settings.offline" value="true" />
+    <property name="maven.repo.local" value="${d4j.dir.projects}/Gson/lib/" />
+
+    <!-- Generate all debugging information -->
+    <property name="compile.debug" value="yes" />
+
+    <!-- Include existing project build file -->
+    <import file="${d4j.workdir}/gson/build.xml"/>
+
+    <!-- Project properties targets -->
+    <if> <isset property="ant.refid:compile.classpath" />
+          <then>
+            <property name="test.dir" value="${test.home}" />
+          </then>
+          <else>
+            <property name="oldversion"    value="yes" />
+            <path id="compile.classpath"   refid="build.classpath" />
+            <path id="test.classpath"      refid="build.test.classpath" />
+
+            <property name="dir.src.classes"  value="${maven.build.srcDir.0}"/>
+            <property name="dir.src.tests"    value="${maven.build.testDir.0}"/>
+            <property name="test.dir"         value="${maven.build.testDir.0}" />
+            <property name="source.home"      value="${maven.build.srcDir.0}"/>
+            <property name="d4j.test.dir"     value="${maven.build.testDir.0}"/>
+          </else>
+    </if>
+    <property name="build.classes" value="${d4j.workdir}/target/classes/" />
+    <property name="test.home" value="${maven.build.testOutputDir}" />
+    <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
+        <isset property="maven.build.outputDir" />
+    </condition>
+    <condition property="test.classes.dir" value="${maven.build.testOutputDir}" else="${build.tests}">
+        <isset property="maven.build.testOutputDir" />
+    </condition>
+
+    <property name="build.home" value="${classes.dir}/.." />
+
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="test.classpath"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${test.classes.dir}"/>
+        <pathelement path="${junit.jar}" />
+        <fileset dir="${d4j.dir.projects}/Gson/lib/">
+             <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <!-- Manually generalize test patterns if analyzer produces incorrect outputs -->
+    <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
+        <include name='**/${test}.java' />
+        <include name='**/*Test.java' />
+        <include name='**/*TestCase.java' />
+        <include name='**/Test*.java' />
+        <exclude name='**/*Abstract*Test.java' />
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+</project>

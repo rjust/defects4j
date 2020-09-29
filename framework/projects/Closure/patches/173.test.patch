@@ -1,0 +1,115 @@
+diff --git a/test/com/google/javascript/jscomp/CodePrinterTest.java b/test/com/google/javascript/jscomp/CodePrinterTest.java
+index b1f9587c..82742d3e 100644
+--- a/test/com/google/javascript/jscomp/CodePrinterTest.java
++++ b/test/com/google/javascript/jscomp/CodePrinterTest.java
+@@ -195,11 +195,9 @@ public class CodePrinterTest extends TestCase {
+     assertPrint("var a,b,c,d;a || (b&& c) && (a || d)",
+         "var a,b,c,d;a||b&&c&&(a||d)");
+     assertPrint("var a,b,c; a || (b || c); a * (b * c); a | (b | c)",
+-        "var a,b,c;a||(b||c);a*(b*c);a|(b|c)");
++        "var a,b,c;a||b||c;a*b*c;a|b|c");
+     assertPrint("var a,b,c; a / b / c;a / (b / c); a - (b - c);",
+         "var a,b,c;a/b/c;a/(b/c);a-(b-c)");
+-
+-    // Nested assignments
+     assertPrint("var a,b; a = b = 3;",
+         "var a,b;a=b=3");
+     assertPrint("var a,b,c,d; a = (b = c = (d = 3));",
+@@ -450,7 +448,7 @@ public class CodePrinterTest extends TestCase {
+         "var a={};for(var i=(\"length\"in a)+1;i;);");
+     assertPrint("var a={};for (var i = (\"length\" in a|| \"size\" in a);;);",
+         "var a={};for(var i=(\"length\"in a)||(\"size\"in a);;);");
+-    assertPrint("var a={};for (var i = (a || a) || (\"size\" in a);;);",
++    assertPrint("var a={};for (var i = a || a || (\"size\" in a);;);",
+         "var a={};for(var i=a||a||(\"size\"in a);;);");
+ 
+     // Test works with unary operators and calls.
+@@ -1567,8 +1565,4 @@ public class CodePrinterTest extends TestCase {
+     assertPrintSame("x={foo:2}");
+     assertPrint("x={function:2}", "x={\"function\":2}");
+   }
+-
+-  public void testIssue1062() {
+-    assertPrintSame("3*(4%3*5)");
+-  }
+ }
+diff --git a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+index fcaf517e..ffde003f 100644
+--- a/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
++++ b/test/com/google/javascript/jscomp/CommandLineRunnerTest.java
+@@ -443,11 +443,11 @@ public class CommandLineRunnerTest extends TestCase {
+     args.add("--compilation_level=SIMPLE_OPTIMIZATIONS");
+     test("function f(p) {" +
+          " var x;" +
+-         " return ((x=p.id) && (x=parseInt(x.substr(1)))) && x>0;" +
++         " return ((x=p.id) && (x=parseInt(x.substr(1))) && x>0);" +
+          "}",
+          "function f(b) {" +
+          " var a;" +
+-         " return ((a=b.id) && (a=parseInt(a.substr(1)))) && 0<a;" +
++         " return ((a=b.id) && (a=parseInt(a.substr(1))) && 0<a);" +
+          "}");
+   }
+ 
+diff --git a/test/com/google/javascript/jscomp/IntegrationTest.java b/test/com/google/javascript/jscomp/IntegrationTest.java
+index 7e4803c0..41b35a4e 100644
+--- a/test/com/google/javascript/jscomp/IntegrationTest.java
++++ b/test/com/google/javascript/jscomp/IntegrationTest.java
+@@ -2058,8 +2058,8 @@ public class IntegrationTest extends IntegrationTestCase {
+     CompilerOptions options = createCompilerOptions();
+     options.foldConstants = true;
+     test(options,
+-        "if (((x < 1 || x > 1) || 1 < x) || 1 > x) { alert(x) }",
+-        "   (((1 > x || 1 < x) || 1 < x) || 1 > x) && alert(x) ");
++        "if (x < 1 || x > 1 || 1 < x || 1 > x) { alert(x) }",
++        "   (1 > x || 1 < x || 1 < x || 1 > x) && alert(x) ");
+   }
+ 
+   public void testsyntheticBlockOnDeadAssignments() {
+diff --git a/test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java b/test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+index ff644e7d..aeb17e27 100644
+--- a/test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
++++ b/test/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntaxTest.java
+@@ -434,6 +434,7 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+     test("(goog$partial(f))(a)", "f(a)");
+     test("(goog$partial(f,a))(b)", "f(a,b)");
+     test("(goog$partial(f,a,b))(c)", "f(a,b,c)");
++
+     // Don't rewrite if the bind isn't the immediate call target
+     testSame("(goog$bind(f)).call(g)");
+   }
+@@ -455,12 +456,6 @@ public class PeepholeSubstituteAlternateSyntaxTest extends CompilerTestCase {
+     testSame("var a = String({valueOf: function() { return 1; }});");
+   }
+ 
+-  public void testAssocitivity() {
+-    test("var a,b,c; a || (b || c); a * (b * c); a | (b | c)",
+-        "var a,b,c; (a || b) || c; (a * b) * c; (a | b) | c");
+-    testSame("var a,b,c; a % (b % c); a / (b / c); a - (b - c);");
+-  }
+-
+   private static class StringCompareTestCase extends CompilerTestCase {
+ 
+     StringCompareTestCase() {
+diff --git a/test/com/google/javascript/jscomp/parsing/ParserTest.java b/test/com/google/javascript/jscomp/parsing/ParserTest.java
+index cb002bcc..e087e09c 100644
+--- a/test/com/google/javascript/jscomp/parsing/ParserTest.java
++++ b/test/com/google/javascript/jscomp/parsing/ParserTest.java
+@@ -1140,17 +1140,6 @@ public class ParserTest extends BaseJSTypeTestCase {
+     parse("try {} catch (/** @type {Error} */ e) {}");
+   }
+ 
+-  public void testParsingAssociativity() {
+-    assertNodeEquality(parse("x * y * z"), parse("(x * y) * z"));
+-    assertNodeEquality(parse("x + y + z"), parse("(x + y) + z"));
+-    assertNodeEquality(parse("x | y | z"), parse("(x | y) | z"));
+-    assertNodeEquality(parse("x & y & z"), parse("(x & y) & z"));
+-    assertNodeEquality(parse("x ^ y ^ z"), parse("(x ^ y) ^ z"));
+-    // TODO(blickly): Fix rhino to parse || and && left-associatively.
+-    assertNodeEquality(parse("x || y || z"), parse("x || (y || z)"));
+-    assertNodeEquality(parse("x && y && z"), parse("x && (y && z)"));
+-  }
+-
+   /**
+    * Verify that the given code has the given parse errors.
+    * @return If in IDE mode, returns a partial tree.

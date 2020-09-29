@@ -1,0 +1,85 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/convert/TestMapConversions.java b/src/test/java/com/fasterxml/jackson/databind/convert/TestMapConversions.java
+index bfed9dffe..6b77b4e11 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/convert/TestMapConversions.java
++++ b/src/test/java/com/fasterxml/jackson/databind/convert/TestMapConversions.java
+@@ -97,19 +97,4 @@ public class TestMapConversions
+         final String retString = mapper.writeValueAsString(request);
+         assertEquals("{\"hello\":{\"value\":1}}",retString);
+     }
+-
+-    // [databind#810]
+-    public void testMapToProperties() throws Exception
+-    {
+-        Bean bean = new Bean();
+-        bean.A = 129;
+-        bean.B = "13";
+-        Properties props = MAPPER.convertValue(bean, Properties.class);
+-
+-        assertEquals(2, props.size());
+-
+-        assertEquals("13", props.getProperty("B"));
+-        // should coercce non-Strings to Strings
+-        assertEquals("129", props.getProperty("A"));
+-    }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
+index 9c1adbf80..75d1f6b77 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
+@@ -557,23 +557,6 @@ public class TestMapDeserialization
+             verifyException(e, "more than one entry in JSON");
+         }
+     }
+-
+-    /*
+-    /**********************************************************
+-    /* Test methods, other exotic Map types
+-    /**********************************************************
+-     */
+-    
+-    // [databind#810]
+-    public void testReadProperties() throws Exception
+-    {
+-        Properties props = MAPPER.readValue(aposToQuotes("{'a':'foo', 'b':123, 'c':true}"),
+-                Properties.class);
+-        assertEquals(3, props.size());
+-        assertEquals("foo", props.getProperty("a"));
+-        assertEquals("123", props.getProperty("b"));
+-        assertEquals("true", props.getProperty("c"));
+-    }
+     
+     /*
+     /**********************************************************
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
+index 33ce03036..e861cb704 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
++++ b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java
+@@ -142,7 +142,7 @@ public class TestTypeFactory
+         assertEquals(CollectionType.class, t.getClass());
+         assertSame(String.class, ((CollectionType) t).getContentType().getRawClass());
+     }
+-
++    
+     public void testMaps()
+     {
+         TypeFactory tf = TypeFactory.defaultInstance();
+@@ -173,19 +173,6 @@ public class TestTypeFactory
+         assertEquals(tf.constructType(Long.class), mt.getContentType());
+     }
+ 
+-    // [databind#810]: Fake Map type for Properties as <String,String>
+-    public void testProperties()
+-    {
+-        TypeFactory tf = TypeFactory.defaultInstance();
+-        JavaType t = tf.constructType(Properties.class);
+-        assertEquals(MapType.class, t.getClass());
+-        assertSame(Properties.class, t.getRawClass());
+-
+-        // so far so good. But how about parameterization?
+-        assertSame(String.class, ((MapType) t).getKeyType().getRawClass());
+-        assertSame(String.class, ((MapType) t).getContentType().getRawClass());
+-    }
+-    
+     public void testIterator()
+     {
+         TypeFactory tf = TypeFactory.defaultInstance();

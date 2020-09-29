@@ -1,0 +1,229 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+similarity index 99%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
+rename to src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+index b3fe433fe..e1f187753 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.deser;
+ 
+ import java.io.IOException;
+ import java.util.*;
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java
+similarity index 97%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java
+rename to src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java
+index 00c88ec09..6f235175d 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandling.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.deser;
+ 
+ import java.io.*;
+ 
+@@ -23,7 +23,10 @@ public class TestExceptionHandling
+     /* Test methods
+     /**********************************************************
+      */
+-
++    
++    /**
++     * Verification of [JACKSON-301]
++     */
+     public void testHandlingOfUnrecognized() throws Exception
+     {
+         UnrecognizedPropertyException exc = null;
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java
+similarity index 78%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java
+rename to src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java
+index 388872283..1a75d94d7 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithDefaultDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithDefaultDeserialization.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.deser;
+ 
+ import com.fasterxml.jackson.databind.BaseMapTest;
+ import com.fasterxml.jackson.databind.JsonMappingException;
+@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
+ 
+ import java.io.IOException;
+ 
+-public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+-{
++public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest {
++
+     static class Foo {
++
+         private Bar bar;
+ 
+-        public Foo() { }
++        public Foo() {
++        }
+ 
+         public Bar getBar() {
+             return bar;
+@@ -19,9 +21,11 @@ public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+     }
+ 
+     static class Bar {
++
+         private Baz baz;
+ 
+-        public Bar() { }
++        public Bar() {
++        }
+ 
+         public Baz getBaz() {
+             return baz;
+@@ -29,9 +33,11 @@ public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+     }
+ 
+     static class Baz {
++
+         private String qux;
+ 
+-        public Baz() { }
++        public Baz() {
++        }
+ 
+         public String getQux() {
+             return qux;
+@@ -42,7 +48,6 @@ public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+         // given
+         ObjectMapper mapper = new ObjectMapper();
+         String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
+-        final String THIS = getClass().getName();
+ 
+         // when
+         try {
+@@ -50,7 +55,7 @@ public class TestExceptionHandlingWithDefaultDeserialization extends BaseMapTest
+             fail("Upsss! Exception has not been thrown.");
+         } catch (JsonMappingException ex) {
+             // then
+-            assertEquals(THIS+"$Foo[\"bar\"]->"+THIS+"$Bar[\"baz\"]",
++            assertEquals("com.fasterxml.jackson.databind.deser.Foo[\"bar\"]->com.fasterxml.jackson.databind.deser.Bar[\"baz\"]",
+                     ex.getPathReference());
+         }
+     }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java
+similarity index 90%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java
+rename to src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java
+index 8065bc40f..f2da339e8 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionHandlingWithJsonCreatorDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandlingWithJsonCreatorDeserialization.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.deser;
+ 
+ import com.fasterxml.jackson.annotation.JsonCreator;
+ import com.fasterxml.jackson.annotation.JsonProperty;
+@@ -53,7 +53,6 @@ public class TestExceptionHandlingWithJsonCreatorDeserialization extends BaseMap
+         // given
+         ObjectMapper mapper = new ObjectMapper();
+         String input = "{\"bar\":{\"baz\":{qux:\"quxValue\"))}";
+-        final String THIS = getClass().getName();
+ 
+         // when
+         try {
+@@ -61,7 +60,7 @@ public class TestExceptionHandlingWithJsonCreatorDeserialization extends BaseMap
+             fail("Upsss! Exception has not been thrown.");
+         } catch (JsonMappingException ex) {
+             // then
+-            assertEquals(THIS+"$Foo[\"bar\"]->"+THIS+"$Bar[\"baz\"]",
++            assertEquals("com.fasterxml.jackson.databind.deser.Foo[\"bar\"]->com.fasterxml.jackson.databind.deser.Bar[\"baz\"]",
+                     ex.getPathReference());
+         }
+     }
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java
+deleted file mode 100644
+index c4a87bbc0..000000000
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/ExceptionPathTest.java
++++ /dev/null
+@@ -1,46 +0,0 @@
+-package com.fasterxml.jackson.databind.deser.exc;
+-
+-import com.fasterxml.jackson.annotation.*;
+-
+-import com.fasterxml.jackson.databind.*;
+-
+-public class ExceptionPathTest extends BaseMapTest
+-{
+-    static class Outer {
+-        public Inner inner = new Inner();
+-    }
+-
+-    static class Inner {
+-        public int x;
+-
+-        @JsonCreator public static Inner create(@JsonProperty("x") int x) {
+-            throw new RuntimeException("test-exception");
+-        }
+-    }
+-
+-    /*
+-    /**********************************************************
+-    /* Test methods
+-    /**********************************************************
+-     */
+-    
+-    private final ObjectMapper MAPPER = new ObjectMapper();
+-
+-    public void testReferenceChainForInnerClass() throws Exception
+-    {
+-        String json = MAPPER.writeValueAsString(new Outer());
+-        try {
+-            MAPPER.readValue(json, Outer.class);
+-            fail("Should not pass");
+-        } catch (JsonMappingException e) {
+-            JsonMappingException.Reference reference = e.getPath().get(0);
+-            assertEquals(getClass().getName()+"$Outer[\"inner\"]",
+-                    reference.toString());
+-        }
+-    }
+-
+-    public static void main(String[] args)
+-    {
+-        System.err.println("Int, full: "+Integer.TYPE.getName());
+-    }
+-}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java
+similarity index 98%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java
+rename to src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java
+index df5196392..cc1aec75c 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionsDuringWriting.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionHandling.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.ser;
+ 
+ import java.io.*;
+ import java.util.*;
+@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
+  * re-thrown or wrapped, depending)
+  * with Object serialization.
+  */
+-public class TestExceptionsDuringWriting
++public class TestExceptionHandling
+     extends BaseMapTest
+ {
+     /*
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java
+similarity index 98%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
+rename to src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java
+index 07fc70a6b..ee6898367 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestExceptionSerialization.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.exc;
++package com.fasterxml.jackson.databind.ser;
+ 
+ import java.io.IOException;
+ import java.util.*;

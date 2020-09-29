@@ -1,0 +1,166 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestDefaultWithCreators.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestDefaultWithCreators.java
+index 785a3b5da..31f84b590 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestDefaultWithCreators.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestDefaultWithCreators.java
+@@ -1,7 +1,5 @@
+ package com.fasterxml.jackson.databind.jsontype;
+ 
+-import org.junit.Assert;
+-
+ import com.fasterxml.jackson.annotation.*;
+ 
+ import com.fasterxml.jackson.databind.BaseMapTest;
+@@ -10,6 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
+ public class TestDefaultWithCreators
+     extends BaseMapTest
+ {
++    /*
++    /**********************************************************
++    /* Helper types
++    /**********************************************************
++     */
++
+     static abstract class Job
+     {
+         public long id;
+@@ -32,31 +36,7 @@ public class TestDefaultWithCreators
+         public String getUrl() { return url; }
+         public int getCount() { return count; }
+     }
+-
+-    // [databind#1385]
+-    static class Bean1385Wrapper
+-    {
+-        public Object value;
+-
+-        protected Bean1385Wrapper() { }
+-        public Bean1385Wrapper(Object v) { value = v; }
+-    }
+-
+-    static class Bean1385
+-    {
+-        private byte[] raw;
+     
+-        @JsonCreator(mode=JsonCreator.Mode.DELEGATING)
+-        public Bean1385(byte[] raw) {
+-            this.raw = raw.clone();
+-        }
+-
+-        @JsonValue
+-        public byte[] getBytes() {
+-            return raw;
+-        }
+-    }
+-
+     /*
+     /**********************************************************
+     /* Unit tests
+@@ -78,21 +58,4 @@ public class TestDefaultWithCreators
+         assertEquals("http://foo", o2.getUrl());
+         assertEquals(3, o2.getCount());
+     }
+-
+-    // [databind#1385]
+-    public void testWithCreatorAndJsonValue() throws Exception
+-    {
+-        final byte[] BYTES = new byte[] { 1, 2, 3, 4, 5 };
+-        ObjectMapper mapper = new ObjectMapper();
+-        mapper.enableDefaultTyping();
+-        String json = mapper.writeValueAsString(new Bean1385Wrapper(
+-                new Bean1385(BYTES)
+-        ));
+-        Bean1385Wrapper result = mapper.readValue(json, Bean1385Wrapper.class);
+-        assertNotNull(result);
+-        assertNotNull(result.value);
+-        assertEquals(Bean1385.class, result.value.getClass());
+-        Bean1385 b = (Bean1385) result.value;
+-        Assert.assertArrayEquals(BYTES, b.raw);
+-    }
+- }
++}
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java
+index 8913f7a8f..3c54a387a 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest.java
+@@ -473,14 +473,22 @@ public class ExternalTypeIdTest extends BaseMapTest
+         ExternalTypeWithNonPOJO input = new ExternalTypeWithNonPOJO(new AsValueThingy(12345L));
+         String json = MAPPER.writeValueAsString(input);
+         assertNotNull(json);
+-        assertEquals("{\"value\":12345,\"type\":\"thingy\"}", json);
++        assertEquals("{\"value\":12345,\"type\":\"date\"}", json);
+ 
+         // and get it back too:
+         ExternalTypeWithNonPOJO result = MAPPER.readValue(json, ExternalTypeWithNonPOJO.class);
+         assertNotNull(result);
+         assertNotNull(result.value);
++        /* 13-Feb-2013, tatu: Urgh. I don't think this can work quite as intended...
++         *   since POJO type, and type of thing @JsonValue annotated method returns
++         *   are not related. Best we can do is thus this:
++         */
++        /*
+         assertEquals(AsValueThingy.class, result.value.getClass());
+         assertEquals(12345L, ((AsValueThingy) result.value).rawDate);
++        */
++        assertEquals(Date.class, result.value.getClass());
++        assertEquals(12345L, ((Date) result.value).getTime());
+     }
+ 
+     // for [databind#222]
+diff --git a/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonValue.java b/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonValue.java
+index 4b5b4d677..fedf8d648 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonValue.java
++++ b/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonValue.java
+@@ -120,11 +120,10 @@ public class TestJsonValue
+         External(Internal e) { i = e.value; }
+     }
+ 
+-    // [databind#167]
++    // [Issue#167]
+     
+     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "boingo")
+-    @JsonSubTypes(value = {@JsonSubTypes.Type(name = "boopsy", value = AdditionInterfaceImpl.class)
+-    })
++    @JsonSubTypes(value = {@JsonSubTypes.Type(name = "boopsy", value = AdditionInterfaceImpl.class) })
+     static interface AdditionInterface
+     {
+         public int add(int in);
+@@ -149,6 +148,25 @@ public class TestJsonValue
+ 	      return in + toAdd;
+ 	    }
+     }
++	
++    public static class NegatingAdditionInterface implements AdditionInterface
++    {
++	    final AdditionInterface delegate;
++	
++	    public NegatingAdditionInterface(AdditionInterface delegate) {
++	        this.delegate = delegate;
++	    }
++	
++	    @Override
++	    public int add(int in) {
++	        return delegate.add(-in);
++	    }
++	
++	    @JsonValue
++	    public AdditionInterface getDelegate() {
++	        return delegate;
++	    }
++    }
+ 
+     static class Bean838 {
+         @JsonValue
+@@ -240,6 +258,13 @@ public class TestJsonValue
+ 	    String json = MAPPER.writeValueAsString(adder);
+ 	    assertEquals("{\"boingo\":\"boopsy\",\"toAdd\":1}", json);
+ 	    assertEquals(2, MAPPER.readValue(json, AdditionInterface.class).add(1));
++	
++	    adder = new NegatingAdditionInterface(adder);
++	    assertEquals(0, adder.add(1));
++	    json = MAPPER.writeValueAsString(adder);
++
++	    assertEquals("{\"boingo\":\"boopsy\",\"toAdd\":1}", json);
++	    assertEquals(2, MAPPER.readValue(json, AdditionInterface.class).add(1));
+     }
+ 
+     public void testJsonValueWithCustomOverride() throws Exception

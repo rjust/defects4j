@@ -1,0 +1,58 @@
+diff --git a/src/test/org/apache/commons/collections/AbstractTestObject.java b/src/test/org/apache/commons/collections/AbstractTestObject.java
+index 25670566..41647af4 100644
+--- a/src/test/org/apache/commons/collections/AbstractTestObject.java
++++ b/src/test/org/apache/commons/collections/AbstractTestObject.java
+@@ -138,23 +138,17 @@ public abstract class AbstractTestObject extends BulkTest {
+         }
+     }
+ 
+-    protected Object serializeDeserialize(Object obj) throws Exception {
+-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+-        ObjectOutputStream out = new ObjectOutputStream(buffer);
+-        out.writeObject(obj);
+-        out.close();
+-
+-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
+-        Object dest = in.readObject();
+-        in.close();
+-
+-        return dest;
+-    }
+-
+     public void testSerializeDeserializeThenCompare() throws Exception {
+         Object obj = makeObject();
+         if (obj instanceof Serializable && isTestSerialization()) {
+-            Object dest = serializeDeserialize(obj);
++            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
++            ObjectOutputStream out = new ObjectOutputStream(buffer);
++            out.writeObject(obj);
++            out.close();
++
++            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
++            Object dest = in.readObject();
++            in.close();
+             if (isEqualsCheckable()) {
+                 assertEquals("obj != deserialize(serialize(obj))", obj, dest);
+             }
+diff --git a/src/test/org/apache/commons/collections/buffer/TestUnboundedFifoBuffer.java b/src/test/org/apache/commons/collections/buffer/TestUnboundedFifoBuffer.java
+index aa15ff50..2c175bfd 100644
+--- a/src/test/org/apache/commons/collections/buffer/TestUnboundedFifoBuffer.java
++++ b/src/test/org/apache/commons/collections/buffer/TestUnboundedFifoBuffer.java
+@@ -412,17 +412,6 @@ public class TestUnboundedFifoBuffer extends AbstractTestCollection {
+         assertEquals(0, test.tail);
+     }
+ 
+-    //-----------------------------------------------------------------------
+-    public void testCollections220() throws Exception {
+-         UnboundedFifoBuffer buffer = new UnboundedFifoBuffer();
+-         
+-         buffer = (UnboundedFifoBuffer) serializeDeserialize(buffer);
+-
+-         // test size() gets incremented
+-         buffer.add("Foo");
+-         assertEquals(1, buffer.size());
+-    }
+-
+     //-----------------------------------------------------------------------
+     public String getCompatibilityVersion() {
+         return "3.1";

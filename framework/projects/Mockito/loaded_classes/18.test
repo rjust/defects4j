@@ -1,6 +1,6 @@
-org.mockitoutil.TestBase
-org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValuesTest
-org.mockitoutil.Assertor
 org.mockito.configuration.MockitoConfiguration
 org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValuesTest
 org.mockito.StateMaster
+org.mockitoutil.Assertor
+org.mockitoutil.TestBase

@@ -35,7 +35,6 @@ org.mockitousage.annotation.CaptorAnnotationBasicTest
 org.mockitousage.annotation.CaptorAnnotationTest
 org.mockitousage.annotation.MockInjectionUsingConstructorTest$ATest
 org.mockitousage.annotation.MockInjectionUsingConstructorTest
-org.mockitousage.annotation.MockInjectionUsingSetterOrPropertyTest
 org.mockitousage.basicapi.MockAccessTest
 org.mockitousage.basicapi.MocksCreationTest
 org.mockitousage.basicapi.MocksSerializationTest
@@ -133,4 +132,3 @@ org.mockitousage.verification.VerificationInOrderTest
 org.mockitousage.verification.VerificationInOrderWithCallsTest
 org.mockitousage.verification.VerificationOnMultipleMocksUsingMatchersTest
 org.mockitousage.verification.VerificationUsingMatchersTest
-org.mockitousage.verification.VerificationWithTimeoutTest

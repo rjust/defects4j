@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/csv/CSVParser.java b/src/main/java/org/apache/commons/csv/CSVParser.java
+index e97a364..9d56f1a 100644
+--- a/src/main/java/org/apache/commons/csv/CSVParser.java
++++ b/src/main/java/org/apache/commons/csv/CSVParser.java
+@@ -285,7 +285,7 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
+      * @return a copy of the header map that iterates in column order.
+      */
+     public Map<String, Integer> getHeaderMap() {
+-        return this.headerMap == null ? null : new LinkedHashMap<String, Integer>(this.headerMap);
++        return new LinkedHashMap<String, Integer>(this.headerMap);
+     }
+ 
+     /**

@@ -1,0 +1,22 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/creators/ArrayDelegatorCreatorForCollectionTest.java b/src/test/java/com/fasterxml/jackson/failing/UnmodifiableSetTyping1392Test.java
+similarity index 88%
+rename from src/test/java/com/fasterxml/jackson/databind/creators/ArrayDelegatorCreatorForCollectionTest.java
+rename to src/test/java/com/fasterxml/jackson/failing/UnmodifiableSetTyping1392Test.java
+index c0cb96181..8b371fa20 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/creators/ArrayDelegatorCreatorForCollectionTest.java
++++ b/src/test/java/com/fasterxml/jackson/failing/UnmodifiableSetTyping1392Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.creators;
++package com.fasterxml.jackson.failing;
+ 
+ import java.util.Collections;
+ import java.util.Set;
+@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.*;
+ 
+ import com.fasterxml.jackson.databind.*;
+ 
+-public class ArrayDelegatorCreatorForCollectionTest extends BaseMapTest
++public class UnmodifiableSetTyping1392Test extends BaseMapTest
+ {
+     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
+     abstract static class UnmodifiableSetMixin {

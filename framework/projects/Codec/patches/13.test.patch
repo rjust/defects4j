@@ -1,0 +1,32 @@
+diff --git a/src/test/java/org/apache/commons/codec/language/DoubleMetaphoneTest.java b/src/test/java/org/apache/commons/codec/language/DoubleMetaphoneTest.java
+index 5503d34b..7a7cf57a 100644
+--- a/src/test/java/org/apache/commons/codec/language/DoubleMetaphoneTest.java
++++ b/src/test/java/org/apache/commons/codec/language/DoubleMetaphoneTest.java
+@@ -1060,16 +1060,6 @@ public class DoubleMetaphoneTest extends StringEncoderAbstractTest<DoubleMetapho
+         assertTrue(this.getStringEncoder().isDoubleMetaphoneEqual("\u00e7", "S")); // c-cedilla
+     }
+ 
+-    @Test
+-    public void testCodec184() throws Throwable {
+-        assertTrue(new DoubleMetaphone().isDoubleMetaphoneEqual("", "", false));
+-        assertTrue(new DoubleMetaphone().isDoubleMetaphoneEqual("", "", true));
+-        assertFalse(new DoubleMetaphone().isDoubleMetaphoneEqual("aa", "", false));
+-        assertFalse(new DoubleMetaphone().isDoubleMetaphoneEqual("aa", "", true));
+-        assertFalse(new DoubleMetaphone().isDoubleMetaphoneEqual("", "aa", false));
+-        assertFalse(new DoubleMetaphone().isDoubleMetaphoneEqual("", "aa", true));
+-      }
+-
+     @Test
+     public void testDoubleMetaphone() {
+         assertDoubleMetaphone("TSTN", "testing");
+@@ -1121,9 +1111,7 @@ public class DoubleMetaphoneTest extends StringEncoderAbstractTest<DoubleMetapho
+ 
+     @Test
+     public void testIsDoubleMetaphoneEqualBasic() {
+-        final String[][] testFixture = new String[][] { { 
+-                "", "" }, {
+-                "Case", "case" }, {
++        final String[][] testFixture = new String[][] { { "Case", "case" }, {
+                 "CASE", "Case" }, {
+                 "caSe", "cAsE" }, {
+                 "cookie", "quick" }, {

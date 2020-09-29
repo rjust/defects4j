@@ -1,0 +1,40 @@
+diff --git a/src/com/google/javascript/jscomp/Compiler.java b/src/com/google/javascript/jscomp/Compiler.java
+index 448e2b56..d2524b4f 100644
+--- a/src/com/google/javascript/jscomp/Compiler.java
++++ b/src/com/google/javascript/jscomp/Compiler.java
+@@ -261,7 +261,6 @@ public class Compiler extends AbstractCompiler {
+     initOptions(options);
+ 
+     checkFirstModule(modules);
+-    fillEmptyModules(modules);
+ 
+     this.externs = makeCompilerInput(externs, true);
+     this.modules = modules;
+@@ -326,14 +325,6 @@ public class Compiler extends AbstractCompiler {
+    * Fill any empty modules with a place holder file. It makes any cross module
+    * motion easier.
+    */
+-  private void fillEmptyModules(JSModule[] modules) {
+-    for (int i = 1; i < modules.length; i ++) {
+-      JSModule module = modules[i];
+-      if (module.getInputs().isEmpty()) {
+-        module.add(JSSourceFile.fromCode("[" + module.getName() + "]", ""));
+-      }
+-    }
+-  }
+   
+   static final DiagnosticType DUPLICATE_INPUT_IN_MODULES =
+       DiagnosticType.error("JSC_DUPLICATE_INPUT_IN_MODULES_ERROR",
+@@ -1588,6 +1579,12 @@ public class Compiler extends AbstractCompiler {
+     if (inputs.size() > 0) {
+       return inputs.get(0).getAstRoot(this);
+     }
++    for (JSModule m : getModuleGraph().getTransitiveDepsDeepestFirst(module)) {
++      inputs = m.getInputs();
++      if (inputs.size() > 0) {
++        return inputs.get(0).getAstRoot(this);
++      }
++    }
+     throw new IllegalStateException("Root module has no inputs");
+   }
+ 

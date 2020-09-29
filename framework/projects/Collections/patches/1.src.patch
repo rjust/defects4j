@@ -1,0 +1,32 @@
+diff --git a/src/java/org/apache/commons/collections/map/Flat3Map.java b/src/java/org/apache/commons/collections/map/Flat3Map.java
+index a5083d29..8acc0021 100644
+--- a/src/java/org/apache/commons/collections/map/Flat3Map.java
++++ b/src/java/org/apache/commons/collections/map/Flat3Map.java
+@@ -651,13 +651,10 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+             switch (nextIndex) {
+                 case 3: 
+                     parent.value3 = value;
+-                    break;
+                 case 2:
+                     parent.value2 = value;
+-                    break;
+                 case 1:
+                     parent.value1 = value;
+-                    break;
+             }
+             return old;
+         }
+@@ -806,13 +803,10 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+             switch (nextIndex) {
+                 case 3: 
+                     parent.value3 = value;
+-                    break;
+                 case 2:
+                     parent.value2 = value;
+-                    break;
+                 case 1:
+                     parent.value1 = value;
+-                    break;
+             }
+             return old;
+         }
