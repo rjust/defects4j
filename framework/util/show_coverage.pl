@@ -12,6 +12,7 @@ show_coverage.pl [options] [optional defects4j coverage file]
   -help        brief help message
   -details     include details of each test run
   -man         full documentation
+  -expect      expected test count
 
 =head1 OPTIONS
 
@@ -30,6 +31,11 @@ Include coverage details for each test.
 
 Prints the manual page and exits.
 
+=item B<-expect> C<count>
+
+Expected test count. (optional)
+[default value is 30]
+
 =back
 
 =head1 DESCRIPTION
@@ -43,6 +49,9 @@ By default, the script will read the file:
 
 You may supply an alternative file as an argument.
 
+By default, the script expects to find 30 tests in the coverage file.
+You may supply an alternate value with the -expect option.
+
 =cut
 
 use strict;
@@ -55,18 +64,21 @@ use Pod::Usage qw(pod2usage);
 my $help = 0;
 my $details = 0;
 my $man = 0;
+my $expected_test_count;
 
 # Parse options and print usage if there is a syntax error,
 # or if usage was explicitly requested.
-GetOptions('help|?' => \$help, details => \$details, man => \$man) or pod2usage(2);
+GetOptions('help|?' => \$help, details => \$details, man => \$man, "expect:i" => \$expected_test_count) or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-verbose => 2) if $man;
 # Check for too many filenames
 pod2usage("$0: Too many files given.\n")  if (@ARGV > 1);
 
-# if the number of tests to be run is modified in randoop_coverage.sh,
-# then the expected_test_count will need to be modified to match.
-my $expected_test_count = 30;
+# If the default number of tests to be run is modified in randoop_coverage.sh,
+# then the default expected_test_count will need to be modified to match.
+if (! defined $expected_test_count) {
+    $expected_test_count = 30;
+}
 my $test_count = 0;
 my $tot_line = 0;
 my $tot_exec = 0;
@@ -85,8 +97,8 @@ printf("Processing file: %s\n", $filename);
 print(strftime("Created: %Y-%m-%d %H:%M:%S", localtime((stat($fh))[9])), "\n");
 
 if ($details) {
-    print "\nTest    Lines     Total    %", "\n";
-    print "name    covered   lines    coverage", "\n";
+    printf("\nTest\t\tLines\tTotal\t%%\n");
+    printf("name\t\tcovered\tlines\tcoverage\n");
 }
 
 # read all input lines into an array and
@@ -106,7 +118,7 @@ foreach (sort(@lines)) {
         $tot_exec += $fields[5];
         if ($details) {
             if ($fields[4] != 0) {
-                printf("%s: %d %d %.2f\n", $fields[0].$fields[1], $fields[5], $fields[4], $fields[5]/$fields[4]);
+                printf("%s:\t%d\t%d\t%.2f\n", $fields[0].$fields[1], $fields[5], $fields[4], $fields[5]/$fields[4]);
             } else {
                 printf("%s: failed\n", $fields[0].$fields[1]);
                 $tot_fail += 1;
@@ -114,6 +126,8 @@ foreach (sort(@lines)) {
         }
     }
 }
+
+printf("\nexpected_test_count: %d, test_count: %d tot_fail: %d\n", $expected_test_count, $test_count, $tot_fail);
 
 if ($expected_test_count < $test_count) {
     die "More test results than expected!";
