@@ -56,6 +56,16 @@ be used stand-alone.
         <echo message="${dir.rel.src.tests}" file="${file.export}"/>
     </target>
 
+<!-- Target directory of test classes -->
+    <target name="export.dir.bin.tests"
+            description="Target directory of test classes"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+        <property name="dir.rel.bin.tests" value="${test.classes.dir}" relative="yes" />
+
+        <echo message="${dir.rel.bin.tests}" file="${file.export}"/>
+    </target>
+
 <!-- Compile classpath -->
     <target name="export.cp.compile"
             description="Classpath to compile the project"
@@ -79,6 +89,24 @@ be used stand-alone.
 
         <pathconvert property="cp.test" refid="d4j.test.classpath" />
         <echo message="${cp.test}" file="${file.export}"/>
+    </target>
+
+<!-- Relevant classes -->
+    <target name="export.classes.relevant"
+            description="Classes loaded by the triggering tests"
+            depends="sanity.check">
+        <fail message="Property file.export not set!" unless="file.export" />
+
+        <echo message="${d4j.classes.relevant}" file="${file.export}"/>
+
+        <loadfile property="classes.rel" srcFile="${file.export}">
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="[,;]" replace="${line.separator}" flags="g"/>
+            </tokenfilter>
+        </filterchain>
+        </loadfile>
+        <echo message="${classes.rel}" file="${file.export}"/>
     </target>
 
 <!-- Modified classes -->

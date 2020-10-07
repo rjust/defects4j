@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/jsoup/nodes/Element.java b/src/main/java/org/jsoup/nodes/Element.java
+index 175654e..caf1110 100644
+--- a/src/main/java/org/jsoup/nodes/Element.java
++++ b/src/main/java/org/jsoup/nodes/Element.java
+@@ -1089,7 +1089,7 @@ public class Element extends Node {
+      */
+     // performance sensitive
+     public boolean hasClass(String className) {
+-        final String classAttr = attributes.getIgnoreCase("class");
++        final String classAttr = attributes.get("class");
+         final int len = classAttr.length();
+         final int wantLen = className.length();
+ 

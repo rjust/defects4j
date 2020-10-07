@@ -1,0 +1,26 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+index b0588695..964c86db 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
++++ b/src/main/java/org/apache/commons/compress/archivers/zip/ZipFile.java
+@@ -805,11 +805,8 @@ public class ZipFile {
+         // the hashcode - see COMPRESS-164
+         // Map needs to be reconstructed in order to keep central
+         // directory order
+-        Map<ZipArchiveEntry, OffsetEntry> origMap =
+-            new LinkedHashMap<ZipArchiveEntry, OffsetEntry>(entries);
+-        entries.clear();
+-        for (ZipArchiveEntry ze : origMap.keySet()) {
+-            OffsetEntry offsetEntry = origMap.get(ze);
++        for (ZipArchiveEntry ze : entries.keySet()) {
++            OffsetEntry offsetEntry = entries.get(ze);
+             long offset = offsetEntry.headerOffset;
+             archive.seek(offset + LFH_OFFSET_FOR_FILENAME_LENGTH);
+             byte[] b = new byte[SHORT];
+@@ -842,7 +839,6 @@ public class ZipFile {
+                     nameMap.put(ze.getName(), ze);
+                 }
+             }
+-            entries.put(ze, offsetEntry);
+         }
+     }
+ 

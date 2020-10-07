@@ -1,0 +1,31 @@
+diff --git a/src/java/org/apache/commons/cli/TypeHandler.java b/src/java/org/apache/commons/cli/TypeHandler.java
+index 0a0aa72..1ddde5b 100644
+--- a/src/java/org/apache/commons/cli/TypeHandler.java
++++ b/src/java/org/apache/commons/cli/TypeHandler.java
+@@ -22,6 +22,7 @@ import java.net.URL;
+ 
+ import java.util.Date;
+ 
++import org.apache.commons.lang.math.NumberUtils;
+ /**
+   * This is a temporary implementation. TypeHandler will handle the 
+   * pluggableness of OptionTypes and it will direct all of these types 
+@@ -158,17 +159,7 @@ public class TypeHandler {
+     {
+         try
+         {
+-            if( str != null )
+-            {
+-                if( str.indexOf('.') != -1 )
+-                {
+-                    return Double.valueOf(str);
+-                }
+-                else
+-                {
+-                    return Long.valueOf(str);
+-                }
+-            }
++            return NumberUtils.createNumber(str);
+         }
+         catch (NumberFormatException nfe)
+         {

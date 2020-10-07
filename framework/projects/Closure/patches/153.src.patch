@@ -1,0 +1,158 @@
+diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
+index c14ac8f1..4c99858e 100644
+--- a/src/com/google/javascript/jscomp/Normalize.java
++++ b/src/com/google/javascript/jscomp/Normalize.java
+@@ -628,7 +628,6 @@ class Normalize implements CompilerPass {
+   private final class DuplicateDeclarationHandler implements
+       SyntacticScopeCreator.RedeclarationHandler {
+ 
+-    private Set<Var> hasOkDuplicateDeclaration = Sets.newHashSet();
+ 
+     /**
+      * Remove duplicate VAR declarations encountered discovered during
+@@ -636,22 +635,15 @@ class Normalize implements CompilerPass {
+      */
+     @Override
+     public void onRedeclaration(
+-        Scope s, String name, Node n, CompilerInput input) {
++        Scope s, String name, Node n, Node parent, Node gramps,
++        Node nodeWithLineNumber) {
+       Preconditions.checkState(n.getType() == Token.NAME);
+-      Node parent = n.getParent();
+       Var v = s.getVar(name);
+ 
+-      if (v != null && s.isGlobal()) {
+         // We allow variables to be duplicate declared if one
+         // declaration appears in source and the other in externs.
+         // This deals with issues where a browser built-in is declared
+         // in one browser but not in another.
+-        if (v.isExtern() && !input.isExtern()) {
+-          if (hasOkDuplicateDeclaration.add(v)) {
+-            return;
+-          }
+-        }
+-      }
+ 
+       // If name is "arguments", Var maybe null.
+       if (v != null && v.getParentNode().getType() == Token.CATCH) {
+@@ -674,7 +666,7 @@ class Normalize implements CompilerPass {
+             name);
+         compiler.report(
+             JSError.make(
+-                input.getName(), n,
++                NodeUtil.getSourceName(nodeWithLineNumber), nodeWithLineNumber,
+                 CATCH_BLOCK_VAR_ERROR, name));
+       } else if (v != null && parent.getType() == Token.FUNCTION) {
+         if (v.getParentNode().getType() == Token.VAR) {
+@@ -686,7 +678,7 @@ class Normalize implements CompilerPass {
+       } else if (parent.getType() == Token.VAR) {
+         Preconditions.checkState(parent.hasOneChild());
+ 
+-        replaceVarWithAssignment(n, parent, parent.getParent());
++        replaceVarWithAssignment(n, parent, gramps);
+       }
+     }
+ 
+diff --git a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
+index eb6e1eab..04bafcf0 100644
+--- a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
++++ b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
+@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
+ import com.google.javascript.rhino.JSDocInfo;
+ import com.google.javascript.rhino.Node;
+ import com.google.javascript.rhino.Token;
++import com.google.javascript.rhino.jstype.JSType;
+ 
+ 
+ /**
+@@ -91,7 +92,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+       // been declared in the outer scope.
+       String fnName = fnNameNode.getString();
+       if (!fnName.isEmpty() && NodeUtil.isFunctionExpression(n)) {
+-        declareVar(fnNameNode);
++        declareVar(fnName, fnNameNode, n, null, null, n);
+       }
+ 
+       // Args: Declare function variables
+@@ -99,7 +100,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+       for (Node a = args.getFirstChild(); a != null;
+            a = a.getNext()) {
+         Preconditions.checkState(a.getType() == Token.NAME);
+-        declareVar(a);
++        declareVar(a.getString(), a, args, n, null, n);
+       }
+ 
+       // Body
+@@ -121,7 +122,9 @@ class SyntacticScopeCreator implements ScopeCreator {
+         for (Node child = n.getFirstChild();
+              child != null;) {
+           Node next = child.getNext();
+-          declareVar(child);
++          Preconditions.checkState(child.getType() == Token.NAME);
++          String name = child.getString();
++          declareVar(name, child, n, parent, null, n);
+           child = next;
+         }
+         return;
+@@ -136,7 +139,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+           // This is invalid, but allow it so the checks can catch it.
+           return;
+         }
+-        declareVar(n.getFirstChild());
++        declareVar(fnName, n.getFirstChild(), n, parent, null, n);
+         return;   // should not examine function's children
+ 
+       case Token.CATCH:
+@@ -148,7 +151,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+         final Node var = n.getFirstChild();
+         final Node block = var.getNext();
+ 
+-        declareVar(var);
++        declareVar(var.getString(), var, n, parent, null, n);
+         scanVars(block, n);
+         return;  // only one child to scan
+ 
+@@ -174,7 +177,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+    */
+   interface RedeclarationHandler {
+     void onRedeclaration(
+-        Scope s, String name, Node n, CompilerInput input);
++        Scope s, String name,
++        Node n, Node parent, Node gramps, Node nodeWithLineNumber);
+   }
+ 
+   /**
+@@ -182,8 +186,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+    */
+   private class DefaultRedeclarationHandler implements RedeclarationHandler {
+     public void onRedeclaration(
+-        Scope s, String name, Node n, CompilerInput input) {
+-      Node parent = n.getParent();
++        Scope s, String name,
++        Node n, Node parent, Node gramps, Node nodeWithLineNumber) {
+ 
+       // Don't allow multiple variables to be declared at the top level scope
+       if (scope.isGlobal()) {
+@@ -228,17 +232,16 @@ class SyntacticScopeCreator implements ScopeCreator {
+    * @param n The node corresponding to the variable name.
+    * @param declaredType The variable's type, according to JSDoc
+    */
+-  private void declareVar(Node n) {
+-    Preconditions.checkState(n.getType() == Token.NAME);
++  private void declareVar(String name, Node n, Node parent,
++                          Node gramps, JSType declaredType,
++                          Node nodeWithLineNumber) {
+ 
+-    CompilerInput input = compiler.getInput(sourceName);
+-    String name = n.getString();
+     if (scope.isDeclared(name, false)
+         || (scope.isLocal() && name.equals(ARGUMENTS))) {
+       redeclarationHandler.onRedeclaration(
+-          scope, name, n, input);
++          scope, name, n, parent, gramps, nodeWithLineNumber);
+     } else {
+-      scope.declare(name, n, null, input);
++      scope.declare(name, n, declaredType, compiler.getInput(sourceName));
+     }
+   }
+ }

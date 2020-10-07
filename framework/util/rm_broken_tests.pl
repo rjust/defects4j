@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +37,10 @@ rm_broken_tests.pl -- remove broken test methods from a set of test classes.
 Parses the file F<log_file> and fixes failing test methods by replacing each broken test
 method with a dummy test method in the source file of the corresponding test class. The
 source file of the test class is backed up prior to the first modification. If except is
-provided, then this test is mainted even if it appears in the log file.
+provided, then this test is maintained even if it appears in the log file.
 
 =cut
+
 #
 # TODO: This file needs a thorough overhaul and its command-line interface is not
 #       Defects4J standard!
@@ -63,15 +64,19 @@ my $verbose = 0;
 =pod
 
 The log file may contain arbitrary lines -- the script only considers lines that
-match the pattern: B</--- ([^:]*)(::(.*))?/>.
+match the pattern: B<C</--- ([^:]*)(::(.*))?/>>.
 
-=head3 Example entries in the log file
+=head2 Example entries in the log file
 
-=over
+=over 4
 
-=item Failing test class: --- package.Class
+=item *
 
-=item Failing test method: --- package.Class::method
+Failing test class: C<--- package.Class>
+
+=item *
+
+Failing test method: C<--- package.Class::method>
 
 =back
 
@@ -79,6 +84,7 @@ All lines matching the pattern are sorted, such that a failing test class in the
 list will appear before any of its failing methods.
 
 =cut
+
 my @list = `grep -a "^---" $log_file | sort -u -k1 -t":"`;
 
 my $counter=0;
@@ -238,7 +244,7 @@ sub _remove_test_method {
             foreach (@tmp) {
                 # This captures String literals -- accounting for escaped quotes
                 # (\") and non-escaped quotes (" and \\")
-                s/([\"'])(?:(?<!\\)\\\1|.)*?\1/$1$1/g;
+                s/([\"'])(?:\\(\\\\)*\1|.)*?\1/$1$1/g;
                 s/\/\/.*/\/\//;
             }
 

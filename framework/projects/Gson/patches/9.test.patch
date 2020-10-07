@@ -1,0 +1,22 @@
+diff --git a/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java b/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
+index 34dc9140..91763d18 100644
+--- a/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
++++ b/gson/src/test/java/com/google/gson/stream/JsonWriterTest.java
+@@ -283,17 +283,6 @@ public final class JsonWriterTest extends TestCase {
+     assertEquals("[true,false]", stringWriter.toString());
+   }
+ 
+-  public void testBoxedBooleans() throws IOException {
+-    StringWriter stringWriter = new StringWriter();
+-    JsonWriter jsonWriter = new JsonWriter(stringWriter);
+-    jsonWriter.beginArray();
+-    jsonWriter.value((Boolean) true);
+-    jsonWriter.value((Boolean) false);
+-    jsonWriter.value((Boolean) null);
+-    jsonWriter.endArray();
+-    assertEquals("[true,false,null]", stringWriter.toString());
+-  }
+-
+   public void testNulls() throws IOException {
+     StringWriter stringWriter = new StringWriter();
+     JsonWriter jsonWriter = new JsonWriter(stringWriter);

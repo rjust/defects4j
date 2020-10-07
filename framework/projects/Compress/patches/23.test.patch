@@ -1,0 +1,27 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java b/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
+index e2a91f47..69200b63 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/sevenz/SevenZFileTest.java
+@@ -72,22 +72,6 @@ public class SevenZFileTest extends AbstractTestCase {
+         }
+     }
+ 
+-    /**
+-     * @see "https://issues.apache.org/jira/browse/COMPRESS-256"
+-     */
+-    public void testCompressedHeaderWithNonDefaultDictionarySize() throws Exception {
+-        SevenZFile sevenZFile = new SevenZFile(getFile("COMPRESS-256.7z"));
+-        try {
+-            int count = 0;
+-            while (sevenZFile.getNextEntry() != null) {
+-                count++;
+-            }
+-            assertEquals(446, count);
+-        } finally {
+-            sevenZFile.close();
+-        }
+-    }
+-
+     private void test7zUnarchive(File f, byte[] password) throws Exception {
+         SevenZFile sevenZFile = new SevenZFile(f, password);
+         try {

@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,36 +44,35 @@ our @ISA = qw(Project);
 my $PID  = "Mockito";
 
 sub new {
-    my $class = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "mockito";
-    my $src  = "src/main/java";
-    my $test = "src/test/java";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$SCRIPT_DIR/projects/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 sub _post_checkout {
-    my ($vcs, $revision, $work_dir) = @_;
-    my $name = $vcs->{prog_name};
-
-    #
-    # Post-checkout tasks include, for instance, providing proper build files,
-    # fixing compilation errors, etc.
+    my ($self, $rev_id, $work_dir) = @_;
 
     # Fix Mockito's test runners
-    my $id = $vcs->lookup_revision_id($revision);
-    my $mockito_junit_runner_patch_file = "$SCRIPT_DIR/projects/$PID/mockito_test_runners.patch";
-    if ($id == 16 || $id == 17 || ($id >= 34 && $id <= 38)) {
-        $vcs->apply_patch($work_dir, "$mockito_junit_runner_patch_file") or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
+    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+    # TODO: Testing for vids is super brittle! Find a better way to determine
+    # whether a test class needs to be patched, or provide a patch for each
+    # affected revision id.
+    my $mockito_junit_runner_patch_file = "$PROJECTS_DIR/$PID/mockito_test_runners.patch";
+    if ($vid == 16 || $vid == 17 || ($vid >= 34 && $vid <= 38)) {
+        $self->apply_patch($work_dir, "$mockito_junit_runner_patch_file")
+                or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
-    my $lib_dir = "$LIB_DIR/build_systems/gradle";
+    my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";
 
     # Read existing Gradle properties file, if it exists
     open(PROP, "<$prop") or return;
@@ -97,81 +96,22 @@ sub _post_checkout {
     if (-e "$work_dir/gradle.properties") {
         system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
     }
+
+    # Enable local repository
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
 }
 
-#
-# Remove falky tests in addition to the broken ones
-#
-sub fix_tests {
+sub determine_layout {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    # Call fix_tests in super class to fix all broken methods
-    $self->SUPER::fix_tests($vid);
-
-    # Remove randomly failing tests
+    my ($self, $rev_id) = @_;
     my $work_dir = $self->{prog_root};
-    my $dir = $self->test_dir($vid);
-
-    my $file = "$SCRIPT_DIR/projects/$PID/flaky_tests";
-    if (-e $file) {
-        # Remove broken test methods
-        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
+    if (-e "$work_dir/src/main/java") {
+        return {src=>"src/main/java", test=>"src/test/java"};
+    } elsif(-e "$work_dir/src") {
+        return {src=>"src", test=>"test"};
+    } else {
+        die "Unknown directory layout";
     }
-}
-
-sub src_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($vid);
-}
-
-sub test_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($vid);
-}
-
-sub _build_dir_map {
-    my $self = shift;
-
-    return if defined $self->{_dir_map};
-
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
-    }
-    close IN;
-    $self->{_dir_map}=$cache;
 }
 
 sub _ant_call {
@@ -183,7 +123,7 @@ sub _ant_call {
     #
     # TODO: Extract all exported environment variables into a user-visible
     # config file.
-    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/.gradle_local_home";
+    $ENV{'GRADLE_USER_HOME'} = "$self->{prog_root}/$GRADLE_LOCAL_HOME_DIR";
     return $self->SUPER::_ant_call($target, $option_str, $log_file);
 }
 

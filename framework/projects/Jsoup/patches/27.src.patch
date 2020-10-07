@@ -1,0 +1,15 @@
+diff --git a/src/main/java/org/jsoup/helper/DataUtil.java b/src/main/java/org/jsoup/helper/DataUtil.java
+index a4d4f51..f978141 100644
+--- a/src/main/java/org/jsoup/helper/DataUtil.java
++++ b/src/main/java/org/jsoup/helper/DataUtil.java
+@@ -129,9 +129,8 @@ public class DataUtil {
+         Matcher m = charsetPattern.matcher(contentType);
+         if (m.find()) {
+             String charset = m.group(1).trim();
+-            if (Charset.isSupported(charset)) return charset;
+             charset = charset.toUpperCase(Locale.ENGLISH);
+-            if (Charset.isSupported(charset)) return charset;
++            return charset;
+         }
+         return null;
+     }

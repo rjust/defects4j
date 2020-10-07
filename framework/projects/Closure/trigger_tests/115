@@ -169,9 +169,9 @@ Subtree2: NAME JSCompiler_inline_result$$0 10 [source_file: testcode]
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
 	at com.google.javascript.jscomp.InlineFunctionsTest.testBug4944818(InlineFunctionsTest.java:2060)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at junit.framework.TestCase.runTest(TestCase.java:176)
 	at junit.framework.TestCase.runBare(TestCase.java:141)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
@@ -181,15 +181,15 @@ Subtree2: NAME JSCompiler_inline_result$$0 10 [source_file: testcode]
 	at junit.framework.TestSuite.runTest(TestSuite.java:255)
 	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
 	at org.apache.tools.ant.Task.perform(Task.java:348)
 	at org.apache.tools.ant.Target.execute(Target.java:392)
@@ -271,9 +271,9 @@ Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: te
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
 	at com.google.javascript.jscomp.InlineFunctionsTest.testDoubleInlining1(InlineFunctionsTest.java:1099)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at junit.framework.TestCase.runTest(TestCase.java:176)
 	at junit.framework.TestCase.runBare(TestCase.java:141)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
@@ -283,15 +283,15 @@ Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: te
 	at junit.framework.TestSuite.runTest(TestSuite.java:255)
 	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
 	at org.apache.tools.ant.Task.perform(Task.java:348)
 	at org.apache.tools.ant.Target.execute(Target.java:392)
@@ -359,9 +359,9 @@ Subtree2: BLOCK 1 [source_file: testcode]
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
 	at com.google.javascript.jscomp.InlineFunctionsTest.testNoInlineIfParametersModified8(InlineFunctionsTest.java:598)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at junit.framework.TestCase.runTest(TestCase.java:176)
 	at junit.framework.TestCase.runBare(TestCase.java:141)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
@@ -371,15 +371,15 @@ Subtree2: BLOCK 1 [source_file: testcode]
 	at junit.framework.TestSuite.runTest(TestSuite.java:255)
 	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
 	at org.apache.tools.ant.Task.perform(Task.java:348)
 	at org.apache.tools.ant.Target.execute(Target.java:392)
@@ -447,9 +447,9 @@ Subtree2: BLOCK 1 [source_file: testcode]
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
 	at com.google.javascript.jscomp.InlineFunctionsTest.testNoInlineIfParametersModified9(InlineFunctionsTest.java:603)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at junit.framework.TestCase.runTest(TestCase.java:176)
 	at junit.framework.TestCase.runBare(TestCase.java:141)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
@@ -459,391 +459,15 @@ Subtree2: BLOCK 1 [source_file: testcode]
 	at junit.framework.TestSuite.runTest(TestSuite.java:255)
 	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:392)
-	at org.apache.tools.ant.Target.performTasks(Target.java:413)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
-	at org.apache.tools.ant.Main.runBuild(Main.java:811)
-	at org.apache.tools.ant.Main.startAnt(Main.java:217)
-	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
-	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
---- com.google.javascript.jscomp.InlineFunctionsTest::testInlineFunctions22
-junit.framework.AssertionFailedError: 
-Expected: var d;JSCompiler_inline_label_plex_1:{if(1+2){d=0;break JSCompiler_inline_label_plex_1}else{d=1;break JSCompiler_inline_label_plex_1}d=void 0}
-Result: var d;var JSCompiler_inline_result$$inline_1;JSCompiler_inline_label_2:{if(1+2){JSCompiler_inline_result$$inline_1=0;break JSCompiler_inline_label_2}else{JSCompiler_inline_result$$inline_1=1;break JSCompiler_inline_label_2}JSCompiler_inline_result$$inline_1=void 0}d=JSCompiler_inline_result$$inline_1
-Node tree inequality:
-Tree1:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
-        VAR 1 [source_file: expected0]
-            NAME d 1 [source_file: expected0]
-        BLOCK 1 [source_file: expected0]
-            LABEL 1 [source_file: expected0]
-                LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    IF 1 [source_file: expected0]
-                        ADD 1 [source_file: expected0]
-                            NUMBER 1.0 1 [source_file: expected0]
-                            NUMBER 2.0 1 [source_file: expected0]
-                        BLOCK 1 [source_file: expected0]
-                            EXPR_RESULT 1 [source_file: expected0]
-                                ASSIGN 1 [source_file: expected0]
-                                    NAME d 1 [source_file: expected0]
-                                    NUMBER 0.0 1 [source_file: expected0]
-                            BREAK 1 [source_file: expected0]
-                                LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-                        BLOCK 1 [source_file: expected0]
-                            EXPR_RESULT 1 [source_file: expected0]
-                                ASSIGN 1 [source_file: expected0]
-                                    NAME d 1 [source_file: expected0]
-                                    NUMBER 1.0 1 [source_file: expected0]
-                            BREAK 1 [source_file: expected0]
-                                LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            VOID 1 [source_file: expected0]
-                                NUMBER 0.0 1 [source_file: expected0]
-
-
-Tree2:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
-        VAR 1 [source_file: testcode]
-            NAME d 1 [source_file: testcode]
-        BLOCK 1 [source_file: testcode]
-            VAR 1 [source_file: testcode]
-                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-            BLOCK 1 [source_file: testcode]
-                LABEL 1 [source_file: testcode]
-                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        IF 1 [source_file: testcode]
-                            ADD 1 [source_file: testcode]
-                                NUMBER 1.0 1 [source_file: testcode]
-                                NUMBER 2.0 1 [source_file: testcode]
-                            BLOCK 1 [source_file: testcode]
-                                EXPR_RESULT 1 [source_file: testcode]
-                                    ASSIGN 1 [source_file: testcode]
-                                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                        NUMBER 0.0 1 [source_file: testcode]
-                                BREAK 1 [source_file: testcode]
-                                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                            BLOCK 1 [source_file: testcode]
-                                EXPR_RESULT 1 [source_file: testcode]
-                                    ASSIGN 1 [source_file: testcode]
-                                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                        NUMBER 1.0 1 [source_file: testcode]
-                                BREAK 1 [source_file: testcode]
-                                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                VOID 1 [source_file: testcode]
-                                    NUMBER 0.0 1 [source_file: testcode]
-            EXPR_RESULT 1 [source_file: testcode]
-                ASSIGN 1 [source_file: testcode]
-                    NAME d 1 [source_file: testcode]
-                    NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-
-
-Subtree1: BLOCK 1 [source_file: expected0]
-    LABEL 1 [source_file: expected0]
-        LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-        BLOCK 1 [source_file: expected0]
-            IF 1 [source_file: expected0]
-                ADD 1 [source_file: expected0]
-                    NUMBER 1.0 1 [source_file: expected0]
-                    NUMBER 2.0 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            NUMBER 0.0 1 [source_file: expected0]
-                    BREAK 1 [source_file: expected0]
-                        LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            NUMBER 1.0 1 [source_file: expected0]
-                    BREAK 1 [source_file: expected0]
-                        LABEL_NAME JSCompiler_inline_label_plex_1 1 [source_file: expected0]
-            EXPR_RESULT 1 [source_file: expected0]
-                ASSIGN 1 [source_file: expected0]
-                    NAME d 1 [source_file: expected0]
-                    VOID 1 [source_file: expected0]
-                        NUMBER 0.0 1 [source_file: expected0]
-
-
-Subtree2: BLOCK 1 [source_file: testcode]
-    VAR 1 [source_file: testcode]
-        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-    BLOCK 1 [source_file: testcode]
-        LABEL 1 [source_file: testcode]
-            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-            BLOCK 1 [source_file: testcode]
-                IF 1 [source_file: testcode]
-                    ADD 1 [source_file: testcode]
-                        NUMBER 1.0 1 [source_file: testcode]
-                        NUMBER 2.0 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                NUMBER 0.0 1 [source_file: testcode]
-                        BREAK 1 [source_file: testcode]
-                            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                NUMBER 1.0 1 [source_file: testcode]
-                        BREAK 1 [source_file: testcode]
-                            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                EXPR_RESULT 1 [source_file: testcode]
-                    ASSIGN 1 [source_file: testcode]
-                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                        VOID 1 [source_file: testcode]
-                            NUMBER 0.0 1 [source_file: testcode]
-    EXPR_RESULT 1 [source_file: testcode]
-        ASSIGN 1 [source_file: testcode]
-            NAME d 1 [source_file: testcode]
-            NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-
-	at junit.framework.Assert.fail(Assert.java:57)
-	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.Assert.assertNull(Assert.java:277)
-	at junit.framework.TestCase.assertNull(TestCase.java:447)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
-	at com.google.javascript.jscomp.InlineFunctionsTest.testInlineFunctions22(InlineFunctionsTest.java:375)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at junit.framework.TestCase.runTest(TestCase.java:176)
-	at junit.framework.TestCase.runBare(TestCase.java:141)
-	at junit.framework.TestResult$1.protect(TestResult.java:122)
-	at junit.framework.TestResult.runProtected(TestResult.java:142)
-	at junit.framework.TestResult.run(TestResult.java:125)
-	at junit.framework.TestCase.run(TestCase.java:129)
-	at junit.framework.TestSuite.runTest(TestSuite.java:255)
-	at junit.framework.TestSuite.run(TestSuite.java:250)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
-	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:392)
-	at org.apache.tools.ant.Target.performTasks(Target.java:413)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
-	at org.apache.tools.ant.Main.runBuild(Main.java:811)
-	at org.apache.tools.ant.Main.startAnt(Main.java:217)
-	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
-	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
---- com.google.javascript.jscomp.InlineFunctionsTest::testInlineFunctions23
-junit.framework.AssertionFailedError: 
-Expected: var d;JSCompiler_inline_label_complex_1:{if(1+2){d=0;break JSCompiler_inline_label_complex_1}else{d=1;break JSCompiler_inline_label_complex_1}d=void 0}
-Result: var d;var JSCompiler_inline_result$$inline_1;JSCompiler_inline_label_2:{if(1+2){JSCompiler_inline_result$$inline_1=0;break JSCompiler_inline_label_2}else{JSCompiler_inline_result$$inline_1=1;break JSCompiler_inline_label_2}JSCompiler_inline_result$$inline_1=void 0}d=JSCompiler_inline_result$$inline_1
-Node tree inequality:
-Tree1:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
-        VAR 1 [source_file: expected0]
-            NAME d 1 [source_file: expected0]
-        BLOCK 1 [source_file: expected0]
-            LABEL 1 [source_file: expected0]
-                LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    IF 1 [source_file: expected0]
-                        ADD 1 [source_file: expected0]
-                            NUMBER 1.0 1 [source_file: expected0]
-                            NUMBER 2.0 1 [source_file: expected0]
-                        BLOCK 1 [source_file: expected0]
-                            EXPR_RESULT 1 [source_file: expected0]
-                                ASSIGN 1 [source_file: expected0]
-                                    NAME d 1 [source_file: expected0]
-                                    NUMBER 0.0 1 [source_file: expected0]
-                            BREAK 1 [source_file: expected0]
-                                LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-                        BLOCK 1 [source_file: expected0]
-                            EXPR_RESULT 1 [source_file: expected0]
-                                ASSIGN 1 [source_file: expected0]
-                                    NAME d 1 [source_file: expected0]
-                                    NUMBER 1.0 1 [source_file: expected0]
-                            BREAK 1 [source_file: expected0]
-                                LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            VOID 1 [source_file: expected0]
-                                NUMBER 0.0 1 [source_file: expected0]
-
-
-Tree2:
-BLOCK [synthetic: 1]
-    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
-        VAR 1 [source_file: testcode]
-            NAME d 1 [source_file: testcode]
-        BLOCK 1 [source_file: testcode]
-            VAR 1 [source_file: testcode]
-                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-            BLOCK 1 [source_file: testcode]
-                LABEL 1 [source_file: testcode]
-                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        IF 1 [source_file: testcode]
-                            ADD 1 [source_file: testcode]
-                                NUMBER 1.0 1 [source_file: testcode]
-                                NUMBER 2.0 1 [source_file: testcode]
-                            BLOCK 1 [source_file: testcode]
-                                EXPR_RESULT 1 [source_file: testcode]
-                                    ASSIGN 1 [source_file: testcode]
-                                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                        NUMBER 0.0 1 [source_file: testcode]
-                                BREAK 1 [source_file: testcode]
-                                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                            BLOCK 1 [source_file: testcode]
-                                EXPR_RESULT 1 [source_file: testcode]
-                                    ASSIGN 1 [source_file: testcode]
-                                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                        NUMBER 1.0 1 [source_file: testcode]
-                                BREAK 1 [source_file: testcode]
-                                    LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                VOID 1 [source_file: testcode]
-                                    NUMBER 0.0 1 [source_file: testcode]
-            EXPR_RESULT 1 [source_file: testcode]
-                ASSIGN 1 [source_file: testcode]
-                    NAME d 1 [source_file: testcode]
-                    NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-
-
-Subtree1: BLOCK 1 [source_file: expected0]
-    LABEL 1 [source_file: expected0]
-        LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-        BLOCK 1 [source_file: expected0]
-            IF 1 [source_file: expected0]
-                ADD 1 [source_file: expected0]
-                    NUMBER 1.0 1 [source_file: expected0]
-                    NUMBER 2.0 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            NUMBER 0.0 1 [source_file: expected0]
-                    BREAK 1 [source_file: expected0]
-                        LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-                BLOCK 1 [source_file: expected0]
-                    EXPR_RESULT 1 [source_file: expected0]
-                        ASSIGN 1 [source_file: expected0]
-                            NAME d 1 [source_file: expected0]
-                            NUMBER 1.0 1 [source_file: expected0]
-                    BREAK 1 [source_file: expected0]
-                        LABEL_NAME JSCompiler_inline_label_complex_1 1 [source_file: expected0]
-            EXPR_RESULT 1 [source_file: expected0]
-                ASSIGN 1 [source_file: expected0]
-                    NAME d 1 [source_file: expected0]
-                    VOID 1 [source_file: expected0]
-                        NUMBER 0.0 1 [source_file: expected0]
-
-
-Subtree2: BLOCK 1 [source_file: testcode]
-    VAR 1 [source_file: testcode]
-        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-    BLOCK 1 [source_file: testcode]
-        LABEL 1 [source_file: testcode]
-            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-            BLOCK 1 [source_file: testcode]
-                IF 1 [source_file: testcode]
-                    ADD 1 [source_file: testcode]
-                        NUMBER 1.0 1 [source_file: testcode]
-                        NUMBER 2.0 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                NUMBER 0.0 1 [source_file: testcode]
-                        BREAK 1 [source_file: testcode]
-                            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                    BLOCK 1 [source_file: testcode]
-                        EXPR_RESULT 1 [source_file: testcode]
-                            ASSIGN 1 [source_file: testcode]
-                                NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                                NUMBER 1.0 1 [source_file: testcode]
-                        BREAK 1 [source_file: testcode]
-                            LABEL_NAME JSCompiler_inline_label_2 1 [source_file: testcode]
-                EXPR_RESULT 1 [source_file: testcode]
-                    ASSIGN 1 [source_file: testcode]
-                        NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-                        VOID 1 [source_file: testcode]
-                            NUMBER 0.0 1 [source_file: testcode]
-    EXPR_RESULT 1 [source_file: testcode]
-        ASSIGN 1 [source_file: testcode]
-            NAME d 1 [source_file: testcode]
-            NAME JSCompiler_inline_result$$inline_1 1 [source_file: testcode]
-
-	at junit.framework.Assert.fail(Assert.java:57)
-	at junit.framework.Assert.assertTrue(Assert.java:22)
-	at junit.framework.Assert.assertNull(Assert.java:277)
-	at junit.framework.TestCase.assertNull(TestCase.java:447)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
-	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
-	at com.google.javascript.jscomp.InlineFunctionsTest.testInlineFunctions23(InlineFunctionsTest.java:389)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at junit.framework.TestCase.runTest(TestCase.java:176)
-	at junit.framework.TestCase.runBare(TestCase.java:141)
-	at junit.framework.TestResult$1.protect(TestResult.java:122)
-	at junit.framework.TestResult.runProtected(TestResult.java:142)
-	at junit.framework.TestResult.run(TestResult.java:125)
-	at junit.framework.TestCase.run(TestCase.java:129)
-	at junit.framework.TestSuite.runTest(TestSuite.java:255)
-	at junit.framework.TestSuite.run(TestSuite.java:250)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
-	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
 	at org.apache.tools.ant.Task.perform(Task.java:348)
 	at org.apache.tools.ant.Target.execute(Target.java:392)
@@ -947,9 +571,9 @@ Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: te
 	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
 	at com.google.javascript.jscomp.InlineFunctionsTest.testInlineFunctions6(InlineFunctionsTest.java:152)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at junit.framework.TestCase.runTest(TestCase.java:176)
 	at junit.framework.TestCase.runBare(TestCase.java:141)
 	at junit.framework.TestResult$1.protect(TestResult.java:122)
@@ -959,15 +583,15 @@ Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: te
 	at junit.framework.TestSuite.runTest(TestSuite.java:255)
 	at junit.framework.TestSuite.run(TestSuite.java:250)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1478)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:860)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1967)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:812)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2270)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
 	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
 	at org.apache.tools.ant.Task.perform(Task.java:348)
 	at org.apache.tools.ant.Target.execute(Target.java:392)

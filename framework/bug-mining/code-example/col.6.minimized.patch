@@ -1,0 +1,58 @@
+diff --git a/src/java/org/apache/commons/collections/map/Flat3Map.java b/src/java/org/apache/commons/collections/map/Flat3Map.java
+index 1a7bfb58..23ff969f 100644
+--- a/src/java/org/apache/commons/collections/map/Flat3Map.java
++++ b/src/java/org/apache/commons/collections/map/Flat3Map.java
+@@ -416,7 +416,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                         return old;
+                     }
+                     if (key2 == null) {
+-                        Object old = value2;
++                        Object old = value3;
+                         hash2 = hash3;
+                         key2 = key3;
+                         value2 = value3;
+@@ -427,7 +427,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                         return old;
+                     }
+                     if (key1 == null) {
+-                        Object old = value1;
++                        Object old = value3;
+                         hash1 = hash3;
+                         key1 = key3;
+                         value1 = value3;
+@@ -448,7 +448,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                         return old;
+                     }
+                     if (key1 == null) {
+-                        Object old = value1;
++                        Object old = value2;
+                         hash1 = hash2;
+                         key1 = key2;
+                         value1 = value2;
+@@ -483,7 +483,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                             return old;
+                         }
+                         if (hash2 == hashCode && key.equals(key2)) {
+-                            Object old = value2;
++                            Object old = value3;
+                             hash2 = hash3;
+                             key2 = key3;
+                             value2 = value3;
+@@ -494,7 +494,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                             return old;
+                         }
+                         if (hash1 == hashCode && key.equals(key1)) {
+-                            Object old = value1;
++                            Object old = value3;
+                             hash1 = hash3;
+                             key1 = key3;
+                             value1 = value3;
+@@ -515,7 +515,7 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
+                             return old;
+                         }
+                         if (hash1 == hashCode && key.equals(key1)) {
+-                            Object old = value1;
++                            Object old = value2;
+                             hash1 = hash2;
+                             key1 = key2;
+                             value1 = value2;

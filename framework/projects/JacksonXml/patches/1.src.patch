@@ -1,0 +1,32 @@
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
+index 58618b4..91b14dd 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
+@@ -509,13 +509,8 @@ public class FromXmlParser
+             // Simple, except that if this is a leaf, need to suppress end:
+             if (_mayBeLeaf) {
+                 _mayBeLeaf = false;
+-                if (_parsingContext.inArray()) {
+                     // 06-Jan-2015, tatu: as per [dataformat-xml#180], need to
+                     //    expose as empty Object, not null
+-                    _nextToken = JsonToken.END_OBJECT;
+-                    _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+-                    return (_currToken = JsonToken.START_OBJECT);
+-                }
+                 return (_currToken = JsonToken.VALUE_NULL);
+             }
+             _currToken = _parsingContext.inArray() ? JsonToken.END_ARRAY : JsonToken.END_OBJECT;
+@@ -552,9 +547,10 @@ public class FromXmlParser
+                         // 06-Jan-2015, tatu: as per [dataformat-xml#180], need to
+                         //    expose as empty Object, not null (or, worse, as used to
+                         //    be done, by swallowing the token)
+-                        _nextToken = JsonToken.END_OBJECT;
+-                        _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+-                        return (_currToken = JsonToken.START_OBJECT);
++                        _currToken = JsonToken.END_ARRAY;
++                        _parsingContext = _parsingContext.getParent();
++                        _namesToWrap = _parsingContext.getNamesToWrap();
++                        return _currToken;
+                     }
+                 }
+                 return (_currToken = JsonToken.VALUE_STRING);

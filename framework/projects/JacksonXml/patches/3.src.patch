@@ -1,0 +1,15 @@
+diff --git a/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java b/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
+index c71cd1d..7b163ed 100644
+--- a/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
++++ b/src/main/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParser.java
+@@ -666,8 +666,9 @@ public class FromXmlParser
+             }
+             break;
+         case XmlTokenStream.XML_ATTRIBUTE_VALUE:
++            _currText = _xmlTokens.getText();
+             _currToken = JsonToken.VALUE_STRING;
+-            return (_currText = _xmlTokens.getText());
++            break;
+         case XmlTokenStream.XML_TEXT:
+             _currText = _xmlTokens.getText();
+             if (_mayBeLeaf) {

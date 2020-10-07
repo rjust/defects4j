@@ -1,0 +1,12 @@
+--- org.apache.commons.math.distribution.ChiSquareDistributionTest::testSampling
+--- org.apache.commons.math3.distribution.ChiSquareDistributionTest::testSampling
+--- org.apache.commons.math.distribution.WeibullDistributionTest::testSampling
+--- org.apache.commons.math3.distribution.WeibullDistributionTest::testSampling
+--- org.apache.commons.math.optimization.direct.CMAESOptimizerTest::testCigTab
+--- org.apache.commons.math3.optimization.direct.CMAESOptimizerTest::testCigTab
+--- org.apache.commons.math.optimization.direct.CMAESOptimizerTest::testDiagonalRosen
+--- org.apache.commons.math3.optimization.direct.CMAESOptimizerTest::testDiagonalRosen
+--- org.apache.commons.math.optimization.direct.CMAESOptimizerTest::testMaximize
+--- org.apache.commons.math3.optimization.direct.CMAESOptimizerTest::testMaximize
+--- org.apache.commons.math.stat.descriptive.summary.SumTest::testWeightedConsistency
+--- org.apache.commons.math3.stat.descriptive.summary.SumTest::testWeightedConsistency

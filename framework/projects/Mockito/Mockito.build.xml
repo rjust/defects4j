@@ -30,6 +30,7 @@
     <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">
         <istrue value="${use.ant}"/>
     </condition>
+    <property name="test.classes.dir" value="${test.home}" />
 
     <condition property="build.home" value="${basedir}/target" else="${basedir}/build">
         <istrue value="${use.ant}"/>
@@ -158,7 +159,7 @@
     </target>
 
     <!-- target used for compiling test cases.-->
-    <target name="compile.tests" description="Compile the Mockito tests.">
+    <target name="compile.tests" description="Compile the Mockito tests." depends="compile">
         <antcall target="gradle.compile.tests"/>
         <antcall target="ant.compile.tests"/>
     </target>

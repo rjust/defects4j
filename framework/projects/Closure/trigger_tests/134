@@ -1,0 +1,195 @@
+--- com.google.javascript.jscomp.AmbiguatePropertiesTest::testImplementsAndExtends
+junit.framework.AssertionFailedError: 
+Expected: function Foo(){}function Bar(){}Bar.prototype.b=function(){return 3};function SubBar(){}function f(x){x.a=3}function g(x){x.a=3}
+Result: function Foo(){}function Bar(){}Bar.prototype.a=function(){return 3};function SubBar(){}function f(x){x.a=3}function g(x){x.a=3}
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: expected0] [synthetic: 1]
+        FUNCTION Foo 1 [sourcename: expected0]
+            NAME Foo 1
+            LP 1
+            BLOCK 1
+        FUNCTION Bar 2 [sourcename: expected0]
+            NAME Bar 2
+            LP 2
+            BLOCK 2
+        EXPR_RESULT 3
+            ASSIGN 3
+                GETPROP 3
+                    GETPROP 3
+                        NAME Bar 3
+                        STRING prototype 3
+                    STRING b 3
+                FUNCTION  3 [sourcename: expected0]
+                    NAME  3
+                    LP 3
+                    BLOCK 3
+                        RETURN 3
+                            NUMBER 3.0 3
+        FUNCTION SubBar 4 [sourcename: expected0]
+            NAME SubBar 4
+            LP 4
+            BLOCK 4
+        FUNCTION f 5 [sourcename: expected0]
+            NAME f 5
+            LP 5
+                NAME x 5
+            BLOCK 5
+                EXPR_RESULT 5
+                    ASSIGN 5
+                        GETPROP 5
+                            NAME x 5
+                            STRING a 5
+                        NUMBER 3.0 5
+        FUNCTION g 6 [sourcename: expected0]
+            NAME g 6
+            LP 6
+                NAME x 6
+            BLOCK 6
+                EXPR_RESULT 6
+                    ASSIGN 6
+                        GETPROP 6
+                            NAME x 6
+                            STRING a 6
+                        NUMBER 3.0 6
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: testcode] [synthetic: 1]
+        FUNCTION Foo 1 [sourcename: testcode] [jsdoc_info: JSDocInfo] : function (this:Foo)
+            NAME Foo 1 : function (this:Foo)
+            LP 1
+            BLOCK 1
+        FUNCTION Bar 5 [sourcename: testcode] [jsdoc_info: JSDocInfo] : function (this:Bar): ?
+            NAME Bar 5 : function (this:Bar): ?
+            LP 5
+            BLOCK 5
+        EXPR_RESULT 6
+            ASSIGN 6 : function (this:Bar): ?
+                GETPROP 6 : function (this:Bar): ?
+                    GETPROP 6 : Bar.prototype
+                        NAME Bar 6 : function (this:Bar): ?
+                        STRING prototype 6 : string
+                    STRING a 6 : string
+                FUNCTION  6 [sourcename: testcode] : function (this:Bar): ?
+                    NAME  6
+                    LP 6
+                    BLOCK 6
+                        RETURN 6
+                            NUMBER 3.0 6 : number
+        FUNCTION SubBar 12 [sourcename: testcode] [jsdoc_info: JSDocInfo] : function (this:SubBar): ?
+            NAME SubBar 12 : function (this:SubBar): ?
+            LP 12
+            BLOCK 12
+        FUNCTION f 13 [sourcename: testcode] [jsdoc_info: JSDocInfo] : function ((Foo|null)): ?
+            NAME f 13 : function ((Foo|null)): ?
+            LP 13
+                NAME x 13
+            BLOCK 13
+                EXPR_RESULT 13
+                    ASSIGN 13 : number
+                        GETPROP 13 : number
+                            NAME x 13 : (Foo|null)
+                            STRING a 13 : string
+                        NUMBER 3.0 13 : number
+        FUNCTION g 14 [sourcename: testcode] [jsdoc_info: JSDocInfo] : function ((SubBar|null)): ?
+            NAME g 14 : function ((SubBar|null)): ?
+            LP 14
+                NAME x 14
+            BLOCK 14
+                EXPR_RESULT 14
+                    ASSIGN 14 : number
+                        GETPROP 14 : number
+                            NAME x 14 : (SubBar|null)
+                            STRING a 14 : string
+                        NUMBER 3.0 14 : number
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:745)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:338)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:268)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:237)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:225)
+	at com.google.javascript.jscomp.AmbiguatePropertiesTest.testImplementsAndExtends(AmbiguatePropertiesTest.java:431)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.TypeCheckTest::testIssue86
+junit.framework.AssertionFailedError: expected a warning
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.TestCase.assertTrue(TestCase.java:192)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:6659)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:6639)
+	at com.google.javascript.jscomp.TypeCheckTest.testTypes(TypeCheckTest.java:6592)
+	at com.google.javascript.jscomp.TypeCheckTest.testIssue86(TypeCheckTest.java:3907)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

@@ -1,0 +1,53 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#-------------------------------------------------------------------------------
+
+=pod
+
+=head1 NAME
+
+d4j-pids -- Lists all project IDs
+
+=head1 SYNOPSIS
+
+  d4j-pids 
+
+=head1 DESCRIPTION
+
+This script is a high level shortcut intended to give developers access
+to a list of project IDs.
+
+=cut
+
+use strict;
+use warnings;
+
+use Constants;
+
+my @projects = glob($CORE_DIR."/Project/*.pm");
+
+foreach (@projects) {
+   $_ =~ s|$CORE_DIR/Project/||;
+   $_ =~ s|\.pm||;
+   print "$_\n";
+}
+
+1;

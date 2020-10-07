@@ -1,0 +1,14 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
+index b32b1f9b..e0e3b1ec 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
+@@ -165,9 +165,6 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+         if (this.in == null) {
+             throw new IOException("stream closed");
+         }
+-        if (len == 0) {
+-            return 0;
+-        }
+ 
+         final int hi = offs + len;
+         int destOffs = offs;

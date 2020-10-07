@@ -1,0 +1,5 @@
+org.apache.commons.compress.archivers.tar.TarUtils
+org.apache.commons.compress.archivers.zip.FallbackZipEncoding
+org.apache.commons.compress.archivers.zip.ZipEncoding
+org.apache.commons.compress.archivers.zip.ZipEncodingHelper
+org.apache.commons.compress.utils.Charsets

@@ -1,7 +1,7 @@
-org.mockito.StateMaster
 org.mockito.configuration.MockitoConfiguration
-org.mockitousage.configuration.SmartMock
 org.mockito.internal.configuration.ConfigurationAccess
-org.mockitoutil.Assertor
+org.mockito.StateMaster
 org.mockitousage.annotation.MockInjectionUsingSetterOrPropertyTest
+org.mockitousage.configuration.SmartMock
+org.mockitoutil.Assertor
 org.mockitoutil.TestBase

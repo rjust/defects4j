@@ -1,0 +1,28 @@
+diff --git a/src/java/org/apache/commons/cli/HelpFormatter.java b/src/java/org/apache/commons/cli/HelpFormatter.java
+index 6da67e5..e1edf28 100644
+--- a/src/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/java/org/apache/commons/cli/HelpFormatter.java
+@@ -442,10 +442,8 @@ public class HelpFormatter {
+         // temp variable
+         Option option;
+ 
+-        List optList = new ArrayList(options.getOptions());
+-        Collections.sort(optList, new OptionComparator());
+         // iterate over the options
+-        for (Iterator i = optList.iterator(); i.hasNext();)
++        for (Iterator i = options.getOptions().iterator(); i.hasNext();)
+         {
+             // get the next Option
+             option = (Option) i.next();
+@@ -505,10 +503,8 @@ public class HelpFormatter {
+             buff.append("[");
+         }
+ 
+-        List optList = new ArrayList(group.getOptions());
+-        Collections.sort(optList, new OptionComparator());
+         // for each option in the OptionGroup
+-        for (Iterator i = optList.iterator(); i.hasNext();)
++        for (Iterator i = group.getOptions().iterator(); i.hasNext();)
+         {
+             // whether the option is required or not is handled at group level
+             appendOption(buff, (Option) i.next(), true);

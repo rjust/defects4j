@@ -1,0 +1,159 @@
+diff --git a/test/com/google/javascript/jscomp/AliasKeywordsTest.java b/test/com/google/javascript/jscomp/AliasKeywordsTest.java
+index c31ecf5c..d32c7405 100644
+--- a/test/com/google/javascript/jscomp/AliasKeywordsTest.java
++++ b/test/com/google/javascript/jscomp/AliasKeywordsTest.java
+@@ -57,7 +57,7 @@ public class AliasKeywordsTest extends CompilerTestCase {
+    */
+   private static String generateCode(
+       String keyword, int numReps, String prepend) {
+-    StringBuilder sb = new StringBuilder(prepend);
++    StringBuffer sb = new StringBuffer(prepend);
+     for (int i = 0; i < numReps; i++) {
+       sb.append("if (");
+       sb.append(keyword);
+@@ -72,7 +72,7 @@ public class AliasKeywordsTest extends CompilerTestCase {
+ 
+   private static String generatePreProcessThrowCode(int repititions,
+                                                     String whatToThrow) {
+-    StringBuilder sb = new StringBuilder();
++    StringBuffer sb = new StringBuffer();
+     for (int i = 0; i < repititions; i++) {
+       sb.append("throw ");
+       sb.append(whatToThrow);
+@@ -128,12 +128,12 @@ public class AliasKeywordsTest extends CompilerTestCase {
+   }
+ 
+   public void testAliasTrueFalseNull() {
+-    StringBuilder actual = new StringBuilder();
++    StringBuffer actual = new StringBuffer();
+     actual.append(generateCode("true", ENOUGH_TO_ALIAS_LITERAL));
+     actual.append(generateCode("false", ENOUGH_TO_ALIAS_LITERAL));
+     actual.append(generateCode("null", ENOUGH_TO_ALIAS_LITERAL));
+ 
+-    StringBuilder expected = new StringBuilder();
++    StringBuffer expected = new StringBuffer();
+     expected.append(
+         "var JSCompiler_alias_TRUE=true;" +
+         "var JSCompiler_alias_NULL=null;" +
+diff --git a/test/com/google/javascript/jscomp/CombinedCompilerPassTest.java b/test/com/google/javascript/jscomp/CombinedCompilerPassTest.java
+index 54b63fa5..468b18aa 100644
+--- a/test/com/google/javascript/jscomp/CombinedCompilerPassTest.java
++++ b/test/com/google/javascript/jscomp/CombinedCompilerPassTest.java
+@@ -93,8 +93,8 @@ public class CombinedCompilerPassTest extends TestCase  {
+    * rooted with specified strings.
+    */
+   private static class ConcatTraversal implements Callback {
+-    private StringBuilder visited = new StringBuilder();
+-    private StringBuilder shouldTraversed = new StringBuilder();
++    private StringBuffer visited = new StringBuffer();
++    private StringBuffer shouldTraversed = new StringBuffer();
+     private Set<String> ignoring = Sets.newHashSet();
+ 
+     ConcatTraversal ignore(String s) {
+diff --git a/test/com/google/javascript/jscomp/FunctionRewriterTest.java b/test/com/google/javascript/jscomp/FunctionRewriterTest.java
+index aeec54ae..da441bc0 100644
+--- a/test/com/google/javascript/jscomp/FunctionRewriterTest.java
++++ b/test/com/google/javascript/jscomp/FunctionRewriterTest.java
+@@ -167,8 +167,8 @@ public class FunctionRewriterTest extends CompilerTestCase {
+                                String expectedHdr,
+                                String expectedBody,
+                                int repetitions) {
+-    StringBuilder srcBuffer = new StringBuilder();
+-    StringBuilder expectedBuffer = new StringBuilder();
++    StringBuffer srcBuffer = new StringBuffer();
++    StringBuffer expectedBuffer = new StringBuffer();
+ 
+     expectedBuffer.append(expectedHdr);
+ 
+diff --git a/test/com/google/javascript/jscomp/ParallelCompilerPassTest.java b/test/com/google/javascript/jscomp/ParallelCompilerPassTest.java
+index bae077be..9c0b86d6 100644
+--- a/test/com/google/javascript/jscomp/ParallelCompilerPassTest.java
++++ b/test/com/google/javascript/jscomp/ParallelCompilerPassTest.java
+@@ -53,7 +53,7 @@ public class ParallelCompilerPassTest extends TestCase {
+   }
+ 
+   public void testManyFunctions() {
+-    StringBuilder sb = new StringBuilder("\"foo\";");
++    StringBuffer sb = new StringBuffer("\"foo\";");
+     for (int i = 0; i < 20; i++) {
+       sb.append("function f");
+       sb.append(i);
+diff --git a/test/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java b/test/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
+index 947515e0..14bfbbc3 100644
+--- a/test/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
++++ b/test/com/google/javascript/jscomp/SemanticReverseAbstractInterpreterTest.java
+@@ -332,24 +332,6 @@ public class SemanticReverseAbstractInterpreterTest
+         Sets.newHashSet(new TypedName("a", NUMBER_TYPE)));
+   }
+ 
+-  /**
+-   * Tests reverse interpretation of two undefineds.
+-   */
+-  @SuppressWarnings("unchecked")
+-  public void testEqCondition4() throws Exception {
+-    FlowScope blind = newScope();
+-    testBinop(blind,
+-        Token.EQ,
+-        createVar(blind, "a", VOID_TYPE),
+-        createVar(blind, "b", VOID_TYPE),
+-        Sets.newHashSet(
+-            new TypedName("a", VOID_TYPE),
+-            new TypedName("b", VOID_TYPE)),
+-        Sets.newHashSet(
+-            new TypedName("a", NO_TYPE),
+-            new TypedName("b", NO_TYPE)));
+-  }
+-
+   /**
+    * Tests reverse interpretation of a COMPARE(NAME, NUMBER) expression,
+    * where COMPARE can be LE, LT, GE or GT.
+diff --git a/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java b/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
+index a9cba8da..306420c8 100644
+--- a/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
++++ b/test/com/google/javascript/jscomp/SimpleDefinitionFinderTest.java
+@@ -297,7 +297,7 @@ public class SimpleDefinitionFinderTest extends CompilerTestCase {
+       for (DefinitionSite defSite : passUnderTest.getDefinitionSites()) {
+         Node node = defSite.node;
+         Definition definition = defSite.definition;
+-        StringBuilder sb = new StringBuilder();
++        StringBuffer sb = new StringBuffer();
+         sb.append("DEF ");
+         sb.append(Token.name(node.getType()));
+         sb.append(" ");
+@@ -320,7 +320,7 @@ public class SimpleDefinitionFinderTest extends CompilerTestCase {
+       Collection<Definition> defs =
+           passUnderTest.getDefinitionsReferencedAt(node);
+       if (defs != null) {
+-        StringBuilder sb = new StringBuilder();
++        StringBuffer sb = new StringBuffer();
+         sb.append("USE ");
+         sb.append(Token.name(node.getType()));
+         sb.append(" ");
+diff --git a/test/com/google/javascript/jscomp/deps/JsFileLineParserTest.java b/test/com/google/javascript/jscomp/deps/JsFileLineParserTest.java
+index 510168c3..167e1463 100644
+--- a/test/com/google/javascript/jscomp/deps/JsFileLineParserTest.java
++++ b/test/com/google/javascript/jscomp/deps/JsFileLineParserTest.java
+@@ -16,12 +16,14 @@
+ 
+ package com.google.javascript.jscomp.deps;
+ 
++import com.google.common.collect.ImmutableList;
+ import com.google.javascript.jscomp.ErrorManager;
+ import com.google.javascript.jscomp.PrintStreamErrorManager;
+ 
+ import junit.framework.TestCase;
+ 
+ import java.io.StringReader;
++import java.util.Collections;
+ 
+ /**
+  * Tests for {@link JsFileLineParser}.
+@@ -85,7 +87,7 @@ public class JsFileLineParserTest extends TestCase {
+   }
+ 
+   private static class TestParser extends JsFileLineParser {
+-    StringBuilder sb = new StringBuilder();
++    StringBuffer sb = new StringBuffer();
+ 
+     TestParser(ErrorManager errorManager) {
+       super(errorManager);

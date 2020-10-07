@@ -1,0 +1,11 @@
+org.apache.commons.cli.ApplicationTest
+org.apache.commons.cli.ArgumentIsOptionTest
+org.apache.commons.cli.BugsTest
+org.apache.commons.cli.GnuParseTest
+org.apache.commons.cli.OptionGroupTest
+org.apache.commons.cli.ParseRequiredTest
+org.apache.commons.cli.ParseTest
+org.apache.commons.cli.PatternOptionBuilderTest
+org.apache.commons.cli.ValueTest
+org.apache.commons.cli.ValuesTest
+org.apache.commons.cli.bug.BugCLI13Test

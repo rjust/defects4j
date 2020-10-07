@@ -1,0 +1,16 @@
+diff --git a/src/main/java/org/jsoup/nodes/FormElement.java b/src/main/java/org/jsoup/nodes/FormElement.java
+index f5c59d3..e498975 100644
+--- a/src/main/java/org/jsoup/nodes/FormElement.java
++++ b/src/main/java/org/jsoup/nodes/FormElement.java
+@@ -46,11 +46,6 @@ public class FormElement extends Element {
+         return this;
+     }
+ 
+-    @Override
+-    protected void removeChild(Node out) {
+-        super.removeChild(out);
+-        elements.remove(out);
+-    }
+ 
+     /**
+      * Prepare to submit this form. A Connection object is created with the request set up from the form values. You

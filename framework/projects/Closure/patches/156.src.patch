@@ -1,0 +1,96 @@
+diff --git a/src/com/google/javascript/jscomp/CollapseProperties.java b/src/com/google/javascript/jscomp/CollapseProperties.java
+index abe01595..01295cd8 100644
+--- a/src/com/google/javascript/jscomp/CollapseProperties.java
++++ b/src/com/google/javascript/jscomp/CollapseProperties.java
+@@ -452,8 +452,8 @@ class CollapseProperties implements CompilerPass {
+     boolean canCollapseChildNames = n.canCollapseUnannotatedChildNames();
+ 
+     // Handle this name first so that nested object literals get unrolled.
+-    if (n.canCollapse()) {
+-      updateObjLitOrFunctionDeclaration(n, alias, canCollapseChildNames);
++    if (n.canCollapse() && canCollapseChildNames) {
++      updateObjLitOrFunctionDeclaration(n, alias);
+     }
+ 
+     if (n.props != null) {
+@@ -571,8 +571,7 @@ class CollapseProperties implements CompilerPass {
+    *     this name. (This is mostly passed for convenience; it's equivalent to
+    *     n.canCollapseChildNames()).
+    */
+-  private void updateObjLitOrFunctionDeclaration(
+-      Name n, String alias, boolean canCollapseChildNames) {
++  private void updateObjLitOrFunctionDeclaration(Name n, String alias) {
+     if (n.declaration == null) {
+       // Some names do not have declarations, because they
+       // are only defined in local scopes.
+@@ -587,14 +586,13 @@ class CollapseProperties implements CompilerPass {
+ 
+     switch (n.declaration.node.getParent().getType()) {
+       case Token.ASSIGN:
+-        updateObjLitOrFunctionDeclarationAtAssignNode(
+-            n, alias, canCollapseChildNames);
++        updateObjLitOrFunctionDeclarationAtAssignNode(n, alias);
+         break;
+       case Token.VAR:
+-        updateObjLitOrFunctionDeclarationAtVarNode(n, canCollapseChildNames);
++        updateObjLitOrFunctionDeclarationAtVarNode(n);
+         break;
+       case Token.FUNCTION:
+-        updateFunctionDeclarationAtFunctionNode(n, canCollapseChildNames);
++        updateFunctionDeclarationAtFunctionNode(n);
+         break;
+     }
+   }
+@@ -608,7 +606,7 @@ class CollapseProperties implements CompilerPass {
+    * @param alias The flattened name for {@code n} (e.g. "a", "a$b$c")
+    */
+   private void updateObjLitOrFunctionDeclarationAtAssignNode(
+-      Name n, String alias, boolean canCollapseChildNames) {
++      Name n, String alias) {
+     // NOTE: It's important that we don't add additional nodes
+     // (e.g. a var node before the exprstmt) because the exprstmt might be
+     // the child of an if statement that's not inside a block).
+@@ -652,15 +650,13 @@ class CollapseProperties implements CompilerPass {
+       insertedVarNode = true;
+     }
+ 
+-    if (canCollapseChildNames) {
+-      if (isObjLit) {
++    if (isObjLit) {
+         declareVarsForObjLitValues(
+             n, alias, rvalue,
+             varNode, varParent.getChildBefore(varNode), varParent);
+-      }
+ 
+-      addStubsForUndeclaredProperties(n, alias, varParent, varNode);
+     }
++      addStubsForUndeclaredProperties(n, alias, varParent, varNode);
+ 
+     if (insertedVarNode) {
+       if (!varNode.hasChildren()) {
+@@ -700,11 +696,7 @@ class CollapseProperties implements CompilerPass {
+    *
+    * @param n An object representing a global name (e.g. "a")
+    */
+-  private void updateObjLitOrFunctionDeclarationAtVarNode(
+-      Name n, boolean canCollapseChildNames) {
+-    if (!canCollapseChildNames) {
+-      return;
+-    }
++  private void updateObjLitOrFunctionDeclarationAtVarNode(Name n) {
+ 
+     Ref ref = n.declaration;
+     String name = ref.node.getString();
+@@ -747,11 +739,7 @@ class CollapseProperties implements CompilerPass {
+    *
+    * @param n An object representing a global name (e.g. "a")
+    */
+-  private void updateFunctionDeclarationAtFunctionNode(
+-      Name n, boolean canCollapseChildNames) {
+-    if (!canCollapseChildNames) {
+-      return;
+-    }
++  private void updateFunctionDeclarationAtFunctionNode(Name n) {
+ 
+     Ref ref = n.declaration;
+     String fnName = ref.node.getString();

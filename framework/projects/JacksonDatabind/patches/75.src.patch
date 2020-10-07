@@ -1,0 +1,42 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java b/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java
+index dae384a7c..75c12b5c4 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java
+@@ -83,7 +83,7 @@ public class EnumSerializer
+          *   handle toString() case dynamically (for example)
+          */
+         EnumValues v = EnumValues.constructFromName(config, (Class<Enum<?>>) enumClass);
+-        Boolean serializeAsIndex = _isShapeWrittenUsingIndex(enumClass, format, true, null);
++        Boolean serializeAsIndex = _isShapeWrittenUsingIndex(enumClass, format, true);
+         return new EnumSerializer(v, serializeAsIndex);
+     }
+ 
+@@ -101,7 +101,7 @@ public class EnumSerializer
+                     property, handledType());
+             if (format != null) {
+                 Boolean serializeAsIndex = _isShapeWrittenUsingIndex(property.getType().getRawClass(),
+-                        format, false, _serializeAsIndex);
++                        format, false);
+                 if (serializeAsIndex != _serializeAsIndex) {
+                     return new EnumSerializer(_values, serializeAsIndex);
+                 }
+@@ -214,16 +214,15 @@ public class EnumSerializer
+      * index (number) or not.
+      */
+     protected static Boolean _isShapeWrittenUsingIndex(Class<?> enumClass,
+-            JsonFormat.Value format, boolean fromClass,
+-            Boolean defaultValue)
++            JsonFormat.Value format, boolean fromClass)
+     {
+         JsonFormat.Shape shape = (format == null) ? null : format.getShape();
+         if (shape == null) {
+-            return defaultValue;
++            return null;
+         }
+         // i.e. "default", check dynamically
+         if (shape == Shape.ANY || shape == Shape.SCALAR) {
+-            return defaultValue;
++            return null;
+         }
+         // 19-May-2016, tatu: also consider "natural" shape
+         if (shape == Shape.STRING || shape == Shape.NATURAL) {

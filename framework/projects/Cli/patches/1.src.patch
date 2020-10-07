@@ -1,0 +1,149 @@
+diff --git a/src/java/org/apache/commons/cli/CommandLine.java b/src/java/org/apache/commons/cli/CommandLine.java
+index 3c82942..f658a02 100644
+--- a/src/java/org/apache/commons/cli/CommandLine.java
++++ b/src/java/org/apache/commons/cli/CommandLine.java
+@@ -16,11 +16,11 @@
+ package org.apache.commons.cli;
+ 
+ import java.util.Collection;
++import java.util.HashMap;
+ import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
+-import java.util.Set;
+-import java.util.HashSet;
++import java.util.Map;
+ 
+ /** 
+  * <p>Represents list of arguments parsed against
+@@ -43,10 +43,12 @@ public class CommandLine {
+     private List args = new LinkedList();
+ 
+     /** the processed options */
+-    private Set options = new HashSet();
++    private Map options = new HashMap();
++    private Map names = new HashMap();
+ 
+     /** Map of unique options for ease to get complete list of options */
+ //    private Set allOptions = new HashSet();
++    private Map hashcodeMap = new HashMap();
+ 
+     /**
+      * Creates a command line.
+@@ -64,7 +66,7 @@ public class CommandLine {
+      */
+     public boolean hasOption(String opt)
+     {
+-        return options.contains( resolveOption(opt));
++        return options.containsKey(opt);
+     }
+ 
+     /** 
+@@ -88,13 +90,12 @@ public class CommandLine {
+     {
+         String res = getOptionValue(opt);
+ 
+-        Option option = resolveOption(opt);
+-        if (option == null)
++        if (!options.containsKey(opt))
+         {
+             return null;
+         }
+ 
+-        Object type = option.getType();
++        Object type = ((Option) options.get(opt)).getType();
+ 
+         return (res == null)        ? null : TypeHandler.createValue(res, type);
+     }
+@@ -145,13 +146,19 @@ public class CommandLine {
+      */
+     public String[] getOptionValues(String opt)
+     {
+-        Option key = resolveOption( opt );
++        opt = Util.stripLeadingHyphens(opt);
++
++        String key = opt;
++        if (names.containsKey(opt))
+ 
+-        if (options.contains(key))
+         {
+-            return key.getValues();
++            key = (String) names.get(opt);
+         }
+ 
++        if (options.containsKey(key))
++        {
++            return ((Option) options.get(key)).getValues();
++        }
+         return null;
+         }
+ 
+@@ -160,24 +167,7 @@ public class CommandLine {
+      * @param opt short or long name of the option
+      * @return Canonicalized option
+      */
+-    private Option resolveOption( String opt )
+-    {
+-        opt = Util.stripLeadingHyphens(opt);
+-        for ( Iterator it = options.iterator(); it.hasNext(); )
+-        {
+-            Option option = (Option) it.next();
+-            if (opt.equals(option.getOpt()))
+-            {
+-                return option;
+-            }
+-            if (opt.equals( option.getLongOpt()))
+-            {
+-                return option;
+-        }
+ 
+-        }
+-        return null;
+-    }
+ 
+     /** 
+      * Retrieves the array of values, if any, of an option.
+@@ -285,7 +275,17 @@ public class CommandLine {
+      */
+     void addOption(Option opt)
+     {
+-        options.add(opt);
++        hashcodeMap.put(new Integer(opt.hashCode()), opt);
++        String key = opt.getKey();
++        if (key == null)
++        {
++            key = opt.getLongOpt();
++        }
++        else
++        {
++            names.put(opt.getLongOpt(), key);
++        }
++        options.put(key, opt);
+     }
+ 
+     /**
+@@ -296,7 +296,7 @@ public class CommandLine {
+      */
+     public Iterator iterator()
+     {
+-        return options.iterator();
++        return hashcodeMap.values().iterator();
+     }
+ 
+     /**
+@@ -306,7 +306,7 @@ public class CommandLine {
+      */
+     public Option[] getOptions()
+     {
+-        Collection processed = options;
++        Collection processed = options.values();
+ 
+         // reinitialise array
+         Option[] optionsArray = new Option[processed.size()];
+@@ -314,4 +314,4 @@ public class CommandLine {
+         // return the array
+         return (Option[]) processed.toArray(optionsArray);
+     }
+-}
+\ No newline at end of file
++}

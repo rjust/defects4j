@@ -1,0 +1,54 @@
+diff --git a/src/main/java/org/jsoup/select/CombiningEvaluator.java b/src/main/java/org/jsoup/select/CombiningEvaluator.java
+index 781acc6..bd8460a 100644
+--- a/src/main/java/org/jsoup/select/CombiningEvaluator.java
++++ b/src/main/java/org/jsoup/select/CombiningEvaluator.java
+@@ -61,9 +61,6 @@ abstract class CombiningEvaluator extends Evaluator {
+                 this.evaluators.addAll(evaluators);
+         }
+ 
+-        Or() {
+-            super();
+-        }
+ 
+         public void add(Evaluator e) {
+             evaluators.add(e);
+diff --git a/src/main/java/org/jsoup/select/QueryParser.java b/src/main/java/org/jsoup/select/QueryParser.java
+index 417cb22..d0afaaf 100644
+--- a/src/main/java/org/jsoup/select/QueryParser.java
++++ b/src/main/java/org/jsoup/select/QueryParser.java
+@@ -55,7 +55,15 @@ class QueryParser {
+             // hierarchy and extras
+             boolean seenWhite = tq.consumeWhitespace();
+ 
+-            if (tq.matchesAny(combinators)) {
++            if (tq.matchChomp(",")) {
++                CombiningEvaluator.Or or = new CombiningEvaluator.Or(evals);
++                evals.clear();
++                evals.add(or);
++                while (!tq.isEmpty()) {
++                    String subQuery = tq.chompTo(",");
++                    or.add(parse(subQuery));
++                }
++            } else if (tq.matchesAny(combinators)) {
+                 combinator(tq.consume());
+             } else if (seenWhite) {
+                 combinator(' ');
+@@ -90,18 +98,6 @@ class QueryParser {
+             evals.add(new CombiningEvaluator.And(f, new StructuralEvaluator.ImmediatePreviousSibling(e)));
+         else if (combinator == '~')
+             evals.add(new CombiningEvaluator.And(f, new StructuralEvaluator.PreviousSibling(e)));
+-        else if (combinator == ',') { // group or
+-            CombiningEvaluator.Or or;
+-            if (e instanceof CombiningEvaluator.Or) {
+-                or = (CombiningEvaluator.Or) e;
+-                or.add(f);
+-            } else {
+-                or = new CombiningEvaluator.Or();
+-                or.add(e);
+-                or.add(f);
+-            }
+-            evals.add(or);
+-        }
+         else
+             throw new Selector.SelectorParseException("Unknown combinator: " + combinator);
+     }

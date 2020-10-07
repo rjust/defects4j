@@ -1,0 +1,17 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVParserTest.java b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+index 18a433c..13c42ac 100644
+--- a/src/test/java/org/apache/commons/csv/CSVParserTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+@@ -664,12 +664,6 @@ public class CSVParserTest {
+         assertFalse(records.hasNext());
+     }
+ 
+-    @Test
+-    public void testNoHeaderMap() throws Exception {
+-        final CSVParser parser = CSVParser.parse("a,b,c\n1,2,3\nx,y,z", CSVFormat.DEFAULT);
+-        Assert.assertNull(parser.getHeaderMap());
+-    }
+-
+     @Test
+     public void testGetLineNumberWithLF() throws Exception {
+         this.validateLineNumbers(String.valueOf(LF));

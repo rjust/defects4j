@@ -1,0 +1,24 @@
+diff --git a/src/test/java/org/jsoup/nodes/EntitiesTest.java b/src/test/java/org/jsoup/nodes/EntitiesTest.java
+index aace278..04eab12 100644
+--- a/src/test/java/org/jsoup/nodes/EntitiesTest.java
++++ b/src/test/java/org/jsoup/nodes/EntitiesTest.java
+@@ -1,6 +1,5 @@
+ package org.jsoup.nodes;
+ 
+-import org.jsoup.Jsoup;
+ import org.junit.Test;
+ 
+ import static org.junit.Assert.*;
+@@ -52,12 +51,4 @@ public class EntitiesTest {
+         
+         assertEquals(unescaped, Entities.unescape(escaped));
+     }
+-
+-    @Test public void letterDigitEntities() {
+-        String html = "<p>&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;</p>";
+-        Document doc = Jsoup.parse(html);
+-        Element p = doc.select("p").first();
+-        assertEquals("&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;", p.html());
+-        assertEquals("¹²³¼½¾", p.text());
+-    }
+ }

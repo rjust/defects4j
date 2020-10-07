@@ -1,0 +1,5 @@
+org.jsoup.Connection
+org.jsoup.helper.HttpConnection
+org.jsoup.helper.Validate
+org.jsoup.HttpStatusException
+org.jsoup.UnsupportedMimeTypeException

@@ -1,0 +1,28 @@
+diff --git a/gson/src/main/java/com/google/gson/internal/$Gson$Types.java b/gson/src/main/java/com/google/gson/internal/$Gson$Types.java
+index 67394531..c2372c79 100644
+--- a/gson/src/main/java/com/google/gson/internal/$Gson$Types.java
++++ b/gson/src/main/java/com/google/gson/internal/$Gson$Types.java
+@@ -76,11 +76,7 @@ public final class $Gson$Types {
+    */
+   public static WildcardType subtypeOf(Type bound) {
+     Type[] upperBounds;
+-    if (bound instanceof WildcardType) {
+-      upperBounds = ((WildcardType) bound).getUpperBounds();
+-    } else {
+       upperBounds = new Type[] { bound };
+-    }
+     return new WildcardTypeImpl(upperBounds, EMPTY_TYPE_ARRAY);
+   }
+ 
+@@ -91,11 +87,7 @@ public final class $Gson$Types {
+    */
+   public static WildcardType supertypeOf(Type bound) {
+     Type[] lowerBounds;
+-    if (bound instanceof WildcardType) {
+-      lowerBounds = ((WildcardType) bound).getLowerBounds();
+-    } else {
+       lowerBounds = new Type[] { bound };
+-    }
+     return new WildcardTypeImpl(new Type[] { Object.class }, lowerBounds);
+   }
+ 

@@ -1,0 +1,16 @@
+diff --git a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+index 9b1775e..e5d6f01 100644
+--- a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
++++ b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+@@ -220,11 +220,4 @@ public class XmlTreeBuilderTest {
+ 
+         assertEquals("//\n\n  foo();\n//", doc.selectFirst("script").text());
+     }
+-
+-    @Test
+-    public void handlesDodgyXmlDecl() {
+-        String xml = "<?xml version='1.0'><val>One</val>";
+-        Document doc = Jsoup.parse(xml, "", Parser.xmlParser());
+-        assertEquals("One", doc.select("val").text());
+-    }
+ }

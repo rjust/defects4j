@@ -1,0 +1,25 @@
+diff --git a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+index 204debff..65088eb2 100644
+--- a/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
++++ b/src/main/java/org/apache/commons/compress/archivers/tar/TarUtils.java
+@@ -591,7 +591,7 @@ public class TarUtils {
+      * @since 1.5
+      */
+     public static boolean verifyCheckSum(byte[] header) {
+-        long storedSum = parseOctal(header, CHKSUM_OFFSET, CHKSUMLEN);
++        long storedSum = 0;
+         long unsignedSum = 0;
+         long signedSum = 0;
+ 
+@@ -599,6 +599,11 @@ public class TarUtils {
+         for (int i = 0; i < header.length; i++) {
+             byte b = header[i];
+             if (CHKSUM_OFFSET  <= i && i < CHKSUM_OFFSET + CHKSUMLEN) {
++                if ('0' <= b && b <= '7' && digits++ < 6) {
++                    storedSum = storedSum * 8 + b - '0';
++                } else if (digits > 0) {
++                    digits = 6;
++                }
+                 b = ' ';
+             }
+             unsignedSum += 0xff & b;

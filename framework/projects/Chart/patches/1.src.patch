@@ -1,8 +1,8 @@
-Index: source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
-===================================================================
---- source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2266)
-+++ source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java	(revision 2264)
-@@ -1794,7 +1794,7 @@
+diff --git a/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java b/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
+index 4a54655..226b25a 100644
+--- a/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
++++ b/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java
+@@ -1794,7 +1794,7 @@ public abstract class AbstractCategoryItemRenderer extends AbstractRenderer
          }
          int index = this.plot.getIndexOf(this);
          CategoryDataset dataset = this.plot.getDataset(index);

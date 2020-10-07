@@ -1,0 +1,104 @@
+#
+# This file provides helper functions for the wrapper shell scripts of the test
+# generation tools. This file should be included in each wrapper shell script:
+# "source _tool.source" or ". _tool.source"
+#
+# General coding conventions:
+# - function names: lower case, with underscores to separate words.
+# - variable names: lower case, with underscores to separate words.
+# - constants and environment variable names: all caps, with underscores to
+#   separate words.
+#
+
+################################################################################
+# Helper functions
+################################################################################
+# Print an error message and exit
+die() {
+    echo "$1"
+    exit 1
+}
+
+# Check whether an environment variable is set -- if not, die with an error message
+check_env() {
+    local var="$1"
+    local val=$(eval echo \$$var)
+    [ -z "$val" ] && die "Variable $var not set!"
+}
+
+# Get the relative path (relative to the Defects4J working directory) to the
+# source file of the provided class name.
+get_rel_src_path() {
+    local class="$1"
+    local src_dir=$($D4J_HOME/framework/bin/defects4j \
+            export -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
+    echo "$src_dir/$(echo $class | tr '.' '/').java"
+}
+
+# Get the absolute path to the source file of the provided class name.
+get_abs_src_path() {
+    local class="$1"
+    echo "$D4J_DIR_WORKDIR/$(get_rel_src_path $class)"
+}
+
+# Get the project classpath -- that is, the classpath to compile and run the
+# checked-out Defects4J project version.
+get_project_cp() {
+    $D4J_HOME/framework/bin/defects4j \
+            export -p cp.compile -w $D4J_DIR_WORKDIR 2> /dev/null
+}
+
+# Parse a tool's config file: ignore comments and replace newlines with spaces.
+parse_config() {
+    local file=$1
+    grep -v "\s*#" $file | tr '\n' ' '
+}
+
+# Returns the list of all classes for the current bug
+get_all_classes() {
+    local src_dir=$($D4J_HOME/framework/bin/defects4j \
+            export -p dir.src.classes -w $D4J_DIR_WORKDIR 2> /dev/null)
+    (cd $D4J_DIR_WORKDIR/$src_dir && \
+            find . -name "*.java" | tr '/' '.' | sed -e 's/^\.*//g' | sed -e 's/\.java//g')
+}
+
+# Returns the list of all relevant classes for the current bug
+get_relevant_classes() {
+    $D4J_HOME/framework/bin/defects4j \
+            export -p classes.relevant -w $D4J_DIR_WORKDIR 2> /dev/null
+}
+
+# Output a command, execute it, and print whether it succeeded or failed.
+exec_cmd() {
+    local cmd=$1
+
+    echo
+    echo "Executing command:"
+    echo "$cmd"
+
+    if $cmd; then
+        echo "OK"
+        return 0
+    else
+        echo "FAILED"
+        return 1
+    fi
+}
+
+###############################################################################
+# Check whether all expected environment variables are properly exported.
+sanity_check() {
+    check_env D4J_HOME
+    check_env D4J_FILE_TARGET_CLASSES
+    check_env D4J_DIR_OUTPUT
+    check_env D4J_DIR_WORKDIR
+    check_env D4J_DIR_TESTGEN_BIN
+    check_env D4J_DIR_TESTGEN_LIB
+    check_env D4J_TOTAL_BUDGET
+    check_env D4J_SEED
+    check_env D4J_TEST_MODE
+    check_env D4J_DEBUG
+}
+###############################################################################
+
+sanity_check

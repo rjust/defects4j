@@ -1,0 +1,158 @@
+--- com.google.javascript.jscomp.InlineFunctionsTest::testIssue423
+junit.framework.AssertionFailedError: 
+Expected: (function($){$.fn.multicheck=function(options$$1){options$$1.checkboxes=$(this).siblings(":checkbox");$(this).data("checkboxes")}})(jQuery)
+Result: (function($){$.fn.multicheck=function(options$$1){options$$1.checkboxes=$(this).siblings(":checkbox");preload_check_all.call(this)}})(jQuery)
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: expected0] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: expected0]
+            CALL 1 [sourcename: expected0] [free_call: 1]
+                FUNCTION  1 [sourcename: expected0] [parenthesized: true]
+                    NAME  1 [sourcename: expected0]
+                    LP 1 [sourcename: expected0]
+                        NAME $ 1 [sourcename: expected0]
+                    BLOCK 1 [sourcename: expected0]
+                        EXPR_RESULT 1 [sourcename: expected0]
+                            ASSIGN 1 [sourcename: expected0]
+                                GETPROP 1 [sourcename: expected0]
+                                    GETPROP 1 [sourcename: expected0]
+                                        NAME $ 1 [sourcename: expected0]
+                                        STRING fn 1 [sourcename: expected0]
+                                    STRING multicheck 1 [sourcename: expected0]
+                                FUNCTION  1 [sourcename: expected0]
+                                    NAME  1 [sourcename: expected0]
+                                    LP 1 [sourcename: expected0]
+                                        NAME options$$1 1 [sourcename: expected0]
+                                    BLOCK 1 [sourcename: expected0]
+                                        BLOCK 1 [sourcename: expected0]
+                                            EXPR_RESULT 1 [sourcename: expected0]
+                                                ASSIGN 1 [sourcename: expected0]
+                                                    GETPROP 1 [sourcename: expected0]
+                                                        NAME options$$1 1 [sourcename: expected0]
+                                                        STRING checkboxes 1 [sourcename: expected0]
+                                                    CALL 1 [sourcename: expected0]
+                                                        GETPROP 1 [sourcename: expected0]
+                                                            CALL 1 [sourcename: expected0] [free_call: 1]
+                                                                NAME $ 1 [sourcename: expected0]
+                                                                THIS 1 [sourcename: expected0]
+                                                            STRING siblings 1 [sourcename: expected0]
+                                                        STRING :checkbox 1 [sourcename: expected0]
+                                            BLOCK 1 [sourcename: expected0]
+                                                EXPR_RESULT 1 [sourcename: expected0]
+                                                    CALL 1 [sourcename: expected0]
+                                                        GETPROP 1 [sourcename: expected0]
+                                                            CALL 1 [sourcename: expected0] [free_call: 1]
+                                                                NAME $ 1 [sourcename: expected0]
+                                                                THIS 1 [sourcename: expected0]
+                                                            STRING data 1 [sourcename: expected0]
+                                                        STRING checkboxes 1 [sourcename: expected0]
+                NAME jQuery 1 [sourcename: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [sourcename: testcode] [synthetic: 1]
+        EXPR_RESULT 1 [sourcename: testcode]
+            CALL 14 [sourcename: testcode] [free_call: 1]
+                FUNCTION  1 [sourcename: testcode] [parenthesized: true]
+                    NAME  1 [sourcename: testcode]
+                    LP 1 [sourcename: testcode]
+                        NAME $ 1 [sourcename: testcode]
+                    BLOCK 1 [sourcename: testcode]
+                        EXPR_RESULT 2 [sourcename: testcode]
+                            ASSIGN 2 [sourcename: testcode]
+                                GETPROP 2 [sourcename: testcode]
+                                    GETPROP 2 [sourcename: testcode]
+                                        NAME $ 2 [sourcename: testcode]
+                                        STRING fn 2 [sourcename: testcode]
+                                    STRING multicheck 2 [sourcename: testcode]
+                                FUNCTION  2 [sourcename: testcode]
+                                    NAME  2 [sourcename: testcode]
+                                    LP 2 [sourcename: testcode]
+                                        NAME options$$1 2 [sourcename: testcode]
+                                    BLOCK 2 [sourcename: testcode]
+                                        BLOCK 6 [sourcename: testcode]
+                                            EXPR_RESULT 7 [sourcename: testcode]
+                                                ASSIGN 7 [sourcename: testcode]
+                                                    GETPROP 7 [sourcename: testcode]
+                                                        NAME options$$1 3 [sourcename: testcode]
+                                                        STRING checkboxes 7 [sourcename: testcode]
+                                                    CALL 7 [sourcename: testcode]
+                                                        GETPROP 7 [sourcename: testcode]
+                                                            CALL 7 [sourcename: testcode] [free_call: 1]
+                                                                NAME $ 7 [sourcename: testcode]
+                                                                THIS 7 [sourcename: testcode]
+                                                            STRING siblings 7 [sourcename: testcode]
+                                                        STRING :checkbox 7 [sourcename: testcode]
+                                            EXPR_RESULT 8 [sourcename: testcode]
+                                                CALL 8 [sourcename: testcode]
+                                                    GETPROP 8 [sourcename: testcode]
+                                                        NAME preload_check_all 8 [sourcename: testcode]
+                                                        STRING call 8 [sourcename: testcode]
+                                                    THIS 8 [sourcename: testcode]
+                NAME jQuery 14 [sourcename: testcode]
+
+
+Subtree1: BLOCK 1 [sourcename: expected0]
+    EXPR_RESULT 1 [sourcename: expected0]
+        CALL 1 [sourcename: expected0]
+            GETPROP 1 [sourcename: expected0]
+                CALL 1 [sourcename: expected0] [free_call: 1]
+                    NAME $ 1 [sourcename: expected0]
+                    THIS 1 [sourcename: expected0]
+                STRING data 1 [sourcename: expected0]
+            STRING checkboxes 1 [sourcename: expected0]
+
+
+Subtree2: EXPR_RESULT 8 [sourcename: testcode]
+    CALL 8 [sourcename: testcode]
+        GETPROP 8 [sourcename: testcode]
+            NAME preload_check_all 8 [sourcename: testcode]
+            STRING call 8 [sourcename: testcode]
+        THIS 8 [sourcename: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:862)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:423)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:348)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:317)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:305)
+	at com.google.javascript.jscomp.InlineFunctionsTest.testIssue423(InlineFunctionsTest.java:1668)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

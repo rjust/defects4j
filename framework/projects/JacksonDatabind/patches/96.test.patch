@@ -1,0 +1,73 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/creators/CreatorWithNamingStrategyTest.java b/src/test/java/com/fasterxml/jackson/failing/CreatorWithNamingStrategy2008Test.java
+similarity index 78%
+rename from src/test/java/com/fasterxml/jackson/databind/deser/creators/CreatorWithNamingStrategyTest.java
+rename to src/test/java/com/fasterxml/jackson/failing/CreatorWithNamingStrategy2008Test.java
+index 83f597091..4f0515499 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/creators/CreatorWithNamingStrategyTest.java
++++ b/src/test/java/com/fasterxml/jackson/failing/CreatorWithNamingStrategy2008Test.java
+@@ -1,4 +1,4 @@
+-package com.fasterxml.jackson.databind.deser.creators;
++package com.fasterxml.jackson.failing;
+ 
+ import com.fasterxml.jackson.annotation.JsonCreator;
+ import com.fasterxml.jackson.databind.*;
+@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+ import com.fasterxml.jackson.databind.introspect.AnnotatedParameter;
+ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+ 
+-public class CreatorWithNamingStrategyTest extends BaseMapTest
++public class CreatorWithNamingStrategy2008Test extends BaseMapTest
+ {
+     @SuppressWarnings("serial")
+     static class MyParamIntrospector extends JacksonAnnotationIntrospector
+@@ -21,7 +21,7 @@ public class CreatorWithNamingStrategyTest extends BaseMapTest
+         }
+     }
+ 
+-    // [databind#2051]
++    // wrt [https://github.com/FasterXML/jackson-modules-java8/issues/67]
+     static class OneProperty {
+         public String paramName0;
+ 
+@@ -37,17 +37,18 @@ public class CreatorWithNamingStrategyTest extends BaseMapTest
+     /**********************************************************
+      */
+ 
+-    private final ObjectMapper MAPPER = newObjectMapper()
++    private final ObjectMapper MAPPER = objectMapper()
+             .setAnnotationIntrospector(new MyParamIntrospector())
+             .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+             ;
+ 
+-    // [databind#2051]
++    // Possibly [databind#2008], but originally
++    // wrt [https://github.com/FasterXML/jackson-modules-java8/issues/67]
+     public void testSnakeCaseWithOneArg() throws Exception
+     {
+         final String MSG = "1st";
+         OneProperty actual = MAPPER.readValue(
+-                "{\"param_name0\":\""+MSG+"\"}",
++                "{\"first_property\":\""+MSG+"\"}",
+                 OneProperty.class);
+         assertEquals("CTOR:"+MSG, actual.paramName0);
+     }
+diff --git a/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java b/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
+index 6594df4df..76dbe0c64 100644
+--- a/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
++++ b/src/test/java/com/fasterxml/jackson/failing/ImplicitParamsForCreator806Test.java
+@@ -1,5 +1,6 @@
+ package com.fasterxml.jackson.failing;
+ 
++import com.fasterxml.jackson.annotation.JsonCreator;
+ import com.fasterxml.jackson.databind.*;
+ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+ import com.fasterxml.jackson.databind.introspect.AnnotatedParameter;
+@@ -37,7 +38,7 @@ public class ImplicitParamsForCreator806Test extends BaseMapTest
+     /**********************************************************
+      */
+ 
+-    private final ObjectMapper MAPPER = newObjectMapper()
++    private final ObjectMapper MAPPER = objectMapper()
+             .setAnnotationIntrospector(new MyParamIntrospector())
+             .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+             ;

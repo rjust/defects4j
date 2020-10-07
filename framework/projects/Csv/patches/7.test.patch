@@ -1,0 +1,16 @@
+diff --git a/src/test/java/org/apache/commons/csv/CSVParserTest.java b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+index f68e7b9..c5c9ef7 100644
+--- a/src/test/java/org/apache/commons/csv/CSVParserTest.java
++++ b/src/test/java/org/apache/commons/csv/CSVParserTest.java
+@@ -492,11 +492,6 @@ public class CSVParserTest {
+         parser.close();
+     }
+ 
+-    @Test(expected = IllegalStateException.class)
+-    public void testDuplicateHeaderEntries() throws Exception {
+-        CSVParser.parse("a,b,a\n1,2,3\nx,y,z", CSVFormat.DEFAULT.withHeader(new String[]{}));
+-    }
+-
+     @Test
+     public void testGetLine() throws IOException {
+         final CSVParser parser = CSVParser.parse(CSV_INPUT, CSVFormat.DEFAULT.withIgnoreSurroundingSpaces(true));

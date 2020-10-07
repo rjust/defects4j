@@ -1,0 +1,4 @@
+org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
+org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+org.apache.commons.compress.changes.ChangeSetPerformer

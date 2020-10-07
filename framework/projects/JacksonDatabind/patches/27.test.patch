@@ -1,0 +1,36 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+index 509ded50e..c84824f82 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
++++ b/src/test/java/com/fasterxml/jackson/databind/jsontype/TestExternalId.java
+@@ -238,12 +238,11 @@ public class TestExternalId extends BaseMapTest
+ 
+     // [databind#928]
+     static class Envelope928 {
+-        Object _payload;
+-
+-        public Envelope928(@JsonProperty("payload")
+         @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.EXTERNAL_PROPERTY, property="class")
+-        Object payload) {
+-            _payload = payload;
++        Object payload;
++
++        public Envelope928(@JsonProperty("payload") Object payload) {
++            this.payload = payload;
+         }
+     }
+ 
+@@ -488,12 +487,12 @@ public class TestExternalId extends BaseMapTest
+         final String successCase = "{\"payload\":{\"something\":\"test\"},\"class\":\""+CLASS+"\"}";
+         Envelope928 envelope1 = mapper.readValue(successCase, Envelope928.class);
+         assertNotNull(envelope1);
+-        assertEquals(Payload928.class, envelope1._payload.getClass());
++        assertEquals(Payload928.class, envelope1.payload.getClass());
+ 
+         // and then re-ordered case that was problematic
+         final String failCase = "{\"class\":\""+CLASS+"\",\"payload\":{\"something\":\"test\"}}";
+         Envelope928 envelope2 = mapper.readValue(failCase, Envelope928.class);
+         assertNotNull(envelope2);
+-        assertEquals(Payload928.class, envelope2._payload.getClass());
++        assertEquals(Payload928.class, envelope2.payload.getClass());
+     }
+ }

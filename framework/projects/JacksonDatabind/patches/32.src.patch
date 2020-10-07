@@ -1,0 +1,23 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java b/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java
+index c96221412..76754bd37 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java
++++ b/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java
+@@ -218,7 +218,6 @@ public class UntypedObjectDeserializer
+         case JsonTokenId.ID_FIELD_NAME:
+             // 28-Oct-2015, tatu: [databind#989] We may also be given END_OBJECT (similar to FIELD_NAME),
+             //    if caller has advanced to the first token of Object, but for empty Object
+-        case JsonTokenId.ID_END_OBJECT:
+             if (_mapDeserializer != null) {
+                 return _mapDeserializer.deserialize(p, ctxt);
+             }
+@@ -533,10 +532,8 @@ public class UntypedObjectDeserializer
+             case JsonTokenId.ID_NULL: // should not get this but...
+                 return null;
+ 
+-            case JsonTokenId.ID_END_OBJECT:
+                 // 28-Oct-2015, tatu: [databind#989] We may also be given END_OBJECT (similar to FIELD_NAME),
+                 //    if caller has advanced to the first token of Object, but for empty Object
+-                return new LinkedHashMap<String,Object>(2);
+ 
+             //case JsonTokenId.ID_END_ARRAY: // invalid
+             default:

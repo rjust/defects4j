@@ -1,0 +1,40 @@
+diff --git a/src/test/org/apache/commons/jxpath/JXPathTestCase.java b/src/test/org/apache/commons/jxpath/JXPathTestCase.java
+index 0b048ca..48d63c9 100644
+--- a/src/test/org/apache/commons/jxpath/JXPathTestCase.java
++++ b/src/test/org/apache/commons/jxpath/JXPathTestCase.java
+@@ -250,13 +250,6 @@ public abstract class JXPathTestCase extends TestCase {
+         return list;
+     }
+ 
+-    protected static Set set(Object o1, Object o2) {
+-        Set list = new HashSet();
+-        list.add(o1);
+-        list.add(o2);
+-        return list;
+-    }
+-
+     protected static Set set(Object o1, Object o2, Object o3) {
+         Set list = new HashSet();
+         list.add(o1);
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+index 0520027..c1b292c 100644
+--- a/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
++++ b/src/test/org/apache/commons/jxpath/ri/model/XMLModelTestCase.java
+@@ -552,16 +552,9 @@ public abstract class XMLModelTestCase extends JXPathTestCase {
+             set("100", "", "local"));
+ 
+         // attribute:: with default namespace and wildcard
+-        assertXPathValueIterator(
+-                context,
+-                "vendor/product/price:amount/@*",
+-                //use a set because DOM returns attrs sorted by name, JDOM by occurrence order:
+-                set("10%", "20%"));
+-
+-        // attribute:: select non-ns'd attributes only
+         assertXPathValueIterator(
+             context,
+-            "vendor/product/price:amount/@*[namespace-uri() = '']",
++            "vendor/product/price:amount/@*",
+             list("20%"));
+ 
+         // Empty attribute

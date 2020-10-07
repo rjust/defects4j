@@ -1,0 +1,26 @@
+diff --git a/src/test/java/org/apache/commons/compress/ArchiveUtilsTest.java b/src/test/java/org/apache/commons/compress/ArchiveUtilsTest.java
+index db383edf..413b52b6 100644
+--- a/src/test/java/org/apache/commons/compress/ArchiveUtilsTest.java
++++ b/src/test/java/org/apache/commons/compress/ArchiveUtilsTest.java
+@@ -67,21 +67,6 @@ public class ArchiveUtilsTest extends AbstractTestCase {
+         asciiToByteAndBackFail("\u8025");
+     }
+ 
+-    @Test
+-    public void sanitizeShortensString() {
+-        String input = "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789";
+-        String expected = "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901234567890123456789012345678901234567890123456789"
+-            + "012345678901...";
+-        assertEquals(expected, ArchiveUtils.sanitize(input));
+-    }
+-
+     private void asciiToByteAndBackOK(final String inputString) {
+         assertEquals(inputString, ArchiveUtils.toAsciiString(ArchiveUtils.toAsciiBytes(inputString)));
+     }

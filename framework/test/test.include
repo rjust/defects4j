@@ -18,7 +18,14 @@ log_file=$(echo $script | sed 's/\.sh$/\.log/')
 LOG=$TEST_DIR/${log_file}
 
 # Set default temporary directory
-TMP_DIR=/tmp/test_d4j
+TMP_DIR="/tmp/test_d4j_$$_$(date +%s)"
+
+# Set filenames of active and deprecated bugs csvs.
+BUGS_CSV_ACTIVE="active-bugs.csv"
+BUGS_CSV_DEPRECATED="deprecated-bugs.csv"
+
+# Set filename of directory layout csv.
+LAYOUT_FILE="dir-layout.csv" 
 
 # By default exit on first error
 HALT_ON_ERROR=1
@@ -70,6 +77,13 @@ die() {
     fi
 }
 
+# Print and log warning message.
+# warn <warning_text>
+warn() {
+    echo "Warning: $1" 1>&2
+    log "Warning: $1"
+}
+
 # Determine and print triggering tests listed in <file_name>
 # get_triggers <file_name>
 get_triggers() {
@@ -90,6 +104,14 @@ num_lines() {
     [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <file_name>"
     wc -l < $1
 }
+
+# Determine and print all bug ids found in the provided active-bugs csv
+# get_bugs_ids <active-bugs csv>
+get_bug_ids() {
+    [ $# -eq 1 ] || die "usage: ${FUNCNAME[0]} <active-bugs csv>"
+    tail -n +2 $1 | cut -f1 -d',' | tr '\n' ' '
+}
+
 
 ################################################################################
 # Determine and print all test suites that exist in the provided suite_dir

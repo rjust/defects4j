@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +83,8 @@ _usage() unless defined $cmd_opts{p} and defined $cmd_opts{v} and defined $cmd_o
 
 my $PID = $cmd_opts{p};
 my $VID = $cmd_opts{v};
+
+Utils::ensure_valid_vid($PID, $VID);
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w});
 

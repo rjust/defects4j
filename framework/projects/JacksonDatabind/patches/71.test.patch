@@ -1,0 +1,21 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
+index 5828bd750..29ea9efe3 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestMapDeserialization.java
+@@ -501,15 +501,7 @@ public class TestMapDeserialization
+         assertEquals(1, map.size());
+         assertEquals("foo", map.get(String.class));
+     }
+-
+-    public void testcharSequenceKeyMap() throws Exception {
+-        String JSON = aposToQuotes("{'a':'b'}");
+-        Map<CharSequence,String> result = MAPPER.readValue(JSON, new TypeReference<Map<CharSequence,String>>() { });
+-        assertNotNull(result);
+-        assertEquals(1, result.size());
+-        assertEquals("b", result.get("a"));
+-    }
+-
++    
+     /*
+     /**********************************************************
+     /* Test methods, annotated Maps

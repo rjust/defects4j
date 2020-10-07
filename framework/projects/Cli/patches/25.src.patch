@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/cli/HelpFormatter.java b/src/java/org/apache/commons/cli/HelpFormatter.java
+index a46b0ec..028ff5c 100644
+--- a/src/java/org/apache/commons/cli/HelpFormatter.java
++++ b/src/java/org/apache/commons/cli/HelpFormatter.java
+@@ -822,7 +822,7 @@ public class HelpFormatter
+         if (nextLineTabStop >= width)
+         {
+             // stops infinite loop happening
+-            nextLineTabStop = 1;
++            nextLineTabStop = width - 1;
+         }
+ 
+         // all following lines must be padded with nextLineTabStop space 

@@ -1,0 +1,22 @@
+diff --git a/src/test/java/org/jsoup/helper/HttpConnectionTest.java b/src/test/java/org/jsoup/helper/HttpConnectionTest.java
+index 896383d..4e6bf33 100644
+--- a/src/test/java/org/jsoup/helper/HttpConnectionTest.java
++++ b/src/test/java/org/jsoup/helper/HttpConnectionTest.java
+@@ -1,7 +1,6 @@
+ package org.jsoup.helper;
+ 
+ import org.jsoup.Connection;
+-import org.jsoup.Jsoup;
+ import org.jsoup.MultiLocaleRule;
+ import org.jsoup.MultiLocaleRule.MultiLocaleTest;
+ import org.jsoup.integration.ParseTest;
+@@ -250,9 +249,4 @@ public class HttpConnectionTest {
+         }
+         assertTrue(threw);
+     }
+-
+-    @Test public void handlesHeaderEncodingOnRequest() {
+-        Connection.Request req = new HttpConnection.Request();
+-        req.addHeader("xxx", "é");
+-    }
+ }

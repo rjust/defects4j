@@ -1,0 +1,17 @@
+diff --git a/src/test/org/apache/commons/cli/bug/BugCLI162Test.java b/src/test/org/apache/commons/cli/bug/BugCLI162Test.java
+index 296582c..4de2ed9 100644
+--- a/src/test/org/apache/commons/cli/bug/BugCLI162Test.java
++++ b/src/test/org/apache/commons/cli/bug/BugCLI162Test.java
+@@ -42,7 +42,11 @@ public class BugCLI162Test extends TestCase {
+     public void testInfiniteLoop() {
+         HelpFormatter formatter = new HelpFormatter();
+         formatter.setWidth(20);
+-        formatter.printHelp("app", options); // used to hang & crash
++        try {
++            formatter.printHelp("app", options); // hang & crash
++        } catch(RuntimeException re) {
++            assertTrue(re.getMessage().startsWith("Text too long for line - throwing exception to avoid infinite loop [CLI-162]: "));
++        }
+     }
+     
+     private void testPrintHelp(Options options) throws ParseException, IOException {

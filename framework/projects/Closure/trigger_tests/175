@@ -1,0 +1,406 @@
+--- com.google.javascript.jscomp.FunctionInjectorTest::testIssue1101a
+junit.framework.AssertionFailedError: expected:<NO> but was:<YES>
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.failNotEquals(Assert.java:329)
+	at junit.framework.Assert.assertEquals(Assert.java:78)
+	at junit.framework.Assert.assertEquals(Assert.java:86)
+	at com.google.javascript.jscomp.FunctionInjectorTest$1.call(FunctionInjectorTest.java:1402)
+	at com.google.javascript.jscomp.FunctionInjectorTest$TestCallback.visit(FunctionInjectorTest.java:1543)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:540)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverse(NodeTraversal.java:287)
+	at com.google.javascript.jscomp.NodeTraversal.traverse(NodeTraversal.java:494)
+	at com.google.javascript.jscomp.FunctionInjectorTest.helperCanInlineReferenceToFunction(FunctionInjectorTest.java:1409)
+	at com.google.javascript.jscomp.FunctionInjectorTest.helperCanInlineReferenceToFunction(FunctionInjectorTest.java:1373)
+	at com.google.javascript.jscomp.FunctionInjectorTest.testIssue1101a(FunctionInjectorTest.java:1346)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.FunctionInjectorTest::testIssue1101b
+junit.framework.AssertionFailedError: expected:<NO> but was:<YES>
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.failNotEquals(Assert.java:329)
+	at junit.framework.Assert.assertEquals(Assert.java:78)
+	at junit.framework.Assert.assertEquals(Assert.java:86)
+	at com.google.javascript.jscomp.FunctionInjectorTest$1.call(FunctionInjectorTest.java:1402)
+	at com.google.javascript.jscomp.FunctionInjectorTest$TestCallback.visit(FunctionInjectorTest.java:1543)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:540)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverseBranch(NodeTraversal.java:534)
+	at com.google.javascript.jscomp.NodeTraversal.traverse(NodeTraversal.java:287)
+	at com.google.javascript.jscomp.NodeTraversal.traverse(NodeTraversal.java:494)
+	at com.google.javascript.jscomp.FunctionInjectorTest.helperCanInlineReferenceToFunction(FunctionInjectorTest.java:1409)
+	at com.google.javascript.jscomp.FunctionInjectorTest.helperCanInlineReferenceToFunction(FunctionInjectorTest.java:1373)
+	at com.google.javascript.jscomp.FunctionInjectorTest.testIssue1101b(FunctionInjectorTest.java:1352)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineFunctionsTest::testCostBasedInlining10
+junit.framework.AssertionFailedError: 
+Expected: function f(a$$1){return a$$1+a$$1}var a=f(1+1)
+Result: var a=1+1+(1+1)
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        FUNCTION f 1 [source_file: expected0]
+            NAME f 1 [source_file: expected0]
+            PARAM_LIST 1 [source_file: expected0]
+                NAME a$$1 1 [source_file: expected0]
+            BLOCK 1 [source_file: expected0]
+                RETURN 1 [source_file: expected0]
+                    ADD 1 [source_file: expected0]
+                        NAME a$$1 1 [source_file: expected0]
+                        NAME a$$1 1 [source_file: expected0]
+        VAR 1 [source_file: expected0]
+            NAME a 1 [source_file: expected0]
+                CALL 1 [free_call: 1] [source_file: expected0]
+                    NAME f 1 [source_file: expected0]
+                    ADD 1 [source_file: expected0]
+                        NUMBER 1.0 1 [source_file: expected0]
+                        NUMBER 1.0 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        VAR 1 [source_file: testcode]
+            NAME a 1 [source_file: testcode]
+                ADD 1 [source_file: testcode]
+                    ADD 1 [source_file: testcode]
+                        NUMBER 1.0 1 [source_file: testcode]
+                        NUMBER 1.0 1 [source_file: testcode]
+                    ADD 1 [source_file: testcode]
+                        NUMBER 1.0 1 [source_file: testcode]
+                        NUMBER 1.0 1 [source_file: testcode]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    FUNCTION f 1 [source_file: expected0]
+        NAME f 1 [source_file: expected0]
+        PARAM_LIST 1 [source_file: expected0]
+            NAME a$$1 1 [source_file: expected0]
+        BLOCK 1 [source_file: expected0]
+            RETURN 1 [source_file: expected0]
+                ADD 1 [source_file: expected0]
+                    NAME a$$1 1 [source_file: expected0]
+                    NAME a$$1 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME a 1 [source_file: expected0]
+            CALL 1 [free_call: 1] [source_file: expected0]
+                NAME f 1 [source_file: expected0]
+                ADD 1 [source_file: expected0]
+                    NUMBER 1.0 1 [source_file: expected0]
+                    NUMBER 1.0 1 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+    VAR 1 [source_file: testcode]
+        NAME a 1 [source_file: testcode]
+            ADD 1 [source_file: testcode]
+                ADD 1 [source_file: testcode]
+                    NUMBER 1.0 1 [source_file: testcode]
+                    NUMBER 1.0 1 [source_file: testcode]
+                ADD 1 [source_file: testcode]
+                    NUMBER 1.0 1 [source_file: testcode]
+                    NUMBER 1.0 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
+	at com.google.javascript.jscomp.InlineFunctionsTest.testCostBasedInlining10(InlineFunctionsTest.java:1023)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineFunctionsTest::testIssue1101
+junit.framework.AssertionFailedError: 
+Expected: var x;var saved$$inline_0=obj["prop"];x=modifyObjProp(obj)+saved$$inline_0
+Result: var x=modifyObjProp(obj)+obj["prop"]
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        VAR 1 [source_file: expected0]
+            NAME x 1 [source_file: expected0]
+        BLOCK 1 [source_file: expected0]
+            VAR 1 [source_file: expected0]
+                NAME saved$$inline_0 1 [source_file: expected0]
+                    GETELEM 1 [source_file: expected0]
+                        NAME obj 1 [source_file: expected0]
+                        STRING prop 1 [source_file: expected0]
+            EXPR_RESULT 1 [source_file: expected0]
+                ASSIGN 1 [source_file: expected0]
+                    NAME x 1 [source_file: expected0]
+                    ADD 1 [source_file: expected0]
+                        CALL 1 [free_call: 1] [source_file: expected0]
+                            NAME modifyObjProp 1 [source_file: expected0]
+                            NAME obj 1 [source_file: expected0]
+                        NAME saved$$inline_0 2 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        VAR 1 [source_file: testcode]
+            NAME x 1 [source_file: testcode]
+                ADD 1 [source_file: testcode]
+                    CALL 1 [free_call: 1] [source_file: testcode]
+                        NAME modifyObjProp 1 [source_file: testcode]
+                        NAME obj 1 [source_file: testcode]
+                    GETELEM 1 [source_file: testcode]
+                        NAME obj 1 [source_file: testcode]
+                        STRING prop 1 [source_file: testcode]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    VAR 1 [source_file: expected0]
+        NAME x 1 [source_file: expected0]
+    BLOCK 1 [source_file: expected0]
+        VAR 1 [source_file: expected0]
+            NAME saved$$inline_0 1 [source_file: expected0]
+                GETELEM 1 [source_file: expected0]
+                    NAME obj 1 [source_file: expected0]
+                    STRING prop 1 [source_file: expected0]
+        EXPR_RESULT 1 [source_file: expected0]
+            ASSIGN 1 [source_file: expected0]
+                NAME x 1 [source_file: expected0]
+                ADD 1 [source_file: expected0]
+                    CALL 1 [free_call: 1] [source_file: expected0]
+                        NAME modifyObjProp 1 [source_file: expected0]
+                        NAME obj 1 [source_file: expected0]
+                    NAME saved$$inline_0 2 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+    VAR 1 [source_file: testcode]
+        NAME x 1 [source_file: testcode]
+            ADD 1 [source_file: testcode]
+                CALL 1 [free_call: 1] [source_file: testcode]
+                    NAME modifyObjProp 1 [source_file: testcode]
+                    NAME obj 1 [source_file: testcode]
+                GETELEM 1 [source_file: testcode]
+                    NAME obj 1 [source_file: testcode]
+                    STRING prop 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
+	at com.google.javascript.jscomp.InlineFunctionsTest.testIssue1101(InlineFunctionsTest.java:2401)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.InlineFunctionsTest::testInlineMutableArgsReferencedOnce
+junit.framework.AssertionFailedError: 
+Expected: var x$$inline_0=[];x$$inline_0
+Result: []
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        BLOCK 1 [source_file: expected0]
+            VAR 1 [source_file: expected0]
+                NAME x$$inline_0 1 [source_file: expected0]
+                    ARRAYLIT 1 [source_file: expected0]
+            EXPR_RESULT 1 [source_file: expected0]
+                NAME x$$inline_0 1 [source_file: expected0]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: testcode] [input_id: InputId: testcode]
+        EXPR_RESULT 1 [source_file: testcode]
+            ARRAYLIT 1 [source_file: testcode]
+
+
+Subtree1: BLOCK 1 [source_file: expected0]
+    VAR 1 [source_file: expected0]
+        NAME x$$inline_0 1 [source_file: expected0]
+            ARRAYLIT 1 [source_file: expected0]
+    EXPR_RESULT 1 [source_file: expected0]
+        NAME x$$inline_0 1 [source_file: expected0]
+
+
+Subtree2: EXPR_RESULT 1 [source_file: testcode]
+    ARRAYLIT 1 [source_file: testcode]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:957)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:403)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:372)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:360)
+	at com.google.javascript.jscomp.InlineFunctionsTest.testInlineMutableArgsReferencedOnce(InlineFunctionsTest.java:629)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

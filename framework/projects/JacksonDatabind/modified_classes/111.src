@@ -1,0 +1,7 @@
+com.fasterxml.jackson.databind.deser.CreatorProperty
+com.fasterxml.jackson.databind.deser.impl.FieldProperty
+com.fasterxml.jackson.databind.deser.impl.MethodProperty
+com.fasterxml.jackson.databind.deser.impl.ObjectIdReferenceProperty
+com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty
+com.fasterxml.jackson.databind.deser.impl.SetterlessProperty
+com.fasterxml.jackson.databind.deser.std.AtomicReferenceDeserializer

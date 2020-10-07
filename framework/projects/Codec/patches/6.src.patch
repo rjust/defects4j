@@ -1,0 +1,31 @@
+diff --git a/src/java/org/apache/commons/codec/binary/Base64InputStream.java b/src/java/org/apache/commons/codec/binary/Base64InputStream.java
+index 479638bc..583a5847 100644
+--- a/src/java/org/apache/commons/codec/binary/Base64InputStream.java
++++ b/src/java/org/apache/commons/codec/binary/Base64InputStream.java
+@@ -145,7 +145,6 @@ public class Base64InputStream extends FilterInputStream {
+         } else if (len == 0) {
+             return 0;
+         } else {
+-            int readLen = 0;
+             /*
+              Rationale for while-loop on (readLen == 0):
+              -----
+@@ -162,7 +161,6 @@ public class Base64InputStream extends FilterInputStream {
+              -----
+              This is a fix for CODEC-101
+             */
+-            while (readLen == 0) {
+                 if (!base64.hasData()) {
+                     byte[] buf = new byte[doEncode ? 4096 : 8192];
+                     int c = in.read(buf);
+@@ -177,9 +175,7 @@ public class Base64InputStream extends FilterInputStream {
+                         base64.decode(buf, 0, c);
+                     }
+                 }
+-                readLen = base64.readResults(b, offset, len);
+-            }
+-            return readLen;
++            return base64.readResults(b, offset, len);
+         }
+     }
+ 

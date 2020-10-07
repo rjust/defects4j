@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -98,6 +98,7 @@ F<out_dir/L<TAB_COVERAGE|DB>>. The corresponding log files are stored in
 F<out_dir/L<TAB_COVERAGE|DB>_log>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -133,6 +134,11 @@ my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $INCL = $cmd_opts{f} // "*.java";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
+
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 
 # Directory of class lists used for instrumentation step
 my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
@@ -171,6 +177,7 @@ each executed test suite are copied to:
 F<out_dir/L<TAB_COVERAGE|DB>_log/project_id>.
 
 =cut
+
 # Log directory and file
 my $LOG_DIR = "$OUT_DIR/${TAB_COVERAGE}_log/$PID";
 my $LOG_FILE = "$LOG_DIR/" . basename($0) . ".log";
