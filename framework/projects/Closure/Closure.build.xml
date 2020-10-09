@@ -53,6 +53,12 @@ of the checked-out project version.
     <property name="build.home" value="${build.dir}" />
     <property name="test.classes.dir" value="${test.home}" />
 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="build/classes"/>
+    <property name="source.dir"       value="${src.dir}"/>
+    <property name="mlib.dir"         value="${basedir}/lib/"/>
+    <property name="lib2.dir"	      value="${build.dir}/lib/"/>
+
     <target name="compile.tests" depends="compile-tests" />
 
     <!-- We need to compile rhino.testing package before we can

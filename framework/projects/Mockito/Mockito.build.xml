@@ -4,6 +4,13 @@
     <property name="build.compiler" value="javac1.7"/>
     <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="classfiles.dir2"  value="build/classes/main"/>
+    <property name="source.dir"       value="${src.dir}"/>
+    <property name="mlib.dir" 	      value="${d4j.dir.projects}/Mockito/lib/"/>
+    <property name="lib2.dir"          value="${basedir}/compileLib/"/>
+
     <!-- Check for an existing build.xml, should only exist in older commits -->
     <available file="${basedir}/build.xml" property="ant.exists"/>
 
@@ -159,7 +166,7 @@
     </target>
 
     <!-- target used for compiling test cases.-->
-    <target name="compile.tests" description="Compile the Mockito tests." depends="compile">
+    <target name="compile.tests" description="Compile the Mockito tests.">
         <antcall target="gradle.compile.tests"/>
         <antcall target="ant.compile.tests"/>
     </target>

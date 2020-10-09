@@ -50,6 +50,11 @@ of the checked-out project version.
         <isset property="maven.build.testOutputDir" />
     </condition>
 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="source.dir"       value="${d4j.dir.src.classes}"/>
+    <property name="mlib.dir"          value="${d4j.home}/framework/projects/Lang/lib/"/>
+
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
         <include name="**/*Test.java"/>

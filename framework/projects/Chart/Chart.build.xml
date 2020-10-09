@@ -34,8 +34,14 @@ of the checked-out project version.
     <property name="build.home" value="${d4j.workdir}" />
     <property name="classes.dir" value="${d4j.workdir}/build" />
     <property name="test.classes.dir" value="${test.home}" />
-    <path id="compile.classpath" refid="build.classpath" />
+   
+    <!-- PIT properties needed -->
+    <property name="source.dir" value="${basedir}/source"/>
+    <property name="classfiles.dir" value="build" />
+    <property name="mlib.dir" value="${d4j.workdir}/lib/"/>
 
+    <path id="compile.classpath" refid="build.classpath" />
+    
     <!-- Clean up working directory, i.e., delete classes and test classes. -->
     <target name="clean">
         <delete dir="$test.home" />

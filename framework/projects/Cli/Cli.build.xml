@@ -45,6 +45,12 @@ of the checked-out project version.
     <!-- Include existing project build file -->
     <import file="${d4j.workdir}/build.xml"/>
 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <!--<property name="source.dir"       value="src/java"/>-->
+    <property name="source.dir"		value="${maven.build.srcDir.0}"/>
+    <property name="mlib.dir"	      value="${d4j.dir.projects}/Cli/lib/"/>
+
     <!-- Project properties targets -->
     <if> <isset property="ant.refid:compile.classpath" />
 	  <then>

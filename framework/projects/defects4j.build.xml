@@ -81,6 +81,15 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     <!-- Include project-specific build file -->
     <import file="${d4j.dir.projects}/${d4j.project.id}/${d4j.project.id}.build.xml"/>
 
+    <!--Additional properties for PIT-->
+    <!--Pass $testPlugin as a parameter to ant for evosuite suites-->
+    <property name="test.plugin" value="junit" />
+    
+    <!--Set the target tests if not specified by d4j-->
+    <property name="target.tests" value="*" /> 
+    <property name="d4j.relevant.tests.only" value="true"/>
+    <property name="lib2.dir"         value=""/>
+    <property name="classfiles.dir2"  value=""/>
 
 <!--
      Check whether all properties and paths are configured
@@ -215,7 +224,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             printsummary="false"
             showoutput="false"
             fork="no"
-
+            exportKillMap="true"
             mutationAnalysis="true"
             timeoutFactor="16"
             sort="${major.sort}"
@@ -265,6 +274,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                optimize="false">
                <classpath>
                     <pathelement path="${junit.jar}" />
+		    <pathelement location="${d4j.home}/framework/lib/xstream-1.4.8.jar"/>
+                    <pathelement location="${d4j.home}/framework/lib/xmlpull-1.1.3.1.jar"/>
                     <path refid="d4j.test.classpath" />
                     <pathelement path="${classes.dir}" />
                     <!-- Add dependencies to runtime libraries of test generation tools -->
@@ -356,9 +367,6 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Update list of all manual tests to only include relevant tests
 -->
     <target name="update.all.tests" if="${d4j.relevant.tests.only}">
-        <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
-                   build file should not rely on the current directory structure
-              => D4J should provide properly filtered files in the working directory-->
         <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
                  property="rel.files">
             <filterchain>
@@ -369,7 +377,16 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <striplinebreaks/>
             </filterchain>
         </loadfile>
-        <fileset id="all.manual.tests" dir="${test.home}" includes="${rel.files}"/>
+
+        <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" 
+		  property="dev.target.tests">
+	    <filterchain>	
+		<suffixlines suffix=","/>
+                <striplinebreaks/>
+            </filterchain>
+	</loadfile>
+
+	<fileset id="all.manual.tests" dir="${test.home}" includes="${rel.files}"/>
     </target>
 
 <!--
@@ -393,4 +410,157 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
               todir="${d4j.workdir}" overwrite="true" />
     </target>
 
+
+<!-- PIT setup-->
+    <path id = "pit.path">
+        <pathelement location="${junit.jar}"/>
+
+       <!-- NEW PIT WITH OLD SUPPORT PACKAGES -->
+        <pathelement location="${d4j.home}/framework/lib/pitest-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/pitest-ant-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/pitest-entry-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/pitest-evosuite-plugin-1.0-SNAPSHOT.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/evosuite-standalone-runtime-1.0.6.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/xstream-1.4.8.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/xmlpull-1.1.3.1.jar"/>
+   </path>
+
+    <path id="mutation.pit.path">
+        <!-- Added in some additional paths - not sure if needed? -->
+        <!-- Make sure that instrumented classes appear at the beginning of the classpath -->
+        <pathelement location="${d4j.dir.classes.instrumented}" />
+        <pathelement path="${formatter.jar}" />
+	<!-- Add dependencies to code coverage tools -->
+        <pathelement path="${cobertura.jar}" />
+
+
+	<!-- This is needed for dev test mutation testing -->
+        <!--<path refid="d4j.test.classpath"/>-->
+        <!-- Add dependencies to runtime libraries of test generation tools -->
+        <path refid="d4j.lib.testgen.rt"/>
+
+
+	<!-- Compiled tests -->
+        <pathelement location="${d4j.dir.classes.testgen}"/>
+	<!-- Compiled source -->
+	<pathelement location="${basedir}/${classfiles.dir}/"/>
+	<pathelement location="${basedir}/${classfiles.dir2}/"/>
+	<!-- Testing framework -->
+	<pathelement location="${junit.jar}"/>
+        <pathelement location="${d4j.home}/framework/lib/evosuite-standalone-runtime-1.0.6.jar"/>
+	
+	<!-- Library dependencies -->
+	<fileset dir="${mlib.dir}" erroronmissingdir="false">
+            <include name="**/*.jar" />
+	    <include name="*.jar" />
+        </fileset>
+	<fileset dir="${lib2.dir}" erroronmissingdir="false">
+            <include name="**/*.jar" />
+            <include name="*.jar" />
+        </fileset>
+
+    </path>
+
+    <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
+    
+
+    <!-- Min version of PIT, no dev tests -->
+    <target name="runPit">
+
+        <loadfile property="modified.classes"
+            srcFile="${d4j.home}/framework/projects/${d4j.project.id}/modified_classes/${d4j.bug.id}.src" >
+             <filterchain>
+                 <tokenfilter>
+                     <replaceregex pattern="$" replace="," flags="g"/>
+                 </tokenfilter>
+                 <striplinebreaks />
+                 <tokenfilter>
+                     <replaceregex pattern=",$" replace="" flags="g"/>
+                 </tokenfilter>
+             </filterchain>
+        </loadfile>	
+
+	<!-- sourceDir - path to .java files e.g src/org folder -->
+        <pitest
+            pitClasspath="pit.path"
+            classPath="mutation.pit.path"
+            targetClasses="${modified.classes}"
+            targetTests="${target.tests}"
+            outputformats="XML"
+            reportDir="${basedir}/pitReports/"
+	    sourceDir="${source.dir}/"
+            threads="6"
+            verbose= "true"
+            timestampedReports = "false"           
+	    testPlugin="${test.plugin}"
+	    fullMutationMatrix = "true"
+	    mutators= "ALL" 
+	    jvmArgs="-Xmx40000M"	    
+            />
+    </target>
+
+
+
+
+
+<!-- PIT-DEV setup-->
+    <path id = "pit.path2">
+        <pathelement location="${junit.jar}"/>
+
+       <!-- NEW PIT WITH OLD SUPPORT PACKAGES -->
+        <pathelement location="${d4j.home}/framework/lib/pitest-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/pitest-ant-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/pitest-entry-1.5.2.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/xstream-1.4.8.jar"/>
+        <pathelement location="${d4j.home}/framework/lib/xmlpull-1.1.3.1.jar"/>
+   </path>
+
+
+    <path id="mutation.pit.path2">
+        
+	<path refid="pit.path2"/>
+	<path refid="d4j.test.classpath"/>
+    </path>
+
+
+    <taskdef name="pitest2" classname="org.pitest.ant.PitestTask" classpathref="pit.path2"/>
+
+
+    <!-- Dev tests included in this version -->
+    <target name="runPitDev" depends="compile, compile.tests, update.all.tests">
+
+        <loadfile property="modified.classes" srcFile="${d4j.home}/framework/projects/${d4j.project.id}/modified_classes/${d4j.bug.id}.src" >
+             <filterchain>
+                 <tokenfilter>
+                     <replaceregex pattern="$" replace="," flags="g"/>
+                 </tokenfilter>
+                 <striplinebreaks />
+                 <tokenfilter>
+                     <replaceregex pattern=",$" replace="" flags="g"/>
+                 </tokenfilter>
+             </filterchain>
+        </loadfile>		
+
+	<pitest2
+            pitClasspath="pit.path2"
+            classPath="mutation.pit.path2"
+            targetClasses="${modified.classes}"
+            targetTests="${dev.target.tests}"
+            outputformats="XML"
+            reportDir="${basedir}/pitReports/"
+	    sourceDir="${source.dir}/"
+            threads="6"
+            verbose= "true"
+            timestampedReports = "false"           
+	    testPlugin="junit"
+	    fullMutationMatrix = "true"
+     	    mutators= "ALL"	     
+	    jvmArgs="-Xmx40000M"	    
+            />
+    </target>
 </project>
+
+<!-- fullMutationMatrix = "true"
+     mutators= "ALL" 
+     jvmArgs="-Xmx4096M"
+ -->

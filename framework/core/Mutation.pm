@@ -32,7 +32,6 @@ This module provides helper subroutines for mutation analysis using the Major
 mutation framework.
 
 =cut
-
 package Mutation;
 
 use warnings;
@@ -52,14 +51,13 @@ our $KILL_FILE = "kill.csv";
 our $SUMMARY_FILE = "summary.csv";
 # Name of file that maps test IDs to test names
 our $TEST_MAP_FILE = "testMap.csv";
-
+# Name of file that maps test IDs to mutant IDs
+our $KILL_MAP_FILE = "killMap.csv";
 =pod
 
 =head2 Static subroutines
 
-=over 4
-
-=item C<Mutation::create_mml(instrument_classes, out_file, mut_ops)>
+  Mutation::create_mml(instrument_classes, out_file, mut_ops)
 
 Generates an mml file, enabling all mutation operators defined by the array
 reference C<mut_ops> for all classes listed in F<instrument_classes>. The mml
@@ -67,7 +65,6 @@ reference C<mut_ops> for all classes listed in F<instrument_classes>. The mml
 file to F<'out_file'.bin>.
 
 =cut
-
 sub create_mml {
     @_ == 3 or die $ARG_ERROR;
     my ($instrument_classes, $out_file, $mut_ops) = @_;
@@ -102,15 +99,19 @@ sub create_mml {
 
 =pod
 
-=item C<Mutation::mutation_analysis(project_ref, log_file [, exclude_file, base_map, single_test])>
+  Mutation::mutation_analysis(project_ref, log_file [, exclude_file, base_map, single_test])
 
 Runs mutation analysis for the developer-written test suites of the provided
 L<Project> reference.  Returns a reference to a hash that provides kill details
 for all covered mutants:
-S<C<{mut_id} =E<gt> "[TIME|EXC|FAIL|LIVE]">>
+
+=over 4
+
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
+
+=back
 
 =cut
-
 sub mutation_analysis {
     @_ >= 3 or die $ARG_ERROR;
     my ($project, $log_file, $exclude_file, $base_map, $single_test) = @_;
@@ -128,17 +129,22 @@ sub mutation_analysis {
     return _build_mut_map($project, $base_map);
 }
 
+
 =pod
 
-=item C<Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, exclude_file, base_map])>
+  Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, exclude_file, base_map])
 
 Runs mutation analysis for external (e.g., generated) test suites on the
 provided L<Project> reference. Returns a reference to a hash that provides kill
 details for all covered mutants:
-S<C<{mut_id} =E<gt> "[TIME|EXC|FAIL|LIVE]">>
+
+=over 4
+
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
+
+=back
 
 =cut
-
 sub mutation_analysis_ext {
     @_ >= 4 or die $ARG_ERROR;
     my ($project, $test_dir, $include, $log_file, $exclude_file, $base_map) = @_;
@@ -158,13 +164,48 @@ sub mutation_analysis_ext {
 
 =pod
 
-=item C<Mutation::parse_mutation_operators(file_name)>
+  Mutation::mutation_analysis_pit(project_ref, test_dir, log_file)
+
+Runs mutation analysis with PIT for external (e.g., generated) test suites on the
+provided L<Project> reference. Returns a reference to a hash that provides kill
+details for all covered mutants:
+
+=over 4
+
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
+
+=back
+
+=cut
+sub mutation_analysis_pit_dev {
+    my ($project, $log_file) = @_;
+
+    if (! $project->mutation_analysis_pit_dev($log_file)) {
+        return undef;
+    }
+
+    return 1;
+}
+
+sub mutation_analysis_pit {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($project, $test_dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src) = @_;
+
+    if (! $project->mutation_analysis_pit($test_dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src)) {
+        return undef;
+    }
+
+    return 1;
+}
+
+=pod
+
+  Mutation::parse_mutation_operators(file_name)
 
 Parses the provided text file and returns an array with mutation operator names
 (i.e., "AOR", "ROR", etc.).
 
 =cut
-
 sub parse_mutation_operators {
     @_ == 1 or die $ARG_ERROR;
     my ($file_name) = @_;
@@ -184,14 +225,13 @@ sub parse_mutation_operators {
 
 =pod
 
-=item C<Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen, num_excluded [, mutation_map])>
+  Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen, num_excluded [, mutation_map])
 
 Insert a row into the database table L<TAB_MUTATION|DB>. C<hashref> points to a
 hash holding all key-value pairs of the data row.  F<out_dir> is the optional
 alternative database directory to use.
 
 =cut
-
 sub insert_row {
     @_ >= 5 or die $ARG_ERROR;
     my ($out_dir, $pid, $vid, $suite, $test_id, $gen, $num_excluded, $mut_map) = @_;
@@ -222,7 +262,7 @@ sub insert_row {
 
 =pod
 
-=item C<Mutation::copy_mutation_logs(project, vid, suite, test_id, log, log_dir)>
+  Mutation::copy_mutation_logs(project, vid, suite, test_id, log, log_dir)
 
 Copies the mutation log files to a permanent directory F<log_dir>.  C<project>
 is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
@@ -230,7 +270,6 @@ the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
 the id of the test suite. TODO
 
 =cut
-
 sub copy_mutation_logs {
     @_ == 6 or die $ARG_ERROR;
     my ($project, $vid, $suite, $test_id, $log, $log_dir) = @_;
@@ -241,7 +280,7 @@ sub copy_mutation_logs {
     system("cp $log $log_dir/$suite/$vid.$test_id.log") == 0
         or die "Cannot copy mutation analysis log file";
     # Copy additional data files generated by Major -- unique per test ID
-    for my $file ($SUMMARY_FILE, $KILL_FILE, $TEST_MAP_FILE) {
+    for my $file ($SUMMARY_FILE, $KILL_FILE, $TEST_MAP_FILE, $KILL_MAP_FILE) {
         if (-e "$project->{prog_root}/$SUMMARY_FILE") {
             system("cp $project->{prog_root}/$file $log_dir/$suite/$vid.$test_id.$file") == 0
                 or die "Cannot copy mutation analysis data file: $file";
@@ -249,11 +288,24 @@ sub copy_mutation_logs {
     }
 }
 
+
 =pod
 
-=back
+  Mutation::copy_pit_results(project, vid, suite, test_id, log, log_dir)
+
+Copies the mutation result files to a permanent directory F<log_dir>.  C<project>
+is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
+the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
+the id of the test suite. TODO
 
 =cut
+sub copy_pit_results {
+    @_ == 6 or die $ARG_ERROR;
+    my ($project, $vid, $suite, $test_id, $log, $log_dir) = @_;
+    # Copy the PIT reports directory
+    system("cp -R $project->{prog_root}/pitReports/ $log_dir/$suite/$vid-$test_id-pitReports/") == 0
+	or  die "Cannot copy reports folder";
+}
 
 #
 # Parse kill details file and build mutant map

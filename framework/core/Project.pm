@@ -47,7 +47,7 @@ A specific project instance can be created with C<create_project(project_id)>.
   my $PID = "MyID";
 
   sub new {
-    my ($class) = @_;
+    my $class = shift;
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
@@ -136,7 +136,6 @@ Joda-time (L<Vcs::Git> backend)
 =back
 
 =cut
-
 package Project;
 
 use warnings;
@@ -156,10 +155,9 @@ Dynamically loads the required submodule, instantiates the project, and returns 
 reference to it.
 
 =cut
-
 sub create_project {
     @_ == 1 or die "$ARG_ERROR Use: create_project(project_id)";
-    my ($pid) = @_;
+    my $pid = shift;
     my $module = __PACKAGE__ . "/$pid.pm";
     my $class  = __PACKAGE__ . "::$pid";
 
@@ -182,7 +180,6 @@ The program name of the project.
 The root (working) directory for a checked-out program version of this project.
 
 =cut
-
 sub new {
     @_ == 4 or die $ARG_ERROR;
     my ($class, $pid, $prog, $vcs) = @_;
@@ -207,10 +204,8 @@ sub new {
 Prints all general and project-specific properties to STDOUT.
 
 =cut
-
 sub print_info {
-    @_ == 1 or die $ARG_ERROR;
-    my ($self) = @_;
+    my $self = shift;
     my $pid = $self->{pid};
     print "Summary of configuration for Project: $pid\n";
     print "-"x80 . "\n";
@@ -238,7 +233,6 @@ sub print_info {
 Returns the bug report ID of a given version id C<vid>.
 
 =cut
-
 sub bug_report_id {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -253,7 +247,6 @@ sub bug_report_id {
 Returns the bug report URL of a given version id C<vid>.
 
 =cut
-
 sub bug_report_url {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -269,7 +262,6 @@ Returns the path to the directory of the source files for a given version id C<v
 The returned path is relative to the working directory.
 
 =cut
-
 sub src_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -285,7 +277,6 @@ Returns the path to the directory of the junit test files for a given version id
 The returned path is relative to the working directory.
 
 =cut
-
 sub test_dir {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -313,7 +304,6 @@ F<"work_dir"/$PROP_FILE>.
 =back
 
 =cut
-
 sub exclude_tests_in_file {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $file, $tests_dir) = @_;
@@ -351,10 +341,8 @@ sub exclude_tests_in_file {
 Checks whether the project is correctly configured.
 
 =cut
-
 sub sanity_check {
-    @_ == 1 or die $ARG_ERROR;
-    my ($self) = @_;
+    my $self = shift;
     return $self->_ant_call_comp("sanity.check");
 }
 
@@ -369,7 +357,6 @@ The is_bugmine flag (C<is_bugmine>) is optional and indicates whether the
 framework is used for bug mining, the default is false.
 
 =cut
-
 sub checkout_vid {
     my ($self, $vid, $work_dir, $is_bugmine) = @_;
     my $tmp = Utils::check_vid($vid);
@@ -529,7 +516,6 @@ Compiles the sources of the project version that is currently checked out.
 If F<log_file> is provided, the compiler output is written to this file.
 
 =cut
-
 sub compile {
     my ($self, $log_file) = @_;
     return $self->_ant_call_comp("compile", undef, $log_file);
@@ -543,7 +529,6 @@ Compiles the tests of the project version that is currently checked out.
 If F<log_file> is provided, the compiler output is written to this file.
 
 =cut
-
 sub compile_tests {
     my ($self, $log_file) = @_;
     return $self->_ant_call_comp("compile.tests", undef, $log_file);
@@ -559,7 +544,6 @@ If C<single_test> is provided, only this test method is run.
 Format of C<single_test>: <classname>::<methodname>.
 
 =cut
-
 sub run_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $out_file, $single_test) = @_;
@@ -581,7 +565,6 @@ Executes only developer-written tests that are relevant to the bug of the checke
 program version. Failing tests are written to C<result_file>.
 
 =cut
-
 sub run_relevant_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $out_file) = @_;
@@ -598,7 +581,6 @@ in F<test_dir> against the project version that is currently checked out.
 If F<log_file> is provided, the compiler output is written to this file.
 
 =cut
-
 sub compile_ext_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $dir, $log_file) = @_;
@@ -616,7 +598,6 @@ If C<single_test> is provided, only this test method is executed.
 Format of C<single_test>: <classname>::<methodname>.
 
 =cut
-
 sub run_ext_tests {
     @_ >= 4 or die $ARG_ERROR;
     my ($self, $dir, $include, $out_file, $single_test) = @_;
@@ -639,7 +620,6 @@ removed is determined based on the provided version id C<vid>:
 all tests listed in F<$PROJECTS_DIR/$PID/failing_tests/rev-id> are removed.
 
 =cut
-
 sub fix_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $vid) = @_;
@@ -674,9 +654,7 @@ sub fix_tests {
 
 =head2 Analysis related subroutines
 
-=over 4
-
-=item C<$project-E<gt>monitor_test(single_test, vid [, test_dir])>
+  $project->monitor_test(single_test, vid [, test_dir])
 
 Executes C<single_test>, monitors the class loader, and returns a reference to a
 hash of list references, which store the loaded source and test classes.
@@ -684,8 +662,12 @@ Format of C<single_test>: <classname>::<methodname>.
 
 This subroutine returns a reference to a hash with the keys C<src> and C<test>:
 
+=over 4
+
   {src} => [org.foo.Class1 org.bar.Class2]
   {test} => [org.foo.TestClass1 org.foo.TestClass2]
+
+=back
 
 If the test execution fails, the returned reference is C<undef>.
 
@@ -696,7 +678,6 @@ The location of the test sources can be provided with the optional parameter F<t
 The default is the test directory of the developer-written tests.
 
 =cut
-
 sub monitor_test {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $single_test, $vid, $test_dir) = @_;
@@ -738,12 +719,11 @@ sub monitor_test {
 
 =pod
 
-=item C<$project-E<gt>coverage_instrument(instrument_classes)>
+  $project->coverage_instrument(instrument_classes)
 
 Instruments classes listed in F<instrument_classes> for use with cobertura.
 
 =cut
-
 sub coverage_instrument {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $instrument_classes) = @_;
@@ -779,12 +759,11 @@ sub coverage_instrument {
 
 =pod
 
-=item C<$project-E<gt>coverage_report(source_dir)>
+  $project->coverage_report(source_dir)
 
 TODO
 
 =cut
-
 sub coverage_report {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $source_dir) = @_;
@@ -793,14 +772,13 @@ sub coverage_report {
 
 =pod
 
-=item C<$project-E<gt>mutate(instrument_classes, mut_ops)>
+  $project->mutate(instrument_classes, mut_ops)
 
 Mutates all classes listed in F<instrument_classes>, using all mutation operators
 defined by the array reference C<mut_ops>, in the checked-out program version.
 Returns the number of generated mutants on success, -1 otherwise.
 
 =cut
-
 sub mutate {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $instrument_classes, $mut_ops)  = @_;
@@ -849,7 +827,7 @@ sub mutate {
 
 =pod
 
-=item C<$project-E<gt>mutation_analysis(log_file, relevant_tests [, exclude_file, single_test])>
+  $project->mutation_analysis(log_file, relevant_tests [, exclude_file, single_test])
 
 Performs mutation analysis for the developer-written tests of the checked-out program
 version.
@@ -860,7 +838,6 @@ C<single_test> is specified, only that test is run.
 B<Note that C<mutate> is not called implicitly>.
 
 =cut
-
 sub mutation_analysis {
     @_ >= 3 or die $ARG_ERROR;
     my ($self, $log_file, $relevant_tests, $exclude_file, $single_test) = @_;
@@ -883,7 +860,7 @@ sub mutation_analysis {
 
 =pod
 
-=item C<$project-E<gt>mutation_analysis_ext(test_dir, test_include, log_file [, exclude_file, single_test])>
+  $project->mutation_analysis_ext(test_dir, test_include, log_file [, exclude_file, single_test])
 
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
 C<test_include>.
@@ -893,7 +870,6 @@ C<single_test> is specified, only that test is run.
 B<Note that C<mutate> is not called implicitly>.
 
 =cut
-
 sub mutation_analysis_ext {
     @_ >= 4 or die $ARG_ERROR;
     my ($self, $dir, $include, $log_file, $exclude_file, $single_test) = @_;
@@ -915,25 +891,65 @@ sub mutation_analysis_ext {
 }
 
 =pod
+ 
+ $project->mutation_analysis_pit(test_dir, log_file)
 
-=back
+Performs mutation analysis for all tests in F<test_dir>. 
+The output of the mutation analysis process is redirected to F<log_file>. If
+C<single_test> is specified, only that test is run. 
 
 =cut
+sub mutation_analysis_pit_dev {
+    my ($self, $log_file) = @_;
 
+    my $log = "-logfile $log_file";
+
+    my $basedir = $self->{prog_root};
+
+    my $option_string = "";
+
+    $option_string = "$option_string -Dd4j.relevant.tests.only=true"; 
+
+    return $self->_call_pit_dev("runPitDev", $option_string, $log_file);
+}
+
+sub mutation_analysis_pit {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($self, $dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src) = @_;
+
+    my $log = "-logfile $log_file";
+
+    my $basedir = $self->{prog_root};
+
+    my $option_string = "";
+    if($dir ne "") {
+        $option_string = "-Dd4j.test.dir=$dir";
+    }
+    if(defined $TARGET_TESTS) {
+        $option_string = "$option_string -Dtarget.tests=$TARGET_TESTS";
+    } 
+    if(defined $TARGET_TEST_METHODS) {
+        $option_string = "$option_string -Dtarget.test.methods=$TARGET_TEST_METHODS";
+    } 
+    if(defined $ANT_PROPS_FILE) {
+        $option_string = "$option_string -propertyfile $ANT_PROPS_FILE";
+    }
+    if($suite_src eq "evosuite") {
+        $option_string = "$option_string -Dtest.plugin=$suite_src";
+    }
+
+    return $self->_call_pit("runPit", $option_string, $log_file);
+}
 =pod
-
 =head2 Vcs related subroutines
 
 The following delegate subroutines are implemented merely for convenience.
 
-=over 4
-
-=item C<$project-E<gt>lookup(version_id)>
+  $project->lookup(version_id)
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub lookup {
     my ($self, $vid) = @_;
     return $self->{_vcs}->lookup($vid);
@@ -941,12 +957,11 @@ sub lookup {
 
 =pod
 
-=item C<$project-E<gt>lookup_vid(revision_id)>
+  $project->lookup_vid(revision_id)
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub lookup_vid {
     my ($self, $rev_id) = @_;
     return $self->{_vcs}->lookup_vid($rev_id);
@@ -954,40 +969,35 @@ sub lookup_vid {
 
 =pod
 
-=item C<$project-E<gt>num_revision_pairs()>
+  $project->num_revision_pairs()
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub num_revision_pairs {
-    @_ == 1 or die $ARG_ERROR;
-    my ($self) = @_;
+    my $self = shift;
     return $self->{_vcs}->num_revision_pairs();
 }
 
 =pod
 
-=item C<$project-E<gt>get_bug_ids()>
+  $project->get_bug_ids()
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub get_bug_ids {
-    @_ == 1 or die $ARG_ERROR;
-    my ($self) = @_;
+    my $self = shift;
     return $self->{_vcs}->get_bug_ids();
 }
 
 =pod
 
-=item C<$project-E<gt>contains_version_id(vid)>
+  $project->contains_version_id(vid)
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub contains_version_id {
     my ($self, $vid) = @_;
     return $self->{_vcs}->contains_version_id($vid);
@@ -995,25 +1005,22 @@ sub contains_version_id {
 
 =pod
 
-=item C<$project-E<gt>diff(revision_id_1, revision_id_2 [, path])>
+  $project->diff(revision_id_1, revision_id_2 [, path])
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub diff {
     my ($self, $rev1, $rev2, $path) = @_; shift;
     return $self->{_vcs}->diff(@_);
 }
-
 =pod
 
-=item C<$project-E<gt>export_diff(revision_id_1, revision_id_2, out_file [, path])>
+  $project->export_diff(revision_id_1, revision_id_2, out_file [, path])
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub export_diff {
     my ($self, $rev1, $rev2, $out_file, $path) = @_; shift;
     return $self->{_vcs}->export_diff(@_);
@@ -1021,22 +1028,15 @@ sub export_diff {
 
 =pod
 
-=item C<$project-E<gt>apply_patch(work_dir, patch_file)>
+  $project->apply_patch(work_dir, patch_file)
 
 Delegate to the L<Vcs> backend.
 
 =cut
-
 sub apply_patch {
     my ($self, $work_dir, $patch_file) = @_; shift;
     return $self->{_vcs}->apply_patch(@_);
 }
-
-=pod
-
-=back
-
-=cut
 
 # TODO: Document the purpose of this subroutine and indicate that it needs to be
 # implemented in an inheriting module.
@@ -1101,6 +1101,7 @@ sub _ant_call {
                 " -Dd4j.dir.projects=$PROJECTS_DIR" .
                 " -Dbasedir=$self->{prog_root} ${option_str} $target 2>&1";
     my $log;
+
     my $ret = Utils::exec_cmd($cmd, "Running ant ($target)", \$log);
 
     if (defined $log_file) {
@@ -1135,6 +1136,23 @@ sub _call_major {
     # Reset path for downstream calls to ant
     $ENV{PATH} = $path;
     return($ret);
+}
+
+sub _call_pit_dev {
+    my ($self, $target, $option_str, $log_file) =  @_;
+    $option_str = ($option_str // "");
+    my $ant_cmd = "$MAJOR_ROOT/bin/ant";
+    my $ret = $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    
+    return($ret);
+}
+
+sub _call_pit {
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = ($option_str // "");
+    $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
+    $ant_cmd = "$MAJOR_ROOT/bin/ant";
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
 
 #
@@ -1213,8 +1231,7 @@ sub _write_props {
 # Cache the directory-layout map from the project directory, if it exists.
 #
 sub _cache_layout_map {
-    @_ == 1 or die $ARG_ERROR;
-    my ($self) = @_;
+    my $self = shift;
     my $pid = $self->{pid};
     my $map_file = "$PROJECTS_DIR/$pid/$LAYOUT_FILE";
     return unless -e $map_file;

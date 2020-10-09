@@ -54,7 +54,7 @@ of the checked-out project version.
             <property name="test.dir"         value="${maven.build.testDir.0}" />
             <property name="source.home"      value="${maven.build.srcDir.0}"/>
 	    <property name="d4j.test.dir"     value="${maven.build.testDir.0}"/>
-          </else>
+	  </else>
     </if>
     <property name="build.classes" value="${d4j.workdir}/target/classes/" />
     <property name="test.home" value="${maven.build.testOutputDir}" />
@@ -66,6 +66,11 @@ of the checked-out project version.
     </condition>
 
     <property name="build.home" value="${classes.dir}/.." />
+
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="source.dir"       value="${maven.build.srcDir.0}"/>
+    <property name="mlib.dir"	      value="${d4j.dir.projects}/Compress/lib/"/>
 
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">
