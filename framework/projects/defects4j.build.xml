@@ -494,10 +494,16 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             timestampedReports = "false"           
 	    testPlugin="${test.plugin}"
 	    fullMutationMatrix = "true"
-	    mutators= "ALL" 
-	    jvmArgs="-Xmx40000M"	    
+	    mutators= "ALL" 	    
             />
-    </target>
+     </target>
+
+<!--
+     jvmArgs="-Xmx40000M"
+     fullMutationMatrix = "true"
+     mutators= "ALL"
+     jvmArgs="-Xmx4096M"
+ -->
 
 
 
@@ -555,12 +561,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 	    testPlugin="junit"
 	    fullMutationMatrix = "true"
      	    mutators= "ALL"	     
-	    jvmArgs="-Xmx40000M"	    
             />
     </target>
 </project>
 
-<!-- fullMutationMatrix = "true"
+<!-- 
+     jvmArgs="-Xmx40000M"
+     fullMutationMatrix = "true"
      mutators= "ALL" 
      jvmArgs="-Xmx4096M"
  -->
