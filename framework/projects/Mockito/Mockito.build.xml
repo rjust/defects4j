@@ -166,7 +166,7 @@
     </target>
 
     <!-- target used for compiling test cases.-->
-    <target name="compile.tests" description="Compile the Mockito tests.">
+    <target name="compile.tests" description="Compile the Mockito tests." depends="compile">
         <antcall target="gradle.compile.tests"/>
         <antcall target="ant.compile.tests"/>
     </target>

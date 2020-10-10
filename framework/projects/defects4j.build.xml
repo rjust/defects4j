@@ -224,7 +224,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             printsummary="false"
             showoutput="false"
             fork="no"
-            exportKillMap="true"
+
             mutationAnalysis="true"
             timeoutFactor="16"
             sort="${major.sort}"
@@ -367,6 +367,9 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Update list of all manual tests to only include relevant tests
 -->
     <target name="update.all.tests" if="${d4j.relevant.tests.only}">
+	 <!-- TODO: Conversions in Ant a rather cumbersome and hacky. Also, the
+                   build file should not rely on the current directory structure
+              => D4J should provide properly filtered files in the working directory-->    
         <loadfile srcfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}"
                  property="rel.files">
             <filterchain>
