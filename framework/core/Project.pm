@@ -677,6 +677,7 @@ sub fix_tests {
 =over 4
 
 =item C<$project-E<gt>monitor_test(single_test, vid [, test_dir])>
+
 Executes C<single_test>, monitors the class loader, and returns a reference to a
 hash of list references, which store the loaded source and test classes.
 Format of C<single_test>: <classname>::<methodname>.
@@ -849,6 +850,7 @@ sub mutate {
 =pod
 
 =item C<$project-E<gt>mutation_analysis(log_file, relevant_tests [, exclude_file, single_test])>
+
 Performs mutation analysis for the developer-written tests of the checked-out program
 version.
 The output of the mutation analysis process is redirected to F<log_file>, and the boolean
@@ -882,6 +884,7 @@ sub mutation_analysis {
 =pod
 
 =item C<$project-E<gt>mutation_analysis_ext(test_dir, test_include, log_file [, exclude_file, single_test])>
+
 Performs mutation analysis for all tests in F<test_dir> that match the pattern
 C<test_include>.
 The output of the mutation analysis process is redirected to F<log_file>. If
