@@ -34,7 +34,7 @@ of the checked-out project version.
            - compile.classpath  ->  Classpath to compile sources
     -->
 
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.13.jar"/>
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
 
     <!-- Do not download maven dependencies -->
     <property name="maven.settings.offline" value="true" />
