@@ -1,0 +1,221 @@
+diff --git a/test/com/google/javascript/jscomp/CompilerTestCase.java b/test/com/google/javascript/jscomp/CompilerTestCase.java
+index f8a730a4..68942a66 100644
+--- a/test/com/google/javascript/jscomp/CompilerTestCase.java
++++ b/test/com/google/javascript/jscomp/CompilerTestCase.java
+@@ -62,9 +62,6 @@ public abstract class CompilerTestCase extends TestCase  {
+   /** Whether the Normalize pass runs before pass being tested. */
+   private boolean normalizeEnabled = false;
+ 
+-  /** Whether the expected js strings should be normalized. */
+-  private boolean normalizeExpected = false;
+-
+   /** Whether to check that all line number information is preserved. */
+   private boolean checkLineNumbers = false;
+ 
+@@ -205,28 +202,7 @@ public abstract class CompilerTestCase extends TestCase  {
+    * @see Normalize
+    */
+   protected void enableNormalize() {
+-    enableNormalize(true);
+-  }
+-
+-  /**
+-   * Perform AST normalization before running the test pass, and anti-normalize
+-   * after running it.
+-   *
+-   * @param normalizeExpected Whether to perform normalization on the
+-   * expected js result.
+-   * @see Normalize
+-   */
+-  protected void enableNormalize(boolean normalizeExpected) {
+-    normalizeEnabled = true;
+-    this.normalizeExpected = normalizeExpected;
+-  }
+-
+-  /**
+-   * Don't perform AST normalization before running the test pass.
+-   * @see Normalize
+-   */
+-  protected void disableNormalize() {
+-    normalizeEnabled = false;
++    normalizeEnabled  = true;
+   }
+ 
+   /**
+@@ -841,7 +817,7 @@ public abstract class CompilerTestCase extends TestCase  {
+     Node externsRoot = root.getFirstChild();
+     Node mainRoot = externsRoot.getNext();
+     // Only run the normalize pass, if asked.
+-    if (normalizeEnabled && normalizeExpected && !compiler.hasErrors()) {
++    if (normalizeEnabled && !compiler.hasErrors()) {
+       Normalize normalize = new Normalize(compiler, false);
+       normalize.process(externsRoot, mainRoot);
+       compiler.setNormalized();
+diff --git a/test/com/google/javascript/jscomp/InlineGettersTest.java b/test/com/google/javascript/jscomp/InlineGettersTest.java
+index 1da330f8..699c6568 100644
+--- a/test/com/google/javascript/jscomp/InlineGettersTest.java
++++ b/test/com/google/javascript/jscomp/InlineGettersTest.java
+@@ -231,20 +231,4 @@ public class InlineGettersTest extends CompilerTestCase {
+         "function Foo(){this.empty=emptyFunction}" +
+         "(new Foo).empty()", null);
+   }
+-
+-  public void testIssue2508576_1() {
+-    // Method defined by an extern should be left alone.
+-    String externs = "function alert(a) {}";
+-    testSame(externs, "({a:alert,b:alert}).a(\"a\")", null);
+-  }
+-
+-  public void testIssue2508576_2() {
+-    // Anonymous object definition with a side-effect should be left alone.
+-    testSame("({a:function(){},b:x()}).a(\"a\")");
+-  }  
+-
+-  public void testIssue2508576_3() {
+-    // Anonymous object definition without side-effect should be removed.
+-    test("({a:function(){},b:alert}).a(\"a\")", "");
+-  }  
+ }
+diff --git a/test/com/google/javascript/jscomp/MethodCheckTest.java b/test/com/google/javascript/jscomp/MethodCheckTest.java
+index 327d575e..cbe3cb40 100644
+--- a/test/com/google/javascript/jscomp/MethodCheckTest.java
++++ b/test/com/google/javascript/jscomp/MethodCheckTest.java
+@@ -97,10 +97,12 @@ public class MethodCheckTest extends CompilerTestCase {
+     testSame("Boz.staticMethod1(1);");
+     testSame("Boz.staticMethod2(1, 2);");
+ 
+-    // Can't detect these incorrect usuages as they are defined indirectly.
+-    testSame("var f = new Bar();f.oneOrTwoArg2(1, 2, 3);");
+-    testSame("Boz.staticMethod1(1, 2);");
+-    testSame("Boz.staticMethod2(1);");
++    testErr("var f = new Bar();f.oneOrTwoArg2(1, 2, 3);",
++            FunctionCheck.WRONG_ARGUMENT_COUNT_ERROR);
++    testErr("Boz.staticMethod1(1, 2);",
++            FunctionCheck.WRONG_ARGUMENT_COUNT_ERROR);
++    testErr("Boz.staticMethod2(1);",
++            FunctionCheck.WRONG_ARGUMENT_COUNT_ERROR);
+   }
+ 
+   public void testNoDefinition() {
+diff --git a/test/com/google/javascript/jscomp/RenameVarsTest.java b/test/com/google/javascript/jscomp/RenameVarsTest.java
+index 9e55e05e..879c7101 100644
+--- a/test/com/google/javascript/jscomp/RenameVarsTest.java
++++ b/test/com/google/javascript/jscomp/RenameVarsTest.java
+@@ -46,7 +46,7 @@ public class RenameVarsTest extends CompilerTestCase {
+       return new DefaultCodingConvention();
+     }
+   }
+-
++  
+   @Override
+   protected CompilerPass getProcessor(Compiler compiler) {
+     if (withClosurePass) {
+@@ -73,8 +73,6 @@ public class RenameVarsTest extends CompilerTestCase {
+     localRenamingOnly = false;
+     preserveAnonymousFunctionNames = false;
+     generatePseudoNames = false;
+-
+-    // TODO(johnlenz): Enable Normalize during these tests.
+   }
+ 
+   public void testRenameSimple() {
+@@ -441,13 +439,13 @@ public class RenameVarsTest extends CompilerTestCase {
+     test("var goog, a, b; goog.exportSymbol(a, b);",
+          "var a, b, c; a.exportSymbol(b, c);");
+   }
+-
+-  public void testDollarSignSuperExport1() {
++  
++  public void testDollarSignSuperExport() {
+     useGoogleCodingConvention = false;
+     // See http://code.google.com/p/closure-compiler/issues/detail?id=32
+     test("var x = function($super,duper,$fantastic){}",
+          "var c = function($super,    a,        b){}");
+-
++    
+     localRenamingOnly = false;
+     test("var $super = 1", "var a = 1");
+ 
+@@ -456,40 +454,17 @@ public class RenameVarsTest extends CompilerTestCase {
+          "var d = function(a,     b,    c        ){}");
+   }
+ 
+-  public void testDollarSignSuperExport2() {
+-    boolean normalizedExpectedJs = false;
+-    super.enableNormalize(false);
+-
+-    useGoogleCodingConvention = false;
+-    // See http://code.google.com/p/closure-compiler/issues/detail?id=32
+-    test("var x = function($super,duper,$fantastic){};" +
+-            "var y = function($super,duper){};",
+-         "var c = function($super,    a,         b){};" +
+-            "var d = function($super,    a){};");
+-
+-    localRenamingOnly = false;
+-    test("var $super = 1", "var a = 1");
+-
+-    useGoogleCodingConvention = true;
+-    test("var x = function($super,duper,$fantastic){};" +
+-            "var y = function($super,duper){};",
+-         "var d = function(a,     b,    c         ){};" +
+-            "var e = function(     a,    b){};");
+-
+-    super.disableNormalize();
+-  }
+-
+   public void testPseudoNames() {
+     generatePseudoNames = false;
+     // See http://code.google.com/p/closure-compiler/issues/detail?id=32
+     test("var foo = function(a, b, c){}",
+          "var d = function(a, b, c){}");
+-
++    
+     generatePseudoNames = true;
+     test("var foo = function(a, b, c){}",
+          "var $foo$$ = function($a$$, $b$$, $c$$){}");
+-  }
+-
++  }  
++  
+   private void testRenameMapUsingOldMap(String input, String expected,
+                                         VariableMap expectedMap) {
+     previouslyUsedMap = renameVars.getVariableMap();
+diff --git a/test/com/google/javascript/jscomp/TypeCheckFunctionCheckTest.java b/test/com/google/javascript/jscomp/TypeCheckFunctionCheckTest.java
+index 4347314e..f5185f89 100644
+--- a/test/com/google/javascript/jscomp/TypeCheckFunctionCheckTest.java
++++ b/test/com/google/javascript/jscomp/TypeCheckFunctionCheckTest.java
+@@ -153,34 +153,6 @@ public class TypeCheckFunctionCheckTest extends CompilerTestCase {
+     testSame("var foo = function(var_args) {}; foo(1, 2);");
+   }
+ 
+-  public void testMethodCalls() {
+-    final String METHOD_DEFS =
+-      "/** @constructor */\n" +
+-      "function Foo() {}" +
+-      // Methods defined in a separate functions and then added via assignment
+-      "function twoArg(arg1, arg2) {};" +
+-      "Foo.prototype.prototypeMethod = twoArg;" +
+-      "Foo.staticMethod = twoArg;";
+-    
+-    // Prototype method with too many arguments.
+-    testSame(METHOD_DEFS +
+-        "var f = new Foo();f.prototypeMethod(1, 2, 3);",
+-        TypeCheck.WRONG_ARGUMENT_COUNT);
+-    // Prototype method with too few arguments.
+-    testSame(METHOD_DEFS +
+-        "var f = new Foo();f.prototypeMethod(1);",
+-        TypeCheck.WRONG_ARGUMENT_COUNT);
+-
+-    // Static method with too many arguments.
+-    testSame(METHOD_DEFS +
+-        "Foo.staticMethod(1, 2, 3);",
+-        TypeCheck.WRONG_ARGUMENT_COUNT);
+-    // Static method with too few arguments.
+-    testSame(METHOD_DEFS +
+-        "Foo.staticMethod(1);",
+-        TypeCheck.WRONG_ARGUMENT_COUNT);
+-  }
+-
+   public void assertOk(String params, String arguments) {
+     assertWarning(params, arguments, null);
+   }

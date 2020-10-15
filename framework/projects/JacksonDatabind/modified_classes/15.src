@@ -1,0 +1,5 @@
+com.fasterxml.jackson.databind.JavaType
+com.fasterxml.jackson.databind.ser.BeanSerializerFactory
+com.fasterxml.jackson.databind.ser.std.BeanSerializerBase
+com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer
+com.fasterxml.jackson.databind.ser.std.StdSerializer

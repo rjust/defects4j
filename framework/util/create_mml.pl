@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,7 @@ create_mml.pl -- create a Major-compatible MML file, which defines program mutat
 
 =head1 SYNOPSIS
 
-  create_mml.pl -p project_id -c classes_list -o out_dir -b bug_id
-
-=head1 DESCRIPTION
-
-Generates an MML file for the given C<bug_id>. The file F<classes_list> has to proivde the
-list of classes that should be mutated.
-The generated MML file is named F<C<bug_id>.mml> and written to F<out_dir>.
+  create_mml.pl -p project_id  -b bug_id -c classes_list -o out_dir
 
 =head1 OPTIONS
 
@@ -61,7 +55,14 @@ The output directory to which the generated MML files are written.
 
 =back
 
+=head1 DESCRIPTION
+
+Generates an MML file for the given C<bug_id>. The file F<classes_list> has to proivde the
+list of classes that should be mutated.
+The generated MML file is named F<C<bug_id>.mml> and written to F<out_dir>.
+
 =cut
+
 use warnings;
 use strict;
 

@@ -1,0 +1,23 @@
+diff --git a/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStreamTest.java b/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStreamTest.java
+index e7112df4..b87d004f 100644
+--- a/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStreamTest.java
++++ b/src/test/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStreamTest.java
+@@ -45,18 +45,4 @@ public class CpioArchiveInputStreamTest extends AbstractTestCase {
+         in.close();
+         assertEquals(result.toString(), expected.toString());
+     }
+-
+-    public void testCpioUnarchiveCreatedByRedlineRpm() throws Exception {
+-        CpioArchiveInputStream in =
+-            new CpioArchiveInputStream(new FileInputStream(getFile("redline.cpio")));
+-        CpioArchiveEntry entry= null;
+-
+-        int count = 0;
+-        while ((entry = (CpioArchiveEntry) in.getNextEntry()) != null) {
+-            count++;
+-        }
+-        in.close();
+-
+-        assertEquals(count, 1);
+-    }
+ }

@@ -1,0 +1,13 @@
+diff --git a/src/java/org/apache/commons/cli/Parser.java b/src/java/org/apache/commons/cli/Parser.java
+index c106932..6b39536 100644
+--- a/src/java/org/apache/commons/cli/Parser.java
++++ b/src/java/org/apache/commons/cli/Parser.java
+@@ -287,7 +287,7 @@ public abstract class Parser implements CommandLineParser
+                 {
+                     // if the value is not yes, true or 1 then don't add the
+                     // option to the CommandLine
+-                    continue;
++                    break;
+                 }
+ 
+                 cmd.addOption(opt);

@@ -1,0 +1,12 @@
+#
+# Additional configuration options for EvoSuite.
+#
+# All commented lines are ignored.
+#
+-criterion branch
+-Dstopping_condition=MaxTime
+-Dshow_progress=false
+-Djunit_check=false
+-Dfilter_assertions=false
+-Dtest_comments=false
+-mem 1500

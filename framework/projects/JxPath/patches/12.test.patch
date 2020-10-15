@@ -1,0 +1,130 @@
+diff --git a/src/test/org/apache/commons/jxpath/ExternalNS.xml b/src/test/org/apache/commons/jxpath/ExternalNS.xml
+deleted file mode 100644
+index 4bb87b6..0000000
+--- a/src/test/org/apache/commons/jxpath/ExternalNS.xml
++++ /dev/null
+@@ -1,20 +0,0 @@
+-<?xml version="1.0" ?>
+-<!--
+-   Licensed to the Apache Software Foundation (ASF) under one or more
+-  contributor license agreements.  See the NOTICE file distributed with
+-  this work for additional information regarding copyright ownership.
+-  The ASF licenses this file to You under the Apache License, Version 2.0
+-  (the "License"); you may not use this file except in compliance with
+-  the License.  You may obtain a copy of the License at
+-
+-       http://www.apache.org/licenses/LICENSE-2.0
+-
+-   Unless required by applicable law or agreed to in writing, software
+-   distributed under the License is distributed on an "AS IS" BASIS,
+-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-   See the License for the specific language governing permissions and
+-   limitations under the License.
+--->
+-<ElementA A:myAttr="Mytype">
+-  <B:ElementB>MY VALUE</B:ElementB>
+-</ElementA>
+diff --git a/src/test/org/apache/commons/jxpath/JXPathTestSuite.java b/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
+index fc48dab..6828ca3 100644
+--- a/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
++++ b/src/test/org/apache/commons/jxpath/JXPathTestSuite.java
+@@ -29,9 +29,7 @@ import org.apache.commons.jxpath.ri.compiler.CoreFunctionTest;
+ import org.apache.commons.jxpath.ri.compiler.CoreOperationTest;
+ import org.apache.commons.jxpath.ri.compiler.ExtensionFunctionTest;
+ import org.apache.commons.jxpath.ri.compiler.VariableTest;
+-import org.apache.commons.jxpath.ri.model.ExternalXMLNamespaceTest;
+ import org.apache.commons.jxpath.ri.model.MixedModelTest;
+-import org.apache.commons.jxpath.ri.model.XMLPreserveSpaceTest;
+ import org.apache.commons.jxpath.ri.model.XMLSpaceTest;
+ import org.apache.commons.jxpath.ri.model.beans.BeanModelTest;
+ import org.apache.commons.jxpath.ri.model.container.ContainerModelTest;
+@@ -93,8 +91,6 @@ public class JXPathTestSuite extends TestCase {
+         suite.addTestSuite(BasicTypeConverterTest.class);
+         suite.addTestSuite(RecursiveAxesTest.class);
+         suite.addTestSuite(XMLSpaceTest.class);
+-        suite.addTestSuite(XMLPreserveSpaceTest.class);
+-        suite.addTestSuite(ExternalXMLNamespaceTest.class);
+         return suite;
+     }
+ }
+\ No newline at end of file
+diff --git a/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java b/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java
+deleted file mode 100644
+index 535d2b1..0000000
+--- a/src/test/org/apache/commons/jxpath/ri/model/ExternalXMLNamespaceTest.java
++++ /dev/null
+@@ -1,73 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.commons.jxpath.ri.model;
+-
+-import org.apache.commons.jxpath.JXPathContext;
+-import org.apache.commons.jxpath.JXPathTestCase;
+-import org.apache.commons.jxpath.xml.DocumentContainer;
+-
+-/**
+- * Test externally registered XML namespaces; JXPATH-97.
+- *
+- * @author Matt Benson
+- * @version $Revision$ $Date$
+- */
+-public class ExternalXMLNamespaceTest extends JXPathTestCase {
+-    protected JXPathContext context;
+-
+-    /**
+-     * Construct a new instance of this test case.
+-     *
+-     * @param name Name of the test case
+-     */
+-    public ExternalXMLNamespaceTest(String name) {
+-        super(name);
+-    }
+-
+-    protected DocumentContainer createDocumentContainer(String model) {
+-        DocumentContainer result = new DocumentContainer(JXPathTestCase.class
+-                .getResource("ExternalNS.xml"), model);
+-        //this setting only works for DOM, so no JDOM tests :|
+-        result.setNamespaceAware(false);
+-        return result;
+-    }
+-
+-    protected void doTest(String xpath, String model, String expected) {
+-        JXPathContext context = JXPathContext
+-                .newContext(createDocumentContainer(model));
+-        context.registerNamespace("A", "foo");
+-        context.registerNamespace("B", "bar");
+-        assertXPathValue(context, xpath, expected);
+-    }
+-
+-    protected void doTestAttribute(String model) {
+-        doTest("/ElementA/@A:myAttr", model, "Mytype");
+-    }
+-
+-    protected void doTestElement(String model) {
+-         doTest("/ElementA/B:ElementB", model, "MY VALUE");
+-    }
+-
+-    public void testAttributeDOM() {
+-        doTestAttribute(DocumentContainer.MODEL_DOM);
+-    }
+-
+-    public void testElementDOM() {
+-        doTestElement(DocumentContainer.MODEL_DOM);
+-    }
+-
+-}
+\ No newline at end of file

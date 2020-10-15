@@ -1,0 +1,42 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/BaseTest.java b/src/test/java/com/fasterxml/jackson/core/BaseTest.java
+index b3182d6c..90f75897 100644
+--- a/src/test/java/com/fasterxml/jackson/core/BaseTest.java
++++ b/src/test/java/com/fasterxml/jackson/core/BaseTest.java
+@@ -566,12 +566,7 @@ public abstract class BaseTest
+     protected JsonFactory newStreamFactory() {
+         return new JsonFactory();
+     }
+-
+-    // @since 2.9.8
+-    protected JsonFactoryBuilder streamFactoryBuilder() {
+-        return (JsonFactoryBuilder) JsonFactory.builder();
+-    }
+-
++    
+     protected String fieldNameFor(int index)
+     {
+         StringBuilder sb = new StringBuilder(16);
+diff --git a/src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java b/src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java
+index 6a56a049..ad1a7e7f 100644
+--- a/src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java
++++ b/src/test/java/com/fasterxml/jackson/core/util/TestDefaultPrettyPrinter.java
+@@ -159,19 +159,4 @@ public class TestDefaultPrettyPrinter extends BaseTest
+         }
+         return sw.toString();
+     }
+-
+-    // [core#502]: Force sub-classes to reimplement `createInstance`
+-    public void testInvalidSubClass() throws Exception
+-    {
+-        DefaultPrettyPrinter pp = new MyPrettyPrinter();
+-        try {
+-            pp.createInstance();
+-            fail("Should not pass");
+-        } catch (IllegalStateException e) {
+-            verifyException(e, "does not override");
+-        }
+-    }
+-
+-    @SuppressWarnings("serial")
+-    static class MyPrettyPrinter extends DefaultPrettyPrinter { }
+ }

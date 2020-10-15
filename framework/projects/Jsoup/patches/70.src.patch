@@ -1,0 +1,20 @@
+diff --git a/src/main/java/org/jsoup/nodes/Element.java b/src/main/java/org/jsoup/nodes/Element.java
+index ba1470b..faca4c8 100644
+--- a/src/main/java/org/jsoup/nodes/Element.java
++++ b/src/main/java/org/jsoup/nodes/Element.java
+@@ -1088,13 +1088,10 @@ public class Element extends Node {
+         // looks only at this element and five levels up, to prevent recursion & needless stack searches
+         if (node != null && node instanceof Element) {
+             Element el = (Element) node;
+-            int i = 0;
+-            do {
+                 if (el.tag.preserveWhitespace())
+                     return true;
+-                el = el.parent();
+-                i++;
+-            } while (i < 6 && el != null);
++                else
++                    return el.parent() != null && el.parent().tag.preserveWhitespace();
+         }
+         return false;
+     }

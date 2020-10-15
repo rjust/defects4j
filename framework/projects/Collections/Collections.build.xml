@@ -1,0 +1,94 @@
+<!--
+Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+################################################################################
+               This is the project-specific build file for Collections.
+
+It defines project-specific properties and targets, and imports the build file
+of the checked-out project version.
+#############################################################################-->
+<project name="D4j-Collections" basedir="${basedir}">
+
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
+    <property name="easymock.jar" value="${d4j.dir.projects}/Collections/lib/easymock-2.0.jar"/>
+    <property name="hamcrest.jar" value="${d4j.dir.projects}/Collections/lib/hamcrest-core-1.3.jar"/>
+
+    <!-- Generate all debugging information -->
+    <property name="compile.debug" value="yes" />
+
+    <!-- Include existing project build file -->
+    <import file="${d4j.workdir}/build.xml"/>
+
+    <!-- Project properties targets -->
+    <property name="test.home" value="${source.test}" />
+    <path id="test.classpath">
+        <pathelement location="${build.home}/classes"/>
+        <pathelement location="${build.home}/tests"/>
+    </path>
+    <path id="compile.classpath">
+        <pathelement location="${build.home}/classes" />
+    </path>
+    <property name="test.classes.dir" value="${build.home}/tests"/>
+    <property name="classes.dir" value="${build.home}/classes"/>
+    <property name="build.classes" value="${classes.dir}" />
+
+    <target name="compile.tests">
+        <ant antfile="${basedir}/build.xml" target="compile.tests" inheritAll="true"/>
+    </target>
+
+    <property name="build.home" value="${classes.dir}/.." />
+
+    <!-- Classpath to run developer-written tests -->
+    <path id="d4j.test.classpath">
+        <path refid="test.classpath"/>
+        <pathelement location="${classes.dir}"/>
+	<pathelement location="${test.classes.dir}"/>
+	<pathelement path="${junit.jar}" />
+        <pathelement location="${hamcrest.jar}"/>
+        <pathelement location="${easymock.jar}"/>
+    </path>
+
+    <!-- List of all developer-written tests that reliably pass on the fixed version -->
+    <!-- Manually generalize test patterns if analyzer produces incorrect outputs -->
+    <fileset id="all.manual.tests" dir="${test.home}" excludes="${d4j.tests.exclude}">
+        <include name='${test.entry}' />
+        <include name='**/${test}.java' />
+        <include name='**/*Test.java' />
+        <include name='**/Test*.java' />
+        <exclude name='**/*$*' />
+        <exclude name='**/Abstract*.java' />
+        <exclude name='**/BulkTest.java' />
+        <exclude name='**/TestAbstract*' />
+        <exclude name='**/TestAll*.java' />
+        <exclude name='**/TestAnyAllOnePredicate.java' />
+        <exclude name='**/TestArrayList.java' />
+        <exclude name='**/TestCompositePredicate.java' />
+        <exclude name='**/TestHashMap.java' />
+        <exclude name='**/TestLinkedList.java' />
+        <exclude name='**/TestTreeMap.java' />
+        <exclude name='**/TestTypedCollection.java' />
+        <exclude name='**/TestUtils.java' />
+    </fileset>
+
+    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
+    <fileset id="rel.manual.tests" dir="${test.home}"
+        includesfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
+</project>

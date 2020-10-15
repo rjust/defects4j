@@ -1,0 +1,49 @@
+diff --git a/src/test/java/org/jsoup/parser/HtmlParserTest.java b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+index ad38765..6c83c1e 100644
+--- a/src/test/java/org/jsoup/parser/HtmlParserTest.java
++++ b/src/test/java/org/jsoup/parser/HtmlParserTest.java
+@@ -55,25 +55,6 @@ public class HtmlParserTest {
+         assertEquals("foo > bar", p.attr("class"));
+     }
+ 
+-    @Test public void dropsDuplicateAttributes() {
+-        String html = "<p One=One ONE=Two Two=two one=Three One=Four two=Five>Text</p>";
+-        Parser parser = Parser.htmlParser().setTrackErrors(10);
+-        Document doc = parser.parseInput(html, "");
+-
+-        Element p = doc.selectFirst("p");
+-        assertEquals("<p one=\"One\" two=\"two\">Text</p>", p.outerHtml()); // normalized names due to lower casing
+-
+-        assertEquals(1, parser.getErrors().size());
+-        assertEquals("Duplicate attribute", parser.getErrors().get(0).getErrorMessage());
+-    }
+-
+-    @Test public void retainsAttributesOfDifferentCaseIfSensitive() {
+-        String html = "<p One=One One=Two one=Three two=Four two=Five Two=Six>Text</p>";
+-        Parser parser = Parser.htmlParser().settings(ParseSettings.preserveCase);
+-        Document doc = parser.parseInput(html, "");
+-        assertEquals("<p One=\"One\" one=\"Three\" two=\"Four\" Two=\"Six\">Text</p>", doc.selectFirst("p").outerHtml());
+-    }
+-
+     @Test public void parsesQuiteRoughAttributes() {
+         String html = "<p =a>One<a <p>Something</p>Else";
+         // this (used to; now gets cleaner) gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
+diff --git a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+index 683e16b..7ce70b3 100644
+--- a/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
++++ b/src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java
+@@ -245,14 +245,4 @@ public class XmlTreeBuilderTest {
+         Document doc = Jsoup.parse(html, "", Parser.xmlParser());
+         assertEquals("<script> var a=\"\n <!--?\"; var b=\"?-->\"; </script>", doc.html()); // converted from pseudo xmldecl to comment
+     }
+-
+-    @Test public void dropsDuplicateAttributes() {
+-        // case sensitive, so should drop Four and Five
+-        String html = "<p One=One ONE=Two one=Three One=Four ONE=Five two=Six two=Seven Two=Eight>Text</p>";
+-        Parser parser = Parser.xmlParser().setTrackErrors(10);
+-        Document doc = parser.parseInput(html, "");
+-
+-        assertEquals("<p One=\"One\" ONE=\"Two\" one=\"Three\" two=\"Six\" Two=\"Eight\">Text</p>", doc.selectFirst("p").outerHtml());
+-    }
+-
+ }

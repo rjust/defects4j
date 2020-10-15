@@ -1,0 +1,107 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+index c2c413f0..60919c88 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+@@ -619,6 +619,7 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         if (_parsingContext.expectComma()) {
+             i = _skipComma(i);
+         }
++        _updateLocation();
+ 
+         /* And should we now have a name? Always true for Object contexts, since
+          * the intermediate 'expect-value' state is never retained.
+@@ -626,13 +627,11 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         boolean inObject = _parsingContext.inObject();
+         if (inObject) {
+             // First, field name itself:
+-            _updateNameLocation();
+             String name = (i == INT_QUOTE) ? _parseName() : _handleOddName(i);
+             _parsingContext.setCurrentName(name);
+             _currToken = JsonToken.FIELD_NAME;
+             i = _skipColon();
+         }
+-        _updateLocation();
+ 
+         // Ok: we must have a value... what is it?
+ 
+@@ -771,14 +770,13 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         if (_parsingContext.expectComma()) {
+             i = _skipComma(i);
+         }
++        _updateLocation();
+ 
+         if (!_parsingContext.inObject()) {
+-            _updateLocation();
+             _nextTokenNotInObject(i);
+             return false;
+         }
+ 
+-        _updateNameLocation();
+         if (i == INT_QUOTE) {
+             // when doing literal match, must consider escaping:
+             char[] nameChars = sstr.asQuotedChars();
+@@ -850,19 +848,17 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         if (_parsingContext.expectComma()) {
+             i = _skipComma(i);
+         }
++        _updateLocation();
+         if (!_parsingContext.inObject()) {
+-            _updateLocation();
+             _nextTokenNotInObject(i);
+             return null;
+         }
+ 
+-        _updateNameLocation();
+         String name = (i == INT_QUOTE) ? _parseName() : _handleOddName(i);
+         _parsingContext.setCurrentName(name);
+         _currToken = JsonToken.FIELD_NAME;
+         i = _skipColon();
+ 
+-        _updateLocation();
+         if (i == INT_QUOTE) {
+             _tokenIncomplete = true;
+             _nextToken = JsonToken.VALUE_STRING;
+@@ -918,7 +914,6 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+     private final void _isNextTokenNameYes(int i) throws IOException
+     {
+         _currToken = JsonToken.FIELD_NAME;
+-        _updateLocation();
+ 
+         switch (i) {
+         case '"':
+@@ -969,7 +964,6 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+         _parsingContext.setCurrentName(name);
+         _currToken = JsonToken.FIELD_NAME;
+         i = _skipColon();
+-        _updateLocation();
+         if (i == INT_QUOTE) {
+             _tokenIncomplete = true;
+             _nextToken = JsonToken.VALUE_STRING;
+@@ -2674,12 +2668,9 @@ public class ReaderBasedJsonParser // final in 2.3, earlier
+     public JsonLocation getTokenLocation()
+     {
+         final Object src = _ioContext.getSourceReference();
+-        if (_currToken == JsonToken.FIELD_NAME) {
+-            return new JsonLocation(src,
+-                    -1L, _nameInputTotal, _nameInputRow, _tokenInputCol);
+-        }
+         return new JsonLocation(src,
+-                -1L, _tokenInputTotal, _tokenInputRow,
++                -1L, getTokenCharacterOffset(),
++                getTokenLineNr(),
+                 getTokenColumnNr());
+     }
+ 
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+index b0c007b7..589a34c4 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+@@ -3619,7 +3619,7 @@ public class UTF8StreamJsonParser
+                     _nameInputTotal, -1L, _nameInputRow, _tokenInputCol);
+         }
+         return new JsonLocation(src,
+-                _tokenInputTotal, -1L, _tokenInputRow,
++                getTokenCharacterOffset(), -1L, getTokenLineNr(),
+                 getTokenColumnNr());
+     }
+ 

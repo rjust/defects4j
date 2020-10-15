@@ -1,0 +1,179 @@
+diff --git a/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java b/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+index 930e8559..483c088f 100644
+--- a/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
++++ b/test/com/google/javascript/jscomp/MakeDeclaredNamesUniqueTest.java
+@@ -89,32 +89,18 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+     testSameWithInversion("", original);
+   }
+ 
+-  private String wrapInFunction(String s) {
+-    return "function f(){" + s + "}";
+-  }
+-  
+-  public void testInFunction(String original, String expected) {
+-    test(wrapInFunction(original), wrapInFunction(expected));
+-  }
+-  
+-  public void testSameInFunction(String original) {
+-    testSame(wrapInFunction(original));
+-  }  
+-  
+-  public void testMakeLocalNamesUniqueWithContext1() {
++  public void testMakeLocalNamesUniqueWithContext0() {
+     // Set the test type
+     this.useDefaultRenamer = true;
+ 
++    // Local names are made unique.
+     invert = true;
+     test(
+         "var a;function foo(){var a$$inline_1; a = 1}",
+         "var a;function foo(){var a$$inline_1; a = 1}");
+-    test(
+-        "var a;function foo(){var a$$inline_1;}",
+-        "var a;function foo(){var a;}");
+   }
+ 
+-  public void testMakeLocalNamesUniqueWithContext2() {
++  public void testMakeLocalNamesUniqueWithContext() {
+     // Set the test type
+     this.useDefaultRenamer = true;
+ 
+@@ -156,7 +142,7 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+         "try { } catch(e) {e; try { } catch(e$$1) {e$$1;} }; ");
+   }
+ 
+-  public void testMakeLocalNamesUniqueWithContext3() {
++  public void testMakeLocalNamesUniqueWithContext2() {
+     // Set the test type
+     this.useDefaultRenamer = true;
+ 
+@@ -169,51 +155,6 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+     testSame(externs, "var extern1 = extern1 || {};", null);
+   }
+ 
+-
+-
+-  public void testMakeLocalNamesUniqueWithContext4() {
+-    // Set the test type
+-    this.useDefaultRenamer = true;
+-
+-    // Inversion does not handle exceptions correctly.
+-    testInFunction(
+-        "var e; try { } catch(e) {e;}; try { } catch(e) {e;}",
+-        "var e; try { } catch(e$$1) {e$$1;}; try { } catch(e$$2) {e$$2;}");
+-    testInFunction(
+-        "var e; try { } catch(e) {e; try { } catch(e) {e;}}",
+-        "var e; try { } catch(e$$1) {e$$1; try { } catch(e$$2) {e$$2;} }");
+-    testInFunction(
+-        "try { } catch(e) {e;}; try { } catch(e) {e;} var e;",
+-        "try { } catch(e$$1) {e$$1;}; try { } catch(e$$2) {e$$2;} var e;");
+-    testInFunction(
+-        "try { } catch(e) {e; try { } catch(e) {e;}} var e;",
+-        "try { } catch(e$$1) {e$$1; try { } catch(e$$2) {e$$2;} } var e;");
+-
+-    invert = true;
+-
+-    testSameInFunction(
+-        "var e; try { } catch(e$$1) {e$$1;}; try { } catch(e$$2) {e$$2;}");
+-    testSameInFunction(
+-        "var e; try { } catch(e$$1) {e$$1; try { } catch(e$$2) {e$$2;} };");
+-    testSameInFunction(
+-        "try { } catch(e) {e;}; try { } catch(e$$1) {e$$1;};var e$$2;");
+-    testSameInFunction(
+-        "try { } catch(e) {e; try { } catch(e$$1) {e$$1;} };var e$$2");
+-  }
+-
+-  public void testArguments() {
+-    // Set the test type
+-    this.useDefaultRenamer = true;
+-
+-    invert = true;
+-    // Don't distinguish between "arguments", it can't be made unique.
+-    testSameWithInversion(
+-        "function foo(){var arguments;function bar(){var arguments;}}");
+-    // Don't introduce new references to arguments, it is special.
+-    testSameWithInversion(
+-        "function foo(){var arguments$$1;}");
+-  }
+-
+   public void testMakeLocalNamesUniqueWithoutContext() {
+     // Set the test type
+     this.useDefaultRenamer = false;
+@@ -271,52 +212,6 @@ public class MakeDeclaredNamesUniqueTest extends CompilerTestCase {
+          "function() {var CONST = 3; var ACONST = 2;}");
+   }
+ 
+-  public void testOnlyInversion2() {
+-    invert = true;
+-    testSame("function () {" +
+-        "try { } catch(e) {e;}; try { } catch(e$$1) {e$$1;}}");
+-  }
+-
+-  public void testOnlyInversion3() {
+-    invert = true;
+-    test(
+-        "function x1() {" +
+-        "  var a$$1;" +
+-        "  function x2() {" +
+-        "    var a$$2;" +
+-        "  }" +
+-        "  function x3() {" +
+-        "    var a$$3;" +
+-        "  }" +
+-        "}",
+-        "function x1() {" +
+-        "  var a$$1;" +
+-        "  function x2() {" +
+-        "    var a;" +
+-        "  }" +
+-        "  function x3() {" +
+-        "    var a;" +
+-        "  }" +
+-        "}");
+-  }
+-
+-  public void testOnlyInversion4() {
+-    invert = true;
+-    test(
+-        "function x1() {" +
+-        "  var a$$1;" +
+-        "  function x2() {" +
+-        "    var a;a$$1++" +
+-        "  }" +
+-        "}",
+-        "function x1() {" +
+-        "  var a$$1;" +
+-        "  function x2() {" +
+-        "    var a;a$$1++" +
+-        "  }" +
+-        "}");
+-  }
+-
+   public void testConstRemovingRename1() {
+     removeConst = true;
+     test("function() {var CONST = 3; var ACONST$$1 = 2;}",
+diff --git a/test/com/google/javascript/jscomp/NormalizeTest.java b/test/com/google/javascript/jscomp/NormalizeTest.java
+index 2073bff0..2a4c61a4 100644
+--- a/test/com/google/javascript/jscomp/NormalizeTest.java
++++ b/test/com/google/javascript/jscomp/NormalizeTest.java
+@@ -185,7 +185,7 @@ public class NormalizeTest extends CompilerTestCase {
+          "function f() {var window$$1}");
+   }
+ 
+-  public void testRemoveDuplicateVarDeclarations1() {
++  public void testRemoveDuplicateVarDeclarations() {
+     test("function f() { var a; var a }",
+          "function f() { var a; }");
+     test("function f() { var a = 1; var a = 2 }",
+@@ -200,11 +200,6 @@ public class NormalizeTest extends CompilerTestCase {
+          "function f() { var a = 1; for(a in b); }");
+   }
+ 
+-  public void testRemoveDuplicateVarDeclarations2() {
+-    test("var e = 1; function f(){ try {} catch (e) {} var e = 2 }",
+-         "var e = 1; function f(){ try {} catch (e$$2) {} var e$$1 = 2 }");
+-  }
+-  
+   public void testRenamingConstants() {
+     test("var ACONST = 4;var b = ACONST;",
+          "var ACONST = 4; var b = ACONST;");

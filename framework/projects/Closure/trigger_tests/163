@@ -1,0 +1,879 @@
+--- com.google.javascript.jscomp.CrossModuleMethodMotionTest::testIssue600b
+junit.framework.AssertionFailedError: 
+Expected: var jQuery1=function(){var jQuery2=function(){};jQuery2.prototype={size:function(){return 1}};return jQuery2}();(function(){var div=jQuery1("div");div.size()})()
+Result: var JSCompiler_stubMap=[];function JSCompiler_stubMethod(JSCompiler_stubMethod_id){return function(){return JSCompiler_stubMap[JSCompiler_stubMethod_id].apply(this,arguments)}}function JSCompiler_unstubMethod(JSCompiler_unstubMethod_id,JSCompiler_unstubMethod_body){return JSCompiler_stubMap[JSCompiler_unstubMethod_id]=JSCompiler_unstubMethod_body}var jQuery1=function(){var jQuery2=function(){};jQuery2.prototype={size:JSCompiler_stubMethod(0)};return jQuery2}();
+jQuery2.prototype.size=JSCompiler_unstubMethod(0,function(){return 1});(function(){var div=jQuery1("div");div.size()})()
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        VAR 1 [source_file: expected0]
+            NAME jQuery1 1 [source_file: expected0]
+                CALL 1 [free_call: 1] [source_file: expected0]
+                    FUNCTION  1 [parenthesized: true] [source_file: expected0]
+                        NAME  1 [source_file: expected0]
+                        PARAM_LIST 1 [source_file: expected0]
+                        BLOCK 1 [source_file: expected0]
+                            VAR 2 [source_file: expected0]
+                                NAME jQuery2 2 [source_file: expected0]
+                                    FUNCTION  2 [source_file: expected0]
+                                        NAME  2 [source_file: expected0]
+                                        PARAM_LIST 2 [source_file: expected0]
+                                        BLOCK 2 [source_file: expected0]
+                            EXPR_RESULT 3 [source_file: expected0]
+                                ASSIGN 3 [source_file: expected0]
+                                    GETPROP 3 [source_file: expected0]
+                                        NAME jQuery2 3 [source_file: expected0]
+                                        STRING prototype 3 [source_file: expected0]
+                                    OBJECTLIT 3 [source_file: expected0]
+                                        STRING size 4 [source_file: expected0]
+                                            FUNCTION  4 [source_file: expected0]
+                                                NAME  4 [source_file: expected0]
+                                                PARAM_LIST 4 [source_file: expected0]
+                                                BLOCK 4 [source_file: expected0]
+                                                    RETURN 5 [source_file: expected0]
+                                                        NUMBER 1.0 5 [source_file: expected0]
+                            RETURN 8 [source_file: expected0]
+                                NAME jQuery2 8 [source_file: expected0]
+    SCRIPT 1 [synthetic: 1] [source_file: expected1] [input_id: InputId: expected1]
+        EXPR_RESULT 1 [source_file: expected1]
+            CALL 1 [free_call: 1] [source_file: expected1]
+                FUNCTION  1 [parenthesized: true] [source_file: expected1]
+                    NAME  1 [source_file: expected1]
+                    PARAM_LIST 1 [source_file: expected1]
+                    BLOCK 1 [source_file: expected1]
+                        VAR 1 [source_file: expected1]
+                            NAME div 1 [source_file: expected1]
+                                CALL 1 [free_call: 1] [source_file: expected1]
+                                    NAME jQuery1 1 [source_file: expected1]
+                                    STRING div 1 [source_file: expected1]
+                        EXPR_RESULT 1 [source_file: expected1]
+                            CALL 1 [source_file: expected1]
+                                GETPROP 1 [source_file: expected1]
+                                    NAME div 1 [source_file: expected1]
+                                    STRING size 1 [source_file: expected1]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+        VAR 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                ARRAYLIT 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    FUNCTION  1 [source_file:  [synthetic:1] ]
+                        NAME  1 [source_file:  [synthetic:1] ]
+                        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                        BLOCK 1 [source_file:  [synthetic:1] ]
+                            RETURN 1 [source_file:  [synthetic:1] ]
+                                CALL 1 [source_file:  [synthetic:1] ]
+                                    GETPROP 1 [source_file:  [synthetic:1] ]
+                                        GETELEM 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                        STRING apply 1 [source_file:  [synthetic:1] ]
+                                    THIS 1 [source_file:  [synthetic:1] ]
+                                    NAME arguments 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    ASSIGN 1 [source_file:  [synthetic:1] ]
+                        GETELEM 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        VAR 1 [source_file: i0]
+            NAME jQuery1 1 [source_file: i0]
+                CALL 1 [free_call: 1] [source_file: i0]
+                    FUNCTION  1 [parenthesized: true] [source_file: i0]
+                        NAME  1 [source_file: i0]
+                        PARAM_LIST 1 [source_file: i0]
+                        BLOCK 1 [source_file: i0]
+                            VAR 2 [source_file: i0]
+                                NAME jQuery2 2 [source_file: i0]
+                                    FUNCTION  2 [source_file: i0]
+                                        NAME  2 [source_file: i0]
+                                        PARAM_LIST 2 [source_file: i0]
+                                        BLOCK 2 [source_file: i0]
+                            EXPR_RESULT 3 [source_file: i0]
+                                ASSIGN 3 [source_file: i0]
+                                    GETPROP 3 [source_file: i0]
+                                        NAME jQuery2 3 [source_file: i0]
+                                        STRING prototype 3 [source_file: i0]
+                                    OBJECTLIT 3 [source_file: i0]
+                                        STRING size 4 [source_file: i0]
+                                            CALL 4 [free_call: 1] [source_file: i0]
+                                                NAME JSCompiler_stubMethod 4 [source_file: i0]
+                                                NUMBER 0.0 4 [source_file: i0]
+                            RETURN 8 [source_file: i0]
+                                NAME jQuery2 8 [source_file: i0]
+    SCRIPT 1 [synthetic: 1] [source_file: i1] [input_id: InputId: i1]
+        EXPR_RESULT 4 [source_file: i0]
+            ASSIGN 4 [source_file: i0]
+                GETPROP 4 [source_file: i0]
+                    GETPROP 3 [source_file: i0]
+                        NAME jQuery2 3 [source_file: i0]
+                        STRING prototype 3 [source_file: i0]
+                    STRING size 4 [source_file: i0]
+                CALL 4 [free_call: 1] [source_file: i0]
+                    NAME JSCompiler_unstubMethod 4 [source_file: i0]
+                    NUMBER 0.0 4 [source_file: i0]
+                    FUNCTION  4 [source_file: i0]
+                        NAME  4 [source_file: i0]
+                        PARAM_LIST 4 [source_file: i0]
+                        BLOCK 4 [source_file: i0]
+                            RETURN 5 [source_file: i0]
+                                NUMBER 1.0 5 [source_file: i0]
+        EXPR_RESULT 1 [source_file: i1]
+            CALL 1 [free_call: 1] [source_file: i1]
+                FUNCTION  1 [parenthesized: true] [source_file: i1]
+                    NAME  1 [source_file: i1]
+                    PARAM_LIST 1 [source_file: i1]
+                    BLOCK 1 [source_file: i1]
+                        VAR 1 [source_file: i1]
+                            NAME div 1 [source_file: i1]
+                                CALL 1 [free_call: 1] [source_file: i1]
+                                    NAME jQuery1 1 [source_file: i1]
+                                    STRING div 1 [source_file: i1]
+                        EXPR_RESULT 1 [source_file: i1]
+                            CALL 1 [source_file: i1]
+                                GETPROP 1 [source_file: i1]
+                                    NAME div 1 [source_file: i1]
+                                    STRING size 1 [source_file: i1]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    VAR 1 [source_file: expected0]
+        NAME jQuery1 1 [source_file: expected0]
+            CALL 1 [free_call: 1] [source_file: expected0]
+                FUNCTION  1 [parenthesized: true] [source_file: expected0]
+                    NAME  1 [source_file: expected0]
+                    PARAM_LIST 1 [source_file: expected0]
+                    BLOCK 1 [source_file: expected0]
+                        VAR 2 [source_file: expected0]
+                            NAME jQuery2 2 [source_file: expected0]
+                                FUNCTION  2 [source_file: expected0]
+                                    NAME  2 [source_file: expected0]
+                                    PARAM_LIST 2 [source_file: expected0]
+                                    BLOCK 2 [source_file: expected0]
+                        EXPR_RESULT 3 [source_file: expected0]
+                            ASSIGN 3 [source_file: expected0]
+                                GETPROP 3 [source_file: expected0]
+                                    NAME jQuery2 3 [source_file: expected0]
+                                    STRING prototype 3 [source_file: expected0]
+                                OBJECTLIT 3 [source_file: expected0]
+                                    STRING size 4 [source_file: expected0]
+                                        FUNCTION  4 [source_file: expected0]
+                                            NAME  4 [source_file: expected0]
+                                            PARAM_LIST 4 [source_file: expected0]
+                                            BLOCK 4 [source_file: expected0]
+                                                RETURN 5 [source_file: expected0]
+                                                    NUMBER 1.0 5 [source_file: expected0]
+                        RETURN 8 [source_file: expected0]
+                            NAME jQuery2 8 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+    VAR 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+            ARRAYLIT 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                FUNCTION  1 [source_file:  [synthetic:1] ]
+                    NAME  1 [source_file:  [synthetic:1] ]
+                    PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                    BLOCK 1 [source_file:  [synthetic:1] ]
+                        RETURN 1 [source_file:  [synthetic:1] ]
+                            CALL 1 [source_file:  [synthetic:1] ]
+                                GETPROP 1 [source_file:  [synthetic:1] ]
+                                    GETELEM 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                    STRING apply 1 [source_file:  [synthetic:1] ]
+                                THIS 1 [source_file:  [synthetic:1] ]
+                                NAME arguments 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                ASSIGN 1 [source_file:  [synthetic:1] ]
+                    GETELEM 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                    NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+    VAR 1 [source_file: i0]
+        NAME jQuery1 1 [source_file: i0]
+            CALL 1 [free_call: 1] [source_file: i0]
+                FUNCTION  1 [parenthesized: true] [source_file: i0]
+                    NAME  1 [source_file: i0]
+                    PARAM_LIST 1 [source_file: i0]
+                    BLOCK 1 [source_file: i0]
+                        VAR 2 [source_file: i0]
+                            NAME jQuery2 2 [source_file: i0]
+                                FUNCTION  2 [source_file: i0]
+                                    NAME  2 [source_file: i0]
+                                    PARAM_LIST 2 [source_file: i0]
+                                    BLOCK 2 [source_file: i0]
+                        EXPR_RESULT 3 [source_file: i0]
+                            ASSIGN 3 [source_file: i0]
+                                GETPROP 3 [source_file: i0]
+                                    NAME jQuery2 3 [source_file: i0]
+                                    STRING prototype 3 [source_file: i0]
+                                OBJECTLIT 3 [source_file: i0]
+                                    STRING size 4 [source_file: i0]
+                                        CALL 4 [free_call: 1] [source_file: i0]
+                                            NAME JSCompiler_stubMethod 4 [source_file: i0]
+                                            NUMBER 0.0 4 [source_file: i0]
+                        RETURN 8 [source_file: i0]
+                            NAME jQuery2 8 [source_file: i0]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:866)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:696)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:532)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:677)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:659)
+	at com.google.javascript.jscomp.CrossModuleMethodMotionTest.testIssue600b(CrossModuleMethodMotionTest.java:458)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.CrossModuleMethodMotionTest::testIssue600e
+junit.framework.AssertionFailedError: 
+Expected: var jQuery2=function(){};(function(){var theLoneliestNumber=1;jQuery2.prototype={size:function(){return theLoneliestNumber}}})();(function(){var div=jQuery2("div");div.size()})()
+Result: var JSCompiler_stubMap=[];function JSCompiler_stubMethod(JSCompiler_stubMethod_id){return function(){return JSCompiler_stubMap[JSCompiler_stubMethod_id].apply(this,arguments)}}function JSCompiler_unstubMethod(JSCompiler_unstubMethod_id,JSCompiler_unstubMethod_body){return JSCompiler_stubMap[JSCompiler_unstubMethod_id]=JSCompiler_unstubMethod_body}var jQuery2=function(){};(function(){var theLoneliestNumber=1;jQuery2.prototype={size:JSCompiler_stubMethod(0)}})();
+jQuery2.prototype.size=JSCompiler_unstubMethod(0,function(){return theLoneliestNumber});(function(){var div=jQuery2("div");div.size()})()
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        VAR 1 [source_file: expected0]
+            NAME jQuery2 1 [source_file: expected0]
+                FUNCTION  1 [source_file: expected0]
+                    NAME  1 [source_file: expected0]
+                    PARAM_LIST 1 [source_file: expected0]
+                    BLOCK 1 [source_file: expected0]
+        EXPR_RESULT 2 [source_file: expected0]
+            CALL 2 [free_call: 1] [source_file: expected0]
+                FUNCTION  2 [parenthesized: true] [source_file: expected0]
+                    NAME  2 [source_file: expected0]
+                    PARAM_LIST 2 [source_file: expected0]
+                    BLOCK 2 [source_file: expected0]
+                        VAR 2 [source_file: expected0]
+                            NAME theLoneliestNumber 2 [source_file: expected0]
+                                NUMBER 1.0 2 [source_file: expected0]
+                        EXPR_RESULT 3 [source_file: expected0]
+                            ASSIGN 3 [source_file: expected0]
+                                GETPROP 3 [source_file: expected0]
+                                    NAME jQuery2 3 [source_file: expected0]
+                                    STRING prototype 3 [source_file: expected0]
+                                OBJECTLIT 3 [source_file: expected0]
+                                    STRING size 4 [source_file: expected0]
+                                        FUNCTION  4 [source_file: expected0]
+                                            NAME  4 [source_file: expected0]
+                                            PARAM_LIST 4 [source_file: expected0]
+                                            BLOCK 4 [source_file: expected0]
+                                                RETURN 5 [source_file: expected0]
+                                                    NAME theLoneliestNumber 5 [source_file: expected0]
+    SCRIPT 1 [synthetic: 1] [source_file: expected1] [input_id: InputId: expected1]
+        EXPR_RESULT 1 [source_file: expected1]
+            CALL 1 [free_call: 1] [source_file: expected1]
+                FUNCTION  1 [parenthesized: true] [source_file: expected1]
+                    NAME  1 [source_file: expected1]
+                    PARAM_LIST 1 [source_file: expected1]
+                    BLOCK 1 [source_file: expected1]
+                        VAR 1 [source_file: expected1]
+                            NAME div 1 [source_file: expected1]
+                                CALL 1 [free_call: 1] [source_file: expected1]
+                                    NAME jQuery2 1 [source_file: expected1]
+                                    STRING div 1 [source_file: expected1]
+                        EXPR_RESULT 1 [source_file: expected1]
+                            CALL 1 [source_file: expected1]
+                                GETPROP 1 [source_file: expected1]
+                                    NAME div 1 [source_file: expected1]
+                                    STRING size 1 [source_file: expected1]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+        VAR 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                ARRAYLIT 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    FUNCTION  1 [source_file:  [synthetic:1] ]
+                        NAME  1 [source_file:  [synthetic:1] ]
+                        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                        BLOCK 1 [source_file:  [synthetic:1] ]
+                            RETURN 1 [source_file:  [synthetic:1] ]
+                                CALL 1 [source_file:  [synthetic:1] ]
+                                    GETPROP 1 [source_file:  [synthetic:1] ]
+                                        GETELEM 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                        STRING apply 1 [source_file:  [synthetic:1] ]
+                                    THIS 1 [source_file:  [synthetic:1] ]
+                                    NAME arguments 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    ASSIGN 1 [source_file:  [synthetic:1] ]
+                        GETELEM 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        VAR 1 [source_file: i0]
+            NAME jQuery2 1 [source_file: i0]
+                FUNCTION  1 [source_file: i0]
+                    NAME  1 [source_file: i0]
+                    PARAM_LIST 1 [source_file: i0]
+                    BLOCK 1 [source_file: i0]
+        EXPR_RESULT 2 [source_file: i0]
+            CALL 2 [free_call: 1] [source_file: i0]
+                FUNCTION  2 [parenthesized: true] [source_file: i0]
+                    NAME  2 [source_file: i0]
+                    PARAM_LIST 2 [source_file: i0]
+                    BLOCK 2 [source_file: i0]
+                        VAR 2 [source_file: i0]
+                            NAME theLoneliestNumber 2 [source_file: i0]
+                                NUMBER 1.0 2 [source_file: i0]
+                        EXPR_RESULT 3 [source_file: i0]
+                            ASSIGN 3 [source_file: i0]
+                                GETPROP 3 [source_file: i0]
+                                    NAME jQuery2 3 [source_file: i0]
+                                    STRING prototype 3 [source_file: i0]
+                                OBJECTLIT 3 [source_file: i0]
+                                    STRING size 4 [source_file: i0]
+                                        CALL 4 [free_call: 1] [source_file: i0]
+                                            NAME JSCompiler_stubMethod 4 [source_file: i0]
+                                            NUMBER 0.0 4 [source_file: i0]
+    SCRIPT 1 [synthetic: 1] [source_file: i1] [input_id: InputId: i1]
+        EXPR_RESULT 4 [source_file: i0]
+            ASSIGN 4 [source_file: i0]
+                GETPROP 4 [source_file: i0]
+                    GETPROP 3 [source_file: i0]
+                        NAME jQuery2 3 [source_file: i0]
+                        STRING prototype 3 [source_file: i0]
+                    STRING size 4 [source_file: i0]
+                CALL 4 [free_call: 1] [source_file: i0]
+                    NAME JSCompiler_unstubMethod 4 [source_file: i0]
+                    NUMBER 0.0 4 [source_file: i0]
+                    FUNCTION  4 [source_file: i0]
+                        NAME  4 [source_file: i0]
+                        PARAM_LIST 4 [source_file: i0]
+                        BLOCK 4 [source_file: i0]
+                            RETURN 5 [source_file: i0]
+                                NAME theLoneliestNumber 5 [source_file: i0]
+        EXPR_RESULT 1 [source_file: i1]
+            CALL 1 [free_call: 1] [source_file: i1]
+                FUNCTION  1 [parenthesized: true] [source_file: i1]
+                    NAME  1 [source_file: i1]
+                    PARAM_LIST 1 [source_file: i1]
+                    BLOCK 1 [source_file: i1]
+                        VAR 1 [source_file: i1]
+                            NAME div 1 [source_file: i1]
+                                CALL 1 [free_call: 1] [source_file: i1]
+                                    NAME jQuery2 1 [source_file: i1]
+                                    STRING div 1 [source_file: i1]
+                        EXPR_RESULT 1 [source_file: i1]
+                            CALL 1 [source_file: i1]
+                                GETPROP 1 [source_file: i1]
+                                    NAME div 1 [source_file: i1]
+                                    STRING size 1 [source_file: i1]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    VAR 1 [source_file: expected0]
+        NAME jQuery2 1 [source_file: expected0]
+            FUNCTION  1 [source_file: expected0]
+                NAME  1 [source_file: expected0]
+                PARAM_LIST 1 [source_file: expected0]
+                BLOCK 1 [source_file: expected0]
+    EXPR_RESULT 2 [source_file: expected0]
+        CALL 2 [free_call: 1] [source_file: expected0]
+            FUNCTION  2 [parenthesized: true] [source_file: expected0]
+                NAME  2 [source_file: expected0]
+                PARAM_LIST 2 [source_file: expected0]
+                BLOCK 2 [source_file: expected0]
+                    VAR 2 [source_file: expected0]
+                        NAME theLoneliestNumber 2 [source_file: expected0]
+                            NUMBER 1.0 2 [source_file: expected0]
+                    EXPR_RESULT 3 [source_file: expected0]
+                        ASSIGN 3 [source_file: expected0]
+                            GETPROP 3 [source_file: expected0]
+                                NAME jQuery2 3 [source_file: expected0]
+                                STRING prototype 3 [source_file: expected0]
+                            OBJECTLIT 3 [source_file: expected0]
+                                STRING size 4 [source_file: expected0]
+                                    FUNCTION  4 [source_file: expected0]
+                                        NAME  4 [source_file: expected0]
+                                        PARAM_LIST 4 [source_file: expected0]
+                                        BLOCK 4 [source_file: expected0]
+                                            RETURN 5 [source_file: expected0]
+                                                NAME theLoneliestNumber 5 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+    VAR 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+            ARRAYLIT 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                FUNCTION  1 [source_file:  [synthetic:1] ]
+                    NAME  1 [source_file:  [synthetic:1] ]
+                    PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                    BLOCK 1 [source_file:  [synthetic:1] ]
+                        RETURN 1 [source_file:  [synthetic:1] ]
+                            CALL 1 [source_file:  [synthetic:1] ]
+                                GETPROP 1 [source_file:  [synthetic:1] ]
+                                    GETELEM 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                    STRING apply 1 [source_file:  [synthetic:1] ]
+                                THIS 1 [source_file:  [synthetic:1] ]
+                                NAME arguments 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                ASSIGN 1 [source_file:  [synthetic:1] ]
+                    GETELEM 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                    NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+    VAR 1 [source_file: i0]
+        NAME jQuery2 1 [source_file: i0]
+            FUNCTION  1 [source_file: i0]
+                NAME  1 [source_file: i0]
+                PARAM_LIST 1 [source_file: i0]
+                BLOCK 1 [source_file: i0]
+    EXPR_RESULT 2 [source_file: i0]
+        CALL 2 [free_call: 1] [source_file: i0]
+            FUNCTION  2 [parenthesized: true] [source_file: i0]
+                NAME  2 [source_file: i0]
+                PARAM_LIST 2 [source_file: i0]
+                BLOCK 2 [source_file: i0]
+                    VAR 2 [source_file: i0]
+                        NAME theLoneliestNumber 2 [source_file: i0]
+                            NUMBER 1.0 2 [source_file: i0]
+                    EXPR_RESULT 3 [source_file: i0]
+                        ASSIGN 3 [source_file: i0]
+                            GETPROP 3 [source_file: i0]
+                                NAME jQuery2 3 [source_file: i0]
+                                STRING prototype 3 [source_file: i0]
+                            OBJECTLIT 3 [source_file: i0]
+                                STRING size 4 [source_file: i0]
+                                    CALL 4 [free_call: 1] [source_file: i0]
+                                        NAME JSCompiler_stubMethod 4 [source_file: i0]
+                                        NUMBER 0.0 4 [source_file: i0]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:866)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:696)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:532)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:677)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:659)
+	at com.google.javascript.jscomp.CrossModuleMethodMotionTest.testIssue600e(CrossModuleMethodMotionTest.java:539)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.CrossModuleMethodMotionTest::testIssue600
+junit.framework.AssertionFailedError: 
+Expected: var jQuery1=function(){var jQuery2=function(){};var theLoneliestNumber=1;jQuery2.prototype={size:function(){return theLoneliestNumber}};return jQuery2}();(function(){var div=jQuery1("div");div.size()})()
+Result: var JSCompiler_stubMap=[];function JSCompiler_stubMethod(JSCompiler_stubMethod_id){return function(){return JSCompiler_stubMap[JSCompiler_stubMethod_id].apply(this,arguments)}}function JSCompiler_unstubMethod(JSCompiler_unstubMethod_id,JSCompiler_unstubMethod_body){return JSCompiler_stubMap[JSCompiler_unstubMethod_id]=JSCompiler_unstubMethod_body}var jQuery1=function(){var jQuery2=function(){};var theLoneliestNumber=1;jQuery2.prototype={size:JSCompiler_stubMethod(0)};return jQuery2}();
+jQuery2.prototype.size=JSCompiler_unstubMethod(0,function(){return theLoneliestNumber});(function(){var div=jQuery1("div");div.size()})()
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+        VAR 1 [source_file: expected0]
+            NAME jQuery1 1 [source_file: expected0]
+                CALL 1 [free_call: 1] [source_file: expected0]
+                    FUNCTION  1 [parenthesized: true] [source_file: expected0]
+                        NAME  1 [source_file: expected0]
+                        PARAM_LIST 1 [source_file: expected0]
+                        BLOCK 1 [source_file: expected0]
+                            VAR 2 [source_file: expected0]
+                                NAME jQuery2 2 [source_file: expected0]
+                                    FUNCTION  2 [source_file: expected0]
+                                        NAME  2 [source_file: expected0]
+                                        PARAM_LIST 2 [source_file: expected0]
+                                        BLOCK 2 [source_file: expected0]
+                            VAR 3 [source_file: expected0]
+                                NAME theLoneliestNumber 3 [source_file: expected0]
+                                    NUMBER 1.0 3 [source_file: expected0]
+                            EXPR_RESULT 4 [source_file: expected0]
+                                ASSIGN 4 [source_file: expected0]
+                                    GETPROP 4 [source_file: expected0]
+                                        NAME jQuery2 4 [source_file: expected0]
+                                        STRING prototype 4 [source_file: expected0]
+                                    OBJECTLIT 4 [source_file: expected0]
+                                        STRING size 5 [source_file: expected0]
+                                            FUNCTION  5 [source_file: expected0]
+                                                NAME  5 [source_file: expected0]
+                                                PARAM_LIST 5 [source_file: expected0]
+                                                BLOCK 5 [source_file: expected0]
+                                                    RETURN 6 [source_file: expected0]
+                                                        NAME theLoneliestNumber 6 [source_file: expected0]
+                            RETURN 9 [source_file: expected0]
+                                NAME jQuery2 9 [source_file: expected0]
+    SCRIPT 1 [synthetic: 1] [source_file: expected1] [input_id: InputId: expected1]
+        EXPR_RESULT 1 [source_file: expected1]
+            CALL 1 [free_call: 1] [source_file: expected1]
+                FUNCTION  1 [parenthesized: true] [source_file: expected1]
+                    NAME  1 [source_file: expected1]
+                    PARAM_LIST 1 [source_file: expected1]
+                    BLOCK 1 [source_file: expected1]
+                        VAR 1 [source_file: expected1]
+                            NAME div 1 [source_file: expected1]
+                                CALL 1 [free_call: 1] [source_file: expected1]
+                                    NAME jQuery1 1 [source_file: expected1]
+                                    STRING div 1 [source_file: expected1]
+                        EXPR_RESULT 1 [source_file: expected1]
+                            CALL 1 [source_file: expected1]
+                                GETPROP 1 [source_file: expected1]
+                                    NAME div 1 [source_file: expected1]
+                                    STRING size 1 [source_file: expected1]
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+        VAR 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                ARRAYLIT 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    FUNCTION  1 [source_file:  [synthetic:1] ]
+                        NAME  1 [source_file:  [synthetic:1] ]
+                        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                        BLOCK 1 [source_file:  [synthetic:1] ]
+                            RETURN 1 [source_file:  [synthetic:1] ]
+                                CALL 1 [source_file:  [synthetic:1] ]
+                                    GETPROP 1 [source_file:  [synthetic:1] ]
+                                        GETELEM 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                        STRING apply 1 [source_file:  [synthetic:1] ]
+                                    THIS 1 [source_file:  [synthetic:1] ]
+                                    NAME arguments 1 [source_file:  [synthetic:1] ]
+        FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+            PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+            BLOCK 1 [source_file:  [synthetic:1] ]
+                RETURN 1 [source_file:  [synthetic:1] ]
+                    ASSIGN 1 [source_file:  [synthetic:1] ]
+                        GETELEM 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        VAR 1 [source_file: i0]
+            NAME jQuery1 1 [source_file: i0]
+                CALL 1 [free_call: 1] [source_file: i0]
+                    FUNCTION  1 [parenthesized: true] [source_file: i0]
+                        NAME  1 [source_file: i0]
+                        PARAM_LIST 1 [source_file: i0]
+                        BLOCK 1 [source_file: i0]
+                            VAR 2 [source_file: i0]
+                                NAME jQuery2 2 [source_file: i0]
+                                    FUNCTION  2 [source_file: i0]
+                                        NAME  2 [source_file: i0]
+                                        PARAM_LIST 2 [source_file: i0]
+                                        BLOCK 2 [source_file: i0]
+                            VAR 3 [source_file: i0]
+                                NAME theLoneliestNumber 3 [source_file: i0]
+                                    NUMBER 1.0 3 [source_file: i0]
+                            EXPR_RESULT 4 [source_file: i0]
+                                ASSIGN 4 [source_file: i0]
+                                    GETPROP 4 [source_file: i0]
+                                        NAME jQuery2 4 [source_file: i0]
+                                        STRING prototype 4 [source_file: i0]
+                                    OBJECTLIT 4 [source_file: i0]
+                                        STRING size 5 [source_file: i0]
+                                            CALL 5 [free_call: 1] [source_file: i0]
+                                                NAME JSCompiler_stubMethod 5 [source_file: i0]
+                                                NUMBER 0.0 5 [source_file: i0]
+                            RETURN 9 [source_file: i0]
+                                NAME jQuery2 9 [source_file: i0]
+    SCRIPT 1 [synthetic: 1] [source_file: i1] [input_id: InputId: i1]
+        EXPR_RESULT 5 [source_file: i0]
+            ASSIGN 5 [source_file: i0]
+                GETPROP 5 [source_file: i0]
+                    GETPROP 4 [source_file: i0]
+                        NAME jQuery2 4 [source_file: i0]
+                        STRING prototype 4 [source_file: i0]
+                    STRING size 5 [source_file: i0]
+                CALL 5 [free_call: 1] [source_file: i0]
+                    NAME JSCompiler_unstubMethod 5 [source_file: i0]
+                    NUMBER 0.0 5 [source_file: i0]
+                    FUNCTION  5 [source_file: i0]
+                        NAME  5 [source_file: i0]
+                        PARAM_LIST 5 [source_file: i0]
+                        BLOCK 5 [source_file: i0]
+                            RETURN 6 [source_file: i0]
+                                NAME theLoneliestNumber 6 [source_file: i0]
+        EXPR_RESULT 1 [source_file: i1]
+            CALL 1 [free_call: 1] [source_file: i1]
+                FUNCTION  1 [parenthesized: true] [source_file: i1]
+                    NAME  1 [source_file: i1]
+                    PARAM_LIST 1 [source_file: i1]
+                    BLOCK 1 [source_file: i1]
+                        VAR 1 [source_file: i1]
+                            NAME div 1 [source_file: i1]
+                                CALL 1 [free_call: 1] [source_file: i1]
+                                    NAME jQuery1 1 [source_file: i1]
+                                    STRING div 1 [source_file: i1]
+                        EXPR_RESULT 1 [source_file: i1]
+                            CALL 1 [source_file: i1]
+                                GETPROP 1 [source_file: i1]
+                                    NAME div 1 [source_file: i1]
+                                    STRING size 1 [source_file: i1]
+
+
+Subtree1: SCRIPT 1 [synthetic: 1] [source_file: expected0] [input_id: InputId: expected0]
+    VAR 1 [source_file: expected0]
+        NAME jQuery1 1 [source_file: expected0]
+            CALL 1 [free_call: 1] [source_file: expected0]
+                FUNCTION  1 [parenthesized: true] [source_file: expected0]
+                    NAME  1 [source_file: expected0]
+                    PARAM_LIST 1 [source_file: expected0]
+                    BLOCK 1 [source_file: expected0]
+                        VAR 2 [source_file: expected0]
+                            NAME jQuery2 2 [source_file: expected0]
+                                FUNCTION  2 [source_file: expected0]
+                                    NAME  2 [source_file: expected0]
+                                    PARAM_LIST 2 [source_file: expected0]
+                                    BLOCK 2 [source_file: expected0]
+                        VAR 3 [source_file: expected0]
+                            NAME theLoneliestNumber 3 [source_file: expected0]
+                                NUMBER 1.0 3 [source_file: expected0]
+                        EXPR_RESULT 4 [source_file: expected0]
+                            ASSIGN 4 [source_file: expected0]
+                                GETPROP 4 [source_file: expected0]
+                                    NAME jQuery2 4 [source_file: expected0]
+                                    STRING prototype 4 [source_file: expected0]
+                                OBJECTLIT 4 [source_file: expected0]
+                                    STRING size 5 [source_file: expected0]
+                                        FUNCTION  5 [source_file: expected0]
+                                            NAME  5 [source_file: expected0]
+                                            PARAM_LIST 5 [source_file: expected0]
+                                            BLOCK 5 [source_file: expected0]
+                                                RETURN 6 [source_file: expected0]
+                                                    NAME theLoneliestNumber 6 [source_file: expected0]
+                        RETURN 9 [source_file: expected0]
+                            NAME jQuery2 9 [source_file: expected0]
+
+
+Subtree2: SCRIPT 1 [synthetic: 1] [source_file: i0] [input_id: InputId: i0]
+    VAR 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+            ARRAYLIT 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_stubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                FUNCTION  1 [source_file:  [synthetic:1] ]
+                    NAME  1 [source_file:  [synthetic:1] ]
+                    PARAM_LIST 1 [source_file:  [synthetic:1] ]
+                    BLOCK 1 [source_file:  [synthetic:1] ]
+                        RETURN 1 [source_file:  [synthetic:1] ]
+                            CALL 1 [source_file:  [synthetic:1] ]
+                                GETPROP 1 [source_file:  [synthetic:1] ]
+                                    GETELEM 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                                        NAME JSCompiler_stubMethod_id 1 [source_file:  [synthetic:1] ]
+                                    STRING apply 1 [source_file:  [synthetic:1] ]
+                                THIS 1 [source_file:  [synthetic:1] ]
+                                NAME arguments 1 [source_file:  [synthetic:1] ]
+    FUNCTION JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        NAME JSCompiler_unstubMethod 1 [source_file:  [synthetic:1] ]
+        PARAM_LIST 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+            NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+        BLOCK 1 [source_file:  [synthetic:1] ]
+            RETURN 1 [source_file:  [synthetic:1] ]
+                ASSIGN 1 [source_file:  [synthetic:1] ]
+                    GETELEM 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_stubMap 1 [source_file:  [synthetic:1] ]
+                        NAME JSCompiler_unstubMethod_id 1 [source_file:  [synthetic:1] ]
+                    NAME JSCompiler_unstubMethod_body 1 [source_file:  [synthetic:1] ]
+    VAR 1 [source_file: i0]
+        NAME jQuery1 1 [source_file: i0]
+            CALL 1 [free_call: 1] [source_file: i0]
+                FUNCTION  1 [parenthesized: true] [source_file: i0]
+                    NAME  1 [source_file: i0]
+                    PARAM_LIST 1 [source_file: i0]
+                    BLOCK 1 [source_file: i0]
+                        VAR 2 [source_file: i0]
+                            NAME jQuery2 2 [source_file: i0]
+                                FUNCTION  2 [source_file: i0]
+                                    NAME  2 [source_file: i0]
+                                    PARAM_LIST 2 [source_file: i0]
+                                    BLOCK 2 [source_file: i0]
+                        VAR 3 [source_file: i0]
+                            NAME theLoneliestNumber 3 [source_file: i0]
+                                NUMBER 1.0 3 [source_file: i0]
+                        EXPR_RESULT 4 [source_file: i0]
+                            ASSIGN 4 [source_file: i0]
+                                GETPROP 4 [source_file: i0]
+                                    NAME jQuery2 4 [source_file: i0]
+                                    STRING prototype 4 [source_file: i0]
+                                OBJECTLIT 4 [source_file: i0]
+                                    STRING size 5 [source_file: i0]
+                                        CALL 5 [free_call: 1] [source_file: i0]
+                                            NAME JSCompiler_stubMethod 5 [source_file: i0]
+                                            NUMBER 0.0 5 [source_file: i0]
+                        RETURN 9 [source_file: i0]
+                            NAME jQuery2 9 [source_file: i0]
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:866)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:696)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:532)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:677)
+	at com.google.javascript.jscomp.CompilerTestCase.testSame(CompilerTestCase.java:659)
+	at com.google.javascript.jscomp.CrossModuleMethodMotionTest.testIssue600(CrossModuleMethodMotionTest.java:438)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

@@ -1,0 +1,119 @@
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+index 98b56302..12af5fb0 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java
+@@ -949,9 +949,6 @@ public final class ReaderBasedJsonParser
+             --ptr; // need to push back following separator
+             _inputPtr = ptr;
+             // As per #105, need separating space between root values; check here
+-            if (_parsingContext.inRoot()) {
+-                _verifyRootSpace(ch);
+-            }
+             int len = ptr-startPtr;
+             _textBuffer.resetWithShared(_inputBuffer, startPtr, len);
+             return reset(negative, intLen, fractLen, expLen);
+@@ -1081,9 +1078,6 @@ public final class ReaderBasedJsonParser
+         // Ok; unless we hit end-of-input, need to push last char read back
+         if (!eof) {
+             --_inputPtr;
+-            if (_parsingContext.inRoot()) {
+-                _verifyRootSpace(c);
+-            }
+         }
+         _textBuffer.setCurrentLength(outPtr);
+         // And there we have it!
+@@ -1165,24 +1159,7 @@ public final class ReaderBasedJsonParser
+      * NOTE: caller MUST ensure there is at least one character available;
+      * and that input pointer is AT given char (not past)
+      */
+-    private final void _verifyRootSpace(int ch) throws IOException
+-    {
+         // caller had pushed it back, before calling; reset
+-        ++_inputPtr;
+-        switch (ch) {
+-        case ' ':
+-        case '\t':
+-            return;
+-        case '\r':
+-            _skipCR();
+-            return;
+-        case '\n':
+-            ++_currInputRow;
+-            _currInputRowStart = _inputPtr;
+-            return;
+-        }
+-        _reportMissingRootWS(ch);
+-    }
+     
+     /*
+     /**********************************************************
+diff --git a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+index 83ae5b7a..15faeb8b 100644
+--- a/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
++++ b/src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java
+@@ -1241,9 +1241,6 @@ public final class UTF8StreamJsonParser
+         --_inputPtr; // to push back trailing char (comma etc)
+         _textBuffer.setCurrentLength(outPtr);
+         // As per #105, need separating space between root values; check here
+-        if (_parsingContext.inRoot()) {
+-            _verifyRootSpace(c);
+-        }
+ 
+         // And there we have it!
+         return resetInt(negative, intLen);
+@@ -1280,9 +1277,6 @@ public final class UTF8StreamJsonParser
+         --_inputPtr; // to push back trailing char (comma etc)
+         _textBuffer.setCurrentLength(outPtr);
+         // As per #105, need separating space between root values; check here
+-        if (_parsingContext.inRoot()) {
+-            _verifyRootSpace(_inputBuffer[_inputPtr++] & 0xFF);
+-        }
+ 
+         // And there we have it!
+         return resetInt(negative, intPartLength);
+@@ -1410,9 +1404,6 @@ public final class UTF8StreamJsonParser
+         if (!eof) {
+             --_inputPtr;
+             // As per #105, need separating space between root values; check here
+-            if (_parsingContext.inRoot()) {
+-                _verifyRootSpace(c);
+-            }
+         }
+         _textBuffer.setCurrentLength(outPtr);
+ 
+@@ -1427,25 +1418,8 @@ public final class UTF8StreamJsonParser
+      * NOTE: caller MUST ensure there is at least one character available;
+      * and that input pointer is AT given char (not past)
+      */
+-    private final void _verifyRootSpace(int ch) throws IOException
+-    {
+         // caller had pushed it back, before calling; reset
+-        ++_inputPtr;
+         // TODO? Handle UTF-8 char decoding for error reporting
+-        switch (ch) {
+-        case ' ':
+-        case '\t':
+-            return;
+-        case '\r':
+-            _skipCR();
+-            return;
+-        case '\n':
+-            ++_currInputRow;
+-            _currInputRowStart = _inputPtr;
+-            return;
+-        }
+-        _reportMissingRootWS(ch);
+-    }
+ 
+     /*
+     /**********************************************************
+@@ -2598,6 +2572,9 @@ public final class UTF8StreamJsonParser
+                 }
+                 break;
+             default: // e.g. -1
++                if (i < 32) {
++                    _throwInvalidSpace(i);
++                }
+                 _reportInvalidChar(i);
+             }
+         }

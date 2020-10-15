@@ -1,0 +1,98 @@
+diff --git a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
+index 1cd6f913..4f89e0e5 100644
+--- a/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
++++ b/src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java
+@@ -64,6 +64,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+     private InputStream in;
+     private final boolean decompressConcatenated;
+ 
++    private int currentChar = -1;
+     private static final int EOF = 0;
+     private static final int START_BLOCK_STATE = 1;
+     private static final int RAND_PART_A_STATE = 2;
+@@ -131,6 +132,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+ 
+         init(true);
+         initBlock();
++        setupBlock();
+     }
+ 
+     @Override
+@@ -194,34 +196,40 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+     }
+ 
+     private int read0() throws IOException {
++        final int retChar = this.currentChar;
+         switch (currentState) {
+         case EOF:
+             return -1;
+ 
+         case START_BLOCK_STATE:
+-            return setupBlock();
++            throw new IllegalStateException();
+ 
+         case RAND_PART_A_STATE:
+             throw new IllegalStateException();
+ 
+         case RAND_PART_B_STATE:
+-            return setupRandPartB();
++            setupRandPartB();
++            break;
+ 
+         case RAND_PART_C_STATE:
+-            return setupRandPartC();
++            setupRandPartC();
++            break;
+ 
+         case NO_RAND_PART_A_STATE:
+             throw new IllegalStateException();
+ 
+         case NO_RAND_PART_B_STATE:
+-            return setupNoRandPartB();
++            setupNoRandPartB();
++            break;
+ 
+         case NO_RAND_PART_C_STATE:
+-            return setupNoRandPartC();
++            setupNoRandPartC();
++            break;
+ 
+         default:
+             throw new IllegalStateException();
+         }
++        return retChar;
+     }
+ 
+     private boolean init(boolean isFirstStream) throws IOException {
+@@ -842,6 +850,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+             }
+             this.su_ch2 = su_ch2Shadow ^= (this.su_rNToGo == 1) ? 1 : 0;
+             this.su_i2++;
++            this.currentChar = su_ch2Shadow;
+             this.currentState = RAND_PART_B_STATE;
+             this.crc.updateCRC(su_ch2Shadow);
+             return su_ch2Shadow;
+@@ -859,6 +868,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+             this.su_ch2 = su_ch2Shadow;
+             this.su_tPos = this.data.tt[this.su_tPos];
+             this.su_i2++;
++            this.currentChar = su_ch2Shadow;
+             this.currentState = NO_RAND_PART_B_STATE;
+             this.crc.updateCRC(su_ch2Shadow);
+             return su_ch2Shadow;
+@@ -900,6 +910,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+ 
+     private int setupRandPartC() throws IOException {
+         if (this.su_j2 < this.su_z) {
++            this.currentChar = this.su_ch2;
+             this.crc.updateCRC(this.su_ch2);
+             this.su_j2++;
+             return this.su_ch2;
+@@ -928,6 +939,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
+     private int setupNoRandPartC() throws IOException {
+         if (this.su_j2 < this.su_z) {
+             int su_ch2Shadow = this.su_ch2;
++            this.currentChar = su_ch2Shadow;
+             this.crc.updateCRC(su_ch2Shadow);
+             this.su_j2++;
+             this.currentState = NO_RAND_PART_C_STATE;

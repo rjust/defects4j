@@ -1,0 +1,125 @@
+diff --git a/src/com/google/javascript/jscomp/Scope.java b/src/com/google/javascript/jscomp/Scope.java
+index 8b6b1a50..b6037cb8 100644
+--- a/src/com/google/javascript/jscomp/Scope.java
++++ b/src/com/google/javascript/jscomp/Scope.java
+@@ -565,9 +565,6 @@ public class Scope
+   /**
+    * Return an iterable over all of the variables declared in this scope.
+    */
+-  Iterable<Var> getVarIterable() {
+-    return vars.values();
+-  }
+ 
+   @Override
+   public Iterable<Var> getReferences(Var var) {
+diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
+index 2b447cc3..ba316807 100644
+--- a/src/com/google/javascript/jscomp/ScopedAliases.java
++++ b/src/com/google/javascript/jscomp/ScopedAliases.java
+@@ -223,7 +223,6 @@ class ScopedAliases implements HotSwapCompilerPass {
+       if (n != null && isCallToScopeMethod(n)) {
+         transformation = transformationHandler.logAliasTransformation(
+             n.getSourceFileName(), getSourceRegion(n));
+-        findAliases(t);
+       }
+     }
+ 
+@@ -269,28 +268,8 @@ class ScopedAliases implements HotSwapCompilerPass {
+       hasErrors = true;
+     }
+ 
+-    private void findAliases(NodeTraversal t) {
+-      Scope scope = t.getScope();
+-      for (Var v : scope.getVarIterable()) {
+-        Node n = v.getNode();
+-        int type = n.getType();
+-        Node parent = n.getParent();
+-        if (parent.getType() == Token.VAR) {
+-          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+-            String name = n.getString();
+-            Var aliasVar = scope.getVar(name);
+-            aliases.put(name, aliasVar);
+ 
+-            String qualifiedName =
+-                aliasVar.getInitialValue().getQualifiedName();
+-            transformation.addAlias(name, qualifiedName);
+-          } else {
+             // TODO(robbyw): Support using locals for private variables.
+-            report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+-          }
+-        }
+-      }
+-    }
+ 
+     private void validateScopeCall(NodeTraversal t, Node n, Node parent) {
+       if (preprocessorSymbolTable != null) {
+@@ -321,33 +300,32 @@ class ScopedAliases implements HotSwapCompilerPass {
+         validateScopeCall(t, n, n.getParent());
+       }
+ 
+-      if (t.getScopeDepth() < 2) {
+-        return;
+-      }
+ 
+-      int type = n.getType();
+-      Var aliasVar = null;
+-      if (type == Token.NAME) {
+-        String name = n.getString();
+-        Var lexicalVar = t.getScope().getVar(n.getString());
+-        if (lexicalVar != null && lexicalVar == aliases.get(name)) {
+-          aliasVar = lexicalVar;
+-        }
+-      }
+ 
+       // Validate the top level of the goog.scope block.
+       if (t.getScopeDepth() == 2) {
+-        if (aliasVar != null && NodeUtil.isLValue(n)) {
+-          if (aliasVar.getNode() == n) {
+-            aliasDefinitionsInOrder.add(n);
++        int type = n.getType();
++        if (type == Token.NAME && parent.getType() == Token.VAR) {
++          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
++            String name = n.getString();
++            Var aliasVar = t.getScope().getVar(name);
++            aliases.put(name, aliasVar);
+ 
++            aliasDefinitionsInOrder.add(n);
++            String qualifiedName =
++                aliasVar.getInitialValue().getQualifiedName();
++            transformation.addAlias(name, qualifiedName);
+             // Return early, to ensure that we don't record a definition
+             // twice.
+             return;
+           } else {
+-            report(t, n, GOOG_SCOPE_ALIAS_REDEFINED, n.getString());
++            report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+           }
+         }
++        if (type == Token.NAME && NodeUtil.isAssignmentOp(parent) &&
++            n == parent.getFirstChild()) {
++            report(t, n, GOOG_SCOPE_ALIAS_REDEFINED, n.getString());
++        }
+ 
+         if (type == Token.RETURN) {
+           report(t, n, GOOG_SCOPE_USES_RETURN);
+@@ -361,7 +339,11 @@ class ScopedAliases implements HotSwapCompilerPass {
+       // Validate all descendent scopes of the goog.scope block.
+       if (t.getScopeDepth() >= 2) {
+         // Check if this name points to an alias.
+-        if (aliasVar != null) {
++        if (n.getType() == Token.NAME) {
++          String name = n.getString();
++          Var aliasVar = aliases.get(name);
++          if (aliasVar != null &&
++              t.getScope().getVar(name) == aliasVar) {
+           // Note, to support the transitive case, it's important we don't
+           // clone aliasedNode here.  For example,
+           // var g = goog; var d = g.dom; d.createElement('DIV');
+@@ -370,6 +352,7 @@ class ScopedAliases implements HotSwapCompilerPass {
+           // with <code>g.dom.createElement('DIV')</code>.
+           Node aliasedNode = aliasVar.getInitialValue();
+           aliasUsages.add(new AliasedNode(n, aliasedNode));
++          }
+         }
+ 
+         JSDocInfo info = n.getJSDocInfo();

@@ -1,7 +1,7 @@
 org.mockito.configuration.MockitoConfiguration
+org.mockito.internal.configuration.ConfigurationAccess
+org.mockito.StateMaster
 org.mockitousage.bugs.StubbingMocksThatAreConfiguredToReturnMocksTest
+org.mockitousage.IMethods
 org.mockitoutil.Assertor
 org.mockitoutil.TestBase
-org.mockito.internal.configuration.ConfigurationAccess
-org.mockitousage.IMethods
-org.mockito.StateMaster

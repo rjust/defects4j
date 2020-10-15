@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,12 +47,6 @@ sub _checkout_cmd {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $revision_id, $work_dir) = @_;
     return "git clone $self->{repo} ${work_dir} 2>&1 && cd $work_dir && git checkout $revision_id 2>&1";
-}
-
-sub _apply_cmd {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
-    return "cd $work_dir && git apply $patch_file 2>&1";
 }
 
 sub _diff_cmd {

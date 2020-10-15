@@ -1,0 +1,23 @@
+diff --git a/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java b/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
+index 19ca2d23..d6b7a838 100644
+--- a/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
++++ b/gson/src/test/java/com/google/gson/stream/JsonReaderTest.java
+@@ -560,18 +560,6 @@ public final class JsonReaderTest extends TestCase {
+     } catch (NumberFormatException expected) {
+     }
+   }
+-  
+-  /**
+-   * Issue 1053, negative zero.
+-   * @throws Exception
+-   */
+-  public void testNegativeZero() throws Exception {
+-	  	JsonReader reader = new JsonReader(reader("[-0]"));
+-	    reader.setLenient(false);
+-	    reader.beginArray();
+-	    assertEquals(NUMBER, reader.peek());
+-	    assertEquals("-0", reader.nextString());
+-  }
+ 
+   /**
+    * This test fails because there's no double for 9223372036854775808, and our

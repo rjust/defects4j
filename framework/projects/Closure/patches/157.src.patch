@@ -1,0 +1,159 @@
+diff --git a/src/com/google/javascript/jscomp/CodeGenerator.java b/src/com/google/javascript/jscomp/CodeGenerator.java
+index 593ec05d..142e8202 100644
+--- a/src/com/google/javascript/jscomp/CodeGenerator.java
++++ b/src/com/google/javascript/jscomp/CodeGenerator.java
+@@ -340,20 +340,14 @@ class CodeGenerator {
+         Node body = fn.getLastChild();
+ 
+         // Add the property name.
+-        if (!n.isQuotedString() &&
+-            TokenStream.isJSIdentifier(name) &&
++        if (TokenStream.isJSIdentifier(name) &&
+             // do not encode literally any non-literal characters that were
+             // unicode escaped.
+             NodeUtil.isLatin(name)) {
+           add(name);
+         } else {
+           // Determine if the string is a simple number.
+-          double d = getSimpleNumber(name);
+-          if (!Double.isNaN(d)) {
+-            cc.addNumber(d);
+-          } else {
+-            add(jsString(n.getString(), outputCharsetEncoder));
+-          }
++          add(jsString(n.getString(), outputCharsetEncoder));
+         }
+ 
+         add(parameters);
+@@ -657,25 +651,19 @@ class CodeGenerator {
+           if (c.getType() == Token.GET || c.getType() == Token.SET) {
+             add(c);
+           } else {
+-            Preconditions.checkState(c.getType() == Token.STRING);
+-            String key = c.getString();
+             // Object literal property names don't have to be quoted if they
+             // are not JavaScript keywords
+-            if (!c.isQuotedString() &&
+-                !TokenStream.isKeyword(key) &&
+-                TokenStream.isJSIdentifier(key) &&
++            if (c.getType() == Token.STRING &&
++                !c.isQuotedString() &&
++                !TokenStream.isKeyword(c.getString()) &&
++                TokenStream.isJSIdentifier(c.getString()) &&
+                 // do not encode literally any non-literal characters that
+                 // were unicode escaped.
+-                NodeUtil.isLatin(key)) {
+-              add(key);
++                NodeUtil.isLatin(c.getString())) {
++              add(c.getString());
+             } else {
+               // Determine if the string is a simple number.
+-              double d = getSimpleNumber(key);
+-              if (!Double.isNaN(d)) {
+-                cc.addNumber(d);
+-              } else {
+-                addExpr(c, 1);
+-              }
++              addExpr(c, 1);
+             }
+             add(":");
+             addExpr(c.getFirstChild(), 1);
+@@ -733,26 +721,7 @@ class CodeGenerator {
+     cc.endSourceMapping(n);
+   }
+ 
+-  static boolean isSimpleNumber(String s) {
+-    int len = s.length();
+-    for (int index = 0; index < len; index++) {
+-      char c = s.charAt(index);
+-      if (c < '0' || c > '9') {
+-        return false;
+-      }
+-    }
+-    return len > 0;
+-  }
+ 
+-  static double getSimpleNumber(String s) {
+-    if (isSimpleNumber(s)) {
+-      long l = Long.parseLong(s);
+-      if (l < NodeUtil.MAX_POSITIVE_INTEGER_NUMBER) {
+-        return l;
+-      }
+-    }
+-    return Double.NaN;
+-  }
+ 
+   /**
+    * @return Whether the name is an indirect eval.
+diff --git a/src/com/google/javascript/jscomp/RenamePrototypes.java b/src/com/google/javascript/jscomp/RenamePrototypes.java
+index d7558d00..304c0e1e 100644
+--- a/src/com/google/javascript/jscomp/RenamePrototypes.java
++++ b/src/com/google/javascript/jscomp/RenamePrototypes.java
+@@ -333,7 +333,7 @@ class RenamePrototypes implements CompilerPass {
+                  child != null;
+                  child = child.getNext()) {
+ 
+-              if (TokenStream.isJSIdentifier(child.getString())) {
++              if (child.getType() != Token.NUMBER) {
+                 markObjLitPropertyCandidate(child, t.getInput());
+               }
+             }
+@@ -374,7 +374,7 @@ class RenamePrototypes implements CompilerPass {
+ 
+             for (Node key = map.getFirstChild();
+                  key != null; key = key.getNext()) {
+-              if (TokenStream.isJSIdentifier(key.getString())) {
++              if (key.getType() != Token.NUMBER) {
+                // May be STRING, GET, or SET
+                 markPrototypePropertyCandidate(key, input);
+               }
+diff --git a/src/com/google/javascript/jscomp/parsing/IRFactory.java b/src/com/google/javascript/jscomp/parsing/IRFactory.java
+index 3d1db67d..dcc3def6 100644
+--- a/src/com/google/javascript/jscomp/parsing/IRFactory.java
++++ b/src/com/google/javascript/jscomp/parsing/IRFactory.java
+@@ -252,26 +252,9 @@ public class IRFactory {
+     return irNode;
+   }
+ 
+-  private Node transformNumberAsString(NumberLiteral literalNode) {
+-    JSDocInfo jsDocInfo = handleJsDoc(literalNode);
+-    Node irNode = newStringNode(getStringValue(literalNode.getNumber()));
+-    if (jsDocInfo != null) {
+-      irNode.setJSDocInfo(jsDocInfo);
+-    }
+-    setSourceInfo(irNode, literalNode);
+-    return irNode;
+-  }
+ 
+-  private static String getStringValue(double value) {
+-    long longValue = (long) value;
+ 
+     // Return "1" instead of "1.0"
+-    if (longValue == value) {
+-      return Long.toString(longValue);
+-    } else {
+-      return Double.toString(value);
+-    }
+-  }
+ 
+   private void setSourceInfo(Node irNode, AstNode node) {
+     // If we have a named function, set the position to that of the name.
+@@ -361,14 +344,14 @@ public class IRFactory {
+       Node ret;
+       if (n instanceof Name) {
+         ret = transformNameAsString((Name)n);
+-      } else if (n instanceof NumberLiteral) {
+-        ret = transformNumberAsString((NumberLiteral)n);
+-        ret.putBooleanProp(Node.QUOTED_PROP, true);
+       } else {
+         ret = transform(n);
++        Preconditions.checkState(ret.getType() == Token.NUMBER
++            || ret.getType() == Token.STRING);
++        if (ret.getType() == Token.STRING) {
+         ret.putBooleanProp(Node.QUOTED_PROP, true);
++        }
+       }
+-      Preconditions.checkState(ret.getType() == Token.STRING);
+       return ret;
+     }
+ 

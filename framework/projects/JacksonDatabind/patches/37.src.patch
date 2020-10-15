@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+index 1c741ec9f..eca7e8e48 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
++++ b/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java
+@@ -132,7 +132,7 @@ public class SimpleType // note: until 2.6 was final
+         }
+         */
+         // 15-Jan-2015, tatu: Not correct; should really re-resolve...
+-        return new SimpleType(subclass, _bindings, this, _superInterfaces,
++        return new SimpleType(subclass, _bindings, _superClass, _superInterfaces,
+                 _valueHandler, _typeHandler, _asStatic);
+     }
+     

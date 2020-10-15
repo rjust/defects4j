@@ -1,0 +1,34 @@
+diff --git a/src/main/java/org/apache/commons/collections/list/SetUniqueList.java b/src/main/java/org/apache/commons/collections/list/SetUniqueList.java
+index 537c96a4..60d8995a 100644
+--- a/src/main/java/org/apache/commons/collections/list/SetUniqueList.java
++++ b/src/main/java/org/apache/commons/collections/list/SetUniqueList.java
+@@ -269,26 +269,9 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
+ 
+ 	@Override
+ 	public boolean retainAll(Collection<?> coll) {
+-		Set<Object> setRetainAll = new HashSet<Object>();
+-		for (Iterator<?> it = coll.iterator(); it.hasNext();) {
+-			Object next = it.next();
+-			if (set.contains(next)) {
+-				setRetainAll.add(next);
+-			}
+-		}
+-		if (setRetainAll.size() == set.size()) {
+-			return false;
+-		}
+-		if (setRetainAll.size() == 0) {
+-			clear();
+-		} else {
+-			for (Iterator<E> it = iterator(); it.hasNext();) {
+-				if (!setRetainAll.contains(it.next())) {
+-					it.remove();
+-				}
+-			}
+-		}
+-		return true;
++		boolean result = super.retainAll(coll);
++        	set.retainAll(coll);
++        	return result;
+ 	}
+ 
+ 	@Override

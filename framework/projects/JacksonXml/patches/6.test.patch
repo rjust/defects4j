@@ -1,0 +1,91 @@
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/builder/BuilderSimpleTest.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/builder/BuilderSimpleTest.java
+index 8213689..091c327 100644
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/builder/BuilderSimpleTest.java
++++ b/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/builder/BuilderSimpleTest.java
+@@ -1,5 +1,7 @@
+ package com.fasterxml.jackson.dataformat.xml.deser.builder;
+ 
++import java.util.*;
++
+ import com.fasterxml.jackson.annotation.*;
+ 
+ import com.fasterxml.jackson.core.Version;
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/failing/ListDeser294Test.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/failing/ListDeser294Test.java
+index 54ef4af..0949d43 100644
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/failing/ListDeser294Test.java
++++ b/src/test/java/com/fasterxml/jackson/dataformat/xml/failing/ListDeser294Test.java
+@@ -2,6 +2,7 @@ package com.fasterxml.jackson.dataformat.xml.failing;
+ 
+ import java.util.*;
+ 
++import com.fasterxml.jackson.annotation.JsonProperty;
+ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+ import com.fasterxml.jackson.dataformat.xml.XmlTestBase;
+diff --git a/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestBinaryStreamToXMLSerialization.java b/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestBinaryStreamToXMLSerialization.java
+deleted file mode 100644
+index edcebcf..0000000
+--- a/src/test/java/com/fasterxml/jackson/dataformat/xml/ser/TestBinaryStreamToXMLSerialization.java
++++ /dev/null
+@@ -1,61 +0,0 @@
+-package com.fasterxml.jackson.dataformat.xml.ser;
+-
+-import java.nio.*;
+-
+-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+-import com.fasterxml.jackson.dataformat.xml.XmlTestBase;
+-
+-/**
+- * See <a href="https://github.com/FasterXML/jackson-dataformat-xml/issues/270">issue #270</a>
+- * for details
+- */
+-public class TestBinaryStreamToXMLSerialization extends XmlTestBase
+-{
+-    private final XmlMapper MAPPER = new XmlMapper();
+-
+-    public void testWith0Bytes() throws Exception 
+-    {
+-        String xml = MAPPER.writeValueAsString(createPojo());
+-        assertEquals("<TestPojo><field/></TestPojo>", xml);
+-    }
+-
+-    public void testWith1Byte() throws Exception 
+-    {
+-        String xml = MAPPER.writeValueAsString(createPojo( 'A' ));
+-        assertEquals("<TestPojo><field>QQ==</field></TestPojo>", xml);
+-    }
+-
+-    public void testWith2Bytes() throws Exception 
+-    {
+-        String xml = MAPPER.writeValueAsString(createPojo( 'A', 'B' ));
+-        assertEquals("<TestPojo><field>QUI=</field></TestPojo>", xml);
+-    }
+-
+-    public void testWith3Bytes() throws Exception 
+-    {
+-        String xml = MAPPER.writeValueAsString(createPojo( 'A', 'B', 'C' ));
+-        assertEquals("<TestPojo><field>QUJD</field></TestPojo>", xml);
+-    }
+-
+-    public void testWith4Bytes() throws Exception 
+-    {
+-        String xml = MAPPER.writeValueAsString(createPojo( 'A', 'B', 'C', 'D' ));
+-        assertEquals("<TestPojo><field>QUJDRA==</field></TestPojo>", xml);
+-    }
+-
+-    private TestPojo createPojo(char... content) {
+-        TestPojo obj = new TestPojo();
+-        // DirectByteBuffer does not have an underlying array
+-        // so the ByteArraySerializer has to fallback to stream writing
+-        obj.field = ByteBuffer.allocateDirect(content.length);
+-        for(char b : content) {
+-            obj.field.put((byte) b);
+-        }
+-        obj.field.position(0);
+-        return obj;
+-    }
+-
+-    public static class TestPojo {
+-        public ByteBuffer field;
+-    }
+-} 

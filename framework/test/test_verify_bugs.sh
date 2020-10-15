@@ -3,6 +3,10 @@
 #
 # This script verifies that all bugs for a given project are reproducible and
 # that the provided information about triggering tests is correct.
+# This script must be run from its own directory (`framework/tests/`).
+#
+# By default, this script runs only relevant tests. Set the -A flag to run all
+# tests.
 #
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
@@ -25,9 +29,14 @@ usage() {
     exit 1
 }
 
+# Run only relevant tests by default
+TEST_FLAG="-r"
+
 # Check arguments
-while getopts ":p:b:" opt; do
+while getopts ":p:b:A" opt; do
     case $opt in
+        A) TEST_FLAG=""
+            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -59,13 +68,13 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/commit-db)
-    BUGS="$(seq 1 1 $num_bugs)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
 # Create log file
 script_name=$(echo $script | sed 's/\.sh$//')
 LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
+DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).failing_tests"
 
 ################################################################################
 # Run developer-written tests on all buggy and fixed program versions, and 
@@ -78,15 +87,25 @@ HALT_ON_ERROR=0
 test_dir="$TMP_DIR/test_trigger"
 mkdir -p $test_dir
 
+mkdir -p $DIR_FAILING
+
 work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
+    # Skip all bug ids that do not exist in the active-bugs csv
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
+        warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
+        continue
+    fi
+
     for v in "b" "f"; do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test -r -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+
+        cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
         triggers=$(num_triggers "$work_dir/failing_tests")
         # Expected number of failing tests for each fixed version is 0!
@@ -99,10 +118,14 @@ for bid in $(echo $BUGS); do
         # Expected number of failing tests for each buggy version is equal
         # to the number of provided triggering tests
         expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
+
+        # Fail if there are no trigger tests
+        [ $expected -gt 0 ] || die "Metadata error: There are no trigger tests for $PID-$vid"
+
         [ $triggers -eq $expected ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
-            grep -q "$t" "$work_dir/failing_tests" || die "verify name of triggering tests ($t not found)"
+            grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
         done
     done
 done

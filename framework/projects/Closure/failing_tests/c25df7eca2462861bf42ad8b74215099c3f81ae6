@@ -1,0 +1,305 @@
+## closure-compiler: c25df7eca2462861bf42ad8b74215099c3f81ae6 ##
+--- com.google.javascript.jscomp.graph.GraphColoringTest::testDeterministic
+junit.framework.AssertionFailedError
+	at junit.framework.Assert.fail(Assert.java:55)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertFalse(Assert.java:39)
+	at junit.framework.Assert.assertFalse(Assert.java:47)
+	at junit.framework.TestCase.assertFalse(TestCase.java:219)
+	at com.google.javascript.jscomp.graph.GraphColoringTest.testDeterministic(GraphColoringTest.java:194)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
+--- com.google.javascript.jscomp.CrossModuleMethodMotionTest::testTwoMethods
+junit.framework.AssertionFailedError: 
+Expected: var JSCompiler_stubMap=[];function JSCompiler_stubMethod(id){return function(){return JSCompiler_stubMap[id].apply(this,arguments)}}function JSCompiler_unstubMethod(id,body){return JSCompiler_stubMap[id]=body}function Foo(){}Foo.prototype.baz=JSCompiler_stubMethod(1);Foo.prototype.callBaz=JSCompiler_stubMethod(0);Foo.prototype.baz=JSCompiler_unstubMethod(1,function(){});Foo.prototype.callBaz=JSCompiler_unstubMethod(0,function(){this.baz()});(new Foo).callBaz()
+Result: var JSCompiler_stubMap=[];function JSCompiler_stubMethod(id){return function(){return JSCompiler_stubMap[id].apply(this,arguments)}}function JSCompiler_unstubMethod(id,body){return JSCompiler_stubMap[id]=body}function Foo(){}Foo.prototype.baz=JSCompiler_stubMethod(0);Foo.prototype.callBaz=JSCompiler_stubMethod(1);Foo.prototype.callBaz=JSCompiler_unstubMethod(1,function(){this.baz()});Foo.prototype.baz=JSCompiler_unstubMethod(0,function(){});(new Foo).callBaz()
+Node tree inequality:
+Tree1:
+BLOCK [synthetic: 1]
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: expected0] [synthetic: 1]
+        VAR 1
+            NAME JSCompiler_stubMap 1
+                ARRAYLIT 1
+        FUNCTION JSCompiler_stubMethod 1 [sourcename: expected0]
+            NAME JSCompiler_stubMethod 1
+            LP 1
+                NAME id 1
+            BLOCK 1
+                RETURN 1
+                    FUNCTION  1 [sourcename: expected0]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+                            RETURN 1
+                                CALL 1
+                                    GETPROP 1
+                                        GETELEM 1
+                                            NAME JSCompiler_stubMap 1
+                                            NAME id 1
+                                        STRING apply 1
+                                    THIS 1
+                                    NAME arguments 1
+        FUNCTION JSCompiler_unstubMethod 1 [sourcename: expected0]
+            NAME JSCompiler_unstubMethod 1
+            LP 1
+                NAME id 1
+                NAME body 1
+            BLOCK 1
+                RETURN 1
+                    ASSIGN 1
+                        GETELEM 1
+                            NAME JSCompiler_stubMap 1
+                            NAME id 1
+                        NAME body 1
+        FUNCTION Foo 1 [sourcename: expected0]
+            NAME Foo 1
+            LP 1
+            BLOCK 1
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING baz 1
+                CALL 1
+                    NAME JSCompiler_stubMethod 1
+                    NUMBER 1.0 1
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: expected1] [synthetic: 1]
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING callBaz 1
+                CALL 1
+                    NAME JSCompiler_stubMethod 1
+                    NUMBER 0.0 1
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: expected2] [synthetic: 1]
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING baz 1
+                CALL 1
+                    NAME JSCompiler_unstubMethod 1
+                    NUMBER 1.0 1
+                    FUNCTION  1 [sourcename: expected2]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING callBaz 1
+                CALL 1
+                    NAME JSCompiler_unstubMethod 1
+                    NUMBER 0.0 1
+                    FUNCTION  1 [sourcename: expected2]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+                            EXPR_RESULT 1
+                                CALL 1
+                                    GETPROP 1
+                                        THIS 1
+                                        STRING baz 1
+        EXPR_RESULT 1
+            CALL 1
+                GETPROP 1
+                    NEW 1 [parenthesized: true]
+                        NAME Foo 1
+                    STRING callBaz 1
+
+
+Tree2:
+BLOCK [synthetic: 1]
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: i0] [synthetic: 1]
+        VAR 1
+            NAME JSCompiler_stubMap 1
+                ARRAYLIT 1
+        FUNCTION JSCompiler_stubMethod 1 [sourcename:  [synthetic] ]
+            NAME JSCompiler_stubMethod 1
+            LP 1
+                NAME id 1
+            BLOCK 1
+                RETURN 1
+                    FUNCTION  1 [sourcename:  [synthetic] ]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+                            RETURN 1
+                                CALL 1
+                                    GETPROP 1
+                                        GETELEM 1
+                                            NAME JSCompiler_stubMap 1
+                                            NAME id 1
+                                        STRING apply 1
+                                    THIS 1
+                                    NAME arguments 1
+        FUNCTION JSCompiler_unstubMethod 1 [sourcename:  [synthetic] ]
+            NAME JSCompiler_unstubMethod 1
+            LP 1
+                NAME id 1
+                NAME body 1
+            BLOCK 1
+                RETURN 1
+                    ASSIGN 1
+                        GETELEM 1
+                            NAME JSCompiler_stubMap 1
+                            NAME id 1
+                        NAME body 1
+        FUNCTION Foo 1 [sourcename: i0]
+            NAME Foo 1
+            LP 1
+            BLOCK 1
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING baz 1
+                CALL 1
+                    NAME JSCompiler_stubMethod
+                    NUMBER 0.0
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: i1] [synthetic: 1]
+        EXPR_RESULT 1
+            ASSIGN 1
+                GETPROP 1
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING callBaz 1
+                CALL 1
+                    NAME JSCompiler_stubMethod
+                    NUMBER 1.0
+    SCRIPT [source name: null] [encoded source length: 0] [base line: -1] [end line: -1] 1 [sourcename: i2] [synthetic: 1]
+        EXPR_RESULT
+            ASSIGN
+                GETPROP
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING callBaz
+                CALL
+                    NAME JSCompiler_unstubMethod
+                    NUMBER 1.0
+                    FUNCTION  1 [sourcename: i1]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+                            EXPR_RESULT 1
+                                CALL 1
+                                    GETPROP 1
+                                        THIS 1
+                                        STRING baz 1
+        EXPR_RESULT
+            ASSIGN
+                GETPROP
+                    GETPROP 1
+                        NAME Foo 1
+                        STRING prototype 1
+                    STRING baz
+                CALL
+                    NAME JSCompiler_unstubMethod
+                    NUMBER 0.0
+                    FUNCTION  1 [sourcename: i0]
+                        NAME  1
+                        LP 1
+                        BLOCK 1
+        EXPR_RESULT 1
+            CALL 1
+                GETPROP 1
+                    NEW 1 [parenthesized: true]
+                        NAME Foo 1
+                    STRING callBaz 1
+
+
+Subtree1: NUMBER 1.0 1
+
+
+Subtree2: NUMBER 0.0
+
+	at junit.framework.Assert.fail(Assert.java:57)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertNull(Assert.java:277)
+	at junit.framework.TestCase.assertNull(TestCase.java:447)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:782)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:622)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:477)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:458)
+	at com.google.javascript.jscomp.CompilerTestCase.test(CompilerTestCase.java:445)
+	at com.google.javascript.jscomp.CrossModuleMethodMotionTest.testTwoMethods(CrossModuleMethodMotionTest.java:198)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at junit.framework.TestCase.runTest(TestCase.java:176)
+	at junit.framework.TestCase.runBare(TestCase.java:141)
+	at junit.framework.TestResult$1.protect(TestResult.java:122)
+	at junit.framework.TestResult.runProtected(TestResult.java:142)
+	at junit.framework.TestResult.run(TestResult.java:125)
+	at junit.framework.TestCase.run(TestCase.java:129)
+	at junit.framework.TestSuite.runTest(TestSuite.java:255)
+	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1484)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:872)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1972)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute1(JUnitTask.java:824)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:2277)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
+	at sun.reflect.GeneratedMethodAccessor4.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:392)
+	at org.apache.tools.ant.Target.performTasks(Target.java:413)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:811)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)

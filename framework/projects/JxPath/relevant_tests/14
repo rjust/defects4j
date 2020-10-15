@@ -1,0 +1,10 @@
+org.apache.commons.jxpath.ri.JXPathCompiledExpressionTest
+org.apache.commons.jxpath.ri.compiler.CoreFunctionTest
+org.apache.commons.jxpath.ri.compiler.CoreOperationTest
+org.apache.commons.jxpath.ri.compiler.ExtensionFunctionTest
+org.apache.commons.jxpath.ri.compiler.VariableTest
+org.apache.commons.jxpath.ri.model.MixedModelTest
+org.apache.commons.jxpath.ri.model.beans.BeanModelTest
+org.apache.commons.jxpath.ri.model.dom.DOMModelTest
+org.apache.commons.jxpath.ri.model.dynabeans.DynaBeanModelTest
+org.apache.commons.jxpath.ri.model.jdom.JDOMModelTest

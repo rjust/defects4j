@@ -1,0 +1,9 @@
+com.google.gson.DefaultDateTypeAdapter
+com.google.gson.internal.bind.util.ISO8601Utils
+com.google.gson.internal.LazilyParsedNumber
+com.google.gson.JsonDeserializer
+com.google.gson.JsonElement
+com.google.gson.JsonParseException
+com.google.gson.JsonPrimitive
+com.google.gson.JsonSerializer
+com.google.gson.JsonSyntaxException

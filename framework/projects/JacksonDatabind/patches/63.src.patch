@@ -1,0 +1,36 @@
+diff --git a/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java b/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java
+index 00896eab5..e8bd1e268 100644
+--- a/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java
++++ b/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java
+@@ -7,6 +7,7 @@ import java.util.*;
+ 
+ import com.fasterxml.jackson.annotation.JsonIgnore;
+ import com.fasterxml.jackson.core.*;
++import com.fasterxml.jackson.databind.util.ClassUtil;
+ 
+ /**
+  * Checked exception used to signal fatal problems with mapping of
+@@ -127,22 +128,12 @@ public class JsonMappingException
+                     // butt-ugly for arrays.
+                     // 06-Oct-2016, tatu: as per [databind#1403], `getSimpleName()` not so good
+                     //   as it drops enclosing class. So let's try bit different approach
+-                    int arrays = 0;
+-                    while (cls.isArray()) {
+-                        cls = cls.getComponentType();
+-                        ++arrays;
+-                    }
+-                    sb.append(cls.getName());
+-                    while (--arrays >= 0) {
+-                        sb.append("[]");
+-                    }
+-                    /* was:
+                     String pkgName = ClassUtil.getPackageName(cls);
+                     if (pkgName != null) {
+                         sb.append(pkgName);
+                         sb.append('.');
+                     }
+-                    */
++                    sb.append(cls.getSimpleName());
+                 }
+                 sb.append('[');
+                 if (_fieldName != null) {

@@ -1,0 +1,20 @@
+diff --git a/src/test/org/apache/commons/collections/TestExtendedProperties.java b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+index 0c6388e8..5db27cc4 100644
+--- a/src/test/org/apache/commons/collections/TestExtendedProperties.java
++++ b/src/test/org/apache/commons/collections/TestExtendedProperties.java
+@@ -396,15 +396,4 @@ public class TestExtendedProperties extends TestCase {
+         assertFalse(it.hasNext());
+     }
+ 
+-    public void testCollections271() {
+-        ExtendedProperties props = new ExtendedProperties();
+-        props.setProperty("test", "\\\\\\\\192.168.1.91\\\\test");
+-        props.getProperty("test");
+-        assertEquals( "\\\\192.168.1.91\\test", props.getProperty("test") );
+-
+-        ExtendedProperties props2 = new ExtendedProperties();
+-        props2.combine(props);
+-        assertEquals( "\\\\192.168.1.91\\test", props2.getProperty("test") );
+-    }
+-
+ }

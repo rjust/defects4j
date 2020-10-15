@@ -1,0 +1,117 @@
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/TestParserErrorHandling.java b/src/test/java/com/fasterxml/jackson/core/json/TestParserErrorHandling.java
+index 8476bc4b..6e0c3ac9 100644
+--- a/src/test/java/com/fasterxml/jackson/core/json/TestParserErrorHandling.java
++++ b/src/test/java/com/fasterxml/jackson/core/json/TestParserErrorHandling.java
+@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonToken;
+ public class TestParserErrorHandling
+     extends com.fasterxml.jackson.test.BaseTest
+ {
++
+     public void testInvalidKeywordsStream() throws Exception {
+         _testInvalidKeywords(true);
+     }
+@@ -17,15 +18,6 @@ public class TestParserErrorHandling
+         _testInvalidKeywords(false);
+     }
+ 
+-    // Tests for #105 ("eager number parsing misses errors")
+-    public void testMangledNumbersBytes() throws Exception {
+-        _testMangledNumbers(true);
+-    }
+-
+-    public void testMangledNumbersChars() throws Exception {
+-        _testMangledNumbers(false);
+-    }
+-    
+     /*
+     /**********************************************************
+     /* Helper methods
+@@ -82,30 +74,4 @@ public class TestParserErrorHandling
+             jp.close();
+         }
+     }
+-
+-    private void _testMangledNumbers(boolean useStream) throws Exception
+-    {
+-        String doc = "123true";
+-        JsonParser jp = useStream ? createParserUsingStream(doc, "UTF-8")
+-                : createParserUsingReader(doc);
+-        try {
+-            JsonToken t = jp.nextToken();
+-            fail("Should have gotten an exception; instead got token: "+t);
+-        } catch (JsonParseException e) {
+-            verifyException(e, "expected space");
+-        }
+-        jp.close();
+-
+-        // Also test with floats
+-        doc = "1.5false";
+-        jp = useStream ? createParserUsingStream(doc, "UTF-8")
+-                : createParserUsingReader(doc);
+-        try {
+-            JsonToken t = jp.nextToken();
+-            fail("Should have gotten an exception; instead got token: "+t);
+-        } catch (JsonParseException e) {
+-            verifyException(e, "expected space");
+-        }
+-        jp.close();
+-    }
+ }
+diff --git a/src/test/java/com/fasterxml/jackson/core/json/TestRootValueParsing.java b/src/test/java/com/fasterxml/jackson/core/json/TestRootValueParsing.java
+deleted file mode 100644
+index 5078f4da..00000000
+--- a/src/test/java/com/fasterxml/jackson/core/json/TestRootValueParsing.java
++++ /dev/null
+@@ -1,52 +0,0 @@
+-package com.fasterxml.jackson.core.json;
+-
+-import com.fasterxml.jackson.core.JsonFactory;
+-import com.fasterxml.jackson.core.JsonParser;
+-import com.fasterxml.jackson.core.JsonToken;
+-
+-public class TestRootValueParsing
+-    extends com.fasterxml.jackson.test.BaseTest
+-{
+-    private final JsonFactory JSON_F = new JsonFactory();
+-
+-    public void testSimpleNumbers() throws Exception
+-    {
+-        _testSimpleNumbers(false);
+-        _testSimpleNumbers(true);
+-    }
+-
+-    private void _testSimpleNumbers(boolean useStream) throws Exception
+-    {
+-        final String DOC = "1 2\t3\r4\n5\r\n6\r\n   7";
+-        JsonParser jp = useStream ?
+-                createParserUsingStream(JSON_F, DOC, "UTF-8")
+-                : createParserUsingReader(JSON_F, DOC);
+-        for (int i = 1; i <= 7; ++i) {
+-            assertToken(JsonToken.VALUE_NUMBER_INT, jp.nextToken());
+-            assertEquals(i, jp.getIntValue());
+-        }
+-        assertNull(jp.nextToken());
+-        jp.close();
+-    }
+-
+-    public void testSimpleBooleans() throws Exception
+-    {
+-        _testSimpleBooleans(false);
+-        _testSimpleBooleans(true);
+-    }
+-
+-    private void _testSimpleBooleans(boolean useStream) throws Exception
+-    {
+-        final String DOC = "true false\ttrue\rfalse\ntrue\r\nfalse\r\n   true";
+-        JsonParser jp = useStream ?
+-                createParserUsingStream(JSON_F, DOC, "UTF-8")
+-                : createParserUsingReader(JSON_F, DOC);
+-        boolean exp = true;
+-        for (int i = 1; i <= 7; ++i) {
+-            assertToken(exp ? JsonToken.VALUE_TRUE : JsonToken.VALUE_FALSE, jp.nextToken());
+-            exp = !exp;
+-        }
+-        assertNull(jp.nextToken());
+-        jp.close();
+-    }
+-}

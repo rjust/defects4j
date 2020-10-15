@@ -1,9 +1,9 @@
 org.apache.commons.math.exception.MathArithmeticException
+org.apache.commons.math.exception.MathParseException
+org.apache.commons.math.exception.MathRuntimeException
 org.apache.commons.math.exception.MathThrowable
 org.apache.commons.math.exception.util.Localizable
 org.apache.commons.math.geometry.Vector3D
-org.apache.commons.math.util.CompositeFormat
-org.apache.commons.math.exception.MathRuntimeException
-org.apache.commons.math.exception.MathParseException
-org.apache.commons.math.util.FastMath
 org.apache.commons.math.geometry.Vector3DFormat
+org.apache.commons.math.util.CompositeFormat
+org.apache.commons.math.util.FastMath

@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2018 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -44,100 +44,125 @@ our @ISA = qw(Project);
 my $PID  = "Lang";
 
 sub new {
-    my $class= shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($class) = @_;
+
     my $name = "commons-lang";
-    my $src  = "src/main/java";
-    my $test = "src/test";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$SCRIPT_DIR/projects/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
                              \&_post_checkout);
 
-    return $class->SUPER::new($PID, $name, $vcs, $src, $test);
-}
-
-sub src_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get src directory from lookup table
-    my $src = $self->{_dir_map}->{$revision_id}->{src};
-    return $src if defined $src;
-
-    # Get default src dir if not listed in _dir_map
-    return $self->SUPER::src_dir($vid);
-}
-
-sub test_dir {
-    @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    Utils::check_vid($vid);
-
-    # Init dir_map if necessary
-    $self->_build_dir_map();
-
-    # Get revision hash
-    my $revision_id = $self->lookup($vid);
-
-    # Get test directory from lookup table
-    my $test = $self->{_dir_map}->{$revision_id}->{test};
-    return $test if defined $test;
-
-    # Get default test dir if not listed in _dir_map
-    return $self->SUPER::test_dir($vid);
+    return $class->SUPER::new($PID, $name, $vcs);
 }
 
 #
-# Remove randomly failing tests in addition to the broken ones
+# Determines the directory layout for sources and tests
 #
-sub fix_tests {
+sub determine_layout {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $vid) = @_;
-    # Call fix_tests in super class to fix all broken methods
-    $self->SUPER::fix_tests($vid);
-
-    # Remove randomly failing tests
-    my $work_dir = $self->{prog_root};
-    my $dir = $self->test_dir($vid);
-
-    my $file = "$SCRIPT_DIR/projects/$PID/random_tests";
-    if (-e $file) {
-        # Remove broken test methods
-        system("$UTIL_DIR/rm_broken_tests.pl $file $work_dir/$dir") == 0 or die;
-    }
+    my ($self, $rev_id) = @_;
+    my $dir = $self->{prog_root};
+    my $result = _layout1($dir) // _layout2($dir);
+    die "Unknown layout for revision: ${rev_id}" unless defined $result;
+    return $result;
 }
 
+#
+# Existing Ant build.xml and default.properties
+#
+sub _layout1 {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
+    my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*source.home\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*test.home\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Generated build.xml (from mvn ant:ant) with maven-build.properties
+#
+sub _layout2 {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
+    my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*maven\.build\.srcDir\.0\s*=\s*(\S+)\s*/$1/;
+    $test=~ s/\s*maven\.build\.testDir\.0\s*=\s*(\S+)\s*/$1/;
+
+    return {src=>$src, test=>$test};
+}
+
+#
+# Copy the generated build.xml, if necessary.
+#
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $SCRIPT_DIR/projects/$PID/build_files/$revision_id/* $work_dir");
+        system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $work_dir");
     }
 }
 
-sub _build_dir_map {
-    my $self = shift;
+#
+# Determine and log random tests when initializing a revision.
+#
+sub initialize_revision {
+    my ($self, $revision, $vid) = @_;
+    $self->SUPER::initialize_revision($revision);
+    # TODO: define the file name for random tests in Constants
+    my $random_tests_file = "$PROJECTS_DIR/$self->{pid}/random_tests";
+    _log_random_tests($self->{prog_root} . "/" . $self->test_dir($vid), $random_tests_file);
+}
 
-    return if defined $self->{_dir_map};
+#
+# Search for clearly labeled, randomly failing tests in all Java files
+#
+sub _log_random_tests {
+    my ($test_dir, $out_file) = @_;
+    @_ == 2 or die $ARG_ERROR;
+    # TODO: Move to Constants
+    my $PREFIX = "---";
+    my @list = `cd $test_dir && find . -name *.java`;
+    die if $?!=0 or !@list;
 
-    my $map_file = "$SCRIPT_DIR/projects/$PID/dir_map.csv";
-    open (IN, "<$map_file") or die "Cannot open directory map $map_file: $!";
-    my $cache = {};
-    while (<IN>) {
-        chomp;
-        /([^,]+),([^,]+),(.+)/ or next;
-        $cache->{$1} = {src=>$2, test=>$3};
+    foreach my $file (@list) {
+        chomp $file;
+        open(IN, "<$test_dir/$file") or die $!;
+        my @reason = ();
+        my $rnd=0;
+        while (<IN>) {
+            if (!$rnd) {
+                next unless /(\*|\/\/).*randomly/;
+                $rnd=1;
+            }
+            if ($rnd and /\s*public\s*void\s*([^\(]*)\s*\(/) {
+                my $method=$1;
+                my $class = $file;
+                $class =~ s/\.\/(.*).java/$1/; $class =~ s/\//\./g;
+                my $key = "${class}::$method";
+                # Only print method if it is not already in the result file
+                Utils::append_to_file_unless_matches($out_file,
+                    join('', @reason) . "$PREFIX $key\n\n",
+                    qr/$PREFIX $key/
+                );
+                @reason = ();
+                $rnd=0; next;
+            }
+            push(@reason, $_);
+        }
+        close(IN);
     }
-    close IN;
-    $self->{_dir_map}=$cache;
 }
 
 1;
