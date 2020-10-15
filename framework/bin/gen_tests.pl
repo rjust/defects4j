@@ -256,6 +256,14 @@ $ENV{D4J_SEED}                = "$SEED";
 $ENV{D4J_TEST_MODE}           = "$MODE";
 $ENV{D4J_DEBUG}               = "$DEBUG";
 
+if ($DEBUG) {
+    print "\n";
+    my $key;
+    foreach $key (sort keys(%ENV)) {
+        print "$key = $ENV{$key}\n";
+    }
+}
+
 # Create temporary output directory
 Utils::exec_cmd("mkdir -p $TMP_DIR/$TOOL", "Creating temporary output directory")
         or die("Failed to create temporary output directory!");
