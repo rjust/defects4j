@@ -82,6 +82,8 @@ for pid in "${projects[@]}"; do
 done
 
 # delete tmp file directory
-rm -rf $randoop_dir
+if (( D4J_DEBUG != 1 )); then
+    rm -rf $randoop_dir
+fi
 
 ../util/show_coverage.pl "$TMP_DIR"/coverage
