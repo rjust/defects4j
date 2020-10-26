@@ -35,7 +35,7 @@ master_coverage=$TMP_DIR/coverage
 randoop_dir=$TMP_DIR/randoop
 
 if [ -z "$1" ] ; then
-    # Deafult = generate tests for 6 projects
+    # Default = generate tests for 6 projects
     projects=( Chart Closure Lang Math Mockito Time )
     # Default = first 5 bug ids only
     bids=( 1 2 3 4 5 )
