@@ -49,9 +49,9 @@ more details about the defects and requirements).
 
     * You can indicate a different directory that contains Randoop (note that the `.jar` files must be suffixed `-current.jar`):
       ```export TESTGEN_LIB_DIR="path-to-directory-containing-randoop-current.jar"```
-    * You can link `.jar` files from a local version of Randoop:
+    * You can copy and rename `.jar` files from a local version of Randoop:
       ```
-      export randoop=MY_RANDOOP_DIRECTORY && (cd $randoop && rm -rf build/libs/ && ./gradlew assemble) && (cd $D4J_HOME/framework/lib/test_generation/generation && $randoop/scripts/replace-randoop-jars.sh "-current")
+      (cd MY_RANDOOP && ./gradlew assemble) && (cd $D4J_HOME/framework/lib/test_generation/generation && MY_RANDOOP/scripts/replace-randoop-jars.sh "-current")
       ```
 
 3. Run the test generation and coverage analysis:

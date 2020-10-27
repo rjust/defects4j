@@ -56,11 +56,8 @@ printf "\n(%s)" "$version" >&2
 printf ".%.0s" {1..expr 73 - length "$version"} >&2
 printf " " >&2
 
-# use defects4j version of junit instead of one in randoop-current.jar
-JUNIT=$(realpath $D4J_HOME/framework/projects/lib/junit*.jar)
-
 # Build the test-generation command
-cmd="java -ea -classpath $project_cp:$JUNIT:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
+cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
   -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
   -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
   -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \

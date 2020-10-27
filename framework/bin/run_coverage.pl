@@ -73,7 +73,7 @@ F<instrument_classes> must contain fully-qualified class names -- one class per 
 
 =item -D
 
-Debug: Display execution environment and do not delete the temporary check-out directory
+Debug: Enable verbose logging and do not delete the temporary check-out directory
 (optional).
 
 =item -A
