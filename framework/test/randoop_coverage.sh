@@ -4,7 +4,7 @@
 # This script generates coverage data for Randoop generated tests over the defects4j suite.
 # By default, it does so for just 6 projects and bug ids 1-5 in each project.
 # An optional first agument will replace the default project list.
-# An optional second agument will replace the default bid list.
+# An optional second agument will replace the default bid list; "all" means all valid bids.
 # An optional third agument of 'debug' will set the defects4j DEBUG flag.
 #
 ################################################################################
@@ -35,6 +35,7 @@ master_coverage=$TMP_DIR/coverage
 # Directory for Randoop test suites
 randoop_dir=$TMP_DIR/randoop
 
+all_bids=0
 if [ -z "$1" ] ; then
     # Default = generate tests for 6 projects
     projects=( Chart Closure Lang Math Mockito Time )
@@ -47,8 +48,13 @@ else
         # Default = first 5 bug ids only
         bids=( 1 2 3 4 5 )
     else
+        if [ $2 == "all" ]; then
+# Generate tests for all valid bids in project; actual bids will be set below.
+            all_bids=1
+        else
 # Generate tests for supplied bid list
-        bids=( $2 )
+            bids=( $2 )
+        fi
     fi
 fi
 if [ ! -z "$3" ] ; then
@@ -61,8 +67,9 @@ if [ ! -z "$3" ] ; then
     fi
 fi
 
-echo "Projects: ${projects[@]}"
-echo "Bug ids: ${bids[@]}"
+if ((${#projects[@]} > 1)); then
+    echo "Projects: ${projects[@]}"
+fi
 
 # We want the 'fixed' version of the sample.
 type=f
@@ -75,6 +82,13 @@ suite_num=1
 #rm -f $master_coverage
 
 for pid in "${projects[@]}"; do
+    if (( all_bids == 1 )); then
+        bids=($(defects4j bids -p $pid))
+    fi
+
+    echo "Project: $pid"
+    echo "Bug ids: ${bids[@]}"
+
     for bid in "${bids[@]}"; do
         vid=${bid}$type
 
