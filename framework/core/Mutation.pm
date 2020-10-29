@@ -32,6 +32,7 @@ This module provides helper subroutines for mutation analysis using the Major
 mutation framework.
 
 =cut
+
 package Mutation;
 
 use warnings;
@@ -56,7 +57,9 @@ our $TEST_MAP_FILE = "testMap.csv";
 
 =head2 Static subroutines
 
-  Mutation::create_mml(instrument_classes, out_file, mut_ops)
+=over 4
+
+=item C<Mutation::create_mml(instrument_classes, out_file, mut_ops)>
 
 Generates an mml file, enabling all mutation operators defined by the array
 reference C<mut_ops> for all classes listed in F<instrument_classes>. The mml
@@ -64,6 +67,7 @@ reference C<mut_ops> for all classes listed in F<instrument_classes>. The mml
 file to F<'out_file'.bin>.
 
 =cut
+
 sub create_mml {
     @_ == 3 or die $ARG_ERROR;
     my ($instrument_classes, $out_file, $mut_ops) = @_;
@@ -98,19 +102,15 @@ sub create_mml {
 
 =pod
 
-  Mutation::mutation_analysis(project_ref, log_file [, exclude_file, base_map, single_test])
+=item C<Mutation::mutation_analysis(project_ref, log_file [, exclude_file, base_map, single_test])>
 
 Runs mutation analysis for the developer-written test suites of the provided
 L<Project> reference.  Returns a reference to a hash that provides kill details
 for all covered mutants:
-
-=over 4
-
-  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
-
-=back
+S<C<{mut_id} =E<gt> "[TIME|EXC|FAIL|LIVE]">>
 
 =cut
+
 sub mutation_analysis {
     @_ >= 3 or die $ARG_ERROR;
     my ($project, $log_file, $exclude_file, $base_map, $single_test) = @_;
@@ -128,22 +128,17 @@ sub mutation_analysis {
     return _build_mut_map($project, $base_map);
 }
 
-
 =pod
 
-  Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, exclude_file, base_map])
+=item C<Mutation::mutation_analysis_ext(project_ref, test_dir, include, log_file [, exclude_file, base_map])>
 
 Runs mutation analysis for external (e.g., generated) test suites on the
 provided L<Project> reference. Returns a reference to a hash that provides kill
 details for all covered mutants:
-
-=over 4
-
-  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
-
-=back
+S<C<{mut_id} =E<gt> "[TIME|EXC|FAIL|LIVE]">>
 
 =cut
+
 sub mutation_analysis_ext {
     @_ >= 4 or die $ARG_ERROR;
     my ($project, $test_dir, $include, $log_file, $exclude_file, $base_map) = @_;
@@ -161,16 +156,42 @@ sub mutation_analysis_ext {
     return _build_mut_map($project, $base_map);
 }
 
+=pod
+
+=item C<Mutation::parse_mutation_operators(file_name)>
+
+Parses the provided text file and returns an array with mutation operator names
+(i.e., "AOR", "ROR", etc.).
+
+=cut
+
+sub parse_mutation_operators {
+    @_ == 1 or die $ARG_ERROR;
+    my ($file_name) = @_;
+
+    my @ops = ();
+
+    open(IN, "<$file_name") or die "Cannot open mut-ops file ($file_name): $!";
+    while(my $line = <IN>) {
+        chomp($line);
+        my @tmp = split(" ", $line);
+        push(@ops, @tmp);
+    }
+    close(IN);
+
+    return @ops;
+}
 
 =pod
 
-  Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen, num_excluded [, mutation_map])
+=item C<Mutation::insert_row(output_dir, pid, vid, suite_src, tid, gen, num_excluded [, mutation_map])>
 
 Insert a row into the database table L<TAB_MUTATION|DB>. C<hashref> points to a
 hash holding all key-value pairs of the data row.  F<out_dir> is the optional
 alternative database directory to use.
 
 =cut
+
 sub insert_row {
     @_ >= 5 or die $ARG_ERROR;
     my ($out_dir, $pid, $vid, $suite, $test_id, $gen, $num_excluded, $mut_map) = @_;
@@ -201,7 +222,7 @@ sub insert_row {
 
 =pod
 
-  Mutation::copy_mutation_logs(project, vid, suite, test_id, log, log_dir)
+=item C<Mutation::copy_mutation_logs(project, vid, suite, test_id, log, log_dir)>
 
 Copies the mutation log files to a permanent directory F<log_dir>.  C<project>
 is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
@@ -209,6 +230,7 @@ the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
 the id of the test suite. TODO
 
 =cut
+
 sub copy_mutation_logs {
     @_ == 6 or die $ARG_ERROR;
     my ($project, $vid, $suite, $test_id, $log, $log_dir) = @_;
@@ -227,6 +249,11 @@ sub copy_mutation_logs {
     }
 }
 
+=pod
+
+=back
+
+=cut
 
 #
 # Parse kill details file and build mutant map

@@ -44,7 +44,7 @@ See L<Project|Project/"Available Project IDs"> module for available project IDs.
 =item -d F<suite_dir>
 
 The directory that contains the test suite archives.
-See L<Test suites|/"Test suites">.
+See L<Test Suites|/"Test Suites">.
 
 =item -o F<out_dir>
 
@@ -100,6 +100,7 @@ For each step the database table contains a column, indicating the result of the
 of the steps fails and the script continues with the next test suite>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -135,6 +136,10 @@ my $INCL = $cmd_opts{f} // "*.java";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # Set up project
 my $project = Project::create_project($PID);
 
@@ -167,6 +172,7 @@ each executed test suite are copied to:
 F<out_dir/L<TAB_BUG_DETECTION|DB>_log/project_id>.
 
 =cut
+
 # Log directory and file
 my $LOG_DIR = "$OUT_DIR/${TAB_BUG_DETECTION}_log/$PID";
 my $LOG_FILE = "$LOG_DIR/" . basename($0) . ".log";

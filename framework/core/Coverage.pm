@@ -31,6 +31,7 @@ Coverage.pm -- helper subroutines for code coverage analysis.
 This module provides helper subroutines for code coverage analysis using Cobertura.
 
 =cut
+
 # TODO: Clean up this module and provide a ".ser" parser for Cobertura's coverage results.
 package Coverage;
 
@@ -56,7 +57,9 @@ my $CORBETURA_REPORT = "$SCRIPT_DIR/projects/lib/cobertura-report.sh";
 
 =head2 Static subroutines
 
-  Coverage::coverage(project_ref, instrument_classes, src_dir, log_file, relevant_tests, [single_test, [merge_with]])
+=over 4
+
+=item C<Coverage::coverage(project_ref, instrument_classes, src_dir, log_file, relevant_tests, [single_test, [merge_with]])>
 
 Measures code coverage for a provided L<Project> reference. F<instrument_classes>
 is the name of a file that lists all the classes which should be instrumented.  F<src_dir>
@@ -70,6 +73,7 @@ in conjunction with C<merge_with>, which is the path to another .ser file obtain
 running coverage. This enables incremental analyses.
 
 =cut
+
 sub coverage {
 	@_ >= 5 or die $ARG_ERROR;
 	my ($project, $instrument_classes, $src_dir, $log_file, $relevant_tests, $single_test, $merge_with) = @_;
@@ -114,7 +118,7 @@ sub coverage {
 
 =pod
 
-  Coverage::coverage_ext(project, instrument_classes, src_dir, test_dir, include_pattern, log_file)
+=item C<Coverage::coverage_ext(project, instrument_classes, src_dir, test_dir, include_pattern, log_file)>
 
 Determines code coverage for an external test suite.
 F<instrument_classes> is the name of a file that lists all the classes which
@@ -122,6 +126,7 @@ should be instrumented.  C<src_dir> provides the root directory of the source
 code, which is necessary to generate reports.
 
 =cut
+
 sub coverage_ext {
 	@_ >= 6 or die $ARG_ERROR;
 	my ($project, $instrument_classes, $src_dir, $test_dir, $include, $log_file, $single_test) = @_;
@@ -142,13 +147,14 @@ sub coverage_ext {
 
 =pod
 
-  Coverage::insert_row(hashref, [out_dir])
+=item C<Coverage::insert_row(hashref, [out_dir])>
 
 Insert a row into the database table L<TAB_COVERAGE|DB>. C<hashref> points to a
 hash holding all key-value pairs of the data row.  F<out_dir> is the optional
 alternative database directory to use.
 
 =cut
+
 sub insert_row {
     my ($data, $out_dir) = @_;
 
@@ -171,7 +177,7 @@ sub insert_row {
 
 =pod
 
-  Coverage::copy_coverage_logs(project, vid, suite, test_id, log_dir)
+=item C<Coverage::copy_coverage_logs(project, vid, suite, test_id, log_dir)>
 
 Copies the coverage log files to a permanent directory F<log_dir>.  C<project>
 is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
@@ -179,6 +185,7 @@ the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
 the id of the test suite.
 
 =cut
+
 sub copy_coverage_logs {
     my ($project, $vid, $suite, $test_id, $log_dir) = @_;
 
@@ -188,6 +195,12 @@ sub copy_coverage_logs {
 	system("cp $project->{prog_root}/$XML_FILE $log_dir/$suite/$vid.$test_id.xml") == 0
 		or die "Cannot copy .xml file";
 }
+
+=pod
+
+=back
+
+=cut
 
 #
 # Parse coverage log file and return reference to a hash that holds all results

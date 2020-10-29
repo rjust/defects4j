@@ -43,11 +43,14 @@ Log.pm -- a simple log file abstraction.
 This module provides a simple logging abstraction.
 
 =cut
+
 package Log;
 
 use warnings;
 use strict;
 use POSIX qw(strftime);
+
+use Constants;
 
 =pod
 
@@ -58,8 +61,9 @@ use POSIX qw(strftime);
 Open log file with open mode append (default) and return reference to log object.
 
 =cut
+
 sub create_log {
-    @_ >= 1 or die "Invalid number of arguments";
+    @_ >= 1 or die $ARG_ERROR;
     my ($file_name, $mode) = @_;
     my $open_mode = defined $mode ? $mode : ">>";
     open(my $fh, "$open_mode", "$file_name") or die "Cannot open log file $file_name: $!";
@@ -80,8 +84,9 @@ sub create_log {
 Log provided message.
 
 =cut
+
 sub log_msg {
-    @_ == 2 or die "Invalid number of arguments";
+    @_ == 2 or die $ARG_ERROR;
     my ($self, $msg) = @_;
     my $fh = $self->{log};
     print $fh "$msg\n";
@@ -94,8 +99,9 @@ sub log_msg {
 Log provided message with the current timestamp and the name of calling script.
 
 =cut
+
 sub log_time {
-    @_ == 2 or die "Invalid number of arguments";
+    @_ == 2 or die $ARG_ERROR;
     my ($self, $msg) = @_;
     my $time = strftime('%Y-%m-%d %H:%M:%S', localtime);
     $self->log_msg("######  $msg  $0: $time  ######");
@@ -108,8 +114,9 @@ sub log_time {
 Log provided message and append content of file.
 
 =cut
+
 sub log_file {
-    @_ == 3 or die "Invalid number of arguments";
+    @_ == 3 or die $ARG_ERROR;
     my ($self, $msg, $log_file) = @_;
     $self->log_msg($msg);
     open(IN, "<$log_file") or die "Cannot read file to be logged";
@@ -127,9 +134,10 @@ sub log_file {
 Close log file.
 
 =cut
+
 sub close {
-    @_ == 1 or die "Invalid number of arguments";
-    my $self = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($self) = @_;
     close($self->{log});
 }
 

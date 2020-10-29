@@ -198,6 +198,10 @@ my $MODE = (defined $cmd_opts{E}) ? "error-revealing" : "regression";
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # Temporary directory for project checkout
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
 system("mkdir -p $TMP_DIR");
@@ -215,6 +219,7 @@ Upon success, the log of this script is appended to:
 F<out_dir/logs/C<project_id>.C<version_id>.log>.
 
 =cut
+
 # Log file in output directory
 my $LOG_DIR = "$OUT_DIR/logs";
 my $LOG_FILE = "$LOG_DIR/$PID.$VID.log";
@@ -300,7 +305,8 @@ exit($ret_code);
 ################################################################################
 # Check whether the requested generator is valid
 sub is_generator_valid {
-    my $tool = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($tool) = @_;
     my %all_tools;
     opendir(my $dir, "$TESTGEN_BIN_DIR") || die("Cannot read test generators: $!");
         while (readdir $dir) {

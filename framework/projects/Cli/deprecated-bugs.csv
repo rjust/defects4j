@@ -1,0 +1,2 @@
+bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
+6,3880640ee6268a2ecb2912e1ae896153dc2229e5,6f972cf56d7a3054bac902fecb6d3dd5ee310dea,cli-1,https://issues.apache.org/jira/browse/CLI-1,2.0.0,JVM8.Not.Reproducible

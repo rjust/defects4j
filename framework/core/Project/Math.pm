@@ -50,7 +50,7 @@ sub new {
     my $name = "commons-math";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$PROJECTS_DIR/$PID/commit-db");
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
 
     return $class->SUPER::new($PID, $name, $vcs);
 }
@@ -71,7 +71,8 @@ sub determine_layout {
 # Existing Ant build.xml and default.properties
 #
 sub _layout1 {
-    my $dir = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
     my $src  = `grep 'name="source.home"' $dir/build.xml 2>/dev/null`; chomp $src;
     my $test = `grep 'name="test.home"' $dir/build.xml 2>/dev/null`; chomp $test;
 
@@ -87,7 +88,8 @@ sub _layout1 {
 # Generated build.xml (from mvn ant:ant) with maven-build.properties
 #
 sub _layout2 {
-    my $dir = shift;
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
     my $src  = `grep "<sourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $src;
     my $test = `grep "<unitTestSourceDirectory>" $dir/project.xml 2>/dev/null`; chomp $test;
 

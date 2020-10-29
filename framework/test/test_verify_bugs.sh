@@ -68,7 +68,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/commit-db)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
 # Create log file
@@ -93,9 +93,9 @@ work_dir="$test_dir/$PID"
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
-    # Skip all bug ids that do not exist in the commit-db
-    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/commit-db"; then
-        warn "Skipping bug ID that is not listed in commit-db: $PID-$bid"
+    # Skip all bug ids that do not exist in the active-bugs csv
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
+        warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
         continue
     fi
 
@@ -118,6 +118,10 @@ for bid in $(echo $BUGS); do
         # Expected number of failing tests for each buggy version is equal
         # to the number of provided triggering tests
         expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
+
+        # Fail if there are no trigger tests
+        [ $expected -gt 0 ] || die "Metadata error: There are no trigger tests for $PID-$vid"
+
         [ $triggers -eq $expected ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do

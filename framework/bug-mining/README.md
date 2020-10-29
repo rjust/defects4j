@@ -73,7 +73,7 @@ BUG_FIX_REGEX="/(CODEC-\d+)/mi"
 
 The following table reports the issue trackers, issue tracker project IDs, and
 regular expressions previously used in `Defects4J` (note that we manually built
-the `commit-db` for Chart):
+the `active-bugs.csv` for Chart):
 
 | Project ID | Issue tracker | Issue tracker project ID | Regexp                    |
 |------------|---------------|--------------------------|---------------------------|
@@ -115,7 +115,7 @@ This script performs 3 tasks:
    `$WORK_DIR/issues.txt`.
 
 3. Performs a cross-reference of commit log and the issue ids, and creates a
-   `commit-db` with all commits hashes for all issues ids that have been
+   `active-bugs.csv` with all commits hashes for all issues ids that have been
    reported in the issue tracker.
 
 
@@ -124,7 +124,7 @@ This script performs 3 tasks:
 
 1. Initialize all project revisions with `initialize-revisions.pl`. This script
    will identify the various directory layouts and run a sanity check on each
-   candidate revision in `commit-db`:
+   candidate revision in `active-bugs.csv`:
 
 ```bash
 ./initialize-revisions.pl -p $PROJECT_ID -w $WORK_DIR
@@ -203,8 +203,8 @@ a revision fails.
       `-b <bug_id>`.
 
 4. If particular revisions cannot be built, often due to dependencies that no
-   longer exist, then they may be removed from the `commit-db`. It is
-   recommended to keep a backup of the commit-db until the entire bug mining
+   longer exist, then they may be removed from the `active-bugs.csv`. It is
+   recommended to keep a backup of the active-bugs.csv until the entire bug mining
    process is complete.
 
 5. Upon completion of this stage, inspect all stack traces in the files that are
@@ -218,7 +218,7 @@ a revision fails.
 ## Reproducing bugs
 
 1. Determine triggering tests with the `get-trigger.pl` script. This will
-   determine the revisions in `commit-db` that have a test that can reproduce a
+   determine the revisions in `active-bugs.csv` that have a test that can reproduce a
    fault:
 
 ```bash
@@ -320,11 +320,20 @@ Terms commonly used in Defects4J
 - `VCS`: Version control system (e.g., git, mercurial, or subversion; all VCS
   abstractions in Defects4J inherit from Vcs.pm).
 - `Rev ID`: A VCS-specific revision id (e.g., a git commit hash).
-- `commit-db`: A csv file, per project, that maps each BID to the revision ids
+- `active-bugs.csv`: A csv file, per project, that maps each BID to the revision ids
   of the pre-fix and post-fix revision.
 
 
 
+## Troubleshooting
+
+* If you encounter the following error when running `./initialize-project-and-collect-issues.pl`:
+
+   ```
+  Can't locate JSON/Parse.pm in @INC (you may need to install the JSON::Parse module)
+   ```
+   - Make sure that you have installed all of the perl dependencies listed in [cpanfile](https://github.com/rjust/defects4j/blob/master/cpanfile). As mentioned in the top-level [README](https://github.com/rjust/defects4j/blob/master/README.md), these can automatically installed by running: `cpanm --installdeps .`
+   
 ## Limitations of the bug-mining framework
 
 - Although some scripts in the bug-mining framework are agnostic to the version

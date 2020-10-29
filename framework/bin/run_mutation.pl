@@ -30,7 +30,7 @@ run_mutation.pl -- mutation analysis for generated test suites.
 
 =head1 SYNOPSIS
 
-  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-e exclude_file] [-D] [-A | -i mutate_classes]
+  run_mutation.pl -p project_id -d suite_dir -o out_dir [-f include_file_pattern] [-v version_id] [-t tmp_dir] [-e exclude_file] [-D] [-A | -i mutate_classes] [-m mutation_operators_file]
 
 =head1 OPTIONS
 
@@ -87,6 +87,11 @@ All relevant classes: Perform mutation analysis for all relevant classes (i.e., 
 classes touched by the triggering tests). By default only classes modified by
 the bug fix are analyzed.
 
+=item -m F<mutation_operators_file>
+
+The file that contains the list of mutation operators (separated by space or newline) to apply (optional).
+By default all mutation operators are applied: AOR, LOR, SOR, COR, ROR, ORU, LVR, STD.
+
 =back
 
 =head1 DESCRIPTION
@@ -100,6 +105,7 @@ F<out_dir/L<TAB_MUTATION|DB>>. The corresponding log files are stored in
 F<out_dir/L<TAB_MUTATION|DB>_log>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -134,11 +140,20 @@ my $SUITE_DIR = abs_path($cmd_opts{d});
 my $VID = $cmd_opts{v} if defined $cmd_opts{v};
 my $INCL = $cmd_opts{f} // "*.java";
 my $EXCL = $cmd_opts{e};
+my $MUT_OPS_FILE = $cmd_opts{m};
 # Enable debugging if flag is set
 $DEBUG = 1 if defined $cmd_opts{D};
 
+if ($DEBUG) {
+  Utils::print_env();
+}
+
 # The mutation operators that should be enabled
 my @MUT_OPS = ("AOR", "LOR","SOR", "COR", "ROR", "ORU", "LVR", "STD");
+if (defined($MUT_OPS_FILE)) {
+    @MUT_OPS = Mutation::parse_mutation_operators($MUT_OPS_FILE);
+}
+
 
 # Directory of class lists used for mutation step
 my $CLASSES = defined $cmd_opts{A} ? "loaded_classes" : "modified_classes";
@@ -177,6 +192,7 @@ each executed test suite are copied to:
 F<out_dir/L<TAB_MUTATION|DB>_log/project_id>.
 
 =cut
+
 # Log directory and file
 my $LOG_DIR = "$OUT_DIR/${TAB_MUTATION}_log/$PID";
 my $LOG_FILE = "$LOG_DIR/" . basename($0) . ".log";

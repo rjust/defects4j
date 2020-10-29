@@ -58,6 +58,7 @@ Checks out each project version, and runs the sanity check on it.
 This script stops as soon as an error occurs.
 
 =cut
+
 use warnings;
 use strict;
 
