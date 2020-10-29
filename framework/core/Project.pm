@@ -550,32 +550,12 @@ sub compile_ext_tests {
       closedir($dh);
       foreach my $file (@java_files) {
         my $absfile = "$dir/$file";
-        open (FILE, '<', "$absfile") or die "could not open $absfile";
-        print <FILE>;
-        close (FILE);
+        open(FILE, '<', "$absfile") or die "could not open $absfile";
+        print(<FILE>);
+        close(FILE);
       }
     }
     return $ret;
-}
-
-=pod
-
-  $project->is_continuous_integration()
-
-Returns true if this process is running under continuous integration.
-
-=cut
-sub is_continuous_integration {
-  return (
-    # Azure Pipelines
-    defined $ENV{"AZURE_HTTP_USER_AGENT"}
-    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH"}
-    # CircleCI
-    || defined $ENV{"CIRCLE_COMPARE_URL"}
-    # Travis CI
-    || (defined $ENV{"TRAVIS"}
-        && $ENV{"TRAVIS"} eq "true")
-    );
 }
 
 =pod
