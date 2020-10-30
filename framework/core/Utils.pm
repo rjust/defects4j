@@ -275,7 +275,7 @@ sub print_env {
 
 =pod
 
-  $project->is_continuous_integration()
+=item C<Utils::is_continuous_integration>
 
 Returns true if this process is running under continuous integration.
 
