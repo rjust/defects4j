@@ -4,6 +4,7 @@
 # This script generates coverage data for Randoop generated tests over the defects4j suite.
 # By default, it does so for just 6 projects and bug ids 1-5 in each project.
 # An optional first agument will replace the default project list.
+#   The argument should be space-separated numbers, as in "1 2 3 4 5".
 # An optional second agument will replace the default bid list.
 #
 ################################################################################
