@@ -26,19 +26,19 @@ if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_BIN/_tool.source
+source "$D4J_DIR_TESTGEN_BIN/_tool.source"
 
 # The classpath to compile and run the project
 project_cp=$(get_project_cp)
 
 # Read all additional configuration parameters
-add_config=$(parse_config $D4J_DIR_TESTGEN_BIN/randoop.config)
+add_config=$(parse_config "$D4J_DIR_TESTGEN_BIN/randoop.config")
 
 # Make sure the provided test mode is supported
-if [ $D4J_TEST_MODE == "regression" ]; then
+if [ "$D4J_TEST_MODE" == "regression" ]; then
     get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-error-revealing-tests=true"
-elif [ $D4J_TEST_MODE == "error-revealing" ]; then
+elif [ "$D4J_TEST_MODE" == "error-revealing" ]; then
     #get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-regression-tests=true"
@@ -51,7 +51,7 @@ REG_BASE_NAME=RegressionTest
 ERR_BASE_NAME=ErrorTest
 
 # Print Randoop version
-version=$(java -cp $D4J_DIR_TESTGEN_LIB/randoop-current.jar randoop.main.Main | head -1)
+version=$(java -cp "$D4J_DIR_TESTGEN_LIB/randoop-current.jar" randoop.main.Main | head -1)
 printf "\n(%s)" "$version" >&2
 printf ".%.0s" {1..expr 73 - length "$version"} >&2
 printf " " >&2

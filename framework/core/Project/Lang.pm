@@ -89,7 +89,7 @@ sub _layout1 {
 # Generated build.xml (from mvn ant:ant) with maven-build.properties
 #
 sub _layout2 {
-    @_ == 1 or $ARG_ERROR;
+    @_ == 1 or die $ARG_ERROR;
     my ($dir) = @_;
     my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
     my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
