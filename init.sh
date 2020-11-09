@@ -56,7 +56,7 @@ download_url() {
     URL=$1
     echo "Downloading ${URL}"
     if [ "$(uname)" = "Darwin" ] ; then
-        wget -nv -N "URL" && echo "Downloaded URL"
+        wget -nv -N "$URL" && echo "Downloaded $URL"
     else
         BASENAME=$(basename ${URL: -1})
         if [ -f $BASENAME ]; then
@@ -64,7 +64,7 @@ download_url() {
         else
             ZBASENAME=""
         fi
-        (timeout 300 curl -s -S -R -L -O $ZBASENAME "URL" || (echo "retrying curl URL" && rm -f "$BASENAME" && curl -R -L -O "URL")) && echo "Downloaded URL"
+        (timeout 300 curl -s -S -R -L -O $ZBASENAME "$URL" || (echo "retrying curl $URL" && rm -f "$BASENAME" && curl -R -L -O "$URL")) && echo "Downloaded $URL"
     fi
 }
 
@@ -82,7 +82,7 @@ download_url_and_unzip() {
     if ! unzip -o "$BASENAME" > /dev/null ; then
         echo "retrying download and unzip"
         rm -rf "$BASENAME"
-        download_url "${URL}"
+        download_url "$URL"
         unzip -o "$BASENAME"
     fi
 }
