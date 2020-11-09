@@ -59,7 +59,6 @@ download_url() {
         wget -nv -N "$URL" && echo "Downloaded $URL"
     else
         BASENAME="$(basename "$URL")"
-        echo "Basename of $URL is $BASENAME"
         if [ -f "$BASENAME" ]; then
             ZBASENAME="-z $BASENAME"
         else
@@ -79,7 +78,6 @@ download_url_and_unzip() {
     fi
     URL=$1
     BASENAME="$(basename "$URL")"
-    echo "Basename of $URL is $BASENAME"
     download_url "$URL"
     if ! unzip -o "$BASENAME" > /dev/null ; then
         echo "retrying download and unzip"
