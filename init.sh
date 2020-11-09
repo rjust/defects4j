@@ -54,7 +54,7 @@ download_url() {
         echo "Illegal number of arguments"
     fi
     URL=$1
-    echo "Downloading $URL"
+    echo "Downloading ${URL}"
     if [ "$(uname)" = "Darwin" ] ; then
         wget -nv -N "URL" && echo "Downloaded URL"
     else
@@ -78,11 +78,11 @@ download_url_and_unzip() {
     fi
     URL=$1
     BASENAME=$(basename ${URL: -1})
-    download_url "$1"
+    download_url "$URL"
     if ! unzip -o "$BASENAME" > /dev/null ; then
         echo "retrying download and unzip"
         rm -rf "$BASENAME"
-        download_url "$URL"
+        download_url "${URL}"
         unzip -o "$BASENAME"
     fi
 }
