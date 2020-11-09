@@ -275,6 +275,26 @@ sub print_env {
 
 =pod
 
+=item C<Utils::is_continuous_integration>
+
+Returns true if this process is running under continuous integration.
+
+=cut
+sub is_continuous_integration {
+  return (
+    # Azure Pipelines
+    defined $ENV{"AZURE_HTTP_USER_AGENT"}
+    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH"}
+    # CircleCI
+    || defined $ENV{"CIRCLE_COMPARE_URL"}
+    # Travis CI
+    || (defined $ENV{"TRAVIS"}
+        && $ENV{"TRAVIS"} eq "true")
+    );
+}
+
+=pod
+
 =back
 
 =cut

@@ -603,7 +603,19 @@ sub compile_ext_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $dir, $log_file) = @_;
 
-    return $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
+    my $ret = $self->_ant_call("compile.gen.tests", "-Dd4j.test.dir=$dir", $log_file);
+    if (!$ret && Utils::is_continuous_integration()) {
+      opendir(my $dh, $dir) || die "Can't opendir $dir: $!";
+      my @java_files = grep { /\.java$/ } readdir($dh);
+      closedir($dh);
+      foreach my $file (@java_files) {
+        my $absfile = "$dir/$file";
+        open(FILE, '<', "$absfile") or die "could not open $absfile";
+        print(<FILE>);
+        close(FILE);
+      }
+    }
+    return $ret;
 }
 
 =pod
