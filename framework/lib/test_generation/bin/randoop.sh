@@ -57,6 +57,7 @@ printf ".%.0s" {1..expr 73 - length "$version"} >&2
 printf " " >&2
 
 # The most common package in file $D4J_FILE_TARGET_CLASSES.
+# TODO: Determine the set of all distinct packages and invoke Randoop multiple times with different packages.
 PACKAGE=$(sed 's/\.[A-Za-z_$][^.]*$//' "$D4J_FILE_TARGET_CLASSES" | uniq -c | sort -rn | sed -E 's/^ *[0-9]+ //g' | head -1)
 
 # Build the test-generation command
