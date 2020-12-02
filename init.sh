@@ -152,7 +152,7 @@ cd "$DIR_LIB_RT"  && download_url "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.2.2"
+RANDOOP_VERSION="4.2.5"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
