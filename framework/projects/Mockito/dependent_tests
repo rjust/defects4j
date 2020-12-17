@@ -1,3 +1,4 @@
 --- org.mockito.runners.RunnersValidateFrameworkUsageTest$DummyTest::dummy
---- org.mockitousage.verification.VerificationAfterDelayTest::shouldVerifyNormallyWithAtLeast
 --- org.mockito.verification.TimeoutTest::should_try_to_verify_correct_number_of_times
+--- org.mockitousage.verification.VerificationAfterDelayTest::shouldVerifyNormallyWithAtLeast
+--- org.mockitousage.verification.VerificationWithTimeoutTest::shouldVerifyWithTimeout
