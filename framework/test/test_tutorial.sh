@@ -35,9 +35,17 @@ defects4j compile || die "compile program version $pid-$vid"
 
 # Run tests for buggy version and verify triggering tests
 defects4j test -r || die "test program version $pid-$vid"
-actual=$(num_triggers "$work_dir/failing_tests")
-expected=$(num_triggers "$BASE_DIR/framework/projects/$pid/trigger_tests/$bid")
-[ $actual -eq $expected ] || die "verify number of triggering tests"
+actual_file="$work_dir/failing_tests"
+expected_file="$BASE_DIR/framework/projects/$pid/trigger_tests/$bid"
+actual=$(num_triggers "$actual_file")
+expected=$(num_triggers "$expected_file")
+if [ "$actual" -ne "$expected" ] ; then
+    echo "Actual triggers from $actual_file :"
+    get_triggers "$actual_file"
+    echo "Expected triggers from $expected_file :"
+    get_triggers "$expected_file"
+    die "verify number of triggering tests"
+fi
 
 vid=${bid}f
 # Checkout fixed version
