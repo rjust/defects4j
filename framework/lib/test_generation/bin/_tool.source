@@ -68,6 +68,13 @@ get_relevant_classes() {
             export -p classes.relevant -w $D4J_DIR_WORKDIR 2> /dev/null
 }
 
+# Returns the list of all modified classes for the current bug
+get_modified_classes() {
+    local file=$1
+    $D4J_HOME/framework/bin/defects4j \
+            export -p classes.modified -w $D4J_DIR_WORKDIR 2> /dev/null
+}
+
 # Output a command, execute it, and print whether it succeeded or failed.
 exec_cmd() {
     local cmd=$1
