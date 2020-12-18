@@ -34,13 +34,24 @@ project_cp=$(get_project_cp)
 # Read all additional configuration parameters
 add_config=$(parse_config "$D4J_DIR_TESTGEN_BIN/randoop.config")
 
+# If the user provided a custom set of target classes, invoke Randoop with all
+# classes (as opposed to only relevant classes). This will allow Randoop to
+# generate tests for all target classes, but will likely require a larger budget
+# because many classes irrelevant to the target classes will be explored as
+# well.
+get_modified_classes > "$D4J_DIR_WORKDIR/classes.d4j.modified"
+if diff -q -w "$D4J_DIR_WORKDIR/classes.d4j.modified" "$D4J_FILE_TARGET_CLASSES"; then
+    echo "Running Randoop on relevant classes only"
+    get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+else
+    echo "Running Randoop on all classes"
+    get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
+fi
+
 # Make sure the provided test mode is supported
 if [ "$D4J_TEST_MODE" == "regression" ]; then
-    get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-error-revealing-tests=true"
 elif [ "$D4J_TEST_MODE" == "error-revealing" ]; then
-    #get_all_classes > "$D4J_DIR_WORKDIR/classes.randoop"
-    get_relevant_classes > "$D4J_DIR_WORKDIR/classes.randoop"
     add_config="$add_config --no-regression-tests=true"
 else
     die "Unsupported test mode: $D4J_TEST_MODE"
