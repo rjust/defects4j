@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Any subsequent command which fail will cause the shell script to exit
+# Exit the shell script immediately if any of the subsequent commands fails.
 # immediately
 set -e
 #
@@ -13,18 +13,26 @@ set -e
 ################################################################################
 # TODO: Major and the coverage tools should be moved to framework/lib
 
-# Check whether curl is available
+# Check whether wget is available on OSX
 if [ "$(uname)" = "Darwin" ] ; then
     if ! wget --version > /dev/null 2>&1; then
         echo "Couldn't find wget to download dependencies. Please install wget and re-run this script."
         exit 1
     fi
 fi
+
+# Check whether curl is available
 if ! curl --version > /dev/null 2>&1; then
     echo "Couldn't find curl to download dependencies. Please install curl and re-run this script."
     exit 1
 fi
 
+# Check whether unzip is available
+if ! unzip -v > /dev/null 2>&1; then
+    echo "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
+    exit 1
+fi
+################################################################################
 HOST_URL="https://defects4j.org/downloads"
 
 # Directories for project repositories and external libraries
