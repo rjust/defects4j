@@ -39,7 +39,7 @@ gen_tests.pl -- generate a test suite using one of the supported test generators
 =item -g C<generator>
 
 The test generator to use. Run the following command to see a list of supported
-test generators: C<run_test_gen.pl -g help>
+test generators: C<gen_tests.pl -g help>
 
 =item -p C<project_id>
 
