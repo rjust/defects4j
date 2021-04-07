@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Any subsequent command which fail will cause the shell script to exit
+# Exit the shell script immediately if any of the subsequent commands fails.
 # immediately
 set -e
 #
@@ -13,18 +13,26 @@ set -e
 ################################################################################
 # TODO: Major and the coverage tools should be moved to framework/lib
 
-# Check whether curl is available
+# Check whether wget is available on OSX
 if [ "$(uname)" = "Darwin" ] ; then
     if ! wget --version > /dev/null 2>&1; then
         echo "Couldn't find wget to download dependencies. Please install wget and re-run this script."
         exit 1
     fi
 fi
+
+# Check whether curl is available
 if ! curl --version > /dev/null 2>&1; then
     echo "Couldn't find curl to download dependencies. Please install curl and re-run this script."
     exit 1
 fi
 
+# Check whether unzip is available
+if ! unzip -v > /dev/null 2>&1; then
+    echo "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
+    exit 1
+fi
+################################################################################
 HOST_URL="https://defects4j.org/downloads"
 
 # Directories for project repositories and external libraries
@@ -136,7 +144,7 @@ cd "$BASE" && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
 #
 echo
 echo "Setting up EvoSuite ... "
-EVOSUITE_VERSION="1.0.6"
+EVOSUITE_VERSION="1.1.0"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
 EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
@@ -152,7 +160,7 @@ cd "$DIR_LIB_RT"  && download_url "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.2.2"
+RANDOOP_VERSION="4.2.5"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
