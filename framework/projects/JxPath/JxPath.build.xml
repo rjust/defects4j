@@ -52,6 +52,12 @@ of the checked-out project version.
     <property name="d4j.test.dir"     value="${test.home}"/>
     <property name="dir.src.tests"    value="${test.home}"/>
 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="source.dir"       value="${d4j.workdir}/src/java"/>
+    <property name="mlib.dir"	      value="${d4j.workdir}/target/lib"/>
+    <property name="lib2.dir"	      value="${d4j.dir.projects}/JxPath/lib"/>
+
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">
         <path refid="test.classpath"/>

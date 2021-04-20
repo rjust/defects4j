@@ -30,6 +30,8 @@ of the checked-out project version.
     <property name="config.jar" value="${d4j.home}/major/config/config.jar" />
     <property name="jodaconvert.jar" value="${d4j.home}/framework/projects/Time/lib/joda-convert-1.2.jar" />
 
+    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
+
     <!-- Do not download maven dependencies -->
     <property name="maven.settings.offline" value="true" />
     <property name="maven.repo.local" value="${d4j.home}/framework/projects/Time/lib/" />
@@ -62,6 +64,12 @@ of the checked-out project version.
     </condition>
 
     <property name="build.home" value="${classes.dir}/.." />
+
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="classfiles.dir2"  value="build/classes"/>
+    <property name="source.dir"       value="${source.home}"/>
+    <property name="mlib.dir" value="${d4j.home}/framework/projects/Time/lib/"/>
 
     <target name="compile.tests" depends="joda-time.compile.tests"> </target>
 

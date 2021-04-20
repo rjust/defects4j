@@ -47,7 +47,7 @@ A specific project instance can be created with C<create_project(project_id)>.
   my $PID = "MyID";
 
   sub new {
-    my ($class) = @_;
+    my $class = shift;
     my $name  = "my-project-name";
     my $vcs   = Vcs::Git->new($PID,
                               "$REPO_DIR/$name.git",
@@ -927,6 +927,56 @@ sub mutation_analysis_ext {
 }
 
 =pod
+ 
+ $project->mutation_analysis_pit(test_dir, log_file)
+
+PIT mutation analysis
+
+=cut
+
+sub mutation_analysis_pit_dev {
+    my ($self, $log_file) = @_;
+
+    my $log = "-logfile $log_file";
+
+    my $basedir = $self->{prog_root};
+
+    my $option_string = "";
+
+    $option_string = "$option_string -Dd4j.relevant.tests.only=true"; 
+
+    return $self->_call_pit_dev("runPitDev", $option_string, $log_file);
+}
+
+sub mutation_analysis_pit {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($self, $dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src) = @_;
+
+    my $log = "-logfile $log_file";
+
+    my $basedir = $self->{prog_root};
+
+    my $option_string = "";
+    if($dir ne "") {
+        $option_string = "-Dd4j.test.dir=$dir";
+    }
+    if(defined $TARGET_TESTS) {
+        $option_string = "$option_string -Dtarget.tests=$TARGET_TESTS";
+    } 
+    if(defined $TARGET_TEST_METHODS) {
+        $option_string = "$option_string -Dtarget.test.methods=$TARGET_TEST_METHODS";
+    } 
+    if(defined $ANT_PROPS_FILE) {
+        $option_string = "$option_string -propertyfile $ANT_PROPS_FILE";
+    }
+    if($suite_src eq "evosuite") {
+        $option_string = "$option_string -Dtest.plugin=$suite_src";
+    }
+
+    return $self->_call_pit("runPit", $option_string, $log_file);
+}
+
+=pod
 
 =back
 
@@ -1147,6 +1197,23 @@ sub _call_major {
     # Reset path for downstream calls to ant
     $ENV{PATH} = $path;
     return($ret);
+}
+
+sub _call_pit_dev {
+    my ($self, $target, $option_str, $log_file) =  @_;
+    $option_str = ($option_str // "");
+    my $ant_cmd = "$MAJOR_ROOT/bin/ant";
+    my $ret = $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
+    
+    return($ret);
+}
+
+sub _call_pit {
+    my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
+    $option_str = ($option_str // "");
+    $ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
+    $ant_cmd = "$MAJOR_ROOT/bin/ant";
+    return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
 
 #

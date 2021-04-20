@@ -66,6 +66,11 @@ of the checked-out project version.
     </condition>
 
     <property name="build.home" value="${classes.dir}/.." />
+ 
+    <!-- PIT properties -->
+    <property name="classfiles.dir"   value="target/classes"/>
+    <property name="source.dir"       value="${maven.build.srcDir.0}"/>
+    <property name="mlib.dir"          value="${d4j.dir.projects}/JacksonCore/lib/"/>
 
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">

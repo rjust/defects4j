@@ -158,6 +158,42 @@ sub mutation_analysis_ext {
 
 =pod
 
+  Mutation::mutation_analysis_pit(project_ref, test_dir, log_file)
+
+Runs mutation analysis with PIT for external (e.g., generated) test suites on the
+provided L<Project> reference. Returns a reference to a hash that provides kill
+details for all covered mutants:
+
+=over 4
+
+  {mut_id} => "[TIME|EXC|FAIL|LIVE]"
+
+=back
+
+=cut
+sub mutation_analysis_pit_dev {
+    my ($project, $log_file) = @_;
+
+    if (! $project->mutation_analysis_pit_dev($log_file)) {
+        return undef;
+    }
+
+    return 1;
+}
+
+sub mutation_analysis_pit {
+    @_ >= 3 or die $ARG_ERROR;
+    my ($project, $test_dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src) = @_;
+
+    if (! $project->mutation_analysis_pit($test_dir, $log_file, $TARGET_TESTS, $TARGET_TEST_METHODS, $ANT_PROPS_FILE, $suite_src)) {
+        return undef;
+    }
+
+    return 1;
+}
+
+=pod
+
 =item C<Mutation::parse_mutation_operators(file_name)>
 
 Parses the provided text file and returns an array with mutation operator names
@@ -248,6 +284,26 @@ sub copy_mutation_logs {
         }
     }
 }
+
+=pod
+
+  Mutation::copy_pit_results(project, vid, suite, test_id, log, log_dir)
+
+Copies the mutation result files to a permanent directory F<log_dir>.  C<project>
+is the reference to a L<Project>, C<vid> is the version id, C<suite> specifies
+the suite tag (e.g., manual, randoop, evosuite-branch), and C<test_id> provides
+the id of the test suite. TODO
+
+=cut
+
+sub copy_pit_results {
+    @_ == 6 or die $ARG_ERROR;
+    my ($project, $vid, $suite, $test_id, $log, $log_dir) = @_;
+    # Copy the PIT reports directory
+    system("cp -R $project->{prog_root}/pitReports/ $log_dir/$suite/$vid-$test_id-pitReports/") == 0
+	or  die "Cannot copy reports folder";
+}
+
 
 =pod
 
