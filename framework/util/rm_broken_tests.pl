@@ -242,6 +242,9 @@ sub _remove_test_method {
             # proper parser that computes a line-number table for all methods.
             my @tmp = @lines[$index..$#lines];
             foreach (@tmp) {
+                # Special case on escaped backslashes -- Strings and chars.
+                s/"\\\\"/""/g;
+                s/'\\\\'/''/g;
                 # This captures String literals -- accounting for escaped quotes
                 # (\") and non-escaped quotes (" and \\")
                 s/([\"'])(?:\\(\\\\)*\1|.)*?\1/$1$1/g;
