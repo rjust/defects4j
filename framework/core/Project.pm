@@ -1105,9 +1105,12 @@ sub _ant_call {
     $option_str = "" unless defined $option_str;
     $ant_cmd = "ant" unless defined $ant_cmd;
 
+    my $verbose = ($DEBUG==1) ? " -v" : "";
+
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
               " && $ant_cmd" .
+                $verbose .
                 " -f $D4J_BUILD_FILE" .
                 " -Dd4j.home=$BASE_DIR" .
                 " -Dd4j.dir.projects=$PROJECTS_DIR" .
