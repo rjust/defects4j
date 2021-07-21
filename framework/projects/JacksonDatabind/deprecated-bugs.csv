@@ -1,1 +1,2 @@
 bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
+89,6cd5be98485a5fe8920846bb0b47a0fec87113be,ddfddfba6414adbecaff99684ef66eebd3a92e92,1737,https://github.com/FasterXML/jackson-databind/issues/1737,3.0.0,Duplicate

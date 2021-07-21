@@ -8,7 +8,7 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 835 bugs from the following open-source projects:
+Defects4J contains 834 bugs from the following open-source projects:
 
 | Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\*) |
 |-----------------|----------------------------|---------------:|---------------------|-------------------------| 
@@ -21,7 +21,7 @@ Defects4J contains 835 bugs from the following open-source projects:
 | Csv             | commons-csv                |       16       | 1-16                | None                    |
 | Gson            | gson                       |       18       | 1-18                | None                    |
 | JacksonCore     | jackson-core               |       26       | 1-26                | None                    |
-| JacksonDatabind | jackson-databind           |      112       | 1-112               | None                    |
+| JacksonDatabind | jackson-databind           |      111       | 1-88,90-112         | 89                      |
 | JacksonXml      | jackson-dataformat-xml     |        6       | 1-6                 | None                    |
 | Jsoup           | jsoup                      |       93       | 1-93                | None                    |
 | JxPath          | commons-jxpath             |       22       | 1-22                | None                    |
