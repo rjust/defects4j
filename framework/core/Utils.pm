@@ -42,6 +42,7 @@ use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
 use Fcntl qw< LOCK_EX SEEK_END >;
+use String::Interpolate qw(safe_interpolate);
 
 use Constants;
 
@@ -291,6 +292,63 @@ sub is_continuous_integration {
     || (defined $ENV{"TRAVIS"}
         && $ENV{"TRAVIS"} eq "true")
     );
+}
+
+=pod
+
+=item C<Utils::fix_dependency_urls(build_file, pattern_file)>
+
+Parses the F<build_file> and replaces all URLs that match a pattern in
+the F<pattern_file>.
+
+=cut
+sub fix_dependency_urls {
+    @_ == 2 || die $ARG_ERROR;
+    my ($build_file, $pattern_file) = @_;
+
+    open(IN, "<$build_file") or die("Cannot read the build file: $build_file");
+    my @lines = <IN>;
+    close(IN);
+
+    open(IN, "<$pattern_file") or die("Cannot read pattern file: $pattern_file");
+    my @patterns = <IN>;
+    close(IN);
+
+    # Read all regexes; skip comments
+    my @regexes;
+    foreach my $l (@patterns) {
+        $l =~ /^\s*#/ and continue;
+        chomp($l);
+        $l =~ /([^,]+),([^,]+)/ or die("Row in pattern file in wrong format: $l (expected: <find>,<replace>)");
+        my ($find, $repl) = split(",", $l);
+        push(@regexes, [qr($find), $repl]);
+    }
+
+    # Process the build file
+    my $modified = 0;
+    for (my $i=0; $i<=$#lines; ++$i) {
+        my $l = $lines[$i];
+        # Skip all lines that aren't containing a URL
+        $l =~ /http/ or next;
+        foreach (@regexes) {
+            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/eg) {
+                unless($modified) {
+                    exec_cmd("cp $build_file $build_file.bak", "Fixing dependency URLs in build file");
+                    $modified = 1;
+                }
+                $lines[$i] = $l;
+            }
+        }
+    }
+
+    # Update the build file if necessary
+    if ($modified) {
+        unlink($build_file);
+        my $fix = IO::File->new(">$build_file") or die("Cannot overwrite build file: $!");
+        print $fix @lines;
+        $fix->flush();
+        $fix->close();
+    }
 }
 
 =pod
