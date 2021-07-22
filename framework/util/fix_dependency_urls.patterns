@@ -1,3 +1,14 @@
+# This file lists rules, intended to fix broken dependency URLs in build and
+# properties files.
+#
+# Each row must have the following format: <find>,<replace>. The two parts in
+# each row form a substitution regex (s/<find>/<replace>/g). Rows starting with
+# '#' are ignored.
+#
+# The pairs are processed in order: as soon as a <find> pattern matches, the
+# corresponding line in the build/properties file will be updated and all other
+# patterns ignored for that line.
+#
 http://www.ibiblio.org/maven/([^.]+)\.([^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${2}/${2}/${4}/${3}
 http://people.apache.org/repo/m1-snapshot-repository/dumbster/jars/dumbster-SNAPSHOT.jar,https://repo1.maven.org/maven2/dumbster/dumbster/1.6/dumbster-1.6.jar
 https://oss.sonatype.org/content/repositories/snapshots,https://repo1.maven.org/maven2
