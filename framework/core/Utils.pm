@@ -317,7 +317,7 @@ sub fix_dependency_urls {
     # Read all regexes; skip comments
     my @regexes;
     foreach my $l (@patterns) {
-        $l =~ /^\s*#/ and continue;
+        $l =~ /^\s*#/ and next;
         chomp($l);
         $l =~ /([^,]+),([^,]+)/ or die("Row in pattern file in wrong format: $l (expected: <find>,<replace>)");
         my ($find, $repl) = split(",", $l);
@@ -337,6 +337,7 @@ sub fix_dependency_urls {
                     $modified = 1;
                 }
                 $lines[$i] = $l;
+                last;
             }
         }
     }
