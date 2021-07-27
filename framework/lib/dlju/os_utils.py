@@ -1,3 +1,5 @@
+""" Figure out which operating system is being used
+"""
 import platform
 
 def isMacOsX():

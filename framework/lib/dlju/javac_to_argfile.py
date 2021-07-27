@@ -1,3 +1,7 @@
+""" Take the output from do-like-javac (dljc) and turn this into an argfile for
+    javac.
+"""
+
 import json
 import argparse
 import os
@@ -7,6 +11,14 @@ import readline
 import os_utils as otils
 
 def setup_args():
+    """ Setup commandline arguments
+
+    Returns
+    -------
+    object containing args
+        The result of calling `argparse.ArgumentParser.parse_args`
+
+    """
     parser = argparse.ArgumentParser(description="Turns the json javac output from do-like-javac into a javac argfile")
 
     parser.add_argument("file", type=str,
@@ -46,21 +58,82 @@ def setup_args():
 
 
 def wrap_paths_with_spaces_with_quote_marks(possiblePath):
-    if putils.is_path_exists_or_creatable(possiblePath):
+    """ Helper function to find spaces in paths, and if so, wraps the path in
+        quotation marks.
+
+    Parameters
+    ----------
+    possiblePath : str
+        A string that may be a path
+
+    Returns
+    -------
+    str
+        A path that has been properly wrapped in quotation marks, if needed
+
+    """
+    # TODO: This seems to actually do the _opposite_ of what the name suggests
+    if putils.path_exists_or_is_creatable(possiblePath):
         if possiblePath.find(" ") == -1:
             return "\"{}\"".format(possiblePath)
     return possiblePath
 
 def configure_target_or_source(switch, key):
+    """ Obtains the java version to be used for the target or source switch, if
+        the given `switch` is either `target` or `source`.
+
+    Parameters
+    ----------
+    switch : str
+        A javac switch, without the preceding `-`
+    key : str or bool
+        The value given to the switch, if any
+
+    Returns
+    -------
+    str or bool
+        If the switch is either target or source, and the key is not a boolean,
+        then a string containing the java version without the preceding `1.`
+        Else, returns the key, unaltered.
+
+    """
     if switch in ["source", "target"]:
         if not isinstance(key, bool) and key.startswith("1."):
             return key[2:]
     return key
 
 def mayNeedBootClassPath(switches):
+    """ Indicates that to make the build work, we will need to suppress
+        potential `bootclasspath not found` warnings that have been promoted to
+        errors.
+
+    Parameters
+    ----------
+    switches : list of str
+        A list of all of the javac switches found in the dljc output
+
+    Returns
+    -------
+    bool
+        True if the bootclasspath should be specified.
+
+    """
     return "Werror" in switches and ("source" in switches or "target" in switches)
 
 def getPath(version):
+    """ Ask the user to provide a path for the bootclasspath
+
+    Parameters
+    ----------
+    version : str
+        A string describing the Java version
+
+    Returns
+    -------
+    str
+        The path, if specified, otherwise an empty string
+
+    """
     jarname = "rt"
     if otils.isMacOsX() and version in ["1.1", "1.2", "1.3", "1.5", "5", "1.6", "6"]:
         print("Please specify the location of the Java {} classes.jar file (usually rt.jar on Mac OS X for Java versions >= 7)".format(version))
@@ -80,6 +153,24 @@ def addBootClassPath(switches,
                      call,
                      java_bootclasspath_version_locations,
                      always_ask):
+    """ Add the boot class path, if needed
+
+    Parameters
+    ----------
+    switches : list of str
+        The list of the javac switches to examine
+    switches_key : str
+        The key for the switches in the call
+    call : dict
+        A dictionary (obtained from JSON) describing the javac call
+    java_bootclasspath_version_locations : dict
+        A dictionary for containing the java rt.jar or classes.jar locations,
+        where the keys are the java version. This is altered by this function
+        (by reference)
+    always_ask : bool
+        Whether to always ask for the boot classpath from the user.
+
+    """
     src = call[switches_key]["source"] if "source" in call[switches_key] else ""
     trgt = call[switches_key]["target"] if "target" in call[switches_key] else ""
     these_options_names = [switch for switch in call[switches_key] if switch == "source" or switch == "target"]
@@ -175,7 +266,28 @@ def addBootClassPath(switches,
     pass
 
 
+def checkFileName(fileName):
+    """ Check that the file name given is JSON and exists -- this file should
+        be the javac file created by dljc
+
+    Parameters
+    ----------
+    fileName : str
+        The name of the file containing the javac call
+
+    """
+    if not os.path.exists(fileName):
+        print("Warning: file named {} does not exist. Please check to make sure you spelled it correctly and have the right file.".format(fileName))
+        print("Exiting now.")
+        exit(1)
+        pass
+    elif not fileName.endswith(".json"):
+        print("Warning: file {} does not have a json file extension.".format(fileName))
+        pass
+    pass
+
 def main():
+    # Setup commandline parsing with tab completion
     readline.set_completer_delims(' \t\n=')
     readline.parse_and_bind("tab:complete")
     args = setup_args()
@@ -194,14 +306,7 @@ def main():
 
 
 
-    if not os.path.exists(fileName):
-        print("Warning: file named {} does not exist. Please check to make sure you spelled it correctly.".format(fileName))
-        print("Exiting now.")
-        exit(1)
-        pass
-    elif not fileName.endswith(".json"):
-        print("Warning: file {} does not have a json file extension.".format(fileName))
-        pass
+    checkFileName(fileName)
 
 
     javac_calls = []
@@ -249,7 +354,9 @@ def main():
     java_bootclasspath_version_locations = {}
     i = 0
     for call in javac_calls:
+        # We create an argfile per call
         i += 1
+        # This provides a suffix for the created argfiles
         s = str(i)
         if len(javac_calls) == 1:
             s = ""

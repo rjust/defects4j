@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+""" Parse junit output from the do-like-javac build output, and create a file
+    containing all of the commands to run tests
+    (Did not work last time I checked, but can be used to extract dependencies,
+    classpaths, etc.)
+"""
+
 
 import os
 import re
@@ -7,10 +13,33 @@ import path_utils as putils
 import json
 
 def writeCommands(commandsObject, fileName):
+    """ Outputs the junit commands to a file
+
+    Parameters
+    ----------
+    commandsObject : list of str
+        Description of parameter `commandsObject`.
+    fileName : str
+        The file to write the commands to
+
+    """
     with open(fileName, "w") as f:
         f.write("\n".join(commandsObject))
         f.flush()
 def parse_args(outputSuffix=""):
+    """ Set up and parse command line arguments
+
+    Parameters
+    ----------
+    outputSuffix : str
+        Optional suffix to append to the output. Defaults to "".
+
+    Returns
+    -------
+    object containing args
+        The result of calling argparse.ArgumentParser.parse_args
+
+    """
     junit_output_default="junit_commands{}".format(outputSuffix)
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--logs",
@@ -23,6 +52,19 @@ def parse_args(outputSuffix=""):
     return parser.parse_args()
 
 def parse_junit_tasks(output):
+    """ Parse junit tasks from the build output
+
+    Parameters
+    ----------
+    output : list of str
+        A list of the strings in the build output file from dljc
+
+    Returns
+    -------
+    list of junit tasks
+        A list containing the junit tasks
+
+    """
     i = 0
     output = [o.strip() for o in output]
     def getQuotedString(mystr):
@@ -79,10 +121,38 @@ def parse_junit_tasks(output):
     return tasks
 
 def editClasspath(cp):
+    """ Remove ant jars from the classpath
+
+    Parameters
+    ----------
+    cp : str
+        The classpath for junit
+
+    Returns
+    -------
+    str
+        A classpath string for running tests
+
+    """
     paths = cp.split(":")
     paths = [p for p in paths if not re.match(r"ant.*\.jar", os.path.basename(p))]
     return ":".join(paths)
 def getJUnitVersion(commandsList):
+    """ Find the junit version
+
+    Parameters
+    ----------
+    commandsList : list of str
+        A list of the parts of a command for running junit
+
+    Returns
+    -------
+    None, int, or str
+        Returns None if it cannot find the string junit in the classpath string
+        Returns -1 if it cannot find a string of the format `junit-\d+\.\d+`
+        Returns a str of the major junit verison
+
+    """
     if any(c.startswith("-classpath") or c.startswith("-cp") for c in commandsList):
         classpaths = [c for c in commandsList if c.startswith("-classpath") or c.startswith("-cp")]
         if len(classpaths) == 1:
@@ -100,33 +170,84 @@ def getJUnitVersion(commandsList):
                     return -1
 
 def getJunitTestRunnerClass(version):
+    """ Get the correct junit test running class for the given junit version
+
+    Parameters
+    ----------
+    version : int
+        The major version for junit
+
+    Returns
+    -------
+    str or None
+        Returns str if `version` is either 3 or 4
+        Returns None otherwise
+
+    """
     if version == 4:
         return "org.junit.runner.JUnitCore"
     elif version == 3:
+        # Use the JUnit 3 test batch runner
+        # info here: http://www.geog.leeds.ac.uk/people/a.turner/src/andyt/java/grids/lib/junit-3.8.1/doc/cookbook/cookbook.htm
+        # Does anyone actually use this version of junit?????
         return "junit.textui.TestRunner"
     return None
 
 def reorderCommands(commandList):
+    """ Reorder the parts of the junit command so that it is in the order of
+
+        1. `java` call
+        2. `java` runtime options
+        3. `java` classes to run
+
+    Parameters
+    ----------
+    commandList : list of str
+        A list of the parts of the junit command
+
+    Returns
+    -------
+    list of str
+        A list of the parts of the junit command, in the given order
+
+    """
     version = getJUnitVersion(commandList)
     # print(version)
     java_call = commandList.pop(0)
     options = [c for c in commandList if c.startswith("-")]
     classes = [c for c in commandList if not c.startswith("-")]
+    # Remove the ant junit test runner and replace with a normal junit test runner
     testRunner = "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner"
     if testRunner in classes:
         index = classes.index(testRunner)
         if index >= 0:
             classes.pop(index)
-            if version == 4:
-                classes = ["org.junit.runner.JUnitCore"] + classes
-            elif version == 3:
-                # Use the JUnit 3 test batch runner
-                # info here: http://www.geog.leeds.ac.uk/people/a.turner/src/andyt/java/grids/lib/junit-3.8.1/doc/cookbook/cookbook.htm
-                # Does anyone actually use this version of junit?????
-                classes = ["junit.textui.TestRunner"] + classes
+            junitClass = getJunitTestRunnerClass(version)
+            if junitClass:
+                # Only add it if it is not None
+                classes = [junitClass] + classes
     return [java_call] + options + classes
 
 def commandify(tasks):
+    """ Turn the junit tasks, which are stored as parts, into single command
+        strings.
+
+    Parameters
+    ----------
+    tasks : list of list of tuples of strings
+        tasks level: [
+            task level: [
+                option level: (_ , _) # The former part of the tuple is empty if
+                                      # this isn't a switch
+            ]
+        ]
+
+    Returns
+    -------
+    list of str
+        A list of junit command strings
+
+    """
     def combinator(a, b):
         if len(a) == 0:
             return b
@@ -143,6 +264,19 @@ def commandify(tasks):
     return ""
 
 def getOutput(logsDir):
+    """ Find the build output in the dljc logs directory
+
+    Parameters
+    ----------
+    logsDir : str
+        Path to the dljc logs directory
+
+    Returns
+    -------
+    list of str
+        The lines of the dljc build output file
+
+    """
     if not os.path.exists(os.path.join(logsDir, "build_output.txt")):
         print("Warning: the directory {} does not exist!".format(args.logs))
         exit(1)

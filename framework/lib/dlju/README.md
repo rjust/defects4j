@@ -5,7 +5,11 @@ and turns it into an argfile that you can give to `javac`.
 
 ## Requirements
 
-Requires Python 3, and either Mac OS X or Linux.
+Requires
+
+ - Python 3
+ - either Mac OS X or Linux
+ - `do-like-javac` on your path
 
 ## How to Use
 

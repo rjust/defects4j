@@ -14,6 +14,9 @@ BUILD_COMMAND=$3
 COMPILE_TARGET=$4
 TEST_TARGET=$5
 
+DLJU_DIR="$(dirname "$(dirname "$(readlink -fm "$0")")")"
+
+
 get_javac="javac_to_argfile.py"
 ant_junit="capture_junit.py"
 maven_junit="maven_junit.py"

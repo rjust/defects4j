@@ -4,8 +4,21 @@ tests_begin = """-------------------------------------------------------
 -------------------------------------------------------"""
 
 def findBeginningOfTests(output):
+    """ Find where the test running begins
+
+    Parameters
+    ----------
+    output : list of str
+        A list of the build output strings
+
+    Returns
+    -------
+    int
+        The index in the `output` list where the actual tests begin
+        If it can't find that index, then it returns -1
+    """
     testLines = tests_begin.split("\n")
-    print(testLines)
+    # print(testLines)
     for i, o in enumerate(output):
         if o == testLines[0] and (i + 2) < len(output):
             if output[i+1] == testLines[1] and output[i + 2] == testLines[2]:
@@ -13,12 +26,45 @@ def findBeginningOfTests(output):
     return -1
 
 def findSurefireCommand(output):
+    """ Find where the maven surefire plugin (which is the test plugin)
+        begins its command
+
+    Parameters
+    ----------
+    output : list of str
+        The lines of the build output
+
+    Returns
+    -------
+    str
+        The line that contains the java command to run the maven surefire plugin
+
+    """
     for o in output:
         if o.startswith("Forking command line"):
             return o
     return None
 
 def createCommands(javaCommand, options, lines, ranTests):
+    """ Return a list of the junit commands to run
+
+    Parameters
+    ----------
+    javaCommand : str
+        The `java` invocation
+    options : list of str
+        The command line options for `java`
+    lines : list of str
+        Lines containing the test classes and classPathUrl
+    ranTests : list of str
+        A list of the tests that were ran
+
+    Returns
+    -------
+    list of str
+        A list containing commands to run each test class
+
+    """
     print(lines)
     testClasses = [l for l in lines if l.startswith("tc")]
     classPaths = [l for l in lines if l.startswith("classPathUrl")]
@@ -37,6 +83,19 @@ def createCommands(javaCommand, options, lines, ranTests):
         exit(1)
     return ["{} {} {} {} {}".format(javaCommand, " ".join(options), classPath, junitClass, tc) for tc in testClasses]
 def findRunTests(lines):
+    """ From the lines of the build output, figures out which tests were run
+
+    Parameters
+    ----------
+    lines : list of str
+        The lines of the build output file
+
+    Returns
+    -------
+    list of str
+        A list of the names of the tests that were run
+
+    """
     ran = []
     for l in lines:
         if l.startswith("Running"):
@@ -48,6 +107,20 @@ def findRunTests(lines):
     return ran
 
 def isArgumentlessJavaOption(line):
+    """ Determine whether a given line contains a command line option that does
+        not take arguments.
+
+    Parameters
+    ----------
+    line : str
+        A line of the build output
+
+    Returns
+    -------
+    bool
+        True if the line contains an option that doesn't take arguments
+
+    """
     argumentlessOptions = ["agentlib",
                            "agentpath",
                            "disableassertions",

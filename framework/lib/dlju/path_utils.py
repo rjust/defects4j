@@ -100,7 +100,7 @@ def is_path_creatable(pathname: str) -> bool:
     dirname = os.path.dirname(pathname) or os.getcwd()
     return os.access(dirname, os.W_OK)
 
-def is_path_exists_or_creatable(pathname: str) -> bool:
+def path_exists_or_is_creatable(pathname: str) -> bool:
     '''
     `True` if the passed pathname is a valid pathname for the current OS _and_
     either currently exists or is hypothetically creatable; `False` otherwise.
