@@ -56,6 +56,7 @@ jobs:
     # Verify that all bugs are reproducible (run multiple jobs for projects that
     # take a long time to finish).
     - stage: verify-bugs
+      if: commit_message =~ /verify-bugs/
 ## Chart
       script: carton exec ./test_verify_bugs.sh -p Chart
       name: "Chart"
