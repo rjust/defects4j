@@ -56,20 +56,6 @@ sub new {
     return $class->SUPER::new($PID, $name, $vcs);
 }
 
-##
-## Determines the directory layout for sources and tests
-##
-#sub determine_layout {
-#    @_ == 2 or die $ARG_ERROR;
-#    my ($self, $rev_id) = @_;
-#    my $dir = $self->{prog_root};
-
-#    # Add additional layouts if necessary
-#    my $result = _ant_layout($dir) // _maven_layout($dir);
-#    die "Unknown layout for revision: ${rev_id}" unless defined $result;
-#    return $result;
-#}
-
 #
 # Post-checkout tasks include, for instance, providing cached build files,
 # fixing compilation errors, etc.
@@ -97,7 +83,7 @@ sub initialize_revision {
     $self->SUPER::initialize_revision($rev_id);
 
     my $work_dir = $self->{prog_root};
-    my $result = _ant_layout($work_dir) // _maven_layout($work_dir);
+    my $result = _default_layout($work_dir) // _ant_layout($work_dir) // _maven_layout($work_dir);
     die "Unknown layout for revision: ${rev_id}" unless defined $result;
 
     $self->_add_to_layout_map($rev_id, $result->{src}, $result->{test});
@@ -110,6 +96,23 @@ sub initialize_revision {
 # checked-out version. Otherwise, it returns a hash that provides the src and
 # test directory, relative to the working directory.
 #
+
+#
+# Default directory layouts, common in many (Maven) projects
+#
+sub _default_layout {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+
+    # Test for two common layouts
+    my $result;
+    if (-e "$dir/src/main/java" && -e "$dir/src/test/java"){
+        $result = {src=>"src/main/java", test=>"src/test/java"};
+    } elsif (-e "$dir/src/java" && -e "$dir/src/test"){
+        $result = {src=>"src/java", test=>"src/test"};
+    }
+    return $result;
+}
 
 #
 # Existing Ant build.xml and default.properties
