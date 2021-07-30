@@ -1,6 +1,110 @@
+# do-like-junit
+
+`do-like-junit` (or `dlju`) is a tool that extracts test information from build processes
+of a given Java project, and extracts command(s) to run the project's tests directly.
+
+`do-like-junit` supports projects built with
+
+ - Apache Ant
+ - Apache Maven
+
+The `dlju` executable (in `bin/dlju`) specifically works with `defects4j` projects.
+
+## Dependencies
+
+Python 3 is required, as well as [do-like-javac](https://github.com/kelloggm/do-like-javac)
+(or `dljc`) and `defects4j` on your path.
+
+You should also have
+
+ - the build tool of choice, and
+ - any project dependencies
+
+installed as well.
+
+## Installation
+
+After cloning this repo and making sure you have the above dependencies, you can add a symlink to the location of the `bin/dlju`
+executable somewhere on your path, for example:
+
+```
+ln -s /path/to/dlju $HOME/bin/dlju
+```
+
+## Running
+
+Suppose we want to analyze the build system of Lang, bug 1 (fixed version). Run the following in the terminal (does not have to be in any particular directory):
+
+```
+dlju Lang 1f ant compile test
+```
+
+This checks out Lang, version 1f, to a working directory `/tmp/d4j/Lang-1f`, and runs
+`ant clean`, the runs `ant compile` and `ant test` using `dljc`. An executable file called `run_junit`
+is produced in the working directory. Then you can test if test run extraction was successful:
+
+```
+$ cd /tmp/d4j/Lang-1f
+$ ./run_junit
+JUnit version 4.10
+..........
+Time: 0.034
+
+OK (10 tests)
+
+JUnit version 4.10
+.............
+Time: 0.01
+
+OK (13 tests)
+
+JUnit version 4.10
+.......................................................
+Time: 0.024
+
+OK (55 tests)
+# etc
+```
+
+You should see output similar to the above.
+
+In general, to run on any `defects4j` project, use
+
+```
+dlju <project_name> <project_version> <build_command> <compile_target> <test_target>
+```
+
+### Troubleshooting
+
+If a run fails, you can inspect the `dljc` build logs, which will be in `/tmp/d4j/<project_name>-<project_version>/<build_command>.compile.logs` and `/tmp/d4j/<project_name>-<project_version>/<build_command>.test.logs`.
+
+#### Common issue: package <package name> does not exist
+
+For example, this build output (from `/tmp/d4j/Lang-1f`)
+
+```
+[javac] /private/tmp/d4j/Lang-1f/src/test/java/org/apache/commons/lang3/CharSequenceUtilsTest.java:21: error: package org.junit does not exist
+[javac] import static org.junit.Assert.assertNotNull;
+```
+
+This most likely indicates that the `build.properties` file in the working
+directory either
+
+ - doesn't exist,
+ - does exist, but doesn't point to the actual locations of build dependencies such as `junit`.
+
+#### Common issue: Apache Rat causes build to fail
+
+Sometimes, the compile and test log directories and files can trip up the maven rat plugin,
+which assumes that these log directories and files are unlicensed. As a workaround,
+you can manually change the `dlju` executable so that it outputs logs inside the
+build directory for the project, or you can add `<build_command>.test.logs` and
+`<build_command>.compile.logs` to the project's `.gitignore`.
+
+
 # dljc_to_argfile
 
-Takes the `javac.json` output from [do-like-javac](https://github.com/SRI-CSL/do-like-javac)
+Takes the `javac.json` output from [do-like-javac](https://github.com/kelloggm/do-like-javac)
 and turns it into an argfile that you can give to `javac`.
 
 ## Requirements
@@ -9,7 +113,7 @@ Requires
 
  - Python 3
  - either Mac OS X or Linux
- - `do-like-javac` on your path
+ - `dljc` (the `do-like-javac` executable) on your path
 
 ## How to Use
 

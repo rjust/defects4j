@@ -1,4 +1,7 @@
 import capture_junit as cj
+import re
+import os
+
 tests_begin = """-------------------------------------------------------
  T E S T S
 -------------------------------------------------------"""
@@ -20,8 +23,8 @@ def findBeginningOfTests(output):
     testLines = tests_begin.split("\n")
     # print(testLines)
     for i, o in enumerate(output):
-        if o == testLines[0] and (i + 2) < len(output):
-            if output[i+1] == testLines[1] and output[i + 2] == testLines[2]:
+        if o == testLines[0].strip() and (i + 2) < len(output):
+            if output[i+1] == testLines[1].strip() and output[i + 2] == testLines[2].strip():
                 return i + 3
     return -1
 
@@ -41,6 +44,7 @@ def findSurefireCommand(output):
 
     """
     for o in output:
+        print(o)
         if o.startswith("Forking command line"):
             return o
     return None
@@ -145,12 +149,21 @@ def isArgumentlessJavaOption(line):
             return True
     return False
 
+def getSurefireDir(tmps):
+    for t in tmps:
+        if os.path.isdir(t):
+            return t
+    return None
+
 if __name__ == '__main__':
     args = cj.parse_args(outputSuffix="_maven")
     output = cj.getOutput(args.logs)
     print(len(output))
     output = [o.rstrip() for o in output]
+    output = [re.sub(r"\[[^\]]+\]", "", o) for o in output]
+    output = [o.strip() for o in output]
     beginIndex = findBeginningOfTests(output)
+    print(beginIndex)
     surefire = findSurefireCommand(output[beginIndex:])
     ran = findRunTests(output[beginIndex:])
     if surefire is not None:
@@ -166,14 +179,15 @@ if __name__ == '__main__':
                 print(commandParts)
                 while i < len(commandParts):
                     command = commandParts[i]
-                    print(command)
+                    print(f"Command: {command}")
                     if command.find("bin/java") >= 0:
                         javaCommand = command
                     elif command.find("-jar") >= 0:
                         i += 1
                     elif command.startswith("-"):
+                        print(f"An option: {command}")
                         # print("Skipping {}".format(command))
-                        if isArgumentlessJavaOption(command):
+                        if isArgumentlessJavaOption(command) or command.find("=") > -1:
                             options.append(command)
                         else:
                             options.append("{} {}".format(command, commandParts[i + 1]))
@@ -181,10 +195,15 @@ if __name__ == '__main__':
                     elif len(command) > 0:
                         tmpFiles.append(command)
                     i += 1
+                    pass
+                tmpFiles = [tmp for tmp in tmpFiles if tmp.find("surefire") > -1]
+
                 print("tmpFiles: {}".format(tmpFiles))
+                surefireDir = getSurefireDir(tmpFiles)
+                tmpFiles = [t for t in tmpFiles if t != surefireDir]
                 for tmp in tmpFiles:
                     lines = []
-                    with open(tmp, "r") as f:
+                    with open(os.path.join(surefireDir, tmp), "r") as f:
                         lines = f.readlines()
                     lines = [l.strip() for l in lines]
                     if any(l.startswith("tc") for l in lines):
@@ -194,3 +213,9 @@ if __name__ == '__main__':
                             f.write("\n".join(newCommands))
                             f.flush()
                         break
+                    pass
+                pass
+            pass
+        pass
+    else:
+        print("Surefire is none")

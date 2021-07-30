@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """ Parse junit output from the do-like-javac build output, and create a file
     containing all of the commands to run tests
-    (Did not work last time I checked, but can be used to extract dependencies,
-    classpaths, etc.)
+    (Outputted commands did not work last time I checked, but this script can be
+    used to extract classpaths, test classes, etc.)
 """
 
 
@@ -49,6 +49,9 @@ def parse_args(outputSuffix=""):
                         type=str,
                         default=junit_output_default,
                         help="File to store output commands in. Defaults to \"{}\"".format(junit_output_default))
+    parser.add_argument("-i", "--info-only",
+                        action="store_true",
+                        help="Only produce information, and don't create commands. Will produce the classpath and the test classes instead.")
     return parser.parse_args()
 
 def parse_junit_tasks(output):
@@ -228,7 +231,7 @@ def reorderCommands(commandList):
                 classes = [junitClass] + classes
     return [java_call] + options + classes
 
-def commandify(tasks):
+def commandify(tasks, partsOnly=False):
     """ Turn the junit tasks, which are stored as parts, into single command
         strings.
 
@@ -256,9 +259,22 @@ def commandify(tasks):
         return "{} {}".format(a, b)
     if len(tasks) > 0:
         all_combined = []
-        for task in tasks:
-            combined = reorderCommands([combinator(partA, partB) for partA, partB in task])
-            all_combined.append(" ".join(combined))
+        if partsOnly:
+            for task in tasks:
+                simplified = [combinator(partA, partB) for partA, partB in task]
+                if len(simplified > 1):
+                    simplified.pop(0)
+                    classpaths = [c for c in simplified if c.startswith("-classpath") or c.startswith("-cp")]
+                    classes = [c for c in simplified if not c.startrswith("-")]
+                    all_combined.append((classpaths, classes))
+                    pass
+                pass
+            pass
+        else:
+            for task in tasks:
+                combined = reorderCommands([combinator(partA, partB) for partA, partB in task])
+                all_combined.append(" ".join(combined))
+                pass
             pass
         return all_combined
     return ""
@@ -294,7 +310,12 @@ def main():
     output = getOutput(args.logs)
     # print(output)
     junit_tasks = parse_junit_tasks(output)
-    writeCommands(commandify(junit_tasks), args.output)
+    commands = commandify(junit_tasks, partsOnly=args.info_only)
+    if args.info_only:
+        print(commands)
+        pass
+    else:
+        writeCommands(commandify(junit_tasks, partsOnly=args.info_only), args.output)
 
 
 if __name__ == '__main__':

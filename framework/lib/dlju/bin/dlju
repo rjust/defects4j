@@ -14,8 +14,8 @@ BUILD_COMMAND=$3
 COMPILE_TARGET=$4
 TEST_TARGET=$5
 
-DLJU_DIR="$(dirname "$(dirname "$(readlink -fm "$0")")")"
-
+DLJU_DIR="$(dirname "$(dirname "$0")")"
+echo $DLJU_DIR
 
 get_javac="javac_to_argfile.py"
 ant_junit="capture_junit.py"
@@ -64,17 +64,25 @@ TMP_WORK_DIR="/tmp/d4j/$PROJECT_NAME-$PROJECT_VERSION"
 mkdir /tmp/d4j
 
 # Check out defects4j project
-if defects4j checkout -p $PROJECT_NAME -v $PROJECT_VERSION -w $TMP_WORK_DIR; then
-  :
+if [ -e "$TMP_WORK_DIR" ]; then
+  echo "Working directory already exists."
 else
-  echo "Error, defects4j checkout of project \"$PROJECT_NAME\" at version \"$PROJECT_VERSION\" failed."
-  echo "Please check that defects4j is on the \$PATH, and \"$PROJECT_NAME\" with version \"$PROJECT_VERSION\" exists."
-  exit 1
+  if defects4j checkout -p $PROJECT_NAME -v $PROJECT_VERSION -w $TMP_WORK_DIR; then
+    :
+  else
+    echo "Error, defects4j checkout of project \"$PROJECT_NAME\" at version \"$PROJECT_VERSION\" failed."
+    echo "Please check that defects4j is on the \$PATH, and \"$PROJECT_NAME\" with version \"$PROJECT_VERSION\" exists."
+    exit 1
+  fi
 fi
 
 
 
 cd $TMP_WORK_DIR
+
+if ! [ -e "build.properties" ] && [ -e "build.properties.sample" ]; then
+  cp build.properties.sample build.properties
+fi
 
 # Clean the checked out dir just in case
 $BUILD_COMMAND clean
