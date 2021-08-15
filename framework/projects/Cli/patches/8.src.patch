@@ -6,8 +6,8 @@ index 40873f5..639b9d5 100644
          while (true)
          {
              text = padding + text.substring(pos).trim();
--            pos = findWrapPos(text, width, 0);
-+            pos = findWrapPos(text, width, nextLineTabStop);
++            pos = findWrapPos(text, width, 0);
+-            pos = findWrapPos(text, width, nextLineTabStop);
  
              if (pos == -1)
              {
