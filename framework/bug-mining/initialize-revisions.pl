@@ -131,35 +131,68 @@ sub _init_version {
     }
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
-    if (-e "$work_dir/build.xml") {
-        my $cmd = " cd $work_dir" .
-                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
-        Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
-    } elsif (-e "$work_dir/pom.xml") {
-        # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-        my $cmd = " cd $work_dir" .
-                  " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
-                  " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
-                  " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
-                  " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
-                  " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
-        Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id) or die;
 
-        $cmd = " cd $work_dir" .
-               " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
-        Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
-	
-        # Get dependencies if it is maven-ant project
-        my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
-        Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml.");
-    } else {
-        # TODO add support for other build systems
-        die "Unsupported build system";
-    }
+    _init_maven($work_dir, $bid, $rev_id) or _init_ant($work_dir, $bid, $rev_id) or die "Unsupported build system";
 
     $project->initialize_revision($rev_id, "${vid}");
 
     return ($rev_id, $project->src_dir("${vid}"), $project->test_dir("${vid}"));
+}
+
+#
+# Init routine for Maven builds.
+#
+sub _init_maven {
+    my ($work_dir, $bid, $rev_id) = @_;
+
+    if (! -e "$work_dir/pom.xml") { return 0; }
+
+    # If both pom.xml and build.xml are present, rely on the pom.xml.
+    if (-e "$work_dir/build.xml") {
+        rename("$work_dir/build.xml", "$work_dir/build.xml.orig") or die "Cannot backup existing Ant build file: $!";
+    }
+
+    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
+    my $cmd = " cd $work_dir" .
+              " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
+              " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
+              " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+              " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+              " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
+
+    if (! Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id)) {
+        # Can't convert Maven to ant -> restore original Ant build file, which
+        # will be tried next.
+        if (-e "$work_dir/build.xml.orig") {
+            rename("$work_dir/build.xml.orig", "$work_dir/build.xml") or die "Cannot restore existing Ant build file: $!";
+        }
+        return 0;
+    }
+
+    $cmd = " cd $work_dir" .
+           " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+    Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
+
+    # Get dependencies from the maven-build.xml
+    my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
+    Utils::exec_cmd($download_dep, "Download dependencies for maven-build.xml.");
+
+    return 1;
+}
+
+#
+# Init routine for Ant builds.
+#
+sub _init_ant {
+    my ($work_dir, $bid, $rev_id) = @_;
+
+    if (! -e "$work_dir/build.xml") { return 0; }
+
+    my $cmd = " cd $work_dir" .
+              " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+    Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+
+    return 1;
 }
 
 #
