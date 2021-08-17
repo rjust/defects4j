@@ -104,12 +104,9 @@ of the checked-out project version.
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
     <!-- Manually generalize test patterns if analyzer produces incorrect outputs -->
-    <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
+    <fileset id="all.manual.tests" dir="${d4j.dir.src.tests}" excludes="${d4j.tests.exclude}">
         <!--include name="____" /-->
         <!--exclude name="____" /-->
     </fileset>
 
-    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
-    <fileset id="rel.manual.tests" dir="${test.home}"
-        includesfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
 </project>
