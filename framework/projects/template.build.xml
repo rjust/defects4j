@@ -52,17 +52,21 @@ of the checked-out project version.
     <!-- Create a compile.tests target if necessary (compile-tests is a commonly
          used target name in older project versions) -->
     <scriptdef name="hastarget" language="javascript">
-          <attribute name="targetname"/>
-          <attribute name="property"/>
-            <![CDATA[
-            var targetname = attributes.get("property");
+        <attribute name="targetname"/>
+        <attribute name="property"/>
+        <![CDATA[
+            var targetname = attributes.get("targetname");
             if(project.getTargets().containsKey(targetname)) {
-                    project.setProperty(attributes.get("property"), "true");
+                project.setProperty(attributes.get("property"), "true");
             }
-            ]]>
+        ]]>
     </scriptdef>
     <hastarget targetname="compile.tests" property="newLayout" />
-    <target name="compile.tests" depends="compile-tests" unless="newLayout"/>
+    <if> <isfalse value="${newLayout}"/>
+        <then>
+            <target name="compile.tests" depends="compile-tests" unless="newLayout"/>
+        </then>
+    </if>
 
     <!-- Project properties targets -->
     <if> <isset property="ant.refid:compile.classpath" />
