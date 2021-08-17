@@ -84,7 +84,7 @@ sub initialize_revision {
     $self->SUPER::initialize_revision($rev_id);
 
     my $work_dir = $self->{prog_root};
-    my $result = _default_layout($work_dir) // _ant_layout($work_dir) // _maven_layout($work_dir);
+    my $result = _default_layout($work_dir) // _maven_2_layout($work_dir) // _ant_layout($work_dir) // _maven_1_layout($work_dir);
     die "Unknown layout for revision: ${rev_id}" unless defined $result;
 
     $self->_add_to_layout_map($rev_id, $result->{src}, $result->{test});
@@ -134,9 +134,10 @@ sub _ant_layout {
 }
 
 #
-# Generated build.xml (from mvn ant:ant) with maven-build.properties
+# Generated maven-build.xml and maven-build.properties
+# (generated from an existing Maven 2 pom.xml using mvn ant:ant
 #
-sub _maven_layout {
+sub _maven_2_layout {
     @_ == 1 or die $ARG_ERROR;
     my ($dir) = @_;
     my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
@@ -149,5 +150,23 @@ sub _maven_layout {
 
     return {src=>$src, test=>$test};
 }
+
+#
+# Existing Maven 1 project.xml.
+#
+sub _maven_1_layout {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep "<sourceDirectory>" $dir/project.xml 2>/dev/null`;
+    my $test = `grep "<unitTestSourceDirectory>" $dir/project.xml 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*<sourceDirectory>\s*(\S+)\s*<.*/$1/s;
+    $test=~ s/\s*<unitTestSourceDirectory>\s*(\S+)\s*<.*/$1/s;
+
+    return {src=>$src, test=>$test};
+}
+
 
 1;
