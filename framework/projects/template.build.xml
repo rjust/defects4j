@@ -50,23 +50,26 @@ of the checked-out project version.
     <import file="${d4j.workdir}/build.xml"/>
 
     <!-- Create a compile.tests target if necessary (compile-tests is a commonly
-         used target name in older project versions) -->
+-         used target name in older project versions) -->
     <scriptdef name="hastarget" language="javascript">
-        <attribute name="targetname"/>
-        <attribute name="property"/>
+        <attribute name="targetname" />
+        <attribute name="newtargetname" />
+        <attribute name="setproperty" />
         <![CDATA[
-            var targetname = attributes.get("targetname");
+            var targetname    = attributes.get("targetname");
+            var newtargetname = attributes.get("newtargetname");
+            var setproperty   = attributes.get("setproperty");
             if(project.getTargets().containsKey(targetname)) {
-                project.setProperty(attributes.get("property"), "true");
+                var newTarget = new org.apache.tools.ant.Target();
+                newTarget.addDependency(targetname);
+                newTarget.setName(newtargetname);
+                project.addTarget(newtargetname, newTarget);
+                project.setProperty(setproperty, "yes");
             }
         ]]>
     </scriptdef>
-    <hastarget targetname="compile.tests" property="newLayout" />
-    <if> <isfalse value="${newLayout}"/>
-        <then>
-            <target name="compile.tests" depends="compile-tests" unless="newLayout"/>
-        </then>
-    </if>
+
+    <hastarget targetname="compile-tests" newtargetname="compile.tests" setproperty="oldLayout" />
 
     <!-- Project properties targets -->
     <if> <isset property="ant.refid:compile.classpath" />

@@ -161,7 +161,6 @@ sub _init_maven {
     # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
     my $cmd = " cd $work_dir" .
               " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
-              " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
               " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
               " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
               " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
