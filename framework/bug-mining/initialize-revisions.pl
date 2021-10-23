@@ -158,6 +158,9 @@ sub _init_maven {
         rename("$work_dir/build.xml", "$work_dir/build.xml.orig") or die "Cannot backup existing Ant build file: $!";
     }
 
+    # Update the pom.xml to replace deprecated declaration. 
+    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns") if -e "$work_dir/poml.xml";
+    
     # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
     my $cmd = " cd $work_dir" .
               " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
@@ -172,6 +175,11 @@ sub _init_maven {
             rename("$work_dir/build.xml.orig", "$work_dir/build.xml") or die "Cannot restore existing Ant build file: $!";
         }
         return 0;
+    }
+
+    # Update the deprecated urls in the genenrated maven.build.xml
+    for my $build_file (("maven-build.xml", "maven-build.properties")) {
+        Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns") if -e "$work_dir/$build_file";
     }
 
     $cmd = " cd $work_dir" .

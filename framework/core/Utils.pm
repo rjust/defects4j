@@ -326,14 +326,17 @@ sub fix_dependency_urls {
 
     # Process the build file
     my $modified = 0;
+    my $err_message = ($build_file =~ m/pom.xml/) ? "Fixing pom dependency declarations in build file" : "Fixing dependency URLs in build file";
     for (my $i=0; $i<=$#lines; ++$i) {
         my $l = $lines[$i];
         # Skip all lines that aren't containing a URL
-        $l =~ /http/ or next;
+        if ($build_file !~ m/pom.xml/) {
+            $l =~ /http/ or next;
+        }
         foreach (@regexes) {
-            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/eg) {
+            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/emsg) {
                 unless($modified) {
-                    exec_cmd("cp $build_file $build_file.bak", "Fixing dependency URLs in build file");
+                    exec_cmd("cp $build_file $build_file.bak", $err_message);
                     $modified = 1;
                 }
                 $lines[$i] = $l;
