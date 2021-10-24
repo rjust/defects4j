@@ -326,7 +326,6 @@ sub fix_dependency_urls {
 
     # Process the build file
     my $modified = 0;
-    my $err_message = ($build_file =~ m/pom.xml/) ? "Fixing pom dependency declarations in build file" : "Fixing dependency URLs in build file";
     for (my $i=0; $i<=$#lines; ++$i) {
         my $l = $lines[$i];
         # Skip all lines that aren't containing a URL
@@ -336,9 +335,10 @@ sub fix_dependency_urls {
         foreach (@regexes) {
             if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/emsg) {
                 unless($modified) {
-                    exec_cmd("cp $build_file $build_file.bak", $err_message);
+                    exec_cmd("cp $build_file $build_file.bak", "Backing up build file: $build_file");
                     $modified = 1;
                 }
+                print(STDERR "Replacing pattern in build file ($build_file): $$_[0]\n");
                 $lines[$i] = $l;
                 last;
             }
