@@ -158,8 +158,8 @@ sub _init_maven {
         rename("$work_dir/build.xml", "$work_dir/build.xml.orig") or die "Cannot backup existing Ant build file: $!";
     }
 
-    # Update the pom.xml to replace deprecated declaration. 
-    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns") if -e "$work_dir/poml.xml";
+    # Update the pom.xml to replace deprecated declarations.
+    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns", 1) if -e "$work_dir/poml.xml";
     
     # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
     my $cmd = " cd $work_dir" .
