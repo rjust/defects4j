@@ -31,7 +31,7 @@ fix_dependency_urls.pl -- replace broken dependency URLs in a build file, based
 
 =head1 SYNOPSIS
 
-    fix_dependency_urls.pl -f build_file [-p pattern_file]
+    fix_dependency_urls.pl -f build_file [-p pattern_file] [-M]
 
 =head1 OPTIONS
 
@@ -47,6 +47,13 @@ The file that lists all search and replace regexes (optional). Each row in this
 file has to have two comma-separated columns: (1) search pattern and (2) replace
 pattern. Comment lines starting with '#' are ignored. The default pattern file
 is F<fix_dependency_urls.patterns> in this directory. 
+
+=item -M
+
+Multi-line matching. If set, the content of the build file is treated as a
+single string and the search pattern is matched beyond newlines (see /ms
+modifiers for perl regexes).
+
 
 =back
 
@@ -76,11 +83,12 @@ use Utils;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('f:p:', \%cmd_opts) or pod2usage(1);
+getopts('f:p:M', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{f};
 
 my $BUILD_FILE = $cmd_opts{f};
 my $PATTERNS   = $cmd_opts{p} // "$UTIL_DIR/fix_dependency_urls.patterns";
+my $MULTI_LINE = $cmd_opts{M};
 
-Utils::fix_dependency_urls($BUILD_FILE, $PATTERNS);
+Utils::fix_dependency_urls($BUILD_FILE, $PATTERNS, defined($MULTI_LINE) ? 1 : 0);

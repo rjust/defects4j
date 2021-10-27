@@ -296,15 +296,14 @@ sub is_continuous_integration {
 
 =pod
 
-=item C<Utils::fix_dependency_urls(build_file, pattern_file)>
+=item C<Utils::fix_dependency_urls(build_file, pattern_file, multi_line)>
 
-Parses the F<build_file> and replaces all URLs that match a pattern in
-the F<pattern_file>.
+Parses the F<build_file> and applies the first matching pattern in the F<pattern_file>.
 
 =cut
 sub fix_dependency_urls {
-    @_ == 2 || die $ARG_ERROR;
-    my ($build_file, $pattern_file) = @_;
+    @_ == 3 || die $ARG_ERROR;
+    my ($build_file, $pattern_file, $multi_line) = @_;
 
     open(IN, "<$build_file") or die("Cannot read the build file: $build_file");
     my @lines = <IN>;
@@ -321,24 +320,29 @@ sub fix_dependency_urls {
         chomp($l);
         $l =~ /([^,]+),([^,]+)/ or die("Row in pattern file in wrong format: $l (expected: <find>,<replace>)");
         my ($find, $repl) = split(",", $l);
-        push(@regexes, [qr($find), $repl]);
+        if (! $multi_line) {
+            push(@regexes, [qr/$find/, $repl]);
+        } else {
+            print(STDERR "Multi-line matching enabled.\n");
+            push(@regexes, [qr/$find/ms, $repl]);
+            # Replace the list of lines with a single entry, if multi-line match
+            # is enabled. This allows us to use the same iteration over all
+            # "lines" below.
+            @lines = join("", @lines);
+        }
     }
 
     # Process the build file
     my $modified = 0;
     for (my $i=0; $i<=$#lines; ++$i) {
         my $l = $lines[$i];
-        # Skip all lines that aren't containing a URL
-        if ($build_file !~ m/pom.xml/) {
-            $l =~ /http/ or next;
-        }
         foreach (@regexes) {
-            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/emsg) {
+            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/eg) {
                 unless($modified) {
                     exec_cmd("cp $build_file $build_file.bak", "Backing up build file: $build_file");
                     $modified = 1;
                 }
-                print(STDERR "Replacing pattern in build file ($build_file): $$_[0]\n");
+                print(STDERR "Pattern matches in build file ($build_file): $$_[0]\n");
                 $lines[$i] = $l;
                 last;
             }
