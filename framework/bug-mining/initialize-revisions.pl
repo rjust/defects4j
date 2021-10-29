@@ -159,7 +159,7 @@ sub _init_maven {
     }
 
     # Update the pom.xml to replace deprecated declarations.
-    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns", 1) if -e "$work_dir/poml.xml";
+    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns", 1) if -e "$work_dir/pom.xml";
     
     # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
     my $cmd = " cd $work_dir" .
@@ -179,7 +179,7 @@ sub _init_maven {
 
     # Update the deprecated urls in the genenrated maven.build.xml
     for my $build_file (("maven-build.xml", "maven-build.properties")) {
-        Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns") if -e "$work_dir/$build_file";
+        Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns", 0) if -e "$work_dir/$build_file";
     }
 
     $cmd = " cd $work_dir" .

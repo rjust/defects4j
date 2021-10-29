@@ -21,7 +21,7 @@ http://mirrors.ibiblio.org/pub/mirrors/maven/(commons-[^.]+)/jars/(.*-([0-9.]*)\
 http://repo.maven.apache.org/maven2/(.*)/(.*)/(.*)/(.*),https://repo1.maven.org/maven2/${1}/${2}/${3}/${4}
 https://repository.apache.org/snapshots/org/apache/commons/(.*)/(.*)/(.*)\.jar,https://repo1.maven.org/maven2/org/apache/commons/${1}/${2}/${3}\.jar
 https://repository.apache.org/snapshots/(commons-[a-z]+)/(commons-[a-z]+)/([0-9.]*)/(.+)\.jar,https://repo1.maven.org/maven2/${1}/${2}/${3}/${4}\.jar
-https://repository.apache.org/snapshots/(.*)\.jar,https://repo1.maven.org/maven2/${1}\.jar
+https?://repository.apache.org/snapshots/(.*)\.jar,https://repo1.maven.org/maven2/${1}\.jar
 http://repository.apache.org/snapshots/org/javassist/javassist/3.16.1-GA/javassist-3.16.1-GA.jar,https://repo1.maven.org/maven2/org/javassist/javassist/3.18.0-GA/javassist-3.18.0-GA.jar
 http://people.apache.org/repo/m1-snapshot-repository/dumbster/jars/dumbster-SNAPSHOT.jar,https://repo1.maven.org/maven2/dumbster/dumbster/1.6/dumbster-1.6.jar
 https://oss.sonatype.org/content/repositories/snapshots,https://repo1.maven.org/maven2
