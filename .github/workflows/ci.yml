@@ -1,0 +1,246 @@
+name: Run CI tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      JDK_OS: linux
+      JDK_ARCH: x64
+      JDK_VERSION: 8u192
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache JDK
+      uses: actions/cache@v2
+      id: cache-jdk
+      with:
+        path: ~/.java
+        key: jdk-${{ env.JDK_OS }}-${{ env.JDK_ARCH }}-${{ env.JDK_VERSION }}
+    - name: Install JDK
+      if: steps.cache-jdk.outputs.cache-hit != 'true'
+      run: |
+        export JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
+        export JDK_URL="https://defects4j.org/downloads/$JDK_FILE"
+        if [ ! -f "$JDK_FILE" ]; then mkdir -p ~/.java && (timeout 400 curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C ~/.java; fi
+        export JAVA_HOME=$HOME/.java/jdk1.8.0_192
+        echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+        echo "$JAVA_HOME/bin" >> $GITHUB_PATH
+    - name: Install Carton
+      uses: perl-actions/install-with-cpanm@v1
+      with:
+        install: |
+          Carton
+    - name: Install Perl packages
+      run: timeout 300 carton install || cpan carton install
+    - name: Run ./init.sh
+      run: |
+        ./init.sh
+
+    # Test the tutorial and basic commands
+    - run: carton exec ./test_tutorial.sh
+      name: test_tutorial.sh
+      working-directory: "./framework/test"
+    - run: carton exec ./test_mutation_analysis.sh
+      name: test_mutation_analysis.sh
+      working-directory: "./framework/test"
+    - run: carton exec ./test_gen_tests.sh -p Lang -b 6
+      name: test_gen_tests.sh
+      working-directory: "./framework/test"
+    - run: carton exec ./test_fix_test_suite.sh
+      name: test_fix_test_suite.sh
+      working-directory: "./framework/test"
+    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
+      name: "test export 1" 
+      working-directory: "./framework/test"
+    - run: carton exec ./test_export_command.sh -p Codec -p Collections -p Compress -p Csv -p JacksonDatabind
+      name: "test export 2"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_export_command.sh -p Gson -p JacksonCore -p JacksonXml -p Jsoup -p JxPath
+      name: "test export 3"  
+      working-directory: "./framework/test"
+    - run: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
+      name: "test export 4"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_bug_mining.sh
+      name: test_bug_mining.sh
+      working-directory: "./framework/test"
+    # Verify that all bugs are reproducible (run multiple jobs for projects that
+    # take a long time to finish).
+## Chart
+    - run: carton exec ./test_verify_bugs.sh -p Chart
+      name: "Chart"
+      working-directory: "./framework/test"
+## Cli
+    - run: carton exec ./test_verify_bugs.sh -p Cli
+      name: "Cli"
+      working-directory: "./framework/test"
+## Closure
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b1..10
+      name: "Closure 1-10"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b11..15
+      name: "Closure 11-15"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b16..20
+      name: "Closure 16-20"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b21..30
+      name: "Closure 21-30"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b31..40
+      name: "Closure 31-40"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b41..50
+      name: "Closure 41-50"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b51..60
+      name: "Closure 51-60"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b61..70
+      name: "Closure 61-70"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b71..80
+      name: "Closure 71-80"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b81..90
+      name: "Closure 81-90"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b91..100
+      name: "Closure 91-100"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b101..111
+      name: "Closure 101-111"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b112..122
+      name: "Closure 112-122"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b123..133
+      name: "Closure 123-133"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b134..142
+      name: "Closure 134-142"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b143..151
+      name: "Closure 143-151"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b152..160
+      name: "Closure 152-160"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b161..169
+      name: "Closure 161-169"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b170..176
+      name: "Closure 170-176"
+      working-directory: "./framework/test"
+## Codec
+    - run: carton exec ./test_verify_bugs.sh -p Codec -b1..18
+      name: "Codec"
+      working-directory: "./framework/test"
+## Collections
+    - run: carton exec ./test_verify_bugs.sh -p Collections -b25..28
+      name: "Collections"
+      working-directory: "./framework/test"
+## Compress
+    - run: carton exec ./test_verify_bugs.sh -p Compress
+      name: "Compress"
+      working-directory: "./framework/test"
+## Csv
+    - run: carton exec ./test_verify_bugs.sh -p Csv -b1..16
+      name: "Csv"
+      working-directory: "./framework/test"
+## Gson
+    - run: carton exec ./test_verify_bugs.sh -p Gson -b1..18
+      name: "Gson"
+      working-directory: "./framework/test"
+## JacksonCore
+    - run: carton exec ./test_verify_bugs.sh -p JacksonCore
+      name: "JacksonCore"
+      working-directory: "./framework/test"
+## JacksonDatabind
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b1..14
+      name: "JacksonDatabind 1-14"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b15..28
+      name: "JacksonDatabind 15-28"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b29..43
+      name: "JacksonDatabind 29-43"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b44..57
+      name: "JacksonDatabind 44-57"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b58..67
+      name: "JacksonDatabind 58-67"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b68..76
+      name: "JacksonDatabind 68-76"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b77..86
+      name: "JacksonDatabind 77-86"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b87..96
+      name: "JacksonDatabind 87-96"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b97..104
+      name: "JacksonDatabind 97-104"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p JacksonDatabind -b105..112
+      name: "JacksonDatabind 105-112"
+      working-directory: "./framework/test"
+## JacksonXml
+    - run: carton exec ./test_verify_bugs.sh -p JacksonXml -b1..6
+      name: "JacksonXml"
+      working-directory: "./framework/test"
+## Jsoup
+    - run: carton exec ./test_verify_bugs.sh -p Jsoup -b1..50
+      name: "Jsoup 1-50"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Jsoup -b51..93
+      name: "Jsoup 51-93"
+      working-directory: "./framework/test"
+## JxPath
+    - run: carton exec ./test_verify_bugs.sh -p JxPath
+      name: "JxPath"
+      working-directory: "./framework/test"
+## Lang
+    - run: carton exec ./test_verify_bugs.sh -p Lang
+      name: "Lang"
+      working-directory: "./framework/test"
+## Math
+    - run: carton exec ./test_verify_bugs.sh -p Math -b1..18
+      name: "Math 1-18"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Math -b19..36
+      name: "Math 19-36"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Math -b20..54
+      name: "Math 20-54"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Math -b55..80
+      name: "Math 55-80"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Math -b81..106
+      name: "Math 81-106"
+      working-directory: "./framework/test"
+## Mockito
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b1..5
+      name: "Mockito 1-5"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b6..10
+      name: "Mockito 6-10"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b11..15
+      name: "Mockito 11-15"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b16..20
+      name: "Mockito 16-20"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b21..26
+      name: "Mockito 21-26"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b27..38
+      name: "Mockito 27-38"
+      working-directory: "./framework/test"
+## Time
+    - run: carton exec ./test_verify_bugs.sh -p Time
+      name: "Time"
+      working-directory: "./framework/test"
