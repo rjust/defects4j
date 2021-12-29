@@ -260,8 +260,35 @@ foreach my $bid (@ids) {
     $project->sanity_check();
 }
 
-print("\n--- Add the following to the <fileset> tag identified by the id 'all.manual.tests' in the <PROJECT_ID.build.xml> file ---\n");
-system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done");
-system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done");
+# Create a sorted, unique list of inferred include/exclude patterns
+system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done >  $ANALYZER_OUTPUT/inc_exc.patterns");
+system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done >> $ANALYZER_OUTPUT/inc_exc.patterns");
+open(IN, "<$ANALYZER_OUTPUT/inc_exc.patterns") or die "Cannot open include/exclude patterns: $!";
+  my @patterns = <IN>;
+close(IN);
+
+# Parse generated build file and insert inferred include/exclude patterns
+my $build_file  = "$PROJECT_DIR/$PID.build.xml";
+my @cache;
+my $indent;
+open(IN, "<$build_file") or die "Cannot open build file: $!";
+while(<IN>) {
+  if (/^(\s*)<!--###ADD_INC_EXC###/) {
+    $indent = $1;
+    push(@cache, map { $indent . $_ } @patterns);
+  } else {
+    push(@cache, $_);
+  }
+}
+
+# Overwrite the existing, generated build file
+system("mv $build_file $build_file.bak");
+open(OUT, ">$build_file");
+foreach (@cache) {
+  print(OUT $_);
+}
+close(OUT);
+print("\nAdded the following entries to 'all.manual.tests' (in $build_file)\n");
+system("cat $ANALYZER_OUTPUT/inc_exc.patterns");
 
 system("rm -rf $TMP_DIR") unless $DEBUG;
