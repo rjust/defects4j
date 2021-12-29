@@ -236,7 +236,15 @@ test_analyze_project() {
     # Same number of failing tests
     local actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
     local expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
-    [ "$actual_num_failing_tests" -eq "$expected_num_failing_tests" ] || die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+    if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
+      echo "Expected failing tests:"
+      grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
+
+      echo "Actual failing tests:"
+      grep -a "^--- " "$work_dir/$failing_tests"
+
+      die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+    fi
 
     # Same failing tests
     while read -r failing_test; do
