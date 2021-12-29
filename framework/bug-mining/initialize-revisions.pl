@@ -31,7 +31,7 @@ layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
-initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] 
+initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] [-D]
 
 =head1 OPTIONS
 
@@ -54,6 +54,11 @@ The subproject to be mined (if not the root directory)
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
 Per default all bug ids, listed in the active-bugs csv, are considered.
 
+=item B<-D>
+
+Debug: Enable verbose logging and do not delete the temporary check-out directory
+(optional).
+
 =back
 
 =cut
@@ -71,7 +76,7 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:b:w:s:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:s:D', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
@@ -79,6 +84,7 @@ my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 my $WORK_DIR = abs_path($cmd_opts{w});
 my $SUBPROJ = $cmd_opts{s};
+$DEBUG = 1 if defined $cmd_opts{D};
 
 # Check format of target bug id
 if (defined $BID) {
@@ -131,39 +137,75 @@ sub _init_version {
     }
 
     system("mkdir -p $ANALYZER_OUTPUT/$bid");
-    if (-e "$work_dir/build.xml") {
-        my $cmd = " cd $work_dir" .
-                  " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
-        Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
-    } elsif (-e "$work_dir/pom.xml") {
-        # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
-        my $cmd = " cd $work_dir" .
-                  " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
-                  " && patch build.xml $PROJECT_DIR/build.xml.patch 2>&1" .
-                  " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
-                  " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
-                  " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
-        Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id) or die;
 
-        $cmd = " cd $work_dir" .
-               " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
-        Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
-	
-        # Fix broken dependency links
-        my $fix_dep = "cd $work_dir && sed \'s\/https:\\/\\/oss\\.sonatype\\.org\\/content\\/repositories\\/snapshots\\//http:\\/\\/central\\.maven\\.org\\/maven2\\/\/g\' maven-build.xml >> temp && mv temp maven-build.xml";
-        Utils::exec_cmd($fix_dep, "Fixing broken dependency links.");
-
-        # Get dependencies if it is maven-ant project
-        my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
-        Utils::exec_cmd($download_dep, "Download dependencies for maven-ant.xml.");
-    } else {
-        # TODO add support for other build systems
-        die "Unsupported build system";
-    }
+    _init_maven($work_dir, $bid, $rev_id) or _init_ant($work_dir, $bid, $rev_id) or die "Unsupported build system";
 
     $project->initialize_revision($rev_id, "${vid}");
 
     return ($rev_id, $project->src_dir("${vid}"), $project->test_dir("${vid}"));
+}
+
+#
+# Init routine for Maven builds.
+#
+sub _init_maven {
+    my ($work_dir, $bid, $rev_id) = @_;
+
+    if (! -e "$work_dir/pom.xml") { return 0; }
+
+    # If both pom.xml and build.xml are present, rely on the pom.xml.
+    if (-e "$work_dir/build.xml") {
+        rename("$work_dir/build.xml", "$work_dir/build.xml.orig") or die "Cannot backup existing Ant build file: $!";
+    }
+
+    # Update the pom.xml to replace deprecated declarations.
+    Utils::fix_dependency_urls("$work_dir/pom.xml", "$UTIL_DIR/fix_pom_dependency_urls.patterns", 1) if -e "$work_dir/pom.xml";
+    
+    # Run maven-ant plugin and overwrite the original build.xml whenever a maven build file exists
+    my $cmd = " cd $work_dir" .
+              " && mvn ant:ant -Doverwrite=true 2>&1 -Dhttps.protocols=TLSv1.2" .
+              " && rm -rf $GEN_BUILDFILE_DIR/$rev_id && mkdir -p $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+              " && cp maven-build.* $GEN_BUILDFILE_DIR/$rev_id 2>&1" .
+              " && cp build.xml $GEN_BUILDFILE_DIR/$rev_id 2>&1";
+
+    if (! Utils::exec_cmd($cmd, "Convert Maven to Ant build file: " . $rev_id)) {
+        # Can't convert Maven to ant -> restore original Ant build file, which
+        # will be tried next.
+        if (-e "$work_dir/build.xml.orig") {
+            rename("$work_dir/build.xml.orig", "$work_dir/build.xml") or die "Cannot restore existing Ant build file: $!";
+        }
+        return 0;
+    }
+
+    # Update the deprecated urls in the generated maven.build.xml
+    for my $build_file (("maven-build.xml", "maven-build.properties")) {
+        Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns", 0) if -e "$work_dir/$build_file";
+    }
+
+    $cmd = " cd $work_dir" .
+           " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid maven-build.xml 2>&1";
+    Utils::exec_cmd($cmd, "Run build-file analyzer on maven-ant.xml.") or die;
+
+    # Get dependencies from the maven-build.xml
+    my $download_dep = "cd $work_dir && ant -Dmaven.repo.local=\"$PROJECT_DIR/lib\" get-deps";
+    Utils::exec_cmd($download_dep, "Download dependencies for maven-build.xml.");
+
+    return 1;
+}
+
+#
+# Init routine for Ant builds.
+#
+sub _init_ant {
+    my ($work_dir, $bid, $rev_id) = @_;
+
+    if (! -e "$work_dir/build.xml") { return 0; }
+
+    my $cmd = " cd $work_dir" .
+              " && java -jar $LIB_DIR/analyzer.jar $work_dir $ANALYZER_OUTPUT/$bid build.xml 2>&1";
+    Utils::exec_cmd($cmd, "Run build-file analyzer on build.xml.");
+
+    return 1;
 }
 
 #
@@ -218,8 +260,35 @@ foreach my $bid (@ids) {
     $project->sanity_check();
 }
 
-print("\n--- Add the following to the <fileset> tag identified by the id 'all.manual.tests' in the <PROJECT_ID.build.xml> file ---\n");
-system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done");
-system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done");
+# Create a sorted, unique list of inferred include/exclude patterns
+system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done >  $ANALYZER_OUTPUT/inc_exc.patterns");
+system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done >> $ANALYZER_OUTPUT/inc_exc.patterns");
+open(IN, "<$ANALYZER_OUTPUT/inc_exc.patterns") or die "Cannot open include/exclude patterns: $!";
+  my @patterns = <IN>;
+close(IN);
 
-system("rm -rf $TMP_DIR");
+# Parse generated build file and insert inferred include/exclude patterns
+my $build_file  = "$PROJECT_DIR/$PID.build.xml";
+my @cache;
+open(IN, "<$build_file") or die "Cannot open build file: $!";
+while(<IN>) {
+  if (/^(\s*)<!--###ADD_INC_EXC###/) {
+    my $indent = $1;
+    push(@cache, map { $indent . $_ } @patterns);
+  } else {
+    push(@cache, $_);
+  }
+}
+
+# Overwrite the existing, generated build file
+system("mv $build_file $build_file.bak") if $DEBUG;
+open(OUT, ">$build_file");
+foreach (@cache) {
+  print(OUT $_);
+}
+close(OUT);
+
+print("\nAdded the following entries to 'all.manual.tests' (in $build_file)\n");
+system("cat $ANALYZER_OUTPUT/inc_exc.patterns");
+
+system("rm -rf $TMP_DIR") unless $DEBUG;
