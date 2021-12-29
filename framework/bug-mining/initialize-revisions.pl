@@ -270,11 +270,10 @@ close(IN);
 # Parse generated build file and insert inferred include/exclude patterns
 my $build_file  = "$PROJECT_DIR/$PID.build.xml";
 my @cache;
-my $indent;
 open(IN, "<$build_file") or die "Cannot open build file: $!";
 while(<IN>) {
   if (/^(\s*)<!--###ADD_INC_EXC###/) {
-    $indent = $1;
+    my $indent = $1;
     push(@cache, map { $indent . $_ } @patterns);
   } else {
     push(@cache, $_);
@@ -282,12 +281,13 @@ while(<IN>) {
 }
 
 # Overwrite the existing, generated build file
-system("mv $build_file $build_file.bak");
+system("mv $build_file $build_file.bak") if $DEBUG;
 open(OUT, ">$build_file");
 foreach (@cache) {
   print(OUT $_);
 }
 close(OUT);
+
 print("\nAdded the following entries to 'all.manual.tests' (in $build_file)\n");
 system("cat $ANALYZER_OUTPUT/inc_exc.patterns");
 
