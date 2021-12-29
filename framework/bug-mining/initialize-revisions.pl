@@ -177,7 +177,7 @@ sub _init_maven {
         return 0;
     }
 
-    # Update the deprecated urls in the genenrated maven.build.xml
+    # Update the deprecated urls in the generated maven.build.xml
     for my $build_file (("maven-build.xml", "maven-build.properties")) {
         Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns", 0) if -e "$work_dir/$build_file";
     }
