@@ -98,7 +98,6 @@ test_create_project() {
     # Check whether content of expected files is correct
     _check_output "$work_dir/$project_perl_module" "$RESOURCES_OUTPUT_DIR/$project_perl_module"
 
-    cp "$RESOURCES_INPUT_DIR/$project_build_xml" "$work_dir/$project_build_xml" || die "Failed to replace project build file"
 }
 
 #
@@ -376,8 +375,9 @@ test_integration() {
     ./test_verify_bugs.sh -p "$project_id" -b "$bug_id" || die "Verify script has failed"
 }
 
-# Run all test cases (and log all results), regardless of whether errors occur
-HALT_ON_ERROR=0
+# Stop at the very first error (there is no point in running later stages of the
+# bug-mining pipeline if earlier stages failed and preconditions are violated.)
+HALT_ON_ERROR=1
 
 # Bug-mining temporary directory
 WORK_DIR="$TMP_DIR/test_bug_mining"
