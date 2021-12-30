@@ -24,6 +24,8 @@ jobs:
         export JAVA_HOME=$HOME/.java/jdk1.8.0_192
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
+    - name: Install diffstat
+      uses: sudo apt-get install diffstat
     - name: Install Carton
       uses: perl-actions/install-with-cpanm@v1
       with:
@@ -48,21 +50,22 @@ jobs:
     - run: carton exec ./test_fix_test_suite.sh
       name: test_fix_test_suite.sh
       working-directory: "./framework/test"
-    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
-      name: "test export 1" 
-      working-directory: "./framework/test"
-    - run: carton exec ./test_export_command.sh -p Codec -p Collections -p Compress -p Csv -p JacksonDatabind
-      name: "test export 2"
-      working-directory: "./framework/test"
-    - run: carton exec ./test_export_command.sh -p Gson -p JacksonCore -p JacksonXml -p Jsoup -p JxPath
-      name: "test export 3"  
-      working-directory: "./framework/test"
-    - run: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
-      name: "test export 4"
-      working-directory: "./framework/test"
     - run: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
       working-directory: "./framework/test"
+#    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
+#      name: "test export 1"
+#      working-directory: "./framework/test"
+#    - run: carton exec ./test_export_command.sh -p Codec -p Collections -p Compress -p Csv -p JacksonDatabind
+#      name: "test export 2"
+#      working-directory: "./framework/test"
+#    - run: carton exec ./test_export_command.sh -p Gson -p JacksonCore -p JacksonXml -p Jsoup -p JxPath
+#      name: "test export 3"
+#      working-directory: "./framework/test"
+#    - run: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
+#      name: "test export 4"
+#      working-directory: "./framework/test"
+
 #
 # Verifying all bugs is pretty time-consuming. The jobs below should be run as
 # part of the release process, but running them on every push and PR is
