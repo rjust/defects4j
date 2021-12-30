@@ -25,7 +25,7 @@ jobs:
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
     - name: Install diffstat
-      uses: sudo apt-get install diffstat
+      run: sudo apt-get install diffstat
     - name: Install Carton
       uses: perl-actions/install-with-cpanm@v1
       with:
