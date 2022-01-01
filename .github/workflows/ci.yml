@@ -21,6 +21,8 @@ jobs:
         export JDK_FILE="jdk-$JDK_VERSION-$JDK_OS-$JDK_ARCH.tar.gz"
         export JDK_URL="https://defects4j.org/downloads/$JDK_FILE"
         if [ ! -f "$JDK_FILE" ]; then mkdir -p ~/.java && (timeout 400 curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C ~/.java; fi
+    - name: Setup JDK
+      run: |
         export JAVA_HOME=$HOME/.java/jdk1.8.0_192
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
