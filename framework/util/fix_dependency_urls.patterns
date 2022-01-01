@@ -9,11 +9,6 @@
 # corresponding line in the build/properties file will be updated and all other
 # patterns ignored for that line.
 #
-# 
-# https://repository.apache.org/snapshots/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar,https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar
-# https://repository.apache.org/snapshots/commons-logging/commons-logging/1.2/commons-logging-1.2.jar, https://repo1.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar
-#
-#
 http://www.ibiblio.org/maven/([^.]+)\.([^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${2}/${2}/${4}/${3}
 http://www.ibiblio.org/maven/([a-z]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${1}/${3}/${2}
 http://www.ibiblio.org/maven/(commons-[^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${1}/${3}/${2}
