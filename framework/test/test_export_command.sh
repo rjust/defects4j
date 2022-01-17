@@ -181,7 +181,7 @@ test_export_properties() {
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
+    local known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id>"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -208,7 +208,7 @@ done
 
 # If no arguments provided, iterate over all projects
 if [ "$PIDS" == "" ]; then
-    PIDS=$(cd "$BASE_DIR/framework/core/Project" && ls *.pm | sed -e 's/\.pm//g')
+    PIDS=$(defects4j pids)
 fi
 
 for PID in $PIDS; do
