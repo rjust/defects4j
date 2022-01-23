@@ -10,4 +10,5 @@
 --forbid-null=false
 --null-ratio=0.1
 --only-test-public-members=false
---omitmethods=HashCodeAndEqualsSafeSet.of
+--omit-methods=HashCodeAndEqualsSafeSet.of
+--omit-methods=CSVPrinter.close
