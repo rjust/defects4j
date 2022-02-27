@@ -47,6 +47,7 @@ main() {
       echo "$PID-$BID: start" >> "$LOG"
       for cp in "cp.compile" "cp.test"; do
         key="$PID-$BID-$cp"
+        echo "  - $key: $(defects4j export -p $cp -w "$DIR")" >> "$LOG"
         check_cp_entries $key $(defects4j export -p $cp -w "$DIR") || ERROR=1
       done
       echo "$PID-$BID: done" >> "$LOG"
@@ -74,7 +75,7 @@ check_cp_entries() {
   local KEY=$1
   local CP=$2
   for entry in $(echo $CP | tr ':' '\n'); do
-    [[ -e "$entry" ]] || echo "Invalid CP entry ($KEY): $entry" >> "$LOG"
+    [[ -e "$entry" ]] || echo "!!! Invalid CP entry ($KEY): $entry" >> "$LOG"
   done
 }
 
