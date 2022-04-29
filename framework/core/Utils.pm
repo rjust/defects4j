@@ -115,7 +115,7 @@ sub get_abs_path {
     my ($dir) = @_;
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
-    return abs_path($dir);
+    return File::Spec->rel2abs($dir);
 }
 
 =pod
