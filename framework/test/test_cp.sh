@@ -11,6 +11,16 @@ HERE=$(cd `dirname $0` && pwd)
 source "$HERE/test.include" || exit 1
 init
 
+# Print usage message
+usage() {
+    local known_pids=$(defects4j pids)
+    echo "usage: $0 [-p <project id>]"
+    echo "Project ids:"
+    for pid in $known_pids; do
+        echo "  * $pid"
+    done
+}
+
 # Check arguments
 while getopts ":p:" opt; do
   case $opt in
@@ -18,12 +28,12 @@ while getopts ":p:" opt; do
       PIDS="$PIDS $OPTARG"
       ;;
     \?)
-      echo "Unknown option: -$OPTARG" >&2
       usage
+      die "Unknown option: -$OPTARG"
       ;;
     :)
-      echo "No argument provided: -$OPTARG." >&2
       usage
+      die "No argument provided: -$OPTARG"
       ;;
   esac
 done
@@ -57,17 +67,6 @@ main() {
   rm -rf $TMP_ROOT
 
   exit $ERROR
-}
-
-# Print usage message and exit
-usage() {
-    local known_pids=$(defects4j pids)
-    echo "usage: $0 -p <project id>"
-    echo "Project ids:"
-    for pid in $known_pids; do
-        echo "  * $pid"
-    done
-    exit 1
 }
 
 # Check all entries in a colon-separated classpath
