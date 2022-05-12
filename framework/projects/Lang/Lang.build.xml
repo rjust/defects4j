@@ -68,5 +68,6 @@ of the checked-out project version.
         <pathelement path="${asm.jar}" />
         <pathelement path="${easymock.jar}" />
         <pathelement path="${commons-io.jar}" />
+        <pathelement path="${junit.jar}" />
     </path>
 </project>
