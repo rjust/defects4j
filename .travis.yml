@@ -7,7 +7,6 @@ os: linux
 addons:
   apt:
     packages:
-      - ant
       - maven
       - diffstat
 
@@ -25,8 +24,9 @@ before_install:
 
 install:
   - export JAVA_HOME=/home/travis/.java/jdk1.8.0_192
-  - export PATH=$JAVA_HOME/bin:$PATH
+  - export PATH=$JAVA_HOME/bin:$(pwd)/major/bin:$PATH
   - java -version
+  - ant -version
   - (echo y;echo o conf prerequisites_policy follow;echo o conf commit) | cpan
   - timeout 300 cpan install Carton || cpan install Carton
   - timeout 300 carton install || cpan carton install
