@@ -40,43 +40,26 @@ of the checked-out project version.
     <import file="${d4j.workdir}/build.xml"/>
 
     <!-- Project properties targets -->
-    <if> <isset property="ant.refid:compile.classpath" />
-          <then>
-            <property name="test.dir" value="${test.home}" />
-          </then>
-          <else>
-            <property name="oldversion"    value="yes" />
-            <path id="compile.classpath"   refid="build.classpath" />
-            <path id="test.classpath"      refid="build.test.classpath" />
+    <path id="compile.classpath"   refid="build.classpath" />
+    <path id="test.classpath"      refid="build.test.classpath" />
 
-            <property name="dir.src.classes"  value="${maven.build.srcDir.0}"/>
-            <property name="dir.src.tests"    value="${maven.build.testDir.0}"/>
-            <property name="test.dir"         value="${maven.build.testDir.0}" />
-            <property name="source.home"      value="${maven.build.srcDir.0}"/>
-	    <property name="d4j.test.dir"     value="${maven.build.testDir.0}"/>
-          </else>
-    </if>
-    <property name="build.classes" value="${d4j.workdir}/target/classes/" />
-    <property name="test.home" value="${maven.build.testOutputDir}" />
-    <condition property="classes.dir" value="${maven.build.outputDir}" else="${build.classes}">
-        <isset property="maven.build.outputDir" />
-    </condition>
-    <condition property="test.classes.dir" value="${maven.build.testOutputDir}" else="${build.tests}">
-        <isset property="maven.build.testOutputDir" />
-    </condition>
+    <property name="dir.src.classes"  value="${maven.build.srcDir.0}"/>
+    <property name="source.home"      value="${maven.build.srcDir.0}"/>
+    <property name="dir.src.tests"    value="${maven.build.testDir.0}"/>
+    <property name="test.dir"         value="${maven.build.testDir.0}" />
+    <property name="d4j.test.dir"     value="${maven.build.testDir.0}"/>
 
-    <property name="build.home" value="${classes.dir}/.." />
+    <property name="classes.dir"      value="${maven.build.outputDir}" />
+    <property name="test.classes.dir" value="${maven.build.testOutputDir}" />
+    <property name="test.home"        value="${maven.build.testOutputDir}" />
+
+    <property name="build.home"       value="${classes.dir}/.." />
 
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">
         <path refid="test.classpath"/>
         <pathelement location="${classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
-        <pathelement path="${junit.jar}" />
-	<pathelement path="${dependency.jar}" />
-        <fileset dir="${d4j.dir.projects}/Compress/lib/">
-             <include name="**/*.jar" />
-        </fileset>
     </path>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->

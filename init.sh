@@ -11,26 +11,33 @@ set -e
 # - the supported test generation tools
 # - the supported code coverage tools (TODO)
 ################################################################################
+
+# Print an error message and terminate the script.
+# Takes one argument, a custom error message.
+# Prints the supplied error message and a script termination notice to stderr.
+# Terminates the script with exit code 1.
+print_error_and_exit() {
+  echo -e "${1} \nTerminating initialization... " >&2
+  exit 1
+}
+
 # TODO: Major and the coverage tools should be moved to framework/lib
 
 # Check whether wget is available on OSX
 if [ "$(uname)" = "Darwin" ] ; then
     if ! wget --version > /dev/null 2>&1; then
-        echo "Couldn't find wget to download dependencies. Please install wget and re-run this script."
-        exit 1
+        print_error_and_exit "Couldn't find wget to download dependencies. Please install wget and re-run this script."
     fi
 fi
 
 # Check whether curl is available
 if ! curl --version > /dev/null 2>&1; then
-    echo "Couldn't find curl to download dependencies. Please install curl and re-run this script."
-    exit 1
+    print_error_and_exit "Couldn't find curl to download dependencies. Please install curl and re-run this script."
 fi
 
 # Check whether unzip is available
 if ! unzip -v > /dev/null 2>&1; then
-    echo "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
-    exit 1
+    print_error_and_exit "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
 fi
 ################################################################################
 HOST_URL="https://defects4j.org/downloads"
@@ -54,7 +61,7 @@ if [ "$(uname)" = "Darwin" ] ; then
 fi
 
 # Download the remote resource to a local file of the same name.
-# Takes a single command-line argument, a URL.
+# Takes a single argument, a URL.
 # Skips the download if the remote resource is newer.
 # Works around connections that hang.
 download_url() {
@@ -64,7 +71,8 @@ download_url() {
     URL=$1
     echo "Downloading ${URL}"
     if [ "$(uname)" = "Darwin" ] ; then
-        wget -nv -N "$URL" && echo "Downloaded $URL"
+        wget -nv -N "$URL" || print_error_and_exit "Could not download $URL"
+        echo "Downloaded $URL"
     else
         BASENAME="$(basename "$URL")"
         if [ -f "$BASENAME" ]; then
@@ -77,7 +85,7 @@ download_url() {
 }
 
 # Download the remote resource and unzip it.
-# Takes a single command-line argument, a URL.
+# Takes a single argument, a URL.
 # Skips the download if the local file of the same name is newer.
 # Works around connections that hang and corrupted downloads.
 download_url_and_unzip() {
@@ -99,8 +107,7 @@ download_url_and_unzip() {
 get_modification_timestamp() {
     local USAGE="Usage: get_modification_timestamp <file>"
     if [ "$#" != 1 ]; then
-        echo "$USAGE" >&2
-        exit 1
+        print_error_and_exit "$USAGE"
     fi
 
     local f="$1"

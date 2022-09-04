@@ -26,8 +26,14 @@ It defines project-specific properties and targets, and imports the build file
 of the checked-out project version.
 #############################################################################-->
 <project name="D4J-Math">
+
     <!-- Include existing project build file -->
     <import file="${d4j.workdir}/build.xml"/>
+
+    <!-- Remove downloaded libs from classpath (all bugs are reproducible with
+         the most recent version of these dependencies, which are added in this
+         build file) -->
+    <path id="downloaded.lib.classpath"/>
 
     <!-- build.home is not set in old repository layout -->
     <property name="build.home" value="${classesdir}/.." />
@@ -40,40 +46,47 @@ of the checked-out project version.
 
     <!-- Fixing ant script in case compile-tests is defined instead of compile.tests -->
     <scriptdef name="hastarget" language="javascript">
-         <attribute name="targetname" />
-     <attribute name="newtargetname" />
-     <attribute name="setproperty" />
+      <attribute name="targetname" />
+      <attribute name="newtargetname" />
+      <attribute name="setproperty" />
          <![CDATA[
-           var targetname = attributes.get("targetname");
-       var newtargetname = attributes.get("newtargetname");
-       var setproperty = attributes.get("setproperty");
-       if(project.getTargets().containsKey(targetname)) {
-        var newTarget = new org.apache.tools.ant.Target();
-        newTarget.addDependency(targetname);
-        newTarget.setName(newtargetname);
+          var targetname = attributes.get("targetname");
+          var newtargetname = attributes.get("newtargetname");
+          var setproperty = attributes.get("setproperty");
+          if(project.getTargets().containsKey(targetname)) {
+            var newTarget = new org.apache.tools.ant.Target();
+            newTarget.addDependency(targetname);
+            newTarget.setName(newtargetname);
             project.addTarget(newtargetname, newTarget);
-        project.setProperty(setproperty, "yes");
-        }
-         ]]>
+            project.setProperty(setproperty, "yes");
+          }
+        ]]>
     </scriptdef>
 
     <hastarget targetname="compile-tests" newtargetname="compile.tests" setproperty="oldLayout" />
-    <path id="build.classpath">
-    <pathelement location="${d4j.home}/framework/projects/Math/lib/commons-discovery-0.5.jar" />
-    </path>
+
     <if> <isset property="oldLayout" /> <then>
-        <property name ="test.home" value="${d4j.workdir}/src/test" />
-        <property name ="build.home" value="${defaulttargetdir}" />
-        <property name="noget" value="true" />
-        <path id="test.classpath">
-            <pathelement path="${testclassesdir}" />
-                <pathelement path="${classesdir}" />
-                <pathelement path="${junit.jar}" />
+        <!-- Override build.classpath (used in the build file in the working
+             directory) to make sure this compile-time dependency (for the sources)
+             ends up on the classpath -->
+        <path id="build.classpath">
+            <pathelement location="${d4j.home}/framework/projects/Math/lib/commons-discovery-0.5.jar" />
         </path>
+
         <path id="compile.classpath">
+            <path refid="build.classpath"/>
             <pathelement path="${classesdir}" />
         </path>
 
+        <property name ="test.home" value="${d4j.workdir}/src/test" />
+        <property name ="build.home" value="${defaulttargetdir}" />
+        <property name="noget" value="true" />
+
+        <path id="test.classpath">
+            <pathelement path="${testclassesdir}" />
+            <pathelement path="${classesdir}" />
+            <pathelement path="${junit.jar}" />
+        </path>
     </then> </if>
     <!-- end of fixing ant script -->
 
@@ -89,6 +102,5 @@ of the checked-out project version.
     <!-- Classpath to run developer-written tests -->
     <path id="d4j.test.classpath">
         <path refid="test.classpath"/>
-        <pathelement path="${junit.jar}" />
     </path>
 </project>
