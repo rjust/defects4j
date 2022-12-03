@@ -102,6 +102,14 @@ for bid in $(echo $BUGS); do
     for v in "b" "f"; do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
+        case $PID in
+            Cli)
+                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
+                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
+                ;;
+        esac
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
