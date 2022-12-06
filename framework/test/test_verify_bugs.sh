@@ -114,6 +114,11 @@ for bid in $(echo $BUGS); do
             Compress|Csv)
                 sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
                 sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                ;;
+            Gson)
+                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/gson/maven-build.xml
+                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
+                ;;
         esac
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
