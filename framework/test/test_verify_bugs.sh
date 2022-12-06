@@ -111,8 +111,7 @@ for bid in $(echo $BUGS); do
                 sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
                 sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
                 ;;
-            Compress)
-                # doesn't always exist
+            Compress|Csv)
                 sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
                 sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
         esac
