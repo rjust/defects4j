@@ -1,4 +1,6 @@
 ## commons-collections: 3eee44cf63b1ebb0da6925e98b3dcc6ef1e4d610 ##
+--- org.apache.commons.collections4.collection.AbstractCollectionTest::testCollectionToArray2
+--- org.apache.commons.collections4.FluentIterableTest::forEach
 --- org.apache.commons.collections4.map.ReferenceIdentityMapTest::testPurgeValues
 java.lang.NegativeArraySizeException
 	at org.apache.commons.collections4.map.ReferenceIdentityMapTest.testPurgeValues(ReferenceIdentityMapTest.java:317)
