@@ -90,6 +90,16 @@ mkdir -p $test_dir
 mkdir -p $DIR_FAILING
 
 work_dir="$test_dir/$PID"
+
+function sed_cmd()
+{
+    if [ $(uname -s) = "Darwin" ]; then
+        sed -i '' $1 $2
+    else
+        sed -i $1 $2
+    fi
+}
+
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
@@ -105,25 +115,29 @@ for bid in $(echo $BUGS); do
         case $PID in
             Cli)
                 # doesn't always exist
-                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
-                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
                 # only needed for 22
-                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
-                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
                 ;;
-            Compress|Csv|Jsoup)
-                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
-                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+            Closure)
+                sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/build.properties
+                sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/build.properties
+                ;;
+            Compress|Csv|Jsoup|Time)
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
                 ;;
             Gson)
-                sed -i '' "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/gson/maven-build.xml
-                sed -i '' "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/gson/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
                 ;;
             Lang)
-                sed -i '' "s/1\.[1-5]/1.6/" $work_dir/default.properties
+                sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
                 ;;
             Math)
-                sed -i '' "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
                 ;;
         esac
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
