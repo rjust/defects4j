@@ -394,11 +394,11 @@ sub _apply_cmd {
     my @try = (1, 0, 2);
     my $log = "";
     for my $n (@try) {
-        my $cmd = "cd $work_dir; git apply -p$n --check $patch_file 2>&1";
+        my $cmd = "cd $work_dir; git apply -p$n --check $patch_file 2>&1 --whitespace=fix";
         $log .= "* $cmd\n";
         $log .= `$cmd`;
         if ($? == 0) {
-            return("cd $work_dir; git apply -p$n $patch_file 2>&1");
+            return("cd $work_dir; git apply -p$n $patch_file 2>&1 --whitespace=fix");
         }
     }
     confess("Cannot determine how to apply patch!\n" .
