@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
-index 4d8c2c4..ac22fa1 100644
+index 4d8c2c4..af667db 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
 @@ -16,6 +16,8 @@
@@ -11,7 +11,7 @@ index 4d8c2c4..ac22fa1 100644
  /**
   * Implementation of Expression for the operation "&gt;".
   *
-@@ -28,8 +30,10 @@
+@@ -28,8 +30,10 @@ public class CoreOperationGreaterThan extends CoreOperationRelationalExpression
          super(new Expression[] { arg1, arg2 });
      }
  
@@ -25,7 +25,7 @@ index 4d8c2c4..ac22fa1 100644
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
-index c3d5720..5592aef 100644
+index c3d5720..42b4ec2 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
 @@ -16,6 +16,8 @@
@@ -37,7 +37,7 @@ index c3d5720..5592aef 100644
  /**
   * Implementation of Expression for the operation "&gt;=".
   *
-@@ -29,8 +31,10 @@
+@@ -29,8 +31,10 @@ public class CoreOperationGreaterThanOrEqual extends
          super(new Expression[] { arg1, arg2 });
      }
  
@@ -51,7 +51,7 @@ index c3d5720..5592aef 100644
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
-index 4c0d9ce..1c8c03d 100644
+index 4c0d9ce..e0da347 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
 @@ -16,6 +16,8 @@
@@ -63,7 +63,7 @@ index 4c0d9ce..1c8c03d 100644
  /**
   * Implementation of Expression for the operation "&lt;".
   *
-@@ -28,8 +30,10 @@
+@@ -28,8 +30,10 @@ public class CoreOperationLessThan extends CoreOperationRelationalExpression {
          super(new Expression[] { arg1, arg2 });
      }
  
@@ -77,7 +77,7 @@ index 4c0d9ce..1c8c03d 100644
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
-index 7940ecb..6061d3c 100644
+index 7940ecb..becf2e7 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
 @@ -16,6 +16,8 @@
@@ -89,7 +89,7 @@ index 7940ecb..6061d3c 100644
  /**
   * Implementation of Expression for the operation "&lt;=".
   *
-@@ -29,8 +31,10 @@
+@@ -29,8 +31,10 @@ public class CoreOperationLessThanOrEqual extends
          super(new Expression[] { arg1, arg2 });
      }
  
@@ -103,26 +103,25 @@ index 7940ecb..6061d3c 100644
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
-index bbb070d..0000000 100644
+index bbb070d..4893dd6 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java
-@@ -16,15 +16,6 @@
+@@ -16,14 +16,7 @@
   */
  package org.apache.commons.jxpath.ri.compiler;
  
 -import java.util.Collection;
 -import java.util.HashSet;
 -import java.util.Iterator;
--
+ 
 -import org.apache.commons.jxpath.ri.EvalContext;
 -import org.apache.commons.jxpath.ri.InfoSetUtil;
 -import org.apache.commons.jxpath.ri.axes.InitialContext;
 -import org.apache.commons.jxpath.ri.axes.SelfContext;
--
+ 
  /**
   * Base implementation of Expression for the operations "&gt;", "&gt;=", "&lt;", "&lt;=".
-  *
-@@ -37,11 +28,6 @@
+@@ -37,10 +30,6 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
          super(args);
      }
  
@@ -130,20 +129,19 @@ index bbb070d..0000000 100644
 -        return compute(args[0].computeValue(context), args[1]
 -                .computeValue(context)) ? Boolean.TRUE : Boolean.FALSE;
 -    }
--
+ 
      protected final int getPrecedence() {
          return 3;
-     }
-@@ -50,67 +36,4 @@
+@@ -50,67 +39,11 @@ public abstract class CoreOperationRelationalExpression extends CoreOperation {
          return false;
      }
  
 -    protected abstract boolean evaluateCompare(int compare);
--
+ 
 -    private boolean compute(Object left, Object right) {
 -        left = reduce(left);
 -        right = reduce(right);
--
+ 
 -        if (left instanceof InitialContext) {
 -            ((InitialContext) left).reset();
 -        }
@@ -161,7 +159,7 @@ index bbb070d..0000000 100644
 -        }
 -        return evaluateCompare(compare(left, right));
 -    }
--
+ 
 -    private Object reduce(Object o) {
 -        if (o instanceof SelfContext) {
 -            o = ((EvalContext) o).getSingleNodePointer();
@@ -171,7 +169,7 @@ index bbb070d..0000000 100644
 -        }
 -        return o;
 -    }
--
+ 
 -    private boolean containsMatch(Iterator it, Object value) {
 -        while (it.hasNext()) {
 -            Object element = it.next();
@@ -181,7 +179,7 @@ index bbb070d..0000000 100644
 -        }
 -        return false;
 -    }
--
+ 
 -    private boolean findMatch(Iterator lit, Iterator rit) {
 -        HashSet left = new HashSet();
 -        while (lit.hasNext()) {
@@ -194,11 +192,11 @@ index bbb070d..0000000 100644
 -        }
 -        return false;
 -    }
--
+ 
 -    private int compare(Object l, Object r) {
 -        double ld = InfoSetUtil.doubleValue(l);
 -        double rd = InfoSetUtil.doubleValue(r);
 -        return ld == rd ? 0 : ld < rd ? -1 : 1;
 -    }
--
+ 
  }

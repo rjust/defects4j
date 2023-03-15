@@ -1,8 +1,8 @@
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
-index e083ab3..0495807 100644
+index e083ab3..26875b8 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java
-@@ -34,19 +34,9 @@
+@@ -34,20 +34,12 @@ import org.apache.commons.jxpath.ri.axes.SelfContext;
   * @version $Revision$ $Date$
   */
  public abstract class CoreOperationCompare extends CoreOperation {
@@ -11,18 +11,19 @@ index e083ab3..0495807 100644
      public CoreOperationCompare(Expression arg1, Expression arg2) {
 -        this(arg1, arg2, false);
 -    }
--
+ 
 -    protected CoreOperationCompare(Expression arg1, Expression arg2, boolean invert) {
          super(new Expression[] { arg1, arg2 });
 -        this.invert = invert;
--    }
--
--    public Object computeValue(EvalContext context) {
--        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;
      }
  
+-    public Object computeValue(EvalContext context) {
+-        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;
+-    }
+ 
      protected int getPrecedence() {
-@@ -128,6 +118,11 @@
+         return 2;
+@@ -128,6 +120,11 @@ public abstract class CoreOperationCompare extends CoreOperation {
      }
  
      protected boolean equal(Object l, Object r) {
@@ -34,7 +35,7 @@ index e083ab3..0495807 100644
          if (l instanceof Pointer) {
              l = ((Pointer) l).getValue();
          }
-@@ -136,28 +131,21 @@
+@@ -136,28 +133,21 @@ public abstract class CoreOperationCompare extends CoreOperation {
              r = ((Pointer) r).getValue();
          }
  
@@ -74,7 +75,7 @@ index e083ab3..0495807 100644
  
  }
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
-index 801e7fb..94b16fb 100644
+index 801e7fb..26da44c 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
 @@ -16,6 +16,7 @@
@@ -85,7 +86,7 @@ index 801e7fb..94b16fb 100644
  /**
   * Implementation of Expression for the operation "=".
   *
-@@ -28,6 +29,9 @@
+@@ -28,6 +29,9 @@ public class CoreOperationEqual extends CoreOperationCompare {
          super(arg1, arg2);
      }
  
@@ -96,7 +97,7 @@ index 801e7fb..94b16fb 100644
          return "=";
      }
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
-index aad3f5f..ff766a2 100644
+index aad3f5f..dac71f2 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
 @@ -16,6 +16,7 @@
@@ -107,7 +108,7 @@ index aad3f5f..ff766a2 100644
  /**
   * Implementation of Expression for the operation "!=".
   *
-@@ -25,9 +26,12 @@
+@@ -25,9 +26,12 @@ package org.apache.commons.jxpath.ri.compiler;
  public class CoreOperationNotEqual extends CoreOperationCompare {
  
      public CoreOperationNotEqual(Expression arg1, Expression arg2) {
