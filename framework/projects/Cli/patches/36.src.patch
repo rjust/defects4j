@@ -22,23 +22,15 @@ index dc6d5db..322053f 100644
      /** the name of the selected option */
      private String selected;
 diff --git a/src/main/java/org/apache/commons/cli/Options.java b/src/main/java/org/apache/commons/cli/Options.java
-index 796fe5c..0ee4eea 100644
+index 796fe5c..721baaf 100644
 --- a/src/main/java/org/apache/commons/cli/Options.java
 +++ b/src/main/java/org/apache/commons/cli/Options.java
-@@ -21,6 +21,7 @@ import java.io.Serializable;
- import java.util.ArrayList;
- import java.util.Collection;
- import java.util.Collections;
-+import java.util.HashMap;
- import java.util.HashSet;
- import java.util.LinkedHashMap;
- import java.util.List;
-@@ -57,7 +58,7 @@ public class Options implements Serializable
+@@ -57,7 +57,7 @@ public class Options implements Serializable
      private final List<Object> requiredOpts = new ArrayList<Object>();
  
      /** a map of the option groups */
 -    private final Map<String, OptionGroup> optionGroups = new LinkedHashMap<String, OptionGroup>();
-+    private final Map<String, OptionGroup> optionGroups = new HashMap<String, OptionGroup>();
++    private final Map<String, OptionGroup> optionGroups = new java.util.HashMap<String, OptionGroup>();
  
      /**
       * Add the specified option group.
