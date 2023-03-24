@@ -128,7 +128,7 @@ test_FailingTests() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,3"
+  local expected_db_data="$pid,$bid,test,0,0,0,3"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -159,7 +159,7 @@ test_InvalidImport() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,1,0"
+  local expected_db_data="$pid,$bid,test,0,0,1,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -190,7 +190,7 @@ test_UnitTestsWithCompilationIssues() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,2,0,0"
+  local expected_db_data="$pid,$bid,test,0,2,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -221,7 +221,7 @@ test_ValidTestClass() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,0"
+  local expected_db_data="$pid,$bid,test,0,0,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -252,7 +252,7 @@ test_LineCommentsWithWhitespaces() { # Issue 96
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,1"
+  local expected_db_data="$pid,$bid,test,0,0,0,1"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -283,7 +283,7 @@ test_InvalidCharacters() { # Issue 105
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,1"
+  local expected_db_data="$pid,$bid,test,0,0,0,1"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -314,7 +314,7 @@ test_RegexString() { # Issue 184
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,1,0,0"
+  local expected_db_data="$pid,$bid,test,0,1,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
