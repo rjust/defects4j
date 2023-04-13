@@ -8,7 +8,7 @@ Contents of Defects4J
 
 The projects
 ---------------
-Defects4J contains 835 bugs from the following open-source projects:
+Defects4J contains 835 bugs (806 active bugs and 29 deprecated bugs) from the following open-source projects:
 
 | Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\*) |
 |-----------------|----------------------------|---------------:|---------------------|-------------------------| 
