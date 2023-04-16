@@ -57,8 +57,9 @@ my @files = readdir($dir);
 closedir($dir);
 
 # For each project module, instantiate project and determine its name and number
-# of bugs.
-my $total = 0;
+# of active and deprecated bugs.
+my $active_total = 0;
+my $deprecated_total = 0;
 my @projects = ();
 for my $file (sort @files) {
     $file =~ "^([^.]+)\.pm\$" or next;
@@ -74,18 +75,20 @@ for my $file (sort @files) {
     closedir($dir);
 
     my @deprecated = (scalar(@all_bug_ids)==scalar(@active_bug_ids) ? () : _diff(@all_bug_ids, @active_bug_ids));
+    my $num_deprecated_bugs = scalar(@deprecated);
 
     # Cache id, name, and number of bugs; update total number of bugs
     push(@projects, [$pid, $name, $num_bugs, _range(@active_bug_ids), _range(@deprecated)]);
-    $total += $num_bugs;
+    $active_total += $num_bugs;
+    $deprecated_total += $num_deprecated_bugs;
 }
 
 # Print the summary as a markdown table
-print("Defects4J contains $total bugs from the following open-source projects:\n\n");
-print("| Identifier      | Project name               | Number of bugs | Active bug ids      | Deprecated bug ids (\\*) |\n");
-print("|-----------------|----------------------------|---------------:|---------------------|-------------------------| \n");
+print("Defects4J contains $active_total bugs (plus $deprecated_total deprecated bugs) from the following open-source projects:\n\n");
+print("| Identifier      | Project name               | Number of active bugs | Active bug ids      | Deprecated bug ids (\\*) |\n");
+print("|-----------------|----------------------------|----------------------:|---------------------|-------------------------| \n");
 for (@projects) {
-    printf("| %-15s | %-26s |      %3d       | %-19s | %-23s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
+    printf("| %-15s | %-26s |          %3d          | %-19s | %-23s |\n", $_->[0], $_->[1], $_->[2], $_->[3], $_->[4]);
 }
 
 #
