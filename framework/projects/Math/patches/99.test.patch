@@ -1,7 +1,7 @@
 diff --git a/src/test/org/apache/commons/math/util/MathUtilsTest.java b/org/apache/commons/math/util/MathUtilsTest.java
 index 20b61df..26433d6 100644
 --- a/src/test/org/apache/commons/math/util/MathUtilsTest.java
-+++ b/src/test/org/apache/commons/math/util/MathUtilsTest.java
++++ b/org/apache/commons/math/util/MathUtilsTest.java
 @@ -429,28 +429,12 @@ public final class MathUtilsTest extends TestCase {
          assertEquals(3 * (1<<15), MathUtils.gcd(3 * (1<<20), 9 * (1<<15)));
  
