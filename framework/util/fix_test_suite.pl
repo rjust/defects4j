@@ -211,7 +211,7 @@ foreach (@entries) {
     my $pid = $1;
     my $vid = $2;
     my $src = $3;
-    my $tid = ($5 or "1");
+    my $tid = ($5 // "1");
     # Check whether target pid matches
     next if ($PID ne $pid);
     # Check whether a target src is defined

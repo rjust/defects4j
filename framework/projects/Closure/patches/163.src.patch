@@ -1,8 +1,8 @@
 diff --git a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
-index 1eca61cc5..89a39bc7f 100644
+index 1eca61c..10989ec 100644
 --- a/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
 +++ b/src/com/google/javascript/jscomp/AnalyzePrototypeProperties.java
-@@ -198,50 +198,37 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -198,50 +198,36 @@ class AnalyzePrototypeProperties implements CompilerPass {
      //    given a name context. These contexts do not have scopes.
      private Stack<NameContext> symbolStack = new Stack<NameContext>();
  
@@ -44,7 +44,6 @@ index 1eca61cc5..89a39bc7f 100644
      @Override
      public void exitScope(NodeTraversal t) {
 -      symbolStack.pop();
-+
      }
  
      @Override
@@ -68,7 +67,7 @@ index 1eca61cc5..89a39bc7f 100644
        }
        return true;
      }
-@@ -251,35 +238,23 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -251,35 +237,23 @@ class AnalyzePrototypeProperties implements CompilerPass {
        if (n.isGetProp()) {
          String propName = n.getFirstChild().getNext().getString();
  
@@ -111,7 +110,7 @@ index 1eca61cc5..89a39bc7f 100644
  
          // var x = {a: 1, b: 2}
          // should count as a use of property a and b.
-@@ -300,7 +275,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -300,7 +274,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
              if (var.getInitialValue() != null &&
                  var.getInitialValue().isFunction()) {
                if (t.inGlobalScope()) {
@@ -121,7 +120,7 @@ index 1eca61cc5..89a39bc7f 100644
                    addGlobalUseOfSymbol(name, t.getModule(), VAR);
                  }
                } else {
-@@ -325,7 +301,9 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -325,7 +300,9 @@ class AnalyzePrototypeProperties implements CompilerPass {
        }
  
        // Process prototype assignments to non-functions.
@@ -132,7 +131,7 @@ index 1eca61cc5..89a39bc7f 100644
          symbolStack.pop();
        }
      }
-@@ -349,12 +327,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -349,12 +326,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
       * If this is a non-function prototype assign, return the prop name.
       * Otherwise, return null.
       */
@@ -145,7 +144,7 @@ index 1eca61cc5..89a39bc7f 100644
  
      /**
       * Determines whether {@code n} is the FUNCTION node in a global function
-@@ -363,22 +335,23 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -363,22 +334,23 @@ class AnalyzePrototypeProperties implements CompilerPass {
      private boolean isGlobalFunctionDeclaration(NodeTraversal t, Node n) {
        // Make sure we're either in the global scope, or the function
        // we're looking at is the root of the current local scope.
@@ -179,7 +178,7 @@ index 1eca61cc5..89a39bc7f 100644
  
      /**
       * Returns the name of a prototype property being assigned to this r-value.
-@@ -387,32 +360,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -387,32 +359,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
       * the R-value is used in multiple expressions (i.e., if there's
       * a prototype property assignment in a more complex expression).
       */
@@ -220,7 +219,7 @@ index 1eca61cc5..89a39bc7f 100644
      }
  
      /**
-@@ -420,9 +379,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -420,9 +378,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
       * If it is, record it and return true. Otherwise, return false.
       */
      private boolean processGlobalFunctionDeclaration(NodeTraversal t,
@@ -231,7 +230,7 @@ index 1eca61cc5..89a39bc7f 100644
  
        if (// Check for a named FUNCTION.
            isGlobalFunctionDeclaration(t, parent) ||
-@@ -431,7 +389,7 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -431,7 +388,7 @@ class AnalyzePrototypeProperties implements CompilerPass {
            isGlobalFunctionDeclaration(t, firstChild)) {
          String name = nameNode.getString();
          getNameInfoForName(name, VAR).getDeclarations().add(
@@ -240,7 +239,7 @@ index 1eca61cc5..89a39bc7f 100644
  
          // If the function name is exported, we should create an edge here
          // so that it's never removed.
-@@ -451,10 +409,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -451,10 +408,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
       * under an assignment (in the case of Foo.prototype = ...).
       * @return True if a declaration was added.
       */
@@ -252,7 +251,7 @@ index 1eca61cc5..89a39bc7f 100644
        switch (n.getType()) {
          // Foo.prototype.getBar = function() { ... }
          case Token.GETPROP:
-@@ -468,10 +424,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -468,10 +423,8 @@ class AnalyzePrototypeProperties implements CompilerPass {
              String name = dest.getString();
              Property prop = new AssignmentProperty(
                  grandParent,
@@ -263,7 +262,7 @@ index 1eca61cc5..89a39bc7f 100644
            }
            break;
  
-@@ -485,15 +439,12 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -485,15 +438,12 @@ class AnalyzePrototypeProperties implements CompilerPass {
                String name = key.getString();
                Property prop = new LiteralProperty(
                    key, key.getFirstChild(), map, n,
@@ -279,7 +278,7 @@ index 1eca61cc5..89a39bc7f 100644
      }
  
      private void addGlobalUseOfSymbol(String name, JSModule module,
-@@ -545,7 +496,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -545,7 +495,6 @@ class AnalyzePrototypeProperties implements CompilerPass {
      /**
       * The variable for the root of this symbol.
       */
@@ -287,7 +286,7 @@ index 1eca61cc5..89a39bc7f 100644
  
      /**
       * Returns the module where this appears.
-@@ -563,25 +513,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -563,25 +512,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
     */
    class GlobalFunction implements Symbol {
      private final Node nameNode;
@@ -314,7 +313,7 @@ index 1eca61cc5..89a39bc7f 100644
      public void remove() {
        Node parent = nameNode.getParent();
        if (parent.isFunction() || parent.hasOneChild()) {
-@@ -630,24 +573,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -630,24 +572,18 @@ class AnalyzePrototypeProperties implements CompilerPass {
     */
    static class AssignmentProperty implements Property {
      private final Node exprNode;
@@ -340,7 +339,7 @@ index 1eca61cc5..89a39bc7f 100644
      public void remove() {
        NodeUtil.removeChild(exprNode.getParent(), exprNode);
      }
-@@ -683,25 +620,19 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -683,25 +619,19 @@ class AnalyzePrototypeProperties implements CompilerPass {
      private final Node value;
      private final Node map;
      private final Node assign;
@@ -367,7 +366,7 @@ index 1eca61cc5..89a39bc7f 100644
      public void remove() {
        map.removeChild(key);
      }
-@@ -731,11 +662,10 @@ class AnalyzePrototypeProperties implements CompilerPass {
+@@ -731,11 +661,10 @@ class AnalyzePrototypeProperties implements CompilerPass {
  
      // If this is a function context, then scope will be the scope of the
      // corresponding function. Otherwise, it will be null.
@@ -382,7 +381,7 @@ index 1eca61cc5..89a39bc7f 100644
    }
  
 diff --git a/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java b/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
-index d52a3903c..1bd14b3af 100644
+index d52a390..1bd14b3 100644
 --- a/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
 +++ b/src/com/google/javascript/jscomp/CrossModuleMethodMotion.java
 @@ -138,9 +138,6 @@ class CrossModuleMethodMotion implements CompilerPass {
