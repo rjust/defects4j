@@ -79,11 +79,9 @@ org.mockito.internal.stubbing.InvocationContainer
 org.mockito.internal.util.Checks
 org.mockito.internal.util.collections.HashCodeAndEqualsSafeSet
 org.mockito.internal.util.collections.Iterables
-org.mockito.internal.util.collections.ListUtil
 org.mockito.internal.util.collections.Sets
 org.mockito.internal.util.MockUtil
 org.mockito.internal.util.ObjectMethodsGuru
-org.mockito.internal.util.reflection.FieldInitializer
 org.mockito.internal.util.StringJoiner
 org.mockito.internal.util.Timer
 org.mockito.internal.verification.api.VerificationData

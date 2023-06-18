@@ -1,9 +1,7 @@
 com.google.javascript.jscomp.CheckRequiresForConstructorsTest
 com.google.javascript.jscomp.CollapseAnonymousFunctionsTest
-com.google.javascript.jscomp.CollapsePropertiesTest
 com.google.javascript.jscomp.CommandLineRunnerTest
 com.google.javascript.jscomp.ConstCheckTest
-com.google.javascript.jscomp.DenormalizeTest
 com.google.javascript.jscomp.ExternExportsPassTest
 com.google.javascript.jscomp.FunctionInjectorTest
 com.google.javascript.jscomp.GatherRawExportsTest

@@ -24,7 +24,6 @@ com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.deps.DependencyInfo
-com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
@@ -41,7 +40,6 @@ com.google.javascript.jscomp.graph.LinkedDirectedGraph
 com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JSModule
-com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LineNumberCheck
@@ -64,7 +62,6 @@ com.google.javascript.jscomp.PassFactory
 com.google.javascript.jscomp.PrepareAst
 com.google.javascript.jscomp.ProcessDefines
 com.google.javascript.jscomp.PropertyRenamingPolicy
-com.google.javascript.jscomp.ReferenceCollectingCallback
 com.google.javascript.jscomp.Region
 com.google.javascript.jscomp.ReverseAbstractInterpreter
 com.google.javascript.jscomp.RhinoErrorReporter

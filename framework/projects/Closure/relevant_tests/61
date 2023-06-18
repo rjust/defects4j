@@ -136,7 +136,6 @@ com.google.javascript.jscomp.ShadowVariablesTest
 com.google.javascript.jscomp.SideEffectsAnalysisTest
 com.google.javascript.jscomp.SimpleDefinitionFinderTest
 com.google.javascript.jscomp.SimpleFunctionAliasAnalysisTest
-com.google.javascript.jscomp.SourceInformationAnnotatorTest
 com.google.javascript.jscomp.SpecializeModuleTest$SpecializeModuleSpecializationStateTest
 com.google.javascript.jscomp.SpecializeModuleTest
 com.google.javascript.jscomp.StatementFusionTest

@@ -59,11 +59,9 @@ org.mockito.internal.progress.MockingProgressImpl
 org.mockito.internal.progress.ThreadSafeMockingProgress
 org.mockito.internal.util.Checks
 org.mockito.internal.util.collections.HashCodeAndEqualsSafeSet
-org.mockito.internal.util.collections.ListUtil
 org.mockito.internal.util.collections.Sets
 org.mockito.internal.util.MockUtil
 org.mockito.internal.util.reflection.FieldInitializationReport
-org.mockito.internal.util.reflection.FieldInitializer
 org.mockito.invocation.DescribedInvocation
 org.mockito.invocation.Invocation
 org.mockito.invocation.InvocationOnMock

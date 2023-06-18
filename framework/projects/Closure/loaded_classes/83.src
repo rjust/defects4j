@@ -33,7 +33,6 @@ com.google.javascript.jscomp.ControlFlowAnalysis
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.jscomp.ConvertToDottedProperties
-com.google.javascript.jscomp.CrossModuleMethodMotion
 com.google.javascript.jscomp.CssRenamingMap
 com.google.javascript.jscomp.CustomPassExecutionTime
 com.google.javascript.jscomp.DeadAssignmentsElimination
@@ -41,7 +40,6 @@ com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.Denormalize
 com.google.javascript.jscomp.deps.DependencyInfo
-com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
@@ -72,7 +70,6 @@ com.google.javascript.jscomp.InlineVariables
 com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JSModule
-com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.MakeDeclaredNamesUnique
@@ -83,7 +80,6 @@ com.google.javascript.jscomp.NodeTraversal
 com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.Normalize
 com.google.javascript.jscomp.OptimizeArgumentsArray
-com.google.javascript.jscomp.OptimizeCalls
 com.google.javascript.jscomp.parsing.Annotation
 com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory

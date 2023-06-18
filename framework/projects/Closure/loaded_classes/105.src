@@ -32,7 +32,6 @@ com.google.javascript.jscomp.InlineCostEstimator
 com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JSModule
-com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LoggerErrorManager

@@ -45,7 +45,6 @@ com.fasterxml.jackson.databind.deser.impl.MethodProperty
 com.fasterxml.jackson.databind.deser.impl.ObjectIdReferenceProperty
 com.fasterxml.jackson.databind.deser.impl.ObjectIdValueProperty
 com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator
-com.fasterxml.jackson.databind.deser.impl.ReadableObjectId
 com.fasterxml.jackson.databind.deser.impl.SetterlessProperty
 com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer
 com.fasterxml.jackson.databind.deser.KeyDeserializers

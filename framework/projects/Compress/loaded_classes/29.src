@@ -13,7 +13,6 @@ org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream
 org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream
 org.apache.commons.compress.archivers.cpio.CpioConstants
 org.apache.commons.compress.archivers.dump.Dirent
-org.apache.commons.compress.archivers.dump.DumpArchiveConstants
 org.apache.commons.compress.archivers.dump.DumpArchiveEntry
 org.apache.commons.compress.archivers.dump.DumpArchiveException
 org.apache.commons.compress.archivers.dump.DumpArchiveInputStream

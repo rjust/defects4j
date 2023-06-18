@@ -65,7 +65,6 @@ com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
-com.google.javascript.jscomp.DisambiguateProperties
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorHandler
 com.google.javascript.jscomp.ErrorManager
@@ -173,7 +172,6 @@ com.google.javascript.jscomp.SimpleDefinitionFinder
 com.google.javascript.jscomp.SourceAst
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
-com.google.javascript.jscomp.SourceMap
 com.google.javascript.jscomp.SpecializationAwareCompilerPass
 com.google.javascript.jscomp.StatementFusion
 com.google.javascript.jscomp.StrictModeCheck

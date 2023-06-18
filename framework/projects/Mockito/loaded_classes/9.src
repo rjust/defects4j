@@ -123,7 +123,6 @@ org.mockito.internal.stubbing.OngoingStubbingImpl
 org.mockito.internal.stubbing.StubbedInvocationMatcher
 org.mockito.internal.util.Checks
 org.mockito.internal.util.collections.HashCodeAndEqualsSafeSet
-org.mockito.internal.util.collections.ListUtil
 org.mockito.internal.util.collections.Sets
 org.mockito.internal.util.MockCreationValidator
 org.mockito.internal.util.MockNameImpl
@@ -131,7 +130,6 @@ org.mockito.internal.util.MockUtil
 org.mockito.internal.util.ObjectMethodsGuru
 org.mockito.internal.util.Primitives
 org.mockito.internal.util.reflection.FieldInitializationReport
-org.mockito.internal.util.reflection.FieldInitializer
 org.mockito.internal.verification.api.VerificationData
 org.mockito.internal.verification.api.VerificationDataInOrder
 org.mockito.internal.verification.DefaultRegisteredInvocations

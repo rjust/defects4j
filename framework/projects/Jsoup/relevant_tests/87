@@ -15,7 +15,6 @@ org.jsoup.nodes.NodeTest
 org.jsoup.nodes.TextNodeTest
 org.jsoup.parser.AttributeParseTest
 org.jsoup.parser.HtmlParserTest
-org.jsoup.parser.HtmlTreeBuilderStateTest
 org.jsoup.parser.HtmlTreeBuilderTest
 org.jsoup.parser.ParserTest
 org.jsoup.parser.TagTest

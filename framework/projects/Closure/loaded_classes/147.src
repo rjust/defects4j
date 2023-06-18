@@ -26,7 +26,6 @@ com.google.javascript.jscomp.DataFlowAnalysis
 com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.deps.DependencyInfo
-com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
@@ -50,7 +49,6 @@ com.google.javascript.jscomp.JoinOp
 com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JSModule
-com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LatticeElement
 com.google.javascript.jscomp.LightweightMessageFormatter

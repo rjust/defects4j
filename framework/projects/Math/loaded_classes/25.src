@@ -11,5 +11,4 @@ org.apache.commons.math3.exception.ZeroException
 org.apache.commons.math3.optimization.BaseMultivariateVectorOptimizer
 org.apache.commons.math3.optimization.BaseOptimizer
 org.apache.commons.math3.optimization.DifferentiableMultivariateVectorOptimizer
-org.apache.commons.math3.optimization.fitting.HarmonicFitter
 org.apache.commons.math3.optimization.fitting.WeightedObservedPoint

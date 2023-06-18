@@ -114,7 +114,6 @@ com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder
 com.fasterxml.jackson.databind.KeyDeserializer
 com.fasterxml.jackson.databind.MapperFeature
 com.fasterxml.jackson.databind.MappingJsonFactory
-com.fasterxml.jackson.databind.Module
 com.fasterxml.jackson.databind.node.ArrayNode
 com.fasterxml.jackson.databind.node.BaseJsonNode
 com.fasterxml.jackson.databind.node.BigIntegerNode

@@ -29,18 +29,15 @@ com.google.javascript.jscomp.ConstCheck
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.jscomp.CreateSyntheticBlocks
-com.google.javascript.jscomp.CrossModuleMethodMotion
 com.google.javascript.jscomp.CustomPassExecutionTime
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.Denormalize
 com.google.javascript.jscomp.DependencyOptions
 com.google.javascript.jscomp.deps.DependencyInfo
-com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
-com.google.javascript.jscomp.DisambiguateProperties
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorHandler
 com.google.javascript.jscomp.ErrorManager
@@ -57,7 +54,6 @@ com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JsMessageVisitor
 com.google.javascript.jscomp.JSModule
-com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LoggerErrorManager
 com.google.javascript.jscomp.MakeDeclaredNamesUnique
@@ -66,7 +62,6 @@ com.google.javascript.jscomp.MessageFormatter
 com.google.javascript.jscomp.NodeTraversal
 com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.Normalize
-com.google.javascript.jscomp.OptimizeCalls
 com.google.javascript.jscomp.parsing.Annotation
 com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory
@@ -83,7 +78,6 @@ com.google.javascript.jscomp.ProcessCommonJSModules
 com.google.javascript.jscomp.ProcessDefines
 com.google.javascript.jscomp.ProcessTweaks
 com.google.javascript.jscomp.PropertyRenamingPolicy
-com.google.javascript.jscomp.ReferenceCollectingCallback
 com.google.javascript.jscomp.Region
 com.google.javascript.jscomp.ReplaceIdGenerators
 com.google.javascript.jscomp.Result
@@ -93,7 +87,6 @@ com.google.javascript.jscomp.ScopeCreator
 com.google.javascript.jscomp.SourceAst
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
-com.google.javascript.jscomp.SourceMap
 com.google.javascript.jscomp.StrictModeCheck
 com.google.javascript.jscomp.StrictWarningsGuard
 com.google.javascript.jscomp.SuppressDocWarningsGuard
