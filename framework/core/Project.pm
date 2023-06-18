@@ -733,7 +733,7 @@ sub monitor_test {
     my @log = `cat $log_file`;
     foreach (@log) {
         chomp;
-        s/\[Loaded ([^\$]*)(\$\S*)? from.*/$1/;
+        s/\[Loaded (.*) from.*/$1/;
         if (defined $src->{$_}) {
             push(@{$classes->{src}}, $_);
             # Delete already loaded classes to avoid duplicates in the result
