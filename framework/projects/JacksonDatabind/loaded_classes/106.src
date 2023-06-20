@@ -103,6 +103,7 @@ com.fasterxml.jackson.databind.introspect.TypeResolutionContext
 com.fasterxml.jackson.databind.introspect.VirtualAnnotatedMember
 com.fasterxml.jackson.databind.introspect.VisibilityChecker
 com.fasterxml.jackson.databind.JavaType
+com.fasterxml.jackson.databind.json.JsonMapper
 com.fasterxml.jackson.databind.JsonDeserializer
 com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable
 com.fasterxml.jackson.databind.JsonMappingException
@@ -116,6 +117,7 @@ com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder
 com.fasterxml.jackson.databind.KeyDeserializer
 com.fasterxml.jackson.databind.MapperFeature
 com.fasterxml.jackson.databind.MappingJsonFactory
+com.fasterxml.jackson.databind.Module
 com.fasterxml.jackson.databind.node.ArrayNode
 com.fasterxml.jackson.databind.node.BaseJsonNode
 com.fasterxml.jackson.databind.node.BigIntegerNode

@@ -71,6 +71,7 @@ org.mockito.internal.stubbing.defaultanswers.ReturnsMoreEmptyValues
 org.mockito.internal.stubbing.defaultanswers.ReturnsSmartNulls
 org.mockito.internal.stubbing.InvocationContainer
 org.mockito.internal.stubbing.InvocationContainerImpl
+org.mockito.internal.util.ListUtil
 org.mockito.internal.util.MockCreationValidator
 org.mockito.internal.util.MockName
 org.mockito.internal.util.MockUtil

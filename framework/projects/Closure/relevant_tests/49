@@ -30,6 +30,7 @@ com.google.javascript.jscomp.RenameVarsTest
 com.google.javascript.jscomp.ReplaceStringsTest
 com.google.javascript.jscomp.RuntimeTypeCheckTest
 com.google.javascript.jscomp.SanityCheckTest
+com.google.javascript.jscomp.ShadowVariablesTest
 com.google.javascript.jscomp.SpecializeModuleTest$SpecializeModuleSpecializationStateTest
 com.google.javascript.jscomp.SpecializeModuleTest
 com.google.javascript.jscomp.SymbolTableTest

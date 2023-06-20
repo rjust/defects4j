@@ -100,6 +100,7 @@ org.mockito.internal.stubbing.OngoingStubbingImpl
 org.mockito.internal.stubbing.StubbedInvocationMatcher
 org.mockito.internal.util.Checks
 org.mockito.internal.util.collections.Iterables
+org.mockito.internal.util.collections.ListUtil
 org.mockito.internal.util.MockCreationValidator
 org.mockito.internal.util.MockNameImpl
 org.mockito.internal.util.MockUtil

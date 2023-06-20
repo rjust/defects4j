@@ -34,10 +34,12 @@ com.google.javascript.jscomp.DefinitionSite
 com.google.javascript.jscomp.DefinitionsRemover
 com.google.javascript.jscomp.DependencyOptions
 com.google.javascript.jscomp.deps.DependencyInfo
+com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
+com.google.javascript.jscomp.DisambiguateProperties
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorHandler
 com.google.javascript.jscomp.ErrorManager
@@ -58,6 +60,7 @@ com.google.javascript.jscomp.JsAst
 com.google.javascript.jscomp.JSError
 com.google.javascript.jscomp.JsMessageVisitor
 com.google.javascript.jscomp.JSModule
+com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LineNumberCheck
 com.google.javascript.jscomp.LoggerErrorManager
@@ -79,6 +82,7 @@ com.google.javascript.jscomp.ProcessCommonJSModules
 com.google.javascript.jscomp.ProcessDefines
 com.google.javascript.jscomp.ProcessTweaks
 com.google.javascript.jscomp.PropertyRenamingPolicy
+com.google.javascript.jscomp.ReferenceCollectingCallback
 com.google.javascript.jscomp.Region
 com.google.javascript.jscomp.RhinoErrorReporter
 com.google.javascript.jscomp.Scope
@@ -87,6 +91,7 @@ com.google.javascript.jscomp.SimpleDefinitionFinder
 com.google.javascript.jscomp.SourceAst
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
+com.google.javascript.jscomp.SourceMap
 com.google.javascript.jscomp.SpecializationAwareCompilerPass
 com.google.javascript.jscomp.StrictModeCheck
 com.google.javascript.jscomp.SuppressDocWarningsGuard

@@ -1,4 +1,6 @@
+org.jsoup.Connection
 org.jsoup.helper.ChangeNotifyingArrayList
+org.jsoup.helper.HttpConnection
 org.jsoup.helper.StringUtil
 org.jsoup.helper.Validate
 org.jsoup.internal.Normalizer

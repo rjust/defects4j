@@ -123,6 +123,7 @@ org.mockito.internal.util.Checks
 org.mockito.internal.util.collections.HashCodeAndEqualsMockWrapper
 org.mockito.internal.util.collections.HashCodeAndEqualsSafeSet
 org.mockito.internal.util.collections.Iterables
+org.mockito.internal.util.collections.ListUtil
 org.mockito.internal.util.collections.Sets
 org.mockito.internal.util.MockCreationValidator
 org.mockito.internal.util.MockNameImpl
@@ -131,6 +132,7 @@ org.mockito.internal.util.ObjectMethodsGuru
 org.mockito.internal.util.Primitives
 org.mockito.internal.util.reflection.AccessibilityChanger
 org.mockito.internal.util.reflection.FieldCopier
+org.mockito.internal.util.reflection.FieldInitializer
 org.mockito.internal.util.reflection.FieldReader
 org.mockito.internal.util.reflection.FieldSetter
 org.mockito.internal.util.reflection.LenientCopyTool

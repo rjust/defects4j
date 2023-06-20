@@ -136,6 +136,7 @@ org.mockito.internal.util.MockUtil
 org.mockito.internal.util.ObjectMethodsGuru
 org.mockito.internal.util.Primitives
 org.mockito.internal.util.reflection.AccessibilityChanger
+org.mockito.internal.util.reflection.FieldInitializer
 org.mockito.internal.util.reflection.FieldReader
 org.mockito.internal.util.reflection.FieldSetter
 org.mockito.internal.verification.api.VerificationData

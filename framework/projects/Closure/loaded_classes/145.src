@@ -18,12 +18,14 @@ com.google.javascript.jscomp.ComposeWarningsGuard
 com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.deps.DependencyInfo
+com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.GoogleCodingConvention
 com.google.javascript.jscomp.JsAst
+com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LoggerErrorManager

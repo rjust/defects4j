@@ -31,6 +31,7 @@ com.google.javascript.jscomp.ControlFlowAnalysis
 com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.jscomp.ConvertToDottedProperties
+com.google.javascript.jscomp.CrossModuleMethodMotion
 com.google.javascript.jscomp.CssRenamingMap
 com.google.javascript.jscomp.CustomPassExecutionTime
 com.google.javascript.jscomp.DeadAssignmentsElimination
@@ -45,6 +46,7 @@ com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.ExtractPrototypeMemberDeclarations
 com.google.javascript.jscomp.FoldConstants
+com.google.javascript.jscomp.GatherSideEffectSubexpressionsCallback
 com.google.javascript.jscomp.GlobalNamespace
 com.google.javascript.jscomp.GoogleCodeRemoval
 com.google.javascript.jscomp.GoogleCodingConvention
@@ -77,6 +79,7 @@ com.google.javascript.jscomp.NodeTraversal
 com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.Normalize
 com.google.javascript.jscomp.OptimizeArgumentsArray
+com.google.javascript.jscomp.ParallelCompilerPass
 com.google.javascript.jscomp.parsing.Annotation
 com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory

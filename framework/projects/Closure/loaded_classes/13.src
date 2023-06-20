@@ -39,6 +39,7 @@ com.google.javascript.jscomp.ControlFlowGraph
 com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.jscomp.ConvertToDottedProperties
 com.google.javascript.jscomp.CreateSyntheticBlocks
+com.google.javascript.jscomp.CrossModuleMethodMotion
 com.google.javascript.jscomp.CssRenamingMap
 com.google.javascript.jscomp.CustomPassExecutionTime
 com.google.javascript.jscomp.DataFlowAnalysis
@@ -55,6 +56,7 @@ com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
+com.google.javascript.jscomp.DisambiguateProperties
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorHandler
 com.google.javascript.jscomp.ErrorManager
@@ -105,6 +107,7 @@ com.google.javascript.jscomp.NodeTraversal
 com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.Normalize
 com.google.javascript.jscomp.OptimizeArgumentsArray
+com.google.javascript.jscomp.OptimizeCalls
 com.google.javascript.jscomp.parsing.Annotation
 com.google.javascript.jscomp.parsing.Config
 com.google.javascript.jscomp.parsing.IRFactory
@@ -145,6 +148,7 @@ com.google.javascript.jscomp.ShowByPathWarningsGuard
 com.google.javascript.jscomp.SourceAst
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
+com.google.javascript.jscomp.SourceMap
 com.google.javascript.jscomp.SpecializationAwareCompilerPass
 com.google.javascript.jscomp.StatementFusion
 com.google.javascript.jscomp.StrictModeCheck

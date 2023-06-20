@@ -16,6 +16,7 @@ com.google.javascript.jscomp.CompilerPass
 com.google.javascript.jscomp.ComposeWarningsGuard
 com.google.javascript.jscomp.DefaultCodingConvention
 com.google.javascript.jscomp.DefaultPassConfig
+com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
@@ -24,12 +25,14 @@ com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.FlowScope
 com.google.javascript.jscomp.GoogleCodingConvention
+com.google.javascript.jscomp.JSModuleGraph
 com.google.javascript.jscomp.JSSourceFile
 com.google.javascript.jscomp.LatticeElement
 com.google.javascript.jscomp.LightweightMessageFormatter
 com.google.javascript.jscomp.LinkedFlowScope
 com.google.javascript.jscomp.LoggerErrorManager
 com.google.javascript.jscomp.MessageFormatter
+com.google.javascript.jscomp.NodeTraversal
 com.google.javascript.jscomp.NodeUtil
 com.google.javascript.jscomp.PassConfig
 com.google.javascript.jscomp.PassFactory

@@ -3,6 +3,7 @@ com.fasterxml.jackson.databind.annotation.JacksonStdImpl
 com.fasterxml.jackson.databind.annotation.JsonAppend
 com.fasterxml.jackson.databind.annotation.JsonDeserialize
 com.fasterxml.jackson.databind.annotation.JsonNaming
+com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder
 com.fasterxml.jackson.databind.annotation.JsonSerialize
 com.fasterxml.jackson.databind.annotation.JsonTypeResolver
 com.fasterxml.jackson.databind.annotation.JsonValueInstantiator

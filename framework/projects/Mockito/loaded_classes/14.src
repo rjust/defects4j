@@ -86,6 +86,7 @@ org.mockito.internal.stubbing.InvocationContainer
 org.mockito.internal.stubbing.InvocationContainerImpl
 org.mockito.internal.stubbing.OngoingStubbingImpl
 org.mockito.internal.stubbing.StubbedInvocationMatcher
+org.mockito.internal.util.ListUtil
 org.mockito.internal.util.MockCreationValidator
 org.mockito.internal.util.MockName
 org.mockito.internal.util.MockUtil

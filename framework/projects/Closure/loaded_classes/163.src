@@ -32,10 +32,12 @@ com.google.javascript.jscomp.ControlStructureCheck
 com.google.javascript.jscomp.CrossModuleMethodMotion
 com.google.javascript.jscomp.DefaultPassConfig
 com.google.javascript.jscomp.deps.DependencyInfo
+com.google.javascript.jscomp.deps.SortedDependencies
 com.google.javascript.jscomp.DiagnosticGroup
 com.google.javascript.jscomp.DiagnosticGroups
 com.google.javascript.jscomp.DiagnosticGroupWarningsGuard
 com.google.javascript.jscomp.DiagnosticType
+com.google.javascript.jscomp.DisambiguateProperties
 com.google.javascript.jscomp.ErrorFormat
 com.google.javascript.jscomp.ErrorManager
 com.google.javascript.jscomp.FunctionTypeBuilder
@@ -73,6 +75,7 @@ com.google.javascript.jscomp.PrepareAst
 com.google.javascript.jscomp.ProcessDefines
 com.google.javascript.jscomp.ProcessTweaks
 com.google.javascript.jscomp.PropertyRenamingPolicy
+com.google.javascript.jscomp.ReferenceCollectingCallback
 com.google.javascript.jscomp.Region
 com.google.javascript.jscomp.ReverseAbstractInterpreter
 com.google.javascript.jscomp.RhinoErrorReporter
@@ -82,6 +85,7 @@ com.google.javascript.jscomp.SemanticReverseAbstractInterpreter
 com.google.javascript.jscomp.SourceAst
 com.google.javascript.jscomp.SourceExcerptProvider
 com.google.javascript.jscomp.SourceFile
+com.google.javascript.jscomp.SourceMap
 com.google.javascript.jscomp.StrictModeCheck
 com.google.javascript.jscomp.SuppressDocWarningsGuard
 com.google.javascript.jscomp.SyntacticScopeCreator

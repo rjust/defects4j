@@ -13,6 +13,7 @@ org.apache.commons.math.analysis.solvers.RiddersSolverTest
 org.apache.commons.math.complex.ComplexTest
 org.apache.commons.math.distribution.HypergeometricDistributionTest
 org.apache.commons.math.distribution.PascalDistributionTest
+org.apache.commons.math.exception.NonMonotonousSequenceExceptionTest
 org.apache.commons.math.fraction.BigFractionTest
 org.apache.commons.math.fraction.FractionFieldTest
 org.apache.commons.math.fraction.FractionFormatTest
