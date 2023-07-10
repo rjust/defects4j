@@ -472,7 +472,7 @@ sub ensure_valid_bid {
     }
 
     if ( ! -e "${project_dir}/trigger_tests/${bid}" ) {
-        confess("Error: ${pid}-${bid} is a non-existent bug\n");
+        confess("Error: ${pid}-${bid} is a not a bug id; for a list, see ${project_dir}/trigger_tests\n");
     }
 
     # Instantiate the project and get the list of all active bug ids
