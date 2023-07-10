@@ -456,7 +456,8 @@ sub checkout_vid {
         }
     }
 
-    # Note: will skip both of these for bug mining, for two reasons, 1: it isnt necessary, 2: dont have depdencies yet
+    # Note: will skip both of these for bug mining, for two reasons:
+    # (1) it isnt necessary and (2) we don't have dependencies yet.
     # Fix test suite if necessary
     $self->fix_tests("${bid}f");
     # Write version-specific properties
@@ -1105,9 +1106,12 @@ sub _ant_call {
     $option_str = "" unless defined $option_str;
     $ant_cmd = "ant" unless defined $ant_cmd;
 
+    my $verbose = ($DEBUG==1) ? " -v" : "";
+
     # Set up environment before running ant
     my $cmd = " cd $self->{prog_root}" .
               " && $ant_cmd" .
+                $verbose .
                 " -f $D4J_BUILD_FILE" .
                 " -Dd4j.home=$BASE_DIR" .
                 " -Dd4j.dir.projects=$PROJECTS_DIR" .
@@ -1235,7 +1239,7 @@ sub _cache_layout_map {
     my $cache = {};
     while (<IN>) {
         chomp;
-        /^([^,]+),([^,]+),(.+)$/ or die;
+        /^([^,]+),([^,]+),(.+)$/ or die "Unexpected entry in layout map: $_";
         $cache->{$1} = {src=>$2, test=>$3};
     }
     close IN;

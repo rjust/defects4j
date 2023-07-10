@@ -70,15 +70,18 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 1.8 (version 1.5.0 and older requires Java 1.7)
+ - Java 1.8
  - Git >= 1.9
  - SVN >= 1.8
  - Perl >= 5.0.12
 
+Defects4J version 1.x and 0.x required Java 1.7.
+
+
 #### Java version
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 1.8.
-Note that using Java 1.9+ might result in unexpected failing tests on a fixed
+Using a different version of Java might result in unexpected failing tests on a fixed
 program version. 
 
 #### Timezone

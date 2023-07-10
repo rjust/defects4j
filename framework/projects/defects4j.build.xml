@@ -124,7 +124,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <!-- fail build in case we are running all classes, but there are none in the fileset -->
         <if> <not> <isset property="test.entry.class" /> </not> <then>
             <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+            <fail unless="fileset.notempty" message="Fileset of tests to run is empty!" />
         </then> </if>
     </target>
 
