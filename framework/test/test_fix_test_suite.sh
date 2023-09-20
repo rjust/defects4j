@@ -65,7 +65,7 @@ _create_tar_bz2_file() {
   pushd . > /dev/null 2>&1
   cd "$HERE/resources/input"
     tar_bz2_file="$suites_dir/$pid-$bid-test.0.tar.bz2"
-    tar -jcvf "$tar_bz2_file" "$input_files"  || return 1
+    tar -jcvf "$tar_bz2_file" $input_files || return 1
   popd > /dev/null 2>&1
 
   return 0
@@ -128,7 +128,7 @@ test_FailingTests() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,3"
+  local expected_db_data="$pid,$bid,test,0,0,0,3"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -159,7 +159,7 @@ test_InvalidImport() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,1,0"
+  local expected_db_data="$pid,$bid,test,0,0,1,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -190,7 +190,40 @@ test_UnitTestsWithCompilationIssues() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,2,0,0"
+  local expected_db_data="$pid,$bid,test,0,2,0,0"
+  _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
+
+  # Clean up
+  rm -rf "$suites_dir"
+
+  return 0
+}
+
+test_MultipleUnitTestsWithMultipleCompilationIssues() {
+  local suites_dir="$TMP_DIR/test_MultipleUnitTestsWithMultipleCompilationIssues"
+
+  local pid="Gson"
+  local bid="18f"
+
+  run_fix_test_suite_test_case "$pid" "$bid" \
+    'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
+    'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest.java.bak com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
+    "$suites_dir" || return 1
+
+  if ! perl -e 'use DBI; use DBD::CSV;' 2>/dev/null; then
+    echo "Warning: Please make sure perl modules 'DBI' and 'DBD:CSV' are installed."
+    return 0
+  fi
+
+  run_fix_test_suite_test_case "$pid" "$bid" \
+    'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
+    'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest.java.bak com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
+    "$suites_dir" \
+    "-L" || return 1
+
+  # Columns of 'fix' database file:
+  # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
+  local expected_db_data="$pid,$bid,test,0,28,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -221,7 +254,7 @@ test_ValidTestClass() {
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,0"
+  local expected_db_data="$pid,$bid,test,0,0,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -252,7 +285,7 @@ test_LineCommentsWithWhitespaces() { # Issue 96
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,1"
+  local expected_db_data="$pid,$bid,test,0,0,0,1"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -283,7 +316,7 @@ test_InvalidCharacters() { # Issue 105
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,0,0,1"
+  local expected_db_data="$pid,$bid,test,0,0,0,1"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -314,7 +347,7 @@ test_RegexString() { # Issue 184
 
   # Columns of 'fix' database file:
   # project_id,version_id,test_suite_source,test_id,num_uncompilable_tests,num_uncompilable_test_classes,num_failing_tests
-  local expected_db_data="$pid,$bid,test,1,1,0,0"
+  local expected_db_data="$pid,$bid,test,0,1,0,0"
   _check_fix_db "$suites_dir/fix" "$expected_db_data" || return 1
 
   # Clean up
@@ -326,8 +359,8 @@ test_RegexString() { # Issue 184
 test_FailingTests || die "Test 'test_FailingTests' has failed!"
 test_InvalidImport || die "Test 'test_InvalidImport' has failed!"
 test_UnitTestsWithCompilationIssues || die "Test 'test_UnitTestsWithCompilationIssues' has failed!"
+test_MultipleUnitTestsWithMultipleCompilationIssues || die "Test 'test_MultipleUnitTestsWithMultipleCompilationIssues' has failed!"
 test_ValidTestClass || die "Test 'test_ValidTestClass' has failed!"
 test_LineCommentsWithWhitespaces || die "Test 'test_LineCommentsWithWhitespaces' has failed!"
 test_InvalidCharacters || die "Test 'test_InvalidCharacters' has failed!"
 test_RegexString || die "Test 'test_RegexString' has failed!"
-

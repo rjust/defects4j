@@ -57,6 +57,7 @@ commons-lang project is LANG.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
+By default all bug ids, listed in the active-bugs csv, are considered.
 
 =item B<-D>
 

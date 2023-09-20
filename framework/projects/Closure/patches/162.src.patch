@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/Scope.java b/src/com/google/javascript/jscomp/Scope.java
-index 8b6b1a50..b6037cb8 100644
+index 8b6b1a5..b6037cb 100644
 --- a/src/com/google/javascript/jscomp/Scope.java
 +++ b/src/com/google/javascript/jscomp/Scope.java
 @@ -565,9 +565,6 @@ public class Scope
@@ -13,7 +13,7 @@ index 8b6b1a50..b6037cb8 100644
    @Override
    public Iterable<Var> getReferences(Var var) {
 diff --git a/src/com/google/javascript/jscomp/ScopedAliases.java b/src/com/google/javascript/jscomp/ScopedAliases.java
-index 2b447cc3..ba316807 100644
+index 2b447cc..5acf25a 100644
 --- a/src/com/google/javascript/jscomp/ScopedAliases.java
 +++ b/src/com/google/javascript/jscomp/ScopedAliases.java
 @@ -223,7 +223,6 @@ class ScopedAliases implements HotSwapCompilerPass {
@@ -75,15 +75,14 @@ index 2b447cc3..ba316807 100644
        if (t.getScopeDepth() == 2) {
 -        if (aliasVar != null && NodeUtil.isLValue(n)) {
 -          if (aliasVar.getNode() == n) {
--            aliasDefinitionsInOrder.add(n);
 +        int type = n.getType();
 +        if (type == Token.NAME && parent.getType() == Token.VAR) {
 +          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
 +            String name = n.getString();
 +            Var aliasVar = t.getScope().getVar(name);
 +            aliases.put(name, aliasVar);
+             aliasDefinitionsInOrder.add(n);
  
-+            aliasDefinitionsInOrder.add(n);
 +            String qualifiedName =
 +                aliasVar.getInitialValue().getQualifiedName();
 +            transformation.addAlias(name, qualifiedName);
