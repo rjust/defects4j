@@ -263,6 +263,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                debug="true"
                deprecation="false"
                optimize="false">
+               <compilerarg line="-Xmaxerrs 1" />
                <classpath>
                     <pathelement path="${junit.jar}" />
                     <path refid="d4j.test.classpath" />
