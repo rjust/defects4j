@@ -39,6 +39,13 @@ if [ $D4J_TEST_MODE != "regression" ]; then
     die "Unsupported test mode: $D4J_TEST_MODE"
 fi
 
+# Confirm D4J_FILE_TARGET_CLASSES ends in a newline character. Not ending with a
+# newline will lead to the below call to `wc -l` not counting the final line.
+# This is very likely a mistake.
+if [[ $(tail -c1 "$D4J_FILE_TARGET_CLASSES" | wc -l) -eq 0 ]]; then
+    die "File did not end in newline: $D4J_FILE_TARGET_CLASSES"
+fi
+
 # Compute the budget per target class; evenly split the time for search and assertions
 num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
 budget=$(echo "$D4J_TOTAL_BUDGET/2/$num_classes" | bc)
