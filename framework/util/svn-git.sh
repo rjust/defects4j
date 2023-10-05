@@ -34,10 +34,7 @@ git clone https://github.com/jfree/jfreechart
 git --git-dir=jfreechart/.git log | tr -d '[:blank:]' > git.log
 
 # Retain the csv header for active-bugs.csv
-head -1 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv > ${D4J_HOME}/active-bugs.csv
-
-# No header in dir-layout.csv
-> ${D4J_HOME}/dir-layout.csv
+head -1 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv > ${tmp_dir}/active-bugs.csv
 
 # Find git commit hashes for each bug in active-bugs.csv
 while read line; do
@@ -66,20 +63,45 @@ while read line; do
       git_fixed="$c"
     fi
   done
+  # Update failing-tests file names
   if [ ! -z "${git_fixed}" ]; then
     # The buggy commit is the parent commit
     git_buggy=$(git --git-dir=${tmp_dir}/jfreechart/.git rev-list --parents -n 1 ${git_fixed} | cut -f2 -d' ')
+    # Update failing_tests file names, if needed
+    pushd ${D4J_HOME}/framework/projects/Chart/failing_tests > /dev/null
+    [ -e ${svn_fixed} ] && mv ${svn_fixed} ${git_fixed}
+    [ -e ${svn_buggy} ] && mv ${svn_buggy} ${git_buggy}
+    popd > /dev/null
   fi
   # Output the entry for active-bugs.csv
-  echo "${bid},${git_buggy},${git_fixed},${metadata}" >> ${D4J_HOME}/active-bugs.csv
+  echo "${bid},${git_buggy},${git_fixed},${metadata}" >> ${tmp_dir}/active-bugs.csv
   # Output the entires for dir-layout.csv (identical layout for all revisions)
-  echo "${git_fixed},source,tests" >> ${D4J_HOME}/dir-layout.csv
-  echo "${git_buggy},source,tests" >> ${D4J_HOME}/dir-layout.csv
+  echo "${git_fixed},source,tests" >> ${tmp_dir}/dir-layout.csv
+  echo "${git_buggy},source,tests" >> ${tmp_dir}/dir-layout.csv
 done < <(tail -n+2 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv)
 
 popd > /dev/null
 
-# Create the legacy commit-db file
-tail -n+2 ${D4J_HOME}/active-bugs.csv | sed -e's/UNKNOWN//g' > ${D4J_HOME}/commit-db
+# Update the legacy commit-db file
+tail -n+2 ${tmp_dir}/active-bugs.csv | sed -e's/UNKNOWN//g' > ${D4J_HOME}/framework/projects/Chart/commit-db
+
+# Move project files
+mv ${tmp_dir}/active-bugs.csv ${tmp_dir}/dir-layout.csv ${D4J_HOME}/framework/projects/Chart/
+
+# Use Git as opposed to Svn in perl module
+pushd ${D4J_HOME} > /dev/null
+git apply ${D4J_HOME}/framework/util/Chart.diff
+popd > /dev/null
+
+# Update patch file names
+pushd ${D4J_HOME}/framework/projects/Chart/compile-errors > /dev/null
+mv experimental-149-436.diff experimental-19-25.diff
+rm experimental-491-494.diff
+mv test-1025-1087.diff test-7-11.diff
+mv test-2236-2272.diff test-1-2.diff
+rm test-2270-2272.diff
+rm test-778-784.diff
+mv test-807-811.diff test-14-14.diff
+popd > /dev/null
 
 rm -rf ${tmp_dir}
