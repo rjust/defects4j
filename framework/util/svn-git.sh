@@ -1,7 +1,12 @@
 #!/bin/sh
-# This script updates the active-bugs.csv and dir-layout.csv files for Chart,
-# replacing svn revision ids with git commit hashes, corresponding to its
-# current git repo on GitHub.
+#
+# This script updates, for the Chart project:
+# * active-bugs.csv
+# * dir-layout.csv
+# * commit-db
+#
+# For each file, it replaces svn revision ids with git commit hashes,
+# corresponding to its current git repo on GitHub.
 #
 # This script is not intended for long-term archival, but rather to document the
 # update process.
@@ -11,7 +16,7 @@
 # This script requires:
 # * Defects4J to be installed and initialized
 # * D4J_HOME to be set to the root directory of Defects4J
-
+#
 if [ -z ${D4J_HOME+x} ]; then
   echo "D4J_HOME not set!"
   exit 1
@@ -73,5 +78,8 @@ while read line; do
 done < <(tail -n+2 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv)
 
 popd > /dev/null
+
+# Create the legacy commit-db file
+tail -n+2 ${D4J_HOME}/active-bugs.csv | sed -e's/UNKNOWN//g' > ${D4J_HOME}/commit-db
 
 rm -rf ${tmp_dir}
