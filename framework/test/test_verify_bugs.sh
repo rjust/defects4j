@@ -6,13 +6,14 @@
 # This script must be run from its own directory (`framework/tests/`).
 #
 # By default, this script runs only relevant tests. Set the -A flag to run all
-# tests.
+# tests. Set the -D flag to enable verbose logging ($DEBUG).
 #
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
 #   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
 #   * Verify bugs 1 and 3:     ./test_verify_bugs.sh -pLang -b1 -b3
 #   * Verify bugs 1-10 and 20: ./test_verify_bugs.sh -pLang -b1..10 -b20
+#   * Verify bug 2 with DEBUG  ./test_verify_bugs.sh -pLang -b 2 -D
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
@@ -21,7 +22,7 @@ source test.include
 # Print usage message and exit
 usage() {
     local known_pids=$(defects4j pids)
-    echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
+    echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ] [-D]"
     echo "Project ids:"
     for pid in $known_pids; do
         echo "  * $pid"
@@ -31,11 +32,15 @@ usage() {
 
 # Run only relevant tests by default
 TEST_FLAG="-r"
+# Debugging is off by default
+DEBUG=""
 
 # Check arguments
-while getopts ":p:b:A" opt; do
+while getopts ":p:b:AD" opt; do
     case $opt in
         A) TEST_FLAG=""
+            ;;
+        D) DEBUG="-D"
             ;;
         p) PID="$OPTARG"
             ;;
@@ -111,7 +116,7 @@ for bid in $(echo $BUGS); do
 
     for v in "b" "f"; do
         vid=${bid}$v
-        defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
+        defects4j $DEBUG checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         case $PID in
             Cli)
                 # doesn't always exist
@@ -140,8 +145,8 @@ for bid in $(echo $BUGS); do
                 sed_cmd "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
                 ;;
         esac
-        defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j $DEBUG compile -w "$work_dir" || die "compile: $PID-$vid"
+        defects4j $DEBUG test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
@@ -167,7 +172,10 @@ for bid in $(echo $BUGS); do
         done
     done
 done
-rm -rf $work_dir
+
+if [ "$DEBUG" != "-D" ]; then
+    rm -rf $TMP_DIR
+fi
 HALT_ON_ERROR=1
 
 # Print a summary of what went wrong
