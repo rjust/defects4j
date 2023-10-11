@@ -59,6 +59,7 @@
     <pathelement location="${maven.repo.local}/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar"/>
     <pathelement location="${maven.repo.local}/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar"/>
     <pathelement location="${maven.repo.local}/com/fasterxml/woodstox/woodstox-core/5.0.1/woodstox-core-5.0.1.jar"/>
+    <pathelement location="${maven.repo.local}/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar"/>
     <pathelement location="${maven.repo.local}/junit/junit/4.12/junit-4.12.jar"/>
     <pathelement location="${maven.repo.local}/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
   </path>
@@ -313,6 +314,15 @@
          ignoreerrors="true"/>
     <get src="https://repo.maven.apache.org/maven2/com/fasterxml/woodstox/woodstox-core/5.0.1/woodstox-core-5.0.1.jar" 
          dest="${maven.repo.local}/com/fasterxml/woodstox/woodstox-core/5.0.1/woodstox-core-5.0.1.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/javax/xml/bind/jaxb-api/2.3.0"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar" 
+         dest="${maven.repo.local}/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="https://repo.maven.apache.org/maven2/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar" 
+         dest="${maven.repo.local}/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
     <mkdir dir="${maven.repo.local}/junit/junit/4.12"/>
