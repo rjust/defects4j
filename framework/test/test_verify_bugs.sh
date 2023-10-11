@@ -125,6 +125,9 @@ for bid in $(echo $BUGS); do
                 sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/build.properties
                 sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/build.properties
                 ;;
+            Codec)
+                sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
+                ;;
             Compress|Csv|Jsoup|Time)
                 sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
