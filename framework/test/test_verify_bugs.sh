@@ -6,7 +6,7 @@
 # This script must be run from its own directory (`framework/tests/`).
 #
 # By default, this script runs only relevant tests. Set the -A flag to run all
-# tests. Set the -D flag to enable verbose logging ($DEBUG).
+# tests. Set the -D flag to enable verbose logging (D4J_DEBUG).
 #
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
@@ -76,6 +76,10 @@ if [ "$BUGS" == "" ]; then
     BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
+if [ "$DEBUG" == "-D" ]; then
+    export D4J_DEBUG=1
+fi
+
 # Create log file
 script_name=$(echo $script | sed 's/\.sh$//')
 LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
@@ -116,7 +120,7 @@ for bid in $(echo $BUGS); do
 
     for v in "b" "f"; do
         vid=${bid}$v
-        defects4j $DEBUG checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
+        defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         case $PID in
             Cli)
                 # doesn't always exist
@@ -145,8 +149,8 @@ for bid in $(echo $BUGS); do
                 sed_cmd "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
                 ;;
         esac
-        defects4j $DEBUG compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j $DEBUG test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
+        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 

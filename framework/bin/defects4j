@@ -31,8 +31,6 @@ use Cwd qw(abs_path);
 
 use lib abs_path("$Bin/../core");
 use Constants;
-use Getopt::Std;
-use Pod::Usage;
 use Utils;
 
 =pod
@@ -43,7 +41,7 @@ defects4j -- command-line interface to Defects4J.
 
 =head1 SYNOPSIS
 
-  defects4j [-D] <command> [<args>]
+  defects4j <command> [<args>]
 
 =head1 DESCRIPTION
 
@@ -167,41 +165,17 @@ query the metadata for a particular project for automation purposes.
 =cut
 $cmd_descr{query}="query the metadata for a particular project for automation purposes";
 
-=pod
-
-=head1 OPTIONS
-
-=over 4
-
-=item B<-D>
-
-Debug: Enable verbose logging (optional, but must occur prior to <command>).
-
-=for comment
-This is because getopts sees <command> as a positional parameter so it stops
-processing options and won't find a subsequent -D.
-
-=back
-
-=cut
-
 #
 # Issue usage message and quit
 #
 sub _d4j_usage {
-    print("usage: " . basename($0) . "[-D] <command> [<args>]\n\n");
+    print("usage: " . basename($0) . " <command> [<args>]\n\n");
     print("Commands:\n");
     for my $cmd (sort keys %cmd_descr) {
         printf("  %-12s  %-s\n", $cmd, $cmd_descr{$cmd});
     }
     exit 1;
 }
-
-#
-# Process arguments and issue usage message if necessary.
-#
-my %cmd_opts;
-getopts(':D', \%cmd_opts) or pod2usage(1);
 
 # At least a command has to be provided
 $#ARGV >= 0 or _d4j_usage();
@@ -210,9 +184,6 @@ _d4j_usage() unless defined $cmd_descr{$cmd};
 
 # Add d4j-prefix to actual script name
 my $script = dirname(abs_path($0)) . "/d4j/d4j-$cmd";
-
-# Enable debugging if flag is set
-$DEBUG = 1 if defined $cmd_opts{D};
 
 if ($DEBUG) {
   Utils::print_env();
