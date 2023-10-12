@@ -534,11 +534,11 @@ sub ensure_valid_bid {
     my $project_dir = "$PROJECTS_DIR/$pid";
 
     if ( ! -e "${project_dir}" ) {
-        confess("Error: ${pid} is a non-existent project\n");
+        confess("Error: ${pid} is not a project id; for a list, see https://github.com/rjust/defects4j#the-projects\n");
     }
 
     if ( ! -e "${project_dir}/trigger_tests/${bid}" ) {
-        confess("Error: ${pid}-${bid} is a non-existent bug\n");
+        confess("Error: ${pid}-${bid} is a not a bug id; for a list, see ${project_dir}/trigger_tests\n");
     }
 
     # Instantiate the project and get the list of all active bug ids
