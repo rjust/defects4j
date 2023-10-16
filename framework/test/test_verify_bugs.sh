@@ -113,11 +113,11 @@ for bid in $(echo $BUGS); do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         case $PID in
-            Cli)
+            Cli|Time)
                 # doesn't always exist
                 sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
-                # only needed for 22
+                # only used when no maven-build.xml
                 sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
                 ;;
@@ -128,7 +128,7 @@ for bid in $(echo $BUGS); do
             Codec)
                 sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
                 ;;
-            Compress|Csv|Jsoup|Time)
+            Compress|Csv|Jsoup)
                 sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
                 ;;
