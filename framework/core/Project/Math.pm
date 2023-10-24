@@ -50,9 +50,21 @@ sub new {
     my $name = "commons-math";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
+                             \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs);
+}
+
+sub printstack {
+    my ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash);
+    my $i = 1;
+    my @r;
+    while (@r = caller($i)) {
+        ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = @r;
+        print "$filename:$line $subroutine\n";
+        $i++;
+    }
 }
 
 #
@@ -99,6 +111,31 @@ sub _layout2 {
     $test=~ s/.*<unitTestSourceDirectory>\s*([^<]+)\s*<\/unitTestSourceDirectory>.*/$1/;
 
     return {src=>$src, test=>$test};
+}
+
+##
+## Converts file encoding from iso-8859-1 to utf-8
+##
+sub convert_file_encoding {
+    @_ == 1 or die $ARG_ERROR;
+    my ($file_name) = @_;
+    if (-e $file_name){
+        rename($file_name, $file_name.".bak");
+        open(OUT, '>'.$file_name) or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $file_name.bak`;
+        print OUT $converted_file;
+        close(OUT);
+    }
+}
+
+sub _post_checkout {
+    my ($self, $revision_id, $work_dir) = @_;
+    my $vid = $self->{_vcs}->lookup_vid($revision_id);
+
+    # Convert the file encoding of problematic files
+    my $result = determine_layout($self, $revision_id);
+    convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessBivariateCovariance.java");
+    convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
 }
 
 #
