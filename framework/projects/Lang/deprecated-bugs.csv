@@ -1,2 +1,3 @@
 bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
 2,8b494b784dca4de7d79c58e0f00dd4756c04cf89,dcde57852a97a9ac8021d2440b3de5be4870ecf6,LANG-879,https://issues.apache.org/jira/browse/LANG-879,2.0.0,JVM8.Not.Reproducible
+25,44dbf85b6a7156d550ba62210412015058336281,dd5f8ea30755268dc43bbf2cd5024412674eb1b0,LANG-658,https://issues.apache.org/jira/browse/LANG-658,3.0.0,JVM11.Not.Repoducible

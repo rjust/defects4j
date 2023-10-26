@@ -1,4 +1,5 @@
 ## commons-lang: 127e6e338f088b82eea1967d31c1abf8d51a364f ##
+--- org.apache.commons.lang.time.FastDateFormatTest::testShortDateStyleWithLocales
 --- org.apache.commons.lang.CharUtilsPerfTest
 java.lang.Exception: No runnable methods
 	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:169)

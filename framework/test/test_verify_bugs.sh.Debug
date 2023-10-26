@@ -19,6 +19,8 @@
 # Import helper subroutines and variables, and init Defects4J
 source test.include
 
+TEST_DIR=`pwd`
+
 # Print usage message and exit
 usage() {
     local known_pids=$(defects4j pids)
@@ -69,8 +71,6 @@ if [ ! -e "$BASE_DIR/framework/core/Project/$PID.pm" ]; then
     usage
 fi
 
-init
-
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
     BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
@@ -79,6 +79,8 @@ fi
 if [ "$DEBUG" == "-D" ]; then
     export D4J_DEBUG=1
 fi
+
+init
 
 # Create log file
 script_name=$(echo $script | sed 's/\.sh$//')

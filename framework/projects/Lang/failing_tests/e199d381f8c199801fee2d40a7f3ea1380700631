@@ -1,4 +1,5 @@
 ## commons-lang: e199d381f8c199801fee2d40a7f3ea1380700631 ##
+--- org.apache.commons.lang.builder.EqualsBuilderTest::testBigDecimal
 --- org.apache.commons.lang.CharUtilsPerfTest
 java.lang.Exception: No runnable methods
 	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:169)
