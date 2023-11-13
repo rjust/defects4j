@@ -276,6 +276,46 @@ sub print_env {
 
 =pod
 
+=item C<Utils::print_perl_call_stack>
+
+Print the current Perl execution stack trace to F<stderr>.
+
+=cut
+
+sub print_perl_call_stack {
+    my ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash);
+    my $i = 1;
+    my @r;
+    while (@r = caller($i)) {
+        ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = @r;
+        print(STDERR  "$filename:$line $subroutine\n");
+        $i++;
+    }
+}
+
+=pod
+
+=item C<Utils::convert_file_encoding(file_name)>
+
+Copies the original file to <file_name>.bak then converts
+the encoding of file_name from iso-8859-1 to utf-8.
+
+=cut
+
+sub convert_file_encoding {
+    @_ == 1 or die $ARG_ERROR;
+    my ($file_name) = @_;
+    if (-e $file_name){
+        rename($file_name, $file_name.".bak");
+        open(OUT, '>'.$file_name) or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $file_name.bak`;
+        print OUT $converted_file;
+        close(OUT);
+    }
+}
+
+=pod
+
 =item C<Utils::is_continuous_integration>
 
 Returns true if this process is running under continuous integration.
