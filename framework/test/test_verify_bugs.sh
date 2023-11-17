@@ -103,9 +103,9 @@ work_dir="$test_dir/$PID"
 function sed_cmd()
 {
     if [ $(uname -s) = "Darwin" ]; then
-        sed -i '' $1 $2
+        sed -i '' "$1" $2
     else
-        sed -i $1 $2
+        sed -i "$1" $2
     fi
 }
 
@@ -133,6 +133,8 @@ for bid in $(echo $BUGS); do
             Closure)
                 sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/build.properties
                 sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/build.properties
+                sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/src/mozilla/js/rhino/build.properties
+                sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/src/mozilla/js/rhino/build.properties
                 ;;
             Codec)
                 sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
