@@ -57,17 +57,6 @@ sub new {
     return $class->SUPER::new($PID, $name, $vcs);
 }
 
-sub printstack {
-    my ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash);
-    my $i = 1;
-    my @r;
-    while (@r = caller($i)) {
-        ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = @r;
-        print "$filename:$line $subroutine\n";
-        $i++;
-    }
-}
-
 #
 # Determines the directory layout for sources and tests
 #
@@ -89,55 +78,6 @@ sub determine_layout {
 }
 
 #
-# Existing Ant build.xml and default.properties
-#
-sub _layout1 {
-    @_ == 1 or die $ARG_ERROR;
-    my ($dir) = @_;
-    my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
-    my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
-
-    return undef if ($src eq "" || $test eq "");
-
-    $src =~ s/\s*source.home\s*=\s*(\S+)\s*/$1/;
-    $test=~ s/\s*test.home\s*=\s*(\S+)\s*/$1/;
-
-    return {src=>$src, test=>$test};
-}
-
-#
-# Generated build.xml (from mvn ant:ant) with maven-build.properties
-#
-sub _layout2 {
-    @_ == 1 or die $ARG_ERROR;
-    my ($dir) = @_;
-    my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
-    my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
-
-    return undef if ($src eq "" || $test eq "");
-
-    $src =~ s/\s*maven\.build\.srcDir\.0\s*=\s*(\S+)\s*/$1/;
-    $test=~ s/\s*maven\.build\.testDir\.0\s*=\s*(\S+)\s*/$1/;
-
-    return {src=>$src, test=>$test};
-}
-
-##
-## Converts file encoding from iso-8859-1 to utf-8
-##
-sub convert_file_encoding {
-    @_ == 1 or die $ARG_ERROR;
-    my ($file_name) = @_;
-    if (-e $file_name){
-        rename($file_name, $file_name.".bak");
-        open(OUT, '>'.$file_name) or die $!;
-        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $file_name.bak`;
-        print OUT $converted_file;
-        close(OUT);
-    }
-}
-
-#
 # Copy the generated build.xml, if necessary.
 #
 sub _post_checkout {
@@ -146,8 +86,8 @@ sub _post_checkout {
 
     # Convert the file encoding of problematic files
     my $result = determine_layout($self, $revision_id);
-    convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
-    convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
 
     # remove old pre Java 1.5 code
     print($work_dir."/".$result->{src}."/org/apache/commons/lang/enum\n");
