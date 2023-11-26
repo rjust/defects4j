@@ -5,69 +5,56 @@ and/or modifing the Defects4J system.  See README.md in this directory if
 your primary interest is in using Defects4J for research.
 
 How a user's Defects4J is initialized
------------------
+----------------
 After cloning defects4j, the user runs the script `init.sh`. This script has
 several steps:
-- set up the test repositories
+- set up the project repositories
 - set up the tools for mutation testing
 - set up EvoSuite
 - set up Randoop
 - set up Gradle
 - set up utility programs
 
-Many of these items are copied from a protected directory on the Defects4j
-web site:
-* https://defects4j.org/downloads &nbsp; &nbsp; (HOST_URL below)
+The project repositories and the Gradle tools are copied from a protected
+directory on the Defects4j web site:
+* https://defects4j.org/downloads
 
 This directory can be accessed, from a CSE managed machine, at:
 * /cse/web/research/defects4j/downloads
 
-In the details below, the directory containing the user's clone of defects4j will be referred to as `BASE` and the defects4j download location will be referred to
-as `HOST_URL`.
+In the details below, the directory containing the user's clone of defects4j
+will be referred to as `BASE` and the defects4j download location will be
+referred to as `HOST_URL`.
 
-#### Setting up the test repositories
-DIR_REPOS="$BASE/project_repos"
-cd "$DIR_REPOS" && ./get_repos.sh
+### Setting up the project repositories
+cd "$BASE/project_repos"
+get_repos.sh
 
-#### Setting up the tools for mutation testing
-MAJOR_VERSION="1.3.4"
-MAJOR_URL="https://mutation-testing.org/downloads"
-MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
-cd "$BASE" && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
-           && rm "$MAJOR_ZIP" \
-           && cp major/bin/.ant major/bin/ant
+### Setting up the tools for mutation testing
+The tools are downloaded from:
+* https://mutation-testing.org/downloads
 
-#### Setting up EvoSuite
-DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
-DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
-EVOSUITE_VERSION="1.1.0"
-EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
-EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
-EVOSUITE_RT_JAR="evosuite-standalone-runtime-${EVOSUITE_VERSION}.jar"
-cd "$DIR_LIB_GEN" && download_url "$EVOSUITE_URL/$EVOSUITE_JAR"
-cd "$DIR_LIB_RT"  && download_url "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
+### Setting up EvoSuite
+EvoSuite is downloaded from:
+* https://github.com/EvoSuite/evosuite/releases/download
 
-#### Setting up Randoop
-RANDOOP_VERSION="4.2.5"
-RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
-RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
-(cd "$DIR_LIB_GEN" && download_url_and_unzip "$RANDOOP_URL/$RANDOOP_ZIP")
+### Setting up Randoop
+Randoop is downloaded from
+* https://github.com/randoop/randoop/releases/download
 
-#### Setting up Gradle
-DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
-cd "$DIR_LIB_GRADLE"
-GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
-GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
-download_url $HOST_URL/$GRADLE_DISTS_ZIP
-download_url $HOST_URL/$GRADLE_DEPS_ZIP
+It should be noted that the `init.sh` script currently gets Randoop version 4.2.5
+which is about three years old.  At some point we should upgrade to a newer
+version; the current version is 4.3.2.
 
-#### Setting up utility programs
-BUILD_ANALYZER_VERSION="0.0.1"
-BUILD_ANALYZER_JAR=build-analyzer-$BUILD_ANALYZER_VERSION.jar
-BUILD_ANALYZER_URL="https://github.com/jose/build-analyzer/releases/download/v$BUILD_ANALYZER_VERSION/$BUILD_ANALYZER_JAR"
-BUILD_ANALYZER_JAR_LOCAL="analyzer.jar"
-cd "$BASE/framework/lib" && download_url "$BUILD_ANALYZER_URL"
+### Setting up Gradle
+Gradle is downloaded from `HOST_URL`.  As the reproducible bugs in the defect4j
+project repositories are several years old, we must to an older version of gradle
+to build the code defects in the Mockito repository.  Version 2.x of Defects4J
+used Gradle version 2.2.1.  The current version (3.x) of Defects4J uses version 4.9.
 
+### Setting up utility programs
+These programs are downloaded from
+* https://github.com/jose/build-analyzer/releases/download
 
 
 
