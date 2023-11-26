@@ -22,21 +22,11 @@ web site:
 This directory can be accessed, from a CSE managed machine, at:
 * /cse/web/research/defects4j/downloads
 
-
-HOST_URL="https://defects4j.org/downloads"
-
-BASE="$(cd "$(dirname "$0")"; pwd)"
-
-DIR_REPOS="$BASE/project_repos"
-
-DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
-
-DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
-
-DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
-
+In the details below, the directory containing the user's clone of defects4j will be referred to as `BASE` and the defects4j download location will be referred to
+as `HOST_URL`.
 
 #### Setting up the test repositories
+DIR_REPOS="$BASE/project_repos"
 cd "$DIR_REPOS" && ./get_repos.sh
 
 #### Setting up the tools for mutation testing
@@ -48,6 +38,8 @@ cd "$BASE" && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
            && cp major/bin/.ant major/bin/ant
 
 #### Setting up EvoSuite
+DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
+DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
 EVOSUITE_VERSION="1.1.0"
 EVOSUITE_URL="https://github.com/EvoSuite/evosuite/releases/download/v${EVOSUITE_VERSION}"
 EVOSUITE_JAR="evosuite-${EVOSUITE_VERSION}.jar"
@@ -62,6 +54,7 @@ RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 (cd "$DIR_LIB_GEN" && download_url_and_unzip "$RANDOOP_URL/$RANDOOP_ZIP")
 
 #### Setting up Gradle
+DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
 cd "$DIR_LIB_GRADLE"
 GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
 GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
