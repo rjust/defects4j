@@ -1,4 +1,5 @@
 com.google.gson.DefaultDateTypeAdapter
+com.google.gson.internal.$Gson$Preconditions
 com.google.gson.internal.bind.util.ISO8601Utils
 com.google.gson.internal.LazilyParsedNumber
 com.google.gson.JsonDeserializer

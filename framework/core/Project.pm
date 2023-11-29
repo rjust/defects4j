@@ -734,16 +734,47 @@ sub monitor_test {
     my @log = `cat $log_file`;
     foreach (@log) {
         chomp;
-        s/\[Loaded ([^\$]*)(\$\S*)? from.*/$1/;
+        # Try to find the correspondent .java file of a given loaded class X.
+        #
+        # X could be
+        #  - A system class, e.g., java.io.ObjectInput, which is ignored by the following
+        #    procedure as it does not belong to the project under test.
+        #  - A "normal" class for which there is indeed a correspondent X.java file.
+        #  - A "normal" class named with one or more $ symbols, e.g., com.google.gson.internal.$Gson$Types
+        #    from Gson-{14,16,18}.
+        #
+        s/\[Loaded (.*) from.*/$1/;
+        my $found = 0;
         if (defined $src->{$_}) {
+            $found = 1;
             push(@{$classes->{src}}, $_);
             # Delete already loaded classes to avoid duplicates in the result
             delete($src->{$_});
         }
         if (defined $test->{$_}) {
+            $found = 1;
             push(@{$classes->{test}}, $_);
             # Delete already loaded classes to avoid duplicates in the result
             delete($test->{$_});
+        }
+        if ($found == 0) {
+            # The correspondent .java file of a given loaded class X has not been found.
+            #
+            # It might be that X is, for example, an inner class or anonymous class for which
+            # there is no correspondent .java file, e.g., org.apache.commons.math3.util.MathArrays$OrderDirection
+            # from Math-25.  Thus, try to find the correspondent .java file of X's parent class.
+            #
+            s/([^\$]*)(\$\S*)?/$1/;
+            if (defined $src->{$_}) {
+                push(@{$classes->{src}}, $_);
+                # Delete already loaded classes to avoid duplicates in the result
+                delete($src->{$_});
+            }
+            if (defined $test->{$_}) {
+                push(@{$classes->{test}}, $_);
+                # Delete already loaded classes to avoid duplicates in the result
+                delete($test->{$_});
+            }
         }
     }
     return $classes;
