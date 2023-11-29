@@ -1,4 +1,5 @@
 ## commons-lang: bc52782cd84f4356d2984e1aa01806f81754eb08 ##
+--- org.apache.commons.lang3.ClassUtilsTest::test_isAssignable
 --- org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
 junit.framework.ComparisonFailure: expected:<...f289ee[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...f289ee[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)

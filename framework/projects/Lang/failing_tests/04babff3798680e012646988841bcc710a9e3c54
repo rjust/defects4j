@@ -1,4 +1,6 @@
 ## commons-lang: 04babff3798680e012646988841bcc710a9e3c54 ##
+--- org.apache.commons.lang3.time.DateUtilsTest::testLANG799_DE_OK
+--- org.apache.commons.lang3.time.DateUtilsTest::testLANG799_EN_WITH_DE_LOCALE
 --- org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
 junit.framework.AssertionFailedError: expected:<...1774cf[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...1774cf[elementData={[]},size=0,modCount=0]>
 	at org.junit.Assert.assertEquals(Assert.java:115)

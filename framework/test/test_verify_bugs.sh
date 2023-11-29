@@ -148,6 +148,10 @@ for bid in $(echo $BUGS); do
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
                 ;;
             Lang)
+                # either this
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                # or this
                 sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
                 ;;
             Math)
