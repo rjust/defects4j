@@ -131,9 +131,9 @@ cd "$DIR_REPOS" && ./get_repos.sh
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="1.4.0"
+MAJOR_VERSION="2.0.0"
 MAJOR_URL="https://mutation-testing.org/downloads"
-MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
+MAJOR_ZIP="major-${MAJOR_VERSION}_jre8.zip"
 cd "$BASE" && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
            && rm "$MAJOR_ZIP" \
            && cp major/bin/.ant major/bin/ant
