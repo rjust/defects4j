@@ -39,6 +39,7 @@ of the checked-out project version.
         <pathelement location="${d4j.workdir}/src/java"/>
         <fileset dir="${d4j.workdir}/target/lib">
             <include name="*.jar"/>
+            <exclude name="ant-*.jar"/>
         </fileset>
     </path>
     <path id="test.classpath">

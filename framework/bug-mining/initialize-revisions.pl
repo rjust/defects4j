@@ -31,7 +31,7 @@ layout and perform a sanity check for each revision.
 
 =head1 SYNOPSIS
 
-initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] 
+initialize-revisions.pl -p project_id -w work_dir [-s subproject] [ -b bug_id] [-D]
 
 =head1 OPTIONS
 
@@ -54,6 +54,11 @@ The subproject to be mined (if not the root directory)
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
 Per default all bug ids, listed in the active-bugs csv, are considered.
 
+=item B<-D>
+
+Debug: Enable verbose logging and do not delete the temporary check-out directory
+(optional).
+
 =back
 
 =cut
@@ -71,7 +76,7 @@ use DB;
 use Utils;
 
 my %cmd_opts;
-getopts('p:b:w:s:', \%cmd_opts) or pod2usage(1);
+getopts('p:b:w:s:D', \%cmd_opts) or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p} and defined $cmd_opts{w};
 
@@ -79,6 +84,7 @@ my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 my $WORK_DIR = abs_path($cmd_opts{w});
 my $SUBPROJ = $cmd_opts{s};
+$DEBUG = 1 if defined $cmd_opts{D};
 
 # Check format of target bug id
 if (defined $BID) {
@@ -222,4 +228,4 @@ print("\n--- Add the following to the <fileset> tag identified by the id 'all.ma
 system("cat $ANALYZER_OUTPUT/*/includes | sort -u | while read -r include; do echo \"<include name='\"\$include\"' />\"; done");
 system("cat $ANALYZER_OUTPUT/*/excludes | sort -u | while read -r exclude; do echo \"<exclude name='\"\$exclude\"' />\"; done");
 
-system("rm -rf $TMP_DIR");
+system("rm -rf $TMP_DIR") unless $DEBUG;
