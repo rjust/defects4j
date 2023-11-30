@@ -841,7 +841,7 @@ sub mutate {
     -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
 
     # Set environment variable MML, which is read by Major
-    $ENV{MML} = $mml_bin;
+    $ENV{MML} = "mml:$mml_bin";
 
     # Mutate and compile sources
     my $ret = $self->_call_major("mutate");
