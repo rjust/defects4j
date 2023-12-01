@@ -70,6 +70,13 @@ sub _post_checkout {
                 or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
+    # only bid with release notes and doesn't compile with newer Gradle
+    if ($vid == 21) {
+        system("rm -rf $work_dir/buildSrc/src/main/groovy/org/mockito/release/notes");
+        system("rm -rf $work_dir/buildSrc/src/test/groovy/org/mockito/release/notes");
+        system("sed -i '/apply.from:..gradle.release.gradle./d' $work_dir/build.gradle");
+    }
+
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
     my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";

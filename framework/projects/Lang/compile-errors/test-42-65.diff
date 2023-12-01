@@ -1,0 +1,14 @@
+diff --git a/src/test/org/apache/commons/lang/AllLangTestSuite.java b/src/test/org/apache/commons/lang/AllLangTestSuite.java
+index 9c572c3a9..e7b092ef3 100644
+--- a/src/test/org/apache/commons/lang/AllLangTestSuite.java
++++ b/src/test/org/apache/commons/lang/AllLangTestSuite.java
+@@ -61,7 +61,7 @@ public class AllLangTestSuite extends TestCase {
+         suite.addTest(LangTestSuite.suite());
+         suite.addTest(BuilderTestSuite.suite());
+         suite.addTest(EnumTestSuite.suite());
+-        suite.addTest(org.apache.commons.lang.enum.EnumTestSuite.suite());
++        //suite.addTest(org.apache.commons.lang.enum.EnumTestSuite.suite());
+         suite.addTest(ExceptionTestSuite.suite());
+         suite.addTest(MathTestSuite.suite());
+         suite.addTest(MutableTestSuite.suite());
+

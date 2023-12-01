@@ -1,4 +1,5 @@
 ## commons-lang: 75d931a3264b73caa9cdd7d3373375cc33008ddf ##
+--- org.apache.commons.lang.LocaleUtilsTest::testToLocale_3Part
 --- org.apache.commons.lang.CharUtilsPerfTest
 java.lang.Exception: No runnable methods
 	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:169)

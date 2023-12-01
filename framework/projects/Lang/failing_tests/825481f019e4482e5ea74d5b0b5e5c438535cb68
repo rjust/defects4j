@@ -1,4 +1,5 @@
 ## commons-lang: 825481f019e4482e5ea74d5b0b5e5c438535cb68 ##
+--- org.apache.commons.lang3.time.FastDateFormatTest::testShortDateStyleWithLocales
 --- org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
 junit.framework.ComparisonFailure: expected:<...d5da47[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...d5da47[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
