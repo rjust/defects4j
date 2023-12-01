@@ -21,10 +21,10 @@
     </condition>
 
     <!-- Location of compiled classes changes in older builds -->
-    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/test">
+    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/java/test">
         <istrue value="${use.ant}"/>
     </condition>
-    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/main">
+    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/java/main">
         <istrue value="${use.ant}"/>
     </condition>
     <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">
