@@ -16,8 +16,11 @@
 #   * Verify bug 2 with DEBUG  ./test_verify_bugs.sh -pLang -b 2 -D
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
 
 # Print usage message and exit
 usage() {
