@@ -24,7 +24,7 @@
   <property file="${user.home}/.m2/maven.properties"/>
   <property file="maven-build.properties"/>
 
-  <property name="maven.build.finalName" value="jackson-dataformat-xml-2.7.0-rc4-SNAPSHOT"/>
+  <property name="maven.build.finalName" value="jackson-dataformat-xml-2.7.0-rc3"/>
   <property name="maven.build.dir" value="target"/>
   <property name="maven.build.outputDir" value="${maven.build.dir}/classes"/>
   <property name="maven.build.srcDir.0" value="src/main/java"/>
@@ -44,17 +44,17 @@
   <!-- ====================================================================== -->
 
   <path id="build.classpath">
-    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar"/>
+    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-annotations/2.7.0-rc3/jackson-annotations-2.7.0-rc3.jar"/>
-    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar"/>
+    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.7.0-rc3/jackson-module-jaxb-annotations-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar"/>
     <pathelement location="${maven.repo.local}/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar"/>
   </path>
   <path id="build.test.classpath">
-    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar"/>
+    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-annotations/2.7.0-rc3/jackson-annotations-2.7.0-rc3.jar"/>
-    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar"/>
+    <pathelement location="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.7.0-rc3/jackson-module-jaxb-annotations-2.7.0-rc3.jar"/>
     <pathelement location="${maven.repo.local}/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar"/>
     <pathelement location="${maven.repo.local}/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar"/>
@@ -253,13 +253,13 @@
           description="Download all dependencies" 
           unless="maven.mode.offline">
     <mkdir dir="${maven.repo.local}"/>
-    <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT"/>
-    <get src="https://oss.sonatype.org/content/repositories/snapshots/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar" 
-         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar" 
+    <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar" 
+         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
-    <get src="https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar" 
-         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc4-SNAPSHOT/jackson-core-2.7.0-rc4-20160106.062135-1.jar" 
+    <get src="https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar" 
+         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-core/2.7.0-rc3/jackson-core-2.7.0-rc3.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
     <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/core/jackson-annotations/2.7.0-rc3"/>
@@ -271,13 +271,13 @@
          dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-annotations/2.7.0-rc3/jackson-annotations-2.7.0-rc3.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
-    <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT"/>
-    <get src="https://oss.sonatype.org/content/repositories/snapshots/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar" 
-         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar" 
+    <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar" 
+         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
-    <get src="https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar" 
-         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc4-SNAPSHOT/jackson-databind-2.7.0-rc4-20160109.222726-11.jar" 
+    <get src="https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar" 
+         dest="${maven.repo.local}/com/fasterxml/jackson/core/jackson-databind/2.7.0-rc3/jackson-databind-2.7.0-rc3.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
     <mkdir dir="${maven.repo.local}/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.7.0-rc3"/>
