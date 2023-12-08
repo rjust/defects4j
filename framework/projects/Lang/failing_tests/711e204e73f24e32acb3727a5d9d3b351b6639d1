@@ -1,4 +1,6 @@
 ## commons-lang: 711e204e73f24e32acb3727a5d9d3b351b6639d1 ##
+--- org.apache.commons.lang.exception.ExceptionUtilsTest::testIsNestedThrowable_Throwable
+--- org.apache.commons.lang.exception.ExceptionUtilsTest::testIsThrowableNested
 --- org.apache.commons.lang.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
 junit.framework.ComparisonFailure: expected:<...5a7dd3[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...5a7dd3[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)

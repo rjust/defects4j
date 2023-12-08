@@ -16,8 +16,12 @@
 #   * Verify bug 2 with DEBUG  ./test_verify_bugs.sh -pLang -b 2 -D
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
+init
 
 # Print usage message and exit
 usage() {
@@ -68,8 +72,6 @@ fi
 if [ ! -e "$BASE_DIR/framework/core/Project/$PID.pm" ]; then
     usage
 fi
-
-init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
@@ -148,12 +150,28 @@ for bid in $(echo $BUGS); do
                 sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
                 ;;
             Lang)
+                # either this
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                # or this
                 sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
                 ;;
             Math)
                 sed_cmd "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
                 ;;
+            Mockito)
+                # some bids use gradle
+                sed_cmd "s/sourceCompatibility = 1\.[1-5]/sourceCompatibility=1.6/" $work_dir/build.gradle
+                sed_cmd "s/targetCompatibility = 1\.[1-5]/targetCompatibility=1.6/" $work_dir/build.gradle
+                sed_cmd "s/gradle-1.12-bin/gradle-4.9-bin/" $work_dir/gradle/wrapper/gradle-wrapper.properties
+                sed_cmd "s/gradle-2.2.1-all/gradle-4.9-bin/" $work_dir/gradle/wrapper/gradle-wrapper.properties
+                sed_cmd "s/0.7-groovy-1.8/1.1-groovy-2.4/" $work_dir/buildSrc/build.gradle
+                # and some bids don't
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
+                ;;
         esac
+
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 

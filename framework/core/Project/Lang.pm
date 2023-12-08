@@ -39,6 +39,7 @@ use warnings;
 
 use Constants;
 use Vcs::Git;
+use File::Path 'rmtree';
 
 our @ISA = qw(Project);
 my $PID  = "Lang";
@@ -61,45 +62,19 @@ sub new {
 #
 sub determine_layout {
     @_ == 2 or die $ARG_ERROR;
-    my ($self, $rev_id) = @_;
-    my $dir = $self->{prog_root};
-    my $result = _layout1($dir) // _layout2($dir);
-    die "Unknown layout for revision: ${rev_id}" unless defined $result;
+    my ($self, $revision_id) = @_;
+    my $work_dir = $self->{prog_root};
+
+    # Only two sets of layouts in this case
+    my $result;
+    if (-e "$work_dir/src/main"){
+      $result = {src=>"src/main/java", test=>"src/test/java"};
+    }
+    if (-e "$work_dir/src/java"){
+      $result = {src=>"src/java", test=>"src/test"};
+    }
+    die "Unknown layout for revision: ${revision_id}" unless defined $result;
     return $result;
-}
-
-#
-# Existing Ant build.xml and default.properties
-#
-sub _layout1 {
-    @_ == 1 or die $ARG_ERROR;
-    my ($dir) = @_;
-    my $src  = `grep "source.home" $dir/default.properties 2>/dev/null`;
-    my $test = `grep "test.home" $dir/default.properties 2>/dev/null`;
-
-    return undef if ($src eq "" || $test eq "");
-
-    $src =~ s/\s*source.home\s*=\s*(\S+)\s*/$1/;
-    $test=~ s/\s*test.home\s*=\s*(\S+)\s*/$1/;
-
-    return {src=>$src, test=>$test};
-}
-
-#
-# Generated build.xml (from mvn ant:ant) with maven-build.properties
-#
-sub _layout2 {
-    @_ == 1 or die $ARG_ERROR;
-    my ($dir) = @_;
-    my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
-    my $test = `grep "maven.build.testDir.0" $dir/maven-build.properties 2>/dev/null`;
-
-    return undef if ($src eq "" || $test eq "");
-
-    $src =~ s/\s*maven\.build\.srcDir\.0\s*=\s*(\S+)\s*/$1/;
-    $test=~ s/\s*maven\.build\.testDir\.0\s*=\s*(\S+)\s*/$1/;
-
-    return {src=>$src, test=>$test};
 }
 
 #
@@ -107,10 +82,38 @@ sub _layout2 {
 #
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
+    my $vid = $self->{_vcs}->lookup_vid($revision_id);
+
+    # Convert the file encoding of problematic files
+    my $result = determine_layout($self, $revision_id);
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
+
+    # remove old pre Java 1.5 code
+    print($work_dir."/".$result->{src}."/org/apache/commons/lang/enum\n");
+    rmtree($work_dir."/".$result->{src}."/org/apache/commons/lang/enum");
+    rmtree($work_dir."/".$result->{test}."/org/apache/commons/lang/enum");
+
+    # Fix compilation errors if necessary
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($vid >= $1 && $vid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
-        system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $work_dir");
+        my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$revision_id";
+        if (-d "$build_files_dir") {
+            Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
+        }
     }
 }
 

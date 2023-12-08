@@ -4,8 +4,11 @@
 # This script tests the tutorial as described in Defects4J's README file.
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
 init
 
 # Get project info
