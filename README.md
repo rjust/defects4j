@@ -134,7 +134,12 @@ Using Defects4J
     - `defects4j compile`
     - `defects4j test`
 
-5. The scripts in [`framework/test/`](framework/test/)
+5. Some Defects4J commands take the project and bug id as command-line
+arguments; examples include `info`, `checkout`, and `query`.  For other
+commands, you `cd` into the directory and then run the command; examples
+include `compile` and `export`.
+
+6. The scripts in [`framework/test/`](framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
