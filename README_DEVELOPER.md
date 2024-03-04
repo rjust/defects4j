@@ -27,10 +27,10 @@ will be referred to as `BASE` and the defects4j download location will be
 referred to as `HOST_URL`.
 
 ### Setting up the project repositories
-The project_repos directory (`$BASE/project_repos`) is populated by running
-the `get_repos.sh` script in that directory; the repos are not included for
+The project\_repos directory (`$BASE/project\_repos`) is populated by running
+the `get\_repos.sh` script in that directory; the repos are not included for
 space reasons.  All project repos are archived in the file:  
-`$HOST_URL/defects4j-repos-v3.zip`
+`$HOST\_URL/defects4j-repos-v3.zip`
 
 Each repository in that archive (name.git folder) is created by running
 `git clone --bare <URL>;` the README in the archive lists the URLs.
@@ -53,7 +53,7 @@ which is about three years old.  At some point we should upgrade to a newer
 version; the current version is 4.3.2.
 
 ### Setting up Gradle
-Gradle is downloaded from `HOST_URL`.  As the reproducible bugs in the defect4j
+Gradle is downloaded from `HOST\_URL`.  As the reproducible bugs in the defect4j
 project repositories are several years old, we must use an older version of gradle
 to build the code defects in the Mockito repository. Version 2.x of Defects4J
 used Gradle version 2.2.1. The current version (3.x) of Defects4J uses Gradle version 4.9.
@@ -65,7 +65,7 @@ https://github.com/jose/build-analyzer/releases/download
 Notes
 ----------------
 #### Testing
-The test_verfiy_bugs.sh script is essentially the test oracle -- if it passes,
+The test\_verfiy\_bugs.sh script is essentially the test oracle -- if it passes,
 the update/changes was successful.
 #### Project Repos
 * Ideally, we would simply run git pull on each of the name.git repositories to
