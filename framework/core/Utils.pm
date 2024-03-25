@@ -382,7 +382,7 @@ sub fix_dependency_urls {
                     exec_cmd("cp $build_file $build_file.bak", "Backing up build file: $build_file");
                     $modified = 1;
                 }
-                print(STDERR "Pattern matches in build file ($build_file): $$_[0]\n");
+                print(STDERR "Pattern matches in build file ($build_file): $$_[0]\n") if $DEBUG;
                 $lines[$i] = $l;
                 last;
             }
