@@ -4,8 +4,11 @@
 # This script runs the sanity check on each project version.
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
 init
 
 for pid in Chart Closure Lang Math Time; do

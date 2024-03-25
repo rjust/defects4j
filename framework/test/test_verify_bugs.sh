@@ -6,22 +6,27 @@
 # This script must be run from its own directory (`framework/tests/`).
 #
 # By default, this script runs only relevant tests. Set the -A flag to run all
-# tests.
+# tests. Set the -D flag to enable verbose logging (D4J_DEBUG).
 #
 # Examples for Lang:
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
 #   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
 #   * Verify bugs 1 and 3:     ./test_verify_bugs.sh -pLang -b1 -b3
 #   * Verify bugs 1-10 and 20: ./test_verify_bugs.sh -pLang -b1..10 -b20
+#   * Verify bug 2 with DEBUG  ./test_verify_bugs.sh -pLang -b 2 -D
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
+init
 
 # Print usage message and exit
 usage() {
     local known_pids=$(defects4j pids)
-    echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
+    echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ] [-D]"
     echo "Project ids:"
     for pid in $known_pids; do
         echo "  * $pid"
@@ -31,11 +36,15 @@ usage() {
 
 # Run only relevant tests by default
 TEST_FLAG="-r"
+# Debugging is off by default
+DEBUG=""
 
 # Check arguments
-while getopts ":p:b:A" opt; do
+while getopts ":p:b:AD" opt; do
     case $opt in
         A) TEST_FLAG=""
+            ;;
+        D) DEBUG="-D"
             ;;
         p) PID="$OPTARG"
             ;;
@@ -64,11 +73,13 @@ if [ ! -e "$BASE_DIR/framework/core/Project/$PID.pm" ]; then
     usage
 fi
 
-init
-
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
     BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
+fi
+
+if [ "$DEBUG" == "-D" ]; then
+    export D4J_DEBUG=1
 fi
 
 # Create log file
@@ -90,6 +101,16 @@ mkdir -p $test_dir
 mkdir -p $DIR_FAILING
 
 work_dir="$test_dir/$PID"
+
+function sed_cmd()
+{
+    if [ $(uname -s) = "Darwin" ]; then
+        sed -i '' "$1" $2
+    else
+        sed -i "$1" $2
+    fi
+}
+
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
@@ -102,6 +123,55 @@ for bid in $(echo $BUGS); do
     for v in "b" "f"; do
         vid=${bid}$v
         defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
+        case $PID in
+            Cli|Time)
+                # doesn't always exist
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                # only used when no maven-build.xml
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
+                ;;
+            Closure)
+                sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/build.properties
+                sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/build.properties
+                sed_cmd "s/target-jvm: 1\.[1-5]/target-jvm 1.6/" $work_dir/lib/rhino/src/mozilla/js/rhino/build.properties
+                sed_cmd "s/source-level: 1\.[1-5]/source-level 1.6/" $work_dir/lib/rhino/src/mozilla/js/rhino/build.properties
+                ;;
+            Codec)
+                sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
+                ;;
+            Compress|Csv|Jsoup)
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                ;;
+            Gson)
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/gson/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/gson/maven-build.xml
+                ;;
+            Lang)
+                # either this
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/maven-build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/maven-build.xml
+                # or this
+                sed_cmd "s/1\.[1-5]/1.6/" $work_dir/default.properties
+                ;;
+            Math)
+                sed_cmd "s/value=\"1\.[1-5]\"/value=\"1.6\"/" $work_dir/build.xml
+                ;;
+            Mockito)
+                # some bids use gradle
+                sed_cmd "s/sourceCompatibility = 1\.[1-5]/sourceCompatibility=1.6/" $work_dir/build.gradle
+                sed_cmd "s/targetCompatibility = 1\.[1-5]/targetCompatibility=1.6/" $work_dir/build.gradle
+                sed_cmd "s/gradle-1.12-bin/gradle-4.9-bin/" $work_dir/gradle/wrapper/gradle-wrapper.properties
+                sed_cmd "s/gradle-2.2.1-all/gradle-4.9-bin/" $work_dir/gradle/wrapper/gradle-wrapper.properties
+                sed_cmd "s/0.7-groovy-1.8/1.1-groovy-2.4/" $work_dir/buildSrc/build.gradle
+                # and some bids don't
+                sed_cmd "s/source=\"1\.[1-5]\"/source=\"1.6\"/" $work_dir/build.xml
+                sed_cmd "s/target=\"1\.[1-5]\"/target=\"1.6\"/" $work_dir/build.xml
+                ;;
+        esac
+
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
@@ -129,7 +199,10 @@ for bid in $(echo $BUGS); do
         done
     done
 done
-rm -rf $work_dir
+
+if [ "$DEBUG" != "-D" ]; then
+    rm -rf $TMP_DIR
+fi
 HALT_ON_ERROR=1
 
 # Print a summary of what went wrong

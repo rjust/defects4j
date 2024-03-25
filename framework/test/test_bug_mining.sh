@@ -98,7 +98,6 @@ test_create_project() {
     # Check whether content of expected files is correct
     _check_output "$work_dir/$project_perl_module" "$RESOURCES_OUTPUT_DIR/$project_perl_module"
 
-    cp "$RESOURCES_INPUT_DIR/$project_build_xml" "$work_dir/$project_build_xml" || die "Failed to replace project build file"
 }
 
 #
@@ -237,7 +236,15 @@ test_analyze_project() {
     # Same number of failing tests
     local actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
     local expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
-    [ "$actual_num_failing_tests" -eq "$expected_num_failing_tests" ] || die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+    if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
+      echo "Expected failing tests:"
+      grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
+
+      echo "Actual failing tests:"
+      grep -a "^--- " "$work_dir/$failing_tests"
+
+      die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+    fi
 
     # Same failing tests
     while read -r failing_test; do
@@ -376,8 +383,9 @@ test_integration() {
     ./test_verify_bugs.sh -p "$project_id" -b "$bug_id" || die "Verify script has failed"
 }
 
-# Run all test cases (and log all results), regardless of whether errors occur
-HALT_ON_ERROR=0
+# Stop at the very first error (there is no point in running later stages of the
+# bug-mining pipeline if earlier stages failed and preconditions are violated.)
+HALT_ON_ERROR=1
 
 # Bug-mining temporary directory
 WORK_DIR="$TMP_DIR/test_bug_mining"

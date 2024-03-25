@@ -463,6 +463,12 @@ sub checkout_vid {
     # Write version-specific properties
     $self->_write_props($vid, $is_bugmine);
 
+    # Fix dependency URLs if necessary (we only fix this on the fixed version
+    # since the buggy version is derived by applying a source-code patch).
+    for my $build_file (("build.xml", "maven-build.xml", "pom.xml", "project.xml", "project.properties", "default.properties", "maven-build.properties")) {
+        Utils::fix_dependency_urls("$work_dir/$build_file", "$UTIL_DIR/fix_dependency_urls.patterns", 0) if -e "$work_dir/$build_file";
+    }
+
     # Commit and tag the fixed program version
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_FIXED;
     $cmd = "cd $work_dir" .

@@ -188,8 +188,8 @@ echo "Setting up Gradle dependencies ... "
 
 cd "$DIR_LIB_GRADLE"
 
-GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
-GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
+GRADLE_DISTS_ZIP=defects4j-gradle-dists-v3.zip
+GRADLE_DEPS_ZIP=defects4j-gradle-deps-v3.zip
 
 old_dists_ts=0
 old_deps_ts=0

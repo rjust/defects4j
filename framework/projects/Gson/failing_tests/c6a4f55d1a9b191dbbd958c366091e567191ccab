@@ -1,4 +1,7 @@
 ## gson: c6a4f55d1a9b191dbbd958c366091e567191ccab ##
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultDateDeserialization
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultJavaSqlTimestampDeserialization
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultJavaSqlTimestampSerialization
 --- com.google.gson.common.TestTypes
 java.lang.Exception: No runnable methods
 	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:169)
