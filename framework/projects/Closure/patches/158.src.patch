@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
-index e2e102c6..3a7f427f 100644
+index e2e102c..3a7f427 100644
 --- a/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
 +++ b/src/com/google/javascript/jscomp/AbstractCommandLineRunner.java
 @@ -194,11 +194,12 @@ abstract class AbstractCommandLineRunner<A extends Compiler,
@@ -79,7 +79,7 @@ index e2e102c6..3a7f427f 100644
 -  }
  }
 diff --git a/src/com/google/javascript/jscomp/CommandLineRunner.java b/src/com/google/javascript/jscomp/CommandLineRunner.java
-index b1a7472a..d9a381b5 100644
+index b1a7472..d9a381b 100644
 --- a/src/com/google/javascript/jscomp/CommandLineRunner.java
 +++ b/src/com/google/javascript/jscomp/CommandLineRunner.java
 @@ -23,7 +23,6 @@ import com.google.common.collect.Maps;
@@ -200,25 +200,17 @@ index b1a7472a..d9a381b5 100644
            .setCharset(flags.charset)
            .setManageClosureDependencies(flags.manage_closure_dependencies)
 diff --git a/src/com/google/javascript/jscomp/DiagnosticGroups.java b/src/com/google/javascript/jscomp/DiagnosticGroups.java
-index cf0beda1..271492f2 100644
+index cf0beda..d2d38c5 100644
 --- a/src/com/google/javascript/jscomp/DiagnosticGroups.java
 +++ b/src/com/google/javascript/jscomp/DiagnosticGroups.java
-@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
- import com.google.common.collect.ImmutableMap;
- import com.google.common.collect.Maps;
- 
-+import java.util.List;
- import java.util.Map;
- 
- /**
-@@ -182,10 +183,12 @@ public class DiagnosticGroups {
+@@ -182,10 +182,12 @@ public class DiagnosticGroups {
    /**
     * Adds warning levels by name.
     */
 -  void setWarningLevel(CompilerOptions options,
 -      String name, CheckLevel level) {
 +  void setWarningLevels(CompilerOptions options,
-+      List<String> diagnosticGroups, CheckLevel level) {
++      java.util.List<String> diagnosticGroups, CheckLevel level) {
 +    for (String name : diagnosticGroups) {
      DiagnosticGroup group = forName(name);
      Preconditions.checkNotNull(group, "No warning class for name: " + name);
