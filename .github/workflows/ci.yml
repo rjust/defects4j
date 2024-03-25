@@ -8,7 +8,10 @@ jobs:
       JDK_ARCH: x64
       JDK_VERSION: 8u192
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        show-progress: false
     - name: Cache JDK
       uses: actions/cache@v2
       id: cache-jdk
