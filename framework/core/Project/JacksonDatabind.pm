@@ -79,23 +79,6 @@ sub _post_checkout {
         }
     }
 
-    # JacksonDatabind has a Module class. Java 9 introduced a Module system for organizing code.
-    # This created a compile time ambiguity. To fix this, we attempt to convert all references
-    # to a JacksonDatabind Module to com.fasterxml.jackson.databind.Module.
-    my $cmd = "grep -lR ' extends Module\$' $work_dir ";
-    my $log = `$cmd`;
-    my $ret = $?;
-    if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR ' extends Module\$' $work_dir | xargs sed -i 's/ extends Module\$/ extends com.fasterxml.jackson.databind.Module/'", "Correct Module ambiguity 1") or die;
-    }
-
-    $cmd = "grep -lR ' Module ' $work_dir ";
-    $log = `$cmd`;
-    $ret = $?;
-    if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR ' Module ' $work_dir | xargs sed -i 's/ Module / com.fasterxml.jackson.databind.Module /'", "Correct Module ambiguity 2") or die;
-    }
-
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {

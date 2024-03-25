@@ -398,34 +398,9 @@ sub _apply_cmd {
         $log .= "* $cmd\n";
         $log .= `$cmd`;
         if ($? == 0) {
-            print(STDERR "patch applied: $patch_file\n") if $DEBUG;
             return("cd $work_dir; git apply -p$n $patch_file 2>&1");
         }
     }
-    # The code above checks for an exact match before patching
-    # but if we're patching to fix compile errors, because of using
-    # newer versions of the JDK, we want to use a 'fuzzy' match.
-    # Also, if a 'compile-errors' patch doesn't apply, we skip
-    # it rather than report an error.  This allows us to significantly
-    # reduce the number of unique patches in the compile-errors directory.
-    if (index($patch_file, "compile-errors") != -1) {
-        # We have a 'compile-errors' patch.  Reset the log file.
-        $log = "";
-        my $cmd = "cd $work_dir; patch -p1 --dry-run -l < $patch_file 2>&1";
-        $log .= "* $cmd\n";
-        #print "\nlog: $log\n\n";
-        $log .= `$cmd`;
-        if ($? == 0) {
-            print(STDERR "patch applied: $patch_file\n") if $DEBUG;
-            return("cd $work_dir; patch -p1 -l < $patch_file 2>&1");
-        } else {
-            #print "\nlog: $log\n\n";
-            # Patch doesn't apply, just skip it.
-            print(STDERR "patch skipped: $patch_file\n") if $DEBUG;
-            return("echo patch skipped");
-        }
-    }
-
     confess("Cannot determine how to apply patch!\n" .
             "All attempts failed:\n$log" . "-" x 70 . "\n");
 }
