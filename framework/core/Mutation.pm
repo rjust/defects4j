@@ -73,7 +73,7 @@ sub create_mml {
     my ($instrument_classes, $out_file, $mut_ops) = @_;
 
     my $OUT_DIR = Utils::get_dir($out_file);
-    my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
+    my $TEMPLATE = `cat $UTIL_DIR/template.mml` or die "Cannot read mml template: $!";
 
     system("mkdir -p $OUT_DIR");
 
