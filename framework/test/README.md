@@ -1,5 +1,7 @@
-Test and analysis scripts
-----------------
+Testing and analysis
+--------------------
+
+## Scripts
 
 * `test.include`: Constants and helper functions for test scripts.
 
@@ -29,3 +31,23 @@ Test and analysis scripts
 * `test_verify_bugs.sh`: Reproduces a bug, or a set of bugs, and verifies that
    the observed set of triggering tests matches the expected set of triggering
    tests.
+
+## CI testing
+See [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) for the set of
+tests that currently run in CI.
+
+## Local testing
+Some tests take a long time to run and usually only need to be run for major
+version updates (e.g., bumping the Java version or adding new defects).
+
+### Export command and exported properties
+The `test_export_command.sh` test takes a long time as it checks out every
+single defect and checks whether the exported paths, files, etc. make sense.
+
+### Reproducing all bugs (parallel)
+Reproducing all bugs is the most time-consuming test. To speed it up, we use
+GNU parallel (`-j` gives the number of parallel processes):
+```
+./jobs_verify_bugs.pl | shuf > jobs.txt
+parallel -j20 --progress < jobs.txt
+```
