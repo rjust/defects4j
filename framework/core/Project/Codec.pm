@@ -77,21 +77,6 @@ sub determine_layout {
     return $result;
 }
 
-##
-## Converts file encoding from iso-8859-1 to utf-8
-##
-sub convert_file_encoding {
-    @_ == 1 or die $ARG_ERROR;
-    my ($file_name) = @_;
-    if (-e $file_name){
-        rename($file_name, $file_name.".bak");
-        open(OUT, '>'.$file_name) or die $!;
-        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $file_name.bak`;
-        print OUT $converted_file;
-        close(OUT);
-    }
-}
-
 #
 # Post-checkout tasks include, for instance, providing cached build files,
 # fixing compilation errors, etc.
@@ -110,10 +95,10 @@ sub _post_checkout {
 
     # Convert the file encoding of problematic files
     my $result = determine_layout($self, $rev_id);
-    convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/binary/Base64Test.java");
-    convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/ColognePhoneticTest.java");
-    convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java");
-    convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/binary/Base64Test.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/ColognePhoneticTest.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
 
     # Copy in a missing dependency
     if (-d $work_dir."/src/main/resources"){
@@ -130,6 +115,9 @@ sub _post_checkout {
            close(OUT); 
         }
     }
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/1\.[1-5]/1.6/", "$work_dir/default.properties");
 }
 
 #

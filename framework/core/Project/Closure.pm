@@ -94,6 +94,14 @@ sub _post_checkout {
             }
         }
     }
+
+    # Set default Java target to 6.
+    # either these:
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/build.properties");
+    # or these:
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
 }
 
 1;
