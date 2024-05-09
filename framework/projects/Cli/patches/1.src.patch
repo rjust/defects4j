@@ -1,5 +1,5 @@
 diff --git a/src/java/org/apache/commons/cli/CommandLine.java b/src/java/org/apache/commons/cli/CommandLine.java
-index 3c82942..f658a02 100644
+index 3c82942..af1118d 100644
 --- a/src/java/org/apache/commons/cli/CommandLine.java
 +++ b/src/java/org/apache/commons/cli/CommandLine.java
 @@ -16,11 +16,11 @@
@@ -55,30 +55,27 @@ index 3c82942..f658a02 100644
  
          return (res == null)        ? null : TypeHandler.createValue(res, type);
      }
-@@ -145,13 +146,19 @@ public class CommandLine {
+@@ -145,11 +146,16 @@ public class CommandLine {
       */
      public String[] getOptionValues(String opt)
      {
 -        Option key = resolveOption( opt );
 +        opt = Util.stripLeadingHyphens(opt);
-+
-+        String key = opt;
-+        if (names.containsKey(opt))
  
 -        if (options.contains(key))
++        String key = opt;
++        if (names.containsKey(opt))
++        {
++            key = (String) names.get(opt);
++        }
++        if (options.containsKey(key))
          {
 -            return key.getValues();
-+            key = (String) names.get(opt);
-         }
- 
-+        if (options.containsKey(key))
-+        {
 +            return ((Option) options.get(key)).getValues();
-+        }
-         return null;
          }
  
-@@ -160,24 +167,7 @@ public class CommandLine {
+         return null;
+@@ -160,24 +166,7 @@ public class CommandLine {
       * @param opt short or long name of the option
       * @return Canonicalized option
       */
@@ -103,7 +100,7 @@ index 3c82942..f658a02 100644
  
      /** 
       * Retrieves the array of values, if any, of an option.
-@@ -285,7 +275,17 @@ public class CommandLine {
+@@ -285,7 +274,17 @@ public class CommandLine {
       */
      void addOption(Option opt)
      {
@@ -122,7 +119,7 @@ index 3c82942..f658a02 100644
      }
  
      /**
-@@ -296,7 +296,7 @@ public class CommandLine {
+@@ -296,7 +295,7 @@ public class CommandLine {
       */
      public Iterator iterator()
      {
@@ -131,7 +128,7 @@ index 3c82942..f658a02 100644
      }
  
      /**
-@@ -306,7 +306,7 @@ public class CommandLine {
+@@ -306,7 +305,7 @@ public class CommandLine {
       */
      public Option[] getOptions()
      {
@@ -140,7 +137,7 @@ index 3c82942..f658a02 100644
  
          // reinitialise array
          Option[] optionsArray = new Option[processed.size()];
-@@ -314,4 +314,4 @@ public class CommandLine {
+@@ -314,4 +313,4 @@ public class CommandLine {
          // return the array
          return (Option[]) processed.toArray(optionsArray);
      }

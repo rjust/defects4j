@@ -2,7 +2,7 @@
 junit.framework.AssertionFailedError: expected:<[UTF-8]> but was:<[ISO-2022-CN]>
 	at org.junit.Assert.assertEquals(Assert.java:115)
 	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.jsoup.parser.HtmlParserTest.fallbackToUtfIfCantEncode(HtmlParserTest.java:1205)
+	at org.jsoup.parser.HtmlParserTest.fallbackToUtfIfCantEncode(HtmlParserTest.java:1207)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

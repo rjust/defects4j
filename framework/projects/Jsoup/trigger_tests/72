@@ -57,7 +57,7 @@ java.lang.StringIndexOutOfBoundsException: String index out of range: -1
 	at org.jsoup.parser.TreeBuilder.parse(TreeBuilder.java:45)
 	at org.jsoup.parser.Parser.parse(Parser.java:107)
 	at org.jsoup.Jsoup.parse(Jsoup.java:58)
-	at org.jsoup.parser.HtmlParserTest.commentAtEnd(HtmlParserTest.java:1086)
+	at org.jsoup.parser.HtmlParserTest.commentAtEnd(HtmlParserTest.java:1088)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

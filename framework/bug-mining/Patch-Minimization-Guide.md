@@ -261,7 +261,7 @@ Code refactoring may consist of one or more of the following:
 
 ### 2. Compiler directives and annotations
 
-1. __Changes made to import statements should be removed__  
+1. __Changes made to import statements that are not relevant to the bug fix should be removed__
     Although removing changes involving import statements might create new warnings of `unused import statements`, import statements would not communicate anything about the bug or the bug fix since they would only be necessary to support functions. It is also worth noting that these import statements could be completely removed by using the fully qualified function names.
 
 2. __Changes made to @override statements can be removed under some circumstances__  

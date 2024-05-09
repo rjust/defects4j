@@ -63,6 +63,21 @@ sub new {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
+    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+
+    # Fix compilation errors if necessary
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($vid >= $1 && $vid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     # Check whether ant build file exists

@@ -9,7 +9,7 @@ org.jsoup.UncheckedIOException: java.io.IOException: Underlying input stream ret
 	at org.jsoup.parser.Parser.parseInput(Parser.java:39)
 	at org.jsoup.helper.DataUtil.parseInputStream(DataUtil.java:151)
 	at org.jsoup.helper.HttpConnection$Response.parse(HttpConnection.java:837)
-	at org.jsoup.integration.ConnectTest.handlesEmptyStreamDuringParseRead(ConnectTest.java:397)
+	at org.jsoup.integration.ConnectTest.handlesEmptyStreamDuringParseRead(ConnectTest.java:400)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
