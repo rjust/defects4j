@@ -52,8 +52,3 @@ LIT(BOOLEAN);
 LIT(NUMBER);
 // Don't mutate String literals by default
 //LIT(STRING);
-
--LVR<"org.apache.commons.math3.util.FastMathLiteralArrays">;
--ORU<"org.apache.commons.math3.util.FastMathLiteralArrays">;
--LVR<"org.apache.commons.math.optimization.direct.BOBYQAOptimizer@bobyqb">;
--STD<"org.apache.commons.math.optimization.direct.BOBYQAOptimizer@bobyqb">;
