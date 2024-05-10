@@ -13,12 +13,12 @@ RUN \
   apt-get install -y openjdk-8-jdk \
                 git \
                 build-essential \
-				subversion \
-				perl \
-				curl \
-				unzip \
-				cpanminus \
-				make \
+                subversion \
+                perl \
+                curl \
+                unzip \
+                cpanminus \
+                make \
                 && \
   rm -rf /var/lib/apt/lists/*
 

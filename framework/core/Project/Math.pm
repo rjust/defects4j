@@ -110,6 +110,9 @@ sub _post_checkout {
     my $result = determine_layout($self, $revision_id);
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessBivariateCovariance.java");
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/value=\\\"1\.[1-5]\\\"/value=\\\"1.6\\\"/", "$work_dir/build.xml");
 }
 
 #

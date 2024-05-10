@@ -181,10 +181,11 @@ open(RES, "<$WORK_DIR/summary.csv") or die "Cannot read mutation analysis result
 my $header = <RES>;
 my $line = <RES>;
 close(RES);
-my ($mutGen, $mutCov, $mutKill, $mutLive, $timePreproc, $timeAnalysis) = split(/,/, $line);
+my ($mutGen, $mutRet, $mutCov, $mutKill, $mutLive, $timePreproc, $timeAnalysis) = split(/,/, $line);
 my $killRatioGen = $mutGen == 0 ? 0 : $mutKill/$mutGen*100;
 my $killRatioCov = $mutCov == 0 ? 0 : $mutKill/$mutCov*100;
 printf("%17s: %d\n", "Mutants generated", $mutGen);
+printf("%17s: %d\n", "Mutants retained", $mutRet);
 printf("%17s: %d\n", "Mutants covered", $mutCov);
 printf("%17s: %d\n", "Mutants killed", $mutKill);
 printf("%17s: %.1f%% (%.1f%%)\n", "Mutation score", $killRatioCov, $killRatioGen);

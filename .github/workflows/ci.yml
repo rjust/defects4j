@@ -6,7 +6,8 @@ jobs:
     env:
       JDK_OS: linux
       JDK_ARCH: x64
-      JDK_VERSION: 8u192
+      JDK_VERSION: 11u17
+      JDK_DIR: jdk-11.0.17
     steps:
     - uses: actions/checkout@v4
       with:
@@ -26,7 +27,7 @@ jobs:
         if [ ! -f "$JDK_FILE" ]; then mkdir -p ~/.java && (timeout 400 curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C ~/.java; fi
     - name: Setup JDK
       run: |
-        export JAVA_HOME=$HOME/.java/jdk1.8.0_192
+        export JAVA_HOME=$HOME/.java/$JDK_DIR
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
     - name: Install diffstat

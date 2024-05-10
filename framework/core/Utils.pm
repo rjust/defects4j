@@ -316,6 +316,28 @@ sub convert_file_encoding {
 
 =pod
 
+=item C<Utils::sed_cmd(cmd_string, file_name)>
+
+Uses sed with cmd_string to modify file_name.
+
+=cut
+
+sub sed_cmd {
+    @_ == 2 || die $ARG_ERROR;
+    my ($cmd_string, $file_name) = @_;
+
+    print(STDERR "Executed command: sed -i $cmd_string $file_name\n") if $DEBUG;
+
+    # We ignore sed result as it is ok if command fails.
+    if (`uname -s` eq "Darwin" ) {
+        `sed -i '' $cmd_string $file_name`;
+    } else {
+        `sed -i "$cmd_string" "$file_name"`;
+    }
+}
+
+=pod
+
 =item C<Utils::is_continuous_integration>
 
 Returns true if this process is running under continuous integration.
