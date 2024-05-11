@@ -421,8 +421,6 @@ test_integration "$PROJECT_ID" "1" || die "Test 'test_integration' has failed!"
 # Clean up D4J
 rm -rf "$HERE/../projects/$PROJECT_ID" "$HERE/../core/Project/$PROJECT_ID.pm" "$REPOS_DIR/$PROJECT_NAME.git"
 
-HALT_ON_ERROR=1
-
 # Print a summary of what went wrong
 if [ "$ERROR" -ne "0" ]; then
     printf '=%.s' $(seq 1 80) 1>&2
