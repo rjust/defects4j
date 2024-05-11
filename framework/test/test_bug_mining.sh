@@ -393,7 +393,7 @@ rm -rf "$WORK_DIR"
 
 # Project example
 PROJECT_ID="TestCodec"
-PROJECT_NAME="commons-codec"
+PROJECT_NAME="commons-test-codec"
 REPOSITORY_URL="https://github.com/apache/commons-codec.git"
 ISSUE_TRACKER_NAME="jira"
 ISSUE_TRACKER_PROJECT_ID="CODEC"
