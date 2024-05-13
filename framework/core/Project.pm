@@ -749,7 +749,9 @@ sub monitor_test {
         #  - A "normal" class named with one or more $ symbols, e.g., com.google.gson.internal.$Gson$Types
         #    from Gson-{14,16,18}.
         #
-        s/\[Loaded (.*) from.*/$1/;
+        # First match corresponds to what a Java-8 JVM outputs; the second match
+        # corresponds to what a Java-11 JVM outputs.
+        s/\[Loaded (.*) from.*/$1/ or s/\S* (.*) source: .*/$1/;
         my $found = 0;
         if (defined $src->{$_}) {
             $found = 1;
