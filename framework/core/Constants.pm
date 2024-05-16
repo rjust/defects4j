@@ -224,6 +224,21 @@ The directory name of the local gradle repository (I<.gradle_local_home>).
 our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_home");
 
 #
+# Check if we have the correct version of Java
+#
+# Run the 'java -version' command and capture its output
+my $java_version_output = `java -version 2>&1`;
+
+# Extract the imajor version number using regular expressions
+if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
+    if ($1 != 11) {
+        die ("Java 11 is required!\n\n");
+    }
+} else {
+    die ("Failed to parse Java version! Is Java installed/on the execution path?\n\n";
+}
+
+#
 # Check whether Defects4J has been properly initialized:
 # - Project repos available?
 # - Major mutation framework available?

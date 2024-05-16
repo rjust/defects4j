@@ -177,13 +177,6 @@ sub _d4j_usage {
     exit 1;
 }
 
-my $java_version = `java -version 2>&1 | grep -oP 'version "?(1\\.)?\\K\\d+'`;
-# print("version: " . $java_version . "\n");
-if ($java_version != 11) {
-    print ("Java 11 is required!\n");
-    exit 1
-}
-
 # At least a command has to be provided
 $#ARGV >= 0 or _d4j_usage();
 my $cmd = shift(@ARGV);
