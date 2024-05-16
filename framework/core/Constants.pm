@@ -235,7 +235,7 @@ if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
         die ("Java 11 is required!\n\n");
     }
 } else {
-    die ("Failed to parse Java version! Is Java installed/on the execution path?\n\n";
+    die ("Failed to parse Java version! Is Java installed/on the execution path?\n\n");
 }
 
 #
