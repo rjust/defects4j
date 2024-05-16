@@ -228,7 +228,7 @@ our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_ho
 #
 # Run the 'java -version' command and capture its output
 my $java_version_output = `java -version 2>&1`;
-
+print "$java_version_output\n"
 # Extract the imajor version number using regular expressions
 if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
     if ($1 != 11) {
