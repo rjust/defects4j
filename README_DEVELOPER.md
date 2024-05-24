@@ -48,10 +48,6 @@ https://github.com/EvoSuite/evosuite/releases/download
 Randoop is downloaded from:  
 https://github.com/randoop/randoop/releases/download
 
-It should be noted that the `init.sh` script currently gets Randoop version 4.2.5
-which is about three years old.  At some point we should upgrade to a newer
-version; the current version is 4.3.2.
-
 ### Setting up Gradle
 Gradle is downloaded from `HOST_URL`.  As the reproducible bugs in the defect4j
 project repositories are several years old, we must use an older version of gradle
