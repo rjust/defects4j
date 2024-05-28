@@ -50,7 +50,8 @@ fi
 num_classes=$(wc -l "$D4J_FILE_TARGET_CLASSES")
 budget=$(echo "$D4J_TOTAL_BUDGET/2/$num_classes" | bc)
 
-while IFS= read -r class ; do
+# shellcheck disable=SC2013 # reading words rather than lines, I suppose
+for class in $(cat "$D4J_FILE_TARGET_CLASSES"); do
     #shellcheck disable=SC2153 # D4J_DIR_TESTGEN_LIB is not a typo of D4J_DIR_TESTGEN_BIN
     cmd="java -cp $D4J_DIR_TESTGEN_LIB/evosuite-current.jar org.evosuite.EvoSuite \
     -class $class \
@@ -65,4 +66,4 @@ while IFS= read -r class ; do
     if ! exec_cmd "$cmd"; then
         exit 1
     fi
-done < "$D4J_FILE_TARGET_CLASSES"
+done
