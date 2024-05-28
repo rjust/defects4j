@@ -80,7 +80,7 @@ download_url() {
         else
             ZBASENAME=""
         fi
-        (timeout 300 curl -s -S -R -L -O $ZBASENAME "$URL" || (echo "retrying curl $URL" && rm -f "$BASENAME" && curl -R -L -O "$URL")) && echo "Downloaded $URL"
+        (timeout 300 curl -s -S -R -L -O "$ZBASENAME" "$URL" || (echo "retrying curl $URL" && rm -f "$BASENAME" && curl -R -L -O "$URL")) && echo "Downloaded $URL"
     fi
 }
 
@@ -121,7 +121,7 @@ get_modification_timestamp() {
         cmd="stat -f %m $f"
     fi
 
-    local ts=$($cmd)
+    local ts; ts=$($cmd)
     echo "$ts"
 }
 

@@ -26,16 +26,16 @@ if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_BIN/_tool.source
+source "$D4J_DIR_TESTGEN_BIN"/_tool.source
 
 # The classpath to compile and run the project
 project_cp=$(get_project_cp)
 
 # Read all additional configuration parameters
-add_config=$(parse_config $D4J_DIR_TESTGEN_BIN/evosuite.config)
+add_config=$(parse_config "$D4J_DIR_TESTGEN_BIN"/evosuite.config)
 
 # Make sure the provided test mode is supported
-if [ $D4J_TEST_MODE != "regression" ]; then
+if [ "$D4J_TEST_MODE" != "regression" ]; then
     die "Unsupported test mode: $D4J_TEST_MODE"
 fi
 
@@ -47,10 +47,11 @@ if [[ $(tail -c1 "$D4J_FILE_TARGET_CLASSES" | wc -l) -eq 0 ]]; then
 fi
 
 # Compute the budget per target class; evenly split the time for search and assertions
-num_classes=$(cat $D4J_FILE_TARGET_CLASSES | wc -l)
+num_classes=$(wc -l "$D4J_FILE_TARGET_CLASSES")
 budget=$(echo "$D4J_TOTAL_BUDGET/2/$num_classes" | bc)
 
-for class in $(cat $D4J_FILE_TARGET_CLASSES); do
+while IFS= read -r class ; do
+    #shellcheck disable=SC2153 # D4J_DIR_TESTGEN_LIB is not a typo of D4J_DIR_TESTGEN_BIN
     cmd="java -cp $D4J_DIR_TESTGEN_LIB/evosuite-current.jar org.evosuite.EvoSuite \
     -class $class \
     -projectCP $project_cp \
@@ -64,4 +65,4 @@ for class in $(cat $D4J_FILE_TARGET_CLASSES); do
     if ! exec_cmd "$cmd"; then
         exit 1
     fi
-done
+done < "$D4J_FILE_TARGET_CLASSES"
