@@ -17,8 +17,7 @@ init
 
 # Print usage message and exit
 usage() {
-    local known_pids
-    known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -33,7 +32,7 @@ while getopts ":p:b:" opt; do
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
-                BUGS="$BUGS $(eval echo \{"$OPTARG"\})"
+                BUGS="$BUGS $(eval echo "{$OPTARG}")"
            else
                 BUGS="$BUGS $OPTARG"
            fi
@@ -80,7 +79,7 @@ work_dir="$TMP_DIR/$PID"
 mkdir -p "$work_dir"
 
 # Clean working directory
-rm -rf "$work_dir"
+rm -rf "${work_dir:?}/*"
 
 for bid in $BUGS ; do
     # Skip all bug ids that do not exist in the active-bugs csv

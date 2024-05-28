@@ -178,8 +178,7 @@ test_export_properties() {
 
 # Print usage message and exit
 usage() {
-    local known_pids
-    known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id>"
     echo "Project ids:"
     for pid in $known_pids; do

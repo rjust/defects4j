@@ -9,7 +9,7 @@
 
 # Must use Java version 8.
 JAVA_VERSION_STRING=$(java -version 2>&1 | head -1)
-# shellcheck disable=SC2001 # variable substitution does not suffice; need sed.
+# shellcheck disable=SC2001 # variable substitution does not suffice; needs sed.
 JAVA_RELEASE_NUMBER=$(echo "$JAVA_VERSION_STRING" | sed 's/^.*1\.\(.\).*/\1/')
 if [[ "$JAVA_RELEASE_NUMBER" != "8" ]]; then
  echo Must use Java version 8

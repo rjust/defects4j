@@ -20,8 +20,7 @@ source test.include
 
 # Print usage message and exit
 usage() {
-    local known_pids
-    known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -41,7 +40,7 @@ while getopts ":p:b:A" opt; do
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
-                BUGS="$BUGS $(eval echo \{"$OPTARG"\})"
+                BUGS="$BUGS $(eval echo "{$OPTARG}")"
            else
                 BUGS="$BUGS $OPTARG"
            fi
