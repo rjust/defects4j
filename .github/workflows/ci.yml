@@ -58,6 +58,9 @@ jobs:
     - run: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
       working-directory: "./framework/test"
+    - run: carton exec ./test_style.sh
+      name: test_style.sh
+      working-directory: "./framework/test"
 #    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
 #      name: "test export 1"
 #      working-directory: "./framework/test"
