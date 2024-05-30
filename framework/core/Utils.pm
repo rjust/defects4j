@@ -42,6 +42,7 @@ use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
 use Fcntl qw< LOCK_EX SEEK_END >;
+use String::Interpolate qw(safe_interpolate);
 
 use Constants;
 
@@ -291,6 +292,71 @@ sub is_continuous_integration {
     || (defined $ENV{"TRAVIS"}
         && $ENV{"TRAVIS"} eq "true")
     );
+}
+
+=pod
+
+=item C<Utils::fix_dependency_urls(build_file, pattern_file, multi_line)>
+
+Parses the F<build_file> and applies the first matching pattern in the F<pattern_file>.
+
+=cut
+sub fix_dependency_urls {
+    @_ == 3 || die $ARG_ERROR;
+    my ($build_file, $pattern_file, $multi_line) = @_;
+
+    open(IN, "<$build_file") or die("Cannot read the build file: $build_file");
+    my @lines = <IN>;
+    close(IN);
+
+    open(IN, "<$pattern_file") or die("Cannot read pattern file: $pattern_file");
+    my @patterns = <IN>;
+    close(IN);
+
+    # Read all regexes; skip comments
+    my @regexes;
+    foreach my $l (@patterns) {
+        $l =~ /^\s*#/ and next;
+        chomp($l);
+        $l =~ /([^,]+),([^,]+)/ or die("Row in pattern file in wrong format: $l (expected: <find>,<replace>)");
+        my ($find, $repl) = split(",", $l);
+        if (! $multi_line) {
+            push(@regexes, [qr/$find/, $repl]);
+        } else {
+            print(STDERR "Multi-line matching enabled.\n");
+            push(@regexes, [qr/$find/ms, $repl]);
+            # Replace the list of lines with a single entry, if multi-line match
+            # is enabled. This allows us to use the same iteration over all
+            # "lines" below.
+            @lines = join("", @lines);
+        }
+    }
+
+    # Process the build file
+    my $modified = 0;
+    for (my $i=0; $i<=$#lines; ++$i) {
+        my $l = $lines[$i];
+        foreach (@regexes) {
+            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/eg) {
+                unless($modified) {
+                    exec_cmd("cp $build_file $build_file.bak", "Backing up build file: $build_file");
+                    $modified = 1;
+                }
+                print(STDERR "Pattern matches in build file ($build_file): $$_[0]\n");
+                $lines[$i] = $l;
+                last;
+            }
+        }
+    }
+
+    # Update the build file if necessary
+    if ($modified) {
+        unlink($build_file);
+        my $fix = IO::File->new(">$build_file") or die("Cannot overwrite build file: $!");
+        print $fix @lines;
+        $fix->flush();
+        $fix->close();
+    }
 }
 
 =pod

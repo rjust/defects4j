@@ -244,7 +244,7 @@ if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
 # - Major mutation framework available?
 # - External libraries (test generation) available?
 #
--e "$REPO_DIR/README"
+_repos_available()
         or die("Couldn't find project repositories! Did you (re)run 'defects4j/init.sh'?\n\n");
 -e "$MAJOR_ROOT/bin/ant"
         or die("Couldn't find Major mutation framework! Did you (re)run 'defects4j/init.sh'?\n\n");
@@ -256,6 +256,12 @@ if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
         or die("Couldn't find gradle distributions! Did you (re)run 'defects4j/init.sh'?\n\n");
 -d "$BUILD_SYSTEMS_LIB_DIR/gradle/deps"
         or die("Couldn't find gradle dependencies! Did you (re)run 'defects4j/init.sh'?\n\n");
+
+sub _repos_available {
+    opendir(my $dh, "$REPO_DIR") or die "Cannot read $REPO_DIR: $!";
+    # The repos directory by default only contains a helper script
+    return scalar(grep { $_ ne "." && $_ ne ".." } readdir($dh)) > 1;
+}
 
 # Add script and core directory to @INC
 unshift(@INC, $CORE_DIR);
