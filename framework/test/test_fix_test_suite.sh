@@ -62,7 +62,8 @@ _create_tar_bz2_file() {
   local suites_dir="$4"
 
   # Create a .tar.bz2 file with all test suites
-  pushd "$HERE/resources/input" > /dev/null 2>&1 || (echo "cannot pushd to $HERE/resources/input" && exit 1)
+  pushd . > /dev/null 2>&1 || (echo "cannot pushd ." && exit 1)
+  cd "$HERE/resources/input" || (echo "cannot cd to $HERE/resources/input" && exit 1)
     tar_bz2_file="$suites_dir/$pid-$bid-test.0.tar.bz2"
     tar -jcvf "$tar_bz2_file" "$input_files" || return 1
   popd > /dev/null 2>&1 || (echo "cannot popd" && exit 1)
