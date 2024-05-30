@@ -137,7 +137,20 @@ Using Defects4J
     - `defects4j compile`
     - `defects4j test`
 
-5. The scripts in [`framework/test/`](framework/test/)
+5. Some Defects4J commands take the project id as a command-line argument
+   (possibly along with other arguments).  Examples include `info`, `checkout`,
+   and `query`.  Note that `info` and `query` report infromation that is derived
+   from the Defects4J metadata and do not require access to project files that
+   are in the project's VCS.
+
+   Other commands require a working directory, either set explicitly
+   (`-w` command-line argument) or implicitly (executed from within a working
+   directory).  Examples include any command that requires access to files under
+   version control, including source code and build files.  This includes all
+   commands that build or test the code (`compile`, `test`, `coverage`, `mutation`)
+   and commands that return version-specific information (`export`).
+
+6. The scripts in [`framework/test/`](framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
