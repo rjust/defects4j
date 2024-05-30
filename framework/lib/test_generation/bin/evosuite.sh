@@ -47,8 +47,7 @@ if [[ $(tail -c1 "$D4J_FILE_TARGET_CLASSES" | wc -l) -eq 0 ]]; then
 fi
 
 # Compute the budget per target class; evenly split the time for search and assertions
-# shellcheck disable=SC2002 # temporary, for testing
-num_classes=$(cat "$D4J_FILE_TARGET_CLASSES" | wc -l)
+num_classes=$(wc -l < "$D4J_FILE_TARGET_CLASSES")
 budget=$(echo "$D4J_TOTAL_BUDGET/2/$num_classes" | bc)
 
 # shellcheck disable=SC2013 # reading words rather than lines, I suppose
