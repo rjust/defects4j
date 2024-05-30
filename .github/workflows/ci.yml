@@ -62,6 +62,23 @@ jobs:
     - run: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
       working-directory: "./framework/test"
+
+    # Verify a few select bugs to detect serious breakages early.
+    - run: carton exec ./test_verify_bugs.sh -p Lang -b24
+      name: "Verify Lang-24"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b102
+      name: "Verify Closure-102"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b10
+      name: "Verify Mockito-10"
+      working-directory: "./framework/test"
+
+# Verifying the export command for all bugs and verifying reproducibility of all
+# bugs is very time-consuming. The jobs below should be run as part of the
+# release process, but running them on every push and PR is unnecessary.
+#
+#    # Verify that export returns expected values for all projects.
 #    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
 #      name: "test export 1"
 #      working-directory: "./framework/test"
@@ -74,11 +91,6 @@ jobs:
 #    - run: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
 #      name: "test export 4"
 #      working-directory: "./framework/test"
-
-#
-# Verifying all bugs is pretty time-consuming. The jobs below should be run as
-# part of the release process, but running them on every push and PR is
-# unnecessary.
 #
 #    # Verify that all bugs are reproducible (run multiple jobs for projects that
 #    # take a long time to finish).
