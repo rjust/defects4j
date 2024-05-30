@@ -39,7 +39,7 @@ _check_fix_db() {
 
   [ -s "$fix_db_file" ] || die "Database file 'fix' doesn't exist or is empty!"
 
-  local num_rows; num_rows=$(wc -l "$fix_db_file")
+  local num_rows; num_rows=$(wc -l < "$fix_db_file")
   [ "$num_rows" -eq 2 ] || die "Database file 'fix' does not have 2 rows!"
 
   # Convert DOS (\r\n) to Unix (\n) line ending and check data of last row
