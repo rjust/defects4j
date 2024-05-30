@@ -1167,14 +1167,13 @@ sub _ant_call {
 }
 
 #
-# Ensure backward compatibility with Java 7
 # TODO: Remove after Defects4J downloads and initializes its own version of Ant
 #       Currently, we rely on Major's version of Ant to be properly set up.
 #
 sub _ant_call_comp {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
-    $option_str = "-Dbuild.compiler=javac1.7 " . ($option_str // "");
+    $option_str = ($option_str // "");
     $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
     return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }
