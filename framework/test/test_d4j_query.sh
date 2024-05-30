@@ -6,46 +6,46 @@
 ################################################################################
 source test.include
 
-HERE=$(cd `dirname $0` && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -H >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/1`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections -H >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/1)
 
 [ "$result" == "" ] || die "query \"-p Collections\" -H failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp
 
-$BASE_DIR/framework/bin/defects4j query -p Collections >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/2`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/2)
 
 [ "$result" == "" ] || die "query \"-p Collections\" failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/3`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/3)
 
 [ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\"\" failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -D >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/4`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -D >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/4)
 
 [ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -D\" failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -A >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/5`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections -q "revision.id.buggy,classes.modified" -A >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/5)
 
 [ "$result" == "" ] || die "query \"-p Collections -q \"revision.id.buggy,classes.modified\" -A\" failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp
 
-$BASE_DIR/framework/bin/defects4j query -p Collections -q "deprecated.reason" -A >> $HERE"/temp"
-result=`diff $HERE/temp $HERE/resources/output/d4j-query/6`
+"$BASE_DIR"/framework/bin/defects4j query -p Collections -q "deprecated.reason" -A >> "$HERE"/temp
+result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/6)
 
 [ "$result" == "" ] || die "query \"-p Collections -q \"deprecated.reason\" -A\" failed: $result"
 
-rm $HERE"/temp"
+rm "$HERE"/temp

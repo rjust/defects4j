@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Wrapper script for <generator name>
 #
@@ -26,25 +26,25 @@ if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
 fi
 
 # General helper functions
-source $D4J_DIR_TESTGEN_BIN/_tool.source
+source "$D4J_DIR_TESTGEN_BIN"/_tool.source
 
 # The classpath to compile and run the project
-project_cp=$(get_project_cp)
+project_cp="$(get_project_cp)"
 
 # Read all additional configuration parameters
-add_config=$(parse_config $D4J_DIR_TESTGEN_BIN/<generator id>.config)
+add_config=$(parse_config "$D4J_DIR_TESTGEN_BIN"/<generator id>.config)
 
 # Make sure the provided test mode is supported
-if [ $D4J_TEST_MODE == "regression" ]; then
-    ...
-elif [ $D4J_TEST_MODE == "error-revealing" ]; then
-    ...
+if [ "$D4J_TEST_MODE" = "regression" ]; then
+    : # TODO ...
+elif [ "$D4J_TEST_MODE" = "error-revealing" ]; then
+    : # TODO ...
 else
     die "Unsupported test mode: $D4J_TEST_MODE"
 fi
 
 # The command that invokes the test generator
-cmd="... $add_config"
+cmd="... $add_config ... $project_cp ..."
 
 # Run the test-generation command
 if ! exec_cmd "$cmd"; then

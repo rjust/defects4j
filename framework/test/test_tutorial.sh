@@ -20,15 +20,15 @@ vid=${bid}b
 work_dir=$TMP_DIR/$pid-$vid
 
 # Checkout buggy version
-defects4j checkout -p $pid -v $vid -w $work_dir || die "checkout program version $pid-$vid"
+defects4j checkout -p $pid -v $vid -w "$work_dir" || die "checkout program version $pid-$vid"
 
 # Verify that defects4j's config file exists 
-[ -e $work_dir/.defects4j.config ] || die "read config file"
+[ -e "$work_dir"/.defects4j.config ] || die "read config file"
 # Verify that defects4j's config file provides the correct data
-grep -q "pid=$pid" $work_dir/.defects4j.config || die "verify pid in config file"
-grep -q "vid=$vid" $work_dir/.defects4j.config || die "verify vid in config file"
+grep -q "pid=$pid" "$work_dir"/.defects4j.config || die "verify pid in config file"
+grep -q "vid=$vid" "$work_dir"/.defects4j.config || die "verify vid in config file"
 
-cd $work_dir
+cd "$work_dir" || (echo "cannot cd to $work_dir" && exit 1)
 
 # Compile buggy version
 defects4j compile || die "compile program version $pid-$vid"
