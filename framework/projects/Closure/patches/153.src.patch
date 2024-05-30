@@ -1,5 +1,5 @@
 diff --git a/src/com/google/javascript/jscomp/Normalize.java b/src/com/google/javascript/jscomp/Normalize.java
-index c14ac8f1..4c99858e 100644
+index c14ac8f..4c99858 100644
 --- a/src/com/google/javascript/jscomp/Normalize.java
 +++ b/src/com/google/javascript/jscomp/Normalize.java
 @@ -628,7 +628,6 @@ class Normalize implements CompilerPass {
@@ -54,18 +54,10 @@ index c14ac8f1..4c99858e 100644
      }
  
 diff --git a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
-index eb6e1eab..04bafcf0 100644
+index eb6e1ea..9494792 100644
 --- a/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
 +++ b/src/com/google/javascript/jscomp/SyntacticScopeCreator.java
-@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
- import com.google.javascript.rhino.JSDocInfo;
- import com.google.javascript.rhino.Node;
- import com.google.javascript.rhino.Token;
-+import com.google.javascript.rhino.jstype.JSType;
- 
- 
- /**
-@@ -91,7 +92,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -91,7 +91,7 @@ class SyntacticScopeCreator implements ScopeCreator {
        // been declared in the outer scope.
        String fnName = fnNameNode.getString();
        if (!fnName.isEmpty() && NodeUtil.isFunctionExpression(n)) {
@@ -74,7 +66,7 @@ index eb6e1eab..04bafcf0 100644
        }
  
        // Args: Declare function variables
-@@ -99,7 +100,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -99,7 +99,7 @@ class SyntacticScopeCreator implements ScopeCreator {
        for (Node a = args.getFirstChild(); a != null;
             a = a.getNext()) {
          Preconditions.checkState(a.getType() == Token.NAME);
@@ -83,7 +75,7 @@ index eb6e1eab..04bafcf0 100644
        }
  
        // Body
-@@ -121,7 +122,9 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -121,7 +121,9 @@ class SyntacticScopeCreator implements ScopeCreator {
          for (Node child = n.getFirstChild();
               child != null;) {
            Node next = child.getNext();
@@ -94,7 +86,7 @@ index eb6e1eab..04bafcf0 100644
            child = next;
          }
          return;
-@@ -136,7 +139,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -136,7 +138,7 @@ class SyntacticScopeCreator implements ScopeCreator {
            // This is invalid, but allow it so the checks can catch it.
            return;
          }
@@ -103,7 +95,7 @@ index eb6e1eab..04bafcf0 100644
          return;   // should not examine function's children
  
        case Token.CATCH:
-@@ -148,7 +151,7 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -148,7 +150,7 @@ class SyntacticScopeCreator implements ScopeCreator {
          final Node var = n.getFirstChild();
          final Node block = var.getNext();
  
@@ -112,7 +104,7 @@ index eb6e1eab..04bafcf0 100644
          scanVars(block, n);
          return;  // only one child to scan
  
-@@ -174,7 +177,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -174,7 +176,8 @@ class SyntacticScopeCreator implements ScopeCreator {
     */
    interface RedeclarationHandler {
      void onRedeclaration(
@@ -122,7 +114,7 @@ index eb6e1eab..04bafcf0 100644
    }
  
    /**
-@@ -182,8 +186,8 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -182,8 +185,8 @@ class SyntacticScopeCreator implements ScopeCreator {
     */
    private class DefaultRedeclarationHandler implements RedeclarationHandler {
      public void onRedeclaration(
@@ -133,14 +125,14 @@ index eb6e1eab..04bafcf0 100644
  
        // Don't allow multiple variables to be declared at the top level scope
        if (scope.isGlobal()) {
-@@ -228,17 +232,16 @@ class SyntacticScopeCreator implements ScopeCreator {
+@@ -228,17 +231,16 @@ class SyntacticScopeCreator implements ScopeCreator {
     * @param n The node corresponding to the variable name.
     * @param declaredType The variable's type, according to JSDoc
     */
 -  private void declareVar(Node n) {
 -    Preconditions.checkState(n.getType() == Token.NAME);
 +  private void declareVar(String name, Node n, Node parent,
-+                          Node gramps, JSType declaredType,
++                          Node gramps, com.google.javascript.rhino.jstype.JSType declaredType,
 +                          Node nodeWithLineNumber) {
  
 -    CompilerInput input = compiler.getInput(sourceName);

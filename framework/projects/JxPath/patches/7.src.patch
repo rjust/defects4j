@@ -1,103 +1,67 @@
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
-index 4d8c2c4..af667db 100644
+index 4d8c2c4..3a053d4 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java
-@@ -16,6 +16,8 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
-+import org.apache.commons.jxpath.ri.InfoSetUtil;
- /**
-  * Implementation of Expression for the operation "&gt;".
-  *
-@@ -28,8 +30,10 @@ public class CoreOperationGreaterThan extends CoreOperationRelationalExpression
+@@ -28,8 +28,10 @@ public class CoreOperationGreaterThan extends CoreOperationRelationalExpression
          super(new Expression[] { arg1, arg2 });
      }
  
 -    protected boolean evaluateCompare(int compare) {
 -        return compare > 0;
-+    public Object computeValue(EvalContext context) {
-+        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
-+        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
++        double l = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[1].computeValue(context));
 +        return l > r ? Boolean.TRUE : Boolean.FALSE;
      }
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
-index c3d5720..42b4ec2 100644
+index c3d5720..b9f156c 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java
-@@ -16,6 +16,8 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
-+import org.apache.commons.jxpath.ri.InfoSetUtil;
- /**
-  * Implementation of Expression for the operation "&gt;=".
-  *
-@@ -29,8 +31,10 @@ public class CoreOperationGreaterThanOrEqual extends
+@@ -29,8 +29,10 @@ public class CoreOperationGreaterThanOrEqual extends
          super(new Expression[] { arg1, arg2 });
      }
  
 -    protected boolean evaluateCompare(int compare) {
 -        return compare >= 0;
-+    public Object computeValue(EvalContext context) {
-+        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
-+        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
++        double l = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[1].computeValue(context));
 +        return l >= r ? Boolean.TRUE : Boolean.FALSE;
      }
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
-index 4c0d9ce..e0da347 100644
+index 4c0d9ce..374f772 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java
-@@ -16,6 +16,8 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
-+import org.apache.commons.jxpath.ri.InfoSetUtil;
- /**
-  * Implementation of Expression for the operation "&lt;".
-  *
-@@ -28,8 +30,10 @@ public class CoreOperationLessThan extends CoreOperationRelationalExpression {
+@@ -28,8 +28,10 @@ public class CoreOperationLessThan extends CoreOperationRelationalExpression {
          super(new Expression[] { arg1, arg2 });
      }
  
 -    protected boolean evaluateCompare(int compare) {
 -        return compare < 0;
-+    public Object computeValue(EvalContext context) {
-+        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
-+        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
++        double l = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[1].computeValue(context));
 +        return l < r ? Boolean.TRUE : Boolean.FALSE;
      }
  
      public String getSymbol() {
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
-index 7940ecb..becf2e7 100644
+index 7940ecb..db562d8 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java
-@@ -16,6 +16,8 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
-+import org.apache.commons.jxpath.ri.InfoSetUtil;
- /**
-  * Implementation of Expression for the operation "&lt;=".
-  *
-@@ -29,8 +31,10 @@ public class CoreOperationLessThanOrEqual extends
+@@ -29,8 +29,10 @@ public class CoreOperationLessThanOrEqual extends
          super(new Expression[] { arg1, arg2 });
      }
  
 -    protected boolean evaluateCompare(int compare) {
 -        return compare <= 0;
-+    public Object computeValue(EvalContext context) {
-+        double l = InfoSetUtil.doubleValue(args[0].computeValue(context));
-+        double r = InfoSetUtil.doubleValue(args[1].computeValue(context));
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
++        double l = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[0].computeValue(context));
++        double r = org.apache.commons.jxpath.ri.InfoSetUtil.doubleValue(args[1].computeValue(context));
 +        return l <= r ? Boolean.TRUE : Boolean.FALSE;
      }
  

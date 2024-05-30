@@ -1,6 +1,8 @@
 com.google.gson.FieldNamingPolicy
 com.google.gson.FieldNamingStrategy
 com.google.gson.Gson
+com.google.gson.internal.$Gson$Preconditions
+com.google.gson.internal.$Gson$Types
 com.google.gson.internal.bind.ArrayTypeAdapter
 com.google.gson.internal.bind.CollectionTypeAdapterFactory
 com.google.gson.internal.bind.DateTypeAdapter
