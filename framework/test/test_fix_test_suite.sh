@@ -65,7 +65,8 @@ _create_tar_bz2_file() {
   pushd . > /dev/null 2>&1 || (echo "cannot pushd ." && exit 1)
   cd "$HERE/resources/input" || (echo "cannot cd to $HERE/resources/input" && exit 1)
     tar_bz2_file="$suites_dir/$pid-$bid-test.0.tar.bz2"
-    tar -jcvf "$tar_bz2_file" "$input_files" || return 1
+    # shellcheck disable=SC2086 # $input_files contains multiple files
+    tar -jcvf "$tar_bz2_file" $input_files || return 1
   popd > /dev/null 2>&1 || (echo "cannot popd" && exit 1)
 
   return 0
