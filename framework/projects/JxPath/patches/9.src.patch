@@ -75,40 +75,24 @@ index e083ab3..26875b8 100644
  
  }
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
-index 801e7fb..26da44c 100644
+index 801e7fb..baca531 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java
-@@ -16,6 +16,7 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
- /**
-  * Implementation of Expression for the operation "=".
-  *
-@@ -28,6 +29,9 @@ public class CoreOperationEqual extends CoreOperationCompare {
+@@ -28,6 +28,9 @@ public class CoreOperationEqual extends CoreOperationCompare {
          super(arg1, arg2);
      }
  
-+    public Object computeValue(EvalContext context) {
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
 +        return equal(context, args[0], args[1]) ? Boolean.TRUE : Boolean.FALSE;
 +    }
      public String getSymbol() {
          return "=";
      }
 diff --git a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
-index aad3f5f..dac71f2 100644
+index aad3f5f..6754f46 100644
 --- a/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
 +++ b/src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java
-@@ -16,6 +16,7 @@
-  */
- package org.apache.commons.jxpath.ri.compiler;
- 
-+import org.apache.commons.jxpath.ri.EvalContext;
- /**
-  * Implementation of Expression for the operation "!=".
-  *
-@@ -25,9 +26,12 @@ package org.apache.commons.jxpath.ri.compiler;
+@@ -25,9 +25,12 @@ package org.apache.commons.jxpath.ri.compiler;
  public class CoreOperationNotEqual extends CoreOperationCompare {
  
      public CoreOperationNotEqual(Expression arg1, Expression arg2) {
@@ -116,7 +100,7 @@ index aad3f5f..dac71f2 100644
 +        super(arg1, arg2);
      }
  
-+    public Object computeValue(EvalContext context) {
++    public Object computeValue(org.apache.commons.jxpath.ri.EvalContext context) {
 +        return equal(context, args[0], args[1]) ? Boolean.FALSE : Boolean.TRUE;
 +    }
      public String getSymbol() {

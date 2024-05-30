@@ -1,4 +1,4 @@
-Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.com/rjust/defects4j.svg?branch=master)](https://travis-ci.com/rjust/defects4j)
+Defects4J -- version 2.0.1 [![.github/workflows/ci.yml](https://github.com/rjust/defects4j/actions/workflows/ci.yml/badge.svg)](https://github.com/rjust/defects4j/actions/workflows/ci.yml)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -108,6 +108,8 @@ Steps to set up Defects4J
 
 3. Add Defects4J's executables to your PATH:
     - `export PATH=$PATH:"path2defects4j"/framework/bin`
+    ("path2defects4j" points to the directory to which you cloned Defects4J; it
+     looks like "/user/yourComputerUserName/desktop/defects4j".)
 
 4. Check installation:
     - `defects4j info -p Lang`
