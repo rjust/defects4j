@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Wrapper script for <generator name>
 #
@@ -26,7 +26,7 @@ if [ -z "$D4J_DIR_TESTGEN_BIN" ]; then
 fi
 
 # General helper functions
-. "$D4J_DIR_TESTGEN_BIN"/_tool.source
+source "$D4J_DIR_TESTGEN_BIN"/_tool.source
 
 # The classpath to compile and run the project
 project_cp="$(get_project_cp)"
