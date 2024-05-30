@@ -64,14 +64,14 @@ jobs:
       working-directory: "./framework/test"
 
     # Verify a few select bugs to detect serious breakages early.
-    - run: carton exec ./test_verify_bugs.sh -p Lang -b24
-      name: "Verify Lang-24"
+    - run: carton exec ./test_verify_bugs.sh -p Lang -b 24
+      name: "test_verify_bugs.sh -p Lang -b 24"
       working-directory: "./framework/test"
-    - run: carton exec ./test_verify_bugs.sh -p Closure -b102
-      name: "Verify Closure-102"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b 102
+      name: "test_verify_bugs.sh -p Closure -b 102"
       working-directory: "./framework/test"
-    - run: carton exec ./test_verify_bugs.sh -p Mockito -b10
-      name: "Verify Mockito-10"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b 10
+      name: "test_verify_bugs.sh -p Mockito -b 10"
       working-directory: "./framework/test"
 
 # Verifying the export command for all bugs and verifying reproducibility of all
