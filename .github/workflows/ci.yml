@@ -13,7 +13,7 @@ jobs:
         fetch-depth: 1
         show-progress: false
     - name: Cache JDK
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: cache-jdk
       with:
         path: ~/.java
