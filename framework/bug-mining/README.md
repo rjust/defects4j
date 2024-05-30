@@ -322,7 +322,8 @@ Terms commonly used in Defects4J
 - `Rev ID`: A VCS-specific revision id (e.g., a git commit hash).
 - `active-bugs.csv`: A csv file, per project, that maps each BID to the revision ids
   of the pre-fix and post-fix revision.
-
+- working directory: where the buggy or fixed version of the code appears.
+  The `checkout` command creates a working directory.
 
 
 ## Troubleshooting
