@@ -232,6 +232,14 @@ By default, `defects4j query` returns information on active bugs. The `[-D]`
 flag returns information only on deprecated bugs, while the `[-A]` flag returns
 information for all active and deprecated bugs.
 
+To determine the methods that are changed between the buggy and fixed version of the code:
+
+1. Add this line to your user-level git attributes file:
+   `*.java diff=java`
+
+2. Run `git diff --no-index`, for example `git diff --no-index /tmp/lang_1_buggy /tmp/lang_1_fixed`.
+   In the output, every line starting with "@" gives the method name of a changed method.
+
 
 Test execution framework
 --------------------------
