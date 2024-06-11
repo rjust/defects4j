@@ -329,8 +329,9 @@ sub sed_cmd {
     print(STDERR "Executed command: sed -i $cmd_string $file_name\n") if $DEBUG;
 
     # We ignore sed result as it is ok if command fails.
-    if (`uname -s` eq "Darwin" ) {
-        `sed -i '' $cmd_string $file_name`;
+    chomp(my $uname = `uname -s`);
+    if ($uname eq "Darwin" ) {
+        `sed -i '' -e '$cmd_string' $file_name`;
     } else {
         `sed -i "$cmd_string" "$file_name"`;
     }
