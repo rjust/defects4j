@@ -102,15 +102,6 @@ mkdir -p $DIR_FAILING
 
 work_dir="$test_dir/$PID"
 
-function sed_cmd()
-{
-    if [ $(uname -s) = "Darwin" ]; then
-        sed -i '' "$1" $2
-    else
-        sed -i "$1" $2
-    fi
-}
-
 # Clean working directory
 rm -rf $work_dir
 for bid in $(echo $BUGS); do
