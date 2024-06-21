@@ -86,14 +86,14 @@ sub _post_checkout {
     my $log = `$cmd`;
     my $ret = $?;
     if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR ' extends Module\$' $work_dir | xargs sed -i 's/ extends Module\$/ extends com.fasterxml.jackson.databind.Module/'", "Correct Module ambiguity 1") or die;
+        Utils::exec_cmd("grep -lR ' extends Module\$' $work_dir | xargs sed -i'' -e 's/ extends Module\$/ extends com.fasterxml.jackson.databind.Module/'", "Correct Module ambiguity 1") or die;
     }
 
     $cmd = "grep -lR ' Module ' $work_dir ";
     $log = `$cmd`;
     $ret = $?;
     if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR ' Module ' $work_dir | xargs sed -i 's/ Module / com.fasterxml.jackson.databind.Module /'", "Correct Module ambiguity 2") or die;
+        Utils::exec_cmd("grep -lR ' Module ' $work_dir | xargs sed -i'' -e 's/ Module / com.fasterxml.jackson.databind.Module /'", "Correct Module ambiguity 2") or die;
     }
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
