@@ -17,7 +17,7 @@ init
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -32,7 +32,7 @@ while getopts ":p:b:" opt; do
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
-                BUGS="$BUGS $(eval echo {$OPTARG})"
+                BUGS="$BUGS $(eval echo "{$OPTARG}")"
            else
                 BUGS="$BUGS $OPTARG"
            fi
@@ -60,12 +60,12 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
+    BUGS="$(get_bug_ids "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE")"
 fi
 
 # Create log file
-script_name=$(echo $script | sed 's/\.sh$//')
-LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
+script_name_without_sh=${script//.sh/}
+LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
 
 ################################################################################
 # Run all generators on the specified bugs, and determine bug detection,
@@ -76,12 +76,12 @@ LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
 HALT_ON_ERROR=0
 
 work_dir="$TMP_DIR/$PID"
-mkdir -p $work_dir
+mkdir -p "$work_dir"
 
 # Clean working directory
-rm -rf "$work_dir/*"
+rm -rf "${work_dir:?}/*"
 
-for bid in $(echo $BUGS); do
+for bid in $BUGS ; do
     # Skip all bug ids that do not exist in the active-bugs csv
     if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
         warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
@@ -92,9 +92,9 @@ for bid in $(echo $BUGS); do
     target_classes="$BASE_DIR/framework/projects/$PID/modified_classes/$bid.src"
 
     # Iterate over all supported generators and generate regression tests
-    for tool in $($BASE_DIR/framework/bin/gen_tests.pl -g help | grep \- | tr -d '-'); do
+    for tool in $("$BASE_DIR"/framework/bin/gen_tests.pl -g help | grep - | tr -d '-'); do
         # Directory for generated test suites
-        suite_src="$tool"
+        # suite_src="$tool"
         suite_num=1
         suite_dir="$work_dir/$tool/$suite_num"
 
@@ -102,28 +102,28 @@ for bid in $(echo $BUGS); do
         vid=${bid}f
 
         # Run generator and the fix script on the generated test suite
-        if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
+        if ! gen_tests.pl -g "$tool" -p "$PID" -v "$vid" -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
             die "run $tool (regression) on $PID-$vid"
             # Skip any remaining analyses (cannot be run), even if halt-on-error is false
             continue
         fi
-        fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
+        fix_test_suite.pl -p "$PID" -d "$suite_dir" || die "fix test suite"
 
         # Run test suite and determine bug detection
-        test_bug_detection $PID "$suite_dir"
+        test_bug_detection "$PID" "$suite_dir"
 
         # Run test suite and determine mutation score
-        test_mutation $PID "$suite_dir"
+        test_mutation "$PID" "$suite_dir"
 
         # Run test suite and determine code coverage
-        test_coverage $PID "$suite_dir" 0
+        test_coverage "$PID" "$suite_dir" 0
 
-        rm -rf $work_dir/$tool
+        rm -rf "${work_dir:?}/$tool"
     done
 
     vid=${bid}b
     # Run Randoop to generate error-revealing tests (other tools cannot do so)
-    gen_tests.pl -g randoop -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
+    gen_tests.pl -g randoop -p "$PID" -v "$vid" -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
     # We expect Randoop to not crash; it may or may not create an error-revealing test for this version
     ret=$?
     [ $ret -eq 0 ] || [ $ret -eq 127 ] || die "run $tool (error-revealing) on $PID-$vid"
@@ -136,7 +136,7 @@ if [ $ERROR != 0 ]; then
     printf '=%.s' $(seq 1 80) 1>&2
     echo 1>&2
     echo "The following errors occurred:" 1>&2
-    cat $LOG 1>&2
+    cat "$LOG" 1>&2
 fi
 
 # Indicate whether an error occurred
