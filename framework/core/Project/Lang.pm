@@ -90,7 +90,7 @@ sub _post_checkout {
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
 
     # Some of the Lang tests were created pre Java 1.5 and contain an 'enum' package.
-    # The is now a reserved word in Java so we covert all references to 'oldenum'.
+    # The is now a reserved word in Java so we convert all references to 'oldenum'.
     my $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/'";
     my $log = `$cmd`;
     my $ret = $?;
