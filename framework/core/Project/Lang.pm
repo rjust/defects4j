@@ -89,10 +89,21 @@ sub _post_checkout {
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
 
-    # remove old pre Java 1.5 code
-    print($work_dir."/".$result->{src}."/org/apache/commons/lang/enum\n");
-    rmtree($work_dir."/".$result->{src}."/org/apache/commons/lang/enum");
-    rmtree($work_dir."/".$result->{test}."/org/apache/commons/lang/enum");
+    # Some of the Lang tests were created pre Java 1.5 and contain an 'enum' package.
+    # The is now a reserved word in Java so we convert all references to 'oldenum'.
+    my $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/'";
+    my $log = `$cmd`;
+    my $ret = $?;
+    if ($ret == 0 && length($log) > 0) {
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/' | xargs sed -i'' 's/\\.enum;/\\.oldenum;/'", "Rename enum 1") or die;
+    }
+
+    $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/'";
+    $log = `$cmd`;
+    $ret = $?;
+    if ($ret == 0 && length($log) > 0) {
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/' | xargs sed -i'' 's/\\.enum;/\\.oldenum;/'", "Rename enum 2") or die;
+    }
 
     # Fix compilation errors if necessary
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
