@@ -7,7 +7,7 @@ index 38d578aba..a0ae9fc73 100644
          for (Iterator it = list.iterator(); it.hasNext();) {
 -            ValuedEnum enum = (ValuedEnum) it.next();
 -            if (enum.getValue() == value) {
--                return.oldenum;
+-                return enum;
 +            ValuedEnum enumer = (ValuedEnum) it.next();
 +            if (enumer.getValue() == value) {
 +                return enumer;
