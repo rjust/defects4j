@@ -30,6 +30,8 @@ use File::Basename;
 use Cwd qw(abs_path);
 
 use lib abs_path("$Bin/../core");
+use Constants;
+use Utils;
 
 =pod
 
@@ -111,6 +113,24 @@ $cmd_descr{"coverage"}="run code coverage analysis for a checked-out project ver
 
 =pod
 
+=item * L<B<pids>|d4j::d4j-pids/>
+
+prints a list of all available project ids.
+
+=cut
+$cmd_descr{"pids"}="prints all available project ids";
+
+=pod
+
+=item * L<B<bids>|d4j::d4j-bids/>
+
+print all active bug IDs for a specific project.
+
+=cut
+$cmd_descr{bids}="print all active bug IDs for a specific project";
+
+=pod
+
 =item * L<B<info>|d4j::d4j-info/>
 
 print information for a specific project or bug.
@@ -120,14 +140,30 @@ $cmd_descr{info}="print information for a specific project or bug";
 
 =pod
 
+=item * L<B<env>|d4j::d4j-env/>
+
+print environment of defects4j execution.
+
+=cut
+$cmd_descr{"env"}="print environment of defects4j execution";
+
+=pod
+
 =item * L<B<export>|d4j::d4j-export/>
 
 export a version-specific property.
 
+=cut
+$cmd_descr{export}="export a version-specific property";
+
+=item * L<B<query>|d4j::d4j-query/>
+
+query the metadata for a particular project for automation purposes.
+
 =back
 
 =cut
-$cmd_descr{export}="export a version-specific property";
+$cmd_descr{query}="query the metadata for a particular project for automation purposes";
 
 #
 # Issue usage message and quit
@@ -148,6 +184,10 @@ _d4j_usage() unless defined $cmd_descr{$cmd};
 
 # Add d4j-prefix to actual script name
 my $script = dirname(abs_path($0)) . "/d4j/d4j-$cmd";
+
+if ($DEBUG) {
+  Utils::print_env();
+}
 
 # Fake $0 for executed script to report "defects4j cmd" in usage messages.
 $0 = basename($0) . " $cmd";

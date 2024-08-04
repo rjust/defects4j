@@ -44,7 +44,7 @@ See L<Project|Project/"Available Project IDs"> module for available project IDs.
 =item -d F<suite_dir>
 
 The directory that contains the test suite archives.
-See L<Test suites|/"Test suites">.
+See L<Test Suites|/"Test Suites">.
 
 =item -f C<include_file_pattern>
 
@@ -102,6 +102,7 @@ archive in F<suite_dir>):
 =item * The entire test suite passes 5 times in a row.
 
 =cut
+
 my $RUNS = 5;
 
 =pod
@@ -117,6 +118,7 @@ the fixed version. The results of the fix are stored in the database table
 F<suite_dir/L<TAB_FIX|DB>>.
 
 =cut
+
 use warnings;
 use strict;
 
@@ -199,6 +201,7 @@ Examples:
 =back
 
 =cut
+
 my @list;
 opendir(DIR, $SUITE_DIR) or die "Could not open directory: $SUITE_DIR!";
 my @entries = readdir(DIR);
@@ -208,7 +211,7 @@ foreach (@entries) {
     my $pid = $1;
     my $vid = $2;
     my $src = $3;
-    my $tid = ($5 or "1");
+    my $tid = ($5 // "1");
     # Check whether target pid matches
     next if ($PID ne $pid);
     # Check whether a target src is defined
@@ -234,6 +237,7 @@ information (e.g., how many tests were removed) to fix_test_suite.summary.log
 in the test suite directory F<SUITE_DIR>.
 
 =cut
+
 my $COMPILE_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.compile.log");
 my $RUN_LOG     = Log::create_log("$SUITE_DIR/fix_test_suite.run.log");
 my $SUMMARY_LOG = Log::create_log("$SUITE_DIR/fix_test_suite.summary.log");

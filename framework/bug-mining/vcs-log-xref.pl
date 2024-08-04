@@ -188,7 +188,7 @@ close $fh;
 if (scalar keys %commits eq 0) {
     print("Warning, no commit that matches the regex expression provided has been found\n");
 }
-open $fh, ">$OUTPUT_FILE" or die "Cannot open ${OUTPUT_FILE}!";
+open $fh, ">>$OUTPUT_FILE" or die "Cannot open ${OUTPUT_FILE}!";
 for my $commit_id (sort { $a <=> $b} keys %commits) {
     my $row = $commits{$commit_id};
     print $fh "$commit_id,$row->{'p'},$row->{'c'},$row->{'issue_id'},$row->{'issue_url'}\n";

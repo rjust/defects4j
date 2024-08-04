@@ -48,6 +48,7 @@ use Cwd qw(abs_path);
 use Getopt::Std;
 use Pod::Simple::HTMLBatch;
 use Pod::Select;
+use Pod::Checker;
 
 use lib abs_path("$FindBin::Bin/../core");
 use Constants;
@@ -61,26 +62,36 @@ my $OUT_DIR = "./html_doc";
 Utils::exec_cmd("mkdir -p $OUT_DIR && rm -rf $OUT_DIR/* && mkdir $OUT_DIR/d4j",
                 "Create and clean output directory");
 
+# Count number of failures
+my $error = 0;
+
 # Create list of commands
 opendir(my $dir, "$CMD_DIR") or die "Cannot open d4j (command) directory: $!";
 my @cmds = sort(grep(/d4j/, readdir($dir)));
 closedir($dir);
+foreach (@cmds) {$error += podchecker("$CMD_DIR/$_")};
 
 # Create list of core modules
 opendir($dir, "$CORE_DIR") or die "Cannot open core directory: $!";
 my @mods = sort(grep(/\.pm/, readdir($dir)));
 closedir($dir);
+foreach (@mods) {$error += podchecker("$CORE_DIR/$_")};
 
 # Create list of bin scripts
 opendir($dir, "$SCRIPT_DIR/bin") or die "Cannot open bin directory: $!";
 my @bins = sort(grep(/\.pl/, readdir($dir)));
 closedir($dir);
+foreach (@bins) {$error += podchecker("$SCRIPT_DIR/bin/$_")};
 
 # Create list of util scripts
 opendir($dir, "$UTIL_DIR") or die "Cannot open util directory: $!";
 my @utils = sort(grep(/\.pl/, readdir($dir)));
 closedir($dir);
+foreach (@utils) {$error += podchecker("$UTIL_DIR/$_")};
 
+if ($error) {
+    die("Html documentation not generated; please correct the reported ($error) POD errors!");
+};
 
 ################################################################################
 # Process all defects4j commands
@@ -181,7 +192,7 @@ sub _list_entries {
         if( $sec_name =~ /$file -- (.+)/s) {
             print($fh_out "<li><a href=\"${path}${name}.html\" class=\"podlinkpod\" >$cmd</a>: $1</li>\n");
         } else {
-            print(STDERR "### Unexpected format of NAME section: $dir/$file\n");
+            print(STDERR "*** WARNING: Unexpected format of NAME section: $dir/$file\n");
         }
     }
 }
@@ -197,7 +208,7 @@ sub _extract_section {
     podselect({-output => $fh, -sections => ["$section"]}, "$file");
     close($fh);
     if(length($buffer) == 0) {
-      print(STDERR "### No $section section found: $file.\n");
+      print(STDERR "*** WARNING: No $section section found: $file.\n");
     }
 
     return($buffer);

@@ -31,7 +31,7 @@ classes, relevant tests) for each reproducible bug.
 
 =head1 SYNOPSIS
 
-get-class-list.pl -p project_id -w work_dir [-b bug_id]
+get-metadata.pl -p project_id -w work_dir [-b bug_id]
 
 =head1 OPTIONS
 
@@ -48,7 +48,7 @@ The working directory used for the bug-mining process.
 =item B<-b C<bug_id>>
 
 Only analyze this bug id. The bug_id has to follow the format B<(\d+)(:(\d+))?>.
-Per default all bug ids, listed in the commit-db, are considered.
+Per default all bug ids, listed in the active-bugs csv, are considered.
 
 =back
 
@@ -184,7 +184,7 @@ foreach my $bid (@bids) {
 
         # Get number of failing tests -> has to be 0
         my $fail = Utils::get_failing_tests($log_file);
-        (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die;
+        (scalar(@{$fail->{classes}}) + scalar(@{$fail->{methods}})) == 0 or die "Unexpected failing test on fixed project version (see $log_file)!";
 
         # Run tests again and monitor class loader
         my $loaded = $project->monitor_test($test, "${bid}f");

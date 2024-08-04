@@ -57,6 +57,7 @@ Determines the set of classes modified by the src patch.
 This script use diffstat, which is part of the patchutils library.
 
 =cut
+
 use warnings;
 use strict;
 use FindBin;

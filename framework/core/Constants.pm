@@ -33,6 +33,7 @@ Every property is initialized with a default value, which can be overriden by
 setting the corresponding environment variable.
 
 =cut
+
 package Constants;
 
 use 5.012;
@@ -48,7 +49,7 @@ our @ISA = qw(Exporter);
 my $dir = dirname(abs_path(__FILE__));
 
 # Enable debugging and verbose output
-our $DEBUG = 0;
+our $DEBUG = $ENV{'D4J_DEBUG'} // 0;
 
 =pod
 
@@ -65,6 +66,7 @@ timezone setting.
 =back
 
 =cut
+
 # TODO: Extract all exported environment variables into a user-visible
 # config file.
 $ENV{'TZ'} = "America/Los_Angeles";
@@ -88,6 +90,7 @@ C<export PROJECTS_DIR=my_project_directory>.
 The directory that contains all scripts and modules (I<parent of this module's directory>)
 
 =cut
+
 our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
 
 =item C<PROJECTS_DIR>
@@ -95,6 +98,7 @@ our $SCRIPT_DIR = ($ENV{'SCRIPT_DIR'} // abs_path("$dir/../"));
 The directory that contains all project metadata (I<C<SCRIPT_DIR>/projects>)
 
 =cut
+
 our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
 
 =pod
@@ -104,6 +108,7 @@ our $PROJECTS_DIR = ($ENV{'PROJECTS_DIR'} // abs_path("$SCRIPT_DIR/projects"));
 The directory that contains all core modules (I<C<SCRIPT_DIR>/core>)
 
 =cut
+
 our $CORE_DIR = ($ENV{'CORE_DIR'} // abs_path("$SCRIPT_DIR/core"));
 
 =pod
@@ -113,6 +118,7 @@ our $CORE_DIR = ($ENV{'CORE_DIR'} // abs_path("$SCRIPT_DIR/core"));
 The directory that contains additional libraries (I<C<SCRIPT_DIR>/lib>).
 
 =cut
+
 our $LIB_DIR = ($ENV{'LIB_DIR'} // abs_path("$SCRIPT_DIR/lib"));
 
 =pod
@@ -122,6 +128,7 @@ our $LIB_DIR = ($ENV{'LIB_DIR'} // abs_path("$SCRIPT_DIR/lib"));
 The directory that contains util scripts (I<C<SCRIPT_DIR>/util>).
 
 =cut
+
 our $UTIL_DIR = ($ENV{'UTIL_DIR'} // abs_path("$SCRIPT_DIR/util"));
 
 =pod
@@ -131,6 +138,7 @@ our $UTIL_DIR = ($ENV{'UTIL_DIR'} // abs_path("$SCRIPT_DIR/util"));
 The base directory (I<C<SCRIPT_DIR>/..>)
 
 =cut
+
 our $BASE_DIR = ($ENV{'BASE_DIR'} // abs_path("$SCRIPT_DIR/../"));
 
 =pod
@@ -140,6 +148,7 @@ our $BASE_DIR = ($ENV{'BASE_DIR'} // abs_path("$SCRIPT_DIR/../"));
 The directory that contains project repositoriy clones (I<C<BASE_DIR>/project_repos>)
 
 =cut
+
 our $REPO_DIR = ($ENV{'REPO_DIR'} // "$BASE_DIR/project_repos");
 
 =pod
@@ -149,6 +158,7 @@ our $REPO_DIR = ($ENV{'REPO_DIR'} // "$BASE_DIR/project_repos");
 The temporary root directory, used to checkout a program version (I</tmp>)
 
 =cut
+
 our $D4J_TMP_DIR = ($ENV{'D4J_TMP_DIR'} // "/tmp");
 
 =pod
@@ -158,6 +168,7 @@ our $D4J_TMP_DIR = ($ENV{'D4J_TMP_DIR'} // "/tmp");
 The root directory of the Major mutation framework (I<C<BASE_DIR>/major>)
 
 =cut
+
 our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} // "$BASE_DIR/major");
 
 =pod
@@ -167,6 +178,7 @@ our $MAJOR_ROOT = ($ENV{'MAJOR_ROOT'} // "$BASE_DIR/major");
 The directory of the libraries of the test generation tools (I<C<LIB_DIR>/test_generation/generation>)
 
 =cut
+
 our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/generation");
 
 =pod
@@ -176,6 +188,7 @@ our $TESTGEN_LIB_DIR = ($ENV{'TESTGEN_LIB_DIR'} // "$LIB_DIR/test_generation/gen
 The directory of the wrapper scripts of the test generation tools (I<C<LIB_DIR>/test_generation/bin>)
 
 =cut
+
 our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin");
 
 =pod
@@ -185,6 +198,7 @@ our $TESTGEN_BIN_DIR = ($ENV{'TESTGEN_BIN_DIR'} // "$LIB_DIR/test_generation/bin
 The directory of the libraries of the build system tools (I<C<LIB_DIR>/build_systems>)
 
 =cut
+
 our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_systems");
 
 =pod
@@ -194,6 +208,7 @@ our $BUILD_SYSTEMS_LIB_DIR = ($ENV{'BUILD_SYSTEMS_LIB_DIR'} // "$LIB_DIR/build_s
 The top-level (ant) build file (I<C<SCRIPT_DIR>/projects/defects4j.build.xml>)
 
 =cut
+
 our $D4J_BUILD_FILE = ($ENV{'D4J_BUILD_FILE'} // "$SCRIPT_DIR/projects/defects4j.build.xml");
 
 =pod
@@ -205,7 +220,23 @@ The directory name of the local gradle repository (I<.gradle_local_home>).
 =back
 
 =cut
+
 our $GRADLE_LOCAL_HOME_DIR = ($ENV{'GRADLE_LOCAL_HOME_DIR'} // ".gradle_local_home");
+
+#
+# Check if we have the correct version of Java
+#
+# Run the 'java -version' command and capture its output
+my $java_version_output = `java -version 2>&1`;
+
+# Extract the imajor version number using regular expressions
+if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
+    if ($1 != 8) {
+        die ("Java 8 is required!\n\n");
+    }
+} else {
+    die ("Failed to parse Java version! Is Java installed/on the execution path?\n\n");
+}
 
 #
 # Check whether Defects4J has been properly initialized:
@@ -232,8 +263,6 @@ unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
 # Append Major's executables to the PATH -> ant may not be installed by default
 $ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
-# set name of mml file that provides definitions of used mutation operators
-$ENV{MML}="$MAJOR_ROOT/mml/all_mutants.mml.bin" unless defined $ENV{'MML'};
 
 # Constant strings used for errors
 our $ARG_ERROR       = "Invalid number of arguments!";
@@ -251,6 +280,7 @@ our $PROP_FILE = "defects4j.build.properties";
 our $PROP_EXCLUDE         = "d4j.tests.exclude";
 our $PROP_INSTRUMENT      = "d4j.classes.instrument";
 our $PROP_MUTATE          = "d4j.classes.mutate";
+our $PROP_MUT_OPS         = "d4j.major.mutops";
 our $PROP_DIR_SRC_CLASSES = "d4j.dir.src.classes";
 our $PROP_DIR_SRC_TESTS   = "d4j.dir.src.tests";
 our $PROP_CLASSES_MODIFIED= "d4j.classes.modified";
@@ -267,6 +297,43 @@ our $TAG_BUGGY            = "BUGGY_VERSION";
 our $TAG_BUGGY_MIN        = "BUGGY_MIN_VERSION";
 our $TAG_BUGGY_ORIG       = "BUGGY_ORIG_VERSION";
 our $TAG_PRE_FIX          = "PRE_FIX_REVISION";
+
+# Filename for directory layout csv
+our $LAYOUT_FILE = "dir-layout.csv";
+
+# Filenames for bugs csv files
+our $BUGS_CSV_ACTIVE = "active-bugs.csv";
+our $BUGS_CSV_DEPRECATED = "deprecated-bugs.csv";
+
+# Columns in active-bugs and deprecated-bugs csvs
+our $BUGS_CSV_BUGID = "bug.id";
+our $BUGS_CSV_COMMIT_BUGGY = "revision.id.buggy";
+our $BUGS_CSV_COMMIT_FIXED = "revision.id.fixed";
+our $BUGS_CSV_ISSUE_ID = "report.id";
+our $BUGS_CSV_ISSUE_URL = "report.url";
+our $BUGS_CSV_DEPRECATED_WHEN = "deprecated.version";
+our $BUGS_CSV_DEPRECATED_WHY = "deprecated.reason";
+
+# Reasons for deprecation
+our $DEPRECATED_DUPLICATE = "Duplicate";
+our $DEPRECATED_JVM8_REPRO = "JVM8.Not.Reproducible";
+our $DEPRECATED_JVM8_COMPILE = "JVM8.Does.Not.Compile";
+
+# Additional metadata fields that can be queried by d4j-query
+our $METADATA_PROJECT_ID = "project.id";
+our $METADATA_PROJECT_NAME = "project.name";
+our $METADATA_BUILD_FILE = "project.build.file";
+our $METADATA_VCS = "project.vcs";
+our $METADATA_REPOSITORY = "project.repository";
+our $METADATA_COMMIT_DB = "project.bugs.csv";
+our $METADATA_LOADED_CLASSES_SRC = "classes.relevant.src";
+our $METADATA_LOADED_CLASSES_TEST = "classes.relevant.test";
+our $METADATA_MODIFIED_CLASSES = "classes.modified";
+our $METADATA_RELEVANT_TESTS = "tests.relevant";
+our $METADATA_TRIGGER_TESTS = "tests.trigger"; 
+our $METADATA_TRIGGER_CAUSE = "tests.trigger.cause";
+our $METADATA_DATE_BUGGY = "revision.date.buggy";
+our $METADATA_DATE_FIXED = "revision.date.fixed";
 
 # Filenames for test results
 our $FILE_ALL_TESTS     = "all_tests";
@@ -301,6 +368,7 @@ $PROP_FILE
 $PROP_EXCLUDE
 $PROP_INSTRUMENT
 $PROP_MUTATE
+$PROP_MUT_OPS
 $PROP_DIR_SRC_CLASSES
 $PROP_DIR_SRC_TESTS
 $PROP_CLASSES_MODIFIED
@@ -316,6 +384,38 @@ $TAG_BUGGY
 $TAG_BUGGY_MIN
 $TAG_BUGGY_ORIG
 $TAG_PRE_FIX
+
+$LAYOUT_FILE
+
+$BUGS_CSV_ACTIVE
+$BUGS_CSV_DEPRECATED
+
+$BUGS_CSV_BUGID
+$BUGS_CSV_COMMIT_BUGGY
+$BUGS_CSV_COMMIT_FIXED
+$BUGS_CSV_ISSUE_ID
+$BUGS_CSV_ISSUE_URL
+$BUGS_CSV_DEPRECATED_WHEN
+$BUGS_CSV_DEPRECATED_WHY
+
+$DEPRECATED_DUPLICATE
+$DEPRECATED_JVM8_REPRO
+$DEPRECATED_JVM8_COMPILE
+
+$METADATA_LOADED_CLASSES_SRC
+$METADATA_LOADED_CLASSES_TEST
+$METADATA_MODIFIED_CLASSES
+$METADATA_RELEVANT_TESTS
+$METADATA_TRIGGER_TESTS
+$METADATA_TRIGGER_CAUSE
+$METADATA_PROJECT_ID
+$METADATA_PROJECT_NAME
+$METADATA_BUILD_FILE
+$METADATA_VCS
+$METADATA_REPOSITORY
+$METADATA_COMMIT_DB
+$METADATA_DATE_BUGGY
+$METADATA_DATE_FIXED
 
 $FILE_ALL_TESTS
 $FILE_FAILING_TESTS

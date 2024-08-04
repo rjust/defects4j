@@ -26,7 +26,6 @@
 
 d4j-info -- print information for a specific project or bug
 
-
 =head1 SYNOPSIS
 
   d4j-info -p project_id [-b bug_id]
@@ -51,6 +50,7 @@ The id of the bug for which the information shall be printed. Format: C<\d+>.
 =back
 
 =cut
+
 use warnings;
 use strict;
 
@@ -75,12 +75,17 @@ my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
 
 my $project = Project::create_project($PID);
+my $project_dir = "$PROJECTS_DIR/$PID";
+
 my $revision_id;
 my $revision_date;
 my $bug_report_id;
 my $bug_report_url;
+
 # Check version id
 if (defined $BID) {
+    Utils::ensure_valid_bid($PID, $BID);
+
     $BID =~ /^(\d+)$/ or die "Wrong bug_id format: $BID! Expected: \\d+";
     # Obtain revison ID and date
     $revision_id = $project->lookup("${BID}f");
@@ -92,8 +97,6 @@ if (defined $BID) {
 
 
 $project->print_info();
-
-my $project_dir = "$SCRIPT_DIR/projects/$PID";
 
 my $sep = "-" x 80 . "\n";
 if (defined $BID) {

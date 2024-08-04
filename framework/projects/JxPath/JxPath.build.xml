@@ -39,13 +39,14 @@ of the checked-out project version.
         <pathelement location="${d4j.workdir}/src/java"/>
         <fileset dir="${d4j.workdir}/target/lib">
             <include name="*.jar"/>
+            <exclude name="ant-*.jar"/>
         </fileset>
     </path>
     <path id="test.classpath">
         <path refid="compile.classpath"/>
         <pathelement location="${d4j.workdir}/src/test"/>
     </path>
-
+    <property name="build.classes" value="${classes.dir}" />
     <property name="test.home" value="${d4j.workdir}/src/test" />
     <property name="test.dir" value="${test.home}" />
     <property name="build.home" value="${classes.dir}/.." />

@@ -50,7 +50,7 @@ sub new {
     my $name = "mockito";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$PROJECTS_DIR/$PID/commit-db",
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
                              \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs);
@@ -98,7 +98,7 @@ sub _post_checkout {
     }
 
     # Enable local repository
-    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n jcenter()\\\n|g' {} \\;");
+    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
 }
 
 sub determine_layout {

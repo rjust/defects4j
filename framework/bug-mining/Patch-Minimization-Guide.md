@@ -27,8 +27,8 @@ Keep in mind that each patch in `framework/projects/PROJECTNAME/patches/` is a r
 
 Proper minimization requires an understanding of *what* the fault in the code means, and how it affects the system. 
 Three key pieces of information should guide your minimization:
-* The bug report: The `commit-db` includes a link to the bug report (or, in some cases, a pull request). 
-* The commit message: The `commit-db` includes the hash of the commit that fixes the bug. The commit message often explains what was changed and *why*. 
+* The bug report: The `active-bugs.csv` includes a link to the bug report (or, in some cases, a pull request). 
+* The commit message: The `active-bugs.csv` includes the hash of the commit that fixes the bug. The commit message often explains what was changed and *why*. 
 * The trigger tests: Each fault has a set of trigger tests -- tests that fail on the buggy version and pass on the fixed version. The trigger test file lists
 the failing tests and, for each, includes the stack trace of the failing test case.
 
@@ -77,7 +77,7 @@ Code refactoring may consist of one or more of the following:
     * Example 2: Collections-71 contains several tab changes (refactorings) that result in an unnecessarily large patch. See [Collections-71 non-minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.71.preminimized.patch) vs. [Collections-71 minimized](https://github.com/rjust/defects4j/blob/master/framework/bug-mining/code-example/col.71.minimized.patch)
 
 2. __Comments__  
-     Comments could be considered as part of the bug fix: a developer may want to associate a comment with a bug fix and therefore include it in the pure bug-fixing patch. However, a researcher may want to ignore comments when reasoning about or analyzing a bug-fixing patch. Therefore, we remove all changes to comments or documentation from the patch. This information can be seen by directly examining the commits, as offered in the `commit-db`.
+     Comments could be considered as part of the bug fix: a developer may want to associate a comment with a bug fix and therefore include it in the pure bug-fixing patch. However, a researcher may want to ignore comments when reasoning about or analyzing a bug-fixing patch. Therefore, we remove all changes to comments or documentation from the patch. This information can be seen by directly examining the commits, as offered in the `active-bugs.csv`.
 
 3. __Sementically-equivalent changes__  
     Changes that do not alter the visible program behavor -- those that are semantically equivalent across program versions -- can be removed. These changes will have no effect on the bug as they produce the same output before and after the change.
@@ -261,7 +261,7 @@ Code refactoring may consist of one or more of the following:
 
 ### 2. Compiler directives and annotations
 
-1. __Changes made to import statements should be removed__  
+1. __Changes made to import statements that are not relevant to the bug fix should be removed__
     Although removing changes involving import statements might create new warnings of `unused import statements`, import statements would not communicate anything about the bug or the bug fix since they would only be necessary to support functions. It is also worth noting that these import statements could be completely removed by using the fully qualified function names.
 
 2. __Changes made to @override statements can be removed under some circumstances__  

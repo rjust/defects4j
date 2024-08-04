@@ -17,7 +17,7 @@ init
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(cd "$BASE_DIR"/framework/core/Project && ls *.pm | sed -e 's/\.pm//g')
+    local known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ]"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -60,8 +60,7 @@ init
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    num_bugs=$(num_lines $BASE_DIR/framework/projects/$PID/commit-db)
-    BUGS="$(seq 1 1 $num_bugs)"
+    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
 fi
 
 # Create log file
@@ -83,9 +82,9 @@ mkdir -p $work_dir
 rm -rf "$work_dir/*"
 
 for bid in $(echo $BUGS); do
-    # Skip all bug ids that do not exist in the commit-db
-    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/commit-db"; then
-        warn "Skipping bug ID that is not listed in commit-db: $PID-$bid"
+    # Skip all bug ids that do not exist in the active-bugs csv
+    if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
+        warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
         continue
     fi
 
@@ -100,32 +99,30 @@ for bid in $(echo $BUGS); do
         suite_dir="$work_dir/$tool/$suite_num"
 
         # Generate (regression) tests for the fixed version
-        for type in f; do
-            vid=${bid}$type
+        vid=${bid}f
 
-            # Run generator and the fix script on the generated test suite
-            if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
-                die "run $tool (regression) on $PID-$vid"
-                # Skip any remaining analyses (cannot be run), even if halt-on-error is false
-                continue
-            fi
-            fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
+        # Run generator and the fix script on the generated test suite
+        if ! gen_tests.pl -g "$tool" -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes"; then
+            die "run $tool (regression) on $PID-$vid"
+            # Skip any remaining analyses (cannot be run), even if halt-on-error is false
+            continue
+        fi
+        fix_test_suite.pl -p $PID -d "$suite_dir" || die "fix test suite"
 
-            # Run test suite and determine bug detection
-            test_bug_detection $PID "$suite_dir"
+        # Run test suite and determine bug detection
+        test_bug_detection $PID "$suite_dir"
 
-            # Run test suite and determine mutation score
-            test_mutation $PID "$suite_dir"
+        # Run test suite and determine mutation score
+        test_mutation $PID "$suite_dir"
 
-            # Run test suite and determine code coverage
-            test_coverage $PID "$suite_dir" 0
+        # Run test suite and determine code coverage
+        test_coverage $PID "$suite_dir" 0
 
-            rm -rf $work_dir/$tool
-        done
+        rm -rf $work_dir/$tool
     done
 
     vid=${bid}b
-    # Run Randoop and generate error-revealing tests
+    # Run Randoop to generate error-revealing tests (other tools cannot do so)
     gen_tests.pl -g randoop -p $PID -v $vid -n 1 -o "$TMP_DIR" -b 30 -c "$target_classes" -E
     # We expect Randoop to not crash; it may or may not create an error-revealing test for this version
     ret=$?

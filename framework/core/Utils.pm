@@ -31,6 +31,7 @@ Utils.pm -- some useful helper subroutines.
 This module provides general helper subroutines such as parsing config or data files.
 
 =cut
+
 package Utils;
 
 use warnings;
@@ -62,6 +63,7 @@ C<1> if the command succeeded and C<0> otherwise. If the optional reference
 C<log_ref> is provided, the captured output is stored in that variable.
 
 =cut
+
 sub exec_cmd {
     @_ >= 2 or die $ARG_ERROR;
     my ($cmd, $descr, $log_ref) = @_;
@@ -93,8 +95,10 @@ can be specified with C<tmp_root> (optional).
 The default is L<D4J_TMP_DIR|Constants>.
 
 =cut
+
 sub get_tmp_dir {
-    my $tmp_root = shift // $D4J_TMP_DIR;
+    my ($tmp_root) = @_;
+    $tmp_root //= $D4J_TMP_DIR;
     return "$tmp_root/" . basename($0) . "_" . $$ . "_" . time;
 }
 
@@ -105,12 +109,13 @@ sub get_tmp_dir {
 Returns the absolute path to the directory F<dir>.
 
 =cut
+
 sub get_abs_path {
     @_ == 1 or die $ARG_ERROR;
-    my $dir = shift;
+    my ($dir) = @_;
     # Remove trailing slash
     $dir =~ s/^(.+)\/$/$1/;
-    return abs_path($dir);
+    return File::Spec->rel2abs($dir);
 }
 
 =pod
@@ -120,9 +125,10 @@ sub get_abs_path {
 Returns the directory of the absolute path of F<file>.
 
 =cut
+
 sub get_dir {
     @_ == 1 or die $ARG_ERROR;
-    my $path = shift;
+    my ($path) = @_;
     my ($volume,$dir,$file) = File::Spec->splitpath($path);
     return get_abs_path($dir);
 }
@@ -138,6 +144,7 @@ This is done in a way that is safe for multiple processes accessing
 C<file> by acquiring flocks.
 
 =cut
+
 sub append_to_file_unless_matches {
     my ($file, $string, $includes) = @_;
     @_ == 3 or die $ARG_ERROR;
@@ -168,6 +175,7 @@ sub append_to_file_unless_matches {
 Returns an array of files changed in C<commit> in the git repository F<repo_dir>.
 
 =cut
+
 sub files_in_commit {
     my ($repo_dir, $commit) = @_;
     my @files = "cd $repo_dir; git diff-tree --no-commit-id --name-only -r $commit";
@@ -177,9 +185,120 @@ sub files_in_commit {
 
 =pod
 
+=item C<Utils::print_entry(key, val)>
+
+Print a key-value pair for a single-line value. For
+instance, C<print_entry("SHELL", "/bin/bash")> will print the following to
+F<stdout>:
+
+    SHELL................./bin/bash
+
+=cut
+
+sub print_entry {
+    @_ >= 2 || die $ARG_ERROR;
+    my ($key, $val, $val_start_col) = @_;
+    $val =~ s/^\s+|\s+$//g;
+    if (! defined $val_start_col) {
+        $val_start_col = 30;
+    }
+    my $num_seps = $val_start_col - length($key);
+    print(STDERR "$key" . ('.' x $num_seps) . "${val}\n");
+
+}
+
+=pod
+
+=item C<Utils::print_multiline_entry(key, val [, vals...])>
+
+Print a key-value pair for a multi-line value. For
+instance, C<print_multiline_entry("Java Version", `java -version`)> will print
+something like the following to F<stderr>:
+
+    Java Version:
+      openjdk version "1.8.0_232"
+      OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
+      OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
+
+=cut
+
+sub print_multiline_entry {
+    @_ >= 2 || die $ARG_ERROR;
+    my ($key, @lines) = @_;
+    print(STDERR "$key:\n  " . join("  ", @lines));
+}
+
+=pod
+
+=item C<Utils::print_environment_var(var)>
+
+Lookup an environment variable's value and print it to F<stderr>.
+
+=cut
+
+sub print_environment_var {
+    @_ == 1 || die $ARG_ERROR;
+    my ($key) = @_;
+    my $val = $ENV{$key} // "(none)";
+    print_entry ($key, $val);
+}
+
+=pod
+
+=item C<Utils::print_env>
+
+Print relevant environment variables to F<stderr>.
+
+=cut
+
+sub print_env {
+    print(STDERR "-"x80 . "\n");
+    print(STDERR "                     Defects4j Execution Environment \n");
+    print(STDERR "-"x80 . "\n");
+    # General environment
+    print_environment_var("PWD");
+    print_environment_var("SHELL");
+    print_environment_var("TZ");
+
+    # Java environment
+    print_environment_var("JAVA_HOME");
+    print_entry("Java Exec", `which java`);
+    print_entry("Java Exec Resolved", `realpath \$(which java)`);
+    print_multiline_entry("Java Version", `java -version 2>&1`);
+
+    # VCS
+    print_entry("Git version", `git --version`);
+    print_entry("SVN version", `svn --version --quiet`);
+    print_entry("Perl version", $^V);
+    print(STDERR "-"x80 . "\n");
+}
+
+=pod
+
+=item C<Utils::is_continuous_integration>
+
+Returns true if this process is running under continuous integration.
+
+=cut
+sub is_continuous_integration {
+  return (
+    # Azure Pipelines
+    defined $ENV{"AZURE_HTTP_USER_AGENT"}
+    || defined $ENV{"SYSTEM_PULLREQUEST_TARGETBRANCH"}
+    # CircleCI
+    || defined $ENV{"CIRCLE_COMPARE_URL"}
+    # Travis CI
+    || (defined $ENV{"TRAVIS"}
+        && $ENV{"TRAVIS"} eq "true")
+    );
+}
+
+=pod
+
 =back
 
 =cut
+
 ################################################################################
 
 =pod
@@ -195,6 +314,7 @@ Existing entries are overridden and missing entries are added to the config file
 -- all existing but unmodified entries are preserved.
 
 =cut
+
 sub write_config_file {
     @_ == 2 or die $ARG_ERROR;
     my ($file, $hash) = @_;
@@ -222,10 +342,12 @@ C<key=value>.  Returns a hash containing all key-value pairs on success,
 C<undef> otherwise.
 
 =cut
+
 sub read_config_file {
     @_ >= 1 or die $ARG_ERROR;
-    my $file = shift;
-    my $key_separator = shift // '=';
+    my ($file, $key_separator) = @_;
+    $key_separator //= '=';
+
     if (!open(IN, "<$file")) {
         print(STDERR "Cannot open config file ($file): $!\n");
         return undef;
@@ -253,6 +375,7 @@ sub read_config_file {
 Returns the Defects4J prefix for tagging a buggy or fixed program version.
 
 =cut
+
 sub tag_prefix {
     @_ == 2 or die $ARG_ERROR;
     my ($pid, $bid) = @_;
@@ -268,14 +391,16 @@ C<vid>. In case there is not any bug report ID/URL available for a specific
 project id C<pid> and version id, it returns "NA".
 
 =cut
+
 sub bug_report_info {
     @_ == 2 or die $ARG_ERROR;
     my ($pid, $vid) = @_;
 
     my $bug_report_info = {id=>"NA", url=>"NA"};
 
-    my $commit_db = "$PROJECTS_DIR/$pid/commit-db";
+    my $commit_db = "$PROJECTS_DIR/$pid/$BUGS_CSV_ACTIVE";
     open (IN, "<$commit_db") or die "Cannot open $commit_db file: $!";
+    my $header = <IN>;
     while (<IN>) {
         chomp;
         /([^,]+),[^,]+,[^,]+,(.+),(.+)/ or next;
@@ -294,6 +419,7 @@ sub bug_report_info {
 =back
 
 =cut
+
 ################################################################################
 
 =pod
@@ -306,7 +432,18 @@ sub bug_report_info {
 
 Check whether C<vid> represents a valid version id, i.e., matches \d+[bf].
 
+This subroutine terminates with an error message if C<vid> is not valid.
+Otherwise, it returns a hash that maps C<bid> to the bug id that was parsed from
+the provided C<vid>, and C<type> to the version type (C<b> or C<f>) that was
+parsed from the provided C<vid>.
+
+For instance, to check that this is a valid bug and extract the bug-id on
+success, write:
+
+  my bid = Utils::check_vid(vid)->{bid};
+
 =cut
+
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
     my $vid = shift;
@@ -317,9 +454,61 @@ sub check_vid {
 
 =pod
 
+=item C<Utils::ensure_valid_bid(pid, bid)>
+
+Ensure C<bid> represents a valid bug-id in project C<pid>, terminating with a
+detailed error message if not. A bug-id is valid for a project if the project
+exists and the bug-id both exists in the project and is active.
+
+=cut
+
+sub ensure_valid_bid {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $bid) = @_;
+
+    my $project_dir = "$PROJECTS_DIR/$pid";
+
+    if ( ! -e "${project_dir}" ) {
+        confess("Error: ${pid} is not a project id; for a list, see https://github.com/rjust/defects4j#the-projects\n");
+    }
+
+    if ( ! -e "${project_dir}/trigger_tests/${bid}" ) {
+        confess("Error: ${pid}-${bid} is a not a bug id; for a list, see ${project_dir}/trigger_tests\n");
+    }
+
+    # Instantiate the project and get the list of all active bug ids
+    my $project = Project::create_project($pid);
+    my @bug_ids = $project->get_bug_ids;
+    if ( ! grep( /^$bid$/, @bug_ids) ) {
+        confess("Error: ${pid}-${bid} is a deprecated bug\n");
+    }
+}
+
+=pod
+
+=item C<Utils::ensure_valid_vid(pid, vid)>
+
+Ensure C<vid> represents a valid version-id in project C<pid>, terminating with
+a detailed error message if not. A version-id is valid for a project if the
+project exists, the version-id is of the form C<d+[bf]>, and the underlying
+bug-id, represented by the leading integer part of the version id, both exists
+in the project and is active.
+
+=cut
+
+sub ensure_valid_vid {
+    @_ == 2 or die $ARG_ERROR;
+    my ($pid, $vid) = @_;
+    my $bid = check_vid($vid)->{bid};
+    ensure_valid_bid($pid, $bid);
+}
+
+=pod
+
 =back
 
 =cut
+
 ################################################################################
 
 =pod
@@ -334,9 +523,10 @@ Returns 1 if the provided F<test_result_file> lists any failing test classes or
 failing test methods. Returns 0 otherwise.
 
 =cut
+
 sub has_failing_tests {
     @_ == 1 or die $ARG_ERROR;
-    my $file_name = shift;
+    my ($file_name) = @_;
 
     my $list = get_failing_tests($file_name) or die "Could not parse file";
     my @fail_methods = @{$list->{methods}};
@@ -347,6 +537,8 @@ sub has_failing_tests {
     return 0;
 }
 
+=pod
+
 =item C<Utils::get_failing_tests(test_result_file)>
 
 Determines all failing test classes and test methods in F<test_result_file>,
@@ -356,18 +548,15 @@ following pattern: C</--- ([^:]+)(::([^:]+))?/>.
 This subroutine returns a reference to a hash that contains three keys (C<classes>,
 C<methods>, and C<asserts>), which map to lists of failing tests:
 
-=over 8
-
   {classes} => [org.foo.Class1 org.bar.Class2]
   {methods} => [org.foo.Class3::method1 org.foo.Class3::method2]
   {asserts} => {org.foo.Class3::method1} => 4711
 
-=back
-
 =cut
+
 sub get_failing_tests {
     @_ == 1 or die $ARG_ERROR;
-    my $file_name = shift;
+    my ($file_name) = @_;
 
     my $list = {
         classes => [],
@@ -425,13 +614,10 @@ optional.
 This subroutine returns a reference to a hierarchical hash that holds all
 matching test suite archives:
 
-=over 8
-
   $result->{vid}->{suite_src}->{test_id}->{file_name}
 
-=back
-
 =cut
+
 sub get_all_test_suites {
     @_ >= 2 or die $ARG_ERROR;
     my ($suite_dir, $pid, $vid) = @_;
@@ -473,6 +659,7 @@ Extracts an archive of an external test suite (F<test_suite>) into a given test 
 This subroutine returns 1 on success, 0 otherwise.
 
 =cut
+
 sub extract_test_suite {
     @_ == 2 or die $ARG_ERROR;
     my ($test_suite, $test_dir) = @_;
@@ -494,6 +681,7 @@ sub extract_test_suite {
 Remove any old test results in the provided C<work_dir>.
 
 =cut
+
 sub clean_test_results {
     my ($work_dir) = @_;
 
@@ -514,4 +702,5 @@ sub clean_test_results {
 =back
 
 =cut
+
 1;

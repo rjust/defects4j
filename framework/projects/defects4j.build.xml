@@ -60,6 +60,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Location of customized JUnit formatter-->
     <property name="formatter.jar" value="${d4j.home}/framework/lib/formatter.jar"/>
+    <!-- Directory of compiled test-gen classes -->
+    <property name="d4j.dir.classes.testgen" value="${d4j.workdir}/.classes_testgen"/>
     <!-- Directory of instrumented classes (e.g., for coverage analysis)-->
     <property name="d4j.dir.classes.instrumented" value="${d4j.workdir}/.classes_instrumented"/>
     <!-- Directory of mutated classes-->
@@ -122,7 +124,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <!-- fail build in case we are running all classes, but there are none in the fileset -->
         <if> <not> <isset property="test.entry.class" /> </not> <then>
             <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
-            <fail unless="fileset.notempty" message="Test is running with empty fileset" />
+            <fail unless="fileset.notempty" message="Fileset of tests to run is empty!" />
         </then> </if>
     </target>
 
@@ -143,7 +145,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
             <classpath>
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${junit.jar}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to runtime libraries of test generation tools -->
                 <path refid="d4j.lib.testgen.rt"/>
@@ -229,7 +231,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             <classpath>
                 <pathelement location="${d4j.dir.classes.mutated}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <path refid="d4j.test.classpath"/>
                 <!-- Add dependencies to runtime libraries of test generation tools -->
                 <path refid="d4j.lib.testgen.rt"/>
@@ -254,13 +256,14 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <echo message="classes.dir: ${classes.dir}" />
         <echo message="build.home: ${build.home}" />
 
-        <delete dir="${build.home}/gen-tests" quiet="true" />
-        <mkdir dir="${build.home}/gen-tests" />
+        <delete dir="${d4j.dir.classes.testgen}" quiet="true" />
+        <mkdir dir="${d4j.dir.classes.testgen}" />
         <javac srcdir="${d4j.test.dir}"
-               destdir="${build.home}/gen-tests"
+               destdir="${d4j.dir.classes.testgen}"
                debug="true"
                deprecation="false"
                optimize="false">
+               <compilerarg line="-Xmaxerrs 1" />
                <classpath>
                     <pathelement path="${junit.jar}" />
                     <path refid="d4j.test.classpath" />
@@ -288,7 +291,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
                 <!-- Make sure that instrumented classes appear at the beginning of the
                      classpath -->
                 <pathelement location="${d4j.dir.classes.instrumented}" />
-                <pathelement path="${build.home}/gen-tests" />
+                <pathelement path="${d4j.dir.classes.testgen}" />
                 <pathelement path="${formatter.jar}" />
                 <pathelement path="${junit.jar}" />
                 <pathelement path="${classes.dir}" />

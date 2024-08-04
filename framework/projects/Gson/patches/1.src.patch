@@ -1,5 +1,5 @@
 diff --git a/gson/src/main/java/com/google/gson/TypeInfoFactory.java b/gson/src/main/java/com/google/gson/TypeInfoFactory.java
-index 3085e8a8..eaf3a101 100644
+index 3085e8a..eaf3a10 100644
 --- a/gson/src/main/java/com/google/gson/TypeInfoFactory.java
 +++ b/gson/src/main/java/com/google/gson/TypeInfoFactory.java
 @@ -90,16 +90,8 @@ final class TypeInfoFactory {
@@ -19,7 +19,7 @@ index 3085e8a8..eaf3a101 100644
        }
  
        throw new UnsupportedOperationException("Expecting parameterized type, got " + parentType
-@@ -114,43 +106,10 @@ final class TypeInfoFactory {
+@@ -114,43 +106,11 @@ final class TypeInfoFactory {
      }
    }
  
@@ -60,6 +60,7 @@ index 3085e8a8..eaf3a101 100644
 -    }
 -    return searchedType;
 -  }
++
  
    private static Type[] extractRealTypes(
        Type[] actualTypeArguments, Type parentType, Class<?> rawParentClass) {

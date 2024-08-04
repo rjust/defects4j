@@ -107,6 +107,8 @@
 
     <!-- Mutate classes if mutation is enabled -->
     <target name="gradle.compile.mutants" if="d4j.mutation" unless="use.ant">
+        <!-- Delete a test that is causing trouble -->
+        <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
         <!-- Backup build file and set mutation compiler -->
         <copy file="${basedir}/build.gradle" tofile="${basedir}/build.gradle.bak"/>
 
@@ -159,7 +161,7 @@
     </target>
 
     <!-- target used for compiling test cases.-->
-    <target name="compile.tests" description="Compile the Mockito tests.">
+    <target name="compile.tests" description="Compile the Mockito tests." depends="compile">
         <antcall target="gradle.compile.tests"/>
         <antcall target="ant.compile.tests"/>
     </target>

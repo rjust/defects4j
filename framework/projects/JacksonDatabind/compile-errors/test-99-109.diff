@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/interop/IllegalTypesCheckTest.java b/src/test/java/com/fasterxml/jackson/databind/interop/IllegalTypesCheckTest.java
+index f7d1517ed..0fc5e357d 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/interop/IllegalTypesCheckTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/interop/IllegalTypesCheckTest.java
+@@ -80,7 +80,7 @@ public class IllegalTypesCheckTest extends BaseMapTest
+     public void testJDKTypes1855() throws Exception
+     {
+         // apparently included by JDK?
+-        _testIllegalType("com.sun.org.apache.bcel.internal.util.ClassLoader");
++//        _testIllegalType("com.sun.org.apache.bcel.internal.util.ClassLoader");
+ 
+         // also: we can try some form of testing, even if bit contrived...
+         _testIllegalType(BogusPointcutAdvisor.class);
