@@ -7,7 +7,7 @@
 
 set -e
 
-HERE=$(cd `dirname $0` && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -31,8 +31,7 @@ _check_output() {
     sort "$actual" > "$actual.sorted"
     sort "$expected" > "$expected.sorted"
 
-    cmp --silent "$expected.sorted" "$actual.sorted"
-    if [ $? -ne 0 ]; then
+    if ! cmp --silent "$expected.sorted" "$actual.sorted" ; then
         rm -f "$actual.sorted" "$expected.sorted"
         die "'$actual' is not equal to '$expected'!"
     fi
@@ -49,11 +48,11 @@ fi
 # remote resource is newer.  Works around connections that hang.  Takes a
 # single command-line argument, a URL.
 download_url() {
-    BASENAME=`basename ${@: -1}`
+    BASENAME=$(basename "${@: -1}")
     if [ "$(uname)" = "Darwin" ] ; then
         wget -nv -N "$@"
     else
-	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $@" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
+	timeout 300 curl -s -S -R -L -O -z "$BASENAME" "$@" || (echo "retrying curl $*" && rm -f "$BASENAME" && curl -R -L -O -z "$BASENAME" "$@")
     fi
 }
 
@@ -69,8 +68,8 @@ test_create_project() {
     local repository_url="$4"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./create-project.pl -p $project_id -n $project_name -w $work_dir -r $repository_url || die "Create project script has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./create-project.pl -p "$project_id" -n "$project_name" -w "$work_dir" -r "$repository_url" || die "Create project script has failed"
     popd > /dev/null 2>&1
 
     # Check whether expected directories exist
@@ -114,8 +113,8 @@ test_download_issues() {
     local issues_file="$work_dir/issues.txt"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./download-issues.pl -g $issue_tracker_name -t $issue_tracker_project_id -o $issues_dir -f $issues_file || die "Download of all issues from the issue tracker has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./download-issues.pl -g "$issue_tracker_name" -t "$issue_tracker_project_id" -o "$issues_dir" -f "$issues_file" || die "Download of all issues from the issue tracker has failed"
     popd > /dev/null 2>&1
 
     # Check whether expected files exist
@@ -138,11 +137,11 @@ test_crossref_commmit_issue() {
     local issues_file="$work_dir/issues.txt"
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
 
-    git --git-dir=$repository_dir log --reverse > $git_log_file || die "Git log has failed"
+    git --git-dir="$repository_dir" log --reverse > "$git_log_file" || die "Git log has failed"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./vcs-log-xref.pl -e $regex -l $git_log_file -r $repository_dir -i $issues_file -f $commit_db_file || die "Crossreference of commits and issues ids has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./vcs-log-xref.pl -e "$regex" -l "$git_log_file" -r "$repository_dir" -i "$issues_file" -f "$commit_db_file" || die "Crossreference of commits and issues ids has failed"
     popd > /dev/null 2>&1
 
     # Check whether expected files exist
@@ -171,16 +170,16 @@ test_initialize_revisions() {
     mkdir -p "$lib_dir"
 
     mkdir -p "$lib_dir/junit/junit/4.12"
-    (cd "$lib_dir/junit/junit/4.12" && download_url https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar || die "Failed to download junit-4.12.jar")
+    (cd "$lib_dir/junit/junit/4.12" && download_url https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar) || die "Failed to download junit-4.12.jar"
     mkdir -p "$lib_dir/org/apache/commons/commons-lang3/3.4"
-    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4" && download_url https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar || die "Failed to download commons-lang3-3.4.jar")
+    (cd "$lib_dir/org/apache/commons/commons-lang3/3.4" && download_url https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar) || die "Failed to download commons-lang3-3.4.jar"
     mkdir -p "$lib_dir/org/hamcrest/hamcrest-core/1.3"
-    (cd "$lib_dir/org/hamcrest/hamcrest-core/1.3" && download_url https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar || die "Failed to download hamcrest-core-1.3.jar")
+    (cd "$lib_dir/org/hamcrest/hamcrest-core/1.3" && download_url https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar) || die "Failed to download hamcrest-core-1.3.jar"
     # End of fix for Java-7
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./initialize-revisions.pl -p $project_id -w $work_dir -b $bug_id || die "Initialize revisions script has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./initialize-revisions.pl -p "$project_id" -w "$work_dir" -b "$bug_id" || die "Initialize revisions script has failed"
     popd > /dev/null 2>&1
 
     local analyzer_output_dir="framework/projects/$project_id/analyzer_output/$bug_id"
@@ -191,10 +190,10 @@ test_initialize_revisions() {
     _check_output "$work_dir/$analyzer_output_dir/info" "$RESOURCES_OUTPUT_DIR/$analyzer_output_dir/info"
 
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
-    local rev_v1=$(grep "^$bug_id," "$commit_db_file" | cut -f2 -d',')
-    local rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
-    local rev_v1_build_dir="$work_dir/framework/projects/$project_id/build_files/$rev_v1"
-    local rev_v2_build_dir="$work_dir/framework/projects/$project_id/build_files/$rev_v2"
+    local rev_v1; rev_v1=$(grep "^$bug_id," "$commit_db_file" | cut -f2 -d',')
+    local rev_v2; rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
+    local rev_v1_build_dir; rev_v1_build_dir="$work_dir/framework/projects/$project_id/build_files/$rev_v1"
+    local rev_v2_build_dir; rev_v2_build_dir="$work_dir/framework/projects/$project_id/build_files/$rev_v2"
     [ -s "$rev_v1_build_dir/build.xml" ] || die "$rev_v1_build_dir/build.xml does not exist or it is empty"
     [ -s "$rev_v1_build_dir/maven-build.properties" ] || die "$rev_v1_build_dir/maven-build.properties does not exist or it is empty"
     [ -s "$rev_v1_build_dir/maven-build.xml" ] || die "$rev_v1_build_dir/maven-build.xml does not exist or it is empty"
@@ -224,18 +223,18 @@ test_analyze_project() {
     local bug_id="$5"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./analyze-project.pl -p $project_id -w $work_dir -g $issue_tracker_name -t $issue_tracker_project_id -b $bug_id || die "Analyze project script has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./analyze-project.pl -p "$project_id" -w "$work_dir" -g "$issue_tracker_name" -t "$issue_tracker_project_id" -b "$bug_id" || die "Analyze project script has failed"
     popd > /dev/null 2>&1
 
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
-    local rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
+    local rev_v2; rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
     local failing_tests="framework/projects/$project_id/failing_tests/$rev_v2"
     [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
 
     # Same number of failing tests
-    local actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
-    local expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
+    local actual_num_failing_tests; actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
+    local expected_num_failing_tests; expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
     if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
       echo "Expected failing tests:"
       grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
@@ -263,16 +262,16 @@ test_get_trigger() {
     local bug_id="$3"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./get-trigger.pl -p $project_id -w $work_dir -b $bug_id || die "Get list of triggering test cases has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./get-trigger.pl -p "$project_id" -w "$work_dir" -b "$bug_id" || die "Get list of triggering test cases has failed"
     popd > /dev/null 2>&1
 
     local trigger_tests="framework/projects/$project_id/trigger_tests/$bug_id"
     [ -s "$work_dir/$trigger_tests" ] || die "List of triggering test cases is empty or does not exist"
 
     # Same number of trigger tests
-    local actual_num_trigger_tests=$(grep -a "^--- " "$work_dir/$trigger_tests" | wc -l)
-    local expected_num_trigger_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$trigger_tests" | wc -l)
+    local actual_num_trigger_tests; actual_num_trigger_tests=$(grep -c -a "^--- " "$work_dir/$trigger_tests")
+    local expected_num_trigger_tests; expected_num_trigger_tests=$(grep -c -a "^--- " "$RESOURCES_OUTPUT_DIR/$trigger_tests")
     [ "$actual_num_trigger_tests" -eq "$expected_num_trigger_tests" ] || die "Expected $expected_num_trigger_tests trigger tests and got $actual_num_trigger_tests"
 
     # Same trigger tests
@@ -292,8 +291,8 @@ test_get_metadata() {
     local bug_id="$3"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./get-metadata.pl -p $project_id -w $work_dir -b $bug_id || die "Metadata extraction has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./get-metadata.pl -p "$project_id" -w "$work_dir" -b "$bug_id" || die "Metadata extraction has failed"
     popd > /dev/null 2>&1
 
     local relevant_tests="framework/projects/$project_id/relevant_tests/$bug_id"
@@ -324,8 +323,8 @@ test_promote_to_db() {
     local repository_dir="$work_dir/project_repos/$project_name.git"
 
     pushd . > /dev/null 2>&1
-    cd $BUG_MINING_FRAMEWORK_DIR
-    ./promote-to-db.pl -p $project_id -w $work_dir -r $repository_dir -b $bug_id || die "Promotion of $project_id-$bug_id has failed"
+    cd "$BUG_MINING_FRAMEWORK_DIR"
+    ./promote-to-db.pl -p "$project_id" -w "$work_dir" -r "$repository_dir" -b "$bug_id" || die "Promotion of $project_id-$bug_id has failed"
     popd > /dev/null 2>&1
 
     _check_output "$HERE/../core/Project/$project_id.pm" "$work_dir/framework/core/Project/$project_id.pm"
@@ -333,17 +332,17 @@ test_promote_to_db() {
     [ -d "$HERE/../projects/$project_id" ] || die "Project directory does not exist"
 
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
-    local rev_v1=$(grep "^$bug_id," "$commit_db_file" | cut -f2 -d',')
-    local rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
+    local rev_v1; rev_v1=$(grep "^$bug_id," "$commit_db_file" | cut -f2 -d',')
+    local rev_v2; rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
 
     local failing_tests="projects/$project_id/failing_tests/$rev_v2"
     _check_output "$HERE/../$failing_tests" "$work_dir/framework/$failing_tests"
 
     for dir in "build_files/$rev_v1" "build_files/$rev_v2"; do
         while read -r f; do
-            f_name=$(basename $f)
+            f_name=$(basename "$f")
             _check_output "$HERE/../projects/$project_id/$dir/$f_name" "$f"
-        done < <(find "$(cd $work_dir/framework/projects/$project_id/$dir; pwd)" -type f)
+        done < <(find "$(cd "$work_dir/framework/projects/$project_id/$dir"; pwd)" -type f)
     done
 
     local loaded_classes="projects/$project_id/loaded_classes"
@@ -428,7 +427,7 @@ if [ "$ERROR" -ne "0" ]; then
     printf '=%.s' $(seq 1 80) 1>&2
     echo 1>&2
     echo "The following errors occurred:" 1>&2
-    cat $LOG 1>&2
+    cat "$LOG" 1>&2
 fi
 
 # Indicate whether an error occurred

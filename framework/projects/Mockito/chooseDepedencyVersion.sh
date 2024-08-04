@@ -4,10 +4,10 @@
 # $1 = workDir
 # $2 = D4J_HOME
 
-cd $1
+cd "$1" || (echo "cannot cd to workdir $1" && exit 1)
 ./gradlew dependencies >> tmpDepend.txt
 if grep -q buddy tmpDepend.txt; then
-    version=`cat tmpDepend.txt | grep buddy | cut -d: -f 3 | head -1`
-    cp $2/framework/projects/Mockito/byte-buddy/byte-buddy-$version.jar $1/compileLib/
+    version=$(grep buddy tmpDepend.txt | cut -d: -f 3 | head -1)
+    cp "$2/framework/projects/Mockito/byte-buddy/byte-buddy-$version.jar" "$1"/compileLib/
 fi
 rm tmpDepend.txt
