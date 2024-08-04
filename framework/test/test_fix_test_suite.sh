@@ -5,7 +5,7 @@
 #
 ################################################################################
 
-HERE=$(cd `dirname $0` && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -39,11 +39,11 @@ _check_fix_db() {
 
   [ -s "$fix_db_file" ] || die "Database file 'fix' doesn't exist or is empty!"
 
-  local num_rows=$(cat "$fix_db_file" | wc -l)
+  local num_rows; num_rows=$(wc -l < "$fix_db_file")
   [ "$num_rows" -eq 2 ] || die "Database file 'fix' does not have 2 rows!"
 
   # Convert DOS (\r\n) to Unix (\n) line ending and check data of last row
-  local actual_db_data=$(tr -d '\r' < "$fix_db_file" | tail -n1)
+  local actual_db_data; actual_db_data=$(tr -d '\r' < "$fix_db_file" | tail -n1)
   [ "$actual_db_data" == "$expected_db_data" ] || die "Unexpected result (expected: '$expected_db_data'; actual: '$actual_db_data')!"
 
   return 0
@@ -62,11 +62,12 @@ _create_tar_bz2_file() {
   local suites_dir="$4"
 
   # Create a .tar.bz2 file with all test suites
-  pushd . > /dev/null 2>&1
-  cd "$HERE/resources/input"
+  pushd . > /dev/null 2>&1 || (echo "cannot pushd ." && exit 1)
+  cd "$HERE/resources/input" || (echo "cannot cd to $HERE/resources/input" && exit 1)
     tar_bz2_file="$suites_dir/$pid-$bid-test.0.tar.bz2"
+    # shellcheck disable=SC2086 # $input_files contains multiple files
     tar -jcvf "$tar_bz2_file" $input_files || return 1
-  popd > /dev/null 2>&1
+  popd > /dev/null 2>&1 || (echo "cannot popd" && exit 1)
 
   return 0
 }
@@ -205,6 +206,7 @@ test_MultipleUnitTestsWithMultipleCompilationIssues() {
   local pid="Gson"
   local bid="18f"
 
+  #shellcheck disable=SC2016 # Literal $ in single-quoted string.
   run_fix_test_suite_test_case "$pid" "$bid" \
     'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
     'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest.java.bak com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
@@ -215,6 +217,7 @@ test_MultipleUnitTestsWithMultipleCompilationIssues() {
     return 0
   fi
 
+  #shellcheck disable=SC2016 # Literal $ in single-quoted string.
   run_fix_test_suite_test_case "$pid" "$bid" \
     'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
     'com/google/gson/internal/$Gson$Types_ESTest.java com/google/gson/internal/$Gson$Types_ESTest.java.bak com/google/gson/internal/$Gson$Types_ESTest_scaffolding.java' \
