@@ -137,7 +137,20 @@ Using Defects4J
     - `defects4j compile`
     - `defects4j test`
 
-5. The scripts in [`framework/test/`](framework/test/)
+5. Some Defects4J commands take the project id as a command-line argument
+   (possibly along with other arguments).  Examples include `info`, `checkout`,
+   and `query`.  Note that `info` and `query` report infromation that is derived
+   from the Defects4J metadata and do not require access to project files that
+   are in the project's VCS.
+
+   Other commands require a working directory, either set explicitly
+   (`-w` command-line argument) or implicitly (executed from within a working
+   directory).  Examples include any command that requires access to files under
+   version control, including source code and build files.  This includes all
+   commands that build or test the code (`compile`, `test`, `coverage`, `mutation`)
+   and commands that return version-specific information (`export`).
+
+6. The scripts in [`framework/test/`](framework/test/)
 are examples of how to use Defects4J, which you might find useful
 as inspiration when you are writing your own scripts that use Defects4J.
 
@@ -196,7 +209,7 @@ all active bug IDs, along with the bug report ID and bug report URL for each.
 |-----------------------|-------------------------------------------------------------------------------------|
 | bug.id                | Assigned bug IDs (included in all results)                                          |
 | project.id            | Assigned project ID                                                                 |
-| project.name          | Original project name                                                            |
+| project.name          | Original project name                                                               |
 | project.build.file    | Location of the Defects4J build file for the project                                |
 | project.vcs           | Version control system used by the project                                          |
 | project.repository    | Location of the project repository                                                  |
@@ -211,14 +224,22 @@ all active bug IDs, along with the bug report ID and bug report URL for each.
 | classes.relevant.src  | Source classes loaded by the JVM when executing all triggering tests                |
 | classes.relevant.test | Test classes loaded by the JVM when executing all triggering tests                  |
 | tests.relevant        | List of relevant tests classes (a test class is relevant if, when executed, the JVM loads at least one of the modified classes) |
-| tests.trigger         | List of test methods that trigger (expose) the bug                                  |
-| tests.trigger.cause   | List of test methods that trigger (expose) the bug, along with the root cause       |
+| tests.trigger         | List of test methods that trigger (expose) the bug, separated by semicolons (`;`)   |
+| tests.trigger.cause   | List of test methods that trigger (expose) the bug, along with the exception thrown.  Each list element has the form "methodName --> exceptionClass[: message]", and list elements are separated by semicolons (`;`) |
 | deprecated.version    | (for deprecated bugs only) Version of Defects4J where a bug was deprecated          |
 | deprecated.reason     | (for deprecated bugs only) Reason for deprecation                                   |
 
 By default, `defects4j query` returns information on active bugs. The `[-D]`
 flag returns information only on deprecated bugs, while the `[-A]` flag returns
 information for all active and deprecated bugs.
+
+To determine the methods that are changed between the buggy and fixed version of the code:
+
+1. Add this line to your user-level git attributes file:
+   `*.java diff=java`
+
+2. Run `git diff --no-index`, for example `git diff --no-index /tmp/lang_1_buggy /tmp/lang_1_fixed`.
+   In the output, every line starting with "@" gives the method name of a changed method.
 
 
 Test execution framework
