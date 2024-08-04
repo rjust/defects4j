@@ -4,6 +4,9 @@ TOPLEVEL="$(git rev-parse --show-toplevel)"
 
 cd "$TOPLEVEL" || (echo "Cannot cd to $TOPLEVEL" && exit 1)
 
+# Check style of Perl scripts.
+find . \( -name '*.pm' -o -name '*.pl' \) -print0 | xargs -0 -n1 perl -Mstrict -Mdiagnostics -cw
+
 # Check style of sh scripts.
 grep -r -l '^\#! \?\(/bin/\|/usr/bin/env \)sh' --exclude=\*~ "$TOPLEVEL"/framework | while read -r line
 do
@@ -19,4 +22,3 @@ done
 for file in "$TOPLEVEL"/init.sh "$TOPLEVEL"/framework/lib/test_generation/bin/_tool.source ; do
     shellcheck -x -P SCRIPTDIR --format=gcc "$file"
 done
-
