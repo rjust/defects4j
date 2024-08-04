@@ -72,7 +72,7 @@ Requirements
 ----------------
  - Java 1.8
  - Git >= 1.9
- - SVN >= 1.8
+ - Subversion (svn) >= 1.8
  - Perl >= 5.0.12
 
 Defects4J version 1.x and 0.x required Java 1.7.
