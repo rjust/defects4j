@@ -104,7 +104,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Run developer-written tests
 -->
     <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">
-		<junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="on" forkmode="once" showOutput="true" timeout="180000">
+        <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="on" forkmode="once" showOutput="true" timeout="180000">
             <classpath>
                 <!-- Make sure that instrumented classes appear at the beginning of the
                      classpath -->
