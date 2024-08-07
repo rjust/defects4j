@@ -74,7 +74,7 @@ sub _post_checkout {
     if ($vid == 21) {
         system("rm -rf $work_dir/buildSrc/src/main/groovy/org/mockito/release/notes");
         system("rm -rf $work_dir/buildSrc/src/test/groovy/org/mockito/release/notes");
-        system("sed -i '/apply.from:..gradle.release.gradle./d' $work_dir/build.gradle");
+        Utils::sed_cmd("/apply.from:..gradle.release.gradle./d", "$work_dir/build.gradle");
     }
 
     # Change Url to Gradle distribution

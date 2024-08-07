@@ -326,11 +326,12 @@ sub sed_cmd {
     @_ == 2 || die $ARG_ERROR;
     my ($cmd_string, $file_name) = @_;
 
-    print(STDERR "Executed command: sed -i $cmd_string $file_name\n") if $DEBUG;
+    print(STDERR "About to execute command: sed -i $cmd_string $file_name\n") if $DEBUG;
 
     # We ignore sed result as it is ok if command fails.
-    if (`uname -s` eq "Darwin" ) {
-        `sed -i '' $cmd_string $file_name`;
+    chomp(my $uname = `uname -s`);
+    if ($uname eq "Darwin" ) {
+        `sed -i '' -e '$cmd_string' $file_name`;
     } else {
         `sed -i "$cmd_string" "$file_name"`;
     }
