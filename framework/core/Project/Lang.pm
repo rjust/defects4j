@@ -95,14 +95,14 @@ sub _post_checkout {
     my $log = `$cmd`;
     my $ret = $?;
     if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/' | xargs sed -i'' 's/\\.enum;/\\.oldenum;/'", "Rename enum 1") or die;
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum 1") or die;
     }
 
     $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/'";
     $log = `$cmd`;
     $ret = $?;
     if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/' | xargs sed -i'' 's/\\.enum;/\\.oldenum;/'", "Rename enum 2") or die;
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum 2") or die;
     }
 
     # Fix compilation errors if necessary
