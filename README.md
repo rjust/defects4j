@@ -74,6 +74,7 @@ Requirements
  - Git >= 1.9
  - Subversion (svn) >= 1.8
  - Perl >= 5.0.12
+ - `cpanm`
 
 Defects4J version 1.x and 0.x required Java 1.7.
 
@@ -92,7 +93,8 @@ environment variable to `America/Los_Angeles` and export it.
 #### Perl dependencies
 All required Perl modules are listed in [cpanfile](https://github.com/rjust/defects4j/blob/master/cpanfile).
 On many Unix platforms, these required Perl modules are installed by default.
-If this is not the case, see instructions below for how to install them.
+The setup instructions immediately below install them if necessary.
+If you do not have `cpanm` installed, use cpan or a cpan wrapper to install the perl modules listed in `cpanfile`.
 
 Steps to set up Defects4J
 ----------------
@@ -101,7 +103,6 @@ Steps to set up Defects4J
     - `git clone https://github.com/rjust/defects4j`
 
 2. Initialize Defects4J (download the project repositories and external libraries, which are not included in the git repository for size purposes and to avoid redundancies):
-   If you do not have `cpanm` installed, use cpan or a cpan wrapper to install the perl modules listed in `cpanfile`.
     - `cd defects4j`
     - `cpanm --installdeps .`
     - `./init.sh`
