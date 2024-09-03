@@ -167,7 +167,7 @@ cd "$DIR_LIB_RT"  && download_url "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.2.5"
+RANDOOP_VERSION="4.3.3"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
@@ -178,6 +178,7 @@ COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$COVEREDCLASS_JAR" "covered-class-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/jacocoagent.jar" "jacocoagent.jar")
 
 ################################################################################
 #
