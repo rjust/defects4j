@@ -34,13 +34,15 @@ _set_vars() {
 # Check whether the mutation analysis results (summary.csv) match the expectations.
 #
 _check_mutation_result() {
-    [ $# -eq 3 ] || die "usage: ${FUNCNAME[0]} \
+    [ $# -eq 4 ] || die "usage: ${FUNCNAME[0]} \
             <expected_mutants_generated> \
+            <expected_mutants_retained> \
             <expected_mutants_covered> \
             <expected_mutants_killed>"
     local exp_mut_gen=$1
-    local exp_mut_cov=$2
-    # local exp_mut_kill=$3
+    local exp_mut_ret=$2
+    local exp_mut_cov=$3
+    local exp_mut_kill=$4
 
     # Make sure Major generated the expected data files
     [ -s "$mutants_file" ] || die "'$mutants_file' doesn't exist or is empty!"
@@ -53,17 +55,19 @@ _check_mutation_result() {
     [ "$num_rows" -eq "2" ] || die "Unexpected number of lines in '$summary_file'!"
 
     # Columns of summary (csv) file:
-    # MutantsGenerated,MutantsCovered,MutantsKilled,MutantsLive,RuntimePreprocSeconds,RuntimeAnalysisSeconds
-    local act_mut_gen; act_mut_gen=$(tail -n1 "$summary_file" | cut -f1 -d',')
-    local act_mut_cov; act_mut_cov=$(tail -n1 "$summary_file" | cut -f2 -d',')
-    # local act_mut_kill; act_mut_kill=$(tail -n1 "$summary_file" | cut -f3 -d',')
+    # MutantsGenerated,MutantsRetained,MutantsCovered,MutantsKilled,MutantsLive,RuntimePreprocSeconds,RuntimeAnalysisSeconds
+    local act_mut_gen=$(tail -n1  "$summary_file" | cut -f1 -d',')
+    local act_mut_ret=$(tail -n1  "$summary_file" | cut -f2 -d',')
+    local act_mut_cov=$(tail -n1  "$summary_file" | cut -f3 -d',')
+    local act_mut_kill=$(tail -n1 "$summary_file" | cut -f4 -d',')
 
     [ "$act_mut_gen"  -eq "$exp_mut_gen" ] || die "Unexpected number of mutants generated (expected: $exp_mut_gen, actual: $act_mut_gen)!"
+    [ "$act_mut_ret"  -eq "$exp_mut_ret" ] || die "Unexpected number of mutants retained (expected: $exp_mut_ret, actual: $act_mut_ret)!"
     [ "$act_mut_cov"  -eq "$exp_mut_cov" ] || die "Unexpected number of mutants covered (expected: $exp_mut_cov, actual: $act_mut_cov)!"
 # TODO: The CI runs lead to additional timeouts for some mutants, which breaks
 # this test. Change the test to check the kill results themselves and ignore
 # timeouts when counting the expected number of detected mutants.
-#    [ "$act_mut_kill" -eq "$exp_mut_kill" ] || die "Unexpected number of mutants killed (expected: $exp_mut_kill, actual: $act_mut_kill)!"
+    [ "$act_mut_kill" -eq "$exp_mut_kill" ] || die "Unexpected number of mutants killed (expected: $exp_mut_kill, actual: $act_mut_kill)!"
 
     # TODO Would be nice to test the number of excluded mutants. In order to do it
     # Major has to write that number to the '$pid_vid_dir/summary.csv' file.
@@ -71,7 +75,7 @@ _check_mutation_result() {
 ################################################################################
 
 # Any version should work, but the test cases below are specific to Lang-6f
-_set_vars "Lang" "6f"
+_set_vars "Cli" "12f"
 # Clean temporary directory
 rm -rf "$pid_vid_dir"
 
@@ -85,7 +89,7 @@ defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not poss
 rm -f "$summary_file"
 
 defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-_check_mutation_result 42 42 36
+_check_mutation_result 62 62 62 53
 
 ###################################################
 # Test mutation analysis when excluding all mutants
@@ -98,7 +102,7 @@ exclude_file="$pid_vid_dir/exclude_all_mutants.txt"
 cut -f1 -d':' "$mutants_file" > "$exclude_file"
 
 defects4j mutation -w "$pid_vid_dir" -r -e "$exclude_file" || die "Mutation analysis (excluding all mutants) failed!"
-_check_mutation_result 42 0 0
+_check_mutation_result 62 0 0 0
 
 ##########################################################################
 # Test mutation analysis when explicitly providing a subset of operators
@@ -112,7 +116,7 @@ echo "AOR LVR" > "$mut_ops_file"
 echo "ROR" >> "$mut_ops_file"
 
 defects4j mutation -w "$pid_vid_dir" -r -m "$mut_ops_file" || die "Mutation analysis (subset of mutation operators) failed!"
-_check_mutation_result 36 36 30
+_check_mutation_result 33 33 33 30
 
 
 ##########################################################################
@@ -123,10 +127,10 @@ rm -f "$summary_file"
 
 # Mutate an arbitrary, non-modified class
 instrument_classes="$pid_vid_dir/instrument_classes.txt"
-echo "org.apache.commons.lang3.text.translate.UnicodeEscaper" > "$instrument_classes"
+echo "org.apache.commons.cli.Util" > "$instrument_classes"
 
-defects4j mutation -w "$pid_vid_dir" -r -i "$instrument_classes" || die "Mutation analysis (instrument UnicodeEscaper) failed!"
-_check_mutation_result 57 54 43
+defects4j mutation -w "$pid_vid_dir" -r -i "$instrument_classes" || die "Mutation analysis (instrument Util.java) failed!"
+_check_mutation_result 25 25 25 24
 
 # Clean up
 rm -rf "$pid_vid_dir"
@@ -143,7 +147,7 @@ defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not poss
 # Remove the summary file to ensure it is regenerated
 rm -f "$summary_file"
 defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-_check_mutation_result 241 60 32
+_check_mutation_result 238 238 59 32
 # Clean up
 rm -rf "$pid_vid_dir"
 
@@ -156,6 +160,6 @@ defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not poss
 # Remove the summary file to ensure it is regenerated
 rm -f "$summary_file"
 defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-_check_mutation_result 7 7 4
+_check_mutation_result 7 7 7 4
 # Clean up
 rm -rf "$pid_vid_dir"

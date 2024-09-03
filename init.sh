@@ -136,14 +136,24 @@ cd "$DIR_REPOS" && ./get_repos.sh
 #
 # Download Major
 #
+# Adapt Major's default wrapper scripts:
+# - set headless to true to support Chart on machines without X.
+# - do not mutate code unless an MML is specified (for historical reasons,
+#   major v1 was sometimes called without specifying an MML to simply act as
+#   javac; Major v2+'s default is to generate all mutants as opposed to none).
+#
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="1.3.4"
+MAJOR_VERSION="3.0.0"
 MAJOR_URL="https://mutation-testing.org/downloads"
-MAJOR_ZIP="major-${MAJOR_VERSION}_jre7.zip"
-cd "$BASE" && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
+MAJOR_ZIP="major-${MAJOR_VERSION}_jre11.zip"
+cd "$BASE" && rm -rf major \
+           && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
            && rm "$MAJOR_ZIP" \
-           && cp major/bin/.ant major/bin/ant
+           && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n) if /CodeCacheSize/' \
+                major/bin/ant \
+           && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /REFACTOR=/' \
+                major/bin/major \
 
 ################################################################################
 #
@@ -167,7 +177,7 @@ cd "$DIR_LIB_RT"  && download_url "$EVOSUITE_URL/$EVOSUITE_RT_JAR"
 #
 echo
 echo "Setting up Randoop ... "
-RANDOOP_VERSION="4.2.5"
+RANDOOP_VERSION="4.3.3"
 RANDOOP_URL="https://github.com/randoop/randoop/releases/download/v${RANDOOP_VERSION}"
 RANDOOP_ZIP="randoop-${RANDOOP_VERSION}.zip"
 RANDOOP_JAR="randoop-all-${RANDOOP_VERSION}.jar"
@@ -188,8 +198,8 @@ echo "Setting up Gradle dependencies ... "
 
 cd "$DIR_LIB_GRADLE"
 
-GRADLE_DISTS_ZIP=defects4j-gradle-dists.zip
-GRADLE_DEPS_ZIP=defects4j-gradle-deps.zip
+GRADLE_DISTS_ZIP=defects4j-gradle-dists-v3.zip
+GRADLE_DEPS_ZIP=defects4j-gradle-deps-v3.zip
 
 old_dists_ts=0
 old_deps_ts=0

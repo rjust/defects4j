@@ -70,35 +70,54 @@ sub _post_checkout {
                 or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
+    # only bid with release notes and doesn't compile with newer Gradle
+    if ($vid == 21) {
+        system("rm -rf $work_dir/buildSrc/src/main/groovy/org/mockito/release/notes");
+        system("rm -rf $work_dir/buildSrc/src/test/groovy/org/mockito/release/notes");
+        Utils::sed_cmd("/apply.from:..gradle.release.gradle./d", "$work_dir/build.gradle");
+    }
+
     # Change Url to Gradle distribution
     my $prop = "$work_dir/gradle/wrapper/gradle-wrapper.properties";
     my $lib_dir = "$BUILD_SYSTEMS_LIB_DIR/gradle/dists";
 
-    # Read existing Gradle properties file, if it exists
-    open(PROP, "<$prop") or return;
-    my @tmp;
-    while (<PROP>) {
-        if (/(distributionUrl=).*\/(gradle-2.*)/) {
-            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-2.2.1-all.zip/g;
-        } else {
-            s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-1.12-bin.zip/g;
+    # Modify the Gradle properties file, if it exists.
+    if (open(PROP, "<$prop")) {
+        my @tmp;
+        while (<PROP>) {
+            if (/(distributionUrl=).*\/(gradle-2.*)/) {
+                s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-2.2.1-all.zip/g;
+            } else {
+                s/(distributionUrl=).*\/(gradle-.*)/$1file\\:$lib_dir\/gradle-1.12-bin.zip/g;
+            }
+            push(@tmp, $_);
         }
-        push(@tmp, $_);
+        close(PROP);
+    
+        # Update properties file
+        open(OUT, ">$prop") or die "Cannot write properties file";
+        print(OUT @tmp);
+        close(OUT);
+    
+        # Disable the Gradle daemon
+        if (-e "$work_dir/gradle.properties") {
+            system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
+        }
+    
+        # Enable local repository
+        system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
     }
-    close(PROP);
 
-    # Update properties file
-    open(OUT, ">$prop") or die "Cannot write properties file";
-    print(OUT @tmp);
-    close(OUT);
-
-    # Disable the Gradle daemon
-    if (-e "$work_dir/gradle.properties") {
-        system("sed -i.bak s/org.gradle.daemon=true/org.gradle.daemon=false/g \"$work_dir/gradle.properties\"");
-    }
-
-    # Enable local repository
-    system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
+    # Set default Java target to 6.
+    # some bids use gradle:
+    Utils::sed_cmd("s/sourceCompatibility = 1\.[1-5]/sourceCompatibility=1.6/", "$work_dir/build.gradle");
+    Utils::sed_cmd("s/targetCompatibility = 1\.[1-5]/targetCompatibility=1.6/", "$work_dir/build.gradle");
+    Utils::sed_cmd("s/gradle-1.12-bin/gradle-4.9-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
+    Utils::sed_cmd("s/gradle-2.2.1-all/gradle-4.9-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
+    Utils::sed_cmd("s/0.7-groovy-1.8/1.1-groovy-2.4/", "$work_dir/buildSrc/build.gradle");
+    # and some don't:
+    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/build.xml");
 }
 
 sub determine_layout {

@@ -4,12 +4,15 @@
 # This script runs a set of basic queries against d4j-query and checks the results
 #
 ################################################################################
-source test.include
 
 HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
-"$BASE_DIR"/framework/bin/defects4j query -p Collections -H >> "$HERE"/temp
-result=$(diff "$HERE"/temp "$HERE"/resources/output/d4j-query/1)
+# Import helper subroutines and variables, and init Defects4J
+source "$HERE/test.include" || exit 1
+init
+
+$BASE_DIR/framework/bin/defects4j query -p Collections -H >> $HERE"/temp"
+result=`diff $HERE/temp $HERE/resources/output/d4j-query/1`
 
 [ "$result" == "" ] || die "query \"-p Collections\" -H failed: $result"
 

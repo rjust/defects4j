@@ -231,8 +231,8 @@ my $java_version_output = `java -version 2>&1`;
 
 # Extract the imajor version number using regular expressions
 if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
-    if ($1 != 8) {
-        die ("Java 8 is required!\n\n");
+    if ($1 != 11) {
+        die ("Java 11 is required!\n\n");
     }
 } else {
     die ("Failed to parse Java version! Is Java installed/on the execution path?\n\n");

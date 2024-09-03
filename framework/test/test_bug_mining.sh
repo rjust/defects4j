@@ -392,7 +392,7 @@ rm -rf "$WORK_DIR"
 
 # Project example
 PROJECT_ID="TestCodec"
-PROJECT_NAME="commons-codec"
+PROJECT_NAME="commons-test-codec"
 REPOSITORY_URL="https://github.com/apache/commons-codec.git"
 ISSUE_TRACKER_NAME="jira"
 ISSUE_TRACKER_PROJECT_ID="CODEC"
@@ -419,8 +419,6 @@ test_integration "$PROJECT_ID" "1" || die "Test 'test_integration' has failed!"
 
 # Clean up D4J
 rm -rf "$HERE/../projects/$PROJECT_ID" "$HERE/../core/Project/$PROJECT_ID.pm" "$REPOS_DIR/$PROJECT_NAME.git"
-
-HALT_ON_ERROR=1
 
 # Print a summary of what went wrong
 if [ "$ERROR" -ne "0" ]; then

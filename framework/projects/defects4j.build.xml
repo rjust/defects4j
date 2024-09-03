@@ -137,6 +137,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <fail message="Property test.entry not set!" unless="test.entry" />
         <fail message="Property test.output not set!" unless="test.output" />
 
+        <echo message="Logging loaded classes to ${test.output}" />
+
         <java fork="true" classname="edu.washington.cs.mut.testrunner.SingleTestRunner"
               output="${test.output}" failonerror="true" logError="true">
 
@@ -218,10 +220,10 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             mutationAnalysis="true"
             timeoutFactor="16"
-            sort="${major.sort}"
+            testOrder="${major.sort}"
             haltonfailure="true"
-            killDetailsFile="${major.kill.log}"
-            excludeFile="${major.exclude}"
+            mutantDetailsFile="${major.kill.log}"
+            excludeMutantsFile="${major.exclude}"
             >
 
             <!--

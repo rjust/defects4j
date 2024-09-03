@@ -749,7 +749,9 @@ sub monitor_test {
         #  - A "normal" class named with one or more $ symbols, e.g., com.google.gson.internal.$Gson$Types
         #    from Gson-{14,16,18}.
         #
-        s/\[Loaded (.*) from.*/$1/;
+        # First match corresponds to what a Java-8 JVM outputs; the second match
+        # corresponds to what a Java-11 JVM outputs.
+        s/\[Loaded (.*) from.*/$1/ or s/\S* (.*) source: .*/$1/;
         my $found = 0;
         if (defined $src->{$_}) {
             $found = 1;
@@ -879,7 +881,7 @@ sub mutate {
     -e "$mml_bin" or die "Mml file does not exist: $mml_bin!";
 
     # Set environment variable MML, which is read by Major
-    $ENV{MML} = $mml_bin;
+    $ENV{MML} = "mml:$mml_bin";
 
     # Mutate and compile sources
     my $ret = $self->_call_major("mutate");
@@ -1165,14 +1167,13 @@ sub _ant_call {
 }
 
 #
-# Ensure backward compatibility with Java 7
 # TODO: Remove after Defects4J downloads and initializes its own version of Ant
 #       Currently, we rely on Major's version of Ant to be properly set up.
 #
 sub _ant_call_comp {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $target, $option_str, $log_file, $ant_cmd) =  @_;
-    $option_str = "-Dbuild.compiler=javac1.7 " . ($option_str // "");
+    $option_str = ($option_str // "");
     $ant_cmd = "$MAJOR_ROOT/bin/ant" unless defined $ant_cmd;
     return $self->_ant_call($target, $option_str, $log_file, $ant_cmd);
 }

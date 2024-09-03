@@ -1,4 +1,5 @@
 ## commons-collections: 73d69dfe8677210e44049bc1a2a7d1ff85bc1ca7 ##
+--- org.apache.commons.collections4.collection.AbstractCollectionTest::testCollectionToArray2
 --- org.apache.commons.collections4.map.ReferenceIdentityMapTest::testPurgeValues
 java.lang.NegativeArraySizeException
 	at org.apache.commons.collections4.map.ReferenceIdentityMapTest.testPurgeValues(ReferenceIdentityMapTest.java:317)

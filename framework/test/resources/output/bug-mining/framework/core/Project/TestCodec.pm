@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::TestCodec.pm -- L<Project> submodule for commons-codec.
+Project::TestCodec.pm -- L<Project> submodule for commons-test-codec.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-commons-codec project.
+commons-test-codec project.
 
 =cut
 package Project::TestCodec;
@@ -47,7 +47,7 @@ sub new {
     @_ == 1 or die $ARG_ERROR;
     my ($class) = @_;
 
-    my $name = "commons-codec";
+    my $name = "commons-test-codec";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
                              "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",

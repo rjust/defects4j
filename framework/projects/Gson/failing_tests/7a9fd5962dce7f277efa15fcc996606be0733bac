@@ -1,4 +1,15 @@
 ## gson: 7a9fd5962dce7f277efa15fcc996606be0733bac ##
+--- com.google.gson.DefaultDateTypeAdapterTest::testFormattingInEnUs
+--- com.google.gson.DefaultDateTypeAdapterTest::testParsingDatesFormattedWithSystemLocale
+--- com.google.gson.DefaultDateTypeAdapterTest::testFormattingInFr
+--- com.google.gson.DefaultDateTypeAdapterTest::testFormatUsesDefaultTimezone
+--- com.google.gson.DefaultDateTypeAdapterTest::testParsingDatesFormattedWithUsLocale
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultDateDeserialization
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultJavaSqlTimestampDeserialization
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultDateSerializationUsingBuilder
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultJavaSqlTimestampSerialization
+--- com.google.gson.functional.DefaultTypeAdaptersTest::testDefaultDateSerialization
+--- com.google.gson.functional.ObjectTest::testDateAsMapObjectField
 --- com.google.gson.common.TestTypes
 java.lang.Exception: No runnable methods
 	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:169)

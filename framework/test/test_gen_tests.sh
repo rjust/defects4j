@@ -11,8 +11,11 @@
 #   * Generate for bugs 1-10 and 20: ./test_generate_suites.sh -pLang -b1..10 -b20
 #
 ################################################################################
+
+HERE=$(cd `dirname $0` && pwd)
+
 # Import helper subroutines and variables, and init Defects4J
-source test.include
+source "$HERE/test.include" || exit 1
 init
 
 # Print usage message and exit

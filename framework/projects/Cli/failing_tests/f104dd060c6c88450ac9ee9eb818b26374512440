@@ -1,5 +1,6 @@
 ## commons-cli: f104dd060c6c88450ac9ee9eb818b26374512440 ##
 --- org.apache.commons.cli2.CLITestCase
+--- org.apache.commons.cli2.validation.ClassValidatorTest::testCreateProtectedInstance
 junit.framework.AssertionFailedError: No tests found in org.apache.commons.cli2.CLITestCase
 	at junit.framework.Assert.fail(Assert.java:57)
 	at junit.framework.TestCase.fail(TestCase.java:227)

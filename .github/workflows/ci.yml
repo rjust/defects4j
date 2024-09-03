@@ -6,14 +6,15 @@ jobs:
     env:
       JDK_OS: linux
       JDK_ARCH: x64
-      JDK_VERSION: 8u192
+      JDK_VERSION: 11u17
+      JDK_DIR: jdk-11.0.17
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
         show-progress: false
     - name: Cache JDK
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: cache-jdk
       with:
         path: ~/.java
@@ -26,7 +27,7 @@ jobs:
         if [ ! -f "$JDK_FILE" ]; then mkdir -p ~/.java && (timeout 400 curl -O -s -S -L --retry 3 "$JDK_URL" || curl -O -L --retry 3 "$JDK_URL") && tar -xzf "$JDK_FILE" -C ~/.java; fi
     - name: Setup JDK
       run: |
-        export JAVA_HOME=$HOME/.java/jdk1.8.0_192
+        export JAVA_HOME=$HOME/.java/$JDK_DIR
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
     - name: Install diffstat
@@ -46,6 +47,9 @@ jobs:
     - run: carton exec ./test_tutorial.sh
       name: test_tutorial.sh
       working-directory: "./framework/test"
+    - run: carton exec ./test_monitor_test.sh
+      name: test_monitor_test.sh
+      working-directory: "./framework/test"
     - run: carton exec ./test_mutation_analysis.sh
       name: test_mutation_analysis.sh
       working-directory: "./framework/test"
@@ -61,6 +65,26 @@ jobs:
     - run: carton exec ./test_style.sh
       name: test_style.sh
       working-directory: "./framework/test"
+
+    # Verify a few select bugs to detect serious breakages early.
+    - run: carton exec ./test_verify_bugs.sh -p Lang -b 24 -A
+      name: "test_verify_bugs.sh -p Lang -b 24 -A"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Lang -b 62 -A
+      name: "test_verify_bugs.sh -p Lang -b 62 -A"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Closure -b 102 -A
+      name: "test_verify_bugs.sh -p Closure -b 102 -A"
+      working-directory: "./framework/test"
+    - run: carton exec ./test_verify_bugs.sh -p Mockito -b 10 -A
+      name: "test_verify_bugs.sh -p Mockito -b 10 -A"
+      working-directory: "./framework/test"
+
+# Verifying the export command for all bugs and verifying reproducibility of all
+# bugs is very time-consuming. The jobs below should be run as part of the
+# release process, but running them on every push and PR is unnecessary.
+#
+#    # Verify that export returns expected values for all projects.
 #    - run: carton exec ./test_export_command.sh -p Chart -p Cli -p Closure
 #      name: "test export 1"
 #      working-directory: "./framework/test"
@@ -73,11 +97,6 @@ jobs:
 #    - run: carton exec ./test_export_command.sh -p Lang -p Math -p Mockito -p Time
 #      name: "test export 4"
 #      working-directory: "./framework/test"
-
-#
-# Verifying all bugs is pretty time-consuming. The jobs below should be run as
-# part of the release process, but running them on every push and PR is
-# unnecessary.
 #
 #    # Verify that all bugs are reproducible (run multiple jobs for projects that
 #    # take a long time to finish).
