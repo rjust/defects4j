@@ -37,6 +37,7 @@ git --git-dir=jfreechart/.git log | tr -d '[:blank:]' > git.log
 head -1 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv > ${tmp_dir}/active-bugs.csv
 
 # Find git commit hashes for each bug in active-bugs.csv
+tail -n+2 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv |\
 while read line; do
   bid=$(echo $line | cut -f1 -d',')
   svn_buggy=$(echo $line | cut -f2 -d',')
@@ -55,7 +56,9 @@ while read line; do
 
   # The first line may match multiple commits -> evaluate all candidate commits
   commits=$(grep -B4 "${svn_first_line}" git.log | grep "commit" | sed -e 's/commit\s*//g')
+  echo $bid
   for c in $commits; do
+    echo "$c -- $(git --git-dir=jfreechart/.git diff $c $c~1 | wc -l)"
     git --git-dir=jfreechart/.git log -n1 $c | tail -n+5 >  ${bid}.git
     # We found a match if the messages are identical, modulo whitespace changes
     # Multiple commits may match -> pick the last, which is the oldest commit
@@ -63,6 +66,16 @@ while read line; do
       git_fixed="$c"
     fi
   done
+  echo
+
+  # These bugs are no longer reproducible after the SVN -> Git conversion
+  if [ "$bid" -ge 4 ] && [ "$bid" -le 10 ]; then
+    continue
+  fi
+  if [ "$bid" -eq 26 ]; then
+    continue
+  fi
+
   # Update failing-tests file names
   if [ ! -z "${git_fixed}" ]; then
     # The buggy commit is the parent commit
@@ -78,7 +91,7 @@ while read line; do
   # Output the entires for dir-layout.csv (identical layout for all revisions)
   echo "${git_fixed},source,tests" >> ${tmp_dir}/dir-layout.csv
   echo "${git_buggy},source,tests" >> ${tmp_dir}/dir-layout.csv
-done < <(tail -n+2 ${D4J_HOME}/framework/projects/Chart/active-bugs.csv)
+done
 
 popd > /dev/null
 
@@ -103,5 +116,8 @@ rm test-2270-2272.diff
 rm test-778-784.diff
 mv test-807-811.diff test-14-14.diff
 popd > /dev/null
+
+# Add new patch file for build.xml
+cp build-1-4.diff ${D4J_HOME}/framework/projects/Chart/compile-errors
 
 rm -rf ${tmp_dir}
