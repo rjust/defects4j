@@ -26,7 +26,7 @@ index 248048ed..3cb4a638 100644
      # Fix compilation errors if necessary
      @_ == 3 or die $ARG_ERROR;
      my ($self, $revision_id, $work_dir) = @_;
-+    my $vid = $self->{_vcs}->lookup_vid($rev_id);
++    my $vid = $self->{_vcs}->lookup_vid($revision_id);
  
      my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
      opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
