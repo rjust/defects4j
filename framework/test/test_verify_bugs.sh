@@ -83,7 +83,7 @@ if [ "$DEBUG" == "-D" ]; then
 fi
 
 # Create log file
-script_name=$(sed 's/\.sh$//' "$script")
+script_name=$(echo $script | sed 's/\.sh$//')
 LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' "$PID" $$).log"
 DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' "$PID" $$).failing_tests"
 
