@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # This file provides helper functions for the wrapper shell scripts of the test
 # generation tools. This file should be included in each wrapper shell script:
@@ -9,8 +10,6 @@
 # - constants and environment variable names: all caps, with underscores to
 #   separate words.
 #
-
-# shellcheck shell=bash
 
 ################################################################################
 # Helper functions
@@ -25,8 +24,7 @@ die() {
 check_env() {
     local var="$1"
     local val
-    # shellcheck disable=SC2086 # would quoting even work?
-    val=$(eval echo \$$var)
+    val="$(eval echo \$$var)"
     [ -z "$val" ] && die "Variable $var not set!"
 }
 

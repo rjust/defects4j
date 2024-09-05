@@ -131,7 +131,7 @@ test_export_properties() {
         #################################################################
         # Check "dir.bin.classes"
         #################################################################
-        local classes_dir=""; 
+        local classes_dir=""
         if ! classes_dir=$(_run_export_command "$work_dir" "dir.bin.classes") ; then
             die "Export command of $pid-$bid has failed"
         fi
