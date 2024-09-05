@@ -72,9 +72,9 @@ if [ "$BUGS" == "" ]; then
 fi
 
 # Create log file
-script_name=$(sed 's/\.sh$//' "$script")
-LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' "$PID" $$).log"
-DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' "$PID" $$).failing_tests"
+script_name_without_sh=${script//.sh/}
+LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
+DIR_FAILING="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).failing_tests"
 
 ################################################################################
 # Run developer-written tests on all buggy and fixed program versions, and 
