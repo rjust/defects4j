@@ -140,5 +140,5 @@ if [ $ERROR != 0 ]; then
     cat "$LOG" 1>&2
 fi
 
-# Indicate whether an error occurred
+# Indicate whether an error occurred in test_verify_bugs.sh.
 exit $ERROR
