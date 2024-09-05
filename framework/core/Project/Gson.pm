@@ -63,7 +63,7 @@ sub new {
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    # All relevant files live in the gson subdirectory
     $work_dir .= "/gson/";
 
     # Check whether ant build file exists

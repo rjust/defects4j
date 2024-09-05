@@ -81,14 +81,6 @@ sub _post_checkout {
         Utils::exec_cmd("cp $filename $work_dir/build.xml",
                 "Fix broken build") or die;
     }
-
-    # Set default Java target to 6.
-    # either these:
-    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
-    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
-    # or these:
-    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/build.xml");
-    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/build.xml");
 }
 
 sub determine_layout {

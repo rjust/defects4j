@@ -108,16 +108,13 @@ sub _post_checkout {
         system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
     }
 
-    # Set default Java target to 6.
-    # some bids use gradle:
+    # Set default Java target to 6 for gradle builds.
+    # (Maven and Ant builds are handled for all projects in Project.pm)
     Utils::sed_cmd("s/sourceCompatibility = 1\.[1-5]/sourceCompatibility=1.6/", "$work_dir/build.gradle");
     Utils::sed_cmd("s/targetCompatibility = 1\.[1-5]/targetCompatibility=1.6/", "$work_dir/build.gradle");
     Utils::sed_cmd("s/gradle-1.12-bin/gradle-4.9-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
     Utils::sed_cmd("s/gradle-2.2.1-all/gradle-4.9-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
     Utils::sed_cmd("s/0.7-groovy-1.8/1.1-groovy-2.4/", "$work_dir/buildSrc/build.gradle");
-    # and some don't:
-    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/build.xml");
-    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/build.xml");
 }
 
 sub determine_layout {
