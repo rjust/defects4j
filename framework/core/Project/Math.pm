@@ -50,7 +50,8 @@ sub new {
     my $name = "commons-math";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
-                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE");
+                             "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
+                             \&_post_checkout);
 
     return $class->SUPER::new($PID, $name, $vcs);
 }
@@ -99,6 +100,19 @@ sub _layout2 {
     $test=~ s/.*<unitTestSourceDirectory>\s*([^<]+)\s*<\/unitTestSourceDirectory>.*/$1/;
 
     return {src=>$src, test=>$test};
+}
+
+sub _post_checkout {
+    my ($self, $revision_id, $work_dir) = @_;
+    my $vid = $self->{_vcs}->lookup_vid($revision_id);
+
+    # Convert the file encoding of problematic files
+    my $result = determine_layout($self, $revision_id);
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessBivariateCovariance.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/value=\\\"1\.[1-5]\\\"/value=\\\"1.6\\\"/", "$work_dir/build.xml");
 }
 
 #

@@ -112,6 +112,13 @@ sub _post_checkout {
     unless (-e "$work_dir/build.xml") {
         system("cp $PROJECTS_DIR/$PID/build_files/$revision_id/* $work_dir");
     }
+
+    # Set default Java target to 6.
+    # either these:
+    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
+    # or this
+    Utils::sed_cmd("s/1\.[1-5]/1.6/", "$work_dir/default.properties");
 }
 
 #
