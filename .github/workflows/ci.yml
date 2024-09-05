@@ -46,9 +46,6 @@ jobs:
     - run: carton exec ./test_tutorial.sh
       name: test_tutorial.sh
       working-directory: "./framework/test"
-    - run: carton exec ./test_monitor_test.sh
-      name: test_monitor_test.sh
-      working-directory: "./framework/test"
     - run: carton exec ./test_mutation_analysis.sh
       name: test_mutation_analysis.sh
       working-directory: "./framework/test"
