@@ -84,28 +84,9 @@ sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
     my $vid = $self->{_vcs}->lookup_vid($revision_id);
 
-    # Convert the file encoding of problematic files
-    my $result = determine_layout($self, $revision_id);
-    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
-    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
-
-    # Some of the Lang tests were created pre Java 1.5 and contain an 'enum' package.
-    # The is now a reserved word in Java so we convert all references to 'oldenum'.
-    my $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/'";
-    my $log = `$cmd`;
-    my $ret = $?;
-    if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum 1") or die;
-    }
-
-    $cmd = "grep -lR '\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/'";
-    $log = `$cmd`;
-    $ret = $?;
-    if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum 2") or die;
-    }
-
-    # Fix compilation errors if necessary
+    # Fix compilation errors if necessary.
+    # Run this as the first step to ensure that patches are applicable to
+    # unmodified source files.
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
     opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
     my @entries = readdir(DIR);
@@ -117,6 +98,24 @@ sub _post_checkout {
                         or confess("Couldn't apply patch ($file): $!");
             }
         }
+    }
+
+    # Convert the file encoding of problematic files
+    my $result = determine_layout($self, $revision_id);
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang3/text/translate/EntityArrays.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/lang/Entities.java");
+
+
+    # Some of the Lang tests were created pre Java 1.5 and contain an 'enum' package.
+    # The is now a reserved word in Java so we convert all references to 'oldenum'.
+    if (-d "$work_dir/$result->{src}/org/apache/commons/lang/enum/") {
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{src}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum package in src") or die;
+        Utils::exec_cmd("cd $work_dir/$result->{src}/org/apache/commons/lang && mv enum oldenum", "Move enum package in src") or die;
+    }
+
+    if (-d "$work_dir/$result->{test}/org/apache/commons/lang/enum/") {
+        Utils::exec_cmd("grep -lR '\\.enum;' $work_dir'/'$result->{test}'/org/apache/commons/lang/enum/' | xargs sed -i'.bak' 's/\\.enum;/\\.oldenum;/'", "Rename enum package in test") or die;
+        Utils::exec_cmd("cd $work_dir/$result->{test}/org/apache/commons/lang && mv enum oldenum", "Move enum package in test") or die;
     }
 
     # Check whether ant build file exists
