@@ -1,4 +1,6 @@
 ## jackson-databind: a1404d5684783ccf28dc1b0a2791ce7c0c311907 ##
+--- com.fasterxml.jackson.databind.deser.DateDeserializationTest::testDateUtilISO8601_DateTimeMillis
+--- com.fasterxml.jackson.databind.deser.DateDeserializationTest::testDateUtilISO8601_DateTime
 --- com.fasterxml.jackson.databind.BaseMapTest
 junit.framework.AssertionFailedError: Class com.fasterxml.jackson.databind.BaseMapTest has no public constructor TestCase(String name) or TestCase()
 	at junit.framework.Assert.fail(Assert.java:57)
