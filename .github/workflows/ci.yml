@@ -64,6 +64,9 @@ jobs:
       working-directory: "./framework/test"
 
     # Verify a few select bugs to detect serious breakages early.
+    - run: carton exec ./test_verify_bugs.sh -p Collections -b 10 -A
+      name: "test_verify_bugs.sh -p Collections -b 10 -A"
+      working-directory: "./framework/test"
     - run: carton exec ./test_verify_bugs.sh -p Lang -b 24 -A
       name: "test_verify_bugs.sh -p Lang -b 24 -A"
       working-directory: "./framework/test"

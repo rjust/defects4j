@@ -83,26 +83,30 @@ sub determine_layout {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
+    my $vid = $self->{_vcs}->lookup_vid($rev_id);
 
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    # Fix compilation errors if necessary.
+    # Run this as the first step to ensure that patches are applicable to
+    # unmodified source files.
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($vid >= $1 && $vid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or die("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
+
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
         my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
         if (-d "$build_files_dir") {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
-    }
-
-    if (-e "$work_dir/build.xml"){
-        rename("$work_dir/build.xml", "$work_dir/build.xml".'.bak');
-        open(IN, '<'."$work_dir/build.xml".'.bak') or die $!;
-        open(OUT, '>'."$work_dir/build.xml") or die $!;
-        while(<IN>) {
-            $_ =~ s/\<javac srcdir=\"\$\{source\.home\}\" destdir=\"\$\{build\.home\}\/classes\" debug=\"\$\{compile\.debug\}\" deprecation\=\"\$\{compile\.deprecation\}\" target=\"\$\{compile\.target\}\" source=\"\$\{compile\.source\}\" excludes=\"\$\{compile\.excludes\}\" optimize=\"\$\{compile\.optimize\}\" includeantruntime=\"false\" encoding=\"\$\{compile\.encoding\}\"\>/\<javac fork=\"true\" srcdir=\"\$\{source\.home\}\" destdir=\"\$\{build\.home\}\/classes\" debug=\"\$\{compile\.debug\}\" deprecation\=\"\$\{compile\.deprecation\}\" target=\"1\.7\" source=\"1\.7\" excludes=\"\$\{compile\.excludes\}\" optimize=\"\$\{compile\.optimize\}\" includeantruntime=\"false\" encoding=\"\$\{compile\.encoding\}\"\>/g;
-            print OUT $_;
-        }
-        close(IN);
-        close(OUT);
     }
 
     # Convert the file encoding of a problematic file
