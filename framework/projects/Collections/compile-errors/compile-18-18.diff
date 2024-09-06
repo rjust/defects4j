@@ -64,6 +64,19 @@ index 1532cb14..96654243 100644
          Collection<V> valuesForKey = getCollection(key);
          if (valuesForKey == null) {
              return null;
+diff --git a/src/test/java/org/apache/commons/collections/collection/AbstractCollectionTest.java b/src/test/java/org/apache/commons/collections/collection/AbstractCollectionTest.java
+index bcc4a1be..b27899a9 100644
+--- a/src/test/java/org/apache/commons/collections/collection/AbstractCollectionTest.java
++++ b/src/test/java/org/apache/commons/collections/collection/AbstractCollectionTest.java
+@@ -1076,7 +1076,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
+         verify();
+ 
+         try {
+-            array = getCollection().toArray(null);
++            array = getCollection().toArray((Object[])null);
+             fail("toArray(null) should raise NPE");
+         } catch (NullPointerException e) {
+             // expected
 diff --git a/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java b/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java
 index 66e7477f..fa4d4e2e 100644
 --- a/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java
