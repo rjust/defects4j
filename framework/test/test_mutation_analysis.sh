@@ -7,7 +7,7 @@
 # TODO: There is some code duplication in this test script, which we can avoid
 # by extracting the mutation analysis workflow into a parameterized function. 
 
-HERE=$(cd `dirname $0` && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -51,7 +51,7 @@ _check_mutation_result() {
 
     # The last row of 'summary.csv' does not have an end of line character.
     # Otherwise, using wc would be more intuitive.
-    local num_rows=$(grep -c "^" "$summary_file")
+    local num_rows; num_rows=$(grep -c "^" "$summary_file")
     [ "$num_rows" -eq "2" ] || die "Unexpected number of lines in '$summary_file'!"
 
     # Columns of summary (csv) file:
@@ -143,7 +143,7 @@ _set_vars "Chart" "12f"
 # Remove temporary directory if it already exists
 rm -rf "$pid_vid_dir"
 # Checkout project-version
-defects4j checkout -p $pid -v $vid -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
+defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
 # Remove the summary file to ensure it is regenerated
 rm -f "$summary_file"
 defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
@@ -156,7 +156,7 @@ _set_vars "Mockito" "12f"
 # Remove temporary directory if it already exists
 rm -rf "$pid_vid_dir"
 # Checkout project-version
-defects4j checkout -p $pid -v $vid -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
+defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
 # Remove the summary file to ensure it is regenerated
 rm -f "$summary_file"
 defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"

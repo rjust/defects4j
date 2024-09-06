@@ -49,7 +49,7 @@ while getopts ":p:b:AD" opt; do
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
-                BUGS="$BUGS $(eval echo {$OPTARG})"
+                BUGS="$BUGS $(eval echo "{$OPTARG}")"
            else
                 BUGS="$BUGS $OPTARG"
            fi
@@ -75,7 +75,7 @@ fi
 
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
-    BUGS="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
+    BUGS="$(get_bug_ids "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE")"
 fi
 
 if [ "$DEBUG" == "-D" ]; then
@@ -83,9 +83,9 @@ if [ "$DEBUG" == "-D" ]; then
 fi
 
 # Create log file
-script_name=$(echo $script | sed 's/\.sh$//')
-LOG="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).log"
-DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).failing_tests"
+script_name_without_sh=${script//.sh/}
+LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
+DIR_FAILING="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).failing_tests"
 
 ################################################################################
 # Run developer-written tests on all buggy and fixed program versions, and 
@@ -96,15 +96,15 @@ DIR_FAILING="$TEST_DIR/${script_name}$(printf '_%s_%s' $PID $$).failing_tests"
 HALT_ON_ERROR=0
 
 test_dir="$TMP_DIR/test_trigger"
-mkdir -p $test_dir
+mkdir -p "$test_dir"
 
-mkdir -p $DIR_FAILING
+mkdir -p "$DIR_FAILING"
 
 work_dir="$test_dir/$PID"
 
 # Clean working directory
-rm -rf $work_dir
-for bid in $(echo $BUGS); do
+rm -rf "$work_dir"
+for bid in $BUGS ; do
     # Skip all bug ids that do not exist in the active-bugs csv
     if ! grep -q "^$bid," "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE"; then
         warn "Skipping bug ID that is not listed in active-bugs csv: $PID-$bid"
@@ -113,8 +113,7 @@ for bid in $(echo $BUGS); do
 
     for v in "b" "f"; do
         vid=${bid}$v
-        defects4j checkout -p $PID -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
-
+        defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
         defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
@@ -123,7 +122,7 @@ for bid in $(echo $BUGS); do
         triggers=$(num_triggers "$work_dir/failing_tests")
         # Expected number of failing tests for each fixed version is 0!
         if [ $v == "f" ]; then
-            [ $triggers -eq 0 ] \
+            [ "$triggers" -eq 0 ] \
                     || die "verify number of triggering tests: $PID-$vid (expected: 0, actual: $triggers)"
             continue
         fi
@@ -133,9 +132,9 @@ for bid in $(echo $BUGS); do
         expected=$(num_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid")
 
         # Fail if there are no trigger tests
-        [ $expected -gt 0 ] || die "Metadata error: There are no trigger tests for $PID-$vid"
+        [ "$expected" -gt 0 ] || die "Metadata error: There are no trigger tests for $PID-$vid"
 
-        [ $triggers -eq $expected ] \
+        [ "$triggers" -eq "$expected" ] \
                 || die "verify number of triggering tests: $PID-$vid (expected: $expected, actual: $triggers)"
         for t in $(get_triggers "$BASE_DIR/framework/projects/$PID/trigger_tests/$bid"); do
             grep -q "$t" "$work_dir/failing_tests" || die "expected triggering test $t did not fail"
@@ -153,7 +152,7 @@ if [ $ERROR != 0 ]; then
     printf '=%.s' $(seq 1 80) 1>&2
     echo 1>&2
     echo "The following errors occurred:" 1>&2
-    cat $LOG 1>&2
+    cat "$LOG" 1>&2
 fi
 
 # Indicate whether an error occurred
