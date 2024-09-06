@@ -3,7 +3,7 @@
 set -e
 
 # The name of the archive that contains all project repos
-ARCHIVE=defects4j-repos.zip
+ARCHIVE=defects4j-repos-v3.zip
 
 clean() {
     rm -rf \

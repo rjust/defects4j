@@ -73,7 +73,7 @@ sub create_mml {
     my ($instrument_classes, $out_file, $mut_ops) = @_;
 
     my $OUT_DIR = Utils::get_dir($out_file);
-    my $TEMPLATE = `cat $MAJOR_ROOT/mml/template.mml` or die "Cannot read mml template: $!";
+    my $TEMPLATE = `cat $UTIL_DIR/template.mml` or die "Cannot read mml template: $!";
 
     system("mkdir -p $OUT_DIR");
 
@@ -267,7 +267,7 @@ sub _build_mut_map {
     $_ = <IN>;
     while(<IN>) {
         chomp;
-        /(\d+),(TIME|EXC|FAIL|LIVE)/ or die "Wrong format of kill details file";
+        /(\d+),(TIME|EXC|FAIL|LIVE|UNCOV)/ or die "Wrong format of kill details file";
         $mut_map->{$1}=$2;
     }
     close(IN);
@@ -292,7 +292,7 @@ sub _exclude_mutants {
 
     open(OUT, ">$project->{prog_root}/$EXCL_FILE") or die "Cannot open exclude file!";
     foreach my $mut_id (keys %{$mut_map}) {
-        next if ($mut_map->{$mut_id} eq "LIVE");
+        next if ($mut_map->{$mut_id} =~ "(LIVE|UNCOV)");
         print OUT "$mut_id\n";
     }
 

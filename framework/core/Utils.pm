@@ -42,6 +42,7 @@ use File::Spec;
 use Cwd qw(abs_path);
 use Carp qw(confess);
 use Fcntl qw< LOCK_EX SEEK_END >;
+use String::Interpolate qw(safe_interpolate);
 
 use Constants;
 
@@ -275,6 +276,69 @@ sub print_env {
 
 =pod
 
+=item C<Utils::print_perl_call_stack>
+
+Print the current Perl execution stack trace to F<stderr>.
+
+=cut
+
+sub print_perl_call_stack {
+    my ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash);
+    my $i = 1;
+    my @r;
+    while (@r = caller($i)) {
+        ($package, $filename, $line, $subroutine, $hasargs, $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = @r;
+        print(STDERR  "$filename:$line $subroutine\n");
+        $i++;
+    }
+}
+
+=pod
+
+=item C<Utils::convert_file_encoding(file_name)>
+
+Copies the original file to <file_name>.bak then converts
+the encoding of file_name from iso-8859-1 to utf-8.
+
+=cut
+
+sub convert_file_encoding {
+    @_ == 1 or die $ARG_ERROR;
+    my ($file_name) = @_;
+    if (-e $file_name){
+        rename($file_name, $file_name.".bak");
+        open(OUT, '>'.$file_name) or die $!;
+        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $file_name.bak`;
+        print OUT $converted_file;
+        close(OUT);
+    }
+}
+
+=pod
+
+=item C<Utils::sed_cmd(cmd_string, file_name)>
+
+Uses sed with cmd_string to modify file_name.
+
+=cut
+
+sub sed_cmd {
+    @_ == 2 || die $ARG_ERROR;
+    my ($cmd_string, $file_name) = @_;
+
+    print(STDERR "About to execute command: sed -i $cmd_string $file_name\n") if $DEBUG;
+
+    # We ignore sed result as it is ok if command fails.
+    chomp(my $uname = `uname -s`);
+    if ($uname eq "Darwin" ) {
+        `sed -i '' -e '$cmd_string' $file_name`;
+    } else {
+        `sed -i "$cmd_string" "$file_name"`;
+    }
+}
+
+=pod
+
 =item C<Utils::is_continuous_integration>
 
 Returns true if this process is running under continuous integration.
@@ -291,6 +355,71 @@ sub is_continuous_integration {
     || (defined $ENV{"TRAVIS"}
         && $ENV{"TRAVIS"} eq "true")
     );
+}
+
+=pod
+
+=item C<Utils::fix_dependency_urls(build_file, pattern_file, multi_line)>
+
+Parses the F<build_file> and applies the first matching pattern in the F<pattern_file>.
+
+=cut
+sub fix_dependency_urls {
+    @_ == 3 || die $ARG_ERROR;
+    my ($build_file, $pattern_file, $multi_line) = @_;
+
+    open(IN, "<$build_file") or die("Cannot read the build file: $build_file");
+    my @lines = <IN>;
+    close(IN);
+
+    open(IN, "<$pattern_file") or die("Cannot read pattern file: $pattern_file");
+    my @patterns = <IN>;
+    close(IN);
+
+    # Read all regexes; skip comments
+    my @regexes;
+    foreach my $l (@patterns) {
+        $l =~ /^\s*#/ and next;
+        chomp($l);
+        $l =~ /([^,]+),([^,]+)/ or die("Row in pattern file in wrong format: $l (expected: <find>,<replace>)");
+        my ($find, $repl) = split(",", $l);
+        if (! $multi_line) {
+            push(@regexes, [qr/$find/, $repl]);
+        } else {
+            print(STDERR "Multi-line matching enabled.\n");
+            push(@regexes, [qr/$find/ms, $repl]);
+            # Replace the list of lines with a single entry, if multi-line match
+            # is enabled. This allows us to use the same iteration over all
+            # "lines" below.
+            @lines = join("", @lines);
+        }
+    }
+
+    # Process the build file
+    my $modified = 0;
+    for (my $i=0; $i<=$#lines; ++$i) {
+        my $l = $lines[$i];
+        foreach (@regexes) {
+            if ($l =~ s/$$_[0]/safe_interpolate($$_[1])/eg) {
+                unless($modified) {
+                    exec_cmd("cp $build_file $build_file.bak", "Backing up build file: $build_file");
+                    $modified = 1;
+                }
+                print(STDERR "Pattern matches in build file ($build_file): $$_[0]\n") if $DEBUG;
+                $lines[$i] = $l;
+                last;
+            }
+        }
+    }
+
+    # Update the build file if necessary
+    if ($modified) {
+        unlink($build_file);
+        my $fix = IO::File->new(">$build_file") or die("Cannot overwrite build file: $!");
+        print $fix @lines;
+        $fix->flush();
+        $fix->close();
+    }
 }
 
 =pod

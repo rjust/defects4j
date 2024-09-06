@@ -62,8 +62,10 @@ REG_BASE_NAME=RegressionTest
 ERR_BASE_NAME=ErrorTest
 
 # Print Randoop version
+#shellcheck disable=SC2153 # D4J_DIR_TESTGEN_LIB is not a typo of D4J_DIR_TESTGEN_BIN
 version=$(java -cp "$D4J_DIR_TESTGEN_LIB/randoop-current.jar" randoop.main.Main | head -1)
 printf "\n(%s)" "$version" >&2
+# shellcheck disable=SC1083
 printf ".%.0s" {1..expr 73 - length "$version"} >&2
 printf " " >&2
 

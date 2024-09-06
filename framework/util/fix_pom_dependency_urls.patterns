@@ -1,0 +1,12 @@
+# This file lists rules, intended to fix broken dependency declarations in pom
+# build files.
+#
+# Each row must have the following format: <find>,<replace>. The two parts in
+# each row form a substitution regex (s/<find>/<replace>/g). Rows starting with
+# '#' are ignored.
+#
+# The pairs are processed in order: as soon as a <find> pattern matches, the
+# corresponding line in the build/properties file will be updated and all other
+# patterns ignored for that line.
+#
+(<artifactId>commons-vfs2</artifactId>[^<]*)<version>2.0-SNAPSHOT</version>,${1}<version>2.0</version>

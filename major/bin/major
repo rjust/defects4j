@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if [ ! -z "$MML" ]; then
-    echo "Major: Mutation enabled using mml file: $MML"
-    OPT="-XMutator=$MML $MAJOR_OPT"
-fi
-javac $OPT $@
