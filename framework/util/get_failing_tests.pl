@@ -110,9 +110,11 @@ foreach my $bid (@ids) {
     my $rev_id = $project->lookup($vid);
     my $out_file = "$PROJECTS_DIR/$PID/failing_tests/$rev_id";
 
-    # Remove existing file, which would otherwise result in some tests being
-    # excluded during checkout.
-    Utils::exec_cmd("mv $out_file $out_file.bak", "Remove failing-tests file") or die "Cannot remove existing file";
+    if (-e $out_file) {
+      # Remove existing file, which would otherwise result in some tests being
+      # excluded during checkout.
+      Utils::exec_cmd("mv $out_file $out_file.bak", "Remove failing-tests file") or die "Cannot remove existing file";
+    }
     $project->checkout_vid($vid) or die "Could not checkout ${vid}";
     $project->compile() or die "Could not compile";
     $project->compile_tests() or die "Could not compile tests";
