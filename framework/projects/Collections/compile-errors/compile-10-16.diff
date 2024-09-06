@@ -242,3 +242,50 @@ index 65614037..e492e01e 100644
          assertEquals(new MultiValueMap(), map);
      }
  
+diff --git a/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java b/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
+index efeeec3b..ad08d6b7 100644
+--- a/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
++++ b/src/java/org/apache/commons/collections/bidimap/TreeBidiMap.java
+@@ -16,8 +16,6 @@
+  */
+ package org.apache.commons.collections.bidimap;
+ 
+-import java.io.Serializable;
+-
+ import java.util.AbstractSet;
+ import java.util.Collection;
+ import java.util.ConcurrentModificationException;
+@@ -75,7 +73,7 @@ import org.apache.commons.collections.keyvalue.UnmodifiableMapEntry;
+  * @author Marc Johnson
+  * @author Stephen Colebourne
+  */
+-public class TreeBidiMap implements OrderedBidiMap, Serializable {
++public class TreeBidiMap implements OrderedBidiMap {
+ 
+     private static final int KEY = 0;
+     private static final int VALUE = 1;
+@@ -89,11 +87,10 @@ public class TreeBidiMap implements OrderedBidiMap, Serializable {
+     private Node[] rootNode = new Node[2];
+     private int nodeCount = 0;
+     private int modifications = 0;
+-
+-    private transient Set keySet;
+-    private transient Set valuesSet;
+-    private transient Set entrySet;
+-    private transient TreeBidiMap.Inverse inverse = null;
++    private Set keySet;
++    private Set valuesSet;
++    private Set entrySet;
++    private TreeBidiMap.Inverse inverse = null;
+ 
+     //-----------------------------------------------------------------------
+     /**
+@@ -1710,7 +1707,7 @@ public class TreeBidiMap implements OrderedBidiMap, Serializable {
+     /**
+      * A node used to store the data.
+      */
+-    static class Node implements Map.Entry, KeyValue, Serializable {
++    static class Node implements Map.Entry, KeyValue {
+ 
+         private Comparable[] data;
+         private Node[] leftNode;
