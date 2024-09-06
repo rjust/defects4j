@@ -1,4 +1,4 @@
-## commons-lang: 1f35e7c99b66b8d46c4ad96558e694a10aa38062 ##
+## commons-lang: 32f (1f35e7c99b66b8d46c4ad96558e694a10aa38062) ##
 --- org.apache.commons.lang3.ClassUtilsTest::test_isAssignable
 junit.framework.AssertionFailedError: expected:<false> but was:<true>
 	at junit.framework.Assert.fail(Assert.java:57)

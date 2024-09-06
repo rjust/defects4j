@@ -1,4 +1,4 @@
-## commons-lang: 34a6449c90a3b6074111a6bcbd31ad00ac1570f3 ##
+## commons-lang: 18f (34a6449c90a3b6074111a6bcbd31ad00ac1570f3) ##
 --- org.apache.commons.lang3.time.FastDateFormatTest::testShortDateStyleWithLocales
 junit.framework.ComparisonFailure: expected:<[20]04-02-03> but was:<[]04-02-03>
 	at junit.framework.Assert.assertEquals(Assert.java:100)

@@ -1,4 +1,4 @@
-## commons-lang: 825481f019e4482e5ea74d5b0b5e5c438535cb68 ##
+## commons-lang: 38f (825481f019e4482e5ea74d5b0b5e5c438535cb68) ##
 --- org.apache.commons.lang3.LocaleUtilsTest::testToLocale_3Part
 junit.framework.ComparisonFailure: expected:<[A]> but was:<[a]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
