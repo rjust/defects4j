@@ -19,4 +19,3 @@ done
 for file in "$TOPLEVEL"/init.sh "$TOPLEVEL"/framework/lib/test_generation/bin/_tool.source ; do
     shellcheck -x -P SCRIPTDIR --format=gcc "$file"
 done
-
