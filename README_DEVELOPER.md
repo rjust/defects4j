@@ -63,6 +63,11 @@ Notes
 #### Testing
 The test\_verfiy\_bugs.sh script is essentially the test oracle -- if it passes,
 the updates/changes were successful.
+
+Note that a requirement before making a release is to run this script with the -A
+option.  See framework/test/README.md for more details about this step and more
+information about all the testing scripts.
+
 #### Project Repos
 * Ideally, we would simply run git pull on each of the name.git repositories to
 update the version control history every once in a while and update the archive
