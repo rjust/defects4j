@@ -7,7 +7,7 @@
 # TODO: There is some code duplication in this test script, which we can avoid
 # by extracting the mutation analysis workflow into a parameterized function. 
 
-HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -56,10 +56,10 @@ _check_mutation_result() {
 
     # Columns of summary (csv) file:
     # MutantsGenerated,MutantsRetained,MutantsCovered,MutantsKilled,MutantsLive,RuntimePreprocSeconds,RuntimeAnalysisSeconds
-    local act_mut_gen=$(tail -n1  "$summary_file" | cut -f1 -d',')
-    local act_mut_ret=$(tail -n1  "$summary_file" | cut -f2 -d',')
-    local act_mut_cov=$(tail -n1  "$summary_file" | cut -f3 -d',')
-    local act_mut_kill=$(tail -n1 "$summary_file" | cut -f4 -d',')
+    local act_mut_gen; act_mut_gen=$(tail -n1  "$summary_file" | cut -f1 -d',')
+    local act_mut_ret; act_mut_ret=$(tail -n1  "$summary_file" | cut -f2 -d',')
+    local act_mut_cov; act_mut_cov=$(tail -n1  "$summary_file" | cut -f3 -d',')
+    local act_mut_kill; act_mut_kill=$(tail -n1 "$summary_file" | cut -f4 -d',')
 
     [ "$act_mut_gen"  -eq "$exp_mut_gen" ] || die "Unexpected number of mutants generated (expected: $exp_mut_gen, actual: $act_mut_gen)!"
     [ "$act_mut_ret"  -eq "$exp_mut_ret" ] || die "Unexpected number of mutants retained (expected: $exp_mut_ret, actual: $act_mut_ret)!"

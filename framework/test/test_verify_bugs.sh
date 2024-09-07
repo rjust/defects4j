@@ -17,7 +17,7 @@
 #
 ################################################################################
 
-HERE=$(cd `dirname $0` && pwd)
+HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -25,7 +25,7 @@ init
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id> [-b <bug id> ... | -b <bug id range> ... ] [-D]"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -35,14 +35,14 @@ usage() {
 }
 
 # Run only relevant tests by default
-TEST_FLAG="-r"
+TEST_FLAG_OR_EMPTY="-r"
 # Debugging is off by default
 DEBUG=""
 
 # Check arguments
 while getopts ":p:b:AD" opt; do
     case $opt in
-        A) TEST_FLAG=""
+        A) TEST_FLAG_OR_EMPTY=""
             ;;
         D) DEBUG="-D"
             ;;
@@ -115,7 +115,7 @@ for bid in $BUGS ; do
         vid=${bid}$v
         defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j test $TEST_FLAG_OR_EMPTY -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
@@ -143,7 +143,7 @@ for bid in $BUGS ; do
 done
 
 if [ "$DEBUG" != "-D" ]; then
-    rm -rf $TMP_DIR
+    rm -rf "$TMP_DIR"
 fi
 HALT_ON_ERROR=1
 

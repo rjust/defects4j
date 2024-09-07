@@ -7,7 +7,7 @@
 
 set -e
 
-HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -16,7 +16,6 @@ init
 BUG_MINING_FRAMEWORK_DIR="$BASE_DIR/framework/bug-mining"
 [ -d "$BUG_MINING_FRAMEWORK_DIR" ] || die "$BUG_MINING_FRAMEWORK_DIR does not exist"
 
-RESOURCES_INPUT_DIR="$HERE/resources/input/bug-mining"
 RESOURCES_OUTPUT_DIR="$HERE/resources/output/bug-mining"
 
 _check_output() {
@@ -233,8 +232,8 @@ test_analyze_project() {
     [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
 
     # Same number of failing tests
-    local actual_num_failing_tests; actual_num_failing_tests=$(grep -a "^--- " "$work_dir/$failing_tests" | wc -l)
-    local expected_num_failing_tests; expected_num_failing_tests=$(grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests" | wc -l)
+    local actual_num_failing_tests; actual_num_failing_tests=$(grep -c -a "^--- " "$work_dir/$failing_tests")
+    local expected_num_failing_tests; expected_num_failing_tests=$(grep -c -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests")
     if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
       echo "Expected failing tests:"
       grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
