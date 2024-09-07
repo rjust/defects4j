@@ -31,7 +31,8 @@ while getopts ":p:b:" opt; do
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
-               BUGS="$BUGS $(eval echo \{"$OPTARG"\})"
+               # shellcheck disable=SC1083,2086
+                BUGS="$BUGS $(eval echo {$OPTARG})"
            else
                BUGS="$BUGS $OPTARG"
            fi
