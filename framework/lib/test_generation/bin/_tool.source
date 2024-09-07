@@ -24,7 +24,8 @@ die() {
 check_env() {
     local var="$1"
     local val
-    val="$(eval echo \$"$var")"
+    # shellcheck disable=SC2086
+    val="$(eval echo \$$var)"
     [ -z "$val" ] && die "Variable $var not set!"
 }
 
