@@ -38,14 +38,14 @@ if [ -z "$1" ] ; then
     bids=( 1 2 3 4 5 )
 else
 # Generate tests for supplied project list
-    # shellcheck disable=SC2206
+    # shellcheck disable=SC2206 # $1 is a list.
     projects=( $1 )
     if [ -z "$2" ] ; then
 # Generate tests for all bids
         bids=( 1 2 3 4 5 )
     else
 # Generate tests for supplied bid list
-        # shellcheck disable=SC2206
+        # shellcheck disable=SC2206 # #2 is a list
         bids=( $2 )
     fi
 fi
