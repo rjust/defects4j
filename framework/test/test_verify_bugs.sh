@@ -115,7 +115,7 @@ for bid in $BUGS ; do
         vid=${bid}$v
         defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test "$TEST_FLAG" -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
