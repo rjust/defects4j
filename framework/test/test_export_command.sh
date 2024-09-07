@@ -10,7 +10,7 @@
 #
 ################################################################################
 
-HERE=$(cd `dirname $0` && pwd)
+HERE=$(cd "$(dirname "$0")" && pwd) || (echo "cannot cd to $(dirname "$0")" && exit 1)
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -25,14 +25,12 @@ _run_export_command() {
     local exp_cmp="$2"
     local exp_out=""
 
-    pushd . > /dev/null 2>&1
-    cd "$work_dir"
-        exp_out=$(defects4j export -p "$exp_cmp")
-        if [ $? -ne 0 ]; then
-            popd > /dev/null 2>&1
+    pushd "$work_dir" > /dev/null 2>&1 || (echo "Cannot pushd to $work_dir" && exit 1)
+        if ! defects4j export -p "$exp_cmp" ; then
+            popd > /dev/null 2>&1 || (echo "Cannot popd" && exit 1)
             return 1
         fi
-    popd > /dev/null 2>&1
+    popd > /dev/null 2>&1 || (echo "Cannot popd" && exit 1)
 
     echo "$exp_out"
     return 0
@@ -48,7 +46,8 @@ test_export_properties() {
     #################################################################
     # Iterate over all bugs
     #################################################################
-    local bids="$(get_bug_ids $BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE)"
+    local bids
+    bids="$(get_bug_ids "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE")"
     for bid in $bids; do
         local work_dir="$test_dir/$pid/$bid"
         mkdir -p "$work_dir"
@@ -58,9 +57,8 @@ test_export_properties() {
         #################################################################
         # Check "dir.bin.tests"
         #################################################################
-        local test_classes_dir=""
-        test_classes_dir=$(_run_export_command "$work_dir" "dir.bin.tests")
-        if [ $? -ne 0 ]; then
+        local test_classes_dir=""; 
+        if ! test_classes_dir=$(_run_export_command "$work_dir" "dir.bin.tests") ; then
             die "Export command of $pid-$bid has failed"
         fi
 
@@ -134,8 +132,7 @@ test_export_properties() {
         # Check "dir.bin.classes"
         #################################################################
         local classes_dir=""
-        classes_dir=$(_run_export_command "$work_dir" "dir.bin.classes")
-        if [ $? -ne 0 ]; then
+        if ! classes_dir=$(_run_export_command "$work_dir" "dir.bin.classes") ; then
             die "Export command of $pid-$bid has failed"
         fi
 
@@ -181,7 +178,7 @@ test_export_properties() {
 
 # Print usage message and exit
 usage() {
-    local known_pids=$(defects4j pids)
+    local known_pids; known_pids=$(defects4j pids)
     echo "usage: $0 -p <project id>"
     echo "Project ids:"
     for pid in $known_pids; do
@@ -214,7 +211,7 @@ fi
 for PID in $PIDS; do
     HALT_ON_ERROR=0
     # Run all test cases (and log all results), regardless of whether errors occur
-    test_export_properties $PID || die "Test 'test_export_properties' has failed!"
+    test_export_properties "$PID" || die "Test 'test_export_properties' has failed!"
 done
 
 # Print a summary of what went wrong
@@ -222,7 +219,7 @@ if [ "$ERROR" -ne "0" ]; then
     printf '=%.s' $(seq 1 80) 1>&2
     echo 1>&2
     echo "The following errors occurred:" 1>&2
-    cat $LOG 1>&2
+    cat "$LOG" 1>&2
 fi
 
 # Indicate whether an error occurred

@@ -398,9 +398,11 @@ sub _apply_cmd {
         $log .= "* $cmd\n";
         $log .= `$cmd`;
         if ($? == 0) {
+            print(STDERR "patch applied: $patch_file\n") if $DEBUG;
             return("cd $work_dir; git apply -p$n $patch_file 2>&1");
         }
     }
+
     confess("Cannot determine how to apply patch!\n" .
             "All attempts failed:\n$log" . "-" x 70 . "\n");
 }

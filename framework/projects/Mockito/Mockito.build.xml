@@ -1,7 +1,5 @@
 <project name="Mockito" basedir="${basedir}">
 
-    <!-- Force build in Java 1.7 for older versions of the project -->
-    <property name="build.compiler" value="javac1.7"/>
     <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
 
     <!-- Check for an existing build.xml, should only exist in older commits -->
@@ -21,10 +19,10 @@
     </condition>
 
     <!-- Location of compiled classes changes in older builds -->
-    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/test">
+    <condition property="test.home" value="${basedir}/target/test-classes" else="${basedir}/build/classes/java/test">
         <istrue value="${use.ant}"/>
     </condition>
-    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/main">
+    <condition property="classes.dir" value="${basedir}/target/classes" else="${basedir}/build/classes/java/main">
         <istrue value="${use.ant}"/>
     </condition>
     <condition property="test.src.home" value="${basedir}/src/test" else="${basedir}/test">

@@ -1,3 +1,6 @@
+--- org.joda.time.format.TestDateTimeFormat::testFormatParse_textHalfdayAM_UK
+--- org.joda.time.format.TestDateTimeFormat::testFormat_halfdayOfDay
+--- org.joda.time.format.TestDateTimeFormat::testFormatParse_textEraBC_France
 --- org.joda.time.TestDateTimeZone::testGetShortName
 junit.framework.ComparisonFailure: expected:<[BST]> but was:<[+01:00]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
