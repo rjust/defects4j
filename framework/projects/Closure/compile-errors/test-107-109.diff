@@ -1,0 +1,32 @@
+diff --git a/test/com/google/debugging/sourcemap/SourceMapConsumerV3Test.java b/test/com/google/debugging/sourcemap/SourceMapConsumerV3Test.java
+index 0364059cf..39a501b45 100644
+--- a/test/com/google/debugging/sourcemap/SourceMapConsumerV3Test.java
++++ b/test/com/google/debugging/sourcemap/SourceMapConsumerV3Test.java
+@@ -20,6 +20,7 @@ import junit.framework.TestCase;
+
+ import org.json.JSONArray;
+
++import java.util.Collection;
+ import java.util.Map;
+
+ /**
+@@ -41,7 +41,8 @@ public class SourceMapConsumerV3Test extends TestCase {
+     SourceMapConsumerV3 consumer = new SourceMapConsumerV3();
+     consumer.parse(sourceMap);
+
+-    String[] sources = (String[]) consumer.getOriginalSources().toArray();
++    Collection<String> temp = consumer.getOriginalSources();
++    String[] sources = temp.toArray(new String[0]);
+
+     assertEquals(1, sources.length);
+     assertEquals(null, consumer.getSourceRoot());
+@@ -62,7 +63,8 @@ public class SourceMapConsumerV3Test extends TestCase {
+     SourceMapConsumerV3 consumer = new SourceMapConsumerV3();
+     consumer.parse(sourceMap);
+
+-    String[] sources = (String[]) consumer.getOriginalSources().toArray();
++    Collection<String> temp = consumer.getOriginalSources();
++    String[] sources = temp.toArray(new String[0]);
+
+     assertEquals(1, sources.length);
+     assertEquals("http://server/path/", consumer.getSourceRoot());
