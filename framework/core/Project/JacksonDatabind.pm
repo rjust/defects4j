@@ -106,11 +106,18 @@ sub _post_checkout {
         Utils::exec_cmd("grep -lR '<Module>' $work_dir | xargs sed -i'.bak' -e 's/<Module>/<com.fasterxml.jackson.databind.Module>/'", "Correct Module ambiguity 3") or die;
     }
 
+    $cmd = "grep -lR '(Module)' $work_dir ";
+    $log = `$cmd`;
+    $ret = $?;
+    if ($ret == 0 && length($log) > 0) {
+        Utils::exec_cmd("grep -lR '(Module)' $work_dir | xargs sed -i'.bak' -e 's/(Module)/(com.fasterxml.jackson.databind.Module)/'", "Correct Module ambiguity 4") or die;
+    }
+
     $cmd = "grep -lR 'new Module()' $work_dir ";
     $log = `$cmd`;
     $ret = $?;
     if ($ret == 0 && length($log) > 0) {
-        Utils::exec_cmd("grep -lR 'new Module()' $work_dir | xargs sed -i'.bak' -e 's/new Module()/new com.fasterxml.jackson.databind.Module()/'", "Correct Module ambiguity 4") or die;
+        Utils::exec_cmd("grep -lR 'new Module()' $work_dir | xargs sed -i'.bak' -e 's/new Module()/new com.fasterxml.jackson.databind.Module()/'", "Correct Module ambiguity 5") or die;
     }
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
