@@ -35,14 +35,14 @@ usage() {
 }
 
 # Run only relevant tests by default
-TEST_FLAG="-r"
+TEST_FLAG_OR_EMPTY="-r"
 # Debugging is off by default
 DEBUG=""
 
 # Check arguments
 while getopts ":p:b:AD" opt; do
     case $opt in
-        A) TEST_FLAG=""
+        A) TEST_FLAG_OR_EMPTY=""
             ;;
         D) DEBUG="-D"
             ;;
@@ -115,7 +115,7 @@ for bid in $BUGS ; do
         vid=${bid}$v
         defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
         defects4j compile -w "$work_dir" || die "compile: $PID-$vid"
-        defects4j test $TEST_FLAG -w "$work_dir" || die "run relevant tests: $PID-$vid"
+        defects4j test $TEST_FLAG_OR_EMPTY -w "$work_dir" || die "run relevant tests: $PID-$vid"
 
         cat "$work_dir/failing_tests" > "$DIR_FAILING/$vid"
 
