@@ -71,10 +71,13 @@ sub _post_checkout {
     my @entries = readdir(DIR);
     closedir(DIR);
     foreach my $file (@entries) {
-        if ($file =~ /-(\d+)-(\d+).diff/) {
+        if ($file =~ /-(\d+)-(\d+)(.optional)?.diff/) {
+            my $opt = $3;
             if ($vid >= $1 && $vid <= $2) {
-                $self->apply_patch($work_dir, "$compile_errors/$file")
-                        or confess("Couldn't apply patch ($file): $!");
+                my $ret = $self->apply_patch($work_dir, "$compile_errors/$file", $opt);
+                if (!$ret && !$opt) {
+                    confess("Couldn't apply patch ($file): $!");
+                }
             }
         }
     }
@@ -94,6 +97,20 @@ sub _post_checkout {
     $ret = $?;
     if ($ret == 0 && length($log) > 0) {
         Utils::exec_cmd("grep -lR ' Module ' $work_dir | xargs sed -i'.bak' -e 's/ Module / com.fasterxml.jackson.databind.Module /'", "Correct Module ambiguity 2") or die;
+    }
+
+    $cmd = "grep -lR '<Module>' $work_dir ";
+    $log = `$cmd`;
+    $ret = $?;
+    if ($ret == 0 && length($log) > 0) {
+        Utils::exec_cmd("grep -lR '<Module>' $work_dir | xargs sed -i'.bak' -e 's/<Module>/<com.fasterxml.jackson.databind.Module>/'", "Correct Module ambiguity 3") or die;
+    }
+
+    $cmd = "grep -lR 'new Module()' $work_dir ";
+    $log = `$cmd`;
+    $ret = $?;
+    if ($ret == 0 && length($log) > 0) {
+        Utils::exec_cmd("grep -lR 'new Module()' $work_dir | xargs sed -i'.bak' -e 's/new Module()/new com.fasterxml.jackson.databind.Module()/'", "Correct Module ambiguity 4") or die;
     }
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
