@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh script, one line per each bug.
+jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh script, one line per bug.
 
 =head1 SYNOPSIS
 
@@ -72,6 +72,6 @@ for my $file (@files) {
   my $name = $project->{prog_name};
   my @bug_ids = $project->get_bug_ids();
   for my $id (@bug_ids) {
-    print("./test_verify_bugs.sh -p $pid -b $id -A \n");
+    print("./test_verify_bugs.sh -p $pid -b $id -A\n");
   }
 }
