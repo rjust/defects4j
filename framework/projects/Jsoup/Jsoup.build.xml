@@ -85,6 +85,7 @@ of the checked-out project version.
         <include name='**/*TestCase.java' />
         <include name='**/Test*.java' />
         <exclude name='**/*Abstract*Test.java' />
+        <exclude name='org.jsoup.integration.TestServer' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
