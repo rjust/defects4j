@@ -83,7 +83,7 @@ junit.framework.AssertionFailedError: Expected: <null> but was: true
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
-junit.framework.ComparisonFailure: expected:<...2a7fce[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...2a7fce[elementData={[]},size=0,modCount=0]>
+junit.framework.ComparisonFailure: expected:<...4361a9[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...4361a9[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
 	at junit.framework.Assert.assertEquals(Assert.java:107)
 	at junit.framework.TestCase.assertEquals(TestCase.java:269)

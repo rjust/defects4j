@@ -465,7 +465,7 @@ junit.framework.ComparisonFailure: expected:<[org.apache.commons.lang.builder.To
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.apache.commons.lang.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
-junit.framework.ComparisonFailure: expected:<...1e664e[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...1e664e[elementData={[]},size=0,modCount=0]>
+junit.framework.ComparisonFailure: expected:<...b3df93[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...b3df93[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
 	at junit.framework.Assert.assertEquals(Assert.java:107)
 	at junit.framework.TestCase.assertEquals(TestCase.java:269)
