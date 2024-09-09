@@ -4,6 +4,17 @@ TOPLEVEL="$(git rev-parse --show-toplevel)"
 
 cd "$TOPLEVEL" || (echo "Cannot cd to $TOPLEVEL" && exit 1)
 
+# Check style of Perl scripts
+find . \( -name '*.pm' -o -name '*.pl' \) -print0 | xargs -0 -n1 perl -Mstrict -Mdiagnostics -cw
+grep -l --exclude-dir=project_repos --exclude=\*.pm --exclude=\*.pl --exclude=\*.sh --exclude=template -r "=pod" . | while IFS= read -r file ; do
+    perl -Mstrict -Mdiagnostics -cw "$file"
+done
+# Don't run perlcritic yet.
+## Over time, reduce the severity number, eventually to 1.
+# perlcritic --severity 5 "$TOPLEVEL"/framework
+# Don't run perltidy yet.
+# find . \( -name '*.pm' -o -name '*.pl' \) -print0 | xargs -0 perltidy -b
+
 # Check style of sh scripts.
 grep -r -l '^\#! \?\(/bin/\|/usr/bin/env \)sh' --exclude=\*~ "$TOPLEVEL"/framework | while read -r line
 do
