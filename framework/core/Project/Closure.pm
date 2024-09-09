@@ -68,7 +68,15 @@ sub determine_layout {
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $rev_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+    # get original bid
+    my $bid;
+    if (-e "$work_dir/$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/$CONFIG");
+        if (defined $config) {
+            $bid = $config->{$CONFIG_VID};
+        } else { die "no .config file"; }
+    } else { die "no .config file"; }
+    chop($bid);
 
     open FH, "$work_dir/build.xml" or die $!;
     my $build_file = do { local $/; <FH> };
@@ -87,8 +95,9 @@ sub _post_checkout {
     my @entries = readdir(DIR);
     closedir(DIR);
     foreach my $file (@entries) {
+
         if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($vid >= $1 && $vid <= $2) {
+            if ($bid >= $1 && $bid <= $2) {
                 $self->apply_patch($work_dir, "$compile_errors/$file")
                         or confess("Couldn't apply patch ($file): $!");
             }
