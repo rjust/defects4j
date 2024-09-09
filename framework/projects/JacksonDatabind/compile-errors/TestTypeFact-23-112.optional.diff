@@ -1,0 +1,21 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithClassLoader.java b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithClassLoader.java
+index e9a8070f4..0cfa40b97 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithClassLoader.java
++++ b/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactoryWithClassLoader.java
+@@ -6,6 +6,7 @@ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.mockito.Mock;
+ import org.powermock.core.classloader.annotations.PrepareForTest;
++import org.powermock.core.classloader.annotations.PowerMockIgnore;
+ import org.powermock.modules.junit4.PowerMockRunner;
+ 
+ import com.fasterxml.jackson.databind.ObjectMapper;
+@@ -17,7 +18,7 @@ import org.junit.BeforeClass;
+ 
+ @RunWith(PowerMockRunner.class)
+ @PrepareForTest(TypeFactory.class)
+-
++@PowerMockIgnore("jdk.internal.reflect.*")
+ public class TestTypeFactoryWithClassLoader {
+   @Mock
+   private TypeModifier typeModifier;

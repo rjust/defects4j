@@ -55,6 +55,7 @@ of the checked-out project version.
         <include name="**/*Test.java"/>
         <exclude name="**/*Abstract*Test.java"/>
         <exclude name="**/RandomUtilsTest.java"/>
+        <exclude name="**/CharUtilsPerfTest.java"/>
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
