@@ -89,6 +89,9 @@ of the checked-out project version.
         <exclude name='**/failing/*.java' />
         <exclude name='**/failing/**/*.java' />
         <exclude name='failing/*.java' />
+        <exclude name='com/fasterxml/jackson/core/BaseTest.java' />
+        <exclude name='perf/ConcurrencyReadTest.java' />
+        <exclude name='perf/ManualCharAccessTest.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
