@@ -19,3 +19,11 @@ index 255bffe38..51d980959 100644
          mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
          String json = mapper.writeValueAsString(new IOException((String) null));
          IOException result = mapper.readValue(json, IOException.class);
+@@ -100,6 +100,7 @@ public class TestExceptionDeserialization
+     // [Issue#381]
+     public void testSingleValueArrayDeserialization() throws Exception {
+         final ObjectMapper mapper = new ObjectMapper();
++        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+         mapper.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+         final IOException exp;
+         try {
