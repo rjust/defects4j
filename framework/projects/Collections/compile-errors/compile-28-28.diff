@@ -1,0 +1,13 @@
+diff --git a/src/test/java/org/apache/commons/collections4/collection/AbstractCollectionTest.java b/src/test/java/org/apache/commons/collections4/collection/AbstractCollectionTest.java
+index ab1e1033..3d72ef79 100644
+--- a/src/test/java/org/apache/commons/collections4/collection/AbstractCollectionTest.java
++++ b/src/test/java/org/apache/commons/collections4/collection/AbstractCollectionTest.java
+@@ -1085,7 +1085,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
+         verify();
+ 
+         try {
+-            array = getCollection().toArray(null);
++            array = getCollection().toArray((Object[])null);
+             fail("toArray(null) should raise NPE");
+         } catch (final NullPointerException e) {
+             // expected
