@@ -1,0 +1,12 @@
+diff --git a/tests/org/jfree/data/time/junit/WeekTests.java b/tests/org/jfree/data/time/junit/WeekTests.java
+index d7a27ec..7126eb7 100644
+--- a/tests/org/jfree/data/time/junit/WeekTests.java
++++ b/tests/org/jfree/data/time/junit/WeekTests.java
+@@ -106,6 +106,7 @@ public class WeekTests extends TestCase {
+      * Common test setup.
+      */
+     protected void setUp() {
++        Locale.setDefault(Locale.UK);
+         this.w1Y1900 = new Week(1, 1900);
+         this.w2Y1900 = new Week(2, 1900);
+         this.w51Y9999 = new Week(51, 9999);
