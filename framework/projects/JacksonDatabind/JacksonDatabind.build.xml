@@ -86,6 +86,8 @@ of the checked-out project version.
         <include name='**/*Test.java' />
         <include name='**/Test*.java' />
         <exclude name='com/fasterxml/jackson/failing/*.java' />
+        <exclude name='com/fasterxml/jackson/databind/BaseMapTest.java' />
+        <exclude name='com/fasterxml/jackson/databind/BaseTest.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->

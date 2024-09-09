@@ -268,7 +268,7 @@ unshift(@INC, $CORE_DIR);
 unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
 # Append Major's executables to the PATH -> ant may not be installed by default
-$ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
+$ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
 
 # Constant strings used for errors
 our $ARG_ERROR       = "Invalid number of arguments!";

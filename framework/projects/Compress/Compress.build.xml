@@ -70,6 +70,9 @@ of the checked-out project version.
         <include name='**/*Test.java' />
         <include name='**/Test*.java' />
         <exclude name='**/*Abstract*Test.java' />
+        <exclude name='**/AbstractTestCase.java' />
+        <exclude name='**/archivers/TestArchiveStreamProvider.java' />
+        <exclude name='**/compressors/TestCompressorStreamProvider.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->

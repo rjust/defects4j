@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+index d9c442a84..d2ceaf65d 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestJdkTypes.java
+@@ -70,7 +70,7 @@ public class TestJdkTypes extends BaseMapTest
+     /**********************************************************
+      */
+     
+-    private final ObjectMapper mapper = new ObjectMapper();
++    private final ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+ 
+     /**
+      * Related to issues [JACKSON-155], [#170].
