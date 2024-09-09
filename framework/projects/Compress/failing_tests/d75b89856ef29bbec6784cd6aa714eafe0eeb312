@@ -156,7 +156,7 @@ Caused by: java.lang.reflect.InvocationTargetException
 	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
 	at org.objenesis.instantiator.sun.SunReflectionFactoryHelper.newConstructorForSerialization(SunReflectionFactoryHelper.java:45)
 	... 49 more
-Caused by: java.lang.IllegalAccessError: class jdk.internal.reflect.ConstructorAccessorImpl loaded by org.powermock.core.classloader.MockClassLoader @12d1f1d4 cannot access jdk/internal/reflect superclass jdk.internal.reflect.MagicAccessorImpl
+Caused by: java.lang.IllegalAccessError: class jdk.internal.reflect.ConstructorAccessorImpl loaded by org.powermock.core.classloader.MockClassLoader @60859f5a cannot access jdk/internal/reflect superclass jdk.internal.reflect.MagicAccessorImpl
 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1016)
 	at org.powermock.core.classloader.MockClassLoader.loadUnmockedClass(MockClassLoader.java:250)
