@@ -370,10 +370,14 @@ Applies the patch provided in F<patch_file> to the working directory F<work_dir>
 =cut
 
 sub apply_patch {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
-    my $cmd = $self->_apply_cmd($work_dir, $patch_file);
-    return Utils::exec_cmd($cmd, "Apply patch");
+    @_ >= 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file, $ignore_err) = @_;
+    my $cmd = $self->_apply_cmd($work_dir, $patch_file, $ignore_err);
+    if (defined($cmd)) {
+      return Utils::exec_cmd($cmd, "Apply patch");
+    } else {
+      return 0;
+    }
 }
 
 =pod
@@ -387,8 +391,8 @@ command tries a few dry-runs for the most likely settings before giving up.
 =cut
 
 sub _apply_cmd {
-    @_ == 3 or confess($ARG_ERROR);
-    my ($self, $work_dir, $patch_file) = @_;
+    @_ >= 3 or confess($ARG_ERROR);
+    my ($self, $work_dir, $patch_file, $ignore_err) = @_;
     # -p1 is the default for git apply (a/src/...) and the most likely option.
     # Try -p0 and -p2 as well before giving up.
     my @try = (1, 0, 2);
@@ -401,6 +405,10 @@ sub _apply_cmd {
             print(STDERR "patch applied: $patch_file\n") if $DEBUG;
             return("cd $work_dir; git apply -p$n $patch_file 2>&1");
         }
+    }
+
+    if ($ignore_err) {
+        return undef;
     }
 
     confess("Cannot determine how to apply patch!\n" .
