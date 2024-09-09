@@ -1,17 +1,17 @@
-diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
-index 43084c960..a7850ba51 100644
---- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
-+++ b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+index 391ee8386..ab2f03415 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
 @@ -51,7 +51,7 @@ public class TestExceptionDeserialization
      /**********************************************************
       */
  
--    private final ObjectMapper MAPPER = new ObjectMapper();
-+    private final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+-    final ObjectMapper MAPPER = new ObjectMapper();
++    final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
      
      public void testIOException() throws IOException
      {
-@@ -76,6 +76,7 @@ public class TestExceptionDeserialization
+@@ -78,6 +78,7 @@ public class TestExceptionDeserialization
      public void testWithNullMessage() throws IOException
      {
          final ObjectMapper mapper = new ObjectMapper();
@@ -19,7 +19,7 @@ index 43084c960..a7850ba51 100644
          mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
          String json = mapper.writeValueAsString(new IOException((String) null));
          IOException result = mapper.readValue(json, IOException.class);
-@@ -99,6 +99,7 @@ public class TestExceptionDeserialization
+@@ -101,6 +101,7 @@ public class TestExceptionDeserialization
      // [databind#381]
      public void testSingleValueArrayDeserialization() throws Exception {
          final ObjectMapper mapper = new ObjectMapper();
