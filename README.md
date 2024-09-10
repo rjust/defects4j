@@ -77,7 +77,7 @@ and/or non-reproducible bugs.
 Defects4J uses the JDK-8 compatible locale service provider to ensure
 reproducibility of bugs.
 
-If you are using the bugs outside of the Defects4J framework, [set the
+If you are using the bugs _outside_ of the Defects4J framework, [set the
 JVM's locale service provider to
 COMPAT](https://docs.oracle.com/en%2Fjava%2Fjavase%2F11%2Fdocs%2Fapi%2F%2F/java.base/java/util/spi/LocaleServiceProvider.html)
 Specifically, use `java -Djava.locale.providers=COMPAT` to ensure
@@ -86,7 +86,7 @@ reproducibility. Not setting this option results in unexpected failing tests!
 #### Timezone
 Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
 
-If you are using the bugs outside of the Defects4J framework, set the `TZ`
+If you are using the bugs _outside_ of the Defects4J framework, set the `TZ`
 environment variable to `America/Los_Angeles` and export it.
 
 Setting up Defects4J
