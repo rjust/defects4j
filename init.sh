@@ -136,9 +136,10 @@ main() {
     echo "| PLEASE READ:                                                           |"
     echo "| https://github.com/rjust/defects4j/?tab=readme-ov-file#reproducibility |"
     echo "|------------------------------------------------------------------------|"
-    echo "| Major changes:                                                         |"
+    echo "| Important changes:                                                     |"
     echo "|   * Java 11 is required                                                |"
-    echo "|   *                                                                    |"
+    echo "|   * Randoop v4.3.3                                                     |"
+    echo "|   * Major v3.0.1                                                       |"
     echo "|------------------------------------------------------------------------|"
 }
 
