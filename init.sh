@@ -144,7 +144,7 @@ cd "$DIR_REPOS" && ./get_repos.sh
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="3.0.0"
+MAJOR_VERSION="3.0.1"
 MAJOR_URL="https://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre11.zip"
 cd "$BASE" && rm -rf major \
