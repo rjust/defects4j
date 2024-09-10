@@ -71,7 +71,7 @@ Reproducibility
 All bugs have been reproduced and triggering tests verified, using the latest
 version of Java 11.
 Using a different version of Java might result in unexpected failing tests
-and/or non-reproducible defects.
+and/or non-reproducible bugs.
 
 #### Locale
 Defects4J uses the JDK-8 compatible locale service provider to ensure
