@@ -1,6 +1,6 @@
 ## mockito: 36f (84c142f56fe971ed52ecfe42b42bc0aa7bef8354) ##
 --- org.mockitousage.basicapi.MocksSerializationTest::shouldSerializeRealPartialMock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$639d4f8c; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$bd1043d9; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -52,7 +52,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMock
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationTest::shouldSerializeObjectMock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$639d4f8c; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$bd1043d9; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)

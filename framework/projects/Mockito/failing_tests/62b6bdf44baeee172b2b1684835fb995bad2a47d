@@ -1,6 +1,6 @@
 ## mockito: 31f (62b6bdf44baeee172b2b1684835fb995bad2a47d) ##
 --- org.mockitousage.basicapi.MocksSerializationTest::shouldSerializeRealPartialMock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$ff62ad45; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$3bd5d6b0; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -52,7 +52,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMock
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationTest::shouldSerializeObjectMock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$ff61b908; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMockitoWithCGLIB$$3bd4e273; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -105,10 +105,10 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$$EnhancerByMock
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.bugs.ShouldMocksCompareToBeConsistentWithEqualsTest::shouldAllowStubbingAndVerifyingCompareTo
 Argument(s) are different! Wanted:
-date.compareTo(Mon Sep 09 06:46:13 PDT 2024);
+date.compareTo(Mon Sep 09 17:23:34 PDT 2024);
 -> at org.mockitousage.bugs.ShouldMocksCompareToBeConsistentWithEqualsTest.shouldAllowStubbingAndVerifyingCompareTo(ShouldMocksCompareToBeConsistentWithEqualsTest.java:47)
 Actual invocation has different arguments:
-date.compareTo(Mon Sep 09 06:46:13 PDT 2024);
+date.compareTo(Mon Sep 09 17:23:34 PDT 2024);
 -> at org.mockitousage.bugs.ShouldMocksCompareToBeConsistentWithEqualsTest.shouldAllowStubbingAndVerifyingCompareTo(ShouldMocksCompareToBeConsistentWithEqualsTest.java:43)
 
 	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
@@ -122,7 +122,7 @@ date.compareTo(Mon Sep 09 06:46:13 PDT 2024);
 	at org.mockito.internal.verification.MockAwareVerificationMode.verify(MockAwareVerificationMode.java:21)
 	at org.mockito.internal.MockHandler.handle(MockHandler.java:80)
 	at org.mockito.internal.creation.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:47)
-	at $java.util.Date$$EnhancerByMockitoWithCGLIB$$a49a0b2f.compareTo(<generated>)
+	at $java.util.Date$$EnhancerByMockitoWithCGLIB$$5df63ac9.compareTo(<generated>)
 	at org.mockitousage.bugs.ShouldMocksCompareToBeConsistentWithEqualsTest.shouldAllowStubbingAndVerifyingCompareTo(ShouldMocksCompareToBeConsistentWithEqualsTest.java:47)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

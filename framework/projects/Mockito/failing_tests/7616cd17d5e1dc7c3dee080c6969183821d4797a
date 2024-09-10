@@ -8,7 +8,7 @@ org.mockito.exceptions.verification.junit.ArgumentsAreDifferent: message
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockito.verification.VerificationMode$MockitoMock$1010034508.verify(Unknown Source)
+	at org.mockito.verification.VerificationMode$MockitoMock$942672259.verify(Unknown Source)
 	at org.mockito.internal.verification.VerificationOverTimeImpl.verify(VerificationOverTimeImpl.java:81)
 	at org.mockito.internal.verification.VerificationOverTimeImplTest.should_deal_with_junit_assertion_error(VerificationOverTimeImplTest.java:53)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -63,7 +63,7 @@ junit.framework.AssertionFailedError: message
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockito.verification.VerificationMode$MockitoMock$1010034508.verify(Unknown Source)
+	at org.mockito.verification.VerificationMode$MockitoMock$942672259.verify(Unknown Source)
 	at org.mockito.internal.verification.VerificationOverTimeImpl.verify(VerificationOverTimeImpl.java:81)
 	at org.mockito.internal.verification.VerificationOverTimeImplTest.should_throw_mockito_assertion_error(VerificationOverTimeImplTest.java:43)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -110,7 +110,7 @@ junit.framework.AssertionFailedError: message
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationForAnnotationTest::should_serialize_object_mock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1737340933; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1289453855; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -163,7 +163,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$173
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationForAnnotationTest::should_serialize_real_partial_mock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1089713799; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1994475354; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -216,7 +216,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$108
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationForAnnotationTest::should_serialization_work
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1737340933; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1289453855; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -282,7 +282,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$173
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationTest::should_serialize_object_mock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1676813783; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1283070619; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -335,7 +335,7 @@ java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$167
 	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
 	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 --- org.mockitousage.basicapi.MocksSerializationTest::should_serialize_real_partial_mock
-java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$128432352; no valid constructor
+java.io.InvalidClassException: org.mockito.internal.matchers.Any$MockitoMock$1920104650; no valid constructor
 	at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:159)
 	at java.base/java.io.ObjectStreamClass.checkDeserialize(ObjectStreamClass.java:875)
 	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2170)
@@ -461,7 +461,7 @@ But was 1 time:
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at codegen.java.util.List$MockitoMock$1433282576.clear(Unknown Source)
+	at codegen.java.util.List$MockitoMock$576140059.clear(Unknown Source)
 	at org.mockitousage.verification.VerificationAfterDelayTest.shouldFailVerificationWithWrongTimes(VerificationAfterDelayTest.java:80)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -520,7 +520,7 @@ Wanted at most 0 times but was 1
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at codegen.java.util.List$MockitoMock$1433282576.clear(Unknown Source)
+	at codegen.java.util.List$MockitoMock$576140059.clear(Unknown Source)
 	at org.mockitousage.verification.VerificationAfterDelayTest.shouldStopEarlyIfTestIsDefinitelyFailed(VerificationAfterDelayTest.java:112)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -606,7 +606,7 @@ mockOne.oneArg(2);
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockitousage.IMethods$MockitoMock$1311986970.oneArg(Unknown Source)
+	at org.mockitousage.IMethods$MockitoMock$1362448134.oneArg(Unknown Source)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenSingleMethodCallsAreOutOfSequence(VerificationInOrderWithCallsTest.java:81)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -732,7 +732,7 @@ mockTwo.voidMethod();
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockitousage.IMethods$MockitoMock$1311986970.voidMethod(Unknown Source)
+	at org.mockitousage.IMethods$MockitoMock$1362448134.voidMethod(Unknown Source)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodCallsOnDifferentMocksAreOutOfSequence(VerificationInOrderWithCallsTest.java:121)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -860,7 +860,7 @@ mockOne.voidMethod();
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockitousage.IMethods$MockitoMock$1311986970.oneArg(Unknown Source)
+	at org.mockitousage.IMethods$MockitoMock$1362448134.oneArg(Unknown Source)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenDifferentMethodCallsAreOutOfSequence(VerificationInOrderWithCallsTest.java:101)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -926,7 +926,7 @@ mockOne.oneArg(1);
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockitousage.IMethods$MockitoMock$1311986970.oneArg(Unknown Source)
+	at org.mockitousage.IMethods$MockitoMock$1362448134.oneArg(Unknown Source)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodNotCalled(VerificationInOrderWithCallsTest.java:40)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1163,7 +1163,7 @@ But was 1 time:
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:83)
 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.interceptAbstract(MockMethodInterceptor.java:71)
-	at org.mockitousage.IMethods$MockitoMock$1311986970.oneArg(Unknown Source)
+	at org.mockitousage.IMethods$MockitoMock$1362448134.oneArg(Unknown Source)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodCalledTooFewTimes(VerificationInOrderWithCallsTest.java:61)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

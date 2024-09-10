@@ -596,7 +596,7 @@ Caused by: java.lang.ClassNotFoundException: org.hamcrest.Matcher
 --- org.mockitousage.verification.DescriptiveMessagesWhenVerificationFailsTest::should_print_first_unexpected_invocation_when_verifying_zero_interactions
 junit.framework.AssertionFailedError: 
 This substring:[
-But found this interaction on mock 'Mock for IMethods, hashCode: 793068485':
+But found this interaction on mock 'Mock for IMethods, hashCode: 261330114':
 -> at]
 should be inside of:[
 No interactions wanted here:
@@ -658,7 +658,7 @@ For your reference, here is the list of all invocations ([?] - means unverified)
 --- org.mockitousage.verification.DescriptiveMessagesWhenVerificationFailsTest::should_print_first_unexpected_invocation
 junit.framework.AssertionFailedError: 
 This substring:[
-But found this interaction on mock 'Mock for IMethods, hashCode: 899631115':
+But found this interaction on mock 'Mock for IMethods, hashCode: 1841474001':
 -> at]
 should be inside of:[
 No interactions wanted here:
@@ -736,7 +736,7 @@ But was 1 time:
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at $java.util.List$$EnhancerByMockitoWithCGLIB$$877497ba.clear(<generated>)
+	at $java.util.List$$EnhancerByMockitoWithCGLIB$$9419ab18.clear(<generated>)
 	at org.mockitousage.verification.VerificationAfterDelayTest.shouldFailVerificationWithWrongTimes(VerificationAfterDelayTest.java:80)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -794,7 +794,7 @@ Wanted at most 0 times but was 1
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at $java.util.List$$EnhancerByMockitoWithCGLIB$$877497ba.clear(<generated>)
+	at $java.util.List$$EnhancerByMockitoWithCGLIB$$9419ab18.clear(<generated>)
 	at org.mockitousage.verification.VerificationAfterDelayTest.shouldStopEarlyIfTestIsDefinitelyFailed(VerificationAfterDelayTest.java:112)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -879,7 +879,7 @@ mockOne.oneArg(2);
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$b9f061ae.oneArg(<generated>)
+	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$63197d81.oneArg(<generated>)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenSingleMethodCallsAreOutOfSequence(VerificationInOrderWithCallsTest.java:81)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1004,7 +1004,7 @@ mockTwo.voidMethod();
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$b9f061ae.voidMethod(<generated>)
+	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$63197d81.voidMethod(<generated>)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodCallsOnDifferentMocksAreOutOfSequence(VerificationInOrderWithCallsTest.java:121)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1131,7 +1131,7 @@ mockOne.voidMethod();
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$b9f061ae.oneArg(<generated>)
+	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$63197d81.oneArg(<generated>)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenDifferentMethodCallsAreOutOfSequence(VerificationInOrderWithCallsTest.java:101)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1196,7 +1196,7 @@ mockOne.oneArg(1);
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$b9f061ae.oneArg(<generated>)
+	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$63197d81.oneArg(<generated>)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodNotCalled(VerificationInOrderWithCallsTest.java:40)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1432,7 +1432,7 @@ But was 1 time:
 	at org.mockito.internal.handler.NullResultGuardian.handle(NullResultGuardian.java:29)
 	at org.mockito.internal.handler.InvocationNotifierHandler.handle(InvocationNotifierHandler.java:38)
 	at org.mockito.internal.creation.cglib.MethodInterceptorFilter.intercept(MethodInterceptorFilter.java:59)
-	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$b9f061ae.oneArg(<generated>)
+	at org.mockitousage.IMethods$$EnhancerByMockitoWithCGLIB$$63197d81.oneArg(<generated>)
 	at org.mockitousage.verification.VerificationInOrderWithCallsTest.shouldFailWhenMethodCalledTooFewTimes(VerificationInOrderWithCallsTest.java:61)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
