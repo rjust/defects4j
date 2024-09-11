@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -85,6 +85,7 @@ of the checked-out project version.
         <include name='**/*TestCase.java' />
         <include name='**/Test*.java' />
         <exclude name='**/*Abstract*Test.java' />
+        <exclude name='org/jsoup/integration/TestServer.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->

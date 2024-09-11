@@ -1,0 +1,13 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/JDKStringLikeTypesTest.java b/src/test/java/com/fasterxml/jackson/databind/deser/JDKStringLikeTypesTest.java
+index cef00c19b..61eca23a1 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/JDKStringLikeTypesTest.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/JDKStringLikeTypesTest.java
+@@ -64,7 +64,7 @@ public class JDKStringLikeTypesTest extends BaseMapTest
+     /**********************************************************
+      */
+ 
+-    private final ObjectMapper MAPPER = objectMapper();
++    private final ObjectMapper MAPPER = objectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+ 
+     // [databind#239]
+     public void testByteBuffer() throws Exception

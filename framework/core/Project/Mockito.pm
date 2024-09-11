@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -108,6 +108,10 @@ sub _post_checkout {
         system("find $work_dir -type f -name \"build.gradle\" -exec sed -i.bak 's|jcenter()|maven { url \"$BUILD_SYSTEMS_LIB_DIR/gradle/deps\" }\\\n maven { url \"https://jcenter.bintray.com/\" }\\\n|g' {} \\;");
     }
 
+    # Add Major's runtime package to the bnd config
+    if (-e "$work_dir/conf/mockito-core.bnd") {
+      Utils::sed_cmd("s/\\(Import-Package.*\\)/\\1\\n                major.mutation\.\*;resolution:=optional, \\\\/", "$work_dir/conf/mockito-core.bnd");
+    }
     # Set default Java target to 6 for gradle builds.
     # (Maven and Ant builds are handled for all projects in Project.pm)
     Utils::sed_cmd("s/sourceCompatibility = 1\.[1-5]/sourceCompatibility=1.6/", "$work_dir/build.gradle");

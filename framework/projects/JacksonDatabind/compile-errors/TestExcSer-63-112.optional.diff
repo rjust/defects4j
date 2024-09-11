@@ -1,0 +1,12 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
+index 07fc70a6b..31cf96894 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionSerialization.java
+@@ -96,6 +96,7 @@ public class TestExceptionSerialization
+         assertNull(result2.get("bogus2"));
+ 
+         // and try to deserialize as well
++        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+         ExceptionWithIgnoral output = mapper.readValue(json2, ExceptionWithIgnoral.class);
+         assertNotNull(output);
+         assertEquals("foobar", output.getMessage());

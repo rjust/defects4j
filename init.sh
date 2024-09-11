@@ -144,15 +144,17 @@ cd "$DIR_REPOS" && ./get_repos.sh
 #
 echo
 echo "Setting up Major ... "
-MAJOR_VERSION="3.0.0"
+MAJOR_VERSION="3.0.1"
 MAJOR_URL="https://mutation-testing.org/downloads"
 MAJOR_ZIP="major-${MAJOR_VERSION}_jre11.zip"
 cd "$BASE" && rm -rf major \
            && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
            && rm "$MAJOR_ZIP" \
-           && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n) if /CodeCacheSize/' \
+           && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n    -Djava.locale.providers=COMPAT \\\n) if /CodeCacheSize/' \
                 major/bin/ant \
-           && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /REFACTOR=/' \
+           && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /^REFACTOR=/' \
+                major/bin/major \
+           && perl -pi -e '$_ = qq(REFACTOR=\${REFACTOR:-"enable.decl.refactor enable.method.refactor"}\n) if /^REFACTOR=/' \
                 major/bin/major \
 
 ################################################################################
@@ -188,6 +190,7 @@ COVEREDCLASS_JAR="covered-class-${RANDOOP_VERSION}.jar"
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$RANDOOP_JAR" "randoop-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
 (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$COVEREDCLASS_JAR" "covered-class-current.jar")
+(cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/jacocoagent.jar" "jacocoagent.jar")
 
 ################################################################################
 #

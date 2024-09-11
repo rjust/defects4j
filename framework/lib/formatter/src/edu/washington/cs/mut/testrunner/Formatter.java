@@ -79,13 +79,26 @@ public class Formatter implements JUnitResultFormatter {
 
 		className = test.getClass().getName();
 		{
-			Pattern regexp = Pattern.compile("(.*)\\((.*)\\)\\s*");
+            /*
+               The expected format for failing tests in Defects4J is:
+               --- <class name>[::<method name>].
+            
+               In JUnit, a test's String representation is:
+               <method name>(<class name>).
+
+               In JUnit, a parameterized test's String representation is:
+               <method name>[<params>](<class name>).
+            
+               The pattern below extracts only the method name and class name,
+               stripping the [<params>] part if it exists.
+            */
+			Pattern regexp = Pattern.compile("([^\\[\\(]*)(\\[.*\\])?\\((.*)\\)\\s*");
 			Matcher match  = regexp.matcher(test.toString());
 			if (match.matches()) {
 				// Class name will equal to junit.framework.Junit4TestCaseFacade if Junit4
 				// style tests are ran with Junit3 style test runner.
 				if(className.equals("junit.framework.JUnit4TestCaseFacade"))
-					className = match.group(2);
+					className = match.group(3);
 				methodName = match.group(1);
 			}
 		}

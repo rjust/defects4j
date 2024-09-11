@@ -30,8 +30,8 @@ jobs:
         export JAVA_HOME=$HOME/.java/$JDK_DIR
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
-    - name: Install diffstat
-      run: sudo apt-get install diffstat
+    - name: Install diffstat and checkbashisms
+      run: sudo apt-get -y install diffstat devscripts
     - name: Install Carton
       uses: perl-actions/install-with-cpanm@v1
       with:
@@ -62,9 +62,9 @@ jobs:
     - run: carton exec ./test_bug_mining.sh
       name: test_bug_mining.sh
       working-directory: "./framework/test"
-#    - run: carton exec ./test_style.sh
-#      name: test_style.sh
-#      working-directory: "./framework/test"
+    - run: carton exec ./test_style.sh
+      name: test_style.sh
+      working-directory: "./framework/test"
 
     # Verify a few select bugs to detect serious breakages early.
     - run: carton exec ./test_verify_bugs.sh -p Collections -b 10 -A

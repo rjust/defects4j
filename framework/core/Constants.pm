@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -268,7 +268,7 @@ unshift(@INC, $CORE_DIR);
 unshift(@INC, $SCRIPT_DIR);
 unshift(@INC, $LIB_DIR);
 # Append Major's executables to the PATH -> ant may not be installed by default
-$ENV{PATH}="$ENV{PATH}:$MAJOR_ROOT/bin";
+$ENV{PATH}="$MAJOR_ROOT/bin:$ENV{PATH}";
 
 # Constant strings used for errors
 our $ARG_ERROR       = "Invalid number of arguments!";
