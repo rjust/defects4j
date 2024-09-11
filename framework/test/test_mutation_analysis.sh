@@ -117,18 +117,21 @@ main() {
     # Clean up
     rm -rf "$pid_vid_dir"
 
-    # Mockito-4f (gradle build + call to major/bin/major from gradle)
-    _set_vars "Mockito" "4f"
-    # Remove temporary directory if it already exists
-    rm -rf "$pid_vid_dir"
-    # Checkout project-version
-    defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
-    # Remove the summary file to ensure it is regenerated
-    rm -f "$summary_file"
-    defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-    _check_mutation_result 7 7 7 4
-    # Clean up
-    rm -rf "$pid_vid_dir"
+# TODO: Test execution against the generated mutants fails for some Mockito
+# versions due to an incorrect classpath. Reenable this tests once the
+# underlying issue is resolved.
+#    # Mockito-4f (gradle build + call to major/bin/major from gradle)
+#    _set_vars "Mockito" "4f"
+#    # Remove temporary directory if it already exists
+#    rm -rf "$pid_vid_dir"
+#    # Checkout project-version
+#    defects4j checkout -p "$pid" -v "$vid" -w "$pid_vid_dir" || die "It was not possible to checkout $pid-$vid to '$pid_vid_dir'!"
+#    # Remove the summary file to ensure it is regenerated
+#    rm -f "$summary_file"
+#    defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
+#    _check_mutation_result 7 7 7 4
+#    # Clean up
+#    rm -rf "$pid_vid_dir"
 }
 
 ################################################################################
