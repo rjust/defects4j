@@ -40,7 +40,9 @@ main() {
                && rm "$MAJOR_ZIP" \
                && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n    -Djava.locale.providers=COMPAT \\\n) if /CodeCacheSize/' \
                     major/bin/ant \
-               && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /REFACTOR=/' \
+               && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /^REFACTOR=/' \
+                    major/bin/major \
+               && perl -pi -e '$_ = qq(REFACTOR=\${REFACTOR:-"enable.decl.refactor enable.method.refactor"}\n) if /^REFACTOR=/' \
                     major/bin/major \
 
     ############################################################################
