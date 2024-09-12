@@ -139,7 +139,7 @@ Using Defects4J
 
 5. Some Defects4J commands take the project id as a command-line argument
    (possibly along with other arguments).  Examples include `info`, `checkout`,
-   and `query`.  Note that `info` and `query` report infromation that is derived
+   and `query`.  Note that `info` and `query` report information that is derived
    from the Defects4J metadata and do not require access to project files that
    are in the project's VCS.
 
