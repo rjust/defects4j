@@ -47,6 +47,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Dependencies used by all projects -->
     <property name="junit.jar"  value="${d4j.home}/framework/projects/lib/junit-4.12.jar"/>
+    <property name="hamcrest.jar" value="${d4j.home}/framework/projects/lib/hamcrest-core-1.3.jar"/>
     <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
 
     <!-- Location of libraries of test generation tool-->
