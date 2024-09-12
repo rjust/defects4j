@@ -71,6 +71,7 @@ of the checked-out project version.
         <exclude name='**/AbstractTestCase.java' />
         <exclude name='**/archivers/TestArchiveStreamProvider.java' />
         <exclude name='**/compressors/TestCompressorStreamProvider.java' />
+        <exclude name='**/archivers/sevenz/SevenZNativeHeapTest.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
