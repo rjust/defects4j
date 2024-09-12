@@ -27,7 +27,7 @@ of the checked-out project version.
 #############################################################################-->
 <project name="D4J-Time">
     <!-- Project-specific dependencies -->
-    <property name="config.jar" value="${d4j.home}/major/config/config.jar" />
+    <property name="config.jar" value="${d4j.home}/major/lib/major-rt.jar" />
     <property name="jodaconvert.jar" value="${d4j.home}/framework/projects/Time/lib/joda-convert-1.2.jar" />
 
     <!-- Do not download maven dependencies -->

@@ -18,11 +18,64 @@ BUG_MINING_FRAMEWORK_DIR="$BASE_DIR/framework/bug-mining"
 
 RESOURCES_OUTPUT_DIR="$HERE/resources/output/bug-mining"
 
+main() {
+    # Stop at the very first error (there is no point in running later stages of the
+    # bug-mining pipeline if earlier stages failed and preconditions are violated.)
+    HALT_ON_ERROR=1
+    
+    # Bug-mining temporary directory
+    WORK_DIR="$TMP_DIR/test_bug_mining"
+    rm -rf "$WORK_DIR"
+    
+    # Project example
+    PROJECT_ID="TestCodec"
+    PROJECT_NAME="commons-test-codec"
+    REPOSITORY_URL="https://github.com/apache/commons-codec.git"
+    ISSUE_TRACKER_NAME="jira"
+    ISSUE_TRACKER_PROJECT_ID="CODEC"
+    BUG_FIX_REGEX="/(CODEC-\d+)/mi"
+    
+    test_create_project "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$REPOSITORY_URL" || die "Test 'test_create_project' has failed!"
+    test_download_issues "$WORK_DIR" "$ISSUE_TRACKER_NAME" "$ISSUE_TRACKER_PROJECT_ID" || die "Test 'test_download_issues' has failed!"
+    test_crossref_commmit_issue "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$BUG_FIX_REGEX" || die "Test 'test_crossref_commmit_issue' has failed!"
+    
+    ISSUE_ID="CODEC-231"
+    grep -q ",$ISSUE_ID," "$WORK_DIR/framework/projects/$PROJECT_ID/$BUGS_CSV_ACTIVE" || die "$ISSUE_ID has not been mined"
+    BUG_ID=$(grep ",$ISSUE_ID," "$WORK_DIR/framework/projects/$PROJECT_ID/$BUGS_CSV_ACTIVE" | cut -f1 -d',')
+    
+    test_initialize_revisions "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_initialize_revisions' has failed!"
+    test_analyze_project "$PROJECT_ID" "$WORK_DIR" "$ISSUE_TRACKER_NAME" "$ISSUE_TRACKER_PROJECT_ID" "$BUG_ID" || die "Test 'test_analyze_project' has failed!"
+    test_get_trigger "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_get_trigger' has failed!"
+    test_get_metadata "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_get_metadata' has failed!"
+    test_promote_to_db "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$BUG_ID" || die "Test 'test_promote_to_db' has failed!"
+    
+    ## Clean up temporary directory
+    rm -rf "$WORK_DIR"
+    
+    test_integration "$PROJECT_ID" "1" || die "Test 'test_integration' has failed!"
+    
+    # Clean up D4J
+    rm -rf "$HERE/../projects/$PROJECT_ID" "$HERE/../core/Project/$PROJECT_ID.pm" "$REPOS_DIR/$PROJECT_NAME.git"
+    
+    # Print a summary of what went wrong
+    if [ "$ERROR" -ne "0" ]; then
+        printf '=%.s' $(seq 1 80) 1>&2
+        echo 1>&2
+        echo "The following errors occurred:" 1>&2
+        cat "$LOG" 1>&2
+    fi
+    
+    # Indicate whether an error occurred
+    exit "$ERROR"
+}
+
 _check_output() {
     [ $# -eq 2 ] || die "Usage: ${FUNCNAME[0]} <actual> <expected>"
 
     local actual="$1"
     local expected="$2"
+
+    [ ! -s "$actual" ] && [ ! -s "$expected" ] && return
 
     [ -s "$actual" ] || die "$actual does not exist or it is empty"
     [ -s "$expected" ] || die "$expected does not exist or it is empty"
@@ -229,25 +282,27 @@ test_analyze_project() {
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
     local rev_v2; rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
     local failing_tests="framework/projects/$project_id/failing_tests/$rev_v2"
-    [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
-
-    # Same number of failing tests
-    local actual_num_failing_tests; actual_num_failing_tests=$(grep -c -a "^--- " "$work_dir/$failing_tests")
-    local expected_num_failing_tests; expected_num_failing_tests=$(grep -c -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests")
-    if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
-      echo "Expected failing tests:"
-      grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
-
-      echo "Actual failing tests:"
-      grep -a "^--- " "$work_dir/$failing_tests"
-
-      die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+    if [ -e $RESOURCES_OUTPUT_DIR/$failing_tests ]; then
+        [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
+    
+        # Same number of failing tests
+        local actual_num_failing_tests; actual_num_failing_tests=$(grep -c -a "^--- " "$work_dir/$failing_tests")
+        local expected_num_failing_tests; expected_num_failing_tests=$(grep -c -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests")
+        if [ "$actual_num_failing_tests" -ne "$expected_num_failing_tests" ]; then
+          echo "Expected failing tests:"
+          grep -a "^--- " "$RESOURCES_OUTPUT_DIR/$failing_tests"
+    
+          echo "Actual failing tests:"
+          grep -a "^--- " "$work_dir/$failing_tests"
+    
+          die "Expected $expected_num_failing_tests failing tests and got $actual_num_failing_tests"
+        fi
+    
+        # Same failing tests
+        while read -r failing_test; do
+            grep -q "^$failing_test$" "$RESOURCES_OUTPUT_DIR/$failing_tests" || die "Unexpected failing test case: '$failing_test'"
+        done < <(grep -a "^--- " "$work_dir/$failing_tests")
     fi
-
-    # Same failing tests
-    while read -r failing_test; do
-        grep -q "^$failing_test$" "$RESOURCES_OUTPUT_DIR/$failing_tests" || die "Unexpected failing test case: '$failing_test'"
-    done < <(grep -a "^--- " "$work_dir/$failing_tests")
 }
 
 #
@@ -381,51 +436,4 @@ test_integration() {
     ./test_verify_bugs.sh -p "$project_id" -b "$bug_id" || die "Verify script has failed"
 }
 
-# Stop at the very first error (there is no point in running later stages of the
-# bug-mining pipeline if earlier stages failed and preconditions are violated.)
-HALT_ON_ERROR=1
-
-# Bug-mining temporary directory
-WORK_DIR="$TMP_DIR/test_bug_mining"
-rm -rf "$WORK_DIR"
-
-# Project example
-PROJECT_ID="TestCodec"
-PROJECT_NAME="commons-test-codec"
-REPOSITORY_URL="https://github.com/apache/commons-codec.git"
-ISSUE_TRACKER_NAME="jira"
-ISSUE_TRACKER_PROJECT_ID="CODEC"
-BUG_FIX_REGEX="/(CODEC-\d+)/mi"
-
-test_create_project "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$REPOSITORY_URL" || die "Test 'test_create_project' has failed!"
-test_download_issues "$WORK_DIR" "$ISSUE_TRACKER_NAME" "$ISSUE_TRACKER_PROJECT_ID" || die "Test 'test_download_issues' has failed!"
-test_crossref_commmit_issue "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$BUG_FIX_REGEX" || die "Test 'test_crossref_commmit_issue' has failed!"
-
-ISSUE_ID="CODEC-231"
-grep -q ",$ISSUE_ID," "$WORK_DIR/framework/projects/$PROJECT_ID/$BUGS_CSV_ACTIVE" || die "$ISSUE_ID has not been mined"
-BUG_ID=$(grep ",$ISSUE_ID," "$WORK_DIR/framework/projects/$PROJECT_ID/$BUGS_CSV_ACTIVE" | cut -f1 -d',')
-
-test_initialize_revisions "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_initialize_revisions' has failed!"
-test_analyze_project "$PROJECT_ID" "$WORK_DIR" "$ISSUE_TRACKER_NAME" "$ISSUE_TRACKER_PROJECT_ID" "$BUG_ID" || die "Test 'test_analyze_project' has failed!"
-test_get_trigger "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_get_trigger' has failed!"
-test_get_metadata "$PROJECT_ID" "$WORK_DIR" "$BUG_ID" || die "Test 'test_get_metadata' has failed!"
-test_promote_to_db "$PROJECT_ID" "$PROJECT_NAME" "$WORK_DIR" "$BUG_ID" || die "Test 'test_promote_to_db' has failed!"
-
-## Clean up temporary directory
-rm -rf "$WORK_DIR"
-
-test_integration "$PROJECT_ID" "1" || die "Test 'test_integration' has failed!"
-
-# Clean up D4J
-rm -rf "$HERE/../projects/$PROJECT_ID" "$HERE/../core/Project/$PROJECT_ID.pm" "$REPOS_DIR/$PROJECT_NAME.git"
-
-# Print a summary of what went wrong
-if [ "$ERROR" -ne "0" ]; then
-    printf '=%.s' $(seq 1 80) 1>&2
-    echo 1>&2
-    echo "The following errors occurred:" 1>&2
-    cat "$LOG" 1>&2
-fi
-
-# Indicate whether an error occurred
-exit "$ERROR"
+main

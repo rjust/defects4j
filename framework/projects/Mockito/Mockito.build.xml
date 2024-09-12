@@ -1,7 +1,5 @@
 <project name="Mockito" basedir="${basedir}">
 
-    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
-
     <!-- Check for an existing build.xml, should only exist in older commits -->
     <available file="${basedir}/build.xml" property="ant.exists"/>
 
@@ -108,7 +106,7 @@
         <!-- Delete a test that is causing trouble -->
         <delete file="${basedir}/buildSrc/src/test/groovy/org/mockito/release/notes/improvements/GitHubTicketFetcherTest.groovy" quiet="true" />
         <!-- Backup build file and set mutation compiler -->
-        <copy file="${basedir}/build.gradle" tofile="${basedir}/build.gradle.bak"/>
+        <copy file="${basedir}/build.gradle" tofile="${basedir}/build.gradle.nonmut"/>
 
         <trycatch>
         <try>
@@ -128,7 +126,7 @@
         </try>
         <finally>
             <!-- Restore the default compiler -->
-            <move file="${basedir}/build.gradle.bak" tofile="${basedir}/build.gradle"/>
+            <move file="${basedir}/build.gradle.nonmut" tofile="${basedir}/build.gradle"/>
         </finally>
         </trycatch>
     </target>

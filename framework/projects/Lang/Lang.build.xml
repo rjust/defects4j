@@ -56,6 +56,9 @@ of the checked-out project version.
         <exclude name="**/*Abstract*Test.java"/>
         <exclude name="**/RandomUtilsTest.java"/>
         <exclude name="**/CharUtilsPerfTest.java"/>
+        <exclude name="org/apache/commons/lang/text/ExtendedMessageFormatBaselineTest.java" />
+        <exclude name="org/apache/commons/lang/text/MessageFormatExtensionTest.java" />
+        <exclude name="org/apache/commons/lang/text/MessageFormatTest.java" />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->

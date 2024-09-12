@@ -1,6 +1,6 @@
 ## commons-lang: 28f (bef3eb6ed060d5ae14da6ce5a1909675b8cf5650) ##
 --- org.apache.commons.lang3.builder.ToStringBuilderTest::testReflectionHierarchyArrayList
-junit.framework.ComparisonFailure: expected:<...d1ac19[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...d1ac19[elementData={[]},size=0,modCount=0]>
+junit.framework.ComparisonFailure: expected:<...27cc70[elementData={[<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>,<null>]},size=0,modCount=0]> but was:<...27cc70[elementData={[]},size=0,modCount=0]>
 	at junit.framework.Assert.assertEquals(Assert.java:100)
 	at junit.framework.Assert.assertEquals(Assert.java:107)
 	at junit.framework.TestCase.assertEquals(TestCase.java:269)
@@ -15,8 +15,8 @@ junit.framework.ComparisonFailure: expected:<...d1ac19[elementData={[<null>,<nul
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
-	at junit.framework.TestSuite.runTest(TestSuite.java:255)
-	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at junit.framework.TestSuite.runTest(TestSuite.java:252)
+	at junit.framework.TestSuite.run(TestSuite.java:247)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
@@ -54,8 +54,8 @@ junit.framework.AssertionFailedError: Default behaviour should not parse u+
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
-	at junit.framework.TestSuite.runTest(TestSuite.java:255)
-	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at junit.framework.TestSuite.runTest(TestSuite.java:252)
+	at junit.framework.TestSuite.run(TestSuite.java:247)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)
@@ -94,8 +94,8 @@ junit.framework.ComparisonFailure: expected:<AD AD AD AD 2003 [2003 03 20]03 Jan
 	at junit.framework.TestResult.runProtected(TestResult.java:142)
 	at junit.framework.TestResult.run(TestResult.java:125)
 	at junit.framework.TestCase.run(TestCase.java:129)
-	at junit.framework.TestSuite.runTest(TestSuite.java:255)
-	at junit.framework.TestSuite.run(TestSuite.java:250)
+	at junit.framework.TestSuite.runTest(TestSuite.java:252)
+	at junit.framework.TestSuite.run(TestSuite.java:247)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:520)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1492)
 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeTests(JUnitTask.java:878)

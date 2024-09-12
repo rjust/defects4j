@@ -5,6 +5,7 @@
 set -e
 #
 
+# TODO: Major and the coverage tools should be moved to framework/lib
 ################################################################################
 # This script initializes Defects4J. In particular, it downloads and sets up:
 # - the project's version control repositories
@@ -12,7 +13,40 @@ set -e
 # - the supported test generation tools
 # - the supported code coverage tools (TODO)
 ################################################################################
+
+HOST_URL="https://defects4j.org/downloads"
+
+# Directories for project repositories and external libraries
+BASE="$(cd "$(dirname "$0")"; pwd)"
+DIR_REPOS="$BASE/project_repos"
+DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
+DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
+DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
+
+################################################################################
+
 main() {
+    echo "Checking system configuration ... "
+    # Check whether wget is available on OSX
+    if [ "$(uname)" = "Darwin" ] ; then
+        if ! wget --version > /dev/null 2>&1; then
+            print_error_and_exit "Couldn't find wget to download dependencies. Please install wget and re-run this script."
+        fi
+    fi
+    
+    # Check whether curl is available
+    if ! curl --version > /dev/null 2>&1; then
+        print_error_and_exit "Couldn't find curl to download dependencies. Please install curl and re-run this script."
+    fi
+    
+    # Check whether unzip is available
+    if ! unzip -v > /dev/null 2>&1; then
+        print_error_and_exit "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
+    fi
+
+    # Create lib folders if necessary
+    mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
+
     ############################################################################
     #
     # Download project repositories if necessary
@@ -145,6 +179,11 @@ main() {
     echo "|------------------------------------------------------------------------|"
 }
 
+################################################################################
+#
+# Utility functions
+#
+
 # Print an error message and terminate the script.
 # Takes one argument, a custom error message.
 # Prints the supplied error message and a script termination notice to stderr.
@@ -153,40 +192,6 @@ print_error_and_exit() {
   echo -e "${1} \nTerminating initialization... " >&2
   exit 1
 }
-
-# TODO: Major and the coverage tools should be moved to framework/lib
-
-# Check whether wget is available on OSX
-if [ "$(uname)" = "Darwin" ] ; then
-    if ! wget --version > /dev/null 2>&1; then
-        print_error_and_exit "Couldn't find wget to download dependencies. Please install wget and re-run this script."
-    fi
-fi
-
-# Check whether curl is available
-if ! curl --version > /dev/null 2>&1; then
-    print_error_and_exit "Couldn't find curl to download dependencies. Please install curl and re-run this script."
-fi
-
-# Check whether unzip is available
-if ! unzip -v > /dev/null 2>&1; then
-    print_error_and_exit "Couldn't find unzip to extract dependencies. Please install unzip and re-run this script."
-fi
-################################################################################
-HOST_URL="https://defects4j.org/downloads"
-
-# Directories for project repositories and external libraries
-BASE="$(cd "$(dirname "$0")"; pwd)"
-DIR_REPOS="$BASE/project_repos"
-DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
-DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
-DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
-mkdir -p "$DIR_LIB_GEN" && mkdir -p "$DIR_LIB_RT" && mkdir -p "$DIR_LIB_GRADLE"
-
-################################################################################
-#
-# Utility functions
-#
 
 # MacOS does not install the timeout command by default.
 if [ "$(uname)" = "Darwin" ] ; then
