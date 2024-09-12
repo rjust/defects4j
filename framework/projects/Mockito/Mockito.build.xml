@@ -1,7 +1,5 @@
 <project name="Mockito" basedir="${basedir}">
 
-    <property name="junit.jar" value="${script.dir}/build-scripts/lib/junit-4.11.jar"/>
-
     <!-- Check for an existing build.xml, should only exist in older commits -->
     <available file="${basedir}/build.xml" property="ant.exists"/>
 
