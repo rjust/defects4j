@@ -27,8 +27,6 @@ of the checked-out project version.
 #############################################################################-->
 <project name="D4j-JxPath" basedir="${basedir}">
 
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-
     <!-- Generate all debugging information -->
     <property name="compile.debug" value="yes" />
 

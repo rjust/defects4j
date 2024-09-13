@@ -64,6 +64,30 @@ Each bug has the following properties:
 The (b)uggy and (f)ixed program revisions are labelled with `<id>b` and
 `<id>f`, respectively (`<id>` is an integer).
 
+Reproducibility
+================
+
+#### Java version
+All bugs have been reproduced and triggering tests verified, using the latest
+version of Java 11.
+Using a different version of Java might result in unexpected failing tests
+and/or non-reproducible bugs.
+
+#### Locale
+Defects4J uses the JDK-8 compatible locale service provider to ensure
+reproducibility of bugs.
+
+If you are using the bugs _outside_ of the Defects4J framework, [set the
+JVM's locale service provider to
+COMPAT](https://docs.oracle.com/en%2Fjava%2Fjavase%2F11%2Fdocs%2Fapi%2F%2F/java.base/java/util/spi/LocaleServiceProvider.html)
+Specifically, use `java -Djava.locale.providers=COMPAT` to ensure
+reproducibility. Not setting this option results in unexpected failing tests!
+
+#### Timezone
+Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
+
+If you are using the bugs _outside_ of the Defects4J framework, set the `TZ`
+environment variable to `America/Los_Angeles` and export it.
 
 Setting up Defects4J
 ================
@@ -77,19 +101,9 @@ Requirements
  - `cpanm`
 
 Defects4J version 2.x required Java 1.8.
+
 Defects4J version 1.x and 0.x required Java 1.7.
 
-
-#### Java version
-All bugs have been reproduced and triggering tests verified, using the latest
-version of Java 11.
-Using a different version of Java might result in unexpected failing tests on a fixed
-program version. 
-
-#### Timezone
-Defects4J generates and executes tests in the timezone `America/Los_Angeles`.
-If you are using the bugs outside of the Defects4J framework, set the `TZ`
-environment variable to `America/Los_Angeles` and export it.
 
 #### Perl dependencies
 All required Perl modules are listed in [cpanfile](https://github.com/rjust/defects4j/blob/master/cpanfile).
