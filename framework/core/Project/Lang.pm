@@ -82,7 +82,16 @@ sub determine_layout {
 #
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($revision_id);
+
+    # get original bid
+    my $bid;
+    if (-e "$work_dir/$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/$CONFIG");
+        if (defined $config) {
+            $bid = $config->{$CONFIG_VID};
+        } else { die "no .config file"; }
+    } else { die "no .config file"; }
+    chop($bid);
 
     # Fix compilation errors if necessary.
     # Run this as the first step to ensure that patches are applicable to
@@ -93,7 +102,7 @@ sub _post_checkout {
     closedir(DIR);
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($vid >= $1 && $vid <= $2) {
+            if ($bid >= $1 && $bid <= $2) {
                 $self->apply_patch($work_dir, "$compile_errors/$file")
                         or confess("Couldn't apply patch ($file): $!");
             }

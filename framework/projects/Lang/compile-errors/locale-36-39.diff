@@ -1,0 +1,13 @@
+diff --git a/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java b/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
+index 02e9d7151..58d865fe6 100644
+--- a/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
++++ b/src/test/org/apache/commons/lang3/time/FastDateFormatTest.java
+@@ -253,7 +253,7 @@ public class FastDateFormatTest extends TestCase {
+         assertEquals("2/3/04", fdf.format(cal));
+ 
+         fdf = FastDateFormat.getDateInstance(FastDateFormat.SHORT, swedishLocale);
+-        assertEquals("2004-02-03", fdf.format(cal));
++        assertEquals("04-02-03", fdf.format(cal));
+ 
+     }
+ 

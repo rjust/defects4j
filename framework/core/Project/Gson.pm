@@ -66,6 +66,32 @@ sub _post_checkout {
     # All relevant files live in the gson subdirectory
     $work_dir .= "/gson/";
 
+    # get original bid
+    my $bid;
+    if (-e "$work_dir/../$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/../$CONFIG");
+        if (defined $config) {
+            $bid = $config->{$CONFIG_VID};
+        } else { die "no .config file"; }
+    } else { die "no .config file"; }
+    chop($bid);
+
+    # Fix compilation errors if necessary.
+    # Run this as the first step to ensure that patches are applicable to
+    # unmodified source files.
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($bid >= $1 && $bid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
+
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
         my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
