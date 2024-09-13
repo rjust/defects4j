@@ -245,22 +245,29 @@ if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
 # - External libraries (test generation) available?
 #
 _repos_available()
-        or die("Couldn't find project repositories! Did you (re)run 'defects4j/init.sh'?\n\n");
+        or die("Couldn't find up-to-date project repositories! Did you (re)run 'defects4j/init.sh'?\n\n");
+
 -e "$MAJOR_ROOT/bin/ant"
         or die("Couldn't find Major mutation framework! Did you (re)run 'defects4j/init.sh'?\n\n");
+
 -d "$TESTGEN_LIB_DIR"
         or die("Couldn't find test generation tools! Did you (re)run 'defects4j/init.sh'?\n\n");
+
 -d "$BUILD_SYSTEMS_LIB_DIR"
         or die("Couldn't find build system tools! Did you (re)run 'defects4j/init.sh'?\n\n");
+
 -d "$BUILD_SYSTEMS_LIB_DIR/gradle/dists"
         or die("Couldn't find gradle distributions! Did you (re)run 'defects4j/init.sh'?\n\n");
+
 -d "$BUILD_SYSTEMS_LIB_DIR/gradle/deps"
         or die("Couldn't find gradle dependencies! Did you (re)run 'defects4j/init.sh'?\n\n");
 
 sub _repos_available {
-    opendir(my $dh, "$REPO_DIR") or die "Cannot read $REPO_DIR: $!";
-    # The repos directory by default only contains a helper script
-    return scalar(grep { $_ ne "." && $_ ne ".." } readdir($dh)) > 1;
+    -e "$REPO_DIR/README" or return 0;
+    open(IN, "<$REPO_DIR/README") or return 0;
+    my $line = <IN>;
+    close(IN);
+    $line =~ /Defects4J version 3/ or return 0;
 }
 
 # Add script and core directory to @INC
