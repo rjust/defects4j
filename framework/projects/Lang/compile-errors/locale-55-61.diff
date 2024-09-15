@@ -1,0 +1,28 @@
+diff --git a/src/test/org/apache/commons/lang/LocaleUtilsTest.java b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
+index 45aa8e8f2..dc599c741 100644
+--- a/src/test/org/apache/commons/lang/LocaleUtilsTest.java
++++ b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
+@@ -433,9 +433,9 @@ public class LocaleUtilsTest extends TestCase {
+      */
+     public void testLanguagesByCountry() {
+         assertLanguageByCountry(null, new String[0]);
+-        assertLanguageByCountry("GB", new String[]{"en"});
++        assertLanguageByCountry("GB", new String[]{"en", "gd", "kw", "cy"});
+         assertLanguageByCountry("ZZ", new String[0]);
+-        assertLanguageByCountry("CH", new String[]{"fr", "de", "it"});
++        assertLanguageByCountry("CH", new String[]{"gsw", "de", "pt", "fr", "rm", "it", "wae", "en"});
+     }
+ 
+     //-----------------------------------------------------------------------
+@@ -480,9 +480,9 @@ public class LocaleUtilsTest extends TestCase {
+      */
+     public void testCountriesByLanguage() {
+         assertCountriesByLanguage(null, new String[0]);
+-        assertCountriesByLanguage("de", new String[]{"DE", "CH", "AT", "LU"});
++        assertCountriesByLanguage("de", new String[]{"IT", "CH", "BE", "LU", "DE", "LI", "AT"});
+         assertCountriesByLanguage("zz", new String[0]);
+-        assertCountriesByLanguage("it", new String[]{"IT", "CH"});
++        assertCountriesByLanguage("it", new String[]{"VA", "SM", "IT", "CH"});
+     }
+ 
+     /**

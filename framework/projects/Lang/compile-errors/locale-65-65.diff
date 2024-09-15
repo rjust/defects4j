@@ -1,0 +1,29 @@
+diff --git a/src/test/org/apache/commons/lang/LocaleUtilsTest.java b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
+index e08e2c698..95dcf1f6e 100644
+--- a/src/test/org/apache/commons/lang/LocaleUtilsTest.java
++++ b/src/test/org/apache/commons/lang/LocaleUtilsTest.java
+@@ -471,9 +471,9 @@ public class LocaleUtilsTest extends TestCase {
+      */
+     public void testCountriesByLanguage() {
+         assertCountriesByLanguage(null, new String[0]);
+-        assertCountriesByLanguage("de", new String[]{"DE", "CH", "AT", "LU"});
++        assertCountriesByLanguage("de", new String[]{"IT", "CH", "BE", "LU", "DE", "LI", "AT"});
+         assertCountriesByLanguage("zz", new String[0]);
+-        assertCountriesByLanguage("it", new String[]{"IT", "CH"});
++        assertCountriesByLanguage("it", new String[]{"VA", "SM", "IT", "CH"});
+     }
+ 
+     /**
+diff --git a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
+index d774c7b74..71b2006f2 100644
+--- a/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
++++ b/src/test/org/apache/commons/lang/time/FastDateFormatTest.java
+@@ -231,7 +231,7 @@ public class FastDateFormatTest extends TestCase {
+         assertEquals("2/3/04", fdf.format(cal));
+ 
+         fdf = FastDateFormat.getDateInstance(FastDateFormat.SHORT, swedishLocale);
+-        assertEquals("2004-02-03", fdf.format(cal));
++        assertEquals("04-02-03", fdf.format(cal));
+ 
+     }
+ 

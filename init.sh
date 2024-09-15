@@ -72,7 +72,7 @@ main() {
     cd "$BASE" && rm -rf major \
                && download_url_and_unzip "$MAJOR_URL/$MAJOR_ZIP" \
                && rm "$MAJOR_ZIP" \
-               && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n    -Djava.locale.providers=COMPAT \\\n) if /CodeCacheSize/' \
+               && perl -pi -e '$_ .= qq(    -Djava.awt.headless=true \\\n) if /CodeCacheSize/' \
                     major/bin/ant \
                && perl -pi -e '$_ .= qq(\nif [ -z "\$MML" ]; then javac \$*; exit \$?; fi\n) if /^REFACTOR=/' \
                     major/bin/major \
