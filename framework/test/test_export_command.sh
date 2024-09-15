@@ -10,7 +10,7 @@
 #
 ################################################################################
 
-HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")"; exit 2; }
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -25,12 +25,12 @@ _run_export_command() {
     local exp_cmp="$2"
     local exp_out=""
 
-    pushd "$work_dir" > /dev/null 2>&1 || (echo "Cannot pushd to $work_dir" && exit 1)
+    pushd "$work_dir" > /dev/null 2>&1 || { echo "Cannot pushd to $work_dir"; exit 2; }
         if ! defects4j export -p "$exp_cmp" ; then
-            popd > /dev/null 2>&1 || (echo "Cannot popd" && exit 1)
+            popd > /dev/null 2>&1 || { echo "Cannot popd"; exit 2; }
             return 1
         fi
-    popd > /dev/null 2>&1 || (echo "Cannot popd" && exit 1)
+    popd > /dev/null 2>&1 || { echo "Cannot popd"; exit 2; }
 
     echo "$exp_out"
     return 0

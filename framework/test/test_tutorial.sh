@@ -5,7 +5,7 @@
 #
 ################################################################################
 
-HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")"; exit 2; }
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -31,7 +31,7 @@ defects4j checkout -p $pid -v $vid -w "$work_dir" || die "checkout program versi
 grep -q "pid=$pid" "$work_dir"/.defects4j.config || die "verify pid in config file"
 grep -q "vid=$vid" "$work_dir"/.defects4j.config || die "verify vid in config file"
 
-cd "$work_dir" || (echo "cannot cd to $work_dir" && exit 1)
+cd "$work_dir" || { echo "cannot cd to $work_dir"; exit 2; }
 
 # Compile buggy version
 defects4j compile || die "compile program version $pid-$vid"

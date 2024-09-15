@@ -2,11 +2,11 @@
 
 TOPLEVEL="$(git rev-parse --show-toplevel)"
 
-cd "$TOPLEVEL" || (echo "Cannot cd to $TOPLEVEL" && exit 1)
+cd "$TOPLEVEL" || { echo "Cannot cd to $TOPLEVEL"; exit 2; }
 
 # Check style of Perl scripts
 find . \( -name '*.pm' -o -name '*.pl' \) -print0 | xargs -0 -n1 perl -Mstrict -Mdiagnostics -cw
-grep -l --exclude-dir=project_repos --exclude=\*.pm --exclude=\*.pl --exclude=\*.sh --exclude=template -r "=pod" . | while IFS= read -r file ; do
+grep -l --exclude-dir=project_repos --exclude=\*.pm --exclude=\*.pl --exclude=\*.sh --exclude=\*~ --exclude=template -r "=pod" . | while IFS= read -r file ; do
     perl -Mstrict -Mdiagnostics -cw "$file"
 done
 # Don't run perlcritic yet.
