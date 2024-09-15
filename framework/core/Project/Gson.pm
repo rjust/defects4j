@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -63,7 +63,7 @@ sub new {
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    # All relevant files live in the gson subdirectory
     $work_dir .= "/gson/";
 
     # Check whether ant build file exists
@@ -73,6 +73,10 @@ sub _post_checkout {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
     }
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
 }
 
 #

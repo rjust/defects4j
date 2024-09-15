@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,12 @@
 
 =head1 NAME
 
-Project::TestCodec.pm -- L<Project> submodule for commons-codec.
+Project::TestCodec.pm -- L<Project> submodule for commons-test-codec.
 
 =head1 DESCRIPTION
 
 This module provides all project-specific configurations and subroutines for the
-commons-codec project.
+commons-test-codec project.
 
 =cut
 package Project::TestCodec;
@@ -47,7 +47,7 @@ sub new {
     @_ == 1 or die $ARG_ERROR;
     my ($class) = @_;
 
-    my $name = "commons-codec";
+    my $name = "commons-test-codec";
     my $vcs  = Vcs::Git->new($PID,
                              "$REPO_DIR/$name.git",
                              "$PROJECTS_DIR/$PID/$BUGS_CSV_ACTIVE",
@@ -55,20 +55,6 @@ sub new {
 
     return $class->SUPER::new($PID, $name, $vcs);
 }
-
-##
-## Determines the directory layout for sources and tests
-##
-#sub determine_layout {
-#    @_ == 2 or die $ARG_ERROR;
-#    my ($self, $rev_id) = @_;
-#    my $dir = $self->{prog_root};
-
-#    # Add additional layouts if necessary
-#    my $result = _ant_layout($dir) // _maven_layout($dir);
-#    die "Unknown layout for revision: ${rev_id}" unless defined $result;
-#    return $result;
-#}
 
 #
 # Post-checkout tasks include, for instance, providing cached build files,
@@ -78,12 +64,13 @@ sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
-    # Check whether ant build file exists
-    unless (-e "$work_dir/build.xml") {
-        my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
-        if (-d "$build_files_dir") {
-            Utils::exec_cmd("cp $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
+    my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
+    # Check whether a generated Ant build file exists
+    if (-d "$build_files_dir") {
+        if (-e "$work_dir/build.xml") {
+            rename("$work_dir/build.xml", "$work_dir/build.xml.orig") or die "Cannot backup existing Ant build file: $!";
         }
+        Utils::exec_cmd("cp $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
     }
 }
 
@@ -97,7 +84,7 @@ sub initialize_revision {
     $self->SUPER::initialize_revision($rev_id);
 
     my $work_dir = $self->{prog_root};
-    my $result = _ant_layout($work_dir) // _maven_layout($work_dir);
+    my $result = _default_layout($work_dir) // _maven_2_layout($work_dir) // _ant_layout($work_dir) // _maven_1_layout($work_dir);
     die "Unknown layout for revision: ${rev_id}" unless defined $result;
 
     $self->_add_to_layout_map($rev_id, $result->{src}, $result->{test});
@@ -110,6 +97,23 @@ sub initialize_revision {
 # checked-out version. Otherwise, it returns a hash that provides the src and
 # test directory, relative to the working directory.
 #
+
+#
+# Default directory layouts, common in many (Maven) projects
+#
+sub _default_layout {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+
+    # Test for two common layouts
+    my $result;
+    if (-e "$dir/src/main/java" && -e "$dir/src/test/java"){
+        $result = {src=>"src/main/java", test=>"src/test/java"};
+    } elsif (-e "$dir/src/java" && -e "$dir/src/test"){
+        $result = {src=>"src/java", test=>"src/test"};
+    }
+    return $result;
+}
 
 #
 # Existing Ant build.xml and default.properties
@@ -130,9 +134,10 @@ sub _ant_layout {
 }
 
 #
-# Generated build.xml (from mvn ant:ant) with maven-build.properties
+# Generated maven-build.xml and maven-build.properties
+# (generated from an existing Maven 2 pom.xml using mvn ant:ant
 #
-sub _maven_layout {
+sub _maven_2_layout {
     @_ == 1 or die $ARG_ERROR;
     my ($dir) = @_;
     my $src  = `grep "maven.build.srcDir.0" $dir/maven-build.properties 2>/dev/null`;
@@ -145,5 +150,23 @@ sub _maven_layout {
 
     return {src=>$src, test=>$test};
 }
+
+#
+# Existing Maven 1 project.xml.
+#
+sub _maven_1_layout {
+    @_ == 1 or die $ARG_ERROR;
+    my ($dir) = @_;
+    my $src  = `grep "<sourceDirectory>" $dir/project.xml 2>/dev/null`;
+    my $test = `grep "<unitTestSourceDirectory>" $dir/project.xml 2>/dev/null`;
+
+    return undef if ($src eq "" || $test eq "");
+
+    $src =~ s/\s*<sourceDirectory>\s*(\S+)\s*<.*/$1/s;
+    $test=~ s/\s*<unitTestSourceDirectory>\s*(\S+)\s*<.*/$1/s;
+
+    return {src=>$src, test=>$test};
+}
+
 
 1;

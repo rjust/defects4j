@@ -1,0 +1,21 @@
+diff --git a/src/test/org/apache/commons/lang/time/DateUtilsTest.java b/src/test/org/apache/commons/lang/time/DateUtilsTest.java
+index e9f8abd51..8bbc623db 100644
+--- a/src/test/org/apache/commons/lang/time/DateUtilsTest.java
++++ b/src/test/org/apache/commons/lang/time/DateUtilsTest.java
+@@ -37,12 +37,16 @@ import junit.textui.TestRunner;
+ 
+ import org.apache.commons.lang.SystemUtils;
+ 
++import org.junit.FixMethodOrder;
++import org.junit.runners.MethodSorters;
++
+ /**
+  * Unit tests {@link org.apache.commons.lang.time.DateUtils}.
+  *
+  * @author <a href="mailto:sergek@lokitech.com">Serge Knystautas</a>
+  * @author <a href="mailto:steve@mungoknotwise.com">Steven Caswell</a>
+  */
++@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+ public class DateUtilsTest extends TestCase {
+ 
+     private static final long MILLIS_TEST;

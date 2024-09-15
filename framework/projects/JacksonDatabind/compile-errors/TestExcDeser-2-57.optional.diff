@@ -1,0 +1,29 @@
+diff --git a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+index 391ee8386..ab2f03415 100644
+--- a/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
++++ b/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionDeserialization.java
+@@ -51,7 +51,7 @@ public class TestExceptionDeserialization
+     /**********************************************************
+      */
+ 
+-    final ObjectMapper MAPPER = new ObjectMapper();
++    final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+     
+     public void testIOException() throws IOException
+     {
+@@ -78,6 +78,7 @@ public class TestExceptionDeserialization
+     public void testWithNullMessage() throws IOException
+     {
+         final ObjectMapper mapper = new ObjectMapper();
++        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+         String json = mapper.writeValueAsString(new IOException((String) null));
+         IOException result = mapper.readValue(json, IOException.class);
+@@ -102,6 +102,7 @@ public class TestExceptionDeserialization
+     // [Issue#381]
+     public void testSingleValueArrayDeserialization() throws Exception {
+         final ObjectMapper mapper = new ObjectMapper();
++        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+         mapper.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+         final IOException exp;
+         try {

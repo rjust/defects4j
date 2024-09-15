@@ -65,7 +65,8 @@ print_result() {
     printf "\n$text\n" 1>&2
 }
 
-# Print and log error message, and terminate script if HALT_ON_ERROR is set
+# Print and log error message, and set ERROR.
+# Terminate script if HALT_ON_ERROR is set.
 # die <error_text>
 die() {
     echo "Error: $1" 1>&2

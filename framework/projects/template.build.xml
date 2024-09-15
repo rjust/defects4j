@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,17 +34,40 @@ of the checked-out project version.
            - compile.classpath  ->  Classpath to compile sources
     -->
 
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
-
-    <!-- Do not download maven dependencies -->
-    <property name="maven.settings.offline" value="true" />
+    <!-- Set path for dependencies -->
     <property name="maven.repo.local" value="${d4j.dir.projects}/<PID>/lib/" />
+    <property name="libdir" value="${maven.repo.local}" />
+
+    <!-- Do not download maven dependencies for configured projects and bugs -->
+    <property name="maven.settings.offline" value="true" />
 
     <!-- Generate all debugging information -->
     <property name="compile.debug" value="yes" />
 
     <!-- Include existing project build file -->
     <import file="${d4j.workdir}/build.xml"/>
+
+    <!-- Create a compile.tests target if necessary (compile-tests is a commonly
+-         used target name in older project versions) -->
+    <scriptdef name="hastarget" language="javascript">
+        <attribute name="targetname" />
+        <attribute name="newtargetname" />
+        <attribute name="setproperty" />
+        <![CDATA[
+            var targetname    = attributes.get("targetname");
+            var newtargetname = attributes.get("newtargetname");
+            var setproperty   = attributes.get("setproperty");
+            if(project.getTargets().containsKey(targetname)) {
+                var newTarget = new org.apache.tools.ant.Target();
+                newTarget.addDependency(targetname);
+                newTarget.setName(newtargetname);
+                project.addTarget(newtargetname, newTarget);
+                project.setProperty(setproperty, "yes");
+            }
+        ]]>
+    </scriptdef>
+
+    <hastarget targetname="compile-tests" newtargetname="compile.tests" setproperty="oldLayout" />
 
     <!-- Project properties targets -->
     <if> <isset property="ant.refid:compile.classpath" />
@@ -85,13 +108,11 @@ of the checked-out project version.
     </path>
 
     <!-- List of all developer-written tests that reliably pass on the fixed version -->
-    <!-- Manually generalize test patterns if analyzer produces incorrect outputs -->
-    <fileset id="all.manual.tests" dir="${test.dir}" excludes="${d4j.tests.exclude}">
+    <!-- Manually generalize test patterns if the build-file analyzer produces incorrect outputs -->
+    <fileset id="all.manual.tests" dir="${d4j.dir.src.tests}" excludes="${d4j.tests.exclude}">
+        <!--###ADD_INC_EXC### this line will be automatically replaced -->
         <!--include name="____" /-->
         <!--exclude name="____" /-->
     </fileset>
 
-    <!-- List of relevant developer-written tests that reliably pass on the fixed version -->
-    <fileset id="rel.manual.tests" dir="${test.home}"
-        includesfile="${d4j.dir.projects}/${d4j.project.id}/relevant_tests/${d4j.bug.id}" />
 </project>

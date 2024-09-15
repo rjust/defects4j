@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -156,11 +156,18 @@ if (defined($QUERY)) {
 } else {
     $QUERY = "";
 }
+
+my $ORG_ID = "";
+if (defined($ORGANIZATION_ID)) {
+  $ORG_ID = " -z $ORGANIZATION_ID";
+}
+
 # Collect all issues from the project issue tracker
 Utils::exec_cmd("./download-issues.pl -g $ISSUE_TRACKER_NAME"
                                   . " -t $ISSUE_TRACKER_PROJECT_ID"
                                   . " -o $ISSUES_DIR"
                                   . " -f $ISSUES_FILE"
+                                  . "$ORG_ID"
                                   . "$QUERY",
                 "Collecting all issues from the project issue tracker") or die "Cannot collect all issues from the project issue tracker!";
 

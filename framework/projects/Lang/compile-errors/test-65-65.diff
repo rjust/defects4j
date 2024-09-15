@@ -1,0 +1,16 @@
+index 38d578aba..a0ae9fc73 100644
+--- a/src/java/org/apache/commons/lang/enum/ValuedEnum.java
++++ b/src/java/org/apache/commons/lang/enum/ValuedEnum.java
+@@ -140,9 +140,9 @@ public abstract class ValuedEnum extends Enum {
+         }
+         List list = Enum.getEnumList(enumClass);
+         for (Iterator it = list.iterator(); it.hasNext();) {
+-            ValuedEnum enum = (ValuedEnum) it.next();
+-            if (enum.getValue() == value) {
+-                return enum;
++            ValuedEnum enumer = (ValuedEnum) it.next();
++            if (enumer.getValue() == value) {
++                return enumer;
+             }
+         }
+         return null;

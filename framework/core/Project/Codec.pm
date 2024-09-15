@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -95,20 +95,10 @@ sub _post_checkout {
 
     # Convert the file encoding of problematic files
     my $result = determine_layout($self, $rev_id);
-    if (-e $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java"){
-        rename($work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java".".bak");
-        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java") or die $!;
-        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/codec/language/DoubleMetaphoneTest.java.bak"`;
-        print OUT $converted_file;
-        close(OUT);
-    }
-    if (-e $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java"){
-        rename($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java", $work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java".".bak");
-        open(OUT, '>'.$work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java") or die $!;
-        my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/codec/language/SoundexTest.java.bak"`;
-        print OUT $converted_file;
-        close(OUT);
-    }
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/binary/Base64Test.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/ColognePhoneticTest.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/DoubleMetaphoneTest.java");
+    Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
 
     # Copy in a missing dependency
     if (-d $work_dir."/src/main/resources"){
@@ -125,6 +115,9 @@ sub _post_checkout {
            close(OUT); 
         }
     }
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/1\.[1-5]/1.6/", "$work_dir/default.properties");
 }
 
 #

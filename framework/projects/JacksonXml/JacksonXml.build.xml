@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,6 @@ of the checked-out project version.
            - test.classpath     ->  Classpath to compile tests
            - compile.classpath  ->  Classpath to compile sources
     -->
-
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
 
     <!-- Do not download maven dependencies -->
     <property name="maven.settings.offline" value="true" />
