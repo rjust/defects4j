@@ -7,7 +7,7 @@
 
 set -e
 
-HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")" && exit 2; }
+HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")"; exit 2; }
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1

@@ -4,7 +4,7 @@
 # $1 = workDir
 # $2 = D4J_HOME
 
-cd "$1" || { echo "cannot cd to workdir $1" && exit 2; }
+cd "$1" || { echo "cannot cd to workdir $1"; exit 2; }
 ./gradlew dependencies >> tmpDepend.txt
 if grep -q buddy tmpDepend.txt; then
     version=$(grep buddy tmpDepend.txt | head -1 | cut -d: -f 3)
