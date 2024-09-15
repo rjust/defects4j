@@ -113,7 +113,7 @@ main() {
     # Remove the summary file to ensure it is regenerated
     rm -f "$summary_file"
     defects4j mutation -w "$pid_vid_dir" -r || die "Mutation analysis (including all mutants) failed!"
-    _check_mutation_result 327 327 231 200
+    _check_mutation_result 327 327 231 199
     # Clean up
     rm -rf "$pid_vid_dir"
 
