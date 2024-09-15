@@ -5,7 +5,7 @@
 #
 ################################################################################
 
-HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")" && exit 2; }
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -62,12 +62,12 @@ _create_tar_bz2_file() {
   local suites_dir="$4"
 
   # Create a .tar.bz2 file with all test suites
-  pushd . > /dev/null 2>&1 || (echo "cannot pushd ." && exit 1)
-  cd "$HERE/resources/input" || (echo "cannot cd to $HERE/resources/input" && exit 1)
+  pushd . > /dev/null 2>&1 || { echo "cannot pushd ." && exit 2; }
+  cd "$HERE/resources/input" || { echo "cannot cd to $HERE/resources/input" && exit 2; }
     tar_bz2_file="$suites_dir/$pid-$bid-test.0.tar.bz2"
     # shellcheck disable=SC2086 # $input_files contains multiple files
     tar -jcvf "$tar_bz2_file" $input_files || return 1
-  popd > /dev/null 2>&1 || (echo "cannot popd" && exit 1)
+  popd > /dev/null 2>&1 || { echo "cannot popd" && exit 2; }
 
   return 0
 }

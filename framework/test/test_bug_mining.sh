@@ -7,7 +7,7 @@
 
 set -e
 
-HERE="$(cd "$(dirname "$0")" && pwd)" || (echo "cannot cd to $(dirname "$0")" && exit 1)
+HERE="$(cd "$(dirname "$0")" && pwd)" || { echo "cannot cd to $(dirname "$0")" && exit 2; }
 
 # Import helper subroutines and variables, and init Defects4J
 source "$HERE/test.include" || exit 1
@@ -282,7 +282,7 @@ test_analyze_project() {
     local commit_db_file="$work_dir/framework/projects/$project_id/$BUGS_CSV_ACTIVE"
     local rev_v2; rev_v2=$(grep "^$bug_id," "$commit_db_file" | cut -f3 -d',')
     local failing_tests="framework/projects/$project_id/failing_tests/$rev_v2"
-    if [ -e $RESOURCES_OUTPUT_DIR/$failing_tests ]; then
+    if [ -e "$RESOURCES_OUTPUT_DIR/$failing_tests" ]; then
         [ -s "$work_dir/$failing_tests" ] || die "No failing test cases has been reported"
     
         # Same number of failing tests
