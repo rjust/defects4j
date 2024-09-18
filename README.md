@@ -69,8 +69,8 @@ Reproducibility
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using
-Java 11 (see the [CI configuration](.github/workflows/ci.yml) for the specific JDK version).
-Using a different (major) version of Java might result in unexpected failing tests
+Java 11 (see the [CI configuration](.github/workflows/ci.yml) for specifics).
+Using a different version of Java might result in unexpected failing tests
 and/or non-reproducible bugs.
 
 #### Timezone
