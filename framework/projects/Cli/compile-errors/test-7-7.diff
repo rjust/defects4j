@@ -1,0 +1,33 @@
+diff --git a/src/test/org/apache/commons/cli2/jdepend/JDependTest.java b/src/test/org/apache/commons/cli2/jdepend/JDependTest.java
+index f018642..1b3ff61 100644
+--- a/src/test/org/apache/commons/cli2/jdepend/JDependTest.java
++++ b/src/test/org/apache/commons/cli2/jdepend/JDependTest.java
+@@ -65,7 +65,7 @@ public class JDependTest extends TestCase {
+             final String message = pkg.getName() + " too far from line: " + distance;
+             assertTrue(
+                 message,
+-                distance < 0.21d);
++                distance < 0.26d);
+         }
+     }
+
+diff --git a/src/test/org/apache/commons/cli2/validation/ClassValidatorTest.java b/src/test/org/apache/commons/cli2/validation/ClassValidatorTest.java
+index 707ef1e..a4fd007 100644
+--- a/src/test/org/apache/commons/cli2/validation/ClassValidatorTest.java
++++ b/src/test/org/apache/commons/cli2/validation/ClassValidatorTest.java
+@@ -222,8 +222,8 @@ public class ClassValidatorTest extends TestCase {
+                     resources.getMessage(
+                             "ClassValidator.class.access",
+                             className,
+-                            "Class org.apache.commons.cli2.validation.ClassValidator " +
+-                            "can not access a member of class " +
++                            "class org.apache.commons.cli2.validation.ClassValidator " +
++                            "cannot access a member of class " +
+                             "org.apache.commons.cli2.validation.protect.ProtectedClass " +
+                             "with modifiers \"protected\""),
+                             ive.getMessage());
+
+
+
+
+

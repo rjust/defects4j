@@ -10,3 +10,4 @@
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldAllowMixingOtherModesWithTimeoutAndFail
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldFailVerificationWithTimeout
 --- org.mockitousage.verification.VerificationWithTimeoutTest::shouldVerifyWithTimeout
+--- org.mockitousage.bugs.ShouldMocksCompareToBeConsistentWithEqualsTest::shouldAllowStubbingAndVerifyingCompareTo

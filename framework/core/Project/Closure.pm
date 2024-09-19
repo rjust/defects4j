@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +68,15 @@ sub determine_layout {
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $rev_id, $work_dir) = @_;
+    # get original bid
+    my $bid;
+    if (-e "$work_dir/$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/$CONFIG");
+        if (defined $config) {
+            $bid = $config->{$CONFIG_VID};
+        } else { die "no .config file"; }
+    } else { die "no .config file"; }
+    chop($bid);
 
     open FH, "$work_dir/build.xml" or die $!;
     my $build_file = do { local $/; <FH> };
@@ -79,6 +88,29 @@ sub _post_checkout {
     open FH, ">$work_dir/build.xml" or die $!;
     print FH $build_file;
     close FH;
+
+    # Fix compilation errors if necessary
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($bid >= $1 && $bid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
+
+    # Set default Java target to 6.
+    # either these:
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/build.properties");
+    # or these:
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
 }
 
 1;

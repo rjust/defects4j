@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2020 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 
 =head1 NAME
 
-jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh script, one line per each bug.
+jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh script, one line per bug.
 
 =head1 SYNOPSIS
 
@@ -72,6 +72,6 @@ for my $file (@files) {
   my $name = $project->{prog_name};
   my @bug_ids = $project->get_bug_ids();
   for my $id (@bug_ids) {
-    print("./test_verify_bugs.sh -p $pid -b $id -A \n");
+    print("./test_verify_bugs.sh -p $pid -b $id -A\n");
   }
 }

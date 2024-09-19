@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -63,8 +63,34 @@ sub new {
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+    # All relevant files live in the gson subdirectory
     $work_dir .= "/gson/";
+
+    # get original bid
+    my $bid;
+    if (-e "$work_dir/../$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/../$CONFIG");
+        if (defined $config) {
+            $bid = $config->{$CONFIG_VID};
+        } else { die "no .config file"; }
+    } else { die "no .config file"; }
+    chop($bid);
+
+    # Fix compilation errors if necessary.
+    # Run this as the first step to ensure that patches are applicable to
+    # unmodified source files.
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($bid >= $1 && $bid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
 
     # Check whether ant build file exists
     unless (-e "$work_dir/build.xml") {
@@ -73,6 +99,10 @@ sub _post_checkout {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
     }
+
+    # Set default Java target to 6.
+    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
 }
 
 #

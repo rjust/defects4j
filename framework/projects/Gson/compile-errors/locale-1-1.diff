@@ -1,0 +1,27 @@
+diff --git a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+index 89d8ad38..f6a96610 100644
+--- a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
++++ b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+@@ -215,7 +215,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
+   }
+ 
+   public void testDefaultDateDeserialization() {
+-    String json = "'Dec 13, 2009 07:18:02 AM'";
++    String json = "'Dec 13, 2009, 07:18:02 AM'";
+     Date extracted = gson.fromJson(json, Date.class);
+     assertEqualsDate(extracted, 2009, 11, 13);
+     assertEqualsTime(extracted, 7, 18, 02);
+@@ -252,11 +252,11 @@ public class DefaultTypeAdaptersTest extends TestCase {
+   public void testDefaultJavaSqlTimestampSerialization() {
+     Timestamp now = new java.sql.Timestamp(1259875082000L);
+     String json = gson.toJson(now);
+-    assertEquals("\"Dec 3, 2009 1:18:02 PM\"", json);
++    assertEquals("\"Dec 3, 2009, 1:18:02 PM\"", json);
+   }
+ 
+   public void testDefaultJavaSqlTimestampDeserialization() {
+-    String json = "'Dec 3, 2009 1:18:02 PM'";
++    String json = "'Dec 3, 2009, 1:18:02 PM'";
+     Timestamp extracted = gson.fromJson(json, Timestamp.class);
+     assertEqualsDate(extracted, 2009, 11, 3);
+     assertEqualsTime(extracted, 13, 18, 02);

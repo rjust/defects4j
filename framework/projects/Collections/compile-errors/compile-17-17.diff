@@ -1,0 +1,183 @@
+diff --git a/src/main/java/org/apache/commons/collections/MultiMap.java b/src/main/java/org/apache/commons/collections/MultiMap.java
+index 1ef31e73..253a17fc 100644
+--- a/src/main/java/org/apache/commons/collections/MultiMap.java
++++ b/src/main/java/org/apache/commons/collections/MultiMap.java
+@@ -61,7 +61,7 @@ public interface MultiMap<K, V> extends IterableMap<K, Object> {
+      * @throws ClassCastException if the key or value is of an invalid type
+      * @throws NullPointerException if the key or value is null and null is invalid
+      */
+-    public V remove(K key, V item);
++    public V removeMapping(K key, V item);
+ 
+     //-----------------------------------------------------------------------
+     /**
+diff --git a/src/main/java/org/apache/commons/collections/map/MultiKeyMap.java b/src/main/java/org/apache/commons/collections/map/MultiKeyMap.java
+index 98bb3fd2..7ffd44a5 100644
+--- a/src/main/java/org/apache/commons/collections/map/MultiKeyMap.java
++++ b/src/main/java/org/apache/commons/collections/map/MultiKeyMap.java
+@@ -192,7 +192,7 @@ public class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K
+      * @param key2  the second key
+      * @return the value mapped to the removed key, null if key not in map
+      */
+-    public V remove(Object key1, Object key2) {
++    public V removeMultiKey(Object key1, Object key2) {
+         int hashCode = hash(key1, key2);
+         int index = decorated().hashIndex(hashCode, decorated().data.length);
+         AbstractHashedMap.HashEntry<MultiKey<? extends K>, V> entry = decorated().data[index];
+@@ -322,7 +322,7 @@ public class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K
+      * @param key3  the third key
+      * @return the value mapped to the removed key, null if key not in map
+      */
+-    public V remove(Object key1, Object key2, Object key3) {
++    public V removeMultiKey(Object key1, Object key2, Object key3) {
+         int hashCode = hash(key1, key2, key3);
+         int index = decorated().hashIndex(hashCode, decorated().data.length);
+         AbstractHashedMap.HashEntry<MultiKey<? extends K>, V> entry = decorated().data[index];
+@@ -461,7 +461,7 @@ public class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K
+      * @param key4  the fourth key
+      * @return the value mapped to the removed key, null if key not in map
+      */
+-    public V remove(Object key1, Object key2, Object key3, Object key4) {
++    public V removeMultiKey(Object key1, Object key2, Object key3, Object key4) {
+         int hashCode = hash(key1, key2, key3, key4);
+         int index = decorated().hashIndex(hashCode, decorated().data.length);
+         AbstractHashedMap.HashEntry<MultiKey<? extends K>, V> entry = decorated().data[index];
+@@ -610,7 +610,7 @@ public class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K
+      * @param key5  the fifth key
+      * @return the value mapped to the removed key, null if key not in map
+      */
+-    public V remove(Object key1, Object key2, Object key3, Object key4, Object key5) {
++    public V removeMultiKey(Object key1, Object key2, Object key3, Object key4, Object key5) {
+         int hashCode = hash(key1, key2, key3, key4, key5);
+         int index = decorated().hashIndex(hashCode, decorated().data.length);
+         AbstractHashedMap.HashEntry<MultiKey<? extends K>, V> entry = decorated().data[index];
+diff --git a/src/main/java/org/apache/commons/collections/map/MultiValueMap.java b/src/main/java/org/apache/commons/collections/map/MultiValueMap.java
+index 1532cb14..96654243 100644
+--- a/src/main/java/org/apache/commons/collections/map/MultiValueMap.java
++++ b/src/main/java/org/apache/commons/collections/map/MultiValueMap.java
+@@ -189,7 +189,7 @@ public class MultiValueMap<K, V> extends AbstractMapDecorator<K, Object> impleme
+      * @return the value removed (which was passed in), null if nothing removed
+      */
+     @SuppressWarnings("unchecked")
+-    public V remove(Object key, Object value) {
++    public V removeMapping(Object key, Object value) {
+         Collection<V> valuesForKey = getCollection(key);
+         if (valuesForKey == null) {
+             return null;
+diff --git a/src/test/java/org/apache/commons/collections/collection/AbstractTestCollection.java b/src/test/java/org/apache/commons/collections/collection/AbstractTestCollection.java
+index 4ff1fd19..ca2c3d6b 100644
+--- a/src/test/java/org/apache/commons/collections/collection/AbstractTestCollection.java
++++ b/src/test/java/org/apache/commons/collections/collection/AbstractTestCollection.java
+@@ -1076,7 +1076,7 @@ public abstract class AbstractTestCollection<E> extends AbstractTestObject {
+         verify();
+ 
+         try {
+-            array = getCollection().toArray(null);
++            array = getCollection().toArray((Object[])null);
+             fail("toArray(null) should raise NPE");
+         } catch (NullPointerException e) {
+             // expected
+diff --git a/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java b/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java
+index 66e7477f..fa4d4e2e 100644
+--- a/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java
++++ b/src/test/java/org/apache/commons/collections/map/TestMultiKeyMap.java
+@@ -318,34 +318,34 @@ public class TestMultiKeyMap<K, V> extends AbstractTestIterableMap<MultiKey<? ex
+             switch (key.size()) {
+                 case 2:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1)));
+-                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1)));
++                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1)));
++                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1)));
+                 break;
+                 case 3:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+-                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2)));
++                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2)));
++                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2)));
+                 break;
+                 case 4:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+-                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
++                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
++                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3)));
+                 break;
+                 case 5:
+                 assertEquals(true, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+-                assertEquals(value, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
++                assertEquals(value, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(size - 1, multimap.size());
+-                assertEquals(null, multimap.remove(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
++                assertEquals(null, multimap.removeMultiKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 assertEquals(false, multimap.containsKey(key.getKey(0), key.getKey(1), key.getKey(2), key.getKey(3), key.getKey(4)));
+                 break;
+                 default:
+diff --git a/src/test/java/org/apache/commons/collections/map/TestMultiValueMap.java b/src/test/java/org/apache/commons/collections/map/TestMultiValueMap.java
+index 52e667a7..001d68d7 100644
+--- a/src/test/java/org/apache/commons/collections/map/TestMultiValueMap.java
++++ b/src/test/java/org/apache/commons/collections/map/TestMultiValueMap.java
+@@ -156,7 +156,7 @@ public class TestMultiValueMap<K, V> extends AbstractTestObject {
+         MultiValueMap<K, V> one = new MultiValueMap<K, V>();
+         Integer value = new Integer(1);
+         one.put((K) "One", value);
+-        one.remove("One", value);
++        one.removeMapping("One", value);
+ 
+         MultiValueMap<K, V> two = new MultiValueMap<K, V>();
+         assertEquals(two, one);
+@@ -184,7 +184,7 @@ public class TestMultiValueMap<K, V> extends AbstractTestObject {
+         assertEquals(4, map.totalSize());
+         map.remove("A");
+         assertEquals(3, map.totalSize());
+-        map.remove("B", "BC");
++        map.removeMapping("B", "BC");
+         assertEquals(2, map.totalSize());
+     }
+ 
+@@ -202,7 +202,7 @@ public class TestMultiValueMap<K, V> extends AbstractTestObject {
+         assertEquals(2, map.size());
+         map.remove("A");
+         assertEquals(1, map.size());
+-        map.remove("B", "BC");
++        map.removeMapping("B", "BC");
+         assertEquals(1, map.size());
+     }
+ 
+@@ -226,7 +226,7 @@ public class TestMultiValueMap<K, V> extends AbstractTestObject {
+         map.remove("A");
+         assertEquals(0, map.size("A"));
+         assertEquals(3, map.size("B"));
+-        map.remove("B", "BC");
++        map.removeMapping("B", "BC");
+         assertEquals(0, map.size("A"));
+         assertEquals(2, map.size("B"));
+     }
+@@ -354,11 +354,11 @@ public class TestMultiValueMap<K, V> extends AbstractTestObject {
+         map.put((K) "A", "AA");
+         map.put((K) "A", "AB");
+         map.put((K) "A", "AC");
+-        assertEquals(null, map.remove("C", "CA"));
+-        assertEquals(null, map.remove("A", "AD"));
+-        assertEquals("AC", map.remove("A", "AC"));
+-        assertEquals("AB", map.remove("A", "AB"));
+-        assertEquals("AA", map.remove("A", "AA"));
++        assertEquals(null, map.removeMapping("C", "CA"));
++        assertEquals(null, map.removeMapping("A", "AD"));
++        assertEquals("AC", map.removeMapping("A", "AC"));
++        assertEquals("AB", map.removeMapping("A", "AB"));
++        assertEquals("AA", map.removeMapping("A", "AA"));
+         assertEquals(new MultiValueMap<K, V>(), map);
+     }
+ 

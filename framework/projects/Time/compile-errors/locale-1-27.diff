@@ -1,0 +1,39 @@
+diff --git a/src/test/java/org/joda/time/format/TestDateTimeFormat.java b/src/test/java/org/joda/time/format/TestDateTimeFormat.java
+index 74e6244f..cb48322a 100644
+--- a/src/test/java/org/joda/time/format/TestDateTimeFormat.java
++++ b/src/test/java/org/joda/time/format/TestDateTimeFormat.java
+@@ -625,13 +625,13 @@ public class TestDateTimeFormat extends TestCase {
+     public void testFormat_halfdayOfDay() {
+         DateTime dt = new DateTime(2004, 6, 9, 10, 20, 30, 40, UTC);
+         DateTimeFormatter f = DateTimeFormat.forPattern("a").withLocale(Locale.UK);
+-        assertEquals(dt.toString(), "AM", f.print(dt));
++        assertEquals(dt.toString(), "am", f.print(dt));
+         
+         dt = dt.withZone(NEWYORK);
+-        assertEquals(dt.toString(), "AM", f.print(dt));
++        assertEquals(dt.toString(), "am", f.print(dt));
+         
+         dt = dt.withZone(TOKYO);
+-        assertEquals(dt.toString(), "PM", f.print(dt));
++        assertEquals(dt.toString(), "pm", f.print(dt));
+     }
+ 
+     //-----------------------------------------------------------------------
+@@ -1010,7 +1010,7 @@ public class TestDateTimeFormat extends TestCase {
+             .withLocale(Locale.UK).withZoneUTC();
+         
+         String str = new DateTime(2007, 6, 23, 18, 0, 0, 0, UTC).toString(dateFormatter);
+-        assertEquals("$06-PM-2007", str);
++        assertEquals("$06-pm-2007", str);
+         DateTime date = dateFormatter.parseDateTime(str);
+         check(date, 2007, 1, 1);
+     }
+@@ -1070,7 +1070,7 @@ public class TestDateTimeFormat extends TestCase {
+             .withLocale(Locale.FRANCE).withZoneUTC();
+         
+         String str = new DateTime(-1, 6, 23, 0, 0, 0, 0, UTC).toString(dateFormatter);
+-        assertEquals("$BC-0001", str);
++        assertEquals("$av. J.-C.-0001", str);
+         DateTime date = dateFormatter.parseDateTime(str);
+         check(date, -1, 1, 1);
+     }

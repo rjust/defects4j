@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 #-------------------------------------------------------------------------------
-# Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+# Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -160,5 +160,6 @@ close(IN);
 close(OUT);
 
 # Clone the repository
-system("mkdir -p $repo_dir && git clone --bare $URL $repo_dir/$NAME.git 2>&1"
-        . " && echo $NAME: Cloned from $URL >> $repo_dir/README") == 0 or die "Failed to clone repository";
+Utils::exec_cmd("mkdir -p $repo_dir && cp $REPO_DIR/README $repo_dir", "Prepare repository directory");
+Utils::exec_cmd("git clone --bare $URL $repo_dir/$NAME.git 2>&1", "Clone repository from $URL");
+Utils::exec_cmd("echo $NAME: Cloned from $URL >> $repo_dir/README", "Update repository metadata");

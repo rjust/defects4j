@@ -1,0 +1,24 @@
+diff --git a/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java b/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
+index 48cc3ea15..1f2454d89 100644
+--- a/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
++++ b/src/test/java/org/apache/commons/lang3/time/DateUtilsTest.java
+@@ -1595,8 +1595,8 @@ public class DateUtilsTest {
+         final Locale dflt = Locale.getDefault();
+         Locale.setDefault(Locale.GERMAN);
+         try {
+-            DateUtils.parseDate("Mi, 09 Apr 2008 23:55:38 GMT", "EEE, dd MMM yyyy HH:mm:ss zzz");
+-            DateUtils.parseDateStrictly("Mi, 09 Apr 2008 23:55:38 GMT", "EEE, dd MMM yyyy HH:mm:ss zzz");
++            DateUtils.parseDate("Mi., 09 Apr. 2008 23:55:38 GMT", "EEE, dd MMM yyyy HH:mm:ss zzz");
++            DateUtils.parseDateStrictly("Mi., 09 Apr. 2008 23:55:38 GMT", "EEE, dd MMM yyyy HH:mm:ss zzz");
+         } finally {
+             Locale.setDefault(dflt);            
+         }
+@@ -1620,7 +1620,7 @@ public class DateUtilsTest {
+         final Locale dflt = Locale.getDefault();
+         Locale.setDefault(Locale.ENGLISH);
+         try {
+-            DateUtils.parseDate("Mi, 09 Apr 2008 23:55:38 GMT", Locale.GERMAN, "EEE, dd MMM yyyy HH:mm:ss zzz");
++            DateUtils.parseDate("Mi., 09 Apr. 2008 23:55:38 GMT", Locale.GERMAN, "EEE, dd MMM yyyy HH:mm:ss zzz");
+         } finally {
+             Locale.setDefault(dflt);            
+         }

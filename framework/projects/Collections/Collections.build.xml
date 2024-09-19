@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,7 @@ of the checked-out project version.
 #############################################################################-->
 <project name="D4j-Collections" basedir="${basedir}">
 
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
     <property name="easymock.jar" value="${d4j.dir.projects}/Collections/lib/easymock-2.0.jar"/>
-    <property name="hamcrest.jar" value="${d4j.dir.projects}/Collections/lib/hamcrest-core-1.3.jar"/>
 
     <!-- Generate all debugging information -->
     <property name="compile.debug" value="yes" />
@@ -62,7 +60,6 @@ of the checked-out project version.
         <pathelement location="${classes.dir}"/>
 	<pathelement location="${test.classes.dir}"/>
 	<pathelement path="${junit.jar}" />
-        <pathelement location="${hamcrest.jar}"/>
         <pathelement location="${easymock.jar}"/>
     </path>
 

@@ -1,0 +1,137 @@
+diff --git a/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java b/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
+index 966a8c18..1f2e95d9 100644
+--- a/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
++++ b/gson/src/test/java/com/google/gson/DefaultDateTypeAdapterTest.java
+@@ -44,17 +44,17 @@ public class DefaultDateTypeAdapterTest extends TestCase {
+     Locale defaultLocale = Locale.getDefault();
+     Locale.setDefault(locale);
+     try {
+-      assertFormatted("Jan 1, 1970 12:00:00 AM", new DefaultDateTypeAdapter());
++      assertFormatted("Jan 1, 1970, 12:00:00 AM", new DefaultDateTypeAdapter());
+       assertFormatted("1/1/70", new DefaultDateTypeAdapter(DateFormat.SHORT));
+       assertFormatted("Jan 1, 1970", new DefaultDateTypeAdapter(DateFormat.MEDIUM));
+       assertFormatted("January 1, 1970", new DefaultDateTypeAdapter(DateFormat.LONG));
+-      assertFormatted("1/1/70 12:00 AM",
++      assertFormatted("1/1/70, 12:00 AM",
+           new DefaultDateTypeAdapter(DateFormat.SHORT, DateFormat.SHORT));
+-      assertFormatted("Jan 1, 1970 12:00:00 AM",
++      assertFormatted("Jan 1, 1970, 12:00:00 AM",
+           new DefaultDateTypeAdapter(DateFormat.MEDIUM, DateFormat.MEDIUM));
+-      assertFormatted("January 1, 1970 12:00:00 AM UTC",
++      assertFormatted("January 1, 1970 at 12:00:00 AM UTC",
+           new DefaultDateTypeAdapter(DateFormat.LONG, DateFormat.LONG));
+-      assertFormatted("Thursday, January 1, 1970 12:00:00 AM UTC",
++      assertFormatted("Thursday, January 1, 1970 at 12:00:00 AM Coordinated Universal Time",
+           new DefaultDateTypeAdapter(DateFormat.FULL, DateFormat.FULL));
+     } finally {
+       TimeZone.setDefault(defaultTimeZone);
+@@ -68,17 +68,17 @@ public class DefaultDateTypeAdapterTest extends TestCase {
+     Locale defaultLocale = Locale.getDefault();
+     Locale.setDefault(Locale.FRANCE);
+     try {
+-      assertParsed("1 janv. 1970 00:00:00", new DefaultDateTypeAdapter());
++      assertParsed("1 janv. 1970 à 00:00:00", new DefaultDateTypeAdapter());
+       assertParsed("01/01/70", new DefaultDateTypeAdapter(DateFormat.SHORT));
+       assertParsed("1 janv. 1970", new DefaultDateTypeAdapter(DateFormat.MEDIUM));
+       assertParsed("1 janvier 1970", new DefaultDateTypeAdapter(DateFormat.LONG));
+       assertParsed("01/01/70 00:00",
+           new DefaultDateTypeAdapter(DateFormat.SHORT, DateFormat.SHORT));
+-      assertParsed("1 janv. 1970 00:00:00",
++      assertParsed("1 janv. 1970 à 00:00:00",
+           new DefaultDateTypeAdapter(DateFormat.MEDIUM, DateFormat.MEDIUM));
+-      assertParsed("1 janvier 1970 00:00:00 UTC",
++      assertParsed("1 janvier 1970 à 00:00:00 UTC",
+           new DefaultDateTypeAdapter(DateFormat.LONG, DateFormat.LONG));
+-      assertParsed("jeudi 1 janvier 1970 00 h 00 UTC",
++      assertParsed("jeudi 1 janvier 1970 à 00:00:00 Temps universel coordonné",
+           new DefaultDateTypeAdapter(DateFormat.FULL, DateFormat.FULL));
+     } finally {
+       TimeZone.setDefault(defaultTimeZone);
+@@ -92,17 +92,17 @@ public class DefaultDateTypeAdapterTest extends TestCase {
+     Locale defaultLocale = Locale.getDefault();
+     Locale.setDefault(Locale.US);
+     try {
+-      assertParsed("Jan 1, 1970 0:00:00 AM", new DefaultDateTypeAdapter());
++      assertParsed("Jan 1, 1970, 0:00:00 AM", new DefaultDateTypeAdapter());
+       assertParsed("1/1/70", new DefaultDateTypeAdapter(DateFormat.SHORT));
+       assertParsed("Jan 1, 1970", new DefaultDateTypeAdapter(DateFormat.MEDIUM));
+       assertParsed("January 1, 1970", new DefaultDateTypeAdapter(DateFormat.LONG));
+-      assertParsed("1/1/70 0:00 AM",
++      assertParsed("1/1/70, 0:00 AM",
+           new DefaultDateTypeAdapter(DateFormat.SHORT, DateFormat.SHORT));
+-      assertParsed("Jan 1, 1970 0:00:00 AM",
++      assertParsed("Jan 1, 1970, 0:00:00 AM",
+           new DefaultDateTypeAdapter(DateFormat.MEDIUM, DateFormat.MEDIUM));
+-      assertParsed("January 1, 1970 0:00:00 AM UTC",
++      assertParsed("January 1, 1970 at 0:00:00 AM UTC",
+           new DefaultDateTypeAdapter(DateFormat.LONG, DateFormat.LONG));
+-      assertParsed("Thursday, January 1, 1970 0:00:00 AM UTC",
++      assertParsed("Thursday, January 1, 1970 at 0:00:00 AM UTC",
+           new DefaultDateTypeAdapter(DateFormat.FULL, DateFormat.FULL));
+     } finally {
+       TimeZone.setDefault(defaultTimeZone);
+@@ -116,8 +116,8 @@ public class DefaultDateTypeAdapterTest extends TestCase {
+     Locale defaultLocale = Locale.getDefault();
+     Locale.setDefault(Locale.US);
+     try {
+-      assertFormatted("Dec 31, 1969 4:00:00 PM", new DefaultDateTypeAdapter());
+-      assertParsed("Dec 31, 1969 4:00:00 PM", new DefaultDateTypeAdapter());
++      assertFormatted("Dec 31, 1969, 4:00:00 PM", new DefaultDateTypeAdapter());
++      assertParsed("Dec 31, 1969, 4:00:00 PM", new DefaultDateTypeAdapter());
+     } finally {
+       TimeZone.setDefault(defaultTimeZone);
+       Locale.setDefault(defaultLocale);
+diff --git a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+index 19866716..cec90b9c 100644
+--- a/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
++++ b/gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java
+@@ -328,11 +328,11 @@ public class DefaultTypeAdaptersTest extends TestCase {
+   public void testDefaultDateSerialization() {
+     Date now = new Date(1315806903103L);
+     String json = gson.toJson(now);
+-    assertEquals("\"Sep 11, 2011 10:55:03 PM\"", json);
++    assertEquals("\"Sep 11, 2011, 10:55:03 PM\"", json);
+   }
+ 
+   public void testDefaultDateDeserialization() {
+-    String json = "'Dec 13, 2009 07:18:02 AM'";
++    String json = "'Dec 13, 2009, 07:18:02 AM'";
+     Date extracted = gson.fromJson(json, Date.class);
+     assertEqualsDate(extracted, 2009, 11, 13);
+     assertEqualsTime(extracted, 7, 18, 2);
+@@ -369,11 +369,11 @@ public class DefaultTypeAdaptersTest extends TestCase {
+   public void testDefaultJavaSqlTimestampSerialization() {
+     Timestamp now = new java.sql.Timestamp(1259875082000L);
+     String json = gson.toJson(now);
+-    assertEquals("\"Dec 3, 2009 1:18:02 PM\"", json);
++    assertEquals("\"Dec 3, 2009, 1:18:02 PM\"", json);
+   }
+ 
+   public void testDefaultJavaSqlTimestampDeserialization() {
+-    String json = "'Dec 3, 2009 1:18:02 PM'";
++    String json = "'Dec 3, 2009, 1:18:02 PM'";
+     Timestamp extracted = gson.fromJson(json, Timestamp.class);
+     assertEqualsDate(extracted, 2009, 11, 3);
+     assertEqualsTime(extracted, 13, 18, 2);
+@@ -395,7 +395,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
+     Gson gson = new GsonBuilder().create();
+     Date now = new Date(1315806903103L);
+     String json = gson.toJson(now);
+-    assertEquals("\"Sep 11, 2011 10:55:03 PM\"", json);
++    assertEquals("\"Sep 11, 2011, 10:55:03 PM\"", json);
+   }
+ 
+   public void testDefaultDateDeserializationUsingBuilder() throws Exception {
+diff --git a/gson/src/test/java/com/google/gson/functional/ObjectTest.java b/gson/src/test/java/com/google/gson/functional/ObjectTest.java
+index de1219a6..e9a0b81c 100644
+--- a/gson/src/test/java/com/google/gson/functional/ObjectTest.java
++++ b/gson/src/test/java/com/google/gson/functional/ObjectTest.java
+@@ -482,7 +482,7 @@ public class ObjectTest extends TestCase {
+   public void testDateAsMapObjectField() {
+     HasObjectMap a = new HasObjectMap();
+     a.map.put("date", new Date(0));
+-    assertEquals("{\"map\":{\"date\":\"Dec 31, 1969 4:00:00 PM\"}}", gson.toJson(a));
++    assertEquals("{\"map\":{\"date\":\"Dec 31, 1969, 4:00:00 PM\"}}", gson.toJson(a));
+   }
+ 
+   public class HasObjectMap {

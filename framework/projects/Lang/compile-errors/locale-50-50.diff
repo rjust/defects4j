@@ -1,0 +1,47 @@
+diff --git a/src/test/org/apache/commons/lang/text/AbstractMessageFormatTest.java b/src/test/org/apache/commons/lang/text/AbstractMessageFormatTest.java
+index cf93e0e21..2c493951e 100644
+--- a/src/test/org/apache/commons/lang/text/AbstractMessageFormatTest.java
++++ b/src/test/org/apache/commons/lang/text/AbstractMessageFormatTest.java
+@@ -239,7 +239,7 @@ public abstract class AbstractMessageFormatTest extends TestCase {
+                 expected.toString(),
+                 "Time 0: {0,time,full}; Time 1: {1,time,full}; Time 2: {2,time,full}",
+                 DATES,
+-                "Time 0: {0,time,long}; Time 1: {1,time,long}; Time 2: {2,time,long}");
++                "Time 0: {0,date,h:mm:ss a zzzz}; Time 1: {1,date,h:mm:ss a zzzz}; Time 2: {2,date,h:mm:ss a zzzz}");
+     }
+ 
+     public void testTimePattern() {
+diff --git a/src/test/org/apache/commons/lang/text/MessageFormatTest.java b/src/test/org/apache/commons/lang/text/MessageFormatTest.java
+index 4836001fc..93e1cdb1f 100644
+--- a/src/test/org/apache/commons/lang/text/MessageFormatTest.java
++++ b/src/test/org/apache/commons/lang/text/MessageFormatTest.java
+@@ -1,5 +1,6 @@
+ package org.apache.commons.lang.text;
+ 
++import java.text.DateFormat;
+ import java.text.MessageFormat;
+ import java.util.Locale;
+ 
+@@ -19,4 +20,22 @@ public class MessageFormatTest extends AbstractMessageFormatTest {
+     protected MessageFormat createMessageFormat(String pattern) {
+         return new MessageFormat(pattern, Locale.US);
+     }
++
++    public void testFullTime() {
++        DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL);
++        StringBuffer expected = new StringBuffer();
++        for (int i = 0; i < DATES.length; i++) {
++            if (i > 0) {
++                expected.append("; ");
++            }
++            expected.append("Time ").append(i).append(": ").append(
++                    df.format(DATES[i]));
++        }
++        doAssertions(
++                expected.toString(),
++                "Time 0: {0,time,full}; Time 1: {1,time,full}; Time 2: {2,time,full}",
++                DATES,
++                "Time 0: {0,time,full}; Time 1: {1,time,full}; Time 2: {2,time,full}");
++    }
++
+ }

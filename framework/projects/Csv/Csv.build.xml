@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2014-2019 René Just, Darioush Jalali, and Defects4J contributors.
+Copyright (c) 2014-2024 René Just, Darioush Jalali, and Defects4J contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,6 @@ It defines project-specific properties and targets, and imports the build file
 of the checked-out project version.
 #############################################################################-->
 <project name="D4j-Csv" basedir="${basedir}">
-
-    <property name="junit.jar" value="${d4j.home}/framework/projects/lib/junit-4.11.jar"/>
 
     <!-- Do not download maven dependencies -->
     <property name="maven.settings.offline" value="true" />
@@ -87,6 +85,7 @@ of the checked-out project version.
         <include name='**/Test*.java' />
         <exclude name='**/*Abstract*Test.java' />
         <exclude name='**/perf/PerformanceTest.java' />
+        <exclude name='**/csv/PerformanceTest.java' />
     </fileset>
 
     <!-- List of relevant developer-written tests that reliably pass on the fixed version -->

@@ -1,0 +1,30 @@
+# This file lists rules, intended to fix broken dependency URLs in build and
+# properties files.
+#
+# These rules are applied during checkout of a project version to build and
+# properties files (see checkout_vid in Project.pm for details).
+#
+# Each row must have the following format: <find>,<replace>. The two parts in
+# each row form a substitution regex (s/<find>/<replace>/g). Rows starting with
+# '#' are ignored.
+#
+# The pairs are processed in order: as soon as a <find> pattern matches, the
+# corresponding line in the build/properties file is updated and all other
+# patterns are ignored for that line.
+#
+# Update Java source and target version numbers
+(compile.(source|target)\s+=\s+)1.[1-5],${1}1.6
+((source|target)=)"1.[1-5]",${1}"1.6"
+#
+# Update dependency URLs
+http://www.ibiblio.org/maven/([^.]+)\.([^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${2}/${2}/${4}/${3}
+http://www.ibiblio.org/maven/([a-z]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${1}/${3}/${2}
+http://www.ibiblio.org/maven/(commons-[^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${1}/${3}/${2}
+http://mirrors.ibiblio.org/pub/mirrors/maven/(commons-[^.]+)/jars/(.*-([0-9.]*)\.jar),https://repo1.maven.org/maven2/${1}/${1}/${3}/${2}
+http://repo.maven.apache.org/maven2/(.*)/(.*)/(.*)/(.*),https://repo1.maven.org/maven2/${1}/${2}/${3}/${4}
+https://repository.apache.org/snapshots/org/apache/commons/(.*)/(.*)/(.*)\.jar,https://repo1.maven.org/maven2/org/apache/commons/${1}/${2}/${3}\.jar
+https://repository.apache.org/snapshots/(commons-[a-z]+)/(commons-[a-z]+)/([0-9.]*)/(.+)\.jar,https://repo1.maven.org/maven2/${1}/${2}/${3}/${4}\.jar
+https?://repository.apache.org/snapshots/(.*)\.jar,https://repo1.maven.org/maven2/${1}\.jar
+http://repository.apache.org/snapshots/org/javassist/javassist/3.16.1-GA/javassist-3.16.1-GA.jar,https://repo1.maven.org/maven2/org/javassist/javassist/3.18.0-GA/javassist-3.18.0-GA.jar
+http://people.apache.org/repo/m1-snapshot-repository/dumbster/jars/dumbster-SNAPSHOT.jar,https://repo1.maven.org/maven2/dumbster/dumbster/1.6/dumbster-1.6.jar
+https://oss.sonatype.org/content/repositories/snapshots,https://repo1.maven.org/maven2
