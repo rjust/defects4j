@@ -343,9 +343,9 @@ The directory structure of Defects4J is as follows:
 
     defects4j
        |
-       |--- project_repos:     The version control repositories of the provided projects.
+       |--- project_repos:     The version control repositories of the provided projects (populated during initialization).
        |
-       |--- major:             The Major mutation framework.
+       |--- developer:         Resources for Defects4J contributors.
        |
        |--- framework:         Libraries and executables of the core, test execution,
            |                   and bug-mining frameworks.
@@ -356,13 +356,15 @@ The directory structure of Defects4J is as follows:
            |
            |--- core:          The modules of the core framework.
            |
-           |--- lib:           Libraries used in the core framework.
+           |--- doc:           Scripts and templates for the html documentation.
            |
-           |--- util:          Util scripts used by Defects4J.
+           |--- lib:           Libraries used in the core framework.
            |
            |--- projects:      Project-specific resource files.
            |
            |--- test:          Scripts to test the framework.
+           |
+           |--- util:          Util scripts used by Defects4J.
            
 Versioning information
 ----------------------
