@@ -68,7 +68,7 @@ printf "\n(%s)" "$version" >&2
 printf ".%.0s" \{1..expr 73 - length "$version"\} >&2
 printf " " >&2
 
-# Check to see if called from randoop.Bloodhou.sh and if so,
+# Check to see if called from randoop.Bloodhound.sh and if so,
 # modify the arguments to Randoop.
 # Set standard arguments:
 BOOT_CLASS_PATH_ARG="-Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar"
