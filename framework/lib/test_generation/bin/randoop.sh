@@ -68,16 +68,34 @@ printf "\n(%s)" "$version" >&2
 printf ".%.0s" \{1..expr 73 - length "$version"\} >&2
 printf " " >&2
 
+# Check to see if called from randoop.Bloodhou.sh and if so,
+# modify the arguments to Randoop.
+# Set standard arguments:
+BOOT_CLASS_PATH_ARG="-Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar"
+EXTRA_JAVA_AGENT_ARG=""
+METHOD_SELECTION_ARG=""
+
+me=$(basename "$0")
+echo Running $me
+
+if [[ $me == *"Blood"* ]]; then
+BOOT_CLASS_PATH_ARG="$BOOT_CLASS_PATH_ARG:$D4J_DIR_TESTGEN_LIB/jacocoagent.jar"
+EXTRA_JAVA_AGENT_ARG="-javaagent:$D4J_DIR_TESTGEN_LIB/jacocoagent.jar"
+METHOD_SELECTION_ARG="--method-selection=BLOODHOUND"
+fi
+
 # The most common package in file $D4J_FILE_TARGET_CLASSES.
 # TODO: Determine the set of all distinct packages and invoke Randoop multiple times with different packages.
 PACKAGE=$(sed 's/\.[A-Za-z_$][^.]*$//' "$D4J_FILE_TARGET_CLASSES" | uniq -c | sort -rn | sed -E 's/^ *[0-9]+ //g' | head -1)
 
 # Build the test-generation command
 cmd="java -ea -classpath $project_cp:$D4J_DIR_TESTGEN_LIB/randoop-current.jar \
-  -Xbootclasspath/a:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
+  $BOOT_CLASS_PATH_ARG \
   -javaagent:$D4J_DIR_TESTGEN_LIB/replacecall-current.jar \
   -javaagent:$D4J_DIR_TESTGEN_LIB/covered-class-current.jar \
+  $EXTRA_JAVA_AGENT_ARG \
 randoop.main.Main gentests \
+  $METHOD_SELECTION_ARG \
   --classlist=$D4J_DIR_WORKDIR/classes.randoop \
   --require-covered-classes=$D4J_FILE_TARGET_CLASSES \
   --junit-package-name=$PACKAGE \
