@@ -20,7 +20,6 @@ HOST_URL="https://defects4j.org/downloads"
 BASE="$(cd "$(dirname "$0")"; pwd)"
 DIR_REPOS="$BASE/project_repos"
 DIR_LIB_GEN="$BASE/framework/lib/test_generation/generation"
-DIR_BIN_GEN="$BASE/framework/lib/test_generation/bin"
 DIR_LIB_RT="$BASE/framework/lib/test_generation/runtime"
 DIR_LIB_GRADLE="$BASE/framework/lib/build_systems/gradle"
 
@@ -114,7 +113,6 @@ main() {
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$COVEREDCLASS_JAR" "covered-class-current.jar")
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/jacocoagent.jar" "jacocoagent.jar")
-    (cd "$DIR_BIN_GEN" && ln -sf randoop.sh randoopBloodhound.sh)
 
     ############################################################################
     #
