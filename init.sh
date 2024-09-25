@@ -113,7 +113,7 @@ main() {
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$REPLACECALL_JAR" "replacecall-current.jar")
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/$COVEREDCLASS_JAR" "covered-class-current.jar")
     (cd "$DIR_LIB_GEN" && ln -sf "randoop-${RANDOOP_VERSION}/jacocoagent.jar" "jacocoagent.jar")
-    (cd "$SIR_LIB_GEN" && ln -sf randoop.sh randoopBloodhound.sh)
+    (cd "$DIR_LIB_GEN" && ln -sf randoop.sh randoopBloodhound.sh)
 
     ############################################################################
     #
