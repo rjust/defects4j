@@ -118,6 +118,11 @@ sub _post_checkout {
         print OUT $converted_file;
         close(OUT);
     }
+
+    if (-e "$work_dir/default.properties") {
+        # Set default Java target to 7.
+        Utils::sed_cmd("s/1\.[1-6]/1.7/", "$work_dir/default.properties");
+    }
 }
 
 #

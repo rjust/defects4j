@@ -145,6 +145,9 @@ sub _post_checkout {
         copy($project_dir."/generated_sources/".$version."/PackageVersion.java", $work_dir."/src/main/java/com/fasterxml/jackson/databind/cfg/PackageVersion.java");
     }
 
+    # Set default Java target to 7.
+    Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
 }
 
 #

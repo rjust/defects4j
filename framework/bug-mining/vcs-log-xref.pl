@@ -104,6 +104,8 @@ my %SUPPORTED_VCSs = (
                                 if (my $bug_number = eval('$_ =~' . "$regexp" . '; $1')) {
                                     # skip bug ids that have not been reported in the issue tracker
                                     next unless system("grep -qi \"^${bug_number},\" $issues_file") == 0;
+                                    # ignore tag comments
+                                    $commit = (split / /, $commit)[0];
                                     my $parent = _git_get_parent($commit);
                                     next unless $parent; # skip revisions without parent:
                                                          # this can be the first revision or

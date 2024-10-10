@@ -30,14 +30,14 @@ index 966a8c18..1f2e95d9 100644
      Locale.setDefault(Locale.FRANCE);
      try {
 -      assertParsed("1 janv. 1970 00:00:00", new DefaultDateTypeAdapter());
-+      assertParsed("1 janv. 1970 à 00:00:00", new DefaultDateTypeAdapter());
++      assertParsed("1 janv. 1970, 00:00:00", new DefaultDateTypeAdapter());
        assertParsed("01/01/70", new DefaultDateTypeAdapter(DateFormat.SHORT));
        assertParsed("1 janv. 1970", new DefaultDateTypeAdapter(DateFormat.MEDIUM));
        assertParsed("1 janvier 1970", new DefaultDateTypeAdapter(DateFormat.LONG));
        assertParsed("01/01/70 00:00",
            new DefaultDateTypeAdapter(DateFormat.SHORT, DateFormat.SHORT));
 -      assertParsed("1 janv. 1970 00:00:00",
-+      assertParsed("1 janv. 1970 à 00:00:00",
++      assertParsed("1 janv. 1970, 00:00:00",
            new DefaultDateTypeAdapter(DateFormat.MEDIUM, DateFormat.MEDIUM));
 -      assertParsed("1 janvier 1970 00:00:00 UTC",
 +      assertParsed("1 janvier 1970 à 00:00:00 UTC",

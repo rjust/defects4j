@@ -123,8 +123,8 @@ main() {
 
     cd "$DIR_LIB_GRADLE"
 
-    GRADLE_DISTS_ZIP=defects4j-gradle-dists-v3.zip
-    GRADLE_DEPS_ZIP=defects4j-gradle-deps-v3.zip
+    GRADLE_DISTS_ZIP=defects4j-gradle-dists-v4.zip
+    GRADLE_DEPS_ZIP=defects4j-gradle-deps-v4.zip
 
     old_dists_ts=0
     old_deps_ts=0

@@ -117,6 +117,10 @@ sub _post_checkout {
         }
         close(IN);
         close(OUT);
+
+        # Set default Java target to 7.
+        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/build.xml");
     }
 
     if (-e "$work_dir/maven-build.xml"){
@@ -135,6 +139,10 @@ sub _post_checkout {
         }
         close(IN);
         close(OUT);
+
+        # Set default Java target to 7.
+        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
     }
 
     # Convert the file encoding of a problematic file

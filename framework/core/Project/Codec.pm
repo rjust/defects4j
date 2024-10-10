@@ -116,8 +116,15 @@ sub _post_checkout {
         }
     }
 
-    # Set default Java target to 6.
-    Utils::sed_cmd("s/1\.[1-5]/1.6/", "$work_dir/default.properties");
+    # Set default Java target to 7.
+    if (-e "$work_dir/default.properties") {
+        Utils::sed_cmd("s/1\.[1-6]/1.7/", "$work_dir/default.properties");
+    }
+    if (-e "$work_dir/maven-build.xml") {
+        # bids 17 and 18:
+        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
+    }
 }
 
 #
