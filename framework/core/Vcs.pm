@@ -397,13 +397,14 @@ sub _apply_cmd {
     # Try -p0 and -p2 as well before giving up.
     my @try = (1, 0, 2);
     my $log = "";
+    # The '--whitespace=fix' allows empty lines to match lines with any number of blanks.
     for my $n (@try) {
-        my $cmd = "cd $work_dir; git apply -p$n --check $patch_file 2>&1";
+        my $cmd = "cd $work_dir; git apply -v --whitespace=fix -p$n --check $patch_file 2>&1";
         $log .= "* $cmd\n";
         $log .= `$cmd`;
         if ($? == 0) {
             print(STDERR "patch applied: $patch_file\n") if $DEBUG;
-            return("cd $work_dir; git apply -p$n $patch_file 2>&1");
+            return("cd $work_dir; git apply --whitespace=fix -p$n $patch_file 2>&1");
         }
     }
 

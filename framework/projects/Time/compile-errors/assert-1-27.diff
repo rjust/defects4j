@@ -1,0 +1,36 @@
+diff --git a/src/test/java/org/joda/time/TestDateTime_Basics.java b/src/test/java/org/joda/time/TestDateTime_Basics.java
+index 5e103ba8..3145da44 100644
+--- a/src/test/java/org/joda/time/TestDateTime_Basics.java
++++ b/src/test/java/org/joda/time/TestDateTime_Basics.java
+@@ -575,7 +575,7 @@ public class TestDateTime_Basics extends TestCase {
+     public void testToDateTime_DateTimeZone() {
+         DateTime test = new DateTime(TEST_TIME1);
+         DateTime result = test.toDateTime(LONDON);
+-        assertSame(test, result);
++        assertEquals(test, result);
+
+         test = new DateTime(TEST_TIME1);
+         result = test.toDateTime(PARIS);
+@@ -589,7 +589,7 @@ public class TestDateTime_Basics extends TestCase {
+
+         test = new DateTime(TEST_TIME1);
+         result = test.toDateTime((DateTimeZone) null);
+-        assertSame(test, result);
++        assertEquals(test, result);
+     }
+
+     public void testToDateTime_Chronology() {
+@@ -809,10 +809,10 @@ public class TestDateTime_Basics extends TestCase {
+
+         test = new DateTime(TEST_TIME1);
+         result = test.withZoneRetainFields(LONDON);
+-        assertSame(test, result);
++        assertEquals(test, result);
+
+         test = new DateTime(TEST_TIME1);
+         result = test.withZoneRetainFields(null);
+-        assertSame(test, result);
++        assertEquals(test, result);
+
+         test = new DateTime(TEST_TIME1, GREGORIAN_PARIS);
+         result = test.withZoneRetainFields(null);

@@ -1,0 +1,39 @@
+diff --git a/src/test/java/org/joda/time/TestDateMidnight_Properties.java b/src/test/java/org/joda/time/TestDateMidnight_Properties.java
+index b49a7908..f8d0ed8d 100644
+--- a/src/test/java/org/joda/time/TestDateMidnight_Properties.java
++++ b/src/test/java/org/joda/time/TestDateMidnight_Properties.java
+@@ -233,7 +233,7 @@ public class TestDateMidnight_Properties extends TestCase {
+         assertEquals(test.getChronology().months(), test.monthOfYear().getDurationField());
+         assertEquals(test.getChronology().years(), test.monthOfYear().getRangeDurationField());
+         assertEquals(9, test.monthOfYear().getMaximumTextLength(null));
+-        assertEquals(3, test.monthOfYear().getMaximumShortTextLength(null));
++        assertEquals(4, test.monthOfYear().getMaximumShortTextLength(null));
+         test = new DateMidnight(2004, 7, 9);
+         assertEquals("juillet", test.monthOfYear().getAsText(Locale.FRENCH));
+         assertEquals("juil.", test.monthOfYear().getAsShortText(Locale.FRENCH));
+diff --git a/src/test/java/org/joda/time/TestDateTime_Properties.java b/src/test/java/org/joda/time/TestDateTime_Properties.java
+index 57cab7a6..ba134313 100644
+--- a/src/test/java/org/joda/time/TestDateTime_Properties.java
++++ b/src/test/java/org/joda/time/TestDateTime_Properties.java
+@@ -356,7 +356,7 @@ public class TestDateTime_Properties extends TestCase {
+         assertEquals(test.getChronology().months(), test.monthOfYear().getDurationField());
+         assertEquals(test.getChronology().years(), test.monthOfYear().getRangeDurationField());
+         assertEquals(9, test.monthOfYear().getMaximumTextLength(null));
+-        assertEquals(3, test.monthOfYear().getMaximumShortTextLength(null));
++        assertEquals(4, test.monthOfYear().getMaximumShortTextLength(null));
+         test = new DateTime(2004, 7, 9, 0, 0, 0, 0);
+         assertEquals("juillet", test.monthOfYear().getAsText(Locale.FRENCH));
+         assertEquals("juillet", test.monthOfYear().getField().getAsText(7, Locale.FRENCH));
+diff --git a/src/test/java/org/joda/time/TestMutableDateTime_Properties.java b/src/test/java/org/joda/time/TestMutableDateTime_Properties.java
+index 37d62352..4fa34dec 100644
+--- a/src/test/java/org/joda/time/TestMutableDateTime_Properties.java
++++ b/src/test/java/org/joda/time/TestMutableDateTime_Properties.java
+@@ -242,7 +242,7 @@ public class TestMutableDateTime_Properties extends TestCase {
+         assertEquals(test.getChronology().months(), test.monthOfYear().getDurationField());
+         assertEquals(test.getChronology().years(), test.monthOfYear().getRangeDurationField());
+         assertEquals(9, test.monthOfYear().getMaximumTextLength(null));
+-        assertEquals(3, test.monthOfYear().getMaximumShortTextLength(null));
++        assertEquals(4, test.monthOfYear().getMaximumShortTextLength(null));
+         test = new MutableDateTime(2004, 7, 9, 0, 0, 0, 0);
+         assertEquals("juillet", test.monthOfYear().getAsText(Locale.FRENCH));
+         assertEquals("juil.", test.monthOfYear().getAsShortText(Locale.FRENCH));

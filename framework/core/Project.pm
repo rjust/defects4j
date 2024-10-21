@@ -567,6 +567,8 @@ Format of C<single_test>: <classname>::<methodname>.
 
 =cut
 
+use List::Util 'any';
+
 sub run_tests {
     @_ >= 2 or die $ARG_ERROR;
     my ($self, $out_file, $single_test) = @_;
@@ -577,10 +579,13 @@ sub run_tests {
         $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
     }
 
-    # For JDK 17 we need to special case Mockito as it needs to run with 'fork=yes'.
+    # For JDK 17 several of the test suites need to run with 'fork=yes' so
+    # that various 'add-opens' and 'add-exports' can be applied.
+    my @needs_fork = qw(Csv Gson JacksonDatabind JacksonXml Lang Time);
+
     my $pid = $self->{pid};
-    if ($pid eq "Mockito") {
-      return $self->_ant_call_comp("run.dev.tests.Mockito", "-DOUTFILE=$out_file $single_test_opt");
+    if (any { /$pid/ } @needs_fork) {
+      return $self->_ant_call_comp("run.dev.tests.forked", "-DOUTFILE=$out_file $single_test_opt");
     } else {
     return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");
 }
@@ -599,10 +604,13 @@ sub run_relevant_tests {
     @_ == 2 or die $ARG_ERROR;
     my ($self, $out_file) = @_;
 
-    # For JDK 17 we need to special case Mockito as it needs to run with 'fork=yes'.
+    # For JDK 17 several of the test suites need to run with 'fork=yes' so
+    # that various 'add-opens' and 'add-exports' can be applied.
+    my @needs_fork = qw(Csv Gson JacksonDatabind JacksonXml Lang Time);
+
     my $pid = $self->{pid};
-    if ($pid eq "Mockito") {
-      return $self->_ant_call_comp("run.dev.tests.Mockito", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
+    if (any { /$pid/ } @needs_fork) {
+      return $self->_ant_call_comp("run.dev.tests.forked", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
     } else {
     return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file -Dd4j.relevant.tests.only=true");
     }

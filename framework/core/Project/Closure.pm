@@ -105,14 +105,20 @@ sub _post_checkout {
     }
 
     # Set default Java target to 7.
-    # either these:
-    Utils::sed_cmd("s/source-level: 1\.[1-6]/source-level 1.7/", "$work_dir/lib/rhino/build.properties");
-    Utils::sed_cmd("s/target-jvm: 1\.[1-6]/target-jvm 1.7/", "$work_dir/lib/rhino/build.properties");
-    # or these:
-    Utils::sed_cmd("s/source-level: 1\.[1-6]/source-level 1.7/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
-    Utils::sed_cmd("s/target-jvm: 1\.[1-6]/target-jvm 1.7/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
-    # or this:
-    Utils::sed_cmd("s/value=\\\"1\.[1-6]\\\"/value=\\\"1.7\\\"/", "$work_dir/build.xml");
+    if (-e "$work_dir/lib/rhino/build.properties") {
+        # either these:
+        Utils::sed_cmd("s/source-level: 1\.[1-6]/source-level 1.7/", "$work_dir/lib/rhino/build.properties");
+        Utils::sed_cmd("s/target-jvm: 1\.[1-6]/target-jvm 1.7/", "$work_dir/lib/rhino/build.properties");
+    }
+    if (-e "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties") {
+        # or these:
+        Utils::sed_cmd("s/source-level: 1\.[1-6]/source-level 1.7/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+        Utils::sed_cmd("s/target-jvm: 1\.[1-6]/target-jvm 1.7/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    }
+    if (-e "$work_dir/build.xml") {
+        # or this:
+        Utils::sed_cmd("s/value=\\\"1\.[1-6]\\\"/value=\\\"1.7\\\"/", "$work_dir/build.xml");
+    }
 }
 
 1;

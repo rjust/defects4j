@@ -1,3 +1,4 @@
 bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
 65,9257bd6b6a0227c400e1d008d5ad03d2244a6155,9a666887d85349b35e0d80885a7c7cb38029467d,1429,https://github.com/FasterXML/jackson-databind/issues/1429,3.0.0,JVM11.flaky
 89,6cd5be98485a5fe8920846bb0b47a0fec87113be,ddfddfba6414adbecaff99684ef66eebd3a92e92,1737,https://github.com/FasterXML/jackson-databind/issues/1737,3.0.0,Duplicate
+95,c5bfb9a191240fac1744d6569d48a52ebd53c3cf,18dc249e793b15e40e67753ea5e988bd428b1a92,1941,https://github.com/FasterXML/jackson-databind/issues/1941,4.0.0,JVM17.flaky

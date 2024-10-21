@@ -79,6 +79,12 @@ main() {
                && perl -pi -e '$_ = qq(REFACTOR=\${REFACTOR:-"enable.decl.refactor enable.method.refactor"}\n) if /^REFACTOR=/' \
                     major/bin/major \
 
+    # Nashhorn was removed from Java 15+.  A convenient place to put the
+    # replacement is in major/lib/ant as that is always on the classpath.
+    cd "$BASE" && cp framework/projects/Math/lib/asm-9.3.jar major/lib/ant \
+               && cp framework/projects/Math/lib/asm-util-9.3.jar major/lib/ant \
+               && cp framework/projects/Math/lib/nashorn-core-15.3.jar major/lib/ant \
+
     ############################################################################
     #
     # Download EvoSuite
