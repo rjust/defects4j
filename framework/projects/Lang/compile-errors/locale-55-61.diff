@@ -7,7 +7,7 @@ index 45aa8e8f2..dc599c741 100644
      public void testLanguagesByCountry() {
          assertLanguageByCountry(null, new String[0]);
 -        assertLanguageByCountry("GB", new String[]{"en"});
-+        assertLanguageByCountry("GB", new String[]{"en", "gd", "kw", "cy"});
++        assertLanguageByCountry("GB", new String[]{"en", "ga", "gd", "kw", "cy"});
          assertLanguageByCountry("ZZ", new String[0]);
 -        assertLanguageByCountry("CH", new String[]{"fr", "de", "it"});
 +        assertLanguageByCountry("CH", new String[]{"gsw", "de", "pt", "fr", "rm", "it", "wae", "en"});
@@ -26,3 +26,24 @@ index 45aa8e8f2..dc599c741 100644
      }
  
      /**
+diff --git a/src/java/org/apache/commons/lang/LocaleUtils.java b/src/java/org/apache/commons/lang/LocaleUtils.java
+index 139d9a7f6..faa2a1777 100644
+--- a/src/java/org/apache/commons/lang/LocaleUtils.java
++++ b/src/java/org/apache/commons/lang/LocaleUtils.java
+@@ -242,7 +242,7 @@ public class LocaleUtils {
+                 for (int i = 0; i < locales.size(); i++) {
+                     Locale locale = (Locale) locales.get(i);
+                     if (countryCode.equals(locale.getCountry()) &&
+-                            locale.getVariant().length() == 0) {
++                            locale.getVariant().length() == 0 && locale.getScript().isEmpty()) {
+                         langs.add(locale);
+                     }
+                 }
+@@ -275,6 +275,7 @@ public class LocaleUtils {
+                     Locale locale = (Locale) locales.get(i);
+                     if (languageCode.equals(locale.getLanguage()) &&
+                             locale.getCountry().length() != 0 &&
++                            locale.getScript().isEmpty() &&
+                             locale.getVariant().length() == 0) {
+                         countries.add(locale);
+                     }

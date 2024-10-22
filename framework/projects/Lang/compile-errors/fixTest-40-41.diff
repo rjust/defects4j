@@ -1,0 +1,13 @@
+diff --git a/src/test/org/apache/commons/lang/builder/StandardToStringStyleTest.java b/src/test/org/apache/commons/lang/builder/StandardToStringStyleTest.java
+index 868693602..0fea888af 100644
+--- a/src/test/org/apache/commons/lang/builder/StandardToStringStyleTest.java
++++ b/src/test/org/apache/commons/lang/builder/StandardToStringStyleTest.java
+@@ -75,7 +75,7 @@ public class StandardToStringStyleTest extends TestCase {
+     @Override
+     protected void tearDown() throws Exception {
+         super.tearDown();
+-        ToStringBuilder.setDefaultStyle(STYLE);
++        ToStringBuilder.setDefaultStyle(ToStringStyle.DEFAULT_STYLE);
+     }
+
+     //----------------------------------------------------------------
