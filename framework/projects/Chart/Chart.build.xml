@@ -53,6 +53,7 @@ of the checked-out project version.
                destdir="${d4j.workdir}/build"
                debug="on"
                deprecation="false"
+               encoding="UTF-8"
                source="1.6"
                target="1.6">
             <classpath refid="build.classpath" />
@@ -102,6 +103,7 @@ of the checked-out project version.
                destdir="${d4j.workdir}/build"
                debug="on"
                deprecation="false"
+               encoding="UTF-8"
                source="1.6"
                target="1.6">
             <classpath refid="build.experimental.classpath" />
@@ -116,6 +118,7 @@ of the checked-out project version.
          <mkdir dir="${d4j.workdir}/build-tests"/>
         <javac srcdir="${d4j.workdir}/tests"
                destdir="${d4j.workdir}/build-tests"
+               encoding="UTF-8"
                source="1.6"
                target="1.6"
                debug="true"
