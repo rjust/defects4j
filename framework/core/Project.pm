@@ -581,7 +581,7 @@ sub run_tests {
 
     # For JDK 17 several of the test suites need to run with 'fork=yes' so
     # that various 'add-opens' and 'add-exports' can be applied.
-    my @needs_fork = qw(Csv Gson JacksonDatabind JacksonXml Lang Time);
+    my @needs_fork = qw(Closure Csv Gson JacksonDatabind JacksonXml Lang Mockito Time);
 
     my $pid = $self->{pid};
     if (any { /$pid/ } @needs_fork) {
@@ -606,7 +606,7 @@ sub run_relevant_tests {
 
     # For JDK 17 several of the test suites need to run with 'fork=yes' so
     # that various 'add-opens' and 'add-exports' can be applied.
-    my @needs_fork = qw(Csv Gson JacksonDatabind JacksonXml Lang Time);
+    my @needs_fork = qw(Closure Csv Gson JacksonDatabind JacksonXml Lang Mockito Time);
 
     my $pid = $self->{pid};
     if (any { /$pid/ } @needs_fork) {

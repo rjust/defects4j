@@ -1,0 +1,13 @@
+diff --git a/test/org/mockitoutil/ExtraMatchers.java b/test/org/mockitoutil/ExtraMatchers.java
+index bd0fe349e..ca1850265 100644
+--- a/test/org/mockitoutil/ExtraMatchers.java
++++ b/test/org/mockitoutil/ExtraMatchers.java
+@@ -134,7 +134,7 @@ public class ExtraMatchers {
+     }
+     
+     public static org.hamcrest.Matcher<java.lang.Object> clazz(java.lang.Class<?> type) {
+-        return CoreMatchers.is(type);
++        return CoreMatchers.is(CoreMatchers.instanceOf(type));
+     }
+ 
+     public static Assertor hasMethodsInStackTrace(final String ... methods) {

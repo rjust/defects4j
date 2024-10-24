@@ -1,0 +1,35 @@
+diff --git a/test/org/mockito/internal/runners/RunnerFactoryTest.java b/test/org/mockito/internal/runners/RunnerFactoryTest.java
+index 7620ed719..ecee382d8 100644
+--- a/test/org/mockito/internal/runners/RunnerFactoryTest.java
++++ b/test/org/mockito/internal/runners/RunnerFactoryTest.java
+@@ -37,7 +37,7 @@ public class RunnerFactoryTest extends TestBase {
+         RunnerImpl runner = factory.create(RunnerFactoryTest.class);
+
+         //then
+-        assertThat(runner, is(JUnit44RunnerImpl.class));
++        assertTrue(runner instanceof JUnit44RunnerImpl);
+     }
+
+     @Test
+@@ -54,7 +54,7 @@ public class RunnerFactoryTest extends TestBase {
+         RunnerImpl runner = factory.create(RunnerFactoryTest.class);
+
+         //then
+-        assertThat(runner, is(JUnit45AndHigherRunnerImpl.class));
++        assertTrue(runner instanceof JUnit45AndHigherRunnerImpl);
+     }
+
+     @Test
+diff --git a/test/org/mockitousage/basicapi/MocksCreationTest.java b/test/org/mockitousage/basicapi/MocksCreationTest.java
+index 533826a6f..b0fa6b8de 100644
+--- a/test/org/mockitousage/basicapi/MocksCreationTest.java
++++ b/test/org/mockitousage/basicapi/MocksCreationTest.java
+@@ -62,7 +62,7 @@ public class MocksCreationTest extends TestBase {
+         //then
+         assertContains("great mockie", name);
+         //and
+-        assertThat(mock, is(List.class));
++        assertTrue(mock instanceof List);
+     }
+
+     @Test

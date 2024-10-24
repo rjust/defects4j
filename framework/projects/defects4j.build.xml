@@ -117,6 +117,7 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             <jvmarg value="--add-exports=java.base/jdk.internal.access.foreign=ALL-UNNAMED"/>
             <jvmarg value="--add-exports=java.base/sun.util=ALL-UNNAMED"/>
+            <jvmarg value="--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED"/> <!-- Closure 53 only -->
             <jvmarg value="--add-opens=java.base/java.io=ALL-UNNAMED"/>
             <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED"/>
             <jvmarg value="--add-opens=java.base/java.lang.ref=ALL-UNNAMED"/>

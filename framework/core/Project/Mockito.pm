@@ -110,55 +110,62 @@ sub _post_checkout {
 
     # Add Major's runtime package to the bnd config
     if (-e "$work_dir/conf/mockito-core.bnd") {
-      Utils::sed_cmd("s/\\(Import-Package.*\\)/\\1\\n                major.mutation\.\*;resolution:=optional, \\\\/", "$work_dir/conf/mockito-core.bnd");
+      #Utils::sed_cmd("/Import-Package.*/a \\                major.mutation\.\*;resolution:=optional, \\\\\\\\ ", "$work_dir/conf/mockito-core.bnd");
     }
 
-    # gradle files require changes due to upgrade to gradle 7.6.4 needed to support Java 17
-    Utils::sed_cmd("s/2.0.0/4.0.0/", "$work_dir/build.gradle");
-    Utils::sed_cmd("/compileClasspath/d", "$work_dir/build.gradle");
-    Utils::sed_cmd("/configurations.classpath.exclude/a \\ " .
-                                                       "\\n" .
-                                                       "\\    configurations.all { \\n" .
-                                                       "\\        resolutionStrategy {\\n" .
-                                                       "\\            force 'xml-apis:xml-apis:1.4.01'\\n" .
-                                                       "\\            force 'com.ibm.icu:icu4j:3.4.4'\\n" .
-                                                       "\\        }\\n" .
-                                                       "\\    }", "$work_dir/build.gradle");
-    Utils::sed_cmd("/ provided\$/a \\    compileClasspath.extendsFrom(provided)\\n" .
-                                 "\\    testCompile.extendsFrom(provided)", "$work_dir/build.gradle");
-    Utils::sed_cmd("s/compile /implementation /", "$work_dir/build.gradle");
-    Utils::sed_cmd("s/testCompile /testImplementation /", "$work_dir/build.gradle");
-    Utils::sed_cmd("s/testRuntime /testRuntimeClasspath /", "$work_dir/build.gradle");
-    Utils::sed_cmd("/task wrapper/,+2d", "$work_dir/build.gradle");
-    Utils::sed_cmd("/junit:junit/a \\    implementation group: 'junit', name: 'junit', version: '4.13.2'\\n" .
-                                 "\\    implementation 'org.hamcrest:hamcrest-library:1.3'", "$work_dir/build.gradle");
+    if (-e "$work_dir/gradle") {
+        # gradle files require changes due to upgrade to gradle 7.6.4 needed to support Java 17
+        Utils::sed_cmd("s/2.0.0/4.0.0/", "$work_dir/build.gradle");
+        Utils::sed_cmd("/compileClasspath/d", "$work_dir/build.gradle");
+        Utils::sed_cmd("/configurations.classpath.exclude/a \\ " .
+                                                           "\\n" .
+                                                           "\\    configurations.all { \\n" .
+                                                           "\\        resolutionStrategy {\\n" .
+                                                           "\\            force 'xml-apis:xml-apis:1.4.01'\\n" .
+                                                           "\\            force 'com.ibm.icu:icu4j:3.4.4'\\n" .
+                                                           "\\        }\\n" .
+                                                           "\\    }", "$work_dir/build.gradle");
+        Utils::sed_cmd("/ provided\$/a \\    compileClasspath.extendsFrom(provided)\\n" .
+                                     "\\    testCompile.extendsFrom(provided)", "$work_dir/build.gradle");
+        Utils::sed_cmd("s/compile /implementation /", "$work_dir/build.gradle");
+        Utils::sed_cmd("s/testCompile /testImplementation /", "$work_dir/build.gradle");
+        Utils::sed_cmd("s/testRuntime /testRuntimeClasspath /", "$work_dir/build.gradle");
+        Utils::sed_cmd("/task wrapper/,+2d", "$work_dir/build.gradle");
+        Utils::sed_cmd("/junit:junit/a \\    implementation group: 'junit', name: 'junit', version: '4.13.2'\\n" .
+                                     "\\    implementation 'org.hamcrest:hamcrest-library:1.3'", "$work_dir/build.gradle");
 
-    Utils::sed_cmd("s/gradle-1.12-bin/gradle-7.6.4-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
-    Utils::sed_cmd("s/gradle-2.2.1-all/gradle-7.6.4-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
+        Utils::sed_cmd("s/gradle-1.12-bin/gradle-7.6.4-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
+        Utils::sed_cmd("s/gradle-2.2.1-all/gradle-7.6.4-bin/", "$work_dir/gradle/wrapper/gradle-wrapper.properties");
 
-    Utils::sed_cmd("s/0.7-groovy-1.8/2.0-groovy-3.0/", "$work_dir/buildSrc/build.gradle");
-    Utils::sed_cmd("s/0.7-groovy-2.0/2.0-groovy-3.0/", "$work_dir/buildSrc/build.gradle");
-    Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/buildSrc/build.gradle");
-    Utils::sed_cmd("s/compile/implementation/", "$work_dir/buildSrc/build.gradle");
-    Utils::sed_cmd("s/groovy-all/org.codehaus.groovy/", "$work_dir/buildSrc/build.gradle");
-    Utils::sed_cmd("/nodep:2.2.2/a \\    testImplementation group: 'junit', name: 'junit', version: '4.13.2'", "$work_dir/buildSrc/build.gradle");
+        if (-e "$work_dir/buildSrc") {
+          Utils::sed_cmd("s/0.7-groovy-1.8/2.0-groovy-3.0/", "$work_dir/buildSrc/build.gradle");
+          Utils::sed_cmd("s/0.7-groovy-2.0/2.0-groovy-3.0/", "$work_dir/buildSrc/build.gradle");
+          Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/buildSrc/build.gradle");
+          Utils::sed_cmd("s/compile/implementation/", "$work_dir/buildSrc/build.gradle");
+          Utils::sed_cmd("s/groovy-all/org.codehaus.groovy/", "$work_dir/buildSrc/build.gradle");
+          Utils::sed_cmd("/nodep:2.2.2/a \\    testImplementation group: 'junit', name: 'junit', version: '4.13.2'", "$work_dir/buildSrc/build.gradle");
+        }
 
-    Utils::sed_cmd("s/classpath = configurations/\\/\\/classpath = configurations/", "$work_dir/gradle/javadoc.gradle");
+        if (-e "$work_dir/gradle/javadoc.gradle") {
+          Utils::sed_cmd("s/classpath = configurations/\\/\\/classpath = configurations/", "$work_dir/gradle/javadoc.gradle");
+        }
 
-    Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/extTest/extTest.gradle");
+        Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/extTest/extTest.gradle");
 
-    Utils::sed_cmd("/uploadArchives/,+7d", "$work_dir/subprojects/testng/testng.gradle");
-    Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/testng/testng.gradle");
-    Utils::sed_cmd("s/compile/implementation/", "$work_dir/subprojects/testng/testng.gradle");
-    Utils::sed_cmd("s/\'maven\'/\'maven-publish\'/", "$work_dir/subprojects/testng/testng.gradle");
+        Utils::sed_cmd("/uploadArchives/,+7d", "$work_dir/subprojects/testng/testng.gradle");
+        Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/testng/testng.gradle");
+        Utils::sed_cmd("s/compile/implementation/", "$work_dir/subprojects/testng/testng.gradle");
+        Utils::sed_cmd("s/\'maven\'/\'maven-publish\'/", "$work_dir/subprojects/testng/testng.gradle");
 
-# Set default Java target to 7.
-    # some bids use gradle:
-    Utils::sed_cmd("s/sourceCompatibility = 1\.[1-6]/sourceCompatibility=1.7/", "$work_dir/build.gradle");
-    Utils::sed_cmd("s/targetCompatibility = 1\.[1-6]/targetCompatibility=1.7/", "$work_dir/build.gradle");
-    # and some don't:
-    Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/build.xml");
-    Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/build.xml");
+        # Set default Java target to 7.
+        Utils::sed_cmd("s/sourceCompatibility = 1\.[1-6]/sourceCompatibility=1.7/", "$work_dir/build.gradle");
+        Utils::sed_cmd("s/targetCompatibility = 1\.[1-6]/targetCompatibility=1.7/", "$work_dir/build.gradle");
+    }
+    if (-e "$work_dir/build.xml") {
+        # some gradle builds use build.xml as well
+        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/build.xml");
+    }
 
     # Fix compilation errors if necessary
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
@@ -166,7 +173,8 @@ sub _post_checkout {
     my @entries = readdir(DIR);
     closedir(DIR);
     foreach my $file (@entries) {
-        if ($file =~ /-(\d+)-(\d+).diff/) {
+        if ($file =~ /-(\d+)-(\d+)(.optional)?.diff/) {
+            my $opt = $3;
             if ($vid >= $1 && $vid <= $2) {
                 # many of the Mockito source files are in DOS/Windows format
                 # convert to unix format before trying to apply the patch
@@ -176,8 +184,10 @@ sub _post_checkout {
                 (my $filename = $firstline) =~ s/^.............//;
                 $filename =~ s/ .*//;
                 Utils::exec_cmd("dos2unix -q $work_dir/$filename", "run dos2unix on patch target");
-                $self->apply_patch($work_dir, "$compile_errors/$file")
-                        or confess("Couldn't apply patch ($file): $!");
+                my $ret = $self->apply_patch($work_dir, "$compile_errors/$file", $opt);
+                if (!$ret && !$opt) {
+                    confess("Couldn't apply patch ($file): $!");
+                }
             }
         }
     }
