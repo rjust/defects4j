@@ -28,7 +28,7 @@ d4j-compile -- compile a checked-out project version.
 
 =head1 SYNOPSIS
 
-  d4j-compile [-w work_dir]
+  d4j-compile [-w work_dir -o compile_options]
 
 =head1 DESCRIPTION
 
@@ -42,6 +42,10 @@ This script compiles sources and tests of a checked-out project version.
 
 The working directory of the checked-out project version (optional). Default is
 the current directory.
+
+=item -o F<compile_options>
+
+Manual options for ant.
 
 =back
 
@@ -59,12 +63,12 @@ use Getopt::Std;
 # Issue usage message and quit
 #
 sub _usage {
-    print "usage: $0 [-w work_dir]\n";
+    print "usage: $0 [-w work_dir] [-o compile_options]\n";
     exit 1;
 }
 
 my %cmd_opts;
-getopts('w:', \%cmd_opts) or _usage();
+getopts('w:o:', \%cmd_opts) or _usage();
 
 my $WORK_DIR = Utils::get_abs_path($cmd_opts{w} // ".");
 
@@ -79,7 +83,7 @@ my $project = Project::create_project($config->{$CONFIG_PID});
 $project->{prog_root} = $WORK_DIR;
 
 # Checkout and compile project version
-$project->compile() or die "Cannot compile sources!";
-$project->compile_tests() or die "Cannot compile tests!";
+$project->compile(undef, $cmd_opts{o}) or die "Cannot compile sources!";
+$project->compile_tests(undef, $cmd_opts{o}) or die "Cannot compile tests!";
 
 1;
