@@ -68,26 +68,8 @@ sub determine_layout {
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $rev_id, $work_dir) = @_;
-    # get original bid
-    my $bid;
-    if (-e "$work_dir/$CONFIG") {
-        my $config = Utils::read_config_file("$work_dir/$CONFIG");
-        if (defined $config) {
-            $bid = $config->{$CONFIG_VID};
-        } else { die "no .config file"; }
-    } else { die "no .config file"; }
-    chop($bid);
 
-    open FH, "$work_dir/build.xml" or die $!;
-    my $build_file = do { local $/; <FH> };
-    close FH;
-
-    $build_file =~ s/debug=".*"//g;
-    $build_file =~ s/<javac (.*)/<javac debug="true" $1/g;
-
-    open FH, ">$work_dir/build.xml" or die $!;
-    print FH $build_file;
-    close FH;
+    my $bid = Utils::get_bid($work_dir);
 
     # Fix compilation errors if necessary
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
@@ -103,6 +85,25 @@ sub _post_checkout {
             }
         }
     }
+
+    open FH, "$work_dir/build.xml" or die $!;
+    my $build_file = do { local $/; <FH> };
+    close FH;
+
+    $build_file =~ s/debug=".*"//g;
+    $build_file =~ s/<javac (.*)/<javac debug="true" $1/g;
+
+    # Set source and target version in javac targets.
+    my $jvm_version = "1.6";
+
+    unless ($build_file =~ m/<property name="ant.build.javac.source"/) {
+        print STDERR "FIX!";
+        $build_file =~ s/(<project name="compiler"[^>]+>)/$1\n<property name="ant.build.javac.target" value="${jvm_version}"\/>\n<property name="ant.build.javac.source" value="${jvm_version}"\/>/s;
+    }
+
+    open FH, ">$work_dir/build.xml" or die $!;
+    print FH $build_file;
+    close FH;
 
     # Set default Java target to 6.
     # either these:

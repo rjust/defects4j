@@ -62,15 +62,8 @@ sub new {
 sub _post_checkout {
     @_ == 3 or die $ARG_ERROR;
     my ($self, $rev_id, $work_dir) = @_;
-    # get original bid
-    my $bid;
-    if (-e "$work_dir/$CONFIG") {
-        my $config = Utils::read_config_file("$work_dir/$CONFIG");
-        if (defined $config) {
-            $bid = $config->{$CONFIG_VID};
-        } else { die "no .config file"; }
-    } else { die "no .config file"; }
-    chop($bid);
+
+    my $bid = Utils::get_bid($work_dir);
 
     # remove the JodaTime super directory (move things one dir up)
     if (-e "$work_dir/JodaTime") {

@@ -60,18 +60,20 @@ sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
     # Fix Mockito's test runners
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
-    # TODO: Testing for vids is super brittle! Find a better way to determine
+
+    my $bid = Utils::get_bid($work_dir);
+
+    # TODO: Testing for bids/vids is super brittle! Find a better way to determine
     # whether a test class needs to be patched, or provide a patch for each
     # affected revision id.
     my $mockito_junit_runner_patch_file = "$PROJECTS_DIR/$PID/mockito_test_runners.patch";
-    if ($vid == 16 || $vid == 17 || ($vid >= 34 && $vid <= 38)) {
+    if ($bid == 16 || $bid == 17 || ($bid >= 34 && $bid <= 38)) {
         $self->apply_patch($work_dir, "$mockito_junit_runner_patch_file")
                 or confess("Couldn't apply patch ($mockito_junit_runner_patch_file): $!");
     }
 
     # only bid with release notes and doesn't compile with newer Gradle
-    if ($vid == 21) {
+    if ($bid == 21) {
         system("rm -rf $work_dir/buildSrc/src/main/groovy/org/mockito/release/notes");
         system("rm -rf $work_dir/buildSrc/src/test/groovy/org/mockito/release/notes");
         Utils::sed_cmd("/apply.from:..gradle.release.gradle./d", "$work_dir/build.gradle");
