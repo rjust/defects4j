@@ -545,9 +545,35 @@ sub bug_report_info {
 
 =pod
 
+=item C<Utils::get_bid(work_dir)>
+
+Returns the c<bid> (bug id) associated with the provided C<work_dir> (Defects4J
+working directory). This function dies if the working directory does not exist
+or is invalid (i.e., does not provide a Defects4J config file).
+
+=cut
+
+sub get_bid {
+    @_ == 1 or die $ARG_ERROR;
+    my ($work_dir) = @_;
+
+    if (-e "$work_dir/$CONFIG") {
+        my $config = Utils::read_config_file("$work_dir/$CONFIG");
+        if (defined $config) {
+            # Validate vid and extract corresponding bid
+            my $bid = check_vid($config->{$CONFIG_VID})->{bid};
+            return $bid;
+        }
+    }
+    die "Invalid working directory! Cannot read: $work_dir/$CONFIG"
+}
+
+=pod
+
 =back
 
 =cut
+
 
 ################################################################################
 
