@@ -1,12 +1,34 @@
 Testing and analysis
 --------------------
 
+## CI testing
+CI testing is intended to catch major breakages. It does not guarantee
+reproducibility of all bugs.
+
+See [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) for the set of
+tests that currently run in CI.
+
+## Pre-release testing
+Before making a new release, make sure all of the following are true. See
+*Local testing* below for instructions.
+
+1. All tests running in CI pass.
+
+2. All bugs are reproducible.
+
+3. Code coverage analysis succeeds for all bugs (modulo documented issues).
+
+4. Mutation analysis succeeds for all bugs (modulo documented issues).
+
 ## Scripts
 
 * `test.include`: Constants and helper functions for test scripts.
 
 * `test_bug_mining.sh`: Tests the
   [bug-mining](https://github.com/rjust/defects4j/blob/master/framework/bug-mining) infrastructure.
+
+* `test_coverage_cmd.sh`: Tests the
+  [coverage](https://github.com/rjust/defects4j/blob/master/framework/bin/d4j/d4j-coverage) command.
 
 * `test_export_command.sh`: Tests the
   [export](https://github.com/rjust/defects4j/blob/master/framework/bin/d4j/d4j-export) command.
@@ -20,7 +42,11 @@ Testing and analysis
   generators and the compatibility of the generated test suites with the
   coverage, mutation, and bug detection analyses.
 
-* `test_mutation_analysis.sh`: Tests various options for the mutation analysis.
+* `test_mutation_analysis.sh`: Tests various options for the mutation analysis
+  on a small sample of bugs.
+
+* `test_mutation_cmd.sh`: Tests the
+  [mutation](https://github.com/rjust/defects4j/blob/master/framework/bin/d4j/d4j-mutation) command.
 
 * `test_sanity_check.sh`: Checks out each buggy and fixed project version and
   checks for compilation and required properties.
@@ -32,22 +58,38 @@ Testing and analysis
    the observed set of triggering tests matches the expected set of triggering
    tests.
 
-## CI testing
-See [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) for the set of
-tests that currently run in CI.
-
 ## Local testing
 Some tests take a long time to run and usually only need to be run for major
-version updates (e.g., bumping the Java version or adding new defects).
+version updates (e.g., bumping the Java version, adding new defects, or
+upgrading external tools) or large-scale refactorings.
 
-### Export command and exported properties
-The `test_export_command.sh` test takes a long time as it checks out every
-single defect and checks whether the exported paths, files, etc. make sense.
+Reproducing all bugs and running mutation analysis on all bugs are the most
+time-consuming test.
+
+To speed it up long-running tests, we use GNU parallel (`-j` gives the number of
+parallel processes):
 
 ### Reproducing all bugs (parallel)
-Reproducing all bugs is the most time-consuming test. To speed it up, we use
-GNU parallel (`-j` gives the number of parallel processes):
 ```
-./jobs_verify_bugs.pl | shuf > jobs.txt
-parallel -j20 --progress < jobs.txt
+./jobs_verify_bugs.pl | shuf | parallel -j20 --progress
 ```
+Reproducing all bugs (20 jobs in parallel) takes ~3h.
+
+### Code coverage analysis for all bugs (parallel)
+```
+./jobs_coverage.pl | shuf | parallel -j20 --progress
+```
+Running code coverage on all bugs (20 jobs in parallel) takes ~45min.
+
+### Mutation analysis for all bugs (parallel)
+```
+./jobs_mutation.pl | shuf | parallel -j20 --progress
+```
+Running mutation analysis on all bugs (20 jobs in parallel) takes many hours
+(due to a few long-running analyses).
+
+### Export command and exported properties
+```
+./test_export_command.sh
+```
+TODO: We should be able to run this in parallel.
