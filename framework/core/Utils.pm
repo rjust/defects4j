@@ -547,7 +547,7 @@ sub bug_report_info {
 
 =item C<Utils::get_bid(work_dir)>
 
-Returns the c<bid> (bug id) associated with the provided C<work_dir> (Defects4J
+Returns the C<bid> (bug id) associated with the provided C<work_dir> (Defects4J
 working directory). This function dies if the working directory does not exist
 or is invalid (i.e., does not provide a Defects4J config file).
 
