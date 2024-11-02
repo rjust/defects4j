@@ -26,16 +26,16 @@
 
 =head1 NAME
 
-jobs_mutation.pl -- output a list of invocations of the test_mutation_cmd.sh script, one line per bug.
+jobs_coverage.pl -- output a list of invocations of the test_coverage_cmd.sh script, one line per bug.
 
 =head1 SYNOPSIS
 
-  jobs_mutation.pl | shuf | parallel -j20 --progress
+  jobs_coverage.pl | shuf | parallel -j20 --progress
 
 =head1 DESCRIPTION
 
 Determines all active bugs and outputs a list of invocations of the
-test_mutation_cmd.sh script -- one line per bug. The output list of
+test_coverage_cmd.sh script -- one line per bug. The output list of
 jobs can be processed in parallel, e.g., using GNU parallel.
 
 =cut
