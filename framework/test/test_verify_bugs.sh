@@ -8,12 +8,15 @@
 # By default, this script runs only relevant tests. Set the -A flag to run all
 # tests. Set the -D flag to enable verbose logging (D4J_DEBUG).
 #
-# Examples for Lang:
+# Examples for Lang (relevant tests only):
 #   * Verify all bugs:         ./test_verify_bugs.sh -pLang
 #   * Verify bugs 1-10:        ./test_verify_bugs.sh -pLang -b1..10
 #   * Verify bugs 1 and 3:     ./test_verify_bugs.sh -pLang -b1 -b3
 #   * Verify bugs 1-10 and 20: ./test_verify_bugs.sh -pLang -b1..10 -b20
 #   * Verify bug 2 with DEBUG  ./test_verify_bugs.sh -pLang -b 2 -D
+#
+# Examples for Lang (all tests):
+#   * Verify all bugs:         ./test_verify_bugs.sh -pLang -A
 #
 ################################################################################
 
