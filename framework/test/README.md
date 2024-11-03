@@ -77,9 +77,9 @@ parallel processes):
 ```
 Reproducing all bugs (20 jobs in parallel) takes ~3h.
 
-(When upgrading Defects4J it is helpful to drop the -A flag at first for
-efficiency. After fixing any issues, test for full reproducibility with all
-tests.)
+(When upgrading Defects4J it is helpful to drop the `-A` flag at first for
+efficiency. After fixing any issues, add the `-A` flag to test for full
+reproducibility with all tests.)
 
 ### Code coverage analysis for all bugs (parallel)
 ```
@@ -97,8 +97,10 @@ Obtaining code-level stats for all bugs (20 jobs in parallel) takes ~45min.
 ```
 ./jobs_cmd.pl ./test_mutation_cmd.sh | shuf | parallel -j20 --progress
 ```
-Running mutation analysis on all bugs (20 jobs in parallel) takes ~24h (a few
-bugs have a very long analysis time).
+Running mutation analysis on all bugs (20 jobs in parallel) takes up to ~24h.
+
+TODO: A few (Closure) bugs have a very long analysis time; we should prioritize
+these jobs in the shuffled job list to make sure they run first.
 
 ### Export command and exported properties
 ```
