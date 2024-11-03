@@ -57,6 +57,9 @@ fi
 
 init
 
+# Make sure cloc is available
+cloc --version > /dev/null 2>&1 || die "Cannot execute cloc -- make sure it is executable and on the PATH!"
+
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
     BUGS="$(get_bug_ids "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE")"
