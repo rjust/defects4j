@@ -24,6 +24,8 @@ Before making a new release, make sure all of the following are true. See
 
 * `test.include`: Constants and helper functions for test scripts.
 
+* `get_stats.sh`: Compute code-level stats for all bugs or a subset.
+
 * `test_bug_mining.sh`: Tests the
   [bug-mining](https://github.com/rjust/defects4j/blob/master/framework/bug-mining) infrastructure.
 
@@ -71,19 +73,19 @@ parallel processes):
 
 ### Reproducing all bugs (parallel)
 ```
-./jobs_verify_bugs.pl | shuf | parallel -j20 --progress
+./jobs_cmd.pl ./test_verify_bugs.sh | shuf | parallel -j20 --progress
 ```
 Reproducing all bugs (20 jobs in parallel) takes ~3h.
 
 ### Code coverage analysis for all bugs (parallel)
 ```
-./jobs_coverage.pl | shuf | parallel -j20 --progress
+./jobs_cmd.pl ./test_coverage_cmd.sh | shuf | parallel -j20 --progress
 ```
 Running code coverage on all bugs (20 jobs in parallel) takes ~45min.
 
 ### Mutation analysis for all bugs (parallel)
 ```
-./jobs_mutation.pl | shuf | parallel -j20 --progress
+./jobs_cmd.pl ./test_mutation_cmd.sh | shuf | parallel -j20 --progress
 ```
 Running mutation analysis on all bugs (20 jobs in parallel) takes many hours
 (due to a few long-running analyses).

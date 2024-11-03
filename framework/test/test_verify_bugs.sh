@@ -3,7 +3,7 @@
 #
 # This script verifies that all bugs for a given project are reproducible and
 # that the provided information about triggering tests is correct.
-# This script must be run from its own directory (`framework/tests/`).
+# This script must be run from the test directory (`framework/tests/`).
 #
 # By default, this script runs only relevant tests. Set the -A flag to run all
 # tests. Set the -D flag to enable verbose logging (D4J_DEBUG).

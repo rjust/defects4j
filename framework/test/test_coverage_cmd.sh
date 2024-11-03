@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 ################################################################################
 #
-# This script runs the defects4j mutation command for all bugs or a subset of
+# This script runs the defects4j coverage command for all bugs or a subset of
 # bugs for a given project.
 #
 # Examples for Lang:
-#   * All bugs:         ./test_mutation_cmd.sh -pLang
-#   * Bugs 1-10:        ./test_mutation_cmd.sh -pLang -b1..10
-#   * Bugs 1 and 3:     ./test_mutation_cmd.sh -pLang -b1 -b3
-#   * Bugs 1-10 and 20: ./test_mutation_cmd.sh -pLang -b1..10 -b20
+#   * All bugs:         ./test_coverage_cmd.sh -pLang
+#   * Bugs 1-10:        ./test_coverage_cmd.sh -pLang -b1..10
+#   * Bugs 1 and 3:     ./test_coverage_cmd.sh -pLang -b1 -b3
+#   * Bugs 1-10 and 20: ./test_coverage_cmd.sh -pLang -b1..10 -b20
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
@@ -25,9 +25,18 @@ usage() {
     exit 1
 }
 
+# Run only relevant tests by default
+TEST_FLAG_OR_EMPTY="-r"
+# Debugging is off by default
+DEBUG=""
+
 # Check arguments
-while getopts ":p:b:" opt; do
+while getopts ":p:b:AD" opt; do
     case $opt in
+        A) TEST_FLAG_OR_EMPTY=""
+            ;;
+        D) DEBUG="-D"
+            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -68,6 +77,10 @@ LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
 OUT_DIR="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).cov"
 mkdir -p "$OUT_DIR"
 
+if [ "$DEBUG" == "-D" ]; then
+    export D4J_DEBUG=1
+fi
+
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
 
@@ -83,12 +96,12 @@ for bid in $BUGS; do
     vid="${bid}f"
     work_dir="$test_dir/$PID-$vid"
     defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
-    if defects4j coverage -w "$work_dir"; then
-      cat "$work_dir/summary.csv" > "$OUT_DIR/$bid.summary"
+    if defects4j coverage "$TEST_FLAG_OR_EMPTY" -w "$work_dir"; then
+      cp "$work_dir/summary.csv" "$OUT_DIR/$PID-$bid.summary.csv"
     else 
-      echo "ERROR: $PID-$bid" > "$OUT_DIR/$PID-$bid.summary"
+      echo "ERROR: $PID-$bid" > "$OUT_DIR/$PID-$bid.summary.error"
     fi
-    cp "$work_dir/all_tests" "$OUT_DIR/$PID-$bid.tests"
+    cp "$work_dir/all_tests" "$OUT_DIR/$PID-$bid.tests.txt"
 done
 rm -rf "$test_dir"
 HALT_ON_ERROR=1

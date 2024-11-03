@@ -25,9 +25,18 @@ usage() {
     exit 1
 }
 
+# Run only relevant tests by default
+TEST_FLAG_OR_EMPTY="-r"
+# Debugging is off by default
+DEBUG=""
+
 # Check arguments
-while getopts ":p:b:" opt; do
+while getopts ":p:b:AD" opt; do
     case $opt in
+        A) TEST_FLAG_OR_EMPTY=""
+            ;;
+        D) DEBUG="-D"
+            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -65,8 +74,12 @@ fi
 # Create log file
 script_name_without_sh=${script//.sh/}
 LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
-OUT_DIR="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).mutation_summary"
+OUT_DIR="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).mut"
 mkdir -p "$OUT_DIR"
+
+if [ "$DEBUG" == "-D" ]; then
+    export D4J_DEBUG=1
+fi
 
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
@@ -83,9 +96,12 @@ for bid in $BUGS; do
     vid="${bid}f"
     work_dir="$test_dir/$PID-$vid"
     defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
-    defects4j mutation -w "$work_dir" || die "mutation: $PID-$vid"
-
-    cat "$work_dir/summary.csv" > "$OUT_DIR/$bid"
+    if defects4j mutation "$TEST_FLAG_OR_EMPTY" -w "$work_dir"; then
+      cp "$work_dir/summary.csv" "$OUT_DIR/$PID-$bid.summary.csv"
+    else 
+      echo "ERROR: $PID-$bid" > "$OUT_DIR/$PID-$bid.summary.error"
+    fi
+    cp "$work_dir/testMap.csv" "$OUT_DIR/$PID-$bid.tests.csv"
 done
 rm -rf "$test_dir"
 HALT_ON_ERROR=1
