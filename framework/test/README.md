@@ -81,14 +81,20 @@ Reproducing all bugs (20 jobs in parallel) takes ~3h.
 ```
 ./jobs_cmd.pl ./test_coverage_cmd.sh | shuf | parallel -j20 --progress
 ```
-Running code coverage on all bugs (20 jobs in parallel) takes ~45min.
+Running code coverage on all bugs (20 jobs in parallel) takes ~30min.
+
+### Mutation analysis for all bugs (parallel)
+```
+./jobs_cmd.pl ./get_stats.sh | shuf | parallel -j20 --progress
+```
+Obtaining code-level stats for all bugs (20 jobs in parallel) takes ~45min.
 
 ### Mutation analysis for all bugs (parallel)
 ```
 ./jobs_cmd.pl ./test_mutation_cmd.sh | shuf | parallel -j20 --progress
 ```
-Running mutation analysis on all bugs (20 jobs in parallel) takes many hours
-(due to a few long-running analyses).
+Running mutation analysis on all bugs (20 jobs in parallel) takes ~24h (a few
+bugs have a very long analysis time).
 
 ### Export command and exported properties
 ```
