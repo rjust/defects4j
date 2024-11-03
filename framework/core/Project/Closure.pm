@@ -77,7 +77,6 @@ sub _post_checkout {
     my @entries = readdir(DIR);
     closedir(DIR);
     foreach my $file (@entries) {
-
         if ($file =~ /-(\d+)-(\d+).diff/) {
             if ($bid >= $1 && $bid <= $2) {
                 $self->apply_patch($work_dir, "$compile_errors/$file")
@@ -97,7 +96,6 @@ sub _post_checkout {
     my $jvm_version = "1.6";
 
     unless ($build_file =~ m/<property name="ant.build.javac.source"/) {
-        print STDERR "FIX!";
         $build_file =~ s/(<project name="compiler"[^>]+>)/$1\n<property name="ant.build.javac.target" value="${jvm_version}"\/>\n<property name="ant.build.javac.source" value="${jvm_version}"\/>/s;
     }
 
@@ -107,11 +105,11 @@ sub _post_checkout {
 
     # Set default Java target to 6.
     # either these:
-    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/build.properties");
-    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/build.properties");
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
     # or these:
-    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
-    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm 1.6/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
 }
 
 1;
