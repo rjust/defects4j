@@ -1,0 +1,31 @@
+diff --git a/src/main/java/org/apache/commons/collections4/IteratorUtils.java b/src/main/java/org/apache/commons/collections4/IteratorUtils.java
+index d7090a37..284f220b 100644
+--- a/src/main/java/org/apache/commons/collections4/IteratorUtils.java
++++ b/src/main/java/org/apache/commons/collections4/IteratorUtils.java
+@@ -573,7 +573,7 @@ public class IteratorUtils {
+                                                    final Iterator<? extends E> iterator1,
+                                                    final Iterator<? extends E> iterator2) {
+         @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
++        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : (Comparator<E>) comparator;
+         return new CollatingIterator<E>(comp, iterator1, iterator2);
+     }
+
+@@ -596,7 +596,7 @@ public class IteratorUtils {
+     public static <E> Iterator<E> collatedIterator(final Comparator<? super E> comparator,
+                                                    final Iterator<? extends E>... iterators) {
+         @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
++        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : (Comparator<E>) comparator;
+         return new CollatingIterator<E>(comp, iterators);
+     }
+
+@@ -620,7 +620,7 @@ public class IteratorUtils {
+     public static <E> Iterator<E> collatedIterator(final Comparator<? super E> comparator,
+                                                    final Collection<Iterator<? extends E>> iterators) {
+         @SuppressWarnings("unchecked")
+-        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
++        final Comparator<E> comp = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : (Comparator<E>) comparator;
+         return new CollatingIterator<E>(comp, iterators);
+     }
+

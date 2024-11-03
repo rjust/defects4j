@@ -111,8 +111,8 @@ sub _post_checkout {
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessBivariateCovariance.java");
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
 
-    # Set default Java target to 7.
-    Utils::sed_cmd("s/value=\\\"1\.[1-6]\\\"/value=\\\"1.7\\\"/", "$work_dir/build.xml");
+    # Set default Java target to 8.
+    Utils::sed_cmd("s/value=\\\"1\.[1-7]\\\"/value=\\\"1.8\\\"/", "$work_dir/build.xml");
 }
 
 #

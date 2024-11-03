@@ -1,1 +1,2 @@
 bug.id,revision.id.buggy,revision.id.fixed,report.id,report.url,deprecated.version,deprecated.reason
+33,57bafd2c3ad7db992667b7f9d56dfe9aca0d82f4,5cb37751c0aba81d025dc5fe4f2f9a3bf86cc958,200,https://github.com/mockito/mockito/issues/200,4.0.0,JVM17.Not.Reproducible

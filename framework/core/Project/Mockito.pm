@@ -150,21 +150,23 @@ sub _post_checkout {
           Utils::sed_cmd("s/classpath = configurations/\\/\\/classpath = configurations/", "$work_dir/gradle/javadoc.gradle");
         }
 
-        Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/extTest/extTest.gradle");
+        if (-e "$work_dir/subprojects/extTest/extTest.gradle") {
+          Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/extTest/extTest.gradle");
+        }
 
         Utils::sed_cmd("/uploadArchives/,+7d", "$work_dir/subprojects/testng/testng.gradle");
         Utils::sed_cmd("s/testCompile/testImplementation/", "$work_dir/subprojects/testng/testng.gradle");
         Utils::sed_cmd("s/compile/implementation/", "$work_dir/subprojects/testng/testng.gradle");
         Utils::sed_cmd("s/\'maven\'/\'maven-publish\'/", "$work_dir/subprojects/testng/testng.gradle");
 
-        # Set default Java target to 7.
-        Utils::sed_cmd("s/sourceCompatibility = 1\.[1-6]/sourceCompatibility=1.7/", "$work_dir/build.gradle");
-        Utils::sed_cmd("s/targetCompatibility = 1\.[1-6]/targetCompatibility=1.7/", "$work_dir/build.gradle");
+        # Set default Java target to 8.
+        Utils::sed_cmd("s/sourceCompatibility = 1\.[1-7]/sourceCompatibility=1.8/", "$work_dir/build.gradle");
+        Utils::sed_cmd("s/targetCompatibility = 1\.[1-7]/targetCompatibility=1.8/", "$work_dir/build.gradle");
     }
     if (-e "$work_dir/build.xml") {
         # some gradle builds use build.xml as well
-        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/build.xml");
-        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/build.xml");
+        Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/build.xml");
     }
 
     # Fix compilation errors if necessary
@@ -183,8 +185,12 @@ sub _post_checkout {
                 close $patch;
                 (my $filename = $firstline) =~ s/^.............//;
                 $filename =~ s/ .*//;
-                Utils::exec_cmd("dos2unix -q $work_dir/$filename", "run dos2unix on patch target");
+                my $cmd = "dos2unix -q $work_dir/$filename";
+                `$cmd`; $?==0 or confess("failed to run dos2unix");
                 my $ret = $self->apply_patch($work_dir, "$compile_errors/$file", $opt);
+                if (!$ret && $opt) {
+                    print(STDERR "optional patch did not apply: $file\n") if $DEBUG;
+                }
                 if (!$ret && !$opt) {
                     confess("Couldn't apply patch ($file): $!");
                 }

@@ -1,0 +1,20 @@
+diff --git a/test/org/mockitousage/matchers/MatchersTest.java b/test/org/mockitousage/matchers/MatchersTest.java
+index b91e9a853..9597ab46f 100644
+--- a/test/org/mockitousage/matchers/MatchersTest.java
++++ b/test/org/mockitousage/matchers/MatchersTest.java
+@@ -242,7 +242,7 @@ public class MatchersTest extends TestBase {
+         when(mock.oneArg(anyLong())).thenReturn("6");
+         when(mock.oneArg(anyShort())).thenReturn("7");
+         when(mock.oneArg((String) anyObject())).thenReturn("8");
+-        when(mock.oneArg(anyObject())).thenReturn("9");
++        when(mock.oneArg((Object) anyObject())).thenReturn("9");
+
+         assertEquals("0", mock.oneArg(true));
+         assertEquals("0", mock.oneArg(false));
+@@ -495,4 +495,4 @@ public class MatchersTest extends TestBase {
+         assertEquals("2", mock.oneArg(two));
+         assertEquals(null, mock.oneArg(three));
+     }
+-}
+\ No newline at end of file
++}

@@ -135,14 +135,14 @@ sub _post_checkout {
         }
     }
 
-    # Set default Java target to 7.
+    # Set default Java target to 8.
     if (-e "$work_dir/maven-build.xml") {
         # either these:
-        Utils::sed_cmd("s/source=\\\"1\.[1-6]\\\"/source=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
-        Utils::sed_cmd("s/target=\\\"1\.[1-6]\\\"/target=\\\"1.7\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
     } else {
         # or this
-        Utils::sed_cmd("s/1\.[1-6]/1.7/", "$work_dir/default.properties");
+        Utils::sed_cmd("s/1\.[1-7]/1.8/", "$work_dir/default.properties");
     }
 }
 
