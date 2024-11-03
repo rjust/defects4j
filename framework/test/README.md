@@ -14,7 +14,7 @@ Before making a new release, make sure all of the following are true. See
 
 1. All tests running in CI pass.
 
-2. All bugs are reproducible.
+2. All bugs are reproducible without failing tests, when running all tests (-A).
 
 3. Code coverage analysis succeeds for all bugs (modulo documented issues).
 
@@ -71,11 +71,15 @@ time-consuming test.
 To speed it up long-running tests, we use GNU parallel (`-j` gives the number of
 parallel processes):
 
-### Reproducing all bugs (parallel)
+### Reproducing all bugs with all tests (parallel)
 ```
-./jobs_cmd.pl ./test_verify_bugs.sh | shuf | parallel -j20 --progress
+./jobs_cmd.pl ./test_verify_bugs.sh -A | shuf | parallel -j20 --progress
 ```
 Reproducing all bugs (20 jobs in parallel) takes ~3h.
+
+(When upgrading Defects4J it is helpful to drop the -A flag at first for
+efficiency. After fixing any issues, test for full reproducibility with all
+tests.)
 
 ### Code coverage analysis for all bugs (parallel)
 ```
