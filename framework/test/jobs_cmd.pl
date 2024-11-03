@@ -30,11 +30,13 @@ jobs_cmd.pl -- output a list of invocations of a given test command, one line pe
 
 =head1 SYNOPSIS
 
-  jobs_cmd.pl <cmd> | shuf | parallel -j20 --progress
+  jobs_cmd.pl <script name> [pass-through args] | shuf | parallel -j20 --progress
 
 =head1 EXAMPLE
 
   jobs_cmd.pl ./get_stats.sh | shuf | parallel -j20 --progress
+
+  jobs_cmd.pl ./test_verify_bugs.sh -A | shuf | parallel -j20 --progress
 
 =head1 DESCRIPTION
 
@@ -60,8 +62,9 @@ use Project;
 #
 # Process arguments and issue usage message if necessary.
 #
-$#ARGV==0 or die "usage: $0 <script name>";
+$#ARGV>=0 or die "usage: $0 <script name> [pass-through args]";
 my $cmd = shift @ARGV;
+my $args = join(" ", @ARGV);
 
 # Read all project modules
 opendir(my $dir, "$CORE_DIR/Project") or die "Cannot open directory: $!";
@@ -79,6 +82,6 @@ for my $file (@files) {
   my $name = $project->{prog_name};
   my @bug_ids = $project->get_bug_ids();
   for my $id (@bug_ids) {
-    print("$cmd -p $pid -b $id \n");
+    print("$cmd -p $pid -b $id $args\n");
   }
 }
