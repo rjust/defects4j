@@ -363,7 +363,8 @@ sub sanity_check {
   $project->checkout_vid(vid [, work_dir, is_bugmine])
 
 Checks out the provided version id (C<vid>) to F<work_dir>, and tags the buggy AND
-the fixed program version of this bug. Format of C<vid>: C<\d+[bf]>.
+the fixed program version of this bug.
+(Utils::check_vid defines the version-id format.)
 The temporary working directory (C<work_dir>) is optional, the default is C<prog_root> from the instance of this class.
 The is_bugmine flag (C<is_bugmine>) is optional and indicates whether the
 framework is used for bug mining, the default is false.
@@ -397,7 +398,9 @@ sub checkout_vid {
             if (_can_reuse_work_dir($pid, $vid, $old_pid, $old_vid)) {
                 my $version_type = Utils::check_vid($vid)->{type};
                 my $tag_name = Utils::tag_prefix($pid, $bid) .
-                        ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
+                        ($version_type eq "b" ? $TAG_BUGGY :
+                         $version_type eq "b.min" ? $TAG_BUGGY_MIN :
+                         $version_type eq "b.orig" ? $TAG_BUGGY_ORIG : $TAG_FIXED);
                 my $cmd = "cd $work_dir" .
                           " && git checkout $tag_name 2>&1" .
                           " && git clean -xdf 2>&1";
@@ -457,7 +460,7 @@ sub checkout_vid {
     }
 
     # Note: will skip both of these for bug mining, for two reasons:
-    # (1) it isnt necessary and (2) we don't have dependencies yet.
+    # (1) it isn't necessary and (2) we don't have dependencies yet.
     # Fix test suite if necessary
     $self->fix_tests("${bid}f");
     # Write version-specific properties
@@ -478,7 +481,7 @@ sub checkout_vid {
     Utils::exec_cmd($cmd, "Initialize fixed program version")
             or confess("Couldn't tag fixed program version!");
 
-    # Apply patch to obtain buggy version
+    # Apply patch to obtain the buggy version
     my $patch_dir =  "$PROJECTS_DIR/$pid/patches";
     my $src_patch = "$patch_dir/${bid}.src.patch";
     $self->apply_patch($work_dir, $src_patch) or return 0;
@@ -495,19 +498,60 @@ sub checkout_vid {
     Utils::exec_cmd($cmd, "Initialize buggy program version")
             or confess("Couldn't tag buggy program version!");
 
+    # TODO: For now we create two tags for buggy and minimal buggy for
+    # backward-compatibility. Since these are identical, we should only tag the
+    # minimal buggy version and treat 'b' as an alias for 'b.min'.
+    #
+    # Write program and version id of buggy program version to config file
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}b.min"});
+
+    # Commit and tag the buggy program version
+    $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_BUGGY_MIN;
+    $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
+           " && git commit -a -m \"$tag_name\" 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Initialize buggy program version (minimal)")
+            or confess("Couldn't tag buggy program version!");
+
+    # Temporary patch file
+    my $tmp_patch = "$work_dir/.defects4j.diff";
+    my $rev_f = $self->lookup("${bid}f");
+    my $rev_b = $self->lookup("${bid}b");
+
+    # Checkout the fixed version and apply original source-code diff
+    $cmd = "cd $work_dir && git checkout " . Utils::tag_prefix($pid, $bid) . "$TAG_FIXED 2>&1";
+    `$cmd`; $?==0 or confess("Couldn't checkout $TAG_FIXED");
+
+    # Apply original source-code patch to obtain the original buggy version
+    $self->export_diff($rev_f, $rev_b, "$tmp_patch", $self->src_dir($vid));
+    $self->apply_patch($work_dir, $tmp_patch) or return 0;
+
+    # Remove temporary patch
+    system("rm $tmp_patch");
+
+    # Write program and version id of buggy program version to config file
+    Utils::write_config_file("$work_dir/$CONFIG", {$CONFIG_PID => $pid, $CONFIG_VID => "${bid}b.orig"});
+
+    # Commit and tag the buggy program version
+    $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_BUGGY_ORIG;
+    $cmd = "cd $work_dir" .
+           " && git add -A 2>&1" .
+           " && git commit -a -m \"$tag_name\" 2>&1" .
+           " && git tag $tag_name 2>&1";
+    Utils::exec_cmd($cmd, "Initialize buggy program version (original)")
+            or confess("Couldn't tag buggy program version!");
+
     # Checkout post-fix revision and apply unmodified diff to obtain the pre-fix revision
-    my $tmp_file = "$work_dir/.defects4j.diff";
     $cmd = "cd $work_dir && git checkout " . Utils::tag_prefix($pid, $bid) . "$TAG_POST_FIX 2>&1";
     `$cmd`; $?==0 or confess("Couldn't checkout $TAG_POST_FIX");
-    my $rev1 = $self->lookup("${bid}f");
-    my $rev2 = $self->lookup("${bid}b");
     # TODO: svn doesn't support diffing of binary files
     #       -> checkout and tag the pre-fix revision instead
-    $self->{_vcs}->export_diff($rev1, $rev2, $tmp_file);
-    $self->{_vcs}->apply_patch($work_dir, $tmp_file);
+    $self->{_vcs}->export_diff($rev_f, $rev_b, $tmp_patch);
+    $self->{_vcs}->apply_patch($work_dir, $tmp_patch);
 
-    # Remove temporary diff file
-    system("rm $tmp_file");
+    # Remove temporary patch
+    system("rm $tmp_patch");
 
     # Commit and tag the pre-fix revision
     $tag_name = Utils::tag_prefix($pid, $bid) . $TAG_PRE_FIX;
@@ -519,7 +563,10 @@ sub checkout_vid {
             or confess("Couldn't tag pre-fix revision!");
 
     # Checkout the requested program version
-    $tag_name = Utils::tag_prefix($pid, $bid) . ($version_type eq "b" ? $TAG_BUGGY : $TAG_FIXED);
+    $tag_name = Utils::tag_prefix($pid, $bid) .
+        ($version_type eq "b" ? $TAG_BUGGY :
+         $version_type eq "b.min" ? $TAG_BUGGY_MIN :
+         $version_type eq "b.orig" ? $TAG_BUGGY_ORIG : $TAG_FIXED);
     $cmd = "cd $work_dir && git checkout $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Check out program version: $pid-$vid")
             or confess("Couldn't check out program version!");
