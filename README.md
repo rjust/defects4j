@@ -1,4 +1,4 @@
-Defects4J -- version 3.0.0 [![.github/workflows/ci.yml](https://github.com/rjust/defects4j/actions/workflows/ci.yml/badge.svg)](https://github.com/rjust/defects4j/actions/workflows/ci.yml)
+Defects4J -- version 3.0.1 [![.github/workflows/ci.yml](https://github.com/rjust/defects4j/actions/workflows/ci.yml/badge.svg)](https://github.com/rjust/defects4j/actions/workflows/ci.yml)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
