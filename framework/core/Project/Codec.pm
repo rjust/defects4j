@@ -84,9 +84,23 @@ sub determine_layout {
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
-    # Check whether ant build file exists
-    unless (-e "$work_dir/build.xml") {
+    # Set source and target version in javac targets.
+    my $jvm_version="1.6";
+
+    if (-e "$work_dir/build.xml") {
+        rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
+        open(IN, "<$work_dir/build.xml.bak") or die $!;
+        open(OUT, ">$work_dir/build.xml") or die $!;
+        while(<IN>) {
+            my $l = $_;
+            $l =~ s/(<javac srcdir="\$\{source.home\}" destdir="\$\{build.home\}\/classes" debug="\$\{compile.debug\}")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+            $l =~ s/(<javac srcdir="\$\{test.home\}" destdir="\$\{build.home\}\/classes" debug="\$\{compile.debug\}")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+
+            print OUT $l;
+        }
+        close(IN);
+        close(OUT);
+    } else {
         my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
         if (-d "$build_files_dir") {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
@@ -101,6 +115,7 @@ sub _post_checkout {
     Utils::convert_file_encoding($work_dir."/".$result->{test}."/org/apache/commons/codec/language/SoundexTest.java");
 
     # Copy in a missing dependency
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     if (-d $work_dir."/src/main/resources"){
         copy("$project_dir/lib/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar", $work_dir."/src/main/resources/commons-lang3-3.8.1.jar");
         if (-e $work_dir."/build.xml"){

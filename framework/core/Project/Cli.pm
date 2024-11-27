@@ -83,7 +83,24 @@ sub determine_layout {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+
+    my $bid = Utils::get_bid($work_dir);
+
+    # Fix compilation errors if necessary.
+    # Run this as the first step to ensure that patches are applicable to
+    # unmodified source files.
+    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
+    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
+    my @entries = readdir(DIR);
+    closedir(DIR);
+    foreach my $file (@entries) {
+        if ($file =~ /-(\d+)-(\d+).diff/) {
+            if ($bid >= $1 && $bid <= $2) {
+                $self->apply_patch($work_dir, "$compile_errors/$file")
+                        or confess("Couldn't apply patch ($file): $!");
+            }
+        }
+    }
 
     my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     # Check whether ant build file exists
@@ -93,6 +110,9 @@ sub _post_checkout {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
     }
+
+    # Set source and target version in javac targets.
+    my $jvm_version="1.6";
 
     # CommonsCLI uses "compile-tests" instead of "compile.test" as a target name. 
     # Replace all instances of "compile-tests" with "compile.test".
@@ -104,6 +124,8 @@ sub _post_checkout {
         open(IN, '<'."$work_dir/build.xml".'.bak') or die $!;
         open(OUT, '>'."$work_dir/build.xml") or die $!;
         while(<IN>) {
+            $_ =~ s/javac destdir="\$\{classesdir\}" deprecation="true"/javac destdir="\$\{classesdir\}" target="${jvm_version}" source="${jvm_version}" deprecation="true"/g;
+            $_ =~ s/javac destdir="\$\{testclassesdir\}" deprecation="true"/javac destdir="\$\{testclassesdir\}" target="${jvm_version}" source="${jvm_version}" deprecation="true"/g;
             $_ =~ s/compile-tests/compile\.tests/g;
             $_ =~ s/build\.classpath/compile\.classpath/g;
             $_ =~ s/classesdir/classes\.dir/g;
@@ -145,22 +167,6 @@ sub _post_checkout {
         my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{test}"/org/apache/commons/cli2/bug/BugLoopingOptionLookAlikeTest.java.bak"`;
         print OUT $converted_file;
         close(OUT);
-    }
-
-    # Fix compilation errors if necessary.
-    # Run this as the first step to ensure that patches are applicable to
-    # unmodified source files.
-    my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
-    opendir(DIR, $compile_errors) or die "Could not find compile-errors directory.";
-    my @entries = readdir(DIR);
-    closedir(DIR);
-    foreach my $file (@entries) {
-        if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($vid >= $1 && $vid <= $2) {
-                $self->apply_patch($work_dir, "$compile_errors/$file")
-                        or confess("Couldn't apply patch ($file): $!");
-            }
-        }
     }
 }
 
