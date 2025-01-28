@@ -601,8 +601,9 @@ success, write:
 
 sub check_vid {
     @_ == 1 or die $ARG_ERROR;
-    my ($vid) = @_;
-    $vid =~ /^(\d+)([bf])$/ or confess("Wrong version_id: $vid -- expected \\d+[bf]!");
+    my $vid = shift;
+    $vid =~ /^(\d+)(f|b|b\.min|b\.orig)$/
+            or confess("Wrong version_id: '$vid' -- expected: \\d+(f|b|b.min|b.orig)\n");
     return {valid => 1, bid => $1, type => $2};
 }
 
