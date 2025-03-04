@@ -8,3 +8,7 @@ project_repos/*
 !project_repos/get_repos.sh
 major/
 work/
+framework/bug-mining/bug-mining-flink/project_repos/*
+framework/bug-mining/bug-mining-flink/issues/*
+framework/bug-mining/bug-mining-flink/gitlog
+framework/bug-mining/bug-mining-flink/issues.txt
