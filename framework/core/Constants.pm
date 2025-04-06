@@ -231,7 +231,7 @@ my $java_version_output = `java -version 2>&1`;
 
 # Extract the imajor version number using regular expressions
 if ($java_version_output =~ 'version "?(?:1\.)?(\K\d+)') {
-    if ($1 != 17) {
+    if ($1 < 17) {
         die ("Java 17 is required!\n\n");
     }
 } else {

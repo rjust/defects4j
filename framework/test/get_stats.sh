@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 ################################################################################
 #
-# This script runs the defects4j mutation command for all bugs or a subset of
+# This script computes code-level stats for all bugs or a subset of
 # bugs for a given project.
 #
 # Examples for Lang:
-#   * All bugs:         ./test_mutation_cmd.sh -pLang
-#   * Bugs 1-10:        ./test_mutation_cmd.sh -pLang -b1..10
-#   * Bugs 1 and 3:     ./test_mutation_cmd.sh -pLang -b1 -b3
-#   * Bugs 1-10 and 20: ./test_mutation_cmd.sh -pLang -b1..10 -b20
+#   * All bugs:         ./get_stats.sh -pLang
+#   * Bugs 1-10:        ./get_stats.sh -pLang -b1..10
+#   * Bugs 1 and 3:     ./get_stats.sh -pLang -b1 -b3
+#   * Bugs 1-10 and 20: ./get_stats.sh -pLang -b1..10 -b20
 #
 ################################################################################
 # Import helper subroutines and variables, and init Defects4J
@@ -25,18 +25,9 @@ usage() {
     exit 1
 }
 
-# Run only relevant tests by default
-TEST_FLAG_OR_EMPTY="-r"
-# Debugging is off by default
-DEBUG=""
-
 # Check arguments
-while getopts ":p:b:AD" opt; do
+while getopts ":p:b:" opt; do
     case $opt in
-        A) TEST_FLAG_OR_EMPTY=""
-            ;;
-        D) DEBUG="-D"
-            ;;
         p) PID="$OPTARG"
             ;;
         b) if [[ "$OPTARG" =~ ^[0-9]*\.\.[0-9]*$ ]]; then
@@ -66,6 +57,9 @@ fi
 
 init
 
+# Make sure cloc is available
+cloc --version > /dev/null 2>&1 || die "Cannot execute cloc -- make sure it is executable and on the PATH!"
+
 # Run all bugs, unless otherwise specified
 if [ "$BUGS" == "" ]; then
     BUGS="$(get_bug_ids "$BASE_DIR/framework/projects/$PID/$BUGS_CSV_ACTIVE")"
@@ -74,12 +68,8 @@ fi
 # Create log file
 script_name_without_sh=${script//.sh/}
 LOG="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).log"
-OUT_DIR="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).mut"
+OUT_DIR="$TEST_DIR/${script_name_without_sh}$(printf '_%s_%s' "$PID" $$).stats"
 mkdir -p "$OUT_DIR"
-
-if [ "$DEBUG" == "-D" ]; then
-    export D4J_DEBUG=1
-fi
 
 # Reproduce all bugs (and log all results), regardless of whether errors occur
 HALT_ON_ERROR=0
@@ -96,12 +86,22 @@ for bid in $BUGS; do
     vid="${bid}f"
     work_dir="$test_dir/$PID-$vid"
     defects4j checkout -p "$PID" -v "$vid" -w "$work_dir" || die "checkout: $PID-$vid"
-    if defects4j mutation "$TEST_FLAG_OR_EMPTY" -w "$work_dir"; then
-      cp "$work_dir/summary.csv" "$OUT_DIR/$PID-$bid.summary.csv"
-    else 
-      echo "ERROR: $PID-$bid" > "$OUT_DIR/$PID-$bid.summary.error"
-    fi
-    cp "$work_dir/testMap.csv" "$OUT_DIR/$PID-$bid.tests.csv"
+    # All test cases
+    defects4j test -w "$work_dir" || die "test (all): $PID-$vid"
+    cp "$work_dir/all_tests" "$OUT_DIR/$PID-$bid.tests.all"
+    # Relevant test cases
+    defects4j test -r -w "$work_dir" || die "test (rel): $PID-$vid"
+    cp "$work_dir/all_tests" "$OUT_DIR/$PID-$bid.tests.relevant"
+    # Trigger test cases; NOTE the missing newline at the end of the output
+    defects4j export -p tests.trigger -w "$work_dir" > "$OUT_DIR/$PID-$bid.tests.trigger"
+    echo >> "$OUT_DIR/$PID-$bid.tests.trigger"
+
+    # CLOC
+    dir_src=$(defects4j export -p dir.src.classes -w "$work_dir")
+    dir_test=$(defects4j export -p dir.src.tests -w "$work_dir")
+    cloc "$work_dir/$dir_src" --json > "$OUT_DIR/$PID-$bid.cloc.src.json"
+    cloc "$work_dir/$dir_test" --json > "$OUT_DIR/$PID-$bid.cloc.test.json"
+
 done
 rm -rf "$test_dir"
 HALT_ON_ERROR=1

@@ -26,17 +26,24 @@
 
 =head1 NAME
 
-jobs_verify_bugs.pl -- output a list of invocations of the test_verify_bugs.sh script, one line per bug.
+jobs_cmd.pl -- output a list of invocations of a given test command, one line per bug.
 
 =head1 SYNOPSIS
 
-  jobs_gen_tests.pl
+  jobs_cmd.pl <script name> [pass-through args] | shuf | parallel -j20 --progress
+
+=head1 EXAMPLE
+
+  jobs_cmd.pl ./get_stats.sh | shuf | parallel -j20 --progress
+
+  jobs_cmd.pl ./test_verify_bugs.sh -A | shuf | parallel -j20 --progress
 
 =head1 DESCRIPTION
 
-Parses all active-bugs csv files and outputs a list of invocations of the
-test_verify_bugs.sh script. Running this list of jobs, e.g., using GNU parallel,
-reproduces every bug with all available tests.
+Determines all active bugs and outputs a list of invocations of the
+provided <cmd> script -- one line per bug. The <cmd> script is expected to
+accept two arguments: C<-p PID> and C<-b BID>. The output list of
+jobs can be processed in parallel, e.g., using GNU parallel.
 
 =cut
 use warnings;
@@ -55,6 +62,9 @@ use Project;
 #
 # Process arguments and issue usage message if necessary.
 #
+$#ARGV>=0 or die "usage: $0 <script name> [pass-through args]";
+my $cmd = shift @ARGV;
+my $args = join(" ", @ARGV);
 
 # Read all project modules
 opendir(my $dir, "$CORE_DIR/Project") or die "Cannot open directory: $!";
@@ -72,6 +82,6 @@ for my $file (@files) {
   my $name = $project->{prog_name};
   my @bug_ids = $project->get_bug_ids();
   for my $id (@bug_ids) {
-    print("./test_verify_bugs.sh -p $pid -b $id -A\n");
+    print("$cmd -p $pid -b $id $args\n");
   }
 }

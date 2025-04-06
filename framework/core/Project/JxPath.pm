@@ -83,8 +83,8 @@ sub determine_layout {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
-    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
+
+    my $bid = Utils::get_bid($work_dir);
 
     # Fix compilation errors if necessary.
     # Run this as the first step to ensure that patches are applicable to
@@ -95,7 +95,7 @@ sub _post_checkout {
     closedir(DIR);
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($vid >= $1 && $vid <= $2) {
+            if ($bid >= $1 && $bid <= $2) {
                 $self->apply_patch($work_dir, "$compile_errors/$file")
                         or die("Couldn't apply patch ($file): $!");
             }
@@ -111,9 +111,13 @@ sub _post_checkout {
     }
 
     # Copy in a missing dependency
+    my $project_dir = "$PROJECTS_DIR/$self->{pid}";
     mkdir $work_dir."/target";
     mkdir $work_dir."/target/lib";
     copy($project_dir."/lib/mockrunner-0.4.1.jar", $work_dir."/target/lib/mockrunner-0.4.1.jar") or die "Copy failed: $!";
+
+    # Set source and target version in javac targets.
+    my $jvm_version="1.7";
 
     # JxPath uses "compile-tests" instead of "compile.test" as a target name. 
     # Replace all instances of "compile-tests" with "compile.test".
@@ -125,6 +129,8 @@ sub _post_checkout {
         open(IN, '<'."$work_dir/build.xml".'.bak') or die $!;
         open(OUT, '>'."$work_dir/build.xml") or die $!;
         while(<IN>) {
+            $_ =~ s/javac destdir="\$\{classesdir\}" deprecation="true"/javac destdir="\$\{classesdir\}" target="${jvm_version}" source="${jvm_version}" deprecation="true"/g;
+            $_ =~ s/javac destdir="\$\{testclassesdir\}" deprecation="true"/javac destdir="\$\{testclassesdir\}" target="${jvm_version}" source="${jvm_version}" deprecation="true"/g;
             $_ =~ s/compile-tests/compile\.tests/g;
             $_ =~ s/classesdir/classes\.dir/g;
             $_ =~ s/testclasses\.dir/test\.classes\.dir/g;

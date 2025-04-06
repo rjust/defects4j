@@ -83,15 +83,7 @@ sub determine_layout {
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
 
-    # get original bid
-    my $bid;
-    if (-e "$work_dir/$CONFIG") {
-        my $config = Utils::read_config_file("$work_dir/$CONFIG");
-        if (defined $config) {
-            $bid = $config->{$CONFIG_VID};
-        } else { die "no .config file"; }
-    } else { die "no .config file"; }
-    chop($bid);
+    my $bid = Utils::get_bid($work_dir);
 
     # Fix compilation errors if necessary.
     # Run this as the first step to ensure that patches are applicable to

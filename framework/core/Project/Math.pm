@@ -104,15 +104,30 @@ sub _layout2 {
 
 sub _post_checkout {
     my ($self, $revision_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($revision_id);
 
     # Convert the file encoding of problematic files
     my $result = determine_layout($self, $revision_id);
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessBivariateCovariance.java");
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
 
-    # Set default Java target to 7.
-    Utils::sed_cmd("s/value=\\\"1\.[1-6]\\\"/value=\\\"1.7\\\"/", "$work_dir/build.xml");
+    # Set source and target version in javac targets.
+    my $jvm_version="1.7";
+
+    if (-e "$work_dir/build.xml") {
+        rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
+        open(IN, "<$work_dir/build.xml.bak") or die $!;
+        open(OUT, ">$work_dir/build.xml") or die $!;
+        while(<IN>) {
+            my $l = $_;
+            $l =~ s/(javac destdir="\$\{classesdir\}" deprecation="true")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+            $l =~ s/(javac destdir="\$\{testclassesdir\}" deprecation="true")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+            $l =~ s/value="1\.[1-5]"/value="${jvm_version}"/g;
+
+            print OUT $l;
+        }
+        close(IN);
+        close(OUT);
+    }
 }
 
 #
