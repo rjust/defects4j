@@ -63,7 +63,8 @@ sub new {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+
+    my $bid = Utils::get_bid($work_dir);
 
     # Fix compilation errors if necessary
     my $compile_errors = "$PROJECTS_DIR/$self->{pid}/compile-errors/";
@@ -73,7 +74,7 @@ sub _post_checkout {
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+)(.optional)?.diff/) {
             my $opt = $3;
-            if ($vid >= $1 && $vid <= $2) {
+            if ($bid >= $1 && $bid <= $2) {
                 my $ret = $self->apply_patch($work_dir, "$compile_errors/$file", $opt);
                 if (!$ret && !$opt) {
                     confess("Couldn't apply patch ($file): $!");

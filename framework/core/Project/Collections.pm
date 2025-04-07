@@ -83,7 +83,8 @@ sub determine_layout {
 #
 sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
-    my $vid = $self->{_vcs}->lookup_vid($rev_id);
+
+    my $bid = Utils::get_bid($work_dir);
 
     # Fix compilation errors if necessary.
     # Run this as the first step to ensure that patches are applicable to
@@ -94,15 +95,30 @@ sub _post_checkout {
     closedir(DIR);
     foreach my $file (@entries) {
         if ($file =~ /-(\d+)-(\d+).diff/) {
-            if ($vid >= $1 && $vid <= $2) {
+            if ($bid >= $1 && $bid <= $2) {
                 $self->apply_patch($work_dir, "$compile_errors/$file")
                         or die("Couldn't apply patch ($file): $!");
             }
         }
     }
 
-    # Check whether ant build file exists
-    unless (-e "$work_dir/build.xml") {
+    # Set source and target version in javac targets.
+    my $jvm_version="1.8";
+
+    if (-e "$work_dir/build.xml") {
+        rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
+        open(IN, "<$work_dir/build.xml.bak") or die $!;
+        open(OUT, ">$work_dir/build.xml") or die $!;
+        while(<IN>) {
+            my $l = $_;
+            $l =~ s/(<javac  srcdir="\$\{source.test\}")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+            $l =~ s/(<javac  srcdir="\$\{source.java\}")/$1 target="${jvm_version}" source="${jvm_version}"/g;
+
+            print OUT $l;
+        }
+        close(IN);
+        close(OUT);
+    } else {
         my $build_files_dir = "$PROJECTS_DIR/$PID/build_files/$rev_id";
         if (-d "$build_files_dir") {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;

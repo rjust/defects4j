@@ -1,7 +1,7 @@
 Defects4J for Developers
 ================
 This README provides background and information useful for someone updating
-and/or modifing the Defects4J system.  See [README.md](README.md) in this directory if
+and/or modifing the Defects4J system.  See [README.md](../README.md) in the root directory if
 your primary interest is in using Defects4J for research.
 
 How a user's Defects4J is initialized
