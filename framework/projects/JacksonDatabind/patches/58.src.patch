@@ -6,8 +6,8 @@ index 128e46267..df861215c 100644
              // [databind#877]: explicitly prevent forced access to `cause` of `Throwable`;
              // never needed and attempts may cause problems on some platforms.
              // !!! NOTE: should be handled better for 2.8 and later
--            if ((mutator instanceof AnnotatedField)
--                    && "cause".equals(mutator.getName())) {
+-            if ((mutator instanceof AnnotatedMethod)
+-                    && "setCause".equals(mutator.getName())) {
 -                ;
 -            } else {
                  mutator.fixAccess(ctxt.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS));

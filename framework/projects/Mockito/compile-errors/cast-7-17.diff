@@ -1,0 +1,13 @@
+diff --git a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+index c807f2498..fd6ac6071 100644
+--- a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
++++ b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+@@ -25,7 +25,7 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+
+     @Test
+     public void shouldAnyXMatchersAcceptNull() {
+-        when(mock.oneArg(anyObject())).thenReturn("0");
++        when(mock.oneArg((Object) anyObject())).thenReturn("0");
+         when(mock.oneArg(anyString())).thenReturn("1");
+         when(mock.forList(anyList())).thenReturn("2");
+         when(mock.forMap(anyMap())).thenReturn("3");

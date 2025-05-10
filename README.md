@@ -1,4 +1,4 @@
-Defects4J -- version 3.0.1 [![.github/workflows/ci.yml](https://github.com/rjust/defects4j/actions/workflows/ci.yml/badge.svg)](https://github.com/rjust/defects4j/actions/workflows/ci.yml)
+Defects4J -- version 4.0.0 [![.github/workflows/ci.yml](https://github.com/rjust/defects4j/actions/workflows/ci.yml/badge.svg)](https://github.com/rjust/defects4j/actions/workflows/ci.yml)
 ================
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
@@ -69,7 +69,7 @@ Reproducibility
 
 #### Java version
 All bugs have been reproduced and triggering tests verified, using
-Java 11 (see the [CI configuration](.github/workflows/ci.yml) for specifics).
+Java 17 (see the [CI configuration](.github/workflows/ci.yml) for specifics).
 Using a different version of Java might result in unexpected failing tests
 and/or non-reproducible bugs.
 
@@ -100,11 +100,13 @@ Setting up Defects4J
 
 Requirements
 ----------------
- - Java 11
+ - Java 17
  - Git >= 1.9
  - Subversion (svn) >= 1.8
  - Perl >= 5.0.12
  - `cpanm`
+
+Defects4J version 3.x required Java 11.
 
 Defects4J version 2.x required Java 1.8.
 

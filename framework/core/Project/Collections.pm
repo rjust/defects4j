@@ -103,7 +103,7 @@ sub _post_checkout {
     }
 
     # Set source and target version in javac targets.
-    my $jvm_version="1.6";
+    my $jvm_version="1.8";
 
     if (-e "$work_dir/build.xml") {
         rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
@@ -133,6 +133,11 @@ sub _post_checkout {
         my $converted_file = `iconv -f iso-8859-1 -t utf-8 $work_dir"/"$result->{src}"/org/apache/commons/collections/functors/ComparatorPredicate.java.bak"`;
         print OUT $converted_file;
         close(OUT);
+    }
+
+    if (-e "$work_dir/default.properties") {
+        # Set default Java target to 8.
+        Utils::sed_cmd("s/1\.[1-7]/1.8/", "$work_dir/default.properties");
     }
 }
 

@@ -117,7 +117,7 @@ sub _post_checkout {
     copy($project_dir."/lib/mockrunner-0.4.1.jar", $work_dir."/target/lib/mockrunner-0.4.1.jar") or die "Copy failed: $!";
 
     # Set source and target version in javac targets.
-    my $jvm_version="1.6";
+    my $jvm_version="1.8";
 
     # JxPath uses "compile-tests" instead of "compile.test" as a target name. 
     # Replace all instances of "compile-tests" with "compile.test".

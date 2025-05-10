@@ -1,0 +1,14 @@
+diff --git a/src/org/mockito/internal/matchers/LocalizedMatcher.java b/src/org/mockito/internal/matchers/LocalizedMatcher.java
+index 7aeb79a73..8fa0c5cac 100644
+--- a/src/org/mockito/internal/matchers/LocalizedMatcher.java
++++ b/src/org/mockito/internal/matchers/LocalizedMatcher.java
+@@ -36,6 +36,9 @@ public class LocalizedMatcher implements Matcher, ContainsExtraTypeInformation,
+         actualMatcher.describeTo(description);
+     }
+
++    public void describeMismatch(Object item, Description description) {
++    }
++
+     public Location getLocation() {
+         return location;
+     }

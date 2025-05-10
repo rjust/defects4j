@@ -93,7 +93,7 @@ sub _post_checkout {
     $build_file =~ s/<javac (.*)/<javac debug="true" $1/g;
 
     # Set source and target version in javac targets.
-    my $jvm_version = "1.6";
+    my $jvm_version = "1.8";
 
     unless ($build_file =~ m/<property name="ant.build.javac.source"/) {
         $build_file =~ s/(<project name="compiler"[^>]+>)/$1\n<property name="ant.build.javac.target" value="${jvm_version}"\/>\n<property name="ant.build.javac.source" value="${jvm_version}"\/>/s;
@@ -103,16 +103,20 @@ sub _post_checkout {
     print FH $build_file;
     close FH;
 
-    # Set default Java target to 6.
+    # Set default Java target.
     if (-e "$work_dir/lib/rhino/build.properties") {
         # either these:
-        Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
-        Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
+        Utils::sed_cmd("s/source-level: 1\.[1-7]/source-level ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
+        Utils::sed_cmd("s/target-jvm: 1\.[1-7]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/build.properties");
     }
     if (-e "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties") {
         # or these:
-        Utils::sed_cmd("s/source-level: 1\.[1-5]/source-level ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
-        Utils::sed_cmd("s/target-jvm: 1\.[1-5]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+        Utils::sed_cmd("s/source-level: 1\.[1-7]/source-level ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+        Utils::sed_cmd("s/target-jvm: 1\.[1-7]/target-jvm ${jvm_version}/", "$work_dir/lib/rhino/src/mozilla/js/rhino/build.properties");
+    }
+    if (-e "$work_dir/build.xml") {
+        # or this:
+        Utils::sed_cmd("s/value=\\\"1\.[1-7]\\\"/value=\\\"${jvm_version}\\\"/", "$work_dir/build.xml");
     }
 }
 

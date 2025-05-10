@@ -92,9 +92,9 @@ sub _post_checkout {
         }
     }
 
-    # Set default Java target to 6.
-    Utils::sed_cmd("s/source=\\\"1\.[1-5]\\\"/source=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
-    Utils::sed_cmd("s/target=\\\"1\.[1-5]\\\"/target=\\\"1.6\\\"/", "$work_dir/maven-build.xml");
+    # Set default Java target to 8.
+    Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
 }
 
 #

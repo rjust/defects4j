@@ -79,6 +79,12 @@ main() {
                && perl -pi -e '$_ = qq(REFACTOR=\${REFACTOR:-"enable.decl.refactor enable.method.refactor"}\n) if /^REFACTOR=/' \
                     major/bin/major \
 
+    # Nashhorn was removed from Java 15+.  A convenient place to put the
+    # replacement is in major/lib/ant as that is always on the classpath.
+    cd "$BASE" && cp framework/projects/Math/lib/asm-9.3.jar major/lib/ant \
+               && cp framework/projects/Math/lib/asm-util-9.3.jar major/lib/ant \
+               && cp framework/projects/Math/lib/nashorn-core-15.3.jar major/lib/ant \
+
     ############################################################################
     #
     # Download EvoSuite
@@ -123,8 +129,8 @@ main() {
 
     cd "$DIR_LIB_GRADLE"
 
-    GRADLE_DISTS_ZIP=defects4j-gradle-dists-v3.zip
-    GRADLE_DEPS_ZIP=defects4j-gradle-deps-v3.zip
+    GRADLE_DISTS_ZIP=defects4j-gradle-dists-v4.zip
+    GRADLE_DEPS_ZIP=defects4j-gradle-deps-v4.zip
 
     old_dists_ts=0
     old_deps_ts=0
@@ -167,13 +173,13 @@ main() {
     echo "Defects4J successfully initialized."
     echo
     echo "|------------------------------------------------------------------------|"
-    echo "|                           Defects4J version 3                          |"
+    echo "|                           Defects4J version 4                          |"
     echo "|------------------------------------------------------------------------|"
     echo "| PLEASE READ:                                                           |"
     echo "| https://github.com/rjust/defects4j/?tab=readme-ov-file#reproducibility |"
     echo "|------------------------------------------------------------------------|"
     echo "| Important changes:                                                     |"
-    echo "|   * Java 11 is required                                                |"
+    echo "|   * Java 17 is required                                                |"
     echo "|   * Randoop v4.3.3                                                     |"
     echo "|   * Major v3.0.1                                                       |"
     echo "|------------------------------------------------------------------------|"

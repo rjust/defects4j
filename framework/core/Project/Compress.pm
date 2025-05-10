@@ -91,6 +91,10 @@ sub _post_checkout {
             Utils::exec_cmd("cp -r $build_files_dir/* $work_dir", "Copy generated Ant build file") or die;
         }
     }
+
+    # Set default Java target to 8.
+    Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
+    Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
 }
 
 #

@@ -26,4 +26,16 @@ index d774c7b74..71b2006f2 100644
 +        assertEquals("04-02-03", fdf.format(cal));
  
      }
- 
+
+diff --git a/src/java/org/apache/commons/lang/LocaleUtils.java b/src/java/org/apache/commons/lang/LocaleUtils.java
+index abff5102e..c06b27062 100644
+--- a/src/java/org/apache/commons/lang/LocaleUtils.java
++++ b/src/java/org/apache/commons/lang/LocaleUtils.java
+@@ -274,6 +274,7 @@ public class LocaleUtils {
+                     Locale locale = (Locale) locales.get(i);
+                     if (languageCode.equals(locale.getLanguage()) &&
+                             locale.getCountry().length() != 0 &&
++                            locale.getScript().isEmpty() &&
+                             locale.getVariant().length() == 0) {
+                         countries.add(locale);
+                     }

@@ -112,7 +112,7 @@ sub _post_checkout {
     }
 
     # Set source and target version in javac targets.
-    my $jvm_version="1.6";
+    my $jvm_version="1.8";
 
     # CommonsCLI uses "compile-tests" instead of "compile.test" as a target name. 
     # Replace all instances of "compile-tests" with "compile.test".
@@ -139,6 +139,23 @@ sub _post_checkout {
         }
         close(IN);
         close(OUT);
+
+# the s command above does not work!  The source is as follows:
+#  <javac destdir="${maven.build.outputDir}"
+#           encoding="iso-8859-1"
+#           nowarn="false"
+#           debug="true"
+#           optimize="false"
+#           deprecation="true"
+#           target="1.6"
+#           verbose="false"
+#           fork="false"
+#           source="1.6">
+#      <src>
+# Only seems to apply to bid 22; I took easy way out to fix for now:
+        # Set default Java target to 8.
+        Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/build.xml");
     }
 
     if (-e "$work_dir/maven-build.xml"){
@@ -157,6 +174,10 @@ sub _post_checkout {
         }
         close(IN);
         close(OUT);
+
+        # Set default Java target to 8.
+        Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"1.8\\\"/", "$work_dir/maven-build.xml");
     }
 
     # Convert the file encoding of a problematic file

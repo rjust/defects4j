@@ -1,0 +1,13 @@
+diff --git a/test/org/mockitousage/stubbing/StubbingWithDelegateTest.java b/test/org/mockitousage/stubbing/StubbingWithDelegateTest.java
+index bc4494a47..49541b3ed 100644
+--- a/test/org/mockitousage/stubbing/StubbingWithDelegateTest.java
++++ b/test/org/mockitousage/stubbing/StubbingWithDelegateTest.java
+@@ -101,7 +101,7 @@ public class StubbingWithDelegateTest {
+             byte b = methods.byteObjectReturningMethod(); // real method returns null
+             fail();
+         } catch (Exception e) {
+-            assertThat(e.toString()).doesNotContain("org.mockito");
++            assertThat(e.toString()).doesNotContain("org.mockito.");
+         }
+     }
+

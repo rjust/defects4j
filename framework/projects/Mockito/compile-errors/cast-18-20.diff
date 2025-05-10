@@ -1,0 +1,28 @@
+diff --git a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+index b17817589..80618d70d 100644
+--- a/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
++++ b/test/org/mockitousage/matchers/AnyXMatchersAcceptNullsTest.java
+@@ -25,14 +25,14 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+
+     @Test
+     public void shouldAcceptNullsInAnyMatcher() {
+-        when(mock.oneArg(any())).thenReturn("matched");
++        when(mock.oneArg((Object) any())).thenReturn("matched");
+
+         assertEquals(null, mock.forObject(null));
+     }
+
+     @Test
+     public void shouldAcceptNullsInAnyObjectMatcher() {
+-        when(mock.oneArg(anyObject())).thenReturn("matched");
++        when(mock.oneArg((Object) anyObject())).thenReturn("matched");
+
+         assertEquals(null, mock.forObject(null));
+     }
+@@ -73,4 +73,4 @@ public class AnyXMatchersAcceptNullsTest extends TestBase {
+         assertEquals(null, mock.forFloat(null));
+         assertEquals(null, mock.forDouble(null));
+     }
+-}
+\ No newline at end of file
++}

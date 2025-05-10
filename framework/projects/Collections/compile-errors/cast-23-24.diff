@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/apache/commons/collections4/comparators/ReverseComparator.java b/src/main/java/org/apache/commons/collections4/comparators/ReverseComparator.java
+index 10a0a812..22191814 100644
+--- a/src/main/java/org/apache/commons/collections4/comparators/ReverseComparator.java
++++ b/src/main/java/org/apache/commons/collections4/comparators/ReverseComparator.java
+@@ -61,7 +61,7 @@ public class ReverseComparator<E> implements Comparator<E>, Serializable {
+      */
+     @SuppressWarnings("unchecked")
+     public ReverseComparator(final Comparator<? super E> comparator) {
+-        this.comparator = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
++        this.comparator = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : (Comparator<E>) comparator;
+     }
+
+     //-----------------------------------------------------------------------

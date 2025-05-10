@@ -47,8 +47,8 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
     <!-- Dependencies used by all projects -->
     <property name="junit.jar"  value="${d4j.home}/framework/projects/lib/junit-4.12-hamcrest-1.3.jar"/>
-    <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3.jar"/>
-    <property name="cobertura.lib" value="${d4j.home}/framework/projects/lib/cobertura-2.0.3-lib"/>
+    <property name="cobertura.jar" value="${d4j.home}/framework/projects/lib/cobertura-2.1.1.jar"/>
+    <property name="cobertura.lib" value="${d4j.home}/framework/projects/lib/cobertura-2.1.1-lib"/>
 
     <!-- Location of libraries of test generation tool-->
     <property name="d4j.dir.lib.testgen.gen" value="${d4j.home}/framework/lib/test_generation/generation"/>
@@ -99,6 +99,48 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
         <fail unless="ant.refid:d4j.test.classpath"/>
         <fail unless="ant.refid:compile.classpath"/>
         <fail unless="ant.refid:all.manual.tests" />
+    </target>
+
+<!--
+    Run developer-written tests that need to be run with fork=yes.
+    The is required for JDK 17 to ‘open’ Java runtime classes to ALL-UNNAMED modules.
+-->
+    <target name="run.dev.tests.forked" depends="compile.tests,update.all.tests" description="Run unit tests">
+        <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="yes" forkmode="once" showOutput="true">
+            <classpath>
+                <!-- Make sure that instrumented classes appear at the beginning of the
+                     classpath -->
+                <pathelement location="${d4j.dir.classes.instrumented}" />
+                <pathelement path="${formatter.jar}" />
+                <pathelement path="${cobertura.jar}" />
+                <path refid="d4j.test.classpath"/>
+            </classpath>
+
+            <jvmarg value="--add-exports=java.base/jdk.internal.access.foreign=ALL-UNNAMED"/>
+            <jvmarg value="--add-exports=java.base/sun.util=ALL-UNNAMED"/>
+            <jvmarg value="--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED"/> <!-- Closure 53 only -->
+            <jvmarg value="--add-opens=java.base/java.io=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.lang.ref=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.net=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.nio=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.nio.charset=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/java.util=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/javax.net=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/sun.nio.cs=ALL-UNNAMED"/>
+            <jvmarg value="--add-opens=java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED"/>
+            <sysproperty key="OUTFILE" value="${OUTFILE}"/>
+            <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
+            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+            <batchtest unless="test.entry.class">
+                <fileset refid="all.manual.tests" />
+            </batchtest>
+        </junit>
+        <!-- fail build in case we are running all classes, but there are none in the fileset -->
+        <if> <not> <isset property="test.entry.class" /> </not> <then>
+            <pathconvert refid="all.manual.tests" property="fileset.notempty" setonempty="false" />
+            <fail unless="fileset.notempty" message="Fileset of tests to run is empty!" />
+        </then> </if>
     </target>
 
 <!--

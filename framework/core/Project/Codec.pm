@@ -85,7 +85,7 @@ sub _post_checkout {
     my ($self, $rev_id, $work_dir) = @_;
 
     # Set source and target version in javac targets.
-    my $jvm_version="1.6";
+    my $jvm_version="1.8";
 
     if (-e "$work_dir/build.xml") {
         rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
@@ -131,9 +131,13 @@ sub _post_checkout {
         }
     }
 
-    # Set default Java target to 6.
+    # Set default Java target.
     if (-e "$work_dir/default.properties") {
-        Utils::sed_cmd("s/1\.[1-5]/1.6/", "$work_dir/default.properties");
+        Utils::sed_cmd("s/1\.[1-7]/${jvm_version}/", "$work_dir/default.properties");
+    } else {
+        # bids 17 and 18:
+        Utils::sed_cmd("s/source=\\\"1\.[1-7]\\\"/source=\\\"${jvm_version}\\\"/", "$work_dir/maven-build.xml");
+        Utils::sed_cmd("s/target=\\\"1\.[1-7]\\\"/target=\\\"${jvm_version}\\\"/", "$work_dir/maven-build.xml");
     }
 }
 

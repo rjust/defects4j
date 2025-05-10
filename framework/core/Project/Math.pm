@@ -111,7 +111,7 @@ sub _post_checkout {
     Utils::convert_file_encoding($work_dir."/".$result->{src}."/org/apache/commons/math3/stat/correlation/StorelessCovariance.java");
 
     # Set source and target version in javac targets.
-    my $jvm_version="1.6";
+    my $jvm_version="1.8";
 
     if (-e "$work_dir/build.xml") {
         rename("$work_dir/build.xml", "$work_dir/build.xml.bak");
