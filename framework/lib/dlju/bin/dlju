@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+USAGE="Usage: dlju project_name project_version build_command compile_target test_target"
+
+if [ "$#" -ne 5 ]; then
+  echo "Error, not enough arguments. 5 are required."
+  echo $USAGE
+  exit 1
+fi
+
+PROJECT_NAME=$1
+PROJECT_VERSION=$2
+BUILD_COMMAND=$3
+COMPILE_TARGET=$4
+TEST_TARGET=$5
+
+DLJU_DIR="$(dirname "$(dirname "$0")")"
+echo $DLJU_DIR
+
+get_javac="javac_to_argfile.py"
+ant_junit="capture_junit.py"
+maven_junit="maven_junit.py"
+
+SHOULD_EXIT="exit 1"
+
+PWD=`pwd`
+
+function die {
+  cd $PWD
+  exit 1
+}
+
+function cantFindPythonScript {
+  local script=$1
+  if ! [ -f "$DLJU_DIR/$script" ]; then
+    echo "Error: Could not find python script \"$script\" in directory DLJU_DIR=\"$DLJU_DIR\". Are you sure you ran \"$DLJU_DIR/init\"?"
+    SHOULD_EXIT="exit 0"
+  fi
+}
+
+# Only accept either ant or mvn (maven) build commands, since we only have
+# scripts for extra test info from ant and maven.
+if ! [[ "$BUILD_COMMAND" = ant* || "$BUILD_COMMAND" = mvn* ]]; then
+  echo "Error: build command \"$BUILD_COMMAND\" matches neither \"ant\" nor \"mvn\". Exiting."
+  exit 1
+fi
+
+
+# Check to make sure that these scripts all exist in the place
+# we think they should exist at, which is $DLJU_DIR
+cantFindPythonScript $get_javac
+cantFindPythonScript $ant_junit
+cantFindPythonScript $maven_junit
+
+if ($SHOULD_EXIT); then
+  echo "Exiting."
+  die
+fi
+
+# Working directory for defects4j
+TMP_WORK_DIR="/tmp/d4j/$PROJECT_NAME-$PROJECT_VERSION"
+
+# make sure that this directory inside of the temp directory exists
+mkdir /tmp/d4j
+
+# Check out defects4j project
+if [ -e "$TMP_WORK_DIR" ]; then
+  echo "Working directory already exists."
+else
+  if defects4j checkout -p $PROJECT_NAME -v $PROJECT_VERSION -w $TMP_WORK_DIR; then
+    :
+  else
+    echo "Error, defects4j checkout of project \"$PROJECT_NAME\" at version \"$PROJECT_VERSION\" failed."
+    echo "Please check that defects4j is on the \$PATH, and \"$PROJECT_NAME\" with version \"$PROJECT_VERSION\" exists."
+    exit 1
+  fi
+fi
+
+
+
+cd $TMP_WORK_DIR
+
+if ! [ -e "build.properties" ] && [ -e "build.properties.sample" ]; then
+  cp build.properties.sample build.properties
+fi
+
+# Clean the checked out dir just in case
+$BUILD_COMMAND clean
+
+COMPILE_LOGS_DIR="$BUILD_COMMAND.compile.logs"
+TEST_LOGS_DIR="$BUILD_COMMAND.test.logs"
+
+
+# The name of the script to output to run testing
+JUNIT_RUNNER="run_junit"
+
+# Compile and run on dljc
+if dljc -o $COMPILE_LOGS_DIR -- $BUILD_COMMAND $COMPILE_TARGET; then
+  # Succeeded, we don't really want to run the rest unless this has succeeded
+
+  # Now get argfiles for compilation options and the classes
+  python3 "$DLJU_DIR/$get_javac" "$COMPILE_LOGS_DIR/javac.json" -o "compileOptions" -c "compileClasses"
+
+  # run dljc on test target
+  if dljc -o $TEST_LOGS_DIR -- $BUILD_COMMAND $TEST_TARGET; then
+    # Succeeded
+
+    # Get argfiles for test compilation options and classes
+    python3 "$DLJU_DIR/$get_javac" "$TEST_LOGS_DIR/javac.json" -o "testOptions" -c "testClasses"
+    if [[ $BUILD_COMMAND = mvn* ]]; then
+      # Extract testing commands from maven surefire output
+      python3 "$DLJU_DIR/$maven_junit" -l $TEST_LOGS_DIR -o $JUNIT_RUNNER
+      if (exit $!); then
+        :
+      else
+        echo "Error: Could not extract junit tests from output. Exiting."
+        die
+      fi
+    else
+      # Extract testing commands from ant junit output
+      python3 "$DLJU_DIR/$ant_junit" -l $TEST_LOGS_DIR -o $JUNIT_RUNNER
+      if (exit $!); then
+        :
+      else
+        echo "Error: Could not extract junit tests from output. Exiting."
+        die
+      fi
+    fi
+
+  else
+    # if running dljc on test target failed
+    echo "Warning: the command \"dljc -o $TEST_LOGS_DIR -- $BUILD_COMMAND $TEST_TARGET\" failed"
+    die
+  fi
+else
+  # if running dljc on compile target failed
+  echo "Warning: the command \"dljc -o $COMPILE_LOGS_DIR -- $BUILD_COMMAND $COMPILE_TARGET\" failed"
+  die
+fi
+
+# make the file $JUNIT_RUNNER executable
+chmod +x $JUNIT_RUNNER
