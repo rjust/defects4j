@@ -538,8 +538,8 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 
 sub compile {
-    my ($self, $log_file) = @_;
-    return $self->_ant_call_comp("compile", undef, $log_file);
+    my ($self, $log_file, $options_str) = @_;
+    return $self->_ant_call_comp("compile", $options_str, $log_file);
 }
 
 =pod
@@ -552,8 +552,8 @@ If F<log_file> is provided, the compiler output is written to this file.
 =cut
 
 sub compile_tests {
-    my ($self, $log_file) = @_;
-    return $self->_ant_call_comp("compile.tests", undef, $log_file);
+    my ($self, $log_file, $options_str) = @_;
+    return $self->_ant_call_comp("compile.tests", $options_str, $log_file);
 }
 
 =pod
