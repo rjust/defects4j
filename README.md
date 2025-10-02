@@ -379,6 +379,3 @@ Defects4J uses a semantic versioning scheme (`major`.`minor`.`patch`):
 License
 ---------
 MIT License, see [`license.txt`](https://github.com/rjust/defects4j/blob/master/license.txt) for more information.
-
-<!--  LocalWords:  github jfreechart Cli cli Codec codec Csv csv Gson gson JacksonCore jackson JacksonDatabind databind JacksonXml dataformat Jsoup jsoup JxPath jxpath lang Mockito mockito joda
- -->
