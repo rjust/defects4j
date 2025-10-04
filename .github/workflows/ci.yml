@@ -9,7 +9,7 @@ jobs:
       JDK_VERSION: 11u17
       JDK_DIR: jdk-11.0.17
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
         show-progress: false
