@@ -430,7 +430,7 @@ sub checkout_vid {
            " && echo \".svn\" > .gitignore" .
            " && git add -A 2>&1" .
            " && git commit -a -m $tag_name 2>&1" .
-           " && git tag $tag_name 2>&1";
+           " && git tag --no-sign $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Tag post-fix revision")
             or confess("Couldn't tag post-fix revision!");
 
@@ -450,7 +450,7 @@ sub checkout_vid {
             $cmd = "cd $work_dir" .
                    " && git add -A 2>&1" .
                    " && git commit -a -m \"$tag_name\" 2>&1" .
-                   " && git tag $tag_name 2>&1";
+                   " && git tag --no-sign $tag_name 2>&1";
             Utils::exec_cmd($cmd, "Run post-checkout hook")
                     or confess("Couldn't tag version after applying checkout hook!");
         }
@@ -474,7 +474,7 @@ sub checkout_vid {
     $cmd = "cd $work_dir" .
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
-           " && git tag $tag_name 2>&1";
+           " && git tag --no-sign $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Initialize fixed program version")
             or confess("Couldn't tag fixed program version!");
 
@@ -491,7 +491,7 @@ sub checkout_vid {
     $cmd = "cd $work_dir" .
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
-           " && git tag $tag_name 2>&1";
+           " && git tag --no-sign $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Initialize buggy program version")
             or confess("Couldn't tag buggy program version!");
 
@@ -514,7 +514,7 @@ sub checkout_vid {
     $cmd = "cd $work_dir" .
            " && git add -A 2>&1" .
            " && git commit -a -m \"$tag_name\" 2>&1" .
-           " && git tag $tag_name 2>&1";
+           " && git tag --no-sign $tag_name 2>&1";
     Utils::exec_cmd($cmd, "Tag pre-fix revision")
             or confess("Couldn't tag pre-fix revision!");
 
