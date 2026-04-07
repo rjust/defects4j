@@ -573,8 +573,13 @@ sub run_tests {
 
     my $single_test_opt = "";
     if (defined $single_test) {
-        $single_test =~ /([^:]+)::([^:]+)/ or die "Wrong format for single test!";
-        $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
+        if ($single_test =~ /([^:]+)::([^:]+)/) {
+            $single_test_opt = "-Dtest.entry.class=$1 -Dtest.entry.method=$2";
+        } elsif ($single_test =~ /^(\S+)$/) {
+            $single_test_opt = "-Dtest.entry.class=$1";
+        } else {
+            die "Wrong format for single test!";
+        }
     }
 
     return $self->_ant_call_comp("run.dev.tests", "-DOUTFILE=$out_file $single_test_opt");

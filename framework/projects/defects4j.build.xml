@@ -105,6 +105,21 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
     Run developer-written tests
 -->
     <target name="run.dev.tests" depends="compile.tests,update.all.tests" description="Run unit tests">
+        <condition property="run.test.with.method">
+            <and>
+                <isset property="test.entry.class"/>
+                <isset property="test.entry.method"/>
+            </and>
+        </condition>
+
+        <condition property="run.test.without.method">
+            <and>
+                <isset property="test.entry.class"/>
+                <not>
+                    <isset property="test.entry.method"/>
+                </not>
+            </and>
+        </condition>
         <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="no" showOutput="true">
             <classpath>
                 <!-- Make sure that instrumented classes appear at the beginning of the
@@ -117,7 +132,13 @@ project-specific build file ("project_id"/"project_id".build.xml) for the
 
             <sysproperty key="OUTFILE" value="${OUTFILE}"/>
             <formatter classname="edu.washington.cs.mut.testrunner.Formatter" usefile="false" />
-            <test name="${test.entry.class}" methods="${test.entry.method}" if="test.entry.class" />
+            <!-- Usage Case 1: test class and method both specified -->
+            <test name="${test.entry.class}" methods="${test.entry.method}"
+                  if="run.test.with.method" />
+
+            <!-- Usage Case 2: only test class specified -->
+            <test name="${test.entry.class}"
+                  if="run.test.without.method" />
             <batchtest unless="test.entry.class">
                 <fileset refid="all.manual.tests" />
             </batchtest>
