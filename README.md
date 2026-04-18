@@ -126,6 +126,7 @@ Steps to set up Defects4J
 2. Initialize Defects4J (download the project repositories and external libraries, which are not included in the git repository for size purposes and to avoid redundancies):
     - `cd defects4j`
     - `cpanm --installdeps .`
+    - export PERL5LIB=~/perl5/lib/perl5/ # enable Perl to find all modules
     - `./init.sh`
 
 3. Add Defects4J's executables to your PATH:
